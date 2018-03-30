@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:orientation="vertical">
+    <android.support.v7.widget.CardView
+        android:layout_gravity="center"
+        app:cardCornerRadius="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:background="@color/w1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:background="@color/w5"
+                android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
+                android:gravity="center"
+                android:textColor="@color/g6"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.5"
+                    android:minHeight="120dp"
+                    android:minWidth="250dp"
+                    android:paddingBottom="15.0dip"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="15.0dip"
+                    android:textSize="13sp"
+                    android:textColor="@color/b1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:background="@color/b1"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/positiveButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@color/w5"
+                    android:text="取消"
+                    android:gravity="center"
+                    android:textColor="@color/b1"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/negativeButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_yellow"
+                    android:text="确定"
+                    android:gravity="center"
+                    android:textColor="@color/b1"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

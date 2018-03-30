@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w3"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@android:color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/app_name"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/id_activity_parkorcharge_layout_imageiew_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/ic_left" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/id_activity_parkorcharge_layout_linearlayout_address"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@drawable/white_click_gray">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_gps"/>
+
+        <TextView
+            android:id="@+id/id_activity_parkorcharge_layout_textview_address"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="7dp"
+            android:gravity="center_vertical"
+            android:layout_marginRight="7dp"
+            android:textSize="12sp"
+            android:textColor="@color/b1"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_right" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.tianzhili.www.myselfsdk.filter.DropDownMenu
+            android:id="@+id/id_activity_parkorcharge_layout_dropdownmenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView
+                android:id="@id/mFilterRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/w3"/>
+        </com.tianzhili.www.myselfsdk.filter.DropDownMenu>
+        <LinearLayout
+            android:id="@+id/id_activity_parkorcharge_layout_linearlayout_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="40dp">
+
+            <ImageView
+                android:layout_width="95dp"
+                android:layout_height="100dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_noyoushuju" />
+
+            <TextView
+                android:id="@+id/id_activity_parkorcharge_layout_textview_nodata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="80dp"
+                android:text="抱歉，没有数据..."
+                android:textColor="@color/g1"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

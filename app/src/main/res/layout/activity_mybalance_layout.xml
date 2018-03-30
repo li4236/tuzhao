@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w3"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/w0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="账户余额"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/id_activity_mybalance_imageview_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/ic_left" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="账户余额（元）"
+            android:textColor="@color/b1"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/id_activity_mybalance_layout_textview_yue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="0.00"
+            android:textColor="@color/b1"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/id_activity_mybalance_layout_textview_tixian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/little_yuan_yellow_8dp"
+            android:gravity="center"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"
+            android:text="提现"
+            android:textColor="@color/b1"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+</LinearLayout>

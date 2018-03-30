@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:background="@drawable/white_click_gray">
+    
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="0dp">
+        <ImageView
+            android:id="@+id/id_item_parkorcharge_layout_imageview_bigshow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"/>
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+            <TextView
+                android:id="@+id/id_item_parkorcharge_layout_textview_name"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/b1"
+                android:textStyle="bold"
+                android:layout_marginRight="15dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <com.cb.ratingbar.CBRatingBar
+                    android:id="@+id/id_item_parkorcharge_layout_cbratingbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="12dp"
+                    app:starCanTouch="true"
+                    app:starCount="5"
+                    app:starCoverColor="@color/y2"
+                    app:starEndColor="#00ff00"
+                    app:starFillColor="#ffffff"
+                    app:starMaxProgress="100"
+                    app:starPathData="@string/round_star"
+                    app:starPathDataId="@string/round_star"
+                    app:starPointCount="5"
+                    app:starProgress="80"
+                    app:starShowStroke="true"
+                    app:starSize="10dp"
+                    app:starSpace="4dp"
+                    app:starStartColor="#0000ff"
+                    app:starStrokeColor="@color/y3"
+                    app:starStrokeWidth="2px"
+                    app:starUseGradient="false" />
+
+                <TextView
+                    android:id="@+id/id_item_parkorcharge_layout_textview_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="4.0"
+                    android:textColor="@color/y3"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="均价 "
+                android:textSize="10sp"
+                android:textColor="@color/g6"/>
+
+            <TextView
+                android:id="@+id/id_item_parkorcharge_layout_textview_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/y3"/>
+
+            <TextView
+                android:id="@+id/id_item_parkorcharge_layout_textview_price1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 元/小时"
+                android:textSize="10sp"
+                android:textColor="@color/g6"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/id_item_parkorcharge_layout_textview_address"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/g6"/>
+
+            <TextView
+                android:id="@+id/id_item_parkorcharge_layout_textview_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/g6"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

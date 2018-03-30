@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_item_parkreadypay_layout_linearlayout_all"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="9dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="9dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:src="@mipmap/ic_quxiaop" />
+
+        <TextView
+            android:id="@+id/id_item_parkreadypay_layout_textview_parkspace_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/b1"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/id_item_parkreadypay_layout_textview_order_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="待付款"
+            android:textColor="@color/b1"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_item_parkreadypay_layout_linearlayout_orderdetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:id="@+id/id_item_parkreadypay_layout_imageview_bigshow"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/id_item_parkreadypay_layout_textview_parktime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/b1"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/id_item_parkreadypay_layout_textview_address_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/b1"
+                android:maxEms="17"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/id_item_parkreadypay_layout_textview_carnumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/b1"
+                android:textSize="12sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/linebottom_white_gray_shallow_1px"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <LinearLayout
+            android:id="@+id/id_item_parkreadpay_layout_linearlayout_fee_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="合计："
+                    android:textColor="@color/b1"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/id_item_parkreadypay_layout_textview_order_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/b1"
+                    android:text="￥170.00"
+                    android:textSize="17sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="right"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp">
+
+            <TextView
+                android:id="@+id/id_item_parkreadypay_layout_textview_gopay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/yuan_little_line_red_12dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:paddingTop="3dp"
+                android:text="立即付款"
+                android:textColor="@color/r2"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

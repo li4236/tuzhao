@@ -1,0 +1,17 @@
+
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<!-- This is the main color -->
+<item
+    android:height="83dp">
+    <shape>
+        <gradient
+            android:angle="270"
+            android:endColor="#00c6fb"
+            android:centerColor="#0093f3"
+            android:startColor="#005bea"
+            android:type="linear" />
+    </shape>
+</item>
+
+</layer-list>

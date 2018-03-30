@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/save_accept_ticket_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/add_accept_ticket_address_main_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/add_accept_ticket_address_commont_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0">
+
+                <TextView
+                    android:id="@+id/ticket_type_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:text="发票类型"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/ticket_type"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="35dp"
+                    android:drawableEnd="@mipmap/ic_right"
+                    android:gravity="start|center"
+                    android:hint="请选择发票类型"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/ticket_type_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ticket_type_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/ticket_type_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/ticket_type_tv" />
+
+                <TextView
+                    android:id="@+id/company_name_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="公司名称"
+                    app:layout_constraintStart_toStartOf="@id/ticket_type_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/ticket_type_divider" />
+
+                <View
+                    android:id="@+id/company_name_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/company_name_tv" />
+
+                <EditText
+                    android:id="@+id/company_name"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入公司名称"
+                    android:inputType="text"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/company_name_divider"
+                    app:layout_constraintEnd_toEndOf="@id/ticket_type"
+                    app:layout_constraintStart_toStartOf="@+id/ticket_type"
+                    app:layout_constraintTop_toBottomOf="@+id/ticket_type_divider" />
+
+                <TextView
+                    android:id="@+id/company_telephone_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="公司电话"
+                    app:layout_constraintStart_toStartOf="@id/ticket_type_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/company_name_divider" />
+
+                <View
+                    android:id="@+id/company_telephone_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/company_telephone_tv" />
+
+                <EditText
+                    android:id="@+id/company_telephone"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入公司电话"
+                    android:inputType="phone"
+                    android:maxLength="13"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/company_telephone_divider"
+                    app:layout_constraintEnd_toEndOf="@id/ticket_type"
+                    app:layout_constraintStart_toStartOf="@+id/ticket_type"
+                    app:layout_constraintTop_toBottomOf="@+id/company_name_divider" />
+
+                <TextView
+                    android:id="@+id/accept_person_name_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="收件人名"
+                    app:layout_constraintStart_toStartOf="@id/ticket_type_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/company_telephone_divider" />
+
+                <View
+                    android:id="@+id/accept_person_name_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_person_name_tv" />
+
+                <EditText
+                    android:id="@+id/accept_person_name"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入收件人名"
+                    android:inputType="textPersonName"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_person_name_divider"
+                    app:layout_constraintEnd_toEndOf="@id/ticket_type"
+                    app:layout_constraintStart_toStartOf="@+id/ticket_type"
+                    app:layout_constraintTop_toBottomOf="@+id/company_telephone_divider" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/add_accept_ticket_address_email_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/add_accept_ticket_address_commont_cl">
+
+                <TextView
+                    android:id="@+id/accept_ticket_email_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:text="收件邮箱"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/accept_ticket_email"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="35dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入收件邮箱"
+                    android:inputType="textEmailAddress"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/accept_ticket_email_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/add_accept_ticket_address_address_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/add_accept_ticket_address_commont_cl">
+
+                <TextView
+                    android:id="@+id/accept_ticket_telephone_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:text="收件号码"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/accept_ticket_telephone"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="35dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入收件人号码"
+                    android:inputType="phone"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_ticket_telephone_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/accept_ticket_telephone_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/accept_ticket_telephone_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_telephone_tv" />
+
+                <TextView
+                    android:id="@+id/accept_ticket_area_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="收件地区"
+                    app:layout_constraintStart_toStartOf="@id/accept_ticket_telephone_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_telephone_divider" />
+
+                <View
+                    android:id="@+id/accept_ticket_area_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_area_tv" />
+
+                <TextView
+                    android:id="@+id/accept_ticket_area"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:drawableEnd="@mipmap/ic_right"
+                    android:gravity="start|center"
+                    android:hint="请选择收件地区"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_ticket_area_divider"
+                    app:layout_constraintEnd_toEndOf="@id/accept_ticket_telephone"
+                    app:layout_constraintStart_toStartOf="@+id/accept_ticket_telephone"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_telephone_divider" />
+
+                <TextView
+                    android:id="@+id/accept_ticket_detail_address_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="详细地址"
+                    app:layout_constraintStart_toStartOf="@id/accept_ticket_telephone_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_area_divider" />
+
+                <View
+                    android:id="@+id/accept_ticket_detail_address_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_detail_address_tv" />
+
+                <EditText
+                    android:id="@+id/accept_ticket_detail_address"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入详细地址，如街道号、公司楼层"
+                    android:inputType="text"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_ticket_detail_address_divider"
+                    app:layout_constraintEnd_toEndOf="@id/accept_ticket_telephone"
+                    app:layout_constraintStart_toStartOf="@+id/accept_ticket_telephone"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_area_divider" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/add_accept_ticket_address_bank_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/add_accept_ticket_address_address_cl">
+
+                <TextView
+                    android:id="@+id/accept_ticket_tax_number_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:text="税务编号"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/accept_ticket_tax_number"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="35dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入公司税务编号"
+                    android:inputType="text"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_ticket_tax_number_tv_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/accept_ticket_tax_number_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/accept_ticket_tax_number_tv_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_tax_number_tv" />
+
+                <TextView
+                    android:id="@+id/accept_ticket_bank_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="对公银行"
+                    app:layout_constraintStart_toStartOf="@id/accept_ticket_tax_number_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_tax_number_tv_divider" />
+
+                <View
+                    android:id="@+id/accept_ticket_bank_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_bank_tv" />
+
+                <EditText
+                    android:id="@+id/accept_ticket_bank"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请选择公司对公银行"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_ticket_bank_divider"
+                    app:layout_constraintEnd_toEndOf="@id/accept_ticket_tax_number"
+                    app:layout_constraintStart_toStartOf="@+id/accept_ticket_tax_number"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_tax_number_tv_divider" />
+
+                <TextView
+                    android:id="@+id/accept_ticket_bank_number_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="银行卡号"
+                    app:layout_constraintStart_toStartOf="@id/accept_ticket_tax_number_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_bank_divider" />
+
+                <View
+                    android:id="@+id/accept_ticket_bank_number_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_bank_number_tv" />
+
+                <EditText
+                    android:id="@+id/accept_ticket_bank_number"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@null"
+                    android:gravity="start|center"
+                    android:hint="请输入公司对公银行卡号"
+                    android:inputType="number"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toTopOf="@+id/accept_ticket_bank_number_divider"
+                    app:layout_constraintEnd_toEndOf="@id/accept_ticket_tax_number"
+                    app:layout_constraintStart_toStartOf="@+id/accept_ticket_tax_number"
+                    app:layout_constraintTop_toBottomOf="@+id/accept_ticket_bank_divider" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/save_accept_ticket_address"
+        style="@style/SixtyTextB1Styel"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/normal_y4_press_y5_all_5dp"
+        android:text="保存地址"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

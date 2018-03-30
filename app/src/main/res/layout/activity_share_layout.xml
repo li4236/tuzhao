@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/id_activity_share_layout_relativelayouttop"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/w0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="邀请好友"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/id_activity_share_imageview_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/ic_left" />
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/id_activity_share_layout_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/id_activity_share_layout_relativelayouttop">
+    </WebView>
+
+    <ProgressBar
+        android:id="@+id/id_activity_share_layout_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/id_activity_share_layout_relativelayouttop"
+        android:progressDrawable="@drawable/progress_webview"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+</RelativeLayout>

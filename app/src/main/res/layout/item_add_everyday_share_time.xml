@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp">
+
+    <TextView
+        android:id="@+id/add_everyday_share_start_time"
+        android:layout_width="50dp"
+        android:layout_height="23dp"
+        android:background="@drawable/little_yuan_3dp_g10"
+        android:gravity="center"
+        android:text="15:22"
+        android:textColor="@color/b1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/add_everyday_share_start_time_divider"
+        android:layout_width="8dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="3dp"
+        android:background="@color/g6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/add_everyday_share_start_time"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/add_everyday_share_end_time"
+        android:layout_width="50dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="3dp"
+        android:background="@drawable/little_yuan_3dp_g10"
+        android:gravity="center"
+        android:textColor="@color/b1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_everyday_share_start_time_divider"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/delete_everyday_share_time"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@mipmap/ic_delimg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

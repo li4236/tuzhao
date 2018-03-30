@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/w3">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/w0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="支付"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/id_activity_orderpark_layout_imageView_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/ic_left" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@color/w0"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="23dp"
+                android:paddingTop="22dp"
+                android:text="支付金额"
+                android:textColor="@color/b1"
+                android:textSize="16dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="23dp"
+                android:layout_marginRight="23dp"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￥"
+                    android:textColor="@color/g6"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:textSize="30sp"
+                    android:text="30"
+                    android:textColor="@color/b1"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="23dp"
+                android:paddingTop="22dp"
+                android:text="支付方式"
+                android:textColor="@color/b1"
+                android:textSize="16dp" />
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="23dp"-->
+                <!--android:layout_marginRight="23dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:paddingBottom="3dp"-->
+                <!--android:paddingTop="3dp">-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@mipmap/ic_img" />-->
+                <!-- - -->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="33dp"-->
+                    <!--android:layout_marginLeft="8dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@drawable/linebottom_white_gray_shallow_1px"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="6dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:text="@string/zhifubao"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="15sp" />-->
+
+                    <!--<ImageView-->
+                        <!--android:layout_width="20dp"-->
+                        <!--android:layout_height="20dp"-->
+                        <!--android:layout_marginRight="6dp"-->
+                        <!--android:src="@mipmap/ic" />-->
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="17dp"-->
+                <!--android:layout_marginLeft="23dp"-->
+                <!--android:layout_marginRight="23dp"-->
+                <!--android:layout_marginTop="17dp"-->
+                <!--android:background="@drawable/drawable_little_yuan_black"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="8dp"-->
+                <!--android:paddingTop="8dp"-->
+                <!--android:text="@string/confirm_pay"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="18sp" />-->
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

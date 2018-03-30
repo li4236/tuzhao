@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w3"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.tianzhili.www.myselfsdk.banner.Banner
+                android:id="@+id/id_fragment_chargedetail_layout_banner_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/id_fragment_chargedetail_layout_banner_image"
+                android:layout_marginTop="5dp"
+                android:background="@color/w4"
+                android:orientation="vertical"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/id_fragment_chargedetail_layout_textview_chargestationname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/b1"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/id_fragment_chargedetail_layout_textview_opentime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:textColor="@color/b1"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <com.cb.ratingbar.CBRatingBar
+                                android:id="@+id/id_fragment_chargedetail_layout_cbratingbar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="12dp"
+                                app:starCanTouch="true"
+                                app:starCount="5"
+                                app:starCoverColor="@color/y2"
+                                app:starEndColor="#00ff00"
+                                app:starFillColor="#ffffff"
+                                app:starMaxProgress="100"
+                                app:starPathData="@string/round_star"
+                                app:starPathDataId="@string/round_star"
+                                app:starPointCount="5"
+                                app:starProgress="70"
+                                app:starShowStroke="true"
+                                app:starSize="10dp"
+                                app:starSpace="4dp"
+                                app:starStartColor="#0000ff"
+                                app:starStrokeColor="@color/y3"
+                                app:starStrokeWidth="2px"
+                                app:starUseGradient="false" />
+
+                            <TextView
+                                android:id="@+id/id_fragment_chargedetail_layout_textview_grade"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:text="4.5分"
+                                android:textColor="@color/y3"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:src="@mipmap/ic_youhuixuanze" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="充电"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:src="@mipmap/ic_youhuixuanze" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="快充"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:src="@mipmap/ic_youhuixuanze" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    android:text="app支付"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/id_fragment_chargedetail_layout_linearlayout_godaohang"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@mipmap/ic_daohanggo"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_marginLeft="5dp"
+                            android:text="导航"
+                            android:textColor="@color/b1"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/id_fragment_chargedetail_layout_textview_address"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="地址：五桂山长命水长逸路"
+                        android:textColor="@color/b1"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom|center_horizontal">
+
+                        <TextView
+                            android:id="@+id/id_fragment_chargedetail_layout_textview_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3000.00"
+                            android:textColor="@color/b1"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/id_fragment_chargedetail_layout_textview_distance_dw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="km"
+                            android:textColor="@color/b1"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/w4"
+                android:orientation="vertical"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收费标准"
+                    android:textColor="@color/b1"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/yuan_little_green_5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="0.9"
+                            android:gravity="center"
+                            android:paddingBottom="6dp"
+                            android:paddingTop="6dp"
+                            android:text="收费项目"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#f2f2f2" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.1"
+                            android:gravity="center"
+                            android:text="资费"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#f2f2f2" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="0.9"
+                            android:gravity="center"
+                            android:paddingBottom="6dp"
+                            android:paddingTop="6dp"
+                            android:text="充电费"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#f2f2f2" />
+
+                        <TextView
+                            android:id="@+id/id_fragment_chargedatali_layout_textview_chargefee"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="1.1"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#f2f2f2" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="0.9"
+                            android:gravity="center"
+                            android:paddingBottom="6dp"
+                            android:paddingTop="6dp"
+                            android:text="服务费"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp" />
+
+                        <ImageView
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#f2f2f2" />
+
+                        <TextView
+                            android:id="@+id/id_fragment_chargedatali_layout_textview_serverfee"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="1.1"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#f2f2f2" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/yuan_little_white_bl_br_5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="0.9"
+                            android:gravity="center"
+                            android:paddingBottom="6dp"
+                            android:paddingTop="6dp"
+                            android:text="停车费"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp" />
+
+                        <ImageView
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="#f2f2f2" />
+
+                        <TextView
+                            android:id="@+id/id_fragment_chargedatali_layout_textview_parkfee"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="1dp"
+                            android:layout_weight="1.1"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:gravity="right"
+                        android:text="收费仅供参考，以实际场地收费为准"
+                        android:textColor="@color/r2"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

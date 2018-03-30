@@ -1,0 +1,33 @@
+<!-- 加载对话框布局 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/progress_iv"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_loading" />
+
+    <!--<ProgressBar
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:indeterminateDrawable="@drawable/indeterminate_drawable"
+        android:indeterminateDuration="1800" />-->
+
+    <TextView
+        android:id="@+id/tvcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:textColor="#ffffff"
+        android:textSize="13sp" />
+
+</LinearLayout>

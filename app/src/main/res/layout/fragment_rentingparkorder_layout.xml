@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w5"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/id_fragment_rentingparkorder_layout_linearlayout_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_noyoushuju" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:text="抱歉，没有数据..."
+            android:textColor="@color/g1"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/id_fragment_rentingparkorder_layout_linearlayout12"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:paddingTop="30dp"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/id_fragment_rentingparkorder_layout_linearlayout1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="2dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="2dp"
+                        app:contentPaddingBottom="2dp">
+
+
+                        <TextView
+                            android:id="@+id/id_fragment_rentingparkorder_layout_textview_order_1"
+                            android:layout_width="80dp"
+                            android:layout_height="30dp"
+                            android:background="@color/w1"
+                            android:gravity="center"
+                            android:text="订单一"
+                            android:textColor="@color/b1"
+                            android:textSize="12sp" />
+
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="2dp"
+                        android:visibility="visible"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="2dp"
+                        app:contentPaddingBottom="2dp">
+
+
+                        <TextView
+                            android:id="@+id/id_fragment_rentingparkorder_layout_textview_order_2"
+                            android:layout_width="80dp"
+                            android:layout_height="30dp"
+                            android:background="@android:color/white"
+                            android:gravity="center"
+                            android:text="订单二"
+                            android:textColor="@color/b1"
+                            android:textSize="12sp" />
+
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/id_fragment_rentingparkorder_layout_linearlayout1"
+                    android:layout_marginTop="-14dp">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/id_fragment_rentingparkorder_layout_cardview1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginTop="3dp"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="2dp"
+                        app:cardPreventCornerOverlap="false">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipChildren="false"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/id_fragment_rentingparkorder_layout_relativelayout_orderdetail"
+                                android:layout_width="match_parent"
+                                android:layout_height="41dp"
+                                android:background="@color/w1"
+                                android:clipChildren="false">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:text="租用详情"
+                                    android:textColor="@color/b1" />
+
+                                <ImageView
+                                    android:layout_width="37dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:padding="14dp"
+                                    android:src="@mipmap/ic_right" />
+
+                            </RelativeLayout>
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:background="#e2e2e2" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="15dp"
+                                android:gravity="center"
+                                android:text="停车时长"
+                                android:textColor="@color/b1"
+                                android:textSize="13sp" />
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:background="@drawable/linebottom_white_gray_shallow_1px"
+                                android:paddingBottom="5dp"
+                                android:paddingLeft="20dp"
+                                android:paddingRight="20dp">
+
+                                <com.tuzhao.publicwidget.timer.CountupView
+                                    android:id="@+id/id_fragment_rentingparkorder_layout_countdownview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginBottom="7dp"
+                                    android:layout_marginTop="5dp"
+                                    app:isShowDay="true"
+                                    app:isShowHour="true"
+                                    app:isShowMillisecond="false"
+                                    app:isShowMinute="true"
+                                    app:isShowSecond="true"
+                                    app:suffixDay=":"
+                                    app:suffixGravity="center"
+                                    app:suffixHour=":"
+                                    app:suffixHourLeftMargin="2dp"
+                                    app:suffixHourRightMargin="2dp"
+                                    app:suffixMinute=":"
+                                    app:suffixMinuteLeftMargin="2dp"
+                                    app:suffixMinuteRightMargin="2dp"
+                                    app:suffixSecondLeftMargin="2dp"
+                                    app:suffixTextColor="#000000"
+                                    app:suffixTextSize="35sp"
+                                    app:timeTextColor="#000000"
+                                    app:timeTextSize="35sp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/id_fragment_rentingparkorder_layout_relativelayout_detailmoney"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="15dp">
+
+                                <TextView
+                                    android:id="@+id/id_fgm_rtpo_tv1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginRight="5dp"
+                                    android:gravity="center"
+                                    android:text="费用预计"
+                                    android:textColor="@color/b1"
+                                    android:textSize="13sp" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_toRightOf="@id/id_fgm_rtpo_tv1"
+                                    android:src="@mipmap/ic_yujiwenhao" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp">
+
+                                <TextView
+                                    android:id="@+id/id_fragment_rentingparkorder_layout_textview_fee"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:gravity="center"
+                                    android:text="36.00"
+                                    android:textColor="@color/b1"
+                                    android:textSize="35sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBottom="@id/id_fragment_rentingparkorder_layout_textview_fee"
+                                    android:layout_marginBottom="8dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_toRightOf="@id/id_fragment_rentingparkorder_layout_textview_fee"
+                                    android:text="元"
+                                    android:textColor="@color/b1"
+                                    android:textSize="12sp" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="10dp"
+                                android:text="温馨提醒"
+                                android:textColor="@color/b1"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/id_fragment_rentingparkorder_layout_textview_warm1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="10dp"
+                                android:gravity="center"
+                                android:textColor="@color/r4"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/id_fragment_rentingparkorder_layout_textview_warm2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="15dp"
+                                android:gravity="center"
+                                android:textColor="@color/r4"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/id_fragment_rentingparkorder_layout_textview_finish"
+                                android:layout_width="230dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="25dp"
+                                android:background="@drawable/little_yuan_yellow_5dp"
+                                android:gravity="center"
+                                android:paddingBottom="11dp"
+                                android:paddingTop="11dp"
+                                android:text="结束停车"
+                                android:textColor="@color/b1"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/id_fragment_rentingparkorder_layout_textview_zheceng1"
+                    android:layout_width="80dp"
+                    android:layout_height="8dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@color/w1"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/id_fragment_rentingparkorder_layout_textview_zheceng2"
+                    android:layout_width="80dp"
+                    android:layout_height="8dp"
+                    android:layout_marginLeft="83dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@color/w1"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

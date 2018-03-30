@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w3">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/drawable_linebottom_gray_1px_gray"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="12dp">
+
+        <LinearLayout
+            android:id="@+id/id_activity_searchparkspace_layout_linearlayout_search"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/lineyuan_little_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="8dp"
+                android:src="@mipmap/ic_search" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <AutoCompleteTextView
+                    android:id="@+id/id_activity_searchparkspace_layout_etextview_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/nocolor"
+                    android:completionThreshold="1"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownHorizontalOffset="-50dp"
+                    android:dropDownWidth="match_parent"
+                    android:gravity="center_vertical"
+                    android:hint="搜索车场"
+                    android:lines="1"
+                    android:paddingBottom="9dp"
+                    android:paddingTop="9dp"
+                    android:singleLine="true"
+                    android:textColor="@color/b1"
+                    android:textColorHint="@color/gray"
+                    android:textCursorDrawable="@null"
+                    android:textSize="14sp" />
+
+                <ProgressBar
+                    android:id="@+id/id_activity_searchparkspace_layout_progressbar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/id_activity_searchparkspace_layout_imageview_clean"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/ic_close2"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/id_activity_searchparkspace_layout_textview_goback"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="取消"
+            android:textColor="@color/b1"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_activity_searchparkspace_layout_linearlayout_has_no_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="没有找到？"
+                    android:textColor="@color/b1"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="快为自己车位所在的车场去申请吧！"
+                    android:textColor="@color/g6"
+                    android:paddingTop="5dp"
+                    android:textSize="10.0sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/id_activity_searchparkspace_layout_textview_goapply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/g6"
+                android:textColor="@android:color/white"
+                android:text="申请开放"
+                android:textSize="13sp"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="20dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

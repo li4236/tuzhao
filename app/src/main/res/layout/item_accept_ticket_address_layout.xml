@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:background="@color/w0">
+
+    <TextView
+        android:id="@+id/accept_ticket_address_name"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="赤炎火狮"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/accept_ticket_address_telephone"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginStart="10dp"
+        android:text="18218911154"
+        app:layout_constraintStart_toEndOf="@id/accept_ticket_address_name"
+        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_name" />
+
+    <TextView
+        android:id="@+id/accept_ticket_address_type"
+        style="@style/TenTextY3Style"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/hollow_y3_6dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
+        android:text="普票"
+        app:layout_constraintBottom_toBottomOf="@id/accept_ticket_address_name"
+        app:layout_constraintStart_toEndOf="@id/accept_ticket_address_telephone"
+        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_name" />
+
+    <TextView
+        android:id="@+id/accept_ticket_address_address"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginTop="9dp"
+        android:text="广东省中山市五桂山镇长命水长逸路5号1栋"
+        app:layout_constraintStart_toStartOf="@id/accept_ticket_address_name"
+        app:layout_constraintTop_toBottomOf="@+id/accept_ticket_address_name" />
+
+    <View
+        android:id="@+id/bottom_divider"
+        style="@style/dividerStyle"
+        android:layout_width="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/accept_ticket_address_name"
+        app:layout_constraintTop_toBottomOf="@+id/accept_ticket_address_address" />
+
+    <CheckBox
+        android:id="@+id/accept_ticket_address_set_default"
+        style="@style/YellowCheckStyle"
+        android:layout_marginTop="9dp"
+        android:text="设为默认"
+        android:textColor="@color/g6"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/accept_ticket_address_name"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
+
+    <TextView
+        android:id="@+id/accept_ticket_address_delete"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginEnd="16dp"
+        android:drawablePadding="7dp"
+        android:drawableStart="@mipmap/ic_del"
+        android:text="删除"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_set_default" />
+
+    <TextView
+        android:id="@+id/accept_ticket_address_edit"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginBottom="9dp"
+        android:layout_marginEnd="20dp"
+        android:drawablePadding="7dp"
+        android:drawableStart="@mipmap/ic_write"
+        android:text="编辑"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/accept_ticket_address_delete"
+        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_delete" />
+
+</android.support.constraint.ConstraintLayout>

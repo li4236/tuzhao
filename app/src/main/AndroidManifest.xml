@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tuzhao">
+
+    <!--允许程序打开网络-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--允许程序访问CellID或WiFi热点来获取粗略的位置，用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!--允许程序获取网络状态，用于获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!--用于读取手机当前的状态和身份-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <!--允许程序设置内置sd卡的写权限，用于写入缓存数据到扩展存储卡-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+    <!--短信验证所需权限-->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!--添加可以向外拨打电话的权限  -->
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <!--调用系统相册-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--极光推送的权限-->
+    <permission
+        android:name="com.tuzhao.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.tuzhao.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <!--科大讯飞语音识别的权限-->
+    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--允许程序改变网络连接状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <!--微信功能所需要的权限-->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <application
+        android:name=".application.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".activity.SplashActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.WelcomeGuideActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".activity.SelectCityActivity" />
+        <activity android:name=".activity.OrderParkActivity" />
+        <activity android:name=".activity.mine.CarNumberActivity" />
+        <activity android:name=".activity.mine.AddCarNumbleActivity" />
+        <activity
+            android:name=".activity.ParkspaceDetailActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".activity.SearchAddressActivity"></activity>
+        <activity android:name=".activity.navi.RouteNaviActivity" />
+        <activity android:name=".activity.ParkOrderDetailsActivity" />
+        <activity android:name=".activity.ChargestationDetailActivity" />
+        <activity android:name=".activity.mine.DiscountActivity" />
+        <activity android:name=".activity.mine.PersonalMessageActivity" />
+        <activity android:name=".activity.mine.MyWalletActivity" />
+        <activity android:name=".activity.mine.ParkOrderActivity" />
+        <activity android:name=".activity.mine.MyParkActivity" />
+        <activity android:name=".activity.mine.AddParkActivity" />
+        <activity android:name=".activity.mine.EditParkActivity" />
+        <activity android:name=".activity.mine.EditParkPicturesActivity" />
+        <activity android:name=".activity.mine.SelectParkSpaceActivity" />
+        <activity android:name=".activity.mine.SearchParkSpaceActivity" />
+        <activity android:name=".activity.mine.ApplyParkSpace" />
+        <activity android:name=".activity.mine.ChangeNicknameActivity" />
+        <activity android:name=".activity.mine.ChangePhoneNumberActivity" />
+        <activity android:name=".activity.mine.MyBalanceActivity" />
+        <activity android:name=".activity.mine.GetMoneyActivty" />
+        <activity android:name=".activity.mine.MapPlanLineActivity" />
+        <activity android:name=".activity.mine.CommentPsActivity" />
+        <activity android:name=".activity.mine.SetActivity" />
+        <activity android:name=".activity.mine.SetAccountAndSafeActivity" />
+        <activity android:name=".activity.mine.ChangePasswordActivity" />
+        <activity android:name=".activity.mine.SuggestActivity" />
+        <activity android:name=".activity.mine.CollectionActivity" />
+        <activity android:name=".activity.mine.BillActivity" />
+        <activity android:name=".activity.mine.ConsumRecordDetailActivity" />
+        <activity android:name=".activity.mine.MyPassingParkActivity" />
+        <activity android:name=".activity.mine.PersonalCreditActivity" />
+        <activity android:name=".activity.mine.OpenParkLockActivity" />
+        <activity android:name=".activity.mine.RentalRecordActivity" />
+        <activity android:name=".activity.mine.ModifyShareTimeActivity" />
+        <activity android:name=".activity.mine.ParkSpaceSettingActivity" />
+        <activity android:name=".activity.mine.InvoiceReimbursementActivity" />
+        <activity android:name=".activity.mine.AcceptTicketAddressActivity" />
+        <activity android:name=".activity.mine.AddAcceptTicketAddressActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity
+            android:name=".activity.mine.ShareActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".activity.mine.TextActivity" />
+        <activity android:name=".activity.BigPictureActivity" />
+        <activity android:name=".activity.ParkOrChargeListActivity" />
+
+        <!--QQ分享-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1106725796" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+
+        <!--微信分享回调空页面-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop" >
+        </activity>
+
+        <!--支付宝未安装软件的话打开网页支付-->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <activity
+            android:name="com.alipay.sdk.app.H5AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+
+        <!--扫码页面-->
+        <!--<activity android:name=".zxing.app.CaptureActivity"></activity>-->
+
+        <!--高德定位服务-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="9df9daec404de15ce47c824fc25a7506" />
+
+        <service android:name="com.amap.api.location.APSService"></service>
+
+        <!--极光推送内容-->
+        <!--  Required SDK核心功能 -->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.tuzhao" />
+            </intent-filter>
+        </activity>
+        <!--  Required SDK 核心功能 -->
+        <!--  可配置android:process参数将PushService放在其他进程中 -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:exported="false"
+            android:process=":mult">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+        <!--  since 3.0.9 Required SDK 核心功能 -->
+        <provider
+            android:name="cn.jpush.android.service.DataProvider"
+            android:authorities="com.tuzhao.DataProvider"
+            android:exported="true" />
+        <!--  Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+                <!-- Required  显示通知栏 -->
+                <category android:name="com.tuzhao" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!--  Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!--  Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false" />
+        <!--  User defined.  For test only  用户自定义的广播接收器 -->
+        <receiver
+            android:name=".activity.jiguang_notification.MyReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />
+                <action android:name="cn.jpush.android.intent.CONNECTION" />
+
+                <category android:name="com.tuzhao" />
+            </intent-filter>
+        </receiver>
+        <!--  User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新 别名/标签 接口设置结果会在该广播接收器对应的方法中回调 -->
+
+        <!--  Required  . Enable it you can get statistics data with channel -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="180219dae0aad1c241e59b65" />
+
+        <!-- 友盟分渠道打包 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5a38a19db27b0a6b3a0004aa" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+    </application>
+
+</manifest>

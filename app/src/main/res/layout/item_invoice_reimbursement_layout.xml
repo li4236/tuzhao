@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:background="@color/w0">
+
+    <TextView
+        android:id="@+id/invoice_reimbursement_park_lot"
+        style="@style/ThirtyTextB1Style"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="12dp"
+        android:drawablePadding="6dp"
+        android:drawableStart="@mipmap/ic_park6"
+        android:text="天之力停车场"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/invoice_reimbursement_item_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/w1"
+        app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_park_lot">
+
+        <CheckBox
+            android:id="@+id/invoice_reimbursement_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:button="@null"
+            android:drawableStart="@drawable/yellow_checkbox_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/invoice_reimbursement_iv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="14dp"
+            android:contentDescription="@string/picture_description"
+            android:scaleType="centerCrop"
+            android:src="@drawable/amap_route_color_texture_0_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toEndOf="@+id/invoice_reimbursement_rb"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_location"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="18dp"
+            android:text="地下一层08车位"
+            app:layout_constraintStart_toEndOf="@id/invoice_reimbursement_iv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_park_duration"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginTop="6dp"
+            android:text="停车时长：1小时35分"
+            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_location"
+            app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_location" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_park_time"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginBottom="18dp"
+            android:layout_marginTop="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_location"
+            app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_park_duration" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/invoice_reimbursement_total_price"
+        style="@style/SixtyTextB1Styel"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:text="Y163.33"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_item_cl" />
+
+    <TextView
+        android:id="@+id/invoice_reimbursement_total_tv"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginEnd="4dp"
+        android:text="合计:"
+        app:layout_constraintBottom_toBottomOf="@+id/invoice_reimbursement_total_price"
+        app:layout_constraintEnd_toStartOf="@id/invoice_reimbursement_total_price"
+        app:layout_constraintTop_toTopOf="@+id/invoice_reimbursement_total_price" />
+
+</android.support.constraint.ConstraintLayout>

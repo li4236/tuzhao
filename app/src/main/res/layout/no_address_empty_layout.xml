@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:id="@+id/no_address_empty_iv"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_marginBottom="128dp"
+        android:src="@drawable/ic_nodizhi"
+        android:layout_height="0dp" />
+
+    <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/no_address_empty_iv"
+        android:layout_marginTop="32dp"
+        android:text="您还没有收票地址喔..."
+       style="@style/SixtyTextG11Styel"/>
+
+</android.support.constraint.ConstraintLayout>

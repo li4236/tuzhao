@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <alpha
+        android:duration="300"
+        android:fromAlpha="0"
+        android:toAlpha="1.0" />
+    <scale
+        android:duration="300"
+        android:fromXScale="0"
+        android:fromYScale="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1.0"
+        android:toYScale="1.0" />
+    <!--
+    动画执行时间
+    动画开始缩放的程度
+    动画开始缩放的程度
+    动画起始的位置，50%表示居中
+    动画起始的位置，50%表示居中
+    动画结束缩放的程度
+    动画结束缩放的程度
+    -->
+</set>

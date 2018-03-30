@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w3">
+
+    <RelativeLayout
+        android:id="@+id/id_activity_add_park_layout_relativelayouttop"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/w0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="添加车位"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/id_activity_add_park_layout_imageview_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/ic_left" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/id_activity_add_park_layout_relativelayouttop"
+        android:layout_marginBottom="54dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/id_activity_add_park_layout_linearlayout_chooseparkspace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/linebottom_white_gray_shallow_1px"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView7"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="选择车场"
+                            android:textColor="@color/b1"
+                            android:textSize="13sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/id_activity_add_park_layout_textview_parkspace"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/b1"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:src="@mipmap/ic_right" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/id_activity_add_park_layout_linearlayout_profit_ratio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="收益比"
+                            android:textColor="@color/b1"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/id_activity_add_park_layout_textview_profit_ratio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/b1"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/linebottom_white_gray_shallow_1px"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="真实姓名"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/id_activity_add_park_layout_et_realname"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:hint="输入您的姓名，方便客服联系您"
+                        android:padding="6dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/linebottom_white_gray_shallow_1px"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="车位描述"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <EditText
+                        android:id="@+id/id_activity_add_park_layout_et_park"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:hint="如:负一层B区01，A区01"
+                        android:padding="6dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/linebottom_white_gray_shallow_1px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="出租日期"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/id_activity_add_park_layout_textview_begindate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/frame_gray_1px"
+                        android:gravity="center"
+                        android:hint="开始日期"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="—"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/g6"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/id_activity_add_park_layout_textview_enddate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/frame_gray_1px"
+                        android:gravity="center"
+                        android:hint="结束日期"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/linebottom_white_gray_shallow_1px"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="出租模式"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:id="@+id/id_activity_add_park_layout_linearlayout_sh"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="15dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/id_activity_add_park_layout_imageview_sh"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:scaleType="centerInside"
+                            android:src="@mipmap/ic_xuanzhong5" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="按时租"
+                            android:textColor="@color/b1"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/id_activity_add_park_layout_linearlayout_sd"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/id_activity_add_park_layout_imageview_sd"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:scaleType="centerInside"
+                            android:src="@mipmap/ic_weixuanzhong5" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="按日租"
+                            android:textColor="@color/b1"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="@drawable/linebottom_white_gray_shallow_1px"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="出租时段"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/id_activity_add_park_layout_textview_begintime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/frame_gray_1px"
+                        android:gravity="center"
+                        android:hint="开始时间"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:hint="—"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/g6"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/id_activity_add_park_layout_textview_endtime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/frame_gray_1px"
+                        android:gravity="center"
+                        android:hint="结束时间"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="预约时间"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/id_activity_add_park_layout_textview_installtime"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:hint="选择安装师傅上门安装时间"
+                        android:padding="6dp"
+                        android:textColor="@color/b1"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:text="温馨提示:"
+                android:textColor="#939393"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:text="1、请填写正确的车位信息"
+                android:textColor="#939393"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:text="2、审核期间会有客服来电专访，请保持电话畅通"
+                android:textColor="#939393"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/id_activity_add_park_layout_textview_ensure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="9dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/little_yuan_yellow_8dp"
+        android:gravity="center"
+        android:paddingBottom="11dp"
+        android:paddingTop="11dp"
+        android:text="提交审核"
+        android:textColor="@color/b1"
+        android:textSize="13sp"
+        android:visibility="visible" />
+
+</RelativeLayout>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginTop="12dp"
+        android:padding="2px"
+        android:background="@drawable/little_yuan_black_5dp">
+
+        <TextView
+            android:id="@+id/id_fragment_parkspacecomment_layout_textview_all"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:textColor="@color/w0"
+            android:background="@drawable/yuan_little_green_lt_lb_5dp"
+            android:text="全部评论"/>
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:background="@color/g5"/>
+        <TextView
+            android:id="@+id/id_fragment_parkspacecomment_layout_textview_good"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/b1"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:text="好评"/>
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="match_parent"
+            android:background="@color/g5"/>
+        <TextView
+            android:id="@+id/id_fragment_parkspacecomment_layout_textview_bad"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:textColor="@color/b1"
+            android:text="差评"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_fragment_parkspacecomment_layout_linearlayout_seeimg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:gravity="center_vertical"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <ImageView
+            android:id="@+id/id_fragment_parkspacecomment_layout_imageview_seeic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_weixuanze"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="只看有图评价"
+            android:textSize="13sp"
+            android:layout_marginLeft="6dp"
+            android:textColor="@color/b1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_fragment_parkspacecomment_linearlayout_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible">
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_noyoushuju"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="抱歉，没有数据..."
+            android:textSize="14sp"
+            android:textColor="@color/g1"
+            android:layout_marginBottom="80dp"/>
+    </LinearLayout>
+
+    <com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView
+        android:id="@+id/id_fragment_parkspacecomment_layout_recycleview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/w1">
+    </com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView>
+
+</LinearLayout>

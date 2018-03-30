@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar" />
+
+    <View style="@style/dividerStyle" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/modify_share_time_share_time_cl"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/w0">
+
+                <TextView
+                    android:id="@+id/modify_share_time_share_time"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="共享日期"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_share_time"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/modify_share_time_start_share_time"
+                        android:layout_width="75dp"
+                        android:layout_height="23dp"
+                        android:background="@drawable/little_yuan_3dp_g10"
+                        android:gravity="center"
+                        android:text="2019-03-15"
+                        android:textColor="@color/b1"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/modify_share_time_share_time_divider"
+                        android:layout_width="8dp"
+                        android:layout_height="2dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@color/g6"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/modify_share_time_start_share_time"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/modify_share_time_end_share_time"
+                        android:layout_width="75dp"
+                        android:layout_height="23dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/little_yuan_3dp_g10"
+                        android:gravity="center"
+                        android:textColor="@color/b1"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/modify_share_time_share_time_divider"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/modify_share_time_share_time_first"
+                style="@style/dividerStyle"
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_share_time_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/modify_share_time_everyweek_share_cl"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_share_time_first">
+
+                <TextView
+                    android:id="@+id/modify_share_time_everyweek_share"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="每周共享"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_monday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="一"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_tuesday"
+                    app:layout_constraintStart_toEndOf="@id/modify_share_time_everyweek_share"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_tuesday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="二"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_wednesday"
+                    app:layout_constraintStart_toEndOf="@id/modify_share_time_monday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_wednesday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="三"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_thursday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_tuesday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_thursday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="四"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_friday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_wednesday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_friday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="五"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_saturday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_thursday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_saturday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="六"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_sunday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_friday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.tuzhao.publicwidget.others.CheckTextView
+                    android:id="@+id/modify_share_time_sunday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="日"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_saturday"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/modify_share_time_share_time_second"
+                style="@style/dividerStyle"
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyweek_share_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/modify_share_time_pause_time_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@id/modify_share_time_share_time_second">
+
+                <TextView
+                    android:id="@+id/modify_share_time_pause_time"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="暂停共享日期"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_add_pause_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@mipmap/ic_add3"
+                    android:text="添加日期"
+                    android:textColor="@color/y3"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_pause_time" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/modify_share_time_pause_date_rv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/modify_share_time_add_pause_date"
+                    app:layout_constraintTop_toBottomOf="@+id/modify_share_time_add_pause_date" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:id="@+id/modify_share_time_share_time_third"
+                style="@style/dividerStyle"
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_pause_time_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/modify_share_time_everyday_share_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@id/modify_share_time_share_time_third">
+
+                <TextView
+                    android:id="@+id/modify_share_time_everyday_share_time"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="每日共享时段"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_add_everyday_share_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@mipmap/ic_add3"
+                    android:text="添加时段"
+                    android:textColor="@color/y3"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyday_share_time" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/modify_share_time_everyday_share_ime_rv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/modify_share_time_add_everyday_share_time"
+                    app:layout_constraintTop_toBottomOf="@+id/modify_share_time_add_everyday_share_time" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                style="@style/TwentyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:text="提示:不设置时段则默认全天共享"
+                android:textColor="@color/r1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyday_share_date" />
+
+            <TextView
+                android:id="@+id/modify_share_time_submit"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/little_yuan_yellow_8dp"
+                android:gravity="center"
+                android:text="提交"
+                android:textColor="@color/b1"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyday_share_date" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

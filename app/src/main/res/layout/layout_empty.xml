@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="95dp"
+        android:layout_height="100dp"
+        android:scaleType="center"
+        android:id="@+id/layout_empty_iv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_noyoushuju" />
+
+    <TextView
+        android:id="@+id/id_activity_parkorcharge_layout_textview_nodata"
+        android:layout_width="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_empty_iv"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:text="抱歉，没有数据..."
+        android:textColor="@color/g1"
+        android:textSize="14sp" />
+
+</android.support.constraint.ConstraintLayout>
