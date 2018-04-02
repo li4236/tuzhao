@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -74,7 +73,6 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity {
     @NonNull
     @Override
     protected String title() {
-
         return "收票地址";
     }
 
@@ -120,7 +118,6 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
                             && !mRecyclerView.getRecyclerView().isComputingLayout()) {
-                        Log.e(TAG, "onCheckedChanged: " + isChecked);
                         if (isChecked) {
                             if (mDefaultAddressPosition >= 0) {
                                 getData().get(mDefaultAddressPosition).setIsDefault("false");

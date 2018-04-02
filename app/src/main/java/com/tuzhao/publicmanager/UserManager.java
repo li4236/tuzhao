@@ -88,11 +88,10 @@ public class UserManager {
 
     /**
      * 获得用户信息 userInfo info
-     * @return
      */
     public User_Info getUserInfo() {
 
-        return this.userInfo;
+        return userInfo==null?new User_Info():userInfo;
     }
 
     /**

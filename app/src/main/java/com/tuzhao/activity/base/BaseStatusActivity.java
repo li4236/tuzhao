@@ -6,7 +6,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +22,8 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 
 /**
  * Created by juncoder on 2018/3/27.
+ * <p>
+ * 封装了加载对话框以及登录对话框，简单跳转页面
  */
 
 public abstract class BaseStatusActivity extends BaseActivity {
@@ -42,7 +43,6 @@ public abstract class BaseStatusActivity extends BaseActivity {
         turnBackIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "onClick: ");
                 turnBack();
                 finish();
             }
@@ -55,6 +55,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
         initData();
     }
 
+    /**
+     * @return activity的contentView布局
+     */
     @LayoutRes
     protected abstract int resourceId();
 
@@ -162,6 +165,11 @@ public abstract class BaseStatusActivity extends BaseActivity {
         MyToast.showToast(this, msg, 2);
     }
 
+    /**
+     * 显示位置在屏幕1/5的Toast
+     *
+     * @param msg 显示的消息
+     */
     protected void showFiveToast(String msg) {
         MyToast.showToast(this, msg, 5);
     }

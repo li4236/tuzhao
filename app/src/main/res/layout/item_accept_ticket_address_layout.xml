@@ -56,7 +56,8 @@
     <CheckBox
         android:id="@+id/accept_ticket_address_set_default"
         style="@style/YellowCheckStyle"
-        android:layout_marginTop="9dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
         android:text="设为默认"
         android:textColor="@color/g6"
         android:textSize="12sp"
@@ -70,19 +71,21 @@
         android:drawablePadding="7dp"
         android:drawableStart="@mipmap/ic_del"
         android:text="删除"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/accept_ticket_address_set_default"
         app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_set_default" />
 
     <TextView
         android:id="@+id/accept_ticket_address_edit"
         style="@style/TenTextG6Stytle"
-        android:layout_marginBottom="9dp"
         android:layout_marginEnd="20dp"
         android:drawablePadding="7dp"
         android:drawableStart="@mipmap/ic_write"
         android:text="编辑"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/accept_ticket_address_set_default"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toStartOf="@id/accept_ticket_address_delete"
-        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_delete" />
+        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_set_default" />
 
 </android.support.constraint.ConstraintLayout>

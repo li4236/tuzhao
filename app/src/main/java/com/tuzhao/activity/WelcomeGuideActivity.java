@@ -48,14 +48,14 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide_layout);
 
-		views = new ArrayList<View>();
+		views = new ArrayList<>();
 
 		// 初始化引导页视图列表
 		for (int i = 0; i < pics.length; i++) {
-			View view = LayoutInflater.from(this).inflate(pics[i], null);
+			View view = LayoutInflater.from(this).inflate(pics[i], null,false);
 			
 			if (i == pics.length - 1) {
-				startBtn = (Button) view.findViewById(R.id.btn_login);
+				startBtn =  view.findViewById(R.id.btn_login);
 				startBtn.setTag("enter");
 				startBtn.setOnClickListener(this);
 			}
@@ -64,14 +64,14 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
 
 		}
 
-		vp = (ViewPager) findViewById(R.id.vp_guide);
+		vp = findViewById(R.id.vp_guide);
 		// 初始化adapter
 		adapter = new GuideViewPagerAdapter(views);
 		vp.setAdapter(adapter);
-		vp.setOnPageChangeListener(new PageChangeListener());
+		vp.addOnPageChangeListener(new PageChangeListener());
 
 		initDots();
-		
+
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
 		SharedPreferences activityPreferences = WelcomeGuideActivity.this.getSharedPreferences("tuzhaoapp", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = activityPreferences.edit();
 		editor.putBoolean("first_open", true);
-		editor.commit();
+		editor.apply();
 		finish();
 	}
 
@@ -163,7 +163,7 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
 		SharedPreferences activityPreferences = WelcomeGuideActivity.this.getSharedPreferences("tuzhaoapp", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = activityPreferences.edit();
 		editor.putBoolean("first_open", true);
-		editor.commit();
+		editor.apply();
 		finish();
 	}
 

@@ -98,7 +98,9 @@ public class SuperRefreshRecyclerView extends FrameLayout {
 
     public void setEmptyView(View view) {
         emptyView.removeAllViews();
-        emptyView.addView(view);
+        if (view != null) {
+            emptyView.addView(view);
+        }
     }
 
     public boolean isRefreshing() {

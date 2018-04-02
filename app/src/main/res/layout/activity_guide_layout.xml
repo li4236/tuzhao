@@ -13,8 +13,8 @@
             android:layout_height="match_parent" />
 
     </FrameLayout>
-    
-    <Button 
+
+    <Button
         android:id="@+id/btn_enter"
         android:layout_width="200dp"
         android:layout_height="50dp"
@@ -39,31 +39,32 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/dot_selector"
+            android:contentDescription="@string/picture_description"/>
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:contentDescription="@string/picture_description"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/dot_selector" />
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:layout_marginRight="10dp"
+            android:contentDescription="@string/picture_description"
+            android:layout_marginStart="10dp"
             android:src="@drawable/dot_selector" />
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
+            android:layout_marginStart="10dp"
             android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/dot_selector" />
-        
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
+            android:contentDescription="@string/picture_description"
             android:src="@drawable/dot_selector" />
     </LinearLayout>
 

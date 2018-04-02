@@ -45,7 +45,7 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash_layout);
         //两秒后转到正式主页
-        textview_skip = (TextView) findViewById(R.id.id_activity_splash_layout_textview_skip);
+        textview_skip = findViewById(R.id.id_activity_splash_layout_textview_skip);
 
         final Timer timer=new Timer();
 
