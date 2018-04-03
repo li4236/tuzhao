@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.MainActivity">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/id_content_main_layout_bmapView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/id_content_main_layout_relativelayout_openuser"
+        android:layout_width="61dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/ic_zuocebian"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/id_content_main_layout_imageview_huser"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="7dp"
+            android:contentDescription="@string/picture_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/id_content_main_layout_linerlayout_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/id_content_main_layout_relativelayout_openuser"
+        android:layout_marginTop="25dp"
+        android:clipChildren="false"
+        android:orientation="vertical"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="37dp"
+        android:layout_height="73dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/ic_bigbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/id_content_main_layout_imageview_spark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@mipmap/ic_park5"
+            app:layout_constraintBottom_toTopOf="@+id/center_divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/center_divider"
+            style="@style/dividerStyle"
+            android:layout_width="16dp"
+            android:background="@color/b1"
+            app:layout_constraintBottom_toTopOf="@+id/id_content_main_layout_imageview_scharge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/id_content_main_layout_imageview_spark" />
+
+        <ImageView
+            android:id="@+id/id_content_main_layout_imageview_scharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/picture_description"
+            android:padding="4dp"
+            android:src="@mipmap/ic_chong7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/id_content_main_layout_imageview_spark"
+            app:layout_constraintTop_toBottomOf="@+id/center_divider" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/third_gl"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/six_gl"
+        style="@style/VerticalGuideLine"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <TextView
+        android:id="@+id/id_content_main_layout_textview_citynodata"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:textColor="@color/b1"
+        android:background="@drawable/white_all_15dp"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/six_gl"
+        app:layout_constraintStart_toStartOf="@id/third_gl"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/two_gl"
+        style="@style/VerticalGuideLine"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/eight_gl"
+        style="@style/VerticalGuideLine"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <ImageView
+        android:id="@+id/id_content_main_layout_imageview_turnown"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:background="@drawable/ic_button"
+        android:paddingBottom="2dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_weizhi"
+        app:layout_constraintBottom_toBottomOf="@+id/id_content_main_layout_textview_parknow"
+        app:layout_constraintEnd_toStartOf="@+id/id_content_main_layout_textview_parknow"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/id_content_main_layout_textview_parknow"
+        android:layout_width="0dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/normal_y6_press_y7_round"
+        android:gravity="center"
+        android:text="@string/park_now"
+        android:textColor="@color/b1"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/eight_gl"
+        app:layout_constraintStart_toStartOf="@id/two_gl" />
+
+    <ImageView
+        android:id="@+id/id_content_main_layout_imageview_search"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:paddingBottom="2dp"
+        android:background="@drawable/ic_button"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_sousuo"
+        app:layout_constraintBottom_toBottomOf="@id/id_content_main_layout_textview_parknow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/id_content_main_layout_textview_parknow" />
+
+</android.support.constraint.ConstraintLayout>

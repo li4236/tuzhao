@@ -10,23 +10,20 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -50,8 +47,6 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tianzhili.www.myselfsdk.netStateLib.NetChangeObserver;
 import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.netStateLib.NetUtils;
@@ -94,6 +89,7 @@ import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -121,12 +117,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private ImageView imageview_turnown, imageview_user, imageview_huser, imageview_spark, imageview_scharge,
             imageview_search;
     private TextView textview_username, textview_citynodata, textview_credit;
-    private LinearLayout linearlayout_user, linearlayout_mywallet, linearlayout_parkorder, linerlayout_citynodata, linearlayout_share,
+    private TextView  linearlayout_mywallet, linearlayout_parkorder, linearlayout_share,
             linearlayout_mycarnumble, linearlayout_mypark, linearlayout_set, linearlayout_mycollection, linearlayout_find;
-    private RelativeLayout relativelayout_openuser;
+    private ConstraintLayout relativelayout_openuser,linearlayout_user;
     private LoginDialogFragment loginDialogFragment;
     private CustomDialog mCustomDialog;
-    private CardView cardviewtop;
     /**
      * 定位相关
      */
@@ -169,7 +164,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_layout);
+        setContentView(R.layout.activity_main_layout_refatory);
         // 网络改变的一个回掉类
         mNetChangeObserver = new NetChangeObserver() {
             @Override
@@ -199,8 +194,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void initView(Bundle savedInstanceState) {
-        mDrawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mapView = (MapView) findViewById(R.id.id_content_main_layout_bmapView);
+        mDrawerlayout =  findViewById(R.id.drawer_layout);
+        mapView =  findViewById(R.id.id_content_main_layout_bmapView);
         mapView.onCreate(savedInstanceState);
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -216,61 +211,49 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         geocoderSearch = new GeocodeSearch(this);
         mFragmentManager = getSupportFragmentManager();
-        imageview_user = (ImageView) findViewById(R.id.id_activity_main_layout_imageview_user);
-        imageview_turnown = (ImageView) findViewById(R.id.id_content_main_layout_imageview_turnown);
-        imageview_search = (ImageView) findViewById(R.id.id_content_main_layout_imageview_search);
+        imageview_user =  findViewById(R.id.id_activity_main_layout_imageview_user);
+        imageview_turnown =  findViewById(R.id.id_content_main_layout_imageview_turnown);
+        imageview_search =  findViewById(R.id.id_content_main_layout_imageview_search);
         mFragment_content = findViewById(R.id.id_content_main_layout_linerlayout_fragment);
-        textview_username = (TextView) findViewById(R.id.id_activity_main_layout_textview_username);
-        linearlayout_user = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_user);
-        linearlayout_set = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_set);
-        linearlayout_mywallet = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
-        linearlayout_parkorder = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
-        linearlayout_mycarnumble = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
-        linearlayout_mypark = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
-        linearlayout_mycollection = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_mycollection);
-        linearlayout_find = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_find);
-        linerlayout_citynodata = (LinearLayout) findViewById(R.id.id_content_main_layout_linerlayout_citynodata);
-        linearlayout_share = (LinearLayout) findViewById(R.id.id_activity_main_layout_linearlayout_share);
-        imageview_spark = (ImageView) findViewById(R.id.id_content_main_layout_imageview_spark);
-        imageview_huser = (ImageView) findViewById(R.id.id_content_main_layout_imageview_huser);
-        imageview_scharge = (ImageView) findViewById(R.id.id_content_main_layout_imageview_scharge);
-        textview_citynodata = (TextView) findViewById(R.id.id_content_main_layout_textview_citynodata);
-        relativelayout_openuser = (RelativeLayout) findViewById(R.id.id_content_main_layout_relativelayout_openuser);
-        textview_credit = (TextView) findViewById(R.id.id_activity_main_layout_textview_credit);
-        cardviewtop = (CardView) findViewById(R.id.id_content_main_layout_cardviewtop);
-        int barheigh = setStyle(false);
-        RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textview_username =  findViewById(R.id.id_activity_main_layout_textview_username);
+        linearlayout_user =  findViewById(R.id.top_cl);
+        linearlayout_set =  findViewById(R.id.id_activity_main_layout_linearlayout_set);
+        linearlayout_mywallet =  findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
+        linearlayout_parkorder =  findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
+        linearlayout_mycarnumble =  findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
+        linearlayout_mypark =  findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
+        linearlayout_mycollection =  findViewById(R.id.id_activity_main_layout_linearlayout_mycollection);
+        linearlayout_find =  findViewById(R.id.id_activity_main_layout_linearlayout_find);
+        linearlayout_share =  findViewById(R.id.id_activity_main_layout_linearlayout_share);
+        imageview_spark =  findViewById(R.id.id_content_main_layout_imageview_spark);
+        imageview_huser =  findViewById(R.id.id_content_main_layout_imageview_huser);
+        imageview_scharge =  findViewById(R.id.id_content_main_layout_imageview_scharge);
+        textview_citynodata =  findViewById(R.id.id_content_main_layout_textview_citynodata);
+        relativelayout_openuser =  findViewById(R.id.id_content_main_layout_relativelayout_openuser);
+        textview_credit =  findViewById(R.id.id_activity_main_layout_textview_credit);
+
+        setStyle(false);
+        /*RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rp.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 32), 0, 0);
         RelativeLayout.LayoutParams rp1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rp1.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 40), DensityUtil.dp2px(MainActivity.this, 16), 0);
         RelativeLayout.LayoutParams rp2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         rp2.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 33), 0, 0);
         rp1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        cardviewtop.setLayoutParams(rp1);
         relativelayout_openuser.setLayoutParams(rp);
         linerlayout_citynodata.setLayoutParams(rp2);
         linearlayout_user.setPadding(DensityUtil.dp2px(MainActivity.this, 30), barheigh + DensityUtil.dp2px(MainActivity.this, 30), 0, DensityUtil.dp2px(MainActivity.this, 15));
-        showMarkers(mMarkerData);
+        */showMarkers(mMarkerData);
     }
 
     private void initData() {
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
         if (UserManager.getInstance().hasLogined()) {
-            Glide.with(MainActivity.this)
-                    .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                    .placeholder(R.mipmap.ic_usericon)
-                    .error(R.mipmap.ic_usericon)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(imageview_user);
-            Glide.with(MainActivity.this)
-                    .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                    .placeholder(R.mipmap.ic_usericon)
-                    .error(R.mipmap.ic_usericon)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(imageview_huser);
+            ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    R.mipmap.ic_usericon);
+            ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    R.mipmap.ic_usericon);
 
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
@@ -278,6 +261,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
         } else {
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
+            ImageUtil.showCirclePic(imageview_huser,R.mipmap.ic_usericon);
         }
     }
 
@@ -313,7 +297,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
             @Override
             public void onTouch(MotionEvent motionEvent) {
-                if (show == true) {
+                if (show) {
                     controlAnimfragment(mFragment_content);
                 }
             }
@@ -335,12 +319,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         switch (v.getId()) {
             case R.id.id_content_main_layout_relativelayout_openuser:
                 if (UserManager.getInstance().hasLogined()) {
-                    Glide.with(MainActivity.this)
-                            .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                            .placeholder(R.mipmap.ic_usericon)
-                            .error(R.mipmap.ic_usericon)
-                            .centerCrop()
-                            .into(imageview_user);
+                    ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                            R.mipmap.ic_usericon);
                     textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
                     String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
                     textview_credit.setText(credit);
@@ -826,7 +806,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
         MarkerOptions options = new MarkerOptions();
         View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-        ImageView img_chargestation = (ImageView) view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
+        ImageView img_chargestation =  view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
         img_chargestation.setImageResource(R.mipmap.ic_fangxiang);
         options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
         options.anchor(0.5f, 0.5f);
@@ -879,20 +859,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mSensorHelper.registerSensorListener();
         }
         if (UserManager.getInstance().hasLogined()) {
-            Glide.with(MainActivity.this)
-                    .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                    .placeholder(R.mipmap.ic_usericon)
-                    .error(R.mipmap.ic_usericon)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(imageview_user);
-            Glide.with(MainActivity.this)
-                    .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                    .placeholder(R.mipmap.ic_usericon)
-                    .error(R.mipmap.ic_usericon)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(imageview_huser);
+            ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    R.mipmap.ic_usericon);
+            ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    R.mipmap.ic_usericon);
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             textview_credit.setText("信用分 " + UserManager.getInstance().getUserInfo().getCredit());
         }
@@ -1020,9 +990,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 //获取当前的height值
-                int h = (Integer) valueAnimator.getAnimatedValue();
                 //动态更新view的高度
-                ll_view.getLayoutParams().height = h;
+                ll_view.getLayoutParams().height = (Integer) valueAnimator.getAnimatedValue();
                 ll_view.requestLayout();
             }
         });
@@ -1047,8 +1016,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 //获取当前的height值
                 int h = (Integer) valueAnimator.getAnimatedValue();
                 //动态更新view的高度
-                linerlayout_citynodata.getLayoutParams().height = h;
-                linerlayout_citynodata.requestLayout();
+                textview_citynodata.getLayoutParams().height = h;
+                textview_citynodata.requestLayout();
             }
         });
         va.setDuration(150);
@@ -1063,20 +1032,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UserManager.getInstance().hasLogined()) {
-                Glide.with(MainActivity.this)
-                        .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                        .placeholder(R.mipmap.ic_usericon)
-                        .error(R.mipmap.ic_usericon)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .crossFade()
-                        .into(imageview_user);
-                Glide.with(MainActivity.this)
-                        .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                        .placeholder(R.mipmap.ic_usericon)
-                        .error(R.mipmap.ic_usericon)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .crossFade()
-                        .into(imageview_huser);
+                ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                        R.mipmap.ic_usericon);
+                ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                        R.mipmap.ic_usericon);
                 textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
                 textview_credit.setText("信用分 " + UserManager.getInstance().getUserInfo().getCredit());
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
@@ -1094,13 +1053,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             if (!UserManager.getInstance().hasLogined()) {
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-                Glide.with(MainActivity.this)
-                        .load(R.mipmap.ic_usericon)
-                        .placeholder(R.mipmap.ic_usericon)
-                        .error(R.mipmap.ic_usericon)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .crossFade()
-                        .into(imageview_huser);
+                ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                        R.mipmap.ic_usericon);
             }
         }
     }
@@ -1167,7 +1121,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     LatLng latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat")), Double.parseDouble(data.getStringExtra("lon")));
                     MarkerOptions options = new MarkerOptions();
                     View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-                    ImageView img_chargestation = (ImageView) view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
+                    ImageView img_chargestation =  view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
                     options.anchor(0.5f, 0.5f);
@@ -1235,7 +1189,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     search_address = data.getStringExtra("keyword");
                     MarkerOptions options = new MarkerOptions();
                     View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-                    ImageView img_chargestation = (ImageView) view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
+                    ImageView img_chargestation =  view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
                     options.anchor(0.5f, 0.5f);

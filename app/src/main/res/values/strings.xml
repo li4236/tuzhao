@@ -11,6 +11,15 @@
         M1008.1,454.6c-72,87.8 -199.4,232.6 -199.4,232.6s20.8,159.1 32.5,267.7c5.1,55.3 -34.8,79.3 -80,57.7 -86,-43.2 -216.8,-110.1 -246.2,-125.2 -30,14.9 -162.1,80.7 -249,123.8 -45.7,21.5 -86.1,-2.4 -80.9,-57.6 11.8,-108.5 32.9,-267.4 32.9,-267.4S89,541.6 16.1,454c-25.8,-31.8 -9.2,-77.1 41.6,-85.4 103.6,-19.6 264.1,-50.8 264.1,-50.8s87.8,-161.8 143.4,-261c30.6,-60.3 51.7,-53.4 55.3,-51.6 9.4,3.2 24.3,15 43.7,51.6 54.9,99.3 141.7,261.3 141.7,261.3s158.6,31.2 261,50.8c50.2,8.4 66.6,53.7 41.1,85.5z
     </string>
     <string name="picture_description">图片描述</string>
+    <string name="park_now">立即停车</string>
+    <string name="share">分享</string>
+    <string name="setting">设置</string>
+    <string name="find">发现</string>
+    <string name="my_collect">我的收藏</string>
+    <string name="my_park">我的车位</string>
+    <string name="my_card_number">我的车牌</string>
+    <string name="park_record">停车记录</string>
+    <string name="my_wallet">我的钱包</string>
 
     <string-array name="meter">
         <item>20</item>

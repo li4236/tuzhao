@@ -143,4 +143,16 @@
         <item name="android:textColor">@color/g11</item>
     </style>
 
+    <style name="VerticalGuideLine" >
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="HorizontalGuideLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
 </resources>
