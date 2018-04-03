@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,11 +13,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -68,9 +67,10 @@ public class SearchAddressActivity extends BaseActivity {
     private SearchAddressAdapter adapter;
     private ArrayList<Search_Address_Info> mData = new ArrayList<>();
     private ProgressBar progressbar;
-    private ImageView imageview_clean, imageview_mic;
-    private TextView textview_goback;
-    private LinearLayout linearlayout_downpart, linearlayout_clean;
+    private ImageView imageview_clean;
+    private TextView textview_goback, linearlayout_clean;
+    private ImageView imageview_mic;
+    private ConstraintLayout linearlayout_downpart;
     private ListView layout_listview;
     private SearchAddressHistoryAdapter historyAdapter;
 
@@ -98,8 +98,8 @@ public class SearchAddressActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searchaddress_layout);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        setContentView(R.layout.activity_search_address_layout_refactory);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initLocation();//初始化定位
         initData();//初始化数据
         initView();//初始化控件
@@ -124,11 +124,11 @@ public class SearchAddressActivity extends BaseActivity {
     }
 
     private void initView() {
-        linearlayout_downpart = (LinearLayout) findViewById(R.id.id_activity_searchaddress_layout_linearlayout_downpart);
+        linearlayout_downpart = findViewById(R.id.id_activity_searchaddress_layout_linearlayout_downpart);
         databaseImp = new DatabaseImp(SearchAddressActivity.this);
         historyDatas = databaseImp.getSearchLog();
         if (historyDatas.size() > 0) {
-            layout_listview = (ListView) findViewById(R.id.id_activity_searchaddress_layout_listview);
+            layout_listview = findViewById(R.id.id_activity_searchaddress_layout_listview);
             historyAdapter = new SearchAddressHistoryAdapter(historyDatas, SearchAddressActivity.this);
             layout_listview.setAdapter(historyAdapter);
             layout_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -162,7 +162,7 @@ public class SearchAddressActivity extends BaseActivity {
             linearlayout_downpart.setVisibility(View.GONE);
         }
 
-        etextview_input = (AutoCompleteTextView) findViewById(R.id.id_activity_searchaddress_layout_etextview_input);
+        etextview_input = findViewById(R.id.id_activity_searchaddress_layout_etextview_input);
         adapter = new SearchAddressAdapter(mData, SearchAddressActivity.this);
         etextview_input.setAdapter(adapter);
         etextview_input.setDropDownVerticalOffset(DensityUtil.dp2px(this, 13));
@@ -202,10 +202,10 @@ public class SearchAddressActivity extends BaseActivity {
             }
         });
 
-        progressbar = (ProgressBar) findViewById(R.id.id_activity_searchaddress_layout_progressbar);
+        progressbar = findViewById(R.id.id_activity_searchaddress_layout_progressbar);
 
-        textview_goback = (TextView) findViewById(R.id.id_activity_searchaddress_layout_textview_goback);
-        imageview_clean = (ImageView) findViewById(R.id.id_activity_searchaddress_layout_imageview_clean);
+        textview_goback = findViewById(R.id.id_activity_searchaddress_layout_textview_goback);
+        imageview_clean = findViewById(R.id.id_activity_searchaddress_layout_imageview_clean);
 
         if (whatPage.equals("1") || whatPage.equals("2")) {
             keyword = getIntent().getStringExtra("keyword");
@@ -224,9 +224,9 @@ public class SearchAddressActivity extends BaseActivity {
             }
         }
 
-        linearlayout_clean = (LinearLayout) findViewById(R.id.id_activity_searchaddress_layout_linearlayout_clean);
+        linearlayout_clean = findViewById(R.id.id_activity_searchaddress_layout_linearlayout_clean);
 
-        imageview_mic = (ImageView) findViewById(R.id.id_activity_searchaddres_layout_imageview_mic);
+        imageview_mic = findViewById(R.id.id_activity_searchaddres_layout_imageview_mic);
     }
 
     private void initEvent() {
@@ -253,6 +253,9 @@ public class SearchAddressActivity extends BaseActivity {
                 } else {
                     if (imageview_clean.getVisibility() == View.VISIBLE) {
                         imageview_clean.setVisibility(View.GONE);
+                    }
+                    if (progressbar.getVisibility() == View.VISIBLE) {
+                        progressbar.setVisibility(View.GONE);
                     }
                 }
             }
@@ -282,6 +285,9 @@ public class SearchAddressActivity extends BaseActivity {
             public void onClick(View v) {
                 etextview_input.setText("");
                 v.setVisibility(View.GONE);
+                if (progressbar.getVisibility() == View.VISIBLE) {
+                    progressbar.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -529,15 +535,16 @@ public class SearchAddressActivity extends BaseActivity {
                     recordDialogShow.show();
                     dictationResultStr = "[";
                     mIat.startListening(mRecoListener);
-                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.bg_yellow_deep));
+                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.ic_touchmic));
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.bg_yellow));
                     mIat.stopListening();
                     dialogManager.updateUI(R.mipmap.listener01, "录音结束");
+                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.ic_bigmic));
                     recordDialogShow.dismiss();
                 }
                 return true;
             }
         });
+
     }
 }

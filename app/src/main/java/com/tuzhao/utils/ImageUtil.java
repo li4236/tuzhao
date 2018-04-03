@@ -1,5 +1,6 @@
 package com.tuzhao.utils;
 
+import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +17,14 @@ public class ImageUtil {
     public static void showPic(ImageView imageView, String url) {
         Glide.with(imageView.getContext())
                 .load(url)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    public static void showPic(ImageView imageView, @DrawableRes int drawableRes) {
+        Glide.with(imageView.getContext())
+                .load(drawableRes)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);

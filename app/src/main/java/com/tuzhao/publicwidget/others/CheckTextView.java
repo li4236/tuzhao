@@ -2,6 +2,7 @@ package com.tuzhao.publicwidget.others;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
@@ -61,6 +62,30 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
     @Override
     public void toggle() {
 
+    }
+
+    public Drawable getCheckDrawable() {
+        return mCheckDrawable;
+    }
+
+    public void setCheckDrawable(@DrawableRes int drawableId) {
+        mCheckDrawable = ContextCompat.getDrawable(getContext(), drawableId);
+    }
+
+    public void setCheckDrawable(Drawable checkDrawable) {
+        mCheckDrawable = checkDrawable;
+    }
+
+    public Drawable getNoCheckDrawble() {
+        return mNoCheckDrawble;
+    }
+
+    public void setNoCheckDrawble(@DrawableRes int drawableId) {
+        mNoCheckDrawble = ContextCompat.getDrawable(getContext(), drawableId);
+    }
+
+    public void setNoCheckDrawble(Drawable noCheckDrawble) {
+        mNoCheckDrawble = noCheckDrawble;
     }
 
 }

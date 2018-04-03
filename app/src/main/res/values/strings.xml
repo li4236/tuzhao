@@ -20,6 +20,10 @@
     <string name="my_card_number">我的车牌</string>
     <string name="park_record">停车记录</string>
     <string name="my_wallet">我的钱包</string>
+    <string name="cancel">取消</string>
+    <string name="where_do_you_want_to_go">你要去哪？</string>
+    <string name="history_record">历史记录</string>
+    <string name="clear_history_record">清空历史记录</string>
 
     <string-array name="meter">
         <item>20</item>

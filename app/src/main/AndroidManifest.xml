@@ -91,7 +91,8 @@
         <activity
             android:name=".activity.ParkspaceDetailActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".activity.SearchAddressActivity"></activity>
+        <activity android:name=".activity.SearchAddressActivity"
+            android:windowSoftInputMode="stateHidden|adjustNothing"/>
         <activity android:name=".activity.navi.RouteNaviActivity" />
         <activity android:name=".activity.ParkOrderDetailsActivity" />
         <activity android:name=".activity.ChargestationDetailActivity" />
@@ -158,7 +159,7 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <!--微信分享回调空页面-->
         <activity
@@ -173,13 +174,13 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name="com.alipay.sdk.app.H5AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <!--扫码页面-->
         <!--<activity android:name=".zxing.app.CaptureActivity"></activity>-->
@@ -189,7 +190,7 @@
             android:name="com.amap.api.v2.apikey"
             android:value="9df9daec404de15ce47c824fc25a7506" />
 
-        <service android:name="com.amap.api.location.APSService"></service>
+        <service android:name="com.amap.api.location.APSService"/>
 
         <!--极光推送内容-->
         <!--  Required SDK核心功能 -->

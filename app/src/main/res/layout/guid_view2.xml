@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/pic_guidepage_2" />
+        android:contentDescription="@string/picture_description" />
 
 </LinearLayout>

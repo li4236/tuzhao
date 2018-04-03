@@ -66,16 +66,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:visibility="gone" />
+                    android:layout_marginRight="10dp"/>
 
                 <ImageView
                     android:id="@+id/id_activity_searchaddress_layout_imageview_clean"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginRight="10dp"
-                    android:src="@mipmap/ic_close2"
-                    android:visibility="gone" />
+                    android:src="@mipmap/ic_close2"/>
             </LinearLayout>
         </LinearLayout>
 
