@@ -24,6 +24,7 @@
     <string name="where_do_you_want_to_go">你要去哪？</string>
     <string name="history_record">历史记录</string>
     <string name="clear_history_record">清空历史记录</string>
+    <string name="confirm">确定</string>
 
     <string-array name="meter">
         <item>20</item>
