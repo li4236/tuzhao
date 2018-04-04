@@ -21,7 +21,7 @@
         android:background="@color/w0">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/top_cl"
+            android:id="@+id/user_info"
             android:layout_width="match_parent"
             android:layout_height="105dp"
             android:background="@drawable/bg_yellow">
@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toTopOf="@+id/id_activity_main_layout_linearlayout_set"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_cl">
+            app:layout_constraintTop_toBottomOf="@+id/user_info">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

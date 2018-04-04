@@ -1,6 +1,6 @@
 package com.tuzhao.activity;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,8 +36,8 @@ import com.iflytek.cloud.ui.RecognizerDialog;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.navi.Constant;
-import com.tuzhao.activity.navi.DialogManager;
 import com.tuzhao.activity.navi.DictationJsonParseUtil;
+import com.tuzhao.activity.navi.VoiceDialog;
 import com.tuzhao.adapter.SearchAddressAdapter;
 import com.tuzhao.adapter.SearchAddressHistoryAdapter;
 import com.tuzhao.info.Search_Address_Info;
@@ -71,22 +71,21 @@ public class SearchAddressActivity extends BaseActivity {
     private TextView textview_goback, linearlayout_clean;
     private ImageView imageview_mic;
     private ConstraintLayout linearlayout_downpart;
-    private ListView layout_listview;
-    private SearchAddressHistoryAdapter historyAdapter;
 
     /**
      * 定位相关
      */
     private AMapLocationClient locationClient;
-    private AMapLocationClientOption locationOption;
     private String keyword;
 
     /**
      * 语音识别
      */
     private String dictationResultStr = "[", finalResult;
-    private DialogManager dialogManager;
-    private AlertDialog recordDialogShow;
+    //private DialogManager dialogManager;
+    private VoiceDialog mVoiceDialog;
+    private Dialog mDialog;
+    //private AlertDialog recordDialogShow;
     private SpeechRecognizer mAsr;// 语音识别对象
     private RecognizerDialog iatDialog;
     // 用HashMap存储听写结果
@@ -99,7 +98,6 @@ public class SearchAddressActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_address_layout_refactor);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initLocation();//初始化定位
         initData();//初始化数据
         initView();//初始化控件
@@ -128,8 +126,8 @@ public class SearchAddressActivity extends BaseActivity {
         databaseImp = new DatabaseImp(SearchAddressActivity.this);
         historyDatas = databaseImp.getSearchLog();
         if (historyDatas.size() > 0) {
-            layout_listview = findViewById(R.id.id_activity_searchaddress_layout_listview);
-            historyAdapter = new SearchAddressHistoryAdapter(historyDatas, SearchAddressActivity.this);
+            ListView layout_listview = findViewById(R.id.id_activity_searchaddress_layout_listview);
+            SearchAddressHistoryAdapter historyAdapter = new SearchAddressHistoryAdapter(historyDatas, SearchAddressActivity.this);
             layout_listview.setAdapter(historyAdapter);
             layout_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -323,7 +321,7 @@ public class SearchAddressActivity extends BaseActivity {
 
         //初始化client
         locationClient = new AMapLocationClient(this.getApplicationContext());
-        locationOption = getDefaultOption();
+        AMapLocationClientOption locationOption = getDefaultOption();
         //设置定位参数
         locationClient.setLocationOption(locationOption);
         // 设置定位监听
@@ -446,13 +444,14 @@ public class SearchAddressActivity extends BaseActivity {
     private void initVoice() {
         //1.创建SpeechRecognizer对象，第二个参数：本地识别时传InitListener
         final SpeechRecognizer mIat = SpeechRecognizer.createRecognizer(SearchAddressActivity.this, null);
-        dialogManager = DialogManager.getInstance();
-        recordDialogShow = dialogManager.recordDialogShow(this);
+        //dialogManager = DialogManager.getInstance();
+        //recordDialogShow = dialogManager.recordDialogShow(this);
+        mVoiceDialog = new VoiceDialog(this);
+        mDialog = mVoiceDialog.createDialog();
         //2.设置听写参数，详见SDK中《MSC Reference Manual》文件夹下的SpeechConstant类
         mIat.setParameter(SpeechConstant.DOMAIN, "iat");
         mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         mIat.setParameter(SpeechConstant.ACCENT, "mandarin ");
-
 
         //听写监听器
         final RecognizerListener mRecoListener = new RecognizerListener() {
@@ -514,12 +513,13 @@ public class SearchAddressActivity extends BaseActivity {
                         mipmapId = R.mipmap.listener08;
                         break;
                 }
-                dialogManager.updateUI(mipmapId, "正在录音中");
+                mVoiceDialog.updateUI(mipmapId,"正在录音中");
+                //dialogManager.updateUI(mipmapId, "正在录音中");
             }
 
             //结束录音
             public void onEndOfSpeech() {
-                dialogManager.updateUI(R.mipmap.listener01, "录音已结束");
+                mVoiceDialog.updateUI(R.mipmap.listener01, "录音已结束");
             }
 
             //扩展用接口
@@ -531,16 +531,18 @@ public class SearchAddressActivity extends BaseActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    dialogManager.updateUI(R.mipmap.listener01, "正在录音");
-                    recordDialogShow.show();
+                    mDialog.show();
+                    mVoiceDialog.updateUI(R.mipmap.listener01, "正在录音");
+                    //recordDialogShow.show();
                     dictationResultStr = "[";
                     mIat.startListening(mRecoListener);
                     imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.ic_touchmic));
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     mIat.stopListening();
-                    dialogManager.updateUI(R.mipmap.listener01, "录音结束");
+                    mVoiceDialog.updateUI(R.mipmap.listener01, "录音结束");
                     imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.ic_bigmic));
-                    recordDialogShow.dismiss();
+                    mDialog.dismiss();
+                    //recordDialogShow.dismiss();
                 }
                 return true;
             }

@@ -19,7 +19,6 @@ public class DialogManager {
     private ImageView ivLoad;
     private TextView tvPrompt;
 
-
     public static DialogManager getInstance() {
         if (null == instance) {
             synchronized (DialogManager.class) {
@@ -30,15 +29,14 @@ public class DialogManager {
     }
 
     public AlertDialog recordDialogShow(Context context) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, R.style.CustomDialog);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context,R.style.DialogStyle);
         dialogBuilder.setCancelable(false);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_voice_speak, null);
-        tvPrompt = (TextView) view.findViewById(R.id.tv_prompt);
-        ivLoad = (ImageView) view.findViewById(R.id.iv_load);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_voice_speak_refactor, null);
+        tvPrompt =  view.findViewById(R.id.tv_prompt);
+        ivLoad = view.findViewById(R.id.iv_load);
         dialogBuilder.setView(view);
-        AlertDialog dialog = dialogBuilder.create();
 //        dialog.getWindow().setBackgroundDrawable(new BitmapDrawable());
-        return dialog;
+        return dialogBuilder.create();
     }
 
     public void updateUI(int resId, String prompt) {

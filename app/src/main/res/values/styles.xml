@@ -23,7 +23,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- 自定义加载dialog的样式 -->
-    <style name="CustomDialog">
+    <style name="CustomDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="android:windowIsTranslucent">false</item><!--半透明-->
@@ -31,6 +31,16 @@
         <item name="android:windowBackground">@drawable/dialog_custom_bg</item><!--背景透明-->
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
         <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item> <!--默认白色带阴影背景-->
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:backgroundDimAmount">0.6</item><!-- 整个屏幕背景的灰度值：默认是黑色的 ：遮障层的灰度-->
+        <item name="android:windowIsTranslucent">true</item><!-- 背景透明 -->
     </style>
 
     <style name="Dialog" parent="android:style/Theme.Dialog">

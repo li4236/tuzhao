@@ -211,7 +211,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         imageview_search = findViewById(R.id.id_content_main_layout_imageview_search);
         mFragment_content = findViewById(R.id.id_content_main_layout_linerlayout_fragment);
         textview_username = findViewById(R.id.id_activity_main_layout_textview_username);
-        constraintLayout_user = findViewById(R.id.top_cl);
+        constraintLayout_user = findViewById(R.id.user_info);
         textview_set = findViewById(R.id.id_activity_main_layout_linearlayout_set);
         textview_mywallet = findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
         textview_parkorder = findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
@@ -228,17 +228,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         textview_credit = findViewById(R.id.id_activity_main_layout_textview_credit);
 
         setStyle(false);
-        /*RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        rp.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 32), 0, 0);
-        RelativeLayout.LayoutParams rp1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        rp1.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 40), DensityUtil.dp2px(MainActivity.this, 16), 0);
-        RelativeLayout.LayoutParams rp2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        rp2.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 33), 0, 0);
-        rp1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        constraintLayout_openuser.setLayoutParams(rp);
-        linerlayout_citynodata.setLayoutParams(rp2);
-        constraintLayout_user.setPadding(DensityUtil.dp2px(MainActivity.this, 30), barheigh + DensityUtil.dp2px(MainActivity.this, 30), 0, DensityUtil.dp2px(MainActivity.this, 15));
-        */
         showMarkers(mMarkerData);
     }
 
