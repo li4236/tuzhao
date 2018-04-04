@@ -117,9 +117,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private ImageView imageview_turnown, imageview_user, imageview_huser, imageview_spark, imageview_scharge,
             imageview_search;
     private TextView textview_username, textview_citynodata, textview_credit;
-    private TextView  linearlayout_mywallet, linearlayout_parkorder, linearlayout_share,
-            linearlayout_mycarnumble, linearlayout_mypark, linearlayout_set, linearlayout_mycollection, linearlayout_find;
-    private ConstraintLayout relativelayout_openuser,linearlayout_user;
+    private TextView textview_mywallet, textview_parkorder, textview_share,
+            textview_mycarnumble, textview_mypark, textview_set, textview_mycollection, textview_find;
+    private ConstraintLayout constraintLayout_openuser, constraintLayout_user;
     private LoginDialogFragment loginDialogFragment;
     private CustomDialog mCustomDialog;
     /**
@@ -127,7 +127,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
      */
     private LocationSource.OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
-    private AMapLocationClientOption mLocationOption;
     private Marker mLocationMarker;//定位marker
     private Marker mSearchMarker = null;//查找地址marker
     private Marker screenMarker;//选择中心点坐标的marker
@@ -141,16 +140,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private List<ClusterItem> mShowQMarkerData = new ArrayList<>();//其他城市地图标点的数据
     private List<NearPointPCInfo> mYData = new ArrayList<>(), mQYData = new ArrayList<>();
     private ClusterOverlay mClusterOverlay;//标点的聚拢
-    private int clusterRadius = 30;//标点之间的距离半径dp
     private FragmentManager mFragmentManager;
-    private ChargeFragment mChargeFragment;
-    private ParkFragment mParkFragment;
     private View mFragment_content;
     private boolean show = false, show1 = false, isSPark = true, isSCharge = true, isFirstMove = true, isLcData = true;
     private int mapwidth, mapheight;//地图控件的宽高，用来地图中心点
     private int moveDistance = 2000;//移动再次请求的距离
     private GeocodeSearch geocoderSearch;//将经纬度转化为地址
-    private RegeocodeQuery query;//转化参数
     private String search_address = "";//搜索的地址
     private String moveCityCode = null;
     /**
@@ -194,8 +189,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void initView(Bundle savedInstanceState) {
-        mDrawerlayout =  findViewById(R.id.drawer_layout);
-        mapView =  findViewById(R.id.id_content_main_layout_bmapView);
+        mDrawerlayout = findViewById(R.id.drawer_layout);
+        mapView = findViewById(R.id.id_content_main_layout_bmapView);
         mapView.onCreate(savedInstanceState);
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -211,26 +206,26 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         geocoderSearch = new GeocodeSearch(this);
         mFragmentManager = getSupportFragmentManager();
-        imageview_user =  findViewById(R.id.id_activity_main_layout_imageview_user);
-        imageview_turnown =  findViewById(R.id.id_content_main_layout_imageview_turnown);
-        imageview_search =  findViewById(R.id.id_content_main_layout_imageview_search);
+        imageview_user = findViewById(R.id.id_activity_main_layout_imageview_user);
+        imageview_turnown = findViewById(R.id.id_content_main_layout_imageview_turnown);
+        imageview_search = findViewById(R.id.id_content_main_layout_imageview_search);
         mFragment_content = findViewById(R.id.id_content_main_layout_linerlayout_fragment);
-        textview_username =  findViewById(R.id.id_activity_main_layout_textview_username);
-        linearlayout_user =  findViewById(R.id.top_cl);
-        linearlayout_set =  findViewById(R.id.id_activity_main_layout_linearlayout_set);
-        linearlayout_mywallet =  findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
-        linearlayout_parkorder =  findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
-        linearlayout_mycarnumble =  findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
-        linearlayout_mypark =  findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
-        linearlayout_mycollection =  findViewById(R.id.id_activity_main_layout_linearlayout_mycollection);
-        linearlayout_find =  findViewById(R.id.id_activity_main_layout_linearlayout_find);
-        linearlayout_share =  findViewById(R.id.id_activity_main_layout_linearlayout_share);
-        imageview_spark =  findViewById(R.id.id_content_main_layout_imageview_spark);
-        imageview_huser =  findViewById(R.id.id_content_main_layout_imageview_huser);
-        imageview_scharge =  findViewById(R.id.id_content_main_layout_imageview_scharge);
-        textview_citynodata =  findViewById(R.id.id_content_main_layout_textview_citynodata);
-        relativelayout_openuser =  findViewById(R.id.id_content_main_layout_relativelayout_openuser);
-        textview_credit =  findViewById(R.id.id_activity_main_layout_textview_credit);
+        textview_username = findViewById(R.id.id_activity_main_layout_textview_username);
+        constraintLayout_user = findViewById(R.id.top_cl);
+        textview_set = findViewById(R.id.id_activity_main_layout_linearlayout_set);
+        textview_mywallet = findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
+        textview_parkorder = findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
+        textview_mycarnumble = findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
+        textview_mypark = findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
+        textview_mycollection = findViewById(R.id.id_activity_main_layout_linearlayout_mycollection);
+        textview_find = findViewById(R.id.id_activity_main_layout_linearlayout_find);
+        textview_share = findViewById(R.id.id_activity_main_layout_linearlayout_share);
+        imageview_spark = findViewById(R.id.id_content_main_layout_imageview_spark);
+        imageview_huser = findViewById(R.id.id_content_main_layout_imageview_huser);
+        imageview_scharge = findViewById(R.id.id_content_main_layout_imageview_scharge);
+        textview_citynodata = findViewById(R.id.id_content_main_layout_textview_citynodata);
+        constraintLayout_openuser = findViewById(R.id.id_content_main_layout_relativelayout_openuser);
+        textview_credit = findViewById(R.id.id_activity_main_layout_textview_credit);
 
         setStyle(false);
         /*RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -240,19 +235,20 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         RelativeLayout.LayoutParams rp2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         rp2.setMargins(0, barheigh + DensityUtil.dp2px(MainActivity.this, 33), 0, 0);
         rp1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        relativelayout_openuser.setLayoutParams(rp);
+        constraintLayout_openuser.setLayoutParams(rp);
         linerlayout_citynodata.setLayoutParams(rp2);
-        linearlayout_user.setPadding(DensityUtil.dp2px(MainActivity.this, 30), barheigh + DensityUtil.dp2px(MainActivity.this, 30), 0, DensityUtil.dp2px(MainActivity.this, 15));
-        */showMarkers(mMarkerData);
+        constraintLayout_user.setPadding(DensityUtil.dp2px(MainActivity.this, 30), barheigh + DensityUtil.dp2px(MainActivity.this, 30), 0, DensityUtil.dp2px(MainActivity.this, 15));
+        */
+        showMarkers(mMarkerData);
     }
 
     private void initData() {
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
         if (UserManager.getInstance().hasLogined()) {
-            ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
-            ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
 
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
@@ -261,23 +257,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
         } else {
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-            ImageUtil.showCirclePic(imageview_huser,R.mipmap.ic_usericon);
+            ImageUtil.showCirclePic(imageview_huser, R.mipmap.ic_usericon);
         }
     }
 
     private void initEvent() {
-        relativelayout_openuser.setOnClickListener(this);
+        constraintLayout_openuser.setOnClickListener(this);
         imageview_turnown.setOnClickListener(this);
-        linearlayout_set.setOnClickListener(this);
-        linearlayout_user.setOnClickListener(this);
+        textview_set.setOnClickListener(this);
+        constraintLayout_user.setOnClickListener(this);
         imageview_search.setOnClickListener(this);
-        linearlayout_mywallet.setOnClickListener(this);
-        linearlayout_parkorder.setOnClickListener(this);
-        linearlayout_mycarnumble.setOnClickListener(this);
-        linearlayout_mycollection.setOnClickListener(this);
-        linearlayout_mypark.setOnClickListener(this);
-        linearlayout_find.setOnClickListener(this);
-        linearlayout_share.setOnClickListener(this);
+        textview_mywallet.setOnClickListener(this);
+        textview_parkorder.setOnClickListener(this);
+        textview_mycarnumble.setOnClickListener(this);
+        textview_mycollection.setOnClickListener(this);
+        textview_mypark.setOnClickListener(this);
+        textview_find.setOnClickListener(this);
+        textview_share.setOnClickListener(this);
         imageview_spark.setOnClickListener(this);
         imageview_scharge.setOnClickListener(this);
         textview_credit.setOnClickListener(this);
@@ -319,7 +315,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         switch (v.getId()) {
             case R.id.id_content_main_layout_relativelayout_openuser:
                 if (UserManager.getInstance().hasLogined()) {
-                    ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                             R.mipmap.ic_usericon);
                     textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
                     String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
@@ -629,7 +625,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 mMarkerData = new ArrayList<>();
                                 mYData = homePC_info.data;
                                 for (NearPointPCInfo info : mYData) {
-                                    RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()), info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1") ? true : false, citycode, info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
+                                    RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
+                                            info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
+                                            info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
                                     mMarkerData.add(item);
                                 }
                                 if (isSPark && isSCharge) {
@@ -656,7 +654,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             mQMarkerData = new ArrayList<>();
                             mQYData = homePC_info.data;
                             for (NearPointPCInfo info : mQYData) {
-                                RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()), info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1") ? true : false, citycode, info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
+                                RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
+                                        info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
+                                        info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
                                 mQMarkerData.add(item);
                             }
                             if (isSPark && isSCharge) {
@@ -702,7 +702,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                     break;
                                 case 103:
                                     //城市未开放
-                                    textview_citynodata.setText(cityname + "暂未开放");
+                                    String noOpen = cityname + "暂未开放";
+                                    textview_citynodata.setText(noOpen);
                                     if (!show1) {
                                         controlAnim(true);
                                     }
@@ -773,16 +774,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mListener = listener;
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(MainActivity.this);
-            mLocationOption = new AMapLocationClientOption();
+            AMapLocationClientOption locationClientOption = new AMapLocationClientOption();
             //设置定位监听
             mlocationClient.setLocationListener(this);
             //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            mLocationOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-            mLocationOption.setInterval(10000);//20秒定位一次
-            mLocationOption.setOnceLocation(true);//只定位一次
+            locationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            locationClientOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+            locationClientOption.setInterval(10000);//20秒定位一次
+            locationClientOption.setOnceLocation(true);//只定位一次
             //设置定位参数
-            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.setLocationOption(locationClientOption);
             mlocationClient.startLocation();
         }
     }
@@ -806,7 +807,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
         MarkerOptions options = new MarkerOptions();
         View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-        ImageView img_chargestation =  view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
+        ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
         img_chargestation.setImageResource(R.mipmap.ic_fangxiang);
         options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
         options.anchor(0.5f, 0.5f);
@@ -859,12 +860,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mSensorHelper.registerSensorListener();
         }
         if (UserManager.getInstance().hasLogined()) {
-            ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
-            ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
-            textview_credit.setText("信用分 " + UserManager.getInstance().getUserInfo().getCredit());
+            String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
+            textview_credit.setText(crecdit);
         }
     }
 
@@ -888,9 +890,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     /**
      * 聚拢标点的绘制
-     *
-     * @param clusterNum
-     * @return
      */
     @Override
     public Drawable getDrawAble(int clusterNum, int type) {
@@ -915,8 +914,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     /**
-     * @param marker       点击任意的聚合点
-     * @param clusterItems
+     * @param marker 点击任意的聚合点
      */
     @Override
     public void onClick(Marker marker, List<ClusterItem> clusterItems) {
@@ -954,16 +952,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         Bundle bundle = new Bundle();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         if (isparkspace) {
-            mParkFragment = new ParkFragment();
+            ParkFragment parkFragment = new ParkFragment();
             bundle.putSerializable("pssinfo", info);
-            mParkFragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.id_content_main_layout_linerlayout_fragment, mParkFragment);
+            parkFragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.id_content_main_layout_linerlayout_fragment, parkFragment);
             fragmentTransaction.commit();
         } else {
-            mChargeFragment = new ChargeFragment();
+            ChargeFragment chargeFragment = new ChargeFragment();
             bundle.putSerializable("cssinfo", info);
-            mChargeFragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.id_content_main_layout_linerlayout_fragment, mChargeFragment);
+            chargeFragment.setArguments(bundle);
+            fragmentTransaction.replace(R.id.id_content_main_layout_linerlayout_fragment, chargeFragment);
             fragmentTransaction.commit();
         }
         controlAnimfragment(mFragment_content);
@@ -1014,9 +1012,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 //获取当前的height值
-                int h = (Integer) valueAnimator.getAnimatedValue();
                 //动态更新view的高度
-                textview_citynodata.getLayoutParams().height = h;
+                textview_citynodata.getLayoutParams().height = (Integer) valueAnimator.getAnimatedValue();
                 textview_citynodata.requestLayout();
             }
         });
@@ -1032,12 +1029,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UserManager.getInstance().hasLogined()) {
-                ImageUtil.showCirclePic(imageview_user,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
-                ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
                 textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
-                textview_credit.setText("信用分 " + UserManager.getInstance().getUserInfo().getCredit());
+                String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
+                textview_credit.setText(credit);
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
             }
         }
@@ -1053,7 +1051,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             if (!UserManager.getInstance().hasLogined()) {
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-                ImageUtil.showCirclePic(imageview_huser,HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
             }
         }
@@ -1121,7 +1119,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     LatLng latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat")), Double.parseDouble(data.getStringExtra("lon")));
                     MarkerOptions options = new MarkerOptions();
                     View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-                    ImageView img_chargestation =  view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
+                    ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
                     options.anchor(0.5f, 0.5f);
@@ -1189,7 +1187,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     search_address = data.getStringExtra("keyword");
                     MarkerOptions options = new MarkerOptions();
                     View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-                    ImageView img_chargestation =  view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
+                    ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
                     options.anchor(0.5f, 0.5f);
@@ -1320,7 +1318,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             }
 
         });
-        query = new RegeocodeQuery(new LatLonPoint(latLng.latitude, latLng.longitude), 200, GeocodeSearch.AMAP);
+
+        //转化参数
+        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(latLng.latitude, latLng.longitude), 200, GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
     }
 
@@ -1328,6 +1328,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (mClusterOverlay != null) {
             mClusterOverlay.onDestroy();
         }
+        int clusterRadius = 30;//标点之间的距离半径dp
         mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), clusterRadius), getApplicationContext());
         mClusterOverlay.setClusterRenderer(MainActivity.this);
         mClusterOverlay.setOnClusterClickListener(MainActivity.this);
