@@ -1,11 +1,14 @@
 package com.tuzhao.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -82,17 +85,14 @@ public class SearchAddressActivity extends BaseActivity {
      * 语音识别
      */
     private String dictationResultStr = "[", finalResult;
-    //private DialogManager dialogManager;
     private VoiceDialog mVoiceDialog;
     private Dialog mDialog;
-    //private AlertDialog recordDialogShow;
     private SpeechRecognizer mAsr;// 语音识别对象
     private RecognizerDialog iatDialog;
     // 用HashMap存储听写结果
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
     private String mCloudGrammar = null;// 云端语法文件
     private String mEngineType = SpeechConstant.TYPE_CLOUD;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -442,6 +442,7 @@ public class SearchAddressActivity extends BaseActivity {
     }
 
     private void initVoice() {
+        checkPermission(Manifest.permission.RECORD_AUDIO);
         //1.创建SpeechRecognizer对象，第二个参数：本地识别时传InitListener
         final SpeechRecognizer mIat = SpeechRecognizer.createRecognizer(SearchAddressActivity.this, null);
         //dialogManager = DialogManager.getInstance();
@@ -513,8 +514,7 @@ public class SearchAddressActivity extends BaseActivity {
                         mipmapId = R.mipmap.listener08;
                         break;
                 }
-                mVoiceDialog.updateUI(mipmapId,"正在录音中");
-                //dialogManager.updateUI(mipmapId, "正在录音中");
+                mVoiceDialog.updateUI(mipmapId, "正在录音中");
             }
 
             //结束录音
@@ -533,20 +533,49 @@ public class SearchAddressActivity extends BaseActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mDialog.show();
                     mVoiceDialog.updateUI(R.mipmap.listener01, "正在录音");
-                    //recordDialogShow.show();
                     dictationResultStr = "[";
                     mIat.startListening(mRecoListener);
-                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.ic_touchmic));
+                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this, R.drawable.ic_touchmic));
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     mIat.stopListening();
                     mVoiceDialog.updateUI(R.mipmap.listener01, "录音结束");
-                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this,R.drawable.ic_bigmic));
+                    imageview_mic.setBackground(ContextCompat.getDrawable(SearchAddressActivity.this, R.drawable.ic_bigmic));
                     mDialog.dismiss();
-                    //recordDialogShow.dismiss();
                 }
                 return true;
             }
         });
 
     }
+
+    private void checkPermission(final String permission) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                new TipeDialog.Builder(this)
+                        .setTitle("权限申请")
+                        .setMessage("需要麦克风权限才能使用语音输入功能")
+                        .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermission(permission);
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        } else {
+            requestPermission(permission);
+        }
+    }
+
+    private void requestPermission(String permission) {
+        ActivityCompat.requestPermissions(this, new String[]{permission}, 0x111);
+    }
+
 }

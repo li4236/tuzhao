@@ -14,6 +14,8 @@ import com.tuzhao.R;
 /**
  * 提示对话框
  */
+
+
 public class TipeDialog extends Dialog {
 
     public TipeDialog(Context context) {
@@ -136,6 +138,7 @@ public class TipeDialog extends Dialog {
                                 public void onClick(View v) {
                                     positiveButtonClickListener.onClick(dialog,
                                             DialogInterface.BUTTON_POSITIVE);
+                                    dialog.dismiss();
                                 }
                             });
                 }
@@ -154,6 +157,7 @@ public class TipeDialog extends Dialog {
                                 public void onClick(View v) {
                                     negativeButtonClickListener.onClick(dialog,
                                             DialogInterface.BUTTON_NEGATIVE);
+                                    dialog.dismiss();
                                 }
                             });
                 }

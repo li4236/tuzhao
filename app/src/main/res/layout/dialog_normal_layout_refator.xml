@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
-        android:id="@+id/positiveButton"
+        android:id="@+id/negativeButton"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:background="@drawable/w5_bl_10dp"
@@ -49,12 +49,12 @@
         android:textColor="@color/b1"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/negativeButton"
+        app:layout_constraintEnd_toStartOf="@+id/positiveButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message" />
 
     <TextView
-        android:id="@+id/negativeButton"
+        android:id="@+id/positiveButton"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:background="@drawable/yellow_gradient_br_10dp"
@@ -64,6 +64,6 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/positiveButton" />
+        app:layout_constraintStart_toEndOf="@id/negativeButton" />
 
 </android.support.constraint.ConstraintLayout>
