@@ -41,20 +41,49 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/id_content_main_layout_linerlayout_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="25dp"
-        android:clipChildren="false"
+    <android.support.constraint.Guideline
+        android:id="@+id/third_gl"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/id_content_main_layout_relativelayout_openuser" />
+        app:layout_constraintGuide_percent="0.3" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/six_gl"
+        style="@style/VerticalGuideLine"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <TextView
+        android:id="@+id/id_content_main_layout_textview_citynodata"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/white_all_20dp"
+        android:gravity="center"
+        android:textColor="@color/b1"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/six_gl"
+        app:layout_constraintStart_toStartOf="@id/third_gl"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/id_content_main_layout_linerlayout_fragment"
+        android:layout_width="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/id_content_main_layout_right_cl"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toEndOf="@+id/id_content_main_layout_relativelayout_openuser"
+        app:layout_constraintTop_toBottomOf="@+id/id_content_main_layout_right_cl" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="37dp"
         android:layout_height="73dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="80dp"
+        android:id="@+id/id_content_main_layout_right_cl"
         android:background="@drawable/ic_bigbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -93,31 +122,6 @@
             app:layout_constraintTop_toBottomOf="@+id/center_divider" />
 
     </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/third_gl"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/six_gl"
-        style="@style/VerticalGuideLine"
-        app:layout_constraintGuide_percent="0.7" />
-
-    <TextView
-        android:id="@+id/id_content_main_layout_textview_citynodata"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/white_all_15dp"
-        android:gravity="center"
-        android:textColor="@color/b1"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="@id/six_gl"
-        app:layout_constraintStart_toStartOf="@id/third_gl"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/two_gl"

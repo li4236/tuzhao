@@ -25,6 +25,7 @@
     <string name="history_record">历史记录</string>
     <string name="clear_history_record">清空历史记录</string>
     <string name="confirm">确定</string>
+    <string name="look">查看</string>
 
     <string-array name="meter">
         <item>20</item>
