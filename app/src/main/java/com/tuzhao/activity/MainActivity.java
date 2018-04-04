@@ -1,16 +1,22 @@
 package com.tuzhao.activity;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -89,6 +95,7 @@ import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
@@ -104,6 +111,14 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 import static com.tuzhao.utils.DensityUtil.dp2px;
 
 public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender, ClusterClickListener {
+
+    private static final String TAG = "MainActivity";
+
+    private static final int WRITE_REQUEST_CODE = 0x111;
+
+    private static final int LOCATION_REQUEST_CODE = 0x222;
+
+    private static final int OPEN_GPS = 0x333;
 
     public static int ONLYPARK = 1, ONLYCHARGE = 2, PARKANDCHARGE = 3;
 
@@ -131,6 +146,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private Marker mSearchMarker = null;//查找地址marker
     private Marker screenMarker;//选择中心点坐标的marker
 
+    private boolean mHadShowGps;
     private boolean isFirstloc = true;
     private LatLng mLastlocationLatlng = null, showmarklal = null, lastLatlng = null;
     private float morenZoom = 14;//地图的默认缩放等级
@@ -179,7 +195,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         initVersion();
         initView(savedInstanceState);//初始化控件
-        initMapStyle();//初始化地图样式文件
+        if (Build.VERSION.SDK_INT >= 23) {
+            checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, "需要开启读取存储信息权限以便提供更好的服务", WRITE_REQUEST_CODE);
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, "需要开启位置信息权限才可以使用地图服务功能", LOCATION_REQUEST_CODE);
+        } else {
+            initMapStyle();//初始化地图样式文件
+        }
         initData();//初始化数据
         initEvent();//初始化事件
     }
@@ -738,9 +759,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 if (isFirstloc) {
                     //第一次定位成功
                     isFirstloc = false;
+                    Log.e("TAG", "onLocationChanged latitude" + amapLocation.getLatitude() + "  longtitude:" + amapLocation.getLongitude());
                     addLoactionMarker(mLastlocationLatlng);//添加定位图标
+                    Log.e(TAG, "onLocationChanged: addLoactionMarker" + String.valueOf(mLocationMarker == null));
+                    Log.e(TAG, "onLocationChanged: " + String.valueOf(mSensorHelper == null));
+                    if (mSensorHelper == null) {
+                        mSensorHelper = new SensorEventHelper(MainActivity.this);
+                        mSensorHelper.registerSensorListener();
+                    }
                     mSensorHelper.setCurrentMarker(mLocationMarker);//定位图标旋转
+                    Log.e(TAG, "onLocationChanged: setCurrentMarker");
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
+                    Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                 } else {
                     if (mMarkerData == null) {
@@ -749,7 +779,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
                 }
+                // mListener.onLocationChanged(amapLocation);
             } else {
+                if (!mHadShowGps) {
+                    openGps();
+                    mHadShowGps = true;
+                }
                 Log.e("AmapErr", "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo());
             }
         }
@@ -761,6 +796,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     @Override
     public void activate(LocationSource.OnLocationChangedListener listener) {
         mListener = listener;
+        Log.e("TAG", "activate: ");
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(MainActivity.this);
             AMapLocationClientOption locationClientOption = new AMapLocationClientOption();
@@ -769,10 +805,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             //设置为高精度定位模式
             locationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             locationClientOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-            locationClientOption.setInterval(10000);//20秒定位一次
+            locationClientOption.setInterval(2000);//20秒定位一次
             locationClientOption.setOnceLocation(true);//只定位一次
             //设置定位参数
             mlocationClient.setLocationOption(locationClientOption);
+            mlocationClient.stopLocation();
             mlocationClient.startLocation();
         }
     }
@@ -795,10 +832,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             return;
         }
         MarkerOptions options = new MarkerOptions();
-        View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
+       /* View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
         ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
-        img_chargestation.setImageResource(R.mipmap.ic_fangxiang);
-        options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
+        img_chargestation.setImageResource(R.mipmap.ic_fangxiang);*/
+        options.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_fangxiang));
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
         mLocationMarker = aMap.addMarker(options);
@@ -1236,6 +1273,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 }
                 break;
         }
+
+        if (requestCode == OPEN_GPS) {
+            isFirstloc = true;
+            mlocationClient.startLocation();
+        }
     }
 
     private void getAddressOrCitycode(final LatLng latLng, final boolean isCamreaMove) {
@@ -1369,4 +1411,75 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
     }
 
+    private void checkPermission(final String permission, String message, final int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                new TipeDialog.Builder(this)
+                        .setTitle("权限申请")
+                        .setMessage(message)
+                        .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestPermission(permission, requestCode);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+                requestPermission(permission, requestCode);
+            }
+        } else {
+            if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                initMapStyle();
+            }
+        }
+    }
+
+    private void requestPermission(String permission, int requestCode) {
+        ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == LOCATION_REQUEST_CODE) {
+                isFirstloc = true;
+                mlocationClient.startLocation();
+            } else if (requestCode == WRITE_REQUEST_CODE) {
+                initMapStyle();
+                isFirstloc = true;
+                mlocationClient.startLocation();
+            }
+        }
+    }
+
+    private void openGps() {
+        if (!DeviceUtils.isGpsOpen(this)) {
+            new TipeDialog.Builder(this)
+                    .setTitle("打开GPS")
+                    .setMessage("打开GPS可以获取更精确的定位结果哦")
+                    .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, OPEN_GPS);
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+    }
 }
