@@ -98,7 +98,7 @@ public class SearchAddressActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_address_layout_refactory);
+        setContentView(R.layout.activity_search_address_layout_refactor);
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initLocation();//初始化定位
         initData();//初始化数据

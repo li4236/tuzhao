@@ -57,7 +57,7 @@ public class ParkFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
-        mContentView = inflater.inflate(R.layout.fragment_parkspace_layout_refactory, container, false);
+        mContentView = inflater.inflate(R.layout.fragment_parkspace_layout_refactor, container, false);
 
         initView();//初始化控件
         initData();//初始化数据
