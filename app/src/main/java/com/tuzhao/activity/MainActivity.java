@@ -1451,10 +1451,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (requestCode == LOCATION_REQUEST_CODE) {
                 isFirstloc = true;
+                mlocationClient.stopLocation();
                 mlocationClient.startLocation();
             } else if (requestCode == WRITE_REQUEST_CODE) {
                 initMapStyle();
                 isFirstloc = true;
+                mlocationClient.stopLocation();
                 mlocationClient.startLocation();
             }
         }

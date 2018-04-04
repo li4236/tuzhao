@@ -296,19 +296,17 @@ public class SearchAddressActivity extends BaseActivity {
                 TipeDialog.Builder builder = new TipeDialog.Builder(SearchAddressActivity.this);
                 builder.setMessage("确定清空历史记录吗？");
                 builder.setTitle("提示");
-                builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        //清除数据库内容并隐藏下部
+                        databaseImp.deleteSearchLog("-1");
+                        linearlayout_downpart.setVisibility(View.GONE);
                     }
                 });
 
-                builder.setNegativeButton("确定",
+                builder.setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //清除数据库内容并隐藏下部
-                                databaseImp.deleteSearchLog("-1");
-                                linearlayout_downpart.setVisibility(View.GONE);
                             }
                         });
 

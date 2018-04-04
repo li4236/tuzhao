@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_main"
     android:layout_width="match_parent"
-    android:theme="@style/TranslucentTheme"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:theme="@style/TranslucentTheme"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:activity=".activity.MainActivity">
 
@@ -69,21 +69,21 @@
     <FrameLayout
         android:id="@+id/id_content_main_layout_linerlayout_fragment"
         android:layout_width="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/id_content_main_layout_right_cl"
         android:layout_height="0dp"
-        android:clipChildren="false"
-        android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="32dp"
+        android:clipChildren="false"
+        app:layout_constraintEnd_toStartOf="@+id/id_content_main_layout_right_cl"
         app:layout_constraintStart_toEndOf="@+id/id_content_main_layout_relativelayout_openuser"
         app:layout_constraintTop_toBottomOf="@+id/id_content_main_layout_right_cl" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/id_content_main_layout_right_cl"
         android:layout_width="37dp"
         android:layout_height="73dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="80dp"
-        android:id="@+id/id_content_main_layout_right_cl"
         android:background="@drawable/ic_bigbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
