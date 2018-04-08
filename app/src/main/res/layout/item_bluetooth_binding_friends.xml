@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/w0">
+
+    <ImageView
+        android:id="@+id/bluetooth_binding_friend_iv"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/ThirtyTextB1Style"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/bluetooth_binding_friend_name"
+        app:layout_constraintStart_toEndOf="@id/bluetooth_binding_friend_iv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bluetooth_binding_delete_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/picture_description"
+        android:paddingBottom="10dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="8dp"
+        android:paddingTop="10dp"
+        android:src="@mipmap/ic_del"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bluetooth_binding_edit_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/picture_description"
+        android:paddingBottom="10dp"
+        android:paddingEnd="7dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:src="@mipmap/ic_write"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/bluetooth_binding_delete_friend"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

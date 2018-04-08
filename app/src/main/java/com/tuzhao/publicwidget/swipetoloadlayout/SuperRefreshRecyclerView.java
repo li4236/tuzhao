@@ -50,11 +50,11 @@ public class SuperRefreshRecyclerView extends FrameLayout {
     private void initView(Context context) {
         mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.layout_super_refresh_recycler, this);
-        emptyView = (RelativeLayout) findViewById(R.id.layout_empty);
-        errorView = (RelativeLayout) findViewById(R.id.layout_error);
-        swipeToLoadLayout = (SwipeToLoadLayout) findViewById(R.id.swipe_to_load);
-        swipeLoadMoreFooterLayout = (SwipeLoadMoreFooterLayout) findViewById(R.id.swipe_load_more_footer);
-        recyclerView = (RecyclerView) findViewById(R.id.swipe_target);
+        emptyView = findViewById(R.id.layout_empty);
+        errorView = findViewById(R.id.layout_error);
+        swipeToLoadLayout = findViewById(R.id.swipe_to_load);
+        swipeLoadMoreFooterLayout = findViewById(R.id.swipe_load_more_footer);
+        recyclerView = findViewById(R.id.swipe_target);
     }
 
 

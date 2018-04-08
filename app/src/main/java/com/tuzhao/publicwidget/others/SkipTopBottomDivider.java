@@ -27,6 +27,10 @@ public class SkipTopBottomDivider extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
+    private boolean mSkipTop;
+
+    private boolean mSkipBottom;
+
     public SkipTopBottomDivider(Context context) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
@@ -39,6 +43,15 @@ public class SkipTopBottomDivider extends RecyclerView.ItemDecoration {
         mDivider = a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
+    }
+
+    public SkipTopBottomDivider(Context context, boolean skipTop, boolean skipBottom) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        mDivider = a.getDrawable(0);
+        a.recycle();
+        setOrientation(VERTICAL_LIST);
+        mSkipTop = skipTop;
+        mSkipBottom = skipBottom;
     }
 
     public void setOrientation(int orientation) {
@@ -63,7 +76,16 @@ public class SkipTopBottomDivider extends RecyclerView.ItemDecoration {
         final int right = parent.getWidth() - parent.getPaddingRight();
 
         final int childCount = parent.getChildCount();
-        for (int i = 1; i < childCount - 1; i++) {
+        int start = 0;
+        if (mSkipTop) {
+            start = 1;
+        }
+        int end = childCount;
+        if (mSkipBottom) {
+            end -= 1;
+        }
+
+        for (int i = start; i < end; i++) {
             final View child = parent.getChildAt(i);
             //RecyclerView v = new RecyclerView(parent.getContext());
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child

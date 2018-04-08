@@ -127,6 +127,8 @@
         <activity android:name=".activity.mine.ModifyShareTimeActivity" />
         <activity android:name=".activity.mine.ParkSpaceSettingActivity" />
         <activity android:name=".activity.mine.InvoiceReimbursementActivity" />
+        <activity android:name=".activity.mine.BluetoothBindingActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activity.mine.AcceptTicketAddressActivity" />
         <activity android:name=".activity.mine.AddAcceptTicketAddressActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"/>

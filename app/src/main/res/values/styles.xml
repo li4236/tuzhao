@@ -91,8 +91,9 @@
         <item name="android:drawablePadding">4dp</item>
     </style>
 
-    <style name="Text" parent="Widget.AppCompat.CompoundButton.RadioButton">
-
+    <style name="EditeTextStyle" parent="AppTheme">
+        <item name="android:colorControlNormal">@color/g12</item>
+        <item name="android:colorControlActivated">@color/g12</item>
     </style>
 
     <style name="dividerStyle">
@@ -139,6 +140,14 @@
         <item name="android:textSize">13sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/b1</item>
+    </style>
+
+    <style name="ThirtyTextG6Style">
+        <item name="textColor">@color/g6</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="SixtyTextB1Styel">

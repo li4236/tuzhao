@@ -60,6 +60,13 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 startActivity(ModifyShareTimeActivity.class);
             }
         });
+
+        findViewById(R.id.park_space_setting_bluetooth_binding).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(BluetoothBindingActivity.class);
+            }
+        });
     }
 
     @NonNull

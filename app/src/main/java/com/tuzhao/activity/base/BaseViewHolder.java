@@ -92,6 +92,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder showCirclePic(@IdRes int id, String url) {
+        ImageUtil.showCirclePic((ImageView) getView(id),url);
+        return this;
+    }
+
     private int getClickPosition() {
         if (getLayoutPosition() > mBaseAdapter.getHeadViewCount()) {
             return getLayoutPosition() - mBaseAdapter.getHeadViewCount();
