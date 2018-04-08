@@ -32,7 +32,7 @@ public class DensityUtil {
     private static Toast mToast;
 
     /**
-     * 根据手机的分辨率从 dp 的单位 转成为 px(像素) 
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
     public static int dp2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -40,19 +40,19 @@ public class DensityUtil {
     }
 
     /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp 
+     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
     public static int px2dp(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static float sp2px(Context context, float sp){
+    public static float sp2px(Context context, float sp) {
         final float scale = context.getResources().getDisplayMetrics().scaledDensity;
         return sp * scale;
     }
 
-    public static boolean isException (Context context, Exception e){
+    public static boolean isException(Context context, Exception e) {
         if (e instanceof ConnectException) {
             Log.d("TAG", "请求失败，" + " 信息为：连接异常" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
@@ -65,11 +65,11 @@ public class DensityUtil {
             Log.d("TAG", "请求失败，" + " 信息为：没有路由到主机" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
             return true;
-        }else if (e instanceof UnknownHostException) {
+        } else if (e instanceof UnknownHostException) {
             Log.d("TAG", "请求失败，" + " 信息为：设备未能上网" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
             return true;
-        }else if (e instanceof TokenInvalideException) {
+        } else if (e instanceof TokenInvalideException) {
             Log.d("TAG", "请求失败，" + " 信息为：token异常" + e.toString());
             //退出登录，设置不能再自动登录
             User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
@@ -85,18 +85,18 @@ public class DensityUtil {
         return false;
     }
 
-    public static String MD5code(String text){
+    public static String MD5code(String text) {
         try {
-            MessageDigest digest =MessageDigest.getInstance("md5");
-            byte [] result=digest.digest(text.getBytes());
-            StringBuilder sb=new StringBuilder();
-            for(byte b:result){
-                int number=b&0xff;
-                String hex=Integer.toHexString(number);
-                if(hex.length()==1){
+            MessageDigest digest = MessageDigest.getInstance("md5");
+            byte[] result = digest.digest(text.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : result) {
+                int number = b & 0xff;
+                String hex = Integer.toHexString(number);
+                if (hex.length() == 1) {
                     sb.append("0");
                     sb.append(hex);
-                }else {
+                } else {
                     sb.append(hex);
                 }
             }
@@ -107,8 +107,8 @@ public class DensityUtil {
         }
     }
 
-    public static String subZeroAndDot(String s){
-        if(s.indexOf(".") > 0){
+    public static String subZeroAndDot(String s) {
+        if (s.indexOf(".") > 0) {
             s = s.replaceAll("0+?$", "");//去掉多余的0
             s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
         }

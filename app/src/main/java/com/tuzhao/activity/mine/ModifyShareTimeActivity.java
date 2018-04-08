@@ -110,7 +110,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         mStartShareDate.setText(dateFormat.format(new Date(System.currentTimeMillis())));
         mEndShareDate.setText(dateFormat.format(new Date(System.currentTimeMillis())));
         dismmisLoadingDialog();
-
     }
 
     @NonNull
@@ -137,6 +136,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                                 mEndShareDate.setText(startDate);
                             }
                         } else {
+                            Log.e(TAG, "onDateCheck: " );
                             showFiveToast("开始共享的时间不能小于当天哦");
                         }
                     }

@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/TranslucentTheme"
     android:fitsSystemWindows="true"
+    android:theme="@style/TranslucentTheme"
     tools:openDrawer="start">
 
     <include
@@ -15,6 +15,7 @@
         android:layout_height="match_parent" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/drawer_cl"
         android:layout_width="290dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -23,8 +24,9 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/user_info"
             android:layout_width="match_parent"
-            android:layout_height="105dp"
-            android:background="@drawable/bg_yellow">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_yellow"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/id_activity_main_layout_imageview_user"
@@ -44,26 +46,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="4dp"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/id_activity_main_layout_imageview_user"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/id_activity_main_layout_imageview_user"
+                app:layout_constraintTop_toTopOf="@+id/id_activity_main_layout_imageview_user" />
 
             <TextView
                 android:id="@+id/id_activity_main_layout_textview_credit"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="14dp"
                 android:background="@drawable/white_all_10dp"
                 android:gravity="center"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:textColor="@color/b1"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/id_activity_main_layout_textview_username"
+                app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_textview_username"
                 tools:ignore="SmallSp" />
 
         </android.support.constraint.ConstraintLayout>

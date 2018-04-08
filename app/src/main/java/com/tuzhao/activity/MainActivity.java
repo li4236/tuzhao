@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -248,7 +249,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         constraintLayout_openuser = findViewById(R.id.id_content_main_layout_relativelayout_openuser);
         textview_credit = findViewById(R.id.id_activity_main_layout_textview_credit);
 
-        setStyle(false);
+        int barHeight = setStyle(false);
+        ConstraintSet userConstraintSet = new ConstraintSet();
+        userConstraintSet.clone(constraintLayout_user);
+        userConstraintSet.setMargin(R.id.id_activity_main_layout_imageview_user, ConstraintSet.TOP, DensityUtil.dp2px(this, 30) + barHeight);
+        userConstraintSet.applyTo(constraintLayout_user);
         showMarkers(mMarkerData);
     }
 
@@ -888,12 +893,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (UserManager.getInstance().hasLogined()) {
             ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
-            ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
-                    R.mipmap.ic_usericon);
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
             textview_credit.setText(crecdit);
         }
+        ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                R.mipmap.ic_usericon);
     }
 
     @Override
