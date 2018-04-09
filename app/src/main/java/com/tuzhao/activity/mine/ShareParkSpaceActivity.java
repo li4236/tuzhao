@@ -2,6 +2,8 @@ package com.tuzhao.activity.mine;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,12 +33,16 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity {
         super.initView(savedInstanceState);
         mSpaceAdapter = new ShareParkSpaceAdapter();
         mRecyclerView.setAdapter(mSpaceAdapter);
-        View view = LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
-        ImageView imageView = view.findViewById(R.id.no_address_empty_iv);
+        ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.setDimensionRatio(R.id.no_address_empty_iv, "438:334");
+        constraintSet.applyTo(constraintLayout);
+        ImageView imageView = constraintLayout.findViewById(R.id.no_address_empty_iv);
         ImageUtil.showPic(imageView, R.drawable.ic_noshare);
-        TextView textView = view.findViewById(R.id.no_address_empty_tv);
+        TextView textView = constraintLayout.findViewById(R.id.no_address_empty_tv);
         textView.setText("暂无好友给您分享车位哦...");
-        mRecyclerView.setEmptyView(view);
+        mRecyclerView.setEmptyView(constraintLayout);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
     }
 
