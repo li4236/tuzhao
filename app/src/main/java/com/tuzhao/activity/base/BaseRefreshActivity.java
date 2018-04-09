@@ -39,7 +39,7 @@ public abstract class BaseRefreshActivity extends BaseStatusActivity {
     }
 
     /**
-     * recy将使用该LayoutManager
+     * recycler将使用该LayoutManager
      *
      * @return recycleview使用的布局管理器
      */

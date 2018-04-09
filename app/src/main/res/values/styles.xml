@@ -102,6 +102,14 @@
         <item name="android:background">@color/w5</item>
     </style>
 
+    <style name="TenTextB1Style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/b1</item>
+    </style>
+
     <style name="TenTextG6Stytle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -131,7 +139,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12sp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/g1</item>
+        <item name="android:textColor">@color/g6</item>
     </style>
 
     <style name="ThirtyTextB1Style">

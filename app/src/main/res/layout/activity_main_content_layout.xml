@@ -150,7 +150,7 @@
         android:id="@+id/id_content_main_layout_textview_parknow"
         android:layout_width="0dp"
         android:layout_height="53dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="25dp"
         android:background="@drawable/normal_y6_press_y7_round"
         android:gravity="center"
         android:text="@string/park_now"

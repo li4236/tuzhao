@@ -64,7 +64,11 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
         findViewById(R.id.bluetooth_binding_add_device).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPhoneDialog();
+                if (mAdapter.getData().size() >= 5) {
+                    showFiveToast("最多只能添加5个亲友设备哦");
+                } else {
+                    showPhoneDialog();
+                }
             }
         });
     }
@@ -101,12 +105,9 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
     private void showNameDialog(final int position) {
         if (mModifyNameDialog == null) {
-
             ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.dialog_edit_layout, null);
             mFirendName = constraintLayout.findViewById(R.id.dialog_et);
             mFirendName.setHint("请输入亲友备注");
-            mFirendName.setText(mAdapter.getData().get(position).getName());
-            mFirendName.setSelection(mFirendName.getText().toString().length());
 
             mModifyNameDialog = new TipeDialog.Builder(this)
                     .setContentView(constraintLayout)
@@ -132,6 +133,8 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                     .create();
         }
         mModifyNameDialog.show();
+        mFirendName.setText(mAdapter.getData().get(position).getName());
+        mFirendName.setSelection(mFirendName.getText().toString().length());
     }
 
     private void showPhoneDialog() {
@@ -156,11 +159,12 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (mDateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
-                                BluetoothBindingFriendInfo friendInfo = friendInfo = new BluetoothBindingFriendInfo();
+                                BluetoothBindingFriendInfo friendInfo  = new BluetoothBindingFriendInfo();
                                 friendInfo.setName(mFriendPhone.getText().toString());
                                 friendInfo.setImagePath("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
                                 mAdapter.addData(friendInfo);
                                 updateFriendNumber();
+                                mFriendPhone.setText("");
                             } else {
                                 showFiveToast("你输入的手机不正确");
                             }

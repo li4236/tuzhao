@@ -213,6 +213,13 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         }
     }
 
+    public void clearAll() {
+        if (!mData.isEmpty()) {
+            mData.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }

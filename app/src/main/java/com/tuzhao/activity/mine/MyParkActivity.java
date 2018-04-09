@@ -61,12 +61,12 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initView() {
-        mRecyclerView = (SuperRefreshRecyclerView) findViewById(R.id.id_activity_mypark_layout_recyclerview);
+        mRecyclerView =  findViewById(R.id.id_activity_mypark_layout_recyclerview);
         mRecyclerView.init(new LinearLayoutManager(this),new onMyRefresh(),new onMyLoadMore());
         mRecyclerView.setRefreshEnabled(true);
         mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.setEmptyView(R.layout.layout_empty);
-        linearlayout_nodata = (LinearLayout) findViewById(R.id.id_activity_mypark_layout_linearlayout_nodata);
+        linearlayout_nodata =  findViewById(R.id.id_activity_mypark_layout_linearlayout_nodata);
     }
 
     private void initEvent() {

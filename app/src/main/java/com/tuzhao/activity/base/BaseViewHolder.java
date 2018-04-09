@@ -1,5 +1,6 @@
 package com.tuzhao.activity.base;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -79,6 +80,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public BaseViewHolder setCheckboxCheck(@IdRes int id, boolean check) {
         ((CheckBox) getView(id)).setChecked(check);
+        return this;
+    }
+
+    public BaseViewHolder showPic(@IdRes int id, @DrawableRes int drawableRes) {
+        ImageUtil.showPic((ImageView) getView(id), drawableRes);
         return this;
     }
 

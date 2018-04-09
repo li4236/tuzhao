@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/w0">
+
+    <TextView
+        android:id="@+id/share_park_space_space_name"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="14dp"
+        android:text="天之力停车场"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/share_park_space_share_name"
+        style="@style/TwentyTextG6Style"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="10dp"
+        android:text="车主:天之力"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/share_park_space_space_name"
+        app:layout_constraintTop_toBottomOf="@+id/share_park_space_space_name" />
+
+    <ImageView
+        android:id="@+id/share_park_space_status_iv"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/circle_green7"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
+        app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
+        app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
+
+    <TextView
+        android:id="@+id/share_park_space_status"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="16dp"
+        android:text="空闲中"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

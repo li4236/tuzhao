@@ -72,7 +72,7 @@ import com.tuzhao.activity.mine.PersonalCreditActivity;
 import com.tuzhao.activity.mine.PersonalMessageActivity;
 import com.tuzhao.activity.mine.SetActivity;
 import com.tuzhao.activity.mine.ShareActivity;
-import com.tuzhao.activity.mine.TextActivity;
+import com.tuzhao.activity.mine.ShareParkSpaceActivity;
 import com.tuzhao.fragment.home.ChargeFragment;
 import com.tuzhao.fragment.home.ParkFragment;
 import com.tuzhao.http.HttpConstants;
@@ -403,9 +403,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivityForResult(intent, 1);
                 break;
             case R.id.id_activity_main_layout_linearlayout_find:
-                intent = new Intent(MainActivity.this, TextActivity.class);
+                intent = new Intent(MainActivity.this, ShareParkSpaceActivity.class);
                 startActivity(intent);
-                MyToast.showToast(MainActivity.this, "功能开发中", 5);
+                //MyToast.showToast(MainActivity.this, "功能开发中", 5);
                 break;
             case R.id.id_content_main_layout_imageview_spark:
                 if (show) {
@@ -764,16 +764,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 if (isFirstloc) {
                     //第一次定位成功
                     isFirstloc = false;
-                    Log.e("TAG", "onLocationChanged latitude" + amapLocation.getLatitude() + "  longtitude:" + amapLocation.getLongitude());
                     addLoactionMarker(mLastlocationLatlng);//添加定位图标
-                    Log.e(TAG, "onLocationChanged: addLoactionMarker" + String.valueOf(mLocationMarker == null));
-                    Log.e(TAG, "onLocationChanged: " + String.valueOf(mSensorHelper == null));
                     if (mSensorHelper == null) {
                         mSensorHelper = new SensorEventHelper(MainActivity.this);
                         mSensorHelper.registerSensorListener();
                     }
                     mSensorHelper.setCurrentMarker(mLocationMarker);//定位图标旋转
-                    Log.e(TAG, "onLocationChanged: setCurrentMarker");
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
                     Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
@@ -837,9 +833,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             return;
         }
         MarkerOptions options = new MarkerOptions();
-       /* View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
-        ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
-        img_chargestation.setImageResource(R.mipmap.ic_fangxiang);*/
         options.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_fangxiang));
         options.anchor(0.5f, 0.5f);
         options.position(latlng);

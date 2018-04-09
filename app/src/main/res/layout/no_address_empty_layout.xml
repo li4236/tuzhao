@@ -22,6 +22,7 @@
     <TextView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/no_address_empty_tv"
         app:layout_constraintTop_toBottomOf="@+id/no_address_empty_iv"
         android:layout_marginTop="32dp"
         android:text="您还没有收票地址喔..."

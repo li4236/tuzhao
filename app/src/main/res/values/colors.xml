@@ -32,12 +32,14 @@
     <color name="green4">#86e589</color>
     <color name="green5">#1fa72f</color>
     <color name="green6">#1cbd4a</color>
+    <color name="green7">#1dd0a1</color>
     <color name="blue1">#005bea</color>
     <color name="blue2">#0979fe</color>
     <color name="r1">#ef413e</color>
     <color name="r2">#ff0000</color>
     <color name="r3">#cd2a20</color>
     <color name="r4">#de2114</color>
+    <color name="r5">#fd5132</color>
     <color name="y1">#ff863b</color>
     <color name="y2">#ffcc30</color>
     <color name="y3">#ffa830</color>
