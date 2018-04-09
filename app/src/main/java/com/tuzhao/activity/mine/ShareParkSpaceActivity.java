@@ -31,13 +31,13 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity {
         super.initView(savedInstanceState);
         mSpaceAdapter = new ShareParkSpaceAdapter();
         mRecyclerView.setAdapter(mSpaceAdapter);
-        View view = LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView,false);
+        View view = LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
         ImageView imageView = view.findViewById(R.id.no_address_empty_iv);
         ImageUtil.showPic(imageView, R.drawable.ic_noshare);
         TextView textView = view.findViewById(R.id.no_address_empty_tv);
         textView.setText("暂无好友给您分享车位哦...");
         mRecyclerView.setEmptyView(view);
-        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this,true,true));
+        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
     }
 
     @Override

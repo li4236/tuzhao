@@ -62,7 +62,7 @@ public class RentalRecordActivity extends BaseRefreshActivity {
         mAdapter = new RentalRecordAdapter(new ArrayList<RentalRecordItemInfo>(), mRecyclerView.getRecyclerView());
         mAdapter.setHeaderView(R.layout.layout_placeholder);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this,SkipTopBottomDivider.VERTICAL_LIST));
+        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
     }
 
     @Override
