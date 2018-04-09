@@ -28,7 +28,7 @@
             android:background="@drawable/bg_yellow"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <com.tuzhao.publicwidget.others.CircleImageView
                 android:id="@+id/id_activity_main_layout_imageview_user"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -152,6 +152,23 @@
                     tools:ignore="RtlSymmetry" />
 
                 <TextView
+                    android:id="@+id/id_activity_main_layout_linearlayout_friend_park"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="20dp"
+                    android:drawableStart="@mipmap/ic_friendshare"
+                    android:paddingBottom="15dp"
+                    android:paddingStart="30dp"
+                    android:paddingTop="15dp"
+                    android:text="@string/friend_park"
+                    android:textColor="@color/b1"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_linearlayout_mypark"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
                     android:id="@+id/id_activity_main_layout_linearlayout_mycollection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -165,7 +182,7 @@
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_linearlayout_mypark"
+                    app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_linearlayout_friend_park"
                     tools:ignore="RtlSymmetry" />
 
                 <TextView

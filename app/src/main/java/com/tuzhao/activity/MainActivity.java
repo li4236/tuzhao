@@ -73,6 +73,7 @@ import com.tuzhao.activity.mine.PersonalMessageActivity;
 import com.tuzhao.activity.mine.SetActivity;
 import com.tuzhao.activity.mine.ShareActivity;
 import com.tuzhao.activity.mine.ShareParkSpaceActivity;
+import com.tuzhao.activity.mine.TextActivity;
 import com.tuzhao.fragment.home.ChargeFragment;
 import com.tuzhao.fragment.home.ParkFragment;
 import com.tuzhao.http.HttpConstants;
@@ -95,6 +96,7 @@ import com.tuzhao.publicwidget.map.ClusterOverlay;
 import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
@@ -130,8 +132,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private MapView mapView;
     private AMap aMap;
     private SensorEventHelper mSensorHelper;
-    private ImageView imageview_turnown, imageview_user, imageview_huser, imageview_spark, imageview_scharge,
+    private ImageView imageview_turnown, imageview_spark, imageview_scharge,
             imageview_search;
+    private CircleImageView imageview_user, imageview_huser;
     private TextView textview_username, textview_citynodata, textview_credit;
     private TextView textview_mywallet, textview_parkorder, textview_share,
             textview_mycarnumble, textview_mypark, textview_set, textview_mycollection, textview_find;
@@ -293,6 +296,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         imageview_scharge.setOnClickListener(this);
         textview_credit.setOnClickListener(this);
         findViewById(R.id.id_content_main_layout_textview_parknow).setOnClickListener(this);
+        findViewById(R.id.id_activity_main_layout_linearlayout_friend_park).setOnClickListener(this);
 
         //等地图绘制完成后，获得地图宽高，来实现转到地图上部中心点
         ViewTreeObserver vto = mapView.getViewTreeObserver();
@@ -398,14 +402,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 intent = new Intent(MainActivity.this, MyParkActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.id_activity_main_layout_linearlayout_friend_park:
+                intent = new Intent(MainActivity.this, ShareParkSpaceActivity.class);
+                startActivity(intent);
+                break;
             case R.id.id_activity_main_layout_linearlayout_mycollection:
                 intent = new Intent(MainActivity.this, CollectionActivity.class);
                 startActivityForResult(intent, 1);
                 break;
             case R.id.id_activity_main_layout_linearlayout_find:
-                intent = new Intent(MainActivity.this, ShareParkSpaceActivity.class);
+                intent = new Intent(MainActivity.this, TextActivity.class);
                 startActivity(intent);
-                //MyToast.showToast(MainActivity.this, "功能开发中", 5);
+                MyToast.showToast(MainActivity.this, "功能开发中", 5);
                 break;
             case R.id.id_content_main_layout_imageview_spark:
                 if (show) {
