@@ -63,19 +63,12 @@
                     android:textColor="@color/b1"
                     android:textSize="13sp" />
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="0dp">
-
-                    <ImageView
+                    <com.tuzhao.publicwidget.others.CircleImageView
                         android:id="@+id/id_activity_personalmessage_layout_imageview_user"
                         android:layout_width="44dp"
                         android:layout_height="44dp"
                         android:scaleType="centerCrop"
                         android:src="@mipmap/ic_img"/>
-                </android.support.v7.widget.CardView>
 
                 <ImageView
                     android:layout_width="wrap_content"

@@ -371,7 +371,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     }
                 }
                 break;
-            case R.id.id_activity_main_layout_linearlayout_user:
+            case R.id.user_info:
                 //跳转个人页面
                 intent = new Intent(MainActivity.this, PersonalMessageActivity.class);
                 startActivity(intent);

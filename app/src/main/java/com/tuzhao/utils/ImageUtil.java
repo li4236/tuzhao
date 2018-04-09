@@ -74,6 +74,17 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    public static void showCircleImgPic(ImageView imageView, String url) {
+        GlideApp.with(imageView.getContext())
+                .load(url)
+                .circleCrop()
+                .centerCrop()
+                .placeholder(R.mipmap.ic_img)
+                .error(R.mipmap.ic_img)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
     public static void showCirclePic(ImageView imageView, String url, int placeholder) {
         GlideApp.with(imageView.getContext())
                 .load(url)

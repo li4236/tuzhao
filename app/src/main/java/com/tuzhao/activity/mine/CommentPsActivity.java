@@ -144,13 +144,12 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.id_activity_commentps_layout_imageview_add:
                 //调用相册
-                new ImagePicker.Builder()
+                new ImagePicker()
                         .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
                         .needCamera(true) //是否需要在界面中显示相机入口(类似微信那样)
-                        .pickType(ImagePickType.MUTIL) //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
+                        .pickType(ImagePickType.MULTI) //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
                         .maxNum(3)  //设置最大选择数量(此选项只对多选生效，拍照和单选都是1，修改后也无效)
-                        .build()
-                        .start(CommentPsActivity.this, REQUEST_CODE_PICKER, RESULT_CODE_PICKER);
+                        .start(CommentPsActivity.this, REQUEST_CODE_PICKER);
                 break;
             case R.id.id_activity_commentps_layout_imageview_del1:
                 relativelayout_img1.setVisibility(View.GONE);
@@ -266,7 +265,7 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_CODE_PICKER) {
+        if (requestCode == REQUEST_CODE_PICKER &&data!=null) {
             img_list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             initSomePic();
             file_list = new ArrayList<>();

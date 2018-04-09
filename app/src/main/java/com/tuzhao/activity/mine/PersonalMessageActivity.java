@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lwkandroid.imagepicker.ImagePicker;
@@ -28,6 +27,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 
@@ -47,7 +47,7 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
 
 public class PersonalMessageActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView imageview_user;
+    private CircleImageView imageview_user;
     private TextView textview_nickname, textview_realname, textview_credit;
     private CustomDialog mCustomDialog;
 
@@ -109,13 +109,12 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.id_activity_personalmessage_layout_linearlayout_imguser:
                 //调用相册，更换头像
-                new ImagePicker.Builder()
+                new ImagePicker()
                         .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
                         .needCamera(true) //是否需要在界面中显示相机入口(类似微信那样)
                         .pickType(ImagePickType.SINGLE) //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
                         .doCrop(1, 1, 200, 200) //裁剪功能需要调用这个方法，多选模式下无效，参数：aspectX,aspectY,outputX,outputY
-                        .build()
-                        .start(PersonalMessageActivity.this, REQUEST_CODE_PICKER, RESULT_CODE_PICKER);
+                        .start(PersonalMessageActivity.this, REQUEST_CODE_PICKER);
                 break;
             case R.id.id_activity_personalmessage_layout_linearlayout_nickname:
                 //跳转修改昵称
@@ -141,7 +140,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_CODE_PICKER) {
+        if (requestCode == REQUEST_CODE_PICKER && data!=null) {
             final List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             initLoading("正在更换...");
             Log.e("hhaha", getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
@@ -191,7 +190,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                             file.delete();
                         }
 
-                        ImageUtil.showImpPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + data_info.data.getImg_url());
+                        ImageUtil.showCircleImgPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + data_info.data.getImg_url());
                         User_Info userInfo = UserManager.getInstance().getUserInfo();
                         userInfo.setImg_url(data_info.data.getImg_url());
                         UserManager.getInstance().setUserInfo(userInfo);
