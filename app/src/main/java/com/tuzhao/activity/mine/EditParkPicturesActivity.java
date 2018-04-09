@@ -209,19 +209,17 @@ public class EditParkPicturesActivity extends BaseActivity {
         final TipeDialog.Builder builder = new TipeDialog.Builder(this);
         builder.setMessage("是否确定删除这" + count + "张图片吗？");
         builder.setTitle("提示");
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
+                //设置你的操作事项
+                initLoading("删除中...");
+                requestDeleteParkPicture();
             }
         });
-        builder.setNegativeButton("确定",
+        builder.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        //设置你的操作事项
-                        initLoading("删除中...");
-                        requestDeleteParkPicture();
+
                     }
                 });
         builder.create().show();

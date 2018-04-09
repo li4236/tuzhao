@@ -89,42 +89,40 @@ public class MyBalanceActivity extends BaseActivity {
                     TipeDialog.Builder builder = new TipeDialog.Builder(MyBalanceActivity.this);
                     builder.setMessage("绑定支付宝方便提现哦，是否绑定？");
                     builder.setTitle("支付宝绑定");
-                    builder.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("立即绑定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Intent intent = new Intent(MyBalanceActivity.this,GetMoneyActivty.class);
-                            startActivity(intent);
+                            //去绑定
+                            Map<String, String> authInfoMap = OrderInfoUtil2_0.buildAuthInfoMap("201701010102", true);
+                            String info = OrderInfoUtil2_0.buildOrderParam(authInfoMap);
+                            String sign = OrderInfoUtil2_0.getSign(authInfoMap, "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC3dPPLfCrGnYcl4Z96xrC/5MaQ38AnDvqNi+QJwO26nAfru7xuho0U7nyTtx0gbfd0zWbGX0DV3FGab0k8LGIJnKhcC7tXBTgoWlVtdpJ3yxeK3YyPfX1J3O+W2/FddnJ1oZAUqCp81z+fWsoyu907h4rR+Vt06Y85YujlkguRmmiydWsKnU5gaFTaW6IVbL/dLmW/FLVzjtZ3D7rPwnJvRjTxQgTQUTKu4WsGmfjssZFxyNskkXCSvCH+ODVAbF8sAfFrk3d3gR0Yr1McOHte7YJoYzvgXQ/Khf3JbvvfXdzkfhacmwsbFIq5jNO4/6amof6sLiQsANU3n5NAKNHbAgMBAAECggEAPoN/v8sj2GI9d08WxQOHnxwZ/awBEk4sWqdcoWY4m+onWNC0OQVodcV+dedj6XUPaaHEb7xtn3Jf7DwXvIVzMstLI3Jr+A8zP6zoh1BsQJ3X+93a09pzIwRCMCnqaWq/Pg47xo43TCsc5vRNClSx4mMhjsNlwsUDpQ5rRi8p+gcK2tISt5LuYw6Kw36El/paaBz6idd7lZ5eEKqb2p2DQbftj0K5m4RbdayJ1JKpY+co2c2MnIu09isMj8/ONauesh6dg/qMBMcyeuaHCI8YfPj4KYGI5foXqcw8SwRaGErQtNKZlAp84nTp20uvdmH1m1KREF146VoG2eK+iV6d4QKBgQD2EeAZWX/DWcTOu7iR1wTNlBo1WrJ34dFh6p13Pa7clYvSUOZlsidTz2S37vzIrpIYutbrhAV651uWUiDaYAgodzPQDgvn6VOV3V1ss9tigaUgD9GaZ5DOspCojfRfcKPrdEZn09Fv+WumAZecLUEGKH8My8SlkwvPB7r65zFoZwKBgQC+3Dpfv/+3QHMJMQJwDIeO2MptHZvQ7gVPsYi554gfmmnrsRdV9LCCFo6iTBCUQ/xijm3N8lh+qHz9Q627MqGy8wNqkEnjSqUH6xxSLIAd/8sw7vLnfuhvc+VOXOYUMcbRBiqWRK7RItTRRjk7X7WAkGJbE6WvfaP/rUiwPGLybQKBgQDsqhSXTPUMtfILw5Co89yyvJbYafrsQkxXmIcKgFEF5u8rwJNXjBk3CmkcXsbRXNU247yBl+CNbKcx1Ju0bFhsUvmKSXg5/LdflCCew/1kqLxgMdauYp1rr2JiOuWmRXfipVpx0c/FmmZmq3FdzEiV260WaYUgmmTpIc48Ms/aUQKBgAeRpkL700FKLgW0Stt0s7+He2eeX/qGJfHGIZz1wKE4N3EgYcOH46QVDu0CxTmMBKtH6LTdIoNLXUGR+IbO+DiniIAmXrfD0w2gVkwv9Zi69yzmnP1vO/qHhxV3e6xbWP4bF39EFAa5MeVmuohPQFxr3WqtOcne2q0eCx7qFiZ1AoGBAIcctLQUoJ4r5dnbH9ax0fLAHmm8NAZjcao2yzDIi8X4/6593fx4gYqt5ppD1lo/AnfmDvDPEHm9v45XsK1Fa1rgEyA4eMKn6MJMjjQtmbvFINqHtIuk6C4w1VFa7iTUYcjgWVEiim+z4J3zkXgVecsploc8ZS9RYJTTc/Di5/Ab", true);
+                            final String authInfo = info + "&" + sign;
+                            Log.e("请求数据",authInfo);
+                            Runnable authRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 构造AuthTask 对象
+                                    AuthTask authTask = new AuthTask(MyBalanceActivity.this);
+                                    // 调用授权接口，获取授权结果
+                                    Map<String, String> result = authTask.authV2(authInfo, true);
+
+                                    Message msg = new Message();
+                                    msg.what = SDK_AUTH_FLAG;
+                                    msg.obj = result;
+                                    mHandler.sendMessage(msg);
+                                }
+                            };
+
+                            // 必须异步调用
+                            Thread authThread = new Thread(authRunnable);
+                            authThread.start();
                         }
                     });
 
-                    builder.setNegativeButton("立即绑定",
+                    builder.setNegativeButton("去设置",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    //去绑定
-                                    Map<String, String> authInfoMap = OrderInfoUtil2_0.buildAuthInfoMap("201701010102", true);
-                                    String info = OrderInfoUtil2_0.buildOrderParam(authInfoMap);
-                                    String sign = OrderInfoUtil2_0.getSign(authInfoMap, "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC3dPPLfCrGnYcl4Z96xrC/5MaQ38AnDvqNi+QJwO26nAfru7xuho0U7nyTtx0gbfd0zWbGX0DV3FGab0k8LGIJnKhcC7tXBTgoWlVtdpJ3yxeK3YyPfX1J3O+W2/FddnJ1oZAUqCp81z+fWsoyu907h4rR+Vt06Y85YujlkguRmmiydWsKnU5gaFTaW6IVbL/dLmW/FLVzjtZ3D7rPwnJvRjTxQgTQUTKu4WsGmfjssZFxyNskkXCSvCH+ODVAbF8sAfFrk3d3gR0Yr1McOHte7YJoYzvgXQ/Khf3JbvvfXdzkfhacmwsbFIq5jNO4/6amof6sLiQsANU3n5NAKNHbAgMBAAECggEAPoN/v8sj2GI9d08WxQOHnxwZ/awBEk4sWqdcoWY4m+onWNC0OQVodcV+dedj6XUPaaHEb7xtn3Jf7DwXvIVzMstLI3Jr+A8zP6zoh1BsQJ3X+93a09pzIwRCMCnqaWq/Pg47xo43TCsc5vRNClSx4mMhjsNlwsUDpQ5rRi8p+gcK2tISt5LuYw6Kw36El/paaBz6idd7lZ5eEKqb2p2DQbftj0K5m4RbdayJ1JKpY+co2c2MnIu09isMj8/ONauesh6dg/qMBMcyeuaHCI8YfPj4KYGI5foXqcw8SwRaGErQtNKZlAp84nTp20uvdmH1m1KREF146VoG2eK+iV6d4QKBgQD2EeAZWX/DWcTOu7iR1wTNlBo1WrJ34dFh6p13Pa7clYvSUOZlsidTz2S37vzIrpIYutbrhAV651uWUiDaYAgodzPQDgvn6VOV3V1ss9tigaUgD9GaZ5DOspCojfRfcKPrdEZn09Fv+WumAZecLUEGKH8My8SlkwvPB7r65zFoZwKBgQC+3Dpfv/+3QHMJMQJwDIeO2MptHZvQ7gVPsYi554gfmmnrsRdV9LCCFo6iTBCUQ/xijm3N8lh+qHz9Q627MqGy8wNqkEnjSqUH6xxSLIAd/8sw7vLnfuhvc+VOXOYUMcbRBiqWRK7RItTRRjk7X7WAkGJbE6WvfaP/rUiwPGLybQKBgQDsqhSXTPUMtfILw5Co89yyvJbYafrsQkxXmIcKgFEF5u8rwJNXjBk3CmkcXsbRXNU247yBl+CNbKcx1Ju0bFhsUvmKSXg5/LdflCCew/1kqLxgMdauYp1rr2JiOuWmRXfipVpx0c/FmmZmq3FdzEiV260WaYUgmmTpIc48Ms/aUQKBgAeRpkL700FKLgW0Stt0s7+He2eeX/qGJfHGIZz1wKE4N3EgYcOH46QVDu0CxTmMBKtH6LTdIoNLXUGR+IbO+DiniIAmXrfD0w2gVkwv9Zi69yzmnP1vO/qHhxV3e6xbWP4bF39EFAa5MeVmuohPQFxr3WqtOcne2q0eCx7qFiZ1AoGBAIcctLQUoJ4r5dnbH9ax0fLAHmm8NAZjcao2yzDIi8X4/6593fx4gYqt5ppD1lo/AnfmDvDPEHm9v45XsK1Fa1rgEyA4eMKn6MJMjjQtmbvFINqHtIuk6C4w1VFa7iTUYcjgWVEiim+z4J3zkXgVecsploc8ZS9RYJTTc/Di5/Ab", true);
-                                    final String authInfo = info + "&" + sign;
-                                    Log.e("请求数据",authInfo);
-                                    Runnable authRunnable = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            // 构造AuthTask 对象
-                                            AuthTask authTask = new AuthTask(MyBalanceActivity.this);
-                                            // 调用授权接口，获取授权结果
-                                            Map<String, String> result = authTask.authV2(authInfo, true);
-
-                                            Message msg = new Message();
-                                            msg.what = SDK_AUTH_FLAG;
-                                            msg.obj = result;
-                                            mHandler.sendMessage(msg);
-                                        }
-                                    };
-
-                                    // 必须异步调用
-                                    Thread authThread = new Thread(authRunnable);
-                                    authThread.start();
+                                    Intent intent = new Intent(MyBalanceActivity.this,GetMoneyActivty.class);
+                                    startActivity(intent);
                                 }
                             });
 

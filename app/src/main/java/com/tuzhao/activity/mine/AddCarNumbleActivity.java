@@ -152,28 +152,26 @@ public class AddCarNumbleActivity extends BaseActivity implements View.OnClickLi
         mCarNumber = mTv_prefix.getText().toString() + mEt_carnumber.getText().toString();
         builder.setMessage("请确认您填写的车牌号：" + mCarNumber);
         builder.setTitle("提示");
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                //设置你的操作事项
+                if (mUserInfo.getCar_number() == null) {
+                    initLoading("添加中...");
+                    addUserCarNumber(mCarNumber,true);
+                }else {
+                    if (mUserInfo.getCar_number().equals("-1")){
+                        initLoading("添加中...");
+                        addUserCarNumber(mCarNumber,true);
+                    }else {
+                        initLoading("添加中...");
+                        addUserCarNumber(mCarNumber,false);
+                    }
+                }
             }
         });
-        builder.setNegativeButton("确定",
+        builder.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        //设置你的操作事项
-                        if (mUserInfo.getCar_number() == null) {
-                            initLoading("添加中...");
-                            addUserCarNumber(mCarNumber,true);
-                        }else {
-                            if (mUserInfo.getCar_number().equals("-1")){
-                                initLoading("添加中...");
-                                addUserCarNumber(mCarNumber,true);
-                            }else {
-                                initLoading("添加中...");
-                                addUserCarNumber(mCarNumber,false);
-                            }
-                        }
                     }
                 });
         builder.create().show();

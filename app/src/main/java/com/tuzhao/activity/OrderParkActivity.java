@@ -681,18 +681,16 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         final Holder perfectpark = ctpark;
 
         builder.setTitle("确认预定");
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                initLoading("匹配中...");
+                sendOrder(perfectpark, readypark);
             }
         });
 
-        builder.setNegativeButton("立即预定",
+        builder.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        initLoading("匹配中...");
-                        sendOrder(perfectpark, readypark);
                     }
                 });
 
@@ -741,18 +739,16 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                     builder = new TipeDialog.Builder(OrderParkActivity.this);
                                     builder.setMessage("最优车位顺延时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
                                     builder.setTitle("确认预定");
-                                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                                    builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
+                                            initLoading("提交中...");
+                                            requestAppointOrderLockPark(readypark.get(0));
                                         }
                                     });
 
-                                    builder.setNegativeButton("立即预定",
+                                    builder.setNegativeButton("取消",
                                             new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                    initLoading("提交中...");
-                                                    requestAppointOrderLockPark(readypark.get(0));
                                                 }
                                             });
 
@@ -763,18 +759,16 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                     builder = new TipeDialog.Builder(OrderParkActivity.this);
                                     builder.setMessage("最优车位顺延时长为" + readypark.get(1).rest_time + "分钟，是否预定？");
                                     builder.setTitle("确认预定");
-                                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                                    builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
+                                            initLoading("提交中...");
+                                            requestAppointOrderLockPark(readypark.get(1));
                                         }
                                     });
 
-                                    builder.setNegativeButton("立即预定",
+                                    builder.setNegativeButton("取消",
                                             new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                    initLoading("提交中...");
-                                                    requestAppointOrderLockPark(readypark.get(1));
                                                 }
                                             });
 

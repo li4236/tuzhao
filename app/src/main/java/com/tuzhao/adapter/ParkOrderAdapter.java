@@ -136,17 +136,15 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     TipeDialog.Builder builder = new TipeDialog.Builder(mContext);
                     builder.setMessage("确定取消该订单吗？");
                     builder.setTitle("提示");
-                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            onItemCancleOrder.onItemCancleOrder(position);
                         }
                     });
 
-                    builder.setNegativeButton("确定",
+                    builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    onItemCancleOrder.onItemCancleOrder(position);
                                 }
                             });
 
@@ -343,17 +341,15 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     TipeDialog.Builder builder = new TipeDialog.Builder(mContext);
                     builder.setMessage("确定删除该订单吗？");
                     builder.setTitle("提示");
-                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            onItemDeleteOrder.onItemDeleteOrder(position);
                         }
                     });
 
-                    builder.setNegativeButton("确定",
+                    builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    onItemDeleteOrder.onItemDeleteOrder(position);
                                 }
                             });
 
@@ -390,17 +386,15 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     TipeDialog.Builder builder = new TipeDialog.Builder(mContext);
                     builder.setMessage("确定删除该订单吗？");
                     builder.setTitle("提示");
-                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            onItemDeleteOrder.onItemDeleteOrder(position);
                         }
                     });
 
-                    builder.setNegativeButton("确定",
+                    builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    onItemDeleteOrder.onItemDeleteOrder(position);
                                 }
                             });
 

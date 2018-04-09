@@ -233,19 +233,16 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
         final TipeDialog.Builder builder = new TipeDialog.Builder(this);
         builder.setMessage("是否确定出租车位\n请保持手机通讯正常");
         builder.setTitle("提示");
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
+                //设置你的操作事项
+                initLoading("提交中...");
+                sendPark();
             }
         });
-        builder.setNegativeButton("确定",
+        builder.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        //设置你的操作事项
-                        initLoading("提交中...");
-                        sendPark();
                     }
                 });
         builder.create().show();

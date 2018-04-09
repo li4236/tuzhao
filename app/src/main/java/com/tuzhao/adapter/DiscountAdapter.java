@@ -107,17 +107,15 @@ public class DiscountAdapter extends RecyclerView.Adapter<DiscountAdapter.ViewHo
                     TipeDialog.Builder builder = new TipeDialog.Builder(mContext);
                     builder.setMessage("确定删除该优惠券吗？");
                     builder.setTitle("提示");
-                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            mIDeleteBtnClickListener.onDeleteBtnCilck(mDiscountList.get(position).getId(),position);
                         }
                     });
 
-                    builder.setNegativeButton("确定",
+                    builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    mIDeleteBtnClickListener.onDeleteBtnCilck(mDiscountList.get(position).getId(),position);
                                 }
                             });
 

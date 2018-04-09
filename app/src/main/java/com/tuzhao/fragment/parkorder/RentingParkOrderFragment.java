@@ -51,16 +51,16 @@ public class RentingParkOrderFragment extends BaseFragment {
      */
     private View mContentView;
     private CustomDialog mCustomDialog;
-    private LinearLayout linearlayout_nodata,linearlayout12;
+    private LinearLayout linearlayout_nodata, linearlayout12;
     private RelativeLayout relativelayout_orderdetail, relativelayout_detailmoney;
-    private TextView textview_fee, textview_warm1, textview_warm2, textview_finish,textview_order_1,textview_order_2,textview_zheceng1,textview_zheceng2;
+    private TextView textview_fee, textview_warm1, textview_warm2, textview_finish, textview_order_1, textview_order_2, textview_zheceng1, textview_zheceng2;
     private CountupView countdownview;
 
     private List<ParkOrderInfo> mData;
 
     private CustomPopWindow mCustomPopWindow;
     private DateUtil.ParkFee parkFee;
-    private boolean isFirstIn = true,isFirstOrder = true;
+    private boolean isFirstIn = true, isFirstOrder = true;
     DateUtil dateUtil = new DateUtil();
 
     @Nullable
@@ -105,7 +105,7 @@ public class RentingParkOrderFragment extends BaseFragment {
         OkGo.post(HttpConstants.getKindParkOrder)
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("order_status", "2")
                 .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
                     @Override
@@ -114,7 +114,7 @@ public class RentingParkOrderFragment extends BaseFragment {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (isFirstIn){
+                        if (isFirstIn) {
                             isFirstIn = false;
                         }
                         linearlayout_nodata.setVisibility(View.GONE);
@@ -129,7 +129,7 @@ public class RentingParkOrderFragment extends BaseFragment {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(mContext,e)){
+                        if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
@@ -148,31 +148,31 @@ public class RentingParkOrderFragment extends BaseFragment {
     }
 
     private void initDataView() {
-        if (mData.size()>0){
+        if (mData.size() > 0) {
             linearlayout_nodata.setVisibility(View.GONE);
-            if (isFirstOrder && mData.size() ==1){
-                textview_order_1.setBackgroundColor(ContextCompat.getColor(mContext,R.color.w1));
+            if (isFirstOrder && mData.size() == 1) {
+                textview_order_1.setBackgroundColor(ContextCompat.getColor(mContext, R.color.w1));
                 textview_order_2.setText("暂无订单");
                 textview_order_2.setBackgroundColor(Color.WHITE);
                 textview_zheceng1.setVisibility(View.VISIBLE);
                 textview_zheceng2.setVisibility(View.GONE);
                 initDataView1(mData.get(0));
-            }else if (isFirstOrder && mData.size() ==2){
-                textview_order_1.setBackgroundColor(ContextCompat.getColor(mContext,R.color.w1));
+            } else if (isFirstOrder && mData.size() == 2) {
+                textview_order_1.setBackgroundColor(ContextCompat.getColor(mContext, R.color.w1));
                 textview_order_2.setText("订单二");
                 textview_order_2.setBackgroundColor(Color.WHITE);
                 textview_zheceng1.setVisibility(View.VISIBLE);
                 textview_zheceng2.setVisibility(View.GONE);
                 initDataView1(mData.get(0));
-            }else if (!isFirstOrder && mData.size() ==2){
+            } else if (!isFirstOrder && mData.size() == 2) {
                 textview_order_1.setBackgroundColor(Color.WHITE);
                 textview_order_2.setText("订单二");
-                textview_order_2.setBackgroundColor(ContextCompat.getColor(mContext,R.color.w1));
+                textview_order_2.setBackgroundColor(ContextCompat.getColor(mContext, R.color.w1));
                 textview_zheceng1.setVisibility(View.GONE);
                 textview_zheceng2.setVisibility(View.VISIBLE);
                 initDataView1(mData.get(1));
             }
-        }else {
+        } else {
             linearlayout_nodata.setVisibility(View.VISIBLE);
         }
     }
@@ -180,24 +180,24 @@ public class RentingParkOrderFragment extends BaseFragment {
     private void initDataView1(final ParkOrderInfo parkOrderInfo) {
         textview_warm1.setText("需在" + parkOrderInfo.getOrder_endtime() + "前离场");
         textview_warm2.setText("超时按" + parkOrderInfo.getFine() + "元/小时收费");
-        final int parkontime = dateUtil.getTimeDifferenceMinuteMoreDetail(parkOrderInfo.getPark_start_time(), TimeManager.getInstance().getNowTime(true,true));
-        Log.e("停车时长妈的",parkontime+"  ");
+        final int parkontime = dateUtil.getTimeDifferenceMinuteMoreDetail(parkOrderInfo.getPark_start_time(), TimeManager.getInstance().getNowTime(true, true));
+        Log.e("停车时长妈的", parkontime + "  ");
         if (parkontime > 86400) {
-            countdownview.start(parkontime * 1000 );
+            countdownview.start(parkontime * 1000);
         } else if (parkontime < 86400 && parkontime > 3600) {
             countdownview.customTimeShow(false, true, true, true, false);
-            countdownview.start(parkontime * 1000 );
+            countdownview.start(parkontime * 1000);
         } else {
             countdownview.customTimeShow(false, false, true, true, false);
-            countdownview.start(parkontime * 1000 );
+            countdownview.start(parkontime * 1000);
         }
 
-        countdownview.setOnCountdownIntervalListener(1000*10, new CountupView.OnCountdownIntervalListener() {
+        countdownview.setOnCountdownIntervalListener(1000 * 10, new CountupView.OnCountdownIntervalListener() {
             @Override
             public void onInterval(CountupView cv, long remainTime) {
                 //每过一分钟，计算一次价钱
-                parkFee = dateUtil.countCost(parkOrderInfo.getPark_start_time(), TimeManager.getInstance().getNowTime(true,false), parkOrderInfo.getOrder_endtime(), parkOrderInfo.getHigh_time().substring(0, parkOrderInfo.getHigh_time().indexOf(" - ")), parkOrderInfo.getHigh_time().substring(parkOrderInfo.getHigh_time().indexOf(" - ") + 3, parkOrderInfo.getHigh_time().length()), parkOrderInfo.getHigh_fee(), parkOrderInfo.getLow_fee(),parkOrderInfo.getFine());
-                textview_fee.setText((parkFee.parkfee+parkFee.outtimefee) + "");
+                parkFee = dateUtil.countCost(parkOrderInfo.getPark_start_time(), TimeManager.getInstance().getNowTime(true, false), parkOrderInfo.getOrder_endtime(), parkOrderInfo.getHigh_time().substring(0, parkOrderInfo.getHigh_time().indexOf(" - ")), parkOrderInfo.getHigh_time().substring(parkOrderInfo.getHigh_time().indexOf(" - ") + 3, parkOrderInfo.getHigh_time().length()), parkOrderInfo.getHigh_fee(), parkOrderInfo.getLow_fee(), parkOrderInfo.getFine());
+                textview_fee.setText((parkFee.parkfee + parkFee.outtimefee) + "");
                 if (parkontime > 86400) {
                     countdownview.customTimeShow(true, true, true, true, false);
                 } else if (parkontime < 86400 && parkontime > 3600) {
@@ -213,7 +213,7 @@ public class RentingParkOrderFragment extends BaseFragment {
             public void onClick(View v) {
                 //弹出费用详情的popupwindow
                 View view = LayoutInflater.from(mContext).inflate(R.layout.popupwindow_parkorderfee_layout, null);
-                ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_discount_fee)).setText((parkFee.parkfee+parkFee.outtimefee) + "");
+                ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_discount_fee)).setText((parkFee.parkfee + parkFee.outtimefee) + "");
                 ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_park_orderfee)).setText(parkFee.parkfee + "元");
                 ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_park_finefee)).setText(parkFee.outtimefee + "元");
                 String start = parkOrderInfo.getHigh_time().substring(0, parkOrderInfo.getHigh_time().indexOf(" - ")),
@@ -275,15 +275,15 @@ public class RentingParkOrderFragment extends BaseFragment {
         textview_order_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mData!=null){
-                    if (mData.size()>1){
+                if (mData != null) {
+                    if (mData.size() > 1) {
                         isFirstOrder = false;
                         initDataView();
-                    }else {
-                        MyToast.showToast(mContext,"暂无订单",5);
+                    } else {
+                        MyToast.showToast(mContext, "暂无订单", 5);
                     }
-                }else {
-                    MyToast.showToast(mContext,"暂无订单",5);
+                } else {
+                    MyToast.showToast(mContext, "暂无订单", 5);
                 }
 
             }
@@ -295,10 +295,10 @@ public class RentingParkOrderFragment extends BaseFragment {
         OkGo.post(HttpConstants.endParking)
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("order_id", parkOrderInfo.getId())
-                .params("citycode",parkOrderInfo.getCitycode())
-                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code()+"*&*"+UserManager.getInstance().getUserInfo().getCreate_time()+"*&*"+UserManager.getInstance().getUserInfo().getId()))
+                .params("citycode", parkOrderInfo.getCitycode())
+                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> appointParkOrderInfoBase_class_info, Call call, Response response) {
@@ -316,7 +316,7 @@ public class RentingParkOrderFragment extends BaseFragment {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(mContext,e)){
+                        if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
@@ -338,18 +338,17 @@ public class RentingParkOrderFragment extends BaseFragment {
         final TipeDialog.Builder builder = new TipeDialog.Builder(getContext());
         builder.setMessage("确定结束停车吗？");
         builder.setTitle("提示");
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                initLoading("正在提交...");
+                requestEndParking(parkOrderInfo);
             }
         });
 
-        builder.setNegativeButton("确定",
+        builder.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        initLoading("正在提交...");
-                        requestEndParking(parkOrderInfo);
+
                     }
                 });
 
@@ -375,17 +374,17 @@ public class RentingParkOrderFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if ((isVisibleToUser && isResumed())) {
             Log.e("我是正在停车中的页面", "我被显示啦setUserVisibleHint");
-            if (!isFirstIn){
+            if (!isFirstIn) {
                 requestGetRentintParkOrder();
             }
         } else if (!isVisibleToUser) {
             Log.e("我是正在停车中的页面", "我被隐藏啦setUserVisibleHint");
-            if (!isFirstIn){
+            if (!isFirstIn) {
                 requestGetRentintParkOrder();
             }
-        }else if ((isVisibleToUser && !isResumed())) {
+        } else if ((isVisibleToUser && !isResumed())) {
             Log.e("我是正在停车中的页面", "我被显示啦setUserVisibleHint");
-            if (!isFirstIn){
+            if (!isFirstIn) {
                 requestGetRentintParkOrder();
             }
         }
@@ -396,7 +395,7 @@ public class RentingParkOrderFragment extends BaseFragment {
         super.onResume();
         if (getUserVisibleHint()) {
             Log.e("我是正在停车中的页面", "我被显示啦onResume");
-            if (!isFirstIn){
+            if (!isFirstIn) {
                 requestGetRentintParkOrder();
             }
         }

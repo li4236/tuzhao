@@ -92,20 +92,18 @@ public class GetMoneyActivty extends BaseActivity implements View.OnClickListene
                 TipeDialog.Builder builder = new TipeDialog.Builder(GetMoneyActivty.this);
                 builder.setMessage("确定更换支付宝账号？");
                 builder.setTitle("更换支付宝");
-                builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("立即更换", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        //去更换
+                        edittext_alinumble.setText("");
+                        linearlayout_getmoney.setVisibility(View.GONE);
+                        linearlayout_edit_alinumble.setVisibility(View.VISIBLE);
                     }
                 });
 
-                builder.setNegativeButton("立即更换",
+                builder.setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //去更换
-                                edittext_alinumble.setText("");
-                                linearlayout_getmoney.setVisibility(View.GONE);
-                                linearlayout_edit_alinumble.setVisibility(View.VISIBLE);
                             }
                         });
 

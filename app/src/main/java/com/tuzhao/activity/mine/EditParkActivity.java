@@ -243,52 +243,51 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
         TipeDialog.Builder builder = new TipeDialog.Builder(EditParkActivity.this);
         builder.setMessage("确定删除该车位吗？");
         builder.setTitle("提示");
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                initLoading("提交中...");
+                OkGo.post(HttpConstants.deleteParkForUser)
+                        .tag(EditParkActivity.this)
+                        .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                        .params("park_id",mData.getId())
+                        .params("citycode",mData.getCity_code())
+                        .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                            @Override
+                            public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
+                                if (mCustomDialog.isShowing()){
+                                    mCustomDialog.dismiss();
+                                }
+                                MyToast.showToast(EditParkActivity.this,"提交成功",5);
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(Call call, Response response, Exception e) {
+                                super.onError(call, response, e);
+                                if (mCustomDialog.isShowing()){
+                                    mCustomDialog.dismiss();
+                                }
+                                if (!DensityUtil.isException(EditParkActivity.this,e)){
+                                    Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
+                                    int code = Integer.parseInt(e.getMessage());
+                                    switch (code) {
+                                        case 101:
+                                            MyToast.showToast(EditParkActivity.this, "您已提交过删除请求，稍后会有客服人员与您联系", 5);
+                                            break;
+                                        case 901:
+                                            MyToast.showToast(EditParkActivity.this, "服务器正在维护中", 5);
+                                            break;
+                                    }
+                                }
+                            }
+                        });
             }
         });
 
-        builder.setNegativeButton("确定",
+        builder.setNegativeButton("取消",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        initLoading("提交中...");
-                        OkGo.post(HttpConstants.deleteParkForUser)
-                                .tag(EditParkActivity.this)
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
-                                .params("park_id",mData.getId())
-                                .params("citycode",mData.getCity_code())
-                                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
-                                    @Override
-                                    public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
-                                        if (mCustomDialog.isShowing()){
-                                            mCustomDialog.dismiss();
-                                        }
-                                        MyToast.showToast(EditParkActivity.this,"提交成功",5);
-                                        finish();
-                                    }
 
-                                    @Override
-                                    public void onError(Call call, Response response, Exception e) {
-                                        super.onError(call, response, e);
-                                        if (mCustomDialog.isShowing()){
-                                            mCustomDialog.dismiss();
-                                        }
-                                        if (!DensityUtil.isException(EditParkActivity.this,e)){
-                                            Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
-                                            int code = Integer.parseInt(e.getMessage());
-                                            switch (code) {
-                                                case 101:
-                                                    MyToast.showToast(EditParkActivity.this, "您已提交过删除请求，稍后会有客服人员与您联系", 5);
-                                                    break;
-                                                case 901:
-                                                    MyToast.showToast(EditParkActivity.this, "服务器正在维护中", 5);
-                                                    break;
-                                            }
-                                        }
-                                    }
-                                });
                     }
                 });
         builder.create().show();

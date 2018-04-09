@@ -47,11 +47,11 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
     private void initView() {
 
         ((TextView) findViewById(R.id.id_activity_set_layout_textview_thisversion)).setText("当前版本：" + dateUtil.getVersion(this));
-        linearlayout_safe = (LinearLayout) findViewById(R.id.id_activity_set_layout_linearlayout_safe);
-        linearlayout_suggest = (LinearLayout) findViewById(R.id.id_activity_set_layout_linearlayout_suggest);
-        linearlayout_law = (LinearLayout) findViewById(R.id.id_activity_set_layout_linearlayout_law);
-        linearlayout_checkversion = (LinearLayout) findViewById(R.id.id_activity_set_layout_linearlayout_checkversion);
-        linearlayout_loginout = (LinearLayout) findViewById(R.id.id_activity_set_layout_linearlayout_loginout);
+        linearlayout_safe =  findViewById(R.id.id_activity_set_layout_linearlayout_safe);
+        linearlayout_suggest =  findViewById(R.id.id_activity_set_layout_linearlayout_suggest);
+        linearlayout_law =  findViewById(R.id.id_activity_set_layout_linearlayout_law);
+        linearlayout_checkversion =  findViewById(R.id.id_activity_set_layout_linearlayout_checkversion);
+        linearlayout_loginout =  findViewById(R.id.id_activity_set_layout_linearlayout_loginout);
     }
 
     private void initData() {
@@ -106,26 +106,24 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
                 TipeDialog.Builder builder = new TipeDialog.Builder(SetActivity.this);
                 builder.setMessage("确定退出吗？");
                 builder.setTitle("提示");
-                builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        //退出登录，设置不能再自动登录
+                        databaseImp = new DatabaseImp(SetActivity.this);
+                        User_Info user_info = databaseImp.getUserFormDatabase();
+                        user_info.setAutologin("0");
+                        databaseImp.insertUserToDatabase(user_info);
+                        //清空缓存的登录信息
+                        UserManager.getInstance().setUserInfo(null);
+                        //发送退出登录的广播
+                        sendLogoutBroadcast();
+                        MyToast.showToast(SetActivity.this, "已退出登录", 5);
+                        finish();
                     }
                 });
-                builder.setNegativeButton("确定",
+                builder.setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //退出登录，设置不能再自动登录
-                                databaseImp = new DatabaseImp(SetActivity.this);
-                                User_Info user_info = databaseImp.getUserFormDatabase();
-                                user_info.setAutologin("0");
-                                databaseImp.insertUserToDatabase(user_info);
-                                //清空缓存的登录信息
-                                UserManager.getInstance().setUserInfo(null);
-                                //发送退出登录的广播
-                                sendLogoutBroadcast();
-                                MyToast.showToast(SetActivity.this, "已退出登录", 5);
-                                finish();
                             }
                         });
                 builder.create().show();

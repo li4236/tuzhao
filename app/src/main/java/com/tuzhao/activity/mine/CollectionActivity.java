@@ -259,21 +259,19 @@ public class CollectionActivity extends BaseActivity {
                     TipeDialog.Builder builder = new TipeDialog.Builder(CollectionActivity.this);
                     builder.setMessage("确定取消收藏吗？");
                     builder.setTitle("提示");
-                    builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    final String finalIds = ids;
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                            initLoading("加载中...");
+                            String aaa = finalIds;
+                            aaa = aaa.substring(0,aaa.length()-1);
+                            deleteCollections(aaa);
                         }
                     });
 
-                    final String finalIds = ids;
-                    builder.setNegativeButton("确定",
+                    builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    initLoading("加载中...");
-                                    String aaa = finalIds;
-                                    aaa = aaa.substring(0,aaa.length()-1);
-                                    deleteCollections(aaa);
                                 }
                             });
 

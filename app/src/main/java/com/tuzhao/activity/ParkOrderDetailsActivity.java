@@ -207,18 +207,16 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                             TipeDialog.Builder builder = new TipeDialog.Builder(ParkOrderDetailsActivity.this);
                             builder.setMessage("确定取消该订单吗？");
                             builder.setTitle("提示");
-                            builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
+                                    initLoading("取消中...");
+                                    cancleAppointOrder(parkOrderinfo);
                                 }
                             });
 
-                            builder.setNegativeButton("确定",
+                            builder.setNegativeButton("取消",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            initLoading("取消中...");
-                                            cancleAppointOrder(parkOrderinfo);
                                         }
                                     });
 
@@ -373,19 +371,17 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                 TipeDialog.Builder builder = new TipeDialog.Builder(ParkOrderDetailsActivity.this);
                 builder.setMessage("确定呼叫车位主人吗？");
                 builder.setTitle("提示");
-                builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + parkOrderinfo.getPark_username()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 });
 
-                builder.setNegativeButton("确定",
+                builder.setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + parkOrderinfo.getPark_username()));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
                             }
                         });
 

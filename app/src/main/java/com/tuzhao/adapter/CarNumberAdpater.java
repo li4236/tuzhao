@@ -59,18 +59,16 @@ public class CarNumberAdpater extends RecyclerView.Adapter<CarNumberAdpater.MyVi
                 TipeDialog.Builder builder = new TipeDialog.Builder(mContext);
                 builder.setMessage("确定删除该车牌号吗？");
                 builder.setTitle("提示");
-                builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        int n = holder.getLayoutPosition();
+                        mIDeleteBtnClickListener.onDeleteBtnCilck(v, n);
                     }
                 });
 
-                builder.setNegativeButton("确定",
+                builder.setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                int n = holder.getLayoutPosition();
-                                mIDeleteBtnClickListener.onDeleteBtnCilck(v, n);
                             }
                         });
 

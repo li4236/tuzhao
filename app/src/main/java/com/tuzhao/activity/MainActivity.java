@@ -1308,18 +1308,17 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             TipeDialog.Builder builder = new TipeDialog.Builder(MainActivity.this);
                             builder.setMessage("选中地址为\n" + result.getRegeocodeAddress().getFormatAddress() + "\n确定添加收藏吗？");
                             builder.setTitle("收藏该标记点");
-                            builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
+                                    initLoading("添加中...");
+                                    requestSaveBiaoji(result.getRegeocodeAddress().getFormatAddress());
                                 }
                             });
 
-                            builder.setNegativeButton("确定",
+                            builder.setNegativeButton("取消",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            initLoading("添加中...");
-                                            requestSaveBiaoji(result.getRegeocodeAddress().getFormatAddress());
+
                                         }
                                     });
 
