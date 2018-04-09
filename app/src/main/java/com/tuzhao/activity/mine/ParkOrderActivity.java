@@ -40,12 +40,6 @@ public class ParkOrderActivity extends BaseActivity {
      * 页面相关
      */
     private List<Fragment> fragmentList;
-    private RentingParkOrderFragment rentingParkOrderFragment;
-    private AppointParkOrderListFragment appointmentParkOdrderListFragment;
-    private ParkReadPayOrderListFragment parkReadPayOrderListFragment;
-    private FinishParkOrderFragment allorderlistfragment;
-    private CancleParkOrderFragment cancleparkorderFragment;
-    private String[] mTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,24 +53,19 @@ public class ParkOrderActivity extends BaseActivity {
 
     private void initView() {
 
-        viewpager = (ViewPager) findViewById(R.id.id_activity_parkorder_layout_viewpager);
-        viewPagerTab = (SmartTabLayout) findViewById(R.id.id_activity_parkorder_layout_pagetab);
-        imageview_backbotton = (ImageView) findViewById(R.id.id_activity_parkorder_imageview_back);
+        viewpager = findViewById(R.id.id_activity_parkorder_layout_viewpager);
+        viewPagerTab = findViewById(R.id.id_activity_parkorder_layout_pagetab);
+        imageview_backbotton = findViewById(R.id.id_activity_parkorder_imageview_back);
 
-        allorderlistfragment = new FinishParkOrderFragment();
-        parkReadPayOrderListFragment = new ParkReadPayOrderListFragment();
-        rentingParkOrderFragment = new RentingParkOrderFragment();
-        appointmentParkOdrderListFragment = new AppointParkOrderListFragment();
-        cancleparkorderFragment = new CancleParkOrderFragment();
 
         fragmentList = new ArrayList<>();
 
-        mTitle = new String[]{"租用中", "已预约", "待付款", "已完成", "已取消"};
-        fragmentList.add(rentingParkOrderFragment);
-        fragmentList.add(appointmentParkOdrderListFragment);
-        fragmentList.add(parkReadPayOrderListFragment);
-        fragmentList.add(allorderlistfragment);
-        fragmentList.add(cancleparkorderFragment);
+        String[] mTitle = new String[]{"租用中", "已预约", "待付款", "已完成", "已取消"};
+        fragmentList.add(new RentingParkOrderFragment());
+        fragmentList.add(new AppointParkOrderListFragment());
+        fragmentList.add(new ParkReadPayOrderListFragment());
+        fragmentList.add(new FinishParkOrderFragment());
+        fragmentList.add(new CancleParkOrderFragment());
         viewpager.setAdapter(new MyFrageStatePagerAdapter(getSupportFragmentManager(), mTitle));
         viewPagerTab.setViewPager(viewpager);
 
@@ -109,7 +98,7 @@ public class ParkOrderActivity extends BaseActivity {
 
         private String[] TITLES;
 
-         MyFrageStatePagerAdapter(FragmentManager fm, String[] title) {
+        MyFrageStatePagerAdapter(FragmentManager fm, String[] title) {
             super(fm);
             TITLES = title;
         }

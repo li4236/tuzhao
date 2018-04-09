@@ -233,6 +233,8 @@ public class HttpConstants {
      */
     public static String checkCode = ROOT_URL + "checkCode";
 
+    public static String getAliAuthMessage = ROOT_URL + "getAliAuthMessage";
+
     /**
      * 上传支付宝用户授权参数
      */
@@ -242,11 +244,6 @@ public class HttpConstants {
      * 安装师傅未来7天的空闲情况
      */
     public static String getInstallWorkerTime = ROOT_URL + "getInstallWorkerTime";
-
-
-
-
-
 
     /**
      * 请求首页地图页面所有充电站的数据

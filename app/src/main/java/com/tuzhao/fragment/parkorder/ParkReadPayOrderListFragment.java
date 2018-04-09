@@ -141,7 +141,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
 
     private void initView() {
         linearLayoutManager = new LinearLayoutManager(mContext);
-        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
+        mRecycleview = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
         mRecycleview.init(linearLayoutManager, new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
         mRecycleview.setLoadingMoreEnable(true);
@@ -169,7 +169,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
             }
         });
         mRecycleview.setAdapter(mAdapter);
-        linearlayout_nodata = (LinearLayout) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
+        linearlayout_nodata =  mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
     }
 
     private void initData() {

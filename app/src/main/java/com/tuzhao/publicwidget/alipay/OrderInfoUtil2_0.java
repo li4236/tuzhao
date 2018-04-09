@@ -109,7 +109,7 @@ public class OrderInfoUtil2_0 {
 	 * @return
 	 */
 	public static String buildOrderParam(Map<String, String> map) {
-		List<String> keys = new ArrayList<String>(map.keySet());
+		List<String> keys = new ArrayList<>(map.keySet());
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < keys.size() - 1; i++) {

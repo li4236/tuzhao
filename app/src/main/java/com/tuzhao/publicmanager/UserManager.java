@@ -1,5 +1,7 @@
 package com.tuzhao.publicmanager;
 
+import android.util.Log;
+
 import com.tuzhao.info.User_Info;
 
 /**
@@ -76,13 +78,12 @@ public class UserManager {
             e.printStackTrace();
         }
 
-
+        Log.e("Tag", "getUserInfo: "+userInfo.getToken() );
         this.userInfo = userInfo;
 
     }
 
     public boolean hasLogined() {
-
         return userInfo != null;
     }
 
@@ -90,7 +91,6 @@ public class UserManager {
      * 获得用户信息 userInfo info
      */
     public User_Info getUserInfo() {
-
         return userInfo==null?new User_Info():userInfo;
     }
 
