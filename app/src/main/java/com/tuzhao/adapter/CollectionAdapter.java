@@ -11,14 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tuzhao.R;
 import com.tuzhao.activity.ChargestationDetailActivity;
 import com.tuzhao.activity.ParkspaceDetailActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.publicmanager.CollectionManager;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.List;
 
@@ -57,13 +56,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         try {
             switch (Integer.parseInt(mData.get(position).getType())) {
                 case 1:
-                    Glide.with(mContext)
-                            .load(HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPimgs_url() != null ? ((mData.get(position).getPimgs_url().split(","))[0]) : ""))
-                            .crossFade()
-                            .placeholder(R.mipmap.ic_img) //占位图
-                            .error(R.mipmap.ic_img)  //出错的占位图
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(((MyViewHolder) holder).imageview_show);
+                    ImageUtil.showPic(((MyViewHolder) holder).imageview_show,HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPimgs_url() != null ? ((mData.get(position).getPimgs_url().split(","))[0]) : "")
+                    ,R.mipmap.ic_img);
                     ((MyViewHolder) holder).textview_ps_name.setText(mData.get(position).getPs_name());
                     ((MyViewHolder) holder).textview_address.setText(mData.get(position).getPs_address());
                     ((MyViewHolder) holder).textview_pcount.setText(mData.get(position).getP_count() + "个车位");
@@ -77,26 +71,18 @@ public class CollectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     });
                     break;
                 case 2:
-                    Glide.with(mContext)
-                            .load(HttpConstants.ROOT_IMG_URL_CS + (mData.get(position).getPimgs_url() != null ? ((mData.get(position).getCimgs_url().split(","))[0]) : ""))
-                            .crossFade()
-                            .placeholder(R.mipmap.ic_img) //占位图
-                            .error(R.mipmap.ic_img)  //出错的占位图
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(((MyViewHolder) holder).imageview_show);
+                    ImageUtil.showPic(((MyViewHolder) holder).imageview_show,
+                            HttpConstants.ROOT_IMG_URL_CS + (mData.get(position).getPimgs_url() != null ? ((mData.get(position).getCimgs_url().split(","))[0]) : ""),
+                            R.mipmap.ic_img);
                     ((MyViewHolder) holder).textview_ps_name.setText(mData.get(position).getCs_name());
                     ((MyViewHolder) holder).textview_address.setText(mData.get(position).getCs_address());
                     ((MyViewHolder) holder).textview_pcount.setText(mData.get(position).getC_count() + "个电桩");
                     ((MyViewHolder) holder).textview_pcount.setVisibility(View.VISIBLE);
                     break;
                 case 3:
-                    Glide.with(mContext)
-                            .load(HttpConstants.ROOT_IMG_URL_CS + (mData.get(position).getPimgs_url() != null ? ((mData.get(position).getPimgs_url().split(","))[0]) : ""))
-                            .crossFade()
-                            .placeholder(R.mipmap.ic_img) //占位图
-                            .error(R.mipmap.ic_img)  //出错的占位图
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(((MyViewHolder) holder).imageview_show);
+                    ImageUtil.showPic(((MyViewHolder) holder).imageview_show,
+                            HttpConstants.ROOT_IMG_URL_CS + (mData.get(position).getPimgs_url() != null ? ((mData.get(position).getPimgs_url().split(","))[0]) : ""),
+                            R.mipmap.ic_img);
                     String[] aaa = mData.get(position).getPlace().split(",");
                     ((MyViewHolder) holder).textview_ps_name.setText("标记点" + (position + 1));
                     ((MyViewHolder) holder).textview_address.setText(aaa[2]);

@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tuzhao.R;
 import com.tuzhao.activity.mine.EditParkPicturesActivity;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +44,7 @@ public class ParkPicturesAdapter extends RecyclerView.Adapter<ParkPicturesAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Glide.with(mContext)
-                .load(HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getUrl() == null ? null : mData.get(position).getUrl()))
-                .placeholder(R.mipmap.ic_img)
-                .error(R.mipmap.ic_img)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
-                .into(holder.image_content);
+        ImageUtil.showImpPic(holder.image_content,HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getUrl() == null ? null : mData.get(position).getUrl()));
 
         if (mData.get(position).isdelete()) {
             holder.image_delete.setVisibility(View.VISIBLE);

@@ -6,11 +6,10 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.chrisbanes.photoview.OnViewTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.tuzhao.R;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 
@@ -40,13 +39,7 @@ public class PicturePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
 
         PhotoView photoView = new PhotoView(mContext);
-        Glide.with(mContext)
-                .load(mimgList.get(position))
-                .placeholder(R.mipmap.ic_img)
-                .error(R.mipmap.ic_img)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
-                .into(photoView);
+        ImageUtil.showPic(photoView,mimgList.get(position),R.mipmap.ic_img);
         photoView.setOnViewTapListener(new OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {

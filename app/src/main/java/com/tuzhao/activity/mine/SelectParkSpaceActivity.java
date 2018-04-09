@@ -51,7 +51,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
 
     private SuspensionDecoration mDecoration;
 
-    private LinearLayout linearlayout_search,linearlayout_no_open;
+    private LinearLayout linearlayout_search, linearlayout_no_open;
     private TextView textview_goapply;
     private ArrayList<Park_Space_Info> info_list = new ArrayList<>();
 
@@ -88,22 +88,22 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
     }
 
     private void initView() {
-        mTv_city = (TextView) findViewById(R.id.id_activity_park_select_textview_city);
-        mRv = (RecyclerView) findViewById(R.id.id_activity_park_select_rv);
+        mTv_city = findViewById(R.id.id_activity_park_select_textview_city);
+        mRv = findViewById(R.id.id_activity_park_select_rv);
         mRv.setLayoutManager(mManager = new LinearLayoutManager(this));
         //使用indexBar
-        mTvSideBarHint = (TextView) findViewById(R.id.id_activity_park_select_tv_SideBarHint);//HintTextView
-        mIndexBar = (IndexBar) findViewById(R.id.id_activity_park_select_indexBar);//IndexBar
-        linearlayout_search = (LinearLayout) findViewById(R.id.id_activity_park_select_linearlayout_search);
-        linearlayout_no_open = (LinearLayout) findViewById(R.id.id_activity_parkspace_select_linearlayout_no_open);
-        textview_goapply = (TextView) findViewById(R.id.id_activity_parkspace_select_textview_goapply);
+        mTvSideBarHint = findViewById(R.id.id_activity_park_select_tv_SideBarHint);//HintTextView
+        mIndexBar = findViewById(R.id.id_activity_park_select_indexBar);//IndexBar
+        linearlayout_search = findViewById(R.id.id_activity_park_select_linearlayout_search);
+        linearlayout_no_open = findViewById(R.id.id_activity_parkspace_select_linearlayout_no_open);
+        textview_goapply = findViewById(R.id.id_activity_parkspace_select_textview_goapply);
     }
 
     private void initData() {
         if (LocationManager.getInstance().hasLocation()) {
             mTv_city.setText(LocationManager.getInstance().getmAmapLocation().getCity());
             initLoading("正在加载...");
-            requestParkData(LocationManager.getInstance().getmAmapLocation().getCityCode()+"");
+            requestParkData(LocationManager.getInstance().getmAmapLocation().getCityCode() + "");
         } else {
             initLoading("正在定位...");
             locationClient.startLocation();
@@ -145,9 +145,9 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
             public void onClick(View v) {
                 //跳转到已准备的停车场或小区的搜索页面
                 Intent intent = new Intent(SelectParkSpaceActivity.this, SearchParkSpaceActivity.class);
-                intent.putExtra("info_list",info_list);
-                intent.putExtra("citycode",mCityBean == null ? LocationManager.getInstance().getmAmapLocation().getCityCode() : mCityBean.getCitycode());
-                startActivityForResult(intent,101);
+                intent.putExtra("info_list", info_list);
+                intent.putExtra("citycode", mCityBean == null ? LocationManager.getInstance().getmAmapLocation().getCityCode() : mCityBean.getCitycode());
+                startActivityForResult(intent, 101);
             }
         });
 
@@ -155,8 +155,8 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 //跳转到申请停车场的页面
-                Intent intent = new Intent(SelectParkSpaceActivity.this,ApplyParkSpace.class);
-                intent.putExtra("citycode",mCityBean == null ? LocationManager.getInstance().getmAmapLocation().getCityCode() : mCityBean.getCitycode());
+                Intent intent = new Intent(SelectParkSpaceActivity.this, ApplyParkSpace.class);
+                intent.putExtra("citycode", mCityBean == null ? LocationManager.getInstance().getmAmapLocation().getCityCode() : mCityBean.getCitycode());
                 startActivity(intent);
             }
         });
@@ -211,7 +211,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                     mTv_city.setText(location.getCity());
                     LocationManager.getInstance().setmAmapLocation(location);
                     initLoading("正在加载...");
-                    requestParkData(location.getCityCode()+"");
+                    requestParkData(location.getCityCode() + "");
                 } else {
                     //定位失败
                     Log.e("dsa", "定位失败");
@@ -234,13 +234,13 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
      * @param data
      * @return
      */
-    private void initDatas(ArrayList<Park_Space_Info> data,String citycode) {
+    private void initDatas(ArrayList<Park_Space_Info> data, String citycode) {
         if (mDatas != null) {
             mDatas.clear();
         } else {
             mDatas = new ArrayList<>();
         }
-        if (data == null){
+        if (data == null) {
             mDatas.clear();
             mAdapter.setDatas(mDatas);
             mHeaderAdapter.notifyDataSetChanged();
@@ -278,10 +278,10 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                             mCustomDialog.hide();
                         }
                         info_list = responseData.data;
-                        for (int i=0;i<info_list.size();i++){
+                        for (int i = 0; i < info_list.size(); i++) {
                             info_list.get(i).setCity_code(belong_citycode);
                         }
-                        initDatas(responseData.data,belong_citycode);
+                        initDatas(responseData.data, belong_citycode);
                     }
 
                     @Override
@@ -302,19 +302,19 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                             switch (code) {
                                 case 102:
                                     //定位失败
-                                    MyToast.showToast(SelectParkSpaceActivity.this,"定位失败，退出应用打开定位开关再试试哦", 2);
+                                    MyToast.showToast(SelectParkSpaceActivity.this, "定位失败，退出应用打开定位开关再试试哦", 2);
                                     break;
                                 case 103:
                                     //本城市不存在停车场
                                     linearlayout_no_open.setVisibility(View.VISIBLE);
                                     info_list.clear();
-                                    initDatas(null,null);
+                                    initDatas(null, null);
                                     break;
                                 case 901:
-                                    MyToast.showToast(SelectParkSpaceActivity.this,"服务器正在维护中", 2);
+                                    MyToast.showToast(SelectParkSpaceActivity.this, "服务器正在维护中", 2);
                                     break;
                                 default:
-                                    MyToast.showToast(SelectParkSpaceActivity.this,"服务器繁忙，稍后再试", 2);
+                                    MyToast.showToast(SelectParkSpaceActivity.this, "服务器繁忙，稍后再试", 2);
                                     break;
                             }
                         }
@@ -359,7 +359,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!= null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }

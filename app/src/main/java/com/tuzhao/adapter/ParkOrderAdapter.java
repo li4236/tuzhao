@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tuzhao.R;
 import com.tuzhao.activity.ParkOrderDetailsActivity;
 import com.tuzhao.activity.ParkspaceDetailActivity;
@@ -26,6 +24,7 @@ import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.popupwindow.CustomPopWindow;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.List;
 
@@ -98,13 +97,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof AppointParkViewHolder) {
             String[] urlList = mData.get(position).getPictures().split(",");
-            Glide.with(mContext)
-                    .load(urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"")
-                    .placeholder(R.mipmap.ic_img) //占位图
-                    .error(R.mipmap.ic_img)  //出错的占位图
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(((AppointParkViewHolder) holder).imageview_bigshow);
+            ImageUtil.showPic(((AppointParkViewHolder) holder).imageview_bigshow,
+                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"",R.mipmap.ic_img);
             ((AppointParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((AppointParkViewHolder) holder).textview_address.setText(mData.get(position).getPark_space_address());
             ((AppointParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
@@ -160,13 +154,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((AppointParkViewHolder) holder).linearlayout_all.setLayoutParams(lp);
         } else if (holder instanceof ReadyPayViewHolder) {
             String[] urlList = mData.get(position).getPictures().split(",");
-            Glide.with(mContext)
-                    .load(urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"")
-                    .placeholder(R.mipmap.ic_img) //占位图
-                    .error(R.mipmap.ic_img)  //出错的占位图
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(((ReadyPayViewHolder) holder).imageview_bigshow);
+            ImageUtil.showPic(((ReadyPayViewHolder) holder).imageview_bigshow,
+                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"",R.mipmap.ic_img);
             ((ReadyPayViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((ReadyPayViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
             ((ReadyPayViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
@@ -237,13 +226,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((ReadyPayViewHolder) holder).linearlayout_all.setLayoutParams(lp);
         } else if (holder instanceof FinishParkViewHolder) {
             String[] urlList = mData.get(position).getPictures().split(",");
-            Glide.with(mContext)
-                    .load(urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"")
-                    .placeholder(R.mipmap.ic_img) //占位图
-                    .error(R.mipmap.ic_img)  //出错的占位图
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(((FinishParkViewHolder) holder).imageview_bigshow);
+            ImageUtil.showImpPic(((FinishParkViewHolder) holder).imageview_bigshow,
+                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"");
 
             ((FinishParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((FinishParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
@@ -366,13 +350,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else {
 
             String[] urlList = mData.get(position).getPictures().split(",");
-            Glide.with(mContext)
-                    .load(urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"")
-                    .placeholder(R.mipmap.ic_img) //占位图
-                    .error(R.mipmap.ic_img)  //出错的占位图
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(((CancleParkViewHolder) holder).imageview_bigshow);
+            ImageUtil.showImpPic(((CancleParkViewHolder) holder).imageview_bigshow,
+                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"");
             ((CancleParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((CancleParkViewHolder) holder).textview_address.setText(mData.get(position).getPark_space_address());
             ((CancleParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());

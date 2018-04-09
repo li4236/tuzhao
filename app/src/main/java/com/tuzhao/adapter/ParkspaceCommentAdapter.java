@@ -9,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.cb.ratingbar.CBRatingBar;
 import com.tuzhao.R;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkspaceCommentInfo;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 
@@ -43,12 +43,7 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Glide.with(mContext)
-                .load(HttpConstants.ROOT_IMG_URL_USER + mCommentList.get(position).getUser_img_url())
-                .placeholder(R.mipmap.ic_img)
-                .error(R.mipmap.ic_img)
-                .centerCrop()
-                .into(holder.imageview_user);
+        ImageUtil.showImpPic(holder.imageview_user,HttpConstants.ROOT_IMG_URL_USER + mCommentList.get(position).getUser_img_url());
         if (mCommentList.get(position).getImg_url().equals("-1") || mCommentList.get(position).getImg_url().equals("")){
             holder.linearlayout_show.setVisibility(View.GONE);
         }else {
@@ -56,12 +51,7 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
             if (!(img_Url.length>0)){
                 holder.linearlayout_show.setVisibility(View.GONE);
             }else if (img_Url.length==1){
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0])
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(holder.imageview_show1);
+                ImageUtil.showImpPic(holder.imageview_show1,HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                 holder.imageview_show1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -70,24 +60,14 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
                 });
                 holder.linearlayout_show.setVisibility(View.VISIBLE);
             }else if (img_Url.length==2){
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0])
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(holder.imageview_show1);
+                ImageUtil.showImpPic(holder.imageview_show1,HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                 holder.imageview_show1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1])
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(holder.imageview_show2);
+                ImageUtil.showImpPic(holder.imageview_show2,HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                 holder.imageview_show2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -96,36 +76,21 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
                 });
                 holder.linearlayout_show.setVisibility(View.VISIBLE);
             }else if (img_Url.length==3){
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0])
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(holder.imageview_show1);
+                ImageUtil.showImpPic(holder.imageview_show1,HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                 holder.imageview_show1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1])
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(holder.imageview_show2);
+                ImageUtil.showImpPic(holder.imageview_show2,HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                 holder.imageview_show2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2])
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(holder.imageview_show3);
+                ImageUtil.showImpPic(holder.imageview_show3,HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
                 holder.imageview_show3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

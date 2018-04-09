@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/id_activity_park_select_linearlayout_search"
-        android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+        android:background="@android:color/white"/>
 
     <LinearLayout
         android:id="@+id/id_activity_parkspace_select_linearlayout_no_open"
@@ -137,7 +137,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/id_activity_park_select_linearlayout_search"
         android:layout_gravity="right"
-        app:indexBarPressBackground="@color/b1"
         app:indexBarTextSize="15sp" />
 
     <TextView

@@ -55,10 +55,10 @@ public class LoginDialogFragment extends DialogFragment {
      * UI
      */
     private View mContentView;
-    private ImageView imageview_close,imageview_lookpassword,imageview_del1,imageview_del2,imageview_del3;
-    private TextView textview_state,textview_getconfirm_code,textview_turn_pass_login,textview_turn_phone_login,textview_forgetpassword,textview_login;
-    private LinearLayout linearlayout_phone_login,linearlayout_pass_login,linearlayout_set_password;
-    private EditText edittext_phonenumble,edittext_confirm_code,edittext_username,edittext_password,edittext_set_password;
+    private ImageView imageview_close, imageview_lookpassword, imageview_del1, imageview_del2, imageview_del3;
+    private TextView textview_state, textview_getconfirm_code, textview_turn_pass_login, textview_turn_phone_login, textview_forgetpassword, textview_login;
+    private LinearLayout linearlayout_phone_login, linearlayout_pass_login, linearlayout_set_password;
+    private EditText edittext_phonenumble, edittext_confirm_code, edittext_username, edittext_password, edittext_set_password;
 
     /**
      * 页面相关
@@ -73,7 +73,7 @@ public class LoginDialogFragment extends DialogFragment {
     private DatabaseImp databaseImp;
 
     private int isWhatPage = 1;
-    private boolean isForgetPassword = false,isrealForget = false;
+    private boolean isForgetPassword = false, isrealForget = false;
 
     private CustomDialog mCustomDialog;
 
@@ -84,15 +84,15 @@ public class LoginDialogFragment extends DialogFragment {
             switch (msg.what) {
                 case CODE_ING://已发送,开始倒计时
                     textview_getconfirm_code.setText("重新发送(" + (--TIME) + "s)");
-                    if (isAdded()){//判断fragment是否已经加入到activity中
-                        textview_getconfirm_code.setTextColor(ContextCompat.getColor(getContext(),R.color.gray));
+                    if (isAdded()) {//判断fragment是否已经加入到activity中
+                        textview_getconfirm_code.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
                     }
 
                     break;
                 case CODE_REPEAT://重新发送
                     textview_getconfirm_code.setText("重新获取验证码");
                     if (isAdded()) {//判断fragment是否已经加入到activity中
-                        textview_getconfirm_code.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.line_little_yuan_yellow_5dp));
+                        textview_getconfirm_code.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_little_yuan_yellow_5dp));
                     }
                     textview_getconfirm_code.setClickable(true);
                     break;
@@ -116,39 +116,41 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void initView() {
-        imageview_close = (ImageView) mContentView.findViewById(R.id.id_dialog_login_layout_imageview_close);
-        imageview_lookpassword = (ImageView) mContentView.findViewById(R.id.id_dialog_login_layout_imageview_lookpassword);
-        textview_state = (TextView) mContentView.findViewById(R.id.id_dialog_login_layout_textview_state);
-        textview_getconfirm_code = (TextView) mContentView.findViewById(R.id.id_dialog_login_layout_textview_getconfirm_code);
-        textview_turn_pass_login = (TextView) mContentView.findViewById(R.id.id_dialog_login_layout_textview_turn_pass_login);
-        textview_turn_phone_login = (TextView) mContentView.findViewById(R.id.id_dialog_login_layout_textview_turn_phone_login);
-        textview_forgetpassword = (TextView) mContentView.findViewById(R.id.id_dialog_login_layout_textview_forgetpassword);
-        textview_login = (TextView) mContentView.findViewById(R.id.id_dialog_login_layout_textview_login);
-        linearlayout_phone_login = (LinearLayout) mContentView.findViewById(R.id.id_dialog_login_layout_linearlayout_phone_login);
-        linearlayout_pass_login = (LinearLayout) mContentView.findViewById(R.id.id_dialog_login_layout_linearlayout_pass_login);
-        linearlayout_set_password = (LinearLayout) mContentView.findViewById(R.id.id_dialog_login_layout_linearlayout_set_password);
-        edittext_phonenumble = (EditText) mContentView.findViewById(R.id.id_dialog_login_layout_edittext_phonenumble);
-        edittext_confirm_code = (EditText) mContentView.findViewById(R.id.id_dialog_login_layout_edittext_confirm_code);
-        edittext_username = (EditText) mContentView.findViewById(R.id.id_dialog_login_layout_edittext_username);
-        edittext_password = (EditText) mContentView.findViewById(R.id.id_dialog_login_layout_edittext_password);
-        edittext_set_password = (EditText) mContentView.findViewById(R.id.id_dialog_login_layout_edittext_set_password);
-        imageview_del1 = (ImageView) mContentView.findViewById(R.id.id_dialog_login_layout_imageview_del1);
-        imageview_del2 = (ImageView) mContentView.findViewById(R.id.id_dialog_login_layout_imageview_del2);
-        imageview_del3 = (ImageView) mContentView.findViewById(R.id.id_dialog_login_layout_imageview_del3);
+        imageview_close = mContentView.findViewById(R.id.id_dialog_login_layout_imageview_close);
+        imageview_lookpassword = mContentView.findViewById(R.id.id_dialog_login_layout_imageview_lookpassword);
+        textview_state = mContentView.findViewById(R.id.id_dialog_login_layout_textview_state);
+        textview_getconfirm_code = mContentView.findViewById(R.id.id_dialog_login_layout_textview_getconfirm_code);
+        textview_turn_pass_login = mContentView.findViewById(R.id.id_dialog_login_layout_textview_turn_pass_login);
+        textview_turn_phone_login = mContentView.findViewById(R.id.id_dialog_login_layout_textview_turn_phone_login);
+        textview_forgetpassword = mContentView.findViewById(R.id.id_dialog_login_layout_textview_forgetpassword);
+        textview_login = mContentView.findViewById(R.id.id_dialog_login_layout_textview_login);
+        linearlayout_phone_login = mContentView.findViewById(R.id.id_dialog_login_layout_linearlayout_phone_login);
+        linearlayout_pass_login = mContentView.findViewById(R.id.id_dialog_login_layout_linearlayout_pass_login);
+        linearlayout_set_password = mContentView.findViewById(R.id.id_dialog_login_layout_linearlayout_set_password);
+        edittext_phonenumble = mContentView.findViewById(R.id.id_dialog_login_layout_edittext_phonenumble);
+        edittext_confirm_code = mContentView.findViewById(R.id.id_dialog_login_layout_edittext_confirm_code);
+        edittext_username = mContentView.findViewById(R.id.id_dialog_login_layout_edittext_username);
+        edittext_password = mContentView.findViewById(R.id.id_dialog_login_layout_edittext_password);
+        edittext_set_password = mContentView.findViewById(R.id.id_dialog_login_layout_edittext_set_password);
+        imageview_del1 = mContentView.findViewById(R.id.id_dialog_login_layout_imageview_del1);
+        imageview_del2 = mContentView.findViewById(R.id.id_dialog_login_layout_imageview_del2);
+        imageview_del3 = mContentView.findViewById(R.id.id_dialog_login_layout_imageview_del3);
     }
+
     private void initData() {
 
         databaseImp = new DatabaseImp(getContext());
         User_Info user_info = databaseImp.getUserFormDatabase();
-        if (user_info != null){
+        if (user_info != null) {
             //本地数据库有之前登录过的用户信息，则自动将用户名填入文本框中
-            if (user_info.getUsername()!=null){
+            if (user_info.getUsername() != null) {
                 edittext_phonenumble.setText(user_info.getUsername());
                 edittext_username.setText(user_info.getUsername());
                 imageview_del2.setVisibility(View.VISIBLE);
             }
         }
     }
+
     private void initEvent() {
 
         imageview_close.setOnClickListener(new View.OnClickListener() {
@@ -161,18 +163,17 @@ public class LoginDialogFragment extends DialogFragment {
         textview_getconfirm_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edittext_phonenumble.getText().length()>0)
-                {
-                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString())){
+                if (edittext_phonenumble.getText().length() > 0) {
+                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString())) {
                         //获取验证码,并进入60秒倒计时状态
                         isGetCode = true;
                         textview_getconfirm_code.setText("发送中");
                         requestSendSMS(edittext_phonenumble.getText().toString());
-                    }else {
-                        MyToast.showToast(getContext(),"要输入正确的手机号码哦",5);
+                    } else {
+                        MyToast.showToast(getContext(), "要输入正确的手机号码哦", 5);
                     }
-                }else {
-                    MyToast.showToast(getContext(),"手机号不能为空哦",5);
+                } else {
+                    MyToast.showToast(getContext(), "手机号不能为空哦", 5);
                 }
             }
         });
@@ -180,49 +181,49 @@ public class LoginDialogFragment extends DialogFragment {
         textview_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (isWhatPage){
+                switch (isWhatPage) {
                     case 1:
-                        if (isGetCode){
-                            if (edittext_phonenumble.getText().length()>0){
-                                if (edittext_confirm_code.getText().length()>0){
+                        if (isGetCode) {
+                            if (edittext_phonenumble.getText().length() > 0) {
+                                if (edittext_confirm_code.getText().length() > 0) {
                                     initLoading("正在登陆...");
                                     requestConfirmCodeLogin();
-                                }else {
-                                    MyToast.showToast(getContext(),"输入收到的验证码哦",5);
+                                } else {
+                                    MyToast.showToast(getContext(), "输入收到的验证码哦", 5);
                                 }
-                            }else {
-                                MyToast.showToast(getContext(),"手机号不能为空哦",5);
+                            } else {
+                                MyToast.showToast(getContext(), "手机号不能为空哦", 5);
                             }
-                        }else {
-                            MyToast.showToast(getContext(),"要获取验证码才能登录哦",5);
+                        } else {
+                            MyToast.showToast(getContext(), "要获取验证码才能登录哦", 5);
                         }
                         break;
                     case 2:
-                        if (edittext_username.getText().length()>0){
-                            if (dateUtil.isPhoneNumble(edittext_username.getText().toString())){
-                                if (edittext_password.getText().length()>0){
+                        if (edittext_username.getText().length() > 0) {
+                            if (dateUtil.isPhoneNumble(edittext_username.getText().toString())) {
+                                if (edittext_password.getText().length() > 0) {
                                     initLoading("正在登陆...");
-                                    requestPasswordLogin(edittext_username.getText().toString(),edittext_password.getText().toString().trim());
-                                }else {
-                                    MyToast.showToast(getContext(),"密码不能为空哦",5);
+                                    requestPasswordLogin(edittext_username.getText().toString(), edittext_password.getText().toString().trim());
+                                } else {
+                                    MyToast.showToast(getContext(), "密码不能为空哦", 5);
                                 }
-                            }else {
-                                MyToast.showToast(getContext(),"要输入正确的手机号码哦",5);
+                            } else {
+                                MyToast.showToast(getContext(), "要输入正确的手机号码哦", 5);
                             }
-                        }else {
-                            MyToast.showToast(getContext(),"手机号不能为空哦",5);
+                        } else {
+                            MyToast.showToast(getContext(), "手机号不能为空哦", 5);
                         }
                         break;
                     case 3:
-                        if (edittext_set_password.getText().length()>=8 && edittext_set_password.getText().length()<=30){
-                            if (isForgetPassword){
+                        if (edittext_set_password.getText().length() >= 8 && edittext_set_password.getText().length() <= 30) {
+                            if (isForgetPassword) {
                                 initLoading("正在重置密码...");
-                            }else {
+                            } else {
                                 initLoading("正在设置密码...");
                             }
                             requestChangePassword(edittext_set_password.getText().toString());
-                        }else {
-                            MyToast.showToast(getContext(),"密码不符合规则哦",5);
+                        } else {
+                            MyToast.showToast(getContext(), "密码不符合规则哦", 5);
                         }
                         break;
                 }
@@ -237,16 +238,16 @@ public class LoginDialogFragment extends DialogFragment {
                 linearlayout_phone_login.setVisibility(GONE);
                 linearlayout_pass_login.setVisibility(View.VISIBLE);
                 textview_state.setText("账号密码登录");
-                if (edittext_phonenumble.getText().length()>0){
+                if (edittext_phonenumble.getText().length() > 0) {
                     edittext_username.setText(edittext_phonenumble.getText().toString());
                 }
-                if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length()>0){
+                if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length() > 0) {
                     textview_login.setEnabled(true);
-                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                    textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                }else {
+                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                    textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                } else {
                     textview_login.setEnabled(false);
-                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                     textview_login.setTextColor(Color.WHITE);
                 }
             }
@@ -260,16 +261,16 @@ public class LoginDialogFragment extends DialogFragment {
                 linearlayout_phone_login.setVisibility(View.VISIBLE);
                 linearlayout_pass_login.setVisibility(View.GONE);
                 textview_state.setText("手机号登录");
-                if (edittext_username.getText().length()>0){
+                if (edittext_username.getText().length() > 0) {
                     edittext_phonenumble.setText(edittext_username.getText().toString());
                 }
-                if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length()>0&&isGetCode){
+                if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length() > 0 && isGetCode) {
                     textview_login.setEnabled(true);
-                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                    textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                }else {
+                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                    textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                } else {
                     textview_login.setEnabled(false);
-                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                     textview_login.setTextColor(Color.WHITE);
                 }
             }
@@ -283,16 +284,16 @@ public class LoginDialogFragment extends DialogFragment {
                 linearlayout_phone_login.setVisibility(View.VISIBLE);
                 linearlayout_pass_login.setVisibility(View.GONE);
                 textview_state.setText("手机号登录");
-                if (edittext_username.getText().length()>0){
+                if (edittext_username.getText().length() > 0) {
                     edittext_phonenumble.setText(edittext_username.getText().toString());
                 }
-                if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length()>0){
+                if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length() > 0) {
                     textview_login.setEnabled(true);
-                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                    textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                }else {
+                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                    textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                } else {
                     textview_login.setEnabled(false);
-                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                     textview_login.setTextColor(Color.WHITE);
                 }
             }
@@ -326,11 +327,11 @@ public class LoginDialogFragment extends DialogFragment {
         imageview_lookpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edittext_set_password.getInputType() == (InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD)){
+                if (edittext_set_password.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
                     edittext_set_password.setInputType(InputType.TYPE_CLASS_TEXT);
                     imageview_lookpassword.setImageResource(R.mipmap.ic_notsee);
-                }else {
-                    edittext_set_password.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                } else {
+                    edittext_set_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     imageview_lookpassword.setImageResource(R.mipmap.ic_see);
                 }
             }
@@ -343,12 +344,12 @@ public class LoginDialogFragment extends DialogFragment {
         mCustomDialog.show();
     }
 
-    private void requestConfirmCodeLogin(){
+    private void requestConfirmCodeLogin() {
         OkGo.post(HttpConstants.checkCodeLogin)
                 .tag(getContext())
-                .headers("phoneToken",phone_token)
-                .params("code",edittext_confirm_code.getText().toString())
-                .params("isforget",isForgetPassword ? "1":"2")
+                .headers("phoneToken", phone_token)
+                .params("code", edittext_confirm_code.getText().toString())
+                .params("isforget", isForgetPassword ? "1" : "2")
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
@@ -365,7 +366,7 @@ public class LoginDialogFragment extends DialogFragment {
                         //登录成功之后请求用户的收藏记录
                         OkGo.post(HttpConstants.getCollectionDatas)
                                 .tag(this)
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                                 .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
@@ -376,7 +377,7 @@ public class LoginDialogFragment extends DialogFragment {
                         //发送登录成功的局部广播
                         sendLoginBroadcast();
                         MobclickAgent.onProfileSignIn(edittext_username.getText().toString());//友盟在用户登录操作统计
-                        MyToast.showToast(getContext(),"登录成功",5);
+                        MyToast.showToast(getContext(), "登录成功", 5);
                         dismiss();
                     }
 
@@ -386,15 +387,15 @@ public class LoginDialogFragment extends DialogFragment {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(getContext(),e)){
+                        if (!DensityUtil.isException(getContext(), e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
-                            switch (code){
+                            switch (code) {
                                 case 101:
-                                    MyToast.showToast(getContext(),"验证码已过期，重新获取再试试哦",5);
+                                    MyToast.showToast(getContext(), "验证码已过期，重新获取再试试哦", 5);
                                     break;
                                 case 102:
-                                    MyToast.showToast(getContext(),"验证码不匹配，核对后再重试哦",5);
+                                    MyToast.showToast(getContext(), "验证码不匹配，核对后再重试哦", 5);
                                     break;
                                 case 103:
                                     //用户第一次登录，需要填写登录密码
@@ -403,7 +404,7 @@ public class LoginDialogFragment extends DialogFragment {
                                     isWhatPage = 3;
                                     textview_state.setText("设置登录密码");
                                     textview_login.setText("确定");
-                                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                                     textview_login.setTextColor(Color.WHITE);
                                     textview_login.setEnabled(false);
                                     edittext_set_password.setText("");
@@ -416,13 +417,13 @@ public class LoginDialogFragment extends DialogFragment {
                                     isWhatPage = 3;
                                     textview_state.setText("设置登录密码");
                                     textview_login.setText("确定");
-                                    textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                                    textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                                     textview_login.setTextColor(Color.WHITE);
                                     textview_login.setEnabled(false);
                                     edittext_set_password.setText("");
                                     break;
                                 case 901:
-                                    MyToast.showToast(getContext(),"服务器异常，登录失败",5);
+                                    MyToast.showToast(getContext(), "服务器异常，登录失败", 5);
                                     break;
                             }
                         }
@@ -430,7 +431,7 @@ public class LoginDialogFragment extends DialogFragment {
                 });
     }
 
-    private void requestPasswordLogin(final String username, final String password){
+    private void requestPasswordLogin(final String username, final String password) {
 
         OkGo.post(HttpConstants.requestLogin)//请求数据的接口地址
                 .tag(HttpConstants.requestLogin)//
@@ -453,7 +454,7 @@ public class LoginDialogFragment extends DialogFragment {
                         //登录成功之后请求用户的收藏记录
                         OkGo.post(HttpConstants.getCollectionDatas)
                                 .tag(this)
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                                 .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
@@ -464,7 +465,7 @@ public class LoginDialogFragment extends DialogFragment {
                         //发送登录成功的局部广播
                         sendLoginBroadcast();
                         MobclickAgent.onProfileSignIn(username);//友盟在用户登录操作统计
-                        MyToast.showToast(getContext(),"登录成功",5);
+                        MyToast.showToast(getContext(), "登录成功", 5);
                         dismiss();
                     }
 
@@ -474,42 +475,42 @@ public class LoginDialogFragment extends DialogFragment {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(getContext(),e)){
+                        if (!DensityUtil.isException(getContext(), e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
-                            switch (code){
+                            switch (code) {
                                 case 102:
                                     //此手机号未登录过，不能用密码登录
-                                    MyToast.showToast(getContext(),"此手机号是新用户，需要手机验证码登录哦",5);
+                                    MyToast.showToast(getContext(), "此手机号是新用户，需要手机验证码登录哦", 5);
                                     isForgetPassword = false;
                                     isWhatPage = 1;
                                     linearlayout_pass_login.setVisibility(GONE);
                                     linearlayout_phone_login.setVisibility(View.VISIBLE);
                                     textview_state.setText("手机号登录");
-                                    if (edittext_username.getText().length()>0){
+                                    if (edittext_username.getText().length() > 0) {
                                         edittext_phonenumble.setText(edittext_username.getText().toString());
                                     }
-                                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length()>0){
+                                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length() > 0) {
                                         textview_login.setEnabled(true);
-                                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                                        textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                                    }else {
+                                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                                        textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                                    } else {
                                         textview_login.setEnabled(false);
-                                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                                         textview_login.setTextColor(Color.WHITE);
                                     }
                                     break;
                                 case 101:
-                                    MyToast.showToast(getContext(),"账号或密码不正确哦",5);
+                                    MyToast.showToast(getContext(), "账号或密码不正确哦", 5);
                                     break;
                                 case 202:
-                                    MyToast.showToast(getContext(),"服务器异常，登录失败",5);
+                                    MyToast.showToast(getContext(), "服务器异常，登录失败", 5);
                                     break;
                                 case 900:
-                                    MyToast.showToast(getContext(),"服务器异常，登录失败",5);
+                                    MyToast.showToast(getContext(), "服务器异常，登录失败", 5);
                                     break;
                                 case 901:
-                                    MyToast.showToast(getContext(),"服务器异常，登录失败",5);
+                                    MyToast.showToast(getContext(), "服务器异常，登录失败", 5);
                                     break;
                             }
                         }
@@ -517,7 +518,7 @@ public class LoginDialogFragment extends DialogFragment {
                 });
     }
 
-    private void requestChangePassword(String password){
+    private void requestChangePassword(String password) {
 
         OkGo.post(HttpConstants.setPasswordLogin)//请求数据的接口地址
                 .tag(getContext())
@@ -540,7 +541,7 @@ public class LoginDialogFragment extends DialogFragment {
                         //登录成功之后请求用户的收藏记录
                         OkGo.post(HttpConstants.getCollectionDatas)
                                 .tag(this)
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                                 .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
@@ -550,7 +551,7 @@ public class LoginDialogFragment extends DialogFragment {
 
                         //发送登录成功的局部广播
                         sendLoginBroadcast();
-                        MyToast.showToast(getContext(),"登录成功",5);
+                        MyToast.showToast(getContext(), "登录成功", 5);
                         dismiss();
                     }
 
@@ -560,18 +561,18 @@ public class LoginDialogFragment extends DialogFragment {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(getContext(),e)){
+                        if (!DensityUtil.isException(getContext(), e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
-                            switch (code){
+                            switch (code) {
                                 case 101:
-                                    MyToast.showToast(getContext(),"异常，登录失败",5);
+                                    MyToast.showToast(getContext(), "异常，登录失败", 5);
                                     break;
                                 case 102:
-                                    MyToast.showToast(getContext(),"异常，登录失败",5);
+                                    MyToast.showToast(getContext(), "异常，登录失败", 5);
                                     break;
                                 case 901:
-                                    MyToast.showToast(getContext(),"服务器异常，密码设置失败",5);
+                                    MyToast.showToast(getContext(), "服务器异常，密码设置失败", 5);
                                     break;
                             }
                         }
@@ -583,8 +584,8 @@ public class LoginDialogFragment extends DialogFragment {
 
         private TextView view;
 
-         isEmptyTextWatch(View view) {
-            if (view instanceof TextView){
+        isEmptyTextWatch(View view) {
+            if (view instanceof TextView) {
                 this.view = (TextView) view;
             }
         }
@@ -596,15 +597,15 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            switch (view.getId()){
-                case R.id.id_dialog_login_layout_edittext_phonenumble :
-                    if (dateUtil.isPhoneNumble(s.toString()) && edittext_confirm_code.getText().length()>0&&isGetCode){
+            switch (view.getId()) {
+                case R.id.id_dialog_login_layout_edittext_phonenumble:
+                    if (dateUtil.isPhoneNumble(s.toString()) && edittext_confirm_code.getText().length() > 0 && isGetCode) {
                         textview_login.setEnabled(true);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                        textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                    }else {
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                        textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                    } else {
                         textview_login.setEnabled(false);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                         textview_login.setTextColor(Color.WHITE);
                     }
                     if ((count > 0 || start > 0) || s.toString().length() > 0) {
@@ -613,25 +614,25 @@ public class LoginDialogFragment extends DialogFragment {
                         imageview_del1.setVisibility(View.GONE);
                     }
                     break;
-                case R.id.id_dialog_login_layout_edittext_confirm_code :
-                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length()>0&&isGetCode){
+                case R.id.id_dialog_login_layout_edittext_confirm_code:
+                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length() > 0 && isGetCode) {
                         textview_login.setEnabled(true);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                        textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                    }else {
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                        textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                    } else {
                         textview_login.setEnabled(false);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                         textview_login.setTextColor(Color.WHITE);
                     }
                     break;
-                case R.id.id_dialog_login_layout_edittext_username :
-                    if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length()>0){
+                case R.id.id_dialog_login_layout_edittext_username:
+                    if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length() > 0) {
                         textview_login.setEnabled(true);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                        textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                    }else {
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                        textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                    } else {
                         textview_login.setEnabled(false);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                         textview_login.setTextColor(Color.WHITE);
                     }
                     if ((count > 0 || start > 0) || s.toString().length() > 0) {
@@ -640,14 +641,14 @@ public class LoginDialogFragment extends DialogFragment {
                         imageview_del2.setVisibility(View.GONE);
                     }
                     break;
-                case R.id.id_dialog_login_layout_edittext_password :
-                    if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length()>0){
+                case R.id.id_dialog_login_layout_edittext_password:
+                    if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length() > 0) {
                         textview_login.setEnabled(true);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                        textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                    }else {
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                        textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                    } else {
                         textview_login.setEnabled(false);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                         textview_login.setTextColor(Color.WHITE);
                     }
                     if ((count > 0 || start > 0) || s.toString().length() > 0) {
@@ -656,14 +657,14 @@ public class LoginDialogFragment extends DialogFragment {
                         imageview_del3.setVisibility(View.GONE);
                     }
                     break;
-                case R.id.id_dialog_login_layout_edittext_set_password :
-                    if (dateUtil.isCorrectPassword(edittext_set_password.getText().toString())){
+                case R.id.id_dialog_login_layout_edittext_set_password:
+                    if (dateUtil.isCorrectPassword(edittext_set_password.getText().toString())) {
                         textview_login.setEnabled(true);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.little_yuan_yellow_5dp));
-                        textview_login.setTextColor(ContextCompat.getColor(getContext(),R.color.b1));
-                    }else {
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
+                        textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
+                    } else {
                         textview_login.setEnabled(false);
-                        textview_login.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.yuan_little_gray_login_5dp));
+                        textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_gray_login_5dp));
                         textview_login.setTextColor(Color.WHITE);
                     }
                     break;
@@ -676,10 +677,10 @@ public class LoginDialogFragment extends DialogFragment {
         }
     }
 
-    private void requestSendSMS(String phone_numble){
+    private void requestSendSMS(String phone_numble) {
         OkGo.post(HttpConstants.sendSms)
                 .tag(getContext())
-                .params("phone",phone_numble)
+                .params("phone", phone_numble)
                 .execute(new JsonCallback<Base_Class_Info<SMSInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<SMSInfo> smsInfo, Call call, Response response) {
@@ -710,8 +711,8 @@ public class LoginDialogFragment extends DialogFragment {
                         super.onError(call, response, e);
                         textview_getconfirm_code.setText("发送失败");
                         textview_getconfirm_code.setClickable(true);
-                        if (!DensityUtil.isException(getContext(),e)){
-                            MyToast.showToast(getContext(),"发送失败，请重试",5);
+                        if (!DensityUtil.isException(getContext(), e)) {
+                            MyToast.showToast(getContext(), "发送失败，请重试", 5);
                         }
                     }
                 });
@@ -720,7 +721,7 @@ public class LoginDialogFragment extends DialogFragment {
     /**
      * 发送登录的局部广播
      */
-    private void sendLoginBroadcast(){
+    private void sendLoginBroadcast() {
 
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent(LOGIN_ACTION));
     }
@@ -728,7 +729,7 @@ public class LoginDialogFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!=null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }

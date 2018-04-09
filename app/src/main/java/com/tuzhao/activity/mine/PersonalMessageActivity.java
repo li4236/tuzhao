@@ -13,11 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
 import com.lwkandroid.imagepicker.data.ImagePickType;
@@ -34,6 +29,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
 import java.util.List;
@@ -76,23 +72,17 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
 
     private void initView() {
 
-        imageview_user = (ImageView) findViewById(R.id.id_activity_personalmessage_layout_imageview_user);
-        textview_nickname = (TextView) findViewById(R.id.id_activity_personalmessage_layout_textview_nickname);
-        textview_realname = (TextView) findViewById(R.id.id_activity_personalmessage_layout_textview_realname);
-        textview_credit = (TextView) findViewById(R.id.id_activity_personalmessage_layout_textview_credit);
+        imageview_user = findViewById(R.id.id_activity_personalmessage_layout_imageview_user);
+        textview_nickname = findViewById(R.id.id_activity_personalmessage_layout_textview_nickname);
+        textview_realname = findViewById(R.id.id_activity_personalmessage_layout_textview_realname);
+        textview_credit = findViewById(R.id.id_activity_personalmessage_layout_textview_credit);
     }
 
     private void initData() {
 
         if (UserManager.getInstance().hasLogined()) {
             registerLogin();//注册登录广播接收器
-            Glide.with(PersonalMessageActivity.this)
-                    .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                    .placeholder(R.mipmap.ic_usericon)
-                    .error(R.mipmap.ic_usericon)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(imageview_user);
+            ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(), R.mipmap.ic_usericon);
             textview_nickname.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername() : UserManager.getInstance().getUserInfo().getNickname());
             textview_realname.setText("未认证");
             textview_credit.setText(UserManager.getInstance().getUserInfo().getCredit());
@@ -129,7 +119,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.id_activity_personalmessage_layout_linearlayout_nickname:
                 //跳转修改昵称
-                intent = new Intent(PersonalMessageActivity.this,ChangeNicknameActivity.class);
+                intent = new Intent(PersonalMessageActivity.this, ChangeNicknameActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_activity_personalmessage_layout_linearlayout_realname:
@@ -137,7 +127,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.id_activity_personalmessage_layout_linearlayout_credit:
-                intent = new Intent(PersonalMessageActivity.this,PersonalCreditActivity.class);
+                intent = new Intent(PersonalMessageActivity.this, PersonalCreditActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -154,7 +144,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_CODE_PICKER) {
             final List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             initLoading("正在更换...");
-            Log.e("hhaha",getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
+            Log.e("hhaha", getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());
             //进行图片逐个压缩
             Luban.with(PersonalMessageActivity.this)
                     .load(list.get(0).getImagePath())
@@ -168,9 +158,9 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                         @Override
                         public void onSuccess(File file) {
                             // 压缩成功后调用，返回压缩后的图片文件
-                            Log.e("hhaha",file.getAbsolutePath());
+                            Log.e("hhaha", file.getAbsolutePath());
                             File file1 = new File(list.get(0).getImagePath());
-                            if (file1.exists()){
+                            if (file1.exists()) {
                                 file1.delete();
                             }
                             uploadUserImage(file);
@@ -188,34 +178,20 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
         OkGo.post(HttpConstants.changeUserImage)
                 .tag(PersonalMessageActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("img_file", file)
                 .execute(new JsonCallback<Base_Class_Info<ChangeUserImageInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ChangeUserImageInfo> data_info, Call call, Response response) {
-                        Log.d("你妈卖批","返回成功");
-                        SimpleTarget<GlideDrawable> simpleTarget = new SimpleTarget<GlideDrawable>() {
-                            @Override
-                            public void onResourceReady(GlideDrawable resource, GlideAnimation glideAnimation) {
-                                //图片加载完成
-                                Log.d("你妈卖批","更换成功");
-                                if (mCustomDialog.isShowing()) {
-                                    mCustomDialog.dismiss();
-                                }
-                                MyToast.showToast(PersonalMessageActivity.this, "更换成功", 2);
-                                if (file.exists()) {
-                                    file.delete();
-                                }
-                                imageview_user.setImageDrawable(resource);
-                            }
-                        };
-                        Glide.with(PersonalMessageActivity.this)
-                                .load(HttpConstants.ROOT_IMG_URL_USER + data_info.data.getImg_url())
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .crossFade()
-                                .into(simpleTarget);
+                        if (mCustomDialog.isShowing()) {
+                            mCustomDialog.dismiss();
+                        }
+                        MyToast.showToast(PersonalMessageActivity.this, "更换成功", 2);
+                        if (file.exists()) {
+                            file.delete();
+                        }
+
+                        ImageUtil.showImpPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + data_info.data.getImg_url());
                         User_Info userInfo = UserManager.getInstance().getUserInfo();
                         userInfo.setImg_url(data_info.data.getImg_url());
                         UserManager.getInstance().setUserInfo(userInfo);
@@ -228,7 +204,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(PersonalMessageActivity.this, e)){
+                        if (!DensityUtil.isException(PersonalMessageActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为changeUserImage：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
@@ -239,7 +215,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                                     MyToast.showToast(PersonalMessageActivity.this, "更换失败，稍后重试", 5);
                                     break;
                                 case 901:
-                                    MyToast.showToast(PersonalMessageActivity.this,"服务器正在维护中", 5);
+                                    MyToast.showToast(PersonalMessageActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         }
@@ -256,7 +232,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
     /**
      * 发送登录的局部广播
      */
-    private void sendLoginBroadcast(){
+    private void sendLoginBroadcast() {
 
         LocalBroadcastManager.getInstance(PersonalMessageActivity.this).sendBroadcast(new Intent(LOGIN_ACTION));
     }
@@ -269,12 +245,8 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UserManager.getInstance().hasLogined()) {
-                Glide.with(PersonalMessageActivity.this)
-                        .load(HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url())
-                        .placeholder(R.mipmap.ic_usericon)
-                        .error(R.mipmap.ic_usericon)
-                        .centerCrop()
-                        .into(imageview_user);
+                ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                        R.mipmap.ic_usericon);
                 textview_nickname.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername() : UserManager.getInstance().getUserInfo().getNickname());
                 textview_realname.setText("未认证");
                 textview_credit.setText(UserManager.getInstance().getUserInfo().getCredit());

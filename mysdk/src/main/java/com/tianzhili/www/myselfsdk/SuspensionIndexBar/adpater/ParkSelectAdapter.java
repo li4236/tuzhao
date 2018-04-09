@@ -80,6 +80,6 @@ public class ParkSelectAdapter extends RecyclerView.Adapter<ParkSelectAdapter.Vi
         }
     }
     public interface MyItemClickListener {
-        public void onItemClick(View view, int postion);
+         void onItemClick(View view, int postion);
     }
 }

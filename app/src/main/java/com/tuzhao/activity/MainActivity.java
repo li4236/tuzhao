@@ -264,9 +264,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
         if (UserManager.getInstance().hasLogined()) {
-            ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            Log.e(TAG, "initData: login" );
+            ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
-            ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showPic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
 
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
@@ -1060,6 +1061,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "onReceive: " );
             if (UserManager.getInstance().hasLogined()) {
                 ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);

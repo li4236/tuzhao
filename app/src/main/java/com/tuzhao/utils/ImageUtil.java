@@ -3,10 +3,8 @@ package com.tuzhao.utils;
 import android.support.annotation.DrawableRes;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import com.tuzhao.R;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -15,56 +13,73 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class ImageUtil {
 
     public static void showPic(ImageView imageView, String url) {
-        Glide.with(imageView.getContext())
+        GlideApp.with(imageView.getContext())
                 .load(url)
-                .crossFade()
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void showPic(ImageView imageView, @DrawableRes int drawableRes) {
-        Glide.with(imageView.getContext())
+        GlideApp.with(imageView.getContext())
                 .load(drawableRes)
-                .crossFade()
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void showPic(ImageView imageView, String url, int placeholder) {
-        Glide.with(imageView.getContext())
+        GlideApp.with(imageView.getContext())
                 .load(url)
+                .centerCrop()
                 .placeholder(placeholder)
                 .error(placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
+                .into(imageView);
+    }
+
+    public static void showImpPic(ImageView imageView, String url) {
+        GlideApp.with(imageView.getContext())
+                .load(url)
+                .centerCrop()
+                .placeholder(R.mipmap.ic_img)
+                .error(R.mipmap.ic_img)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    public static void showImpPic(ImageView imageView, int url) {
+        GlideApp.with(imageView.getContext())
+                .load(url)
+                .centerCrop()
+                .placeholder(R.mipmap.ic_img)
+                .error(R.mipmap.ic_img)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void showCirclePic(ImageView imageView, int drawableId) {
-        Glide.with(imageView.getContext())
+        GlideApp.with(imageView.getContext())
                 .load(drawableId)
-                .crossFade()
-                .bitmapTransform(new CropCircleTransformation(imageView.getContext()))
+                .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void showCirclePic(ImageView imageView, String url) {
-        Glide.with(imageView.getContext())
+        GlideApp.with(imageView.getContext())
                 .load(url)
-                .crossFade()
-                .bitmapTransform(new CropCircleTransformation(imageView.getContext()))
+                .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void showCirclePic(ImageView imageView, String url, int placeholder) {
-        Glide.with(imageView.getContext())
+        GlideApp.with(imageView.getContext())
                 .load(url)
-                .crossFade()
+                .circleCrop()
                 .placeholder(placeholder)
                 .error(placeholder)
-                .bitmapTransform(new CropCircleTransformation(imageView.getContext()))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }

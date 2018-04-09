@@ -33,7 +33,6 @@
             android:layout_width="33dp"
             android:layout_height="33dp"
             android:layout_marginBottom="2dp"
-            android:src="@mipmap/ic_usericon"
             android:layout_marginEnd="7dp"
             android:contentDescription="@string/picture_description"
             app:layout_constraintBottom_toBottomOf="parent"

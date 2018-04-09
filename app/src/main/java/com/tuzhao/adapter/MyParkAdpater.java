@@ -10,12 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tuzhao.R;
 import com.tuzhao.activity.mine.RentalRecordActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 
@@ -40,21 +39,16 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         try {
-            if (mData.get(position).getPark_status().equals("3")||mData.get(position).getPark_status().equals("10")){
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPark_img() == null ? null : (mData.get(position).getPark_img().split(","))[0]))
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .crossFade()
-                        .into(holder.mIv_icon);
+            if (mData.get(position).getPark_status().equals("3") || mData.get(position).getPark_status().equals("10")) {
+                ImageUtil.showImpPic(holder.mIv_icon,
+                        HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPark_img() == null ? null : (mData.get(position).getPark_img().split(","))[0]));
                 holder.mTv_parkInfo.setText(mData.get(position).getLocation_describe());
                 holder.mTv_belongPark.setText(mData.get(position).getPark_space_name());
-                holder.textview_lockvoltage.setText(mData.get(position).getVoltage()+"V");
-                switch (Integer.parseInt(mData.get(position).getType())){
+                holder.textview_lockvoltage.setText(mData.get(position).getVoltage() + "V");
+                switch (Integer.parseInt(mData.get(position).getType())) {
                     case 1:
                         String[] ccc = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText(ccc[0]+" : "+ccc[1]+" : "+ccc[2] + " （车位主 : 物业 : 平台）");
+                        holder.textview_shouyi.setText(ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）");
                         break;
                     case 2:
                         String[] aaa = mData.get(position).getProfit_ratio().split(":");
@@ -81,21 +75,16 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                         }
                     }
                 });
-            }else {
-                Glide.with(mContext)
-                        .load(HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPark_img() == null ? null : (mData.get(position).getPark_img().split(","))[0]))
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .crossFade()
-                        .into(holder.mIv_icon);
+            } else {
+                ImageUtil.showImpPic(holder.mIv_icon,
+                        HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPark_img() == null ? null : (mData.get(position).getPark_img().split(","))[0]));
                 holder.mTv_parkInfo.setText(mData.get(position).getLocation_describe());
                 holder.mTv_belongPark.setText(mData.get(position).getPark_space_name());
                 holder.textview_lockvoltage.setText("未知");
-                switch (Integer.parseInt(mData.get(position).getType())){
+                switch (Integer.parseInt(mData.get(position).getType())) {
                     case 1:
                         String[] ccc = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText(ccc[0]+" : "+ccc[1]+" : "+ccc[2] + " （车位主 : 物业 : 平台）");
+                        holder.textview_shouyi.setText(ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）");
                         break;
                     case 2:
                         String[] aaa = mData.get(position).getProfit_ratio().split(":");
@@ -111,26 +100,26 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                     holder.textview_cancle.setVisibility(View.VISIBLE);
                 } else if (mData.get(position).getPark_status().equals("3")) {
                     holder.mTv_parkstatus.setText("成功加装车位");
-                    holder.textview_lockvoltage.setText(mData.get(position).getVoltage().equals("-1")?"未知":mData.get(position).getVoltage()+"V");
+                    holder.textview_lockvoltage.setText(mData.get(position).getVoltage().equals("-1") ? "未知" : mData.get(position).getVoltage() + "V");
                     holder.textview_cancle.setVisibility(View.GONE);
                 } else if (mData.get(position).getPark_status().equals("2")) {
                     holder.mTv_parkstatus.setText("正在进行安装中");
                     holder.textview_cancle.setVisibility(View.GONE);
-                }else if (mData.get(position).getPark_status().equals("4")) {
+                } else if (mData.get(position).getPark_status().equals("4")) {
                     holder.mTv_parkstatus.setText("加装车位未通过审核");
                     holder.textview_cancle.setVisibility(View.GONE);
-                }else if (mData.get(position).getPark_status().equals("5")) {
+                } else if (mData.get(position).getPark_status().equals("5")) {
                     holder.mTv_parkstatus.setText("拆卸审核中");
-                }else if (mData.get(position).getPark_status().equals("8")) {
+                } else if (mData.get(position).getPark_status().equals("8")) {
                     holder.mTv_parkstatus.setText("车位已拆卸");
                     holder.textview_cancle.setVisibility(View.GONE);
-                }else if (mData.get(position).getPark_status().equals("6")) {
+                } else if (mData.get(position).getPark_status().equals("6")) {
                     holder.mTv_parkstatus.setText("正在拆卸中");
                     holder.textview_cancle.setVisibility(View.GONE);
-                }else if (mData.get(position).getPark_status().equals("7")) {
+                } else if (mData.get(position).getPark_status().equals("7")) {
                     holder.mTv_parkstatus.setText("押金退还中");
                     holder.textview_cancle.setVisibility(View.GONE);
-                }else if (mData.get(position).getPark_status().equals("9")) {
+                } else if (mData.get(position).getPark_status().equals("9")) {
                     holder.mTv_parkstatus.setText("车位拆卸未通过审核");
                     holder.textview_cancle.setVisibility(View.GONE);
                 }
@@ -157,7 +146,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
         public TextView mTv_belongPark;
         public TextView mTv_parkInfo;
         public TextView textview_shouyi;
-        public TextView mTv_parkstatus,textview_cancle,textview_lockvoltage;
+        public TextView mTv_parkstatus, textview_cancle, textview_lockvoltage;
         public View mItemView;
 
         public MyViewHolder(View itemView) {

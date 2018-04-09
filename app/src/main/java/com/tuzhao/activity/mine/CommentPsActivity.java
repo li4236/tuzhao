@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.cb.ratingbar.CBRatingBar;
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
@@ -30,6 +29,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -102,12 +102,7 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
         relativelayout_img2 = (RelativeLayout) findViewById(R.id.id_activity_commentps_layout_relativelayout_img2);
         relativelayout_img3 = (RelativeLayout) findViewById(R.id.id_activity_commentps_layout_relativelayout_img3);
 
-        Glide.with(CommentPsActivity.this)
-                .load(HttpConstants.ROOT_IMG_URL_PS + parkspace_img)
-                .placeholder(R.mipmap.ic_img)
-                .error(R.mipmap.ic_img)
-                .centerCrop()
-                .into(imageview_psimg);
+        ImageUtil.showPic(imageview_psimg,HttpConstants.ROOT_IMG_URL_PS + parkspace_img,R.mipmap.ic_img);
     }
 
     private void initEvent() {
@@ -319,53 +314,22 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
                 relativelayout_img1.setVisibility(View.VISIBLE);
                 relativelayout_img2.setVisibility(View.GONE);
                 relativelayout_img3.setVisibility(View.GONE);
-                Glide.with(CommentPsActivity.this)
-                        .load(img_list.get(0).getImagePath())
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(imageview_img1);
+                ImageUtil.showPic(imageview_img1,img_list.get(0).getImagePath(),R.mipmap.ic_img);
                 break;
             case 2:
                 relativelayout_img1.setVisibility(View.VISIBLE);
                 relativelayout_img2.setVisibility(View.VISIBLE);
                 relativelayout_img3.setVisibility(View.GONE);
-                Glide.with(CommentPsActivity.this)
-                        .load(img_list.get(0).getImagePath())
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(imageview_img1);
-                Glide.with(CommentPsActivity.this)
-                        .load(img_list.get(1).getImagePath())
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(imageview_img2);
+                ImageUtil.showPic(imageview_img2,img_list.get(1).getImagePath(),R.mipmap.ic_img);
                 break;
             case 3:
                 relativelayout_img1.setVisibility(View.VISIBLE);
                 relativelayout_img2.setVisibility(View.VISIBLE);
                 relativelayout_img3.setVisibility(View.VISIBLE);
                 imageview_add.setVisibility(View.GONE);
-                Glide.with(CommentPsActivity.this)
-                        .load(img_list.get(0).getImagePath())
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(imageview_img1);
-                Glide.with(CommentPsActivity.this)
-                        .load(img_list.get(1).getImagePath())
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(imageview_img2);
-                Glide.with(CommentPsActivity.this)
-                        .load(img_list.get(2).getImagePath())
-                        .placeholder(R.mipmap.ic_img)
-                        .error(R.mipmap.ic_img)
-                        .centerCrop()
-                        .into(imageview_img3);
+                ImageUtil.showPic(imageview_img1,img_list.get(0).getImagePath(),R.mipmap.ic_img);
+                ImageUtil.showPic(imageview_img2,img_list.get(1).getImagePath(),R.mipmap.ic_img);
+                ImageUtil.showPic(imageview_img3,img_list.get(2).getImagePath(),R.mipmap.ic_img);
                 break;
         }
     }

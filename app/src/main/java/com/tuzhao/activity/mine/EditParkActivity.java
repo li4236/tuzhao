@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
@@ -30,6 +28,7 @@ import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 
@@ -87,30 +86,14 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
                     if (pic_list.length > 0) {
                         if (!pic_list[0].equals("")){
                             imageview_show1.setVisibility(View.VISIBLE);
-                            Glide.with(this)
-                                    .load(HttpConstants.ROOT_IMG_URL_PS + pic_list[0])
-                                    .placeholder(R.mipmap.ic_img)
-                                    .error(R.mipmap.ic_img)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .crossFade()
-                                    .into(imageview_show1);
+                            ImageUtil.showPic(imageview_show1,HttpConstants.ROOT_IMG_URL_PS + pic_list[0],R.mipmap.ic_img);
                             if (pic_list.length > 1) {
                                 imageview_show2.setVisibility(View.VISIBLE);
-                                Glide.with(this)
-                                        .load(HttpConstants.ROOT_IMG_URL_PS + pic_list[1])
-                                        .placeholder(R.mipmap.ic_img)
-                                        .error(R.mipmap.ic_img)
-                                        .centerCrop()
-                                        .into(imageview_show2);
+                                ImageUtil.showPic(imageview_show2,HttpConstants.ROOT_IMG_URL_PS + pic_list[1],R.mipmap.ic_img);
                             }
                             if (pic_list.length > 2) {
                                 imageview_show3.setVisibility(View.VISIBLE);
-                                Glide.with(this)
-                                        .load(HttpConstants.ROOT_IMG_URL_PS + pic_list[2])
-                                        .placeholder(R.mipmap.ic_img)
-                                        .error(R.mipmap.ic_img)
-                                        .centerCrop()
-                                        .into(imageview_show3);
+                                ImageUtil.showPic(imageview_show3,HttpConstants.ROOT_IMG_URL_PS + pic_list[2],R.mipmap.ic_img);
                             }
                             textview_img_count.setText(pic_list.length + "张");
                         }else {
@@ -352,52 +335,22 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
                         imageview_show1.setVisibility(View.VISIBLE);
                         imageview_show2.setVisibility(View.GONE);
                         imageview_show3.setVisibility(View.GONE);
-                        Glide.with(this)
-                                .load(HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(0))
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .centerCrop()
-                                .into(imageview_show1);
+                        ImageUtil.showPic(imageview_show1,HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(0),R.mipmap.ic_img);
                         break;
                     case 2:
                         imageview_show1.setVisibility(View.VISIBLE);
                         imageview_show2.setVisibility(View.VISIBLE);
                         imageview_show3.setVisibility(View.GONE);
-                        Glide.with(this)
-                                .load(HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(0))
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .centerCrop()
-                                .into(imageview_show1);
-                        Glide.with(this)
-                                .load(HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(1))
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .centerCrop()
-                                .into(imageview_show2);
+                        ImageUtil.showPic(imageview_show1,HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(0),R.mipmap.ic_img);
+                        ImageUtil.showPic(imageview_show2,HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(1),R.mipmap.ic_img);
                         break;
                     case 3:
                         imageview_show1.setVisibility(View.VISIBLE);
                         imageview_show2.setVisibility(View.VISIBLE);
                         imageview_show3.setVisibility(View.VISIBLE);
-                        Glide.with(this)
-                                .load(HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(0))
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .centerCrop()
-                                .into(imageview_show1);
-                        Glide.with(this)
-                                .load(HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(1))
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .centerCrop()
-                                .into(imageview_show2);
-                        Glide.with(this)
-                                .load(HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(2))
-                                .placeholder(R.mipmap.ic_img)
-                                .error(R.mipmap.ic_img)
-                                .centerCrop()
-                                .into(imageview_show3);
+                        ImageUtil.showPic(imageview_show1,HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(0),R.mipmap.ic_img);
+                        ImageUtil.showPic(imageview_show2,HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(1),R.mipmap.ic_img);
+                        ImageUtil.showPic(imageview_show3,HttpConstants.ROOT_IMG_URL_PS + newpiclist.get(2),R.mipmap.ic_img);
                         break;
                 }
                 textview_img_count.setText(newpiclist.size() + "张");

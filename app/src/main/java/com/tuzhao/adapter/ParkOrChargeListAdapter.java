@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cb.ratingbar.CBRatingBar;
 import com.tuzhao.R;
 import com.tuzhao.activity.ChargestationDetailActivity;
@@ -21,6 +19,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.List;
 
@@ -94,14 +93,8 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     break;
             }
             String[] urlList = mData.get(position).getPicture().split(",");
-            Glide.with(mContext)
-                    .load(urlList.length>0? HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"")
-                    .placeholder(R.mipmap.ic_img) //占位图
-                    .error(R.mipmap.ic_img)  //出错的占位图
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-                    .into(((MyViewHolder) holder).imageview_bigshow);
-
+            ImageUtil.showImpPic(((MyViewHolder) holder).imageview_bigshow,
+                    urlList.length>0? HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"");
         }catch (Exception e){
             e.printStackTrace();
         }
