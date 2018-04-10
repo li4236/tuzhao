@@ -38,18 +38,20 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     private DecimalFormat mDecimalFormat;
 
+    private CheckBox mAllChoose;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
         mChooseInvoice = new ArrayList<>();
         mDecimalFormat = new DecimalFormat("0.00");
         mTotalPrice = findViewById(R.id.invoice_reimbursement_total_invoice);
-        final CheckBox allChoose = findViewById(R.id.invoice_reimbursement_all_rb);
-        allChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mAllChoose = findViewById(R.id.invoice_reimbursement_all_rb);
+        mAllChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setAllCheck(isChecked);
-                allChoose.setChecked(isChecked);
+                mAllChoose.setChecked(isChecked);
             }
         });
         findViewById(R.id.invoice_reimbursement_submit).setOnClickListener(new View.OnClickListener() {
@@ -82,9 +84,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
-                        if (mCommonAdapter.getData().isEmpty()) {
-                            mRecyclerView.showEmpty(null);
-                        }
+                        showEmpty();
                         if (!DensityUtil.isException(InvoiceReimbursementActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
                         }
@@ -103,7 +103,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
                 .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
                 .setText(R.id.invoice_reimbursement_location, invoiceInfo.getParkspaceName())
-                .setText(R.id.invoice_reimbursement_total_price, invoiceInfo.getActualFee())
+                .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
                 .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .showPic(R.id.invoice_reimbursement_iv, invoiceInfo.getPictures())
                 .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("ture"));
@@ -111,10 +111,10 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.e(TAG, "onCheckedChanged: " + isChecked);
                 if (isChecked) {
                     mChooseInvoice.add(invoiceInfo);
                 } else {
+                    mAllChoose.setChecked(false);
                     mChooseInvoice.remove(invoiceInfo);
                 }
                 radioButton.setChecked(isChecked);
@@ -140,7 +140,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
             totolPric += Double.valueOf(invoiceInfo.getActualFee());
         }
 
-        String string = "开票总额:Y" + mDecimalFormat.format(totolPric);
+        String string = "开票总额:￥" + mDecimalFormat.format(totolPric);
         mTotalPrice.setText(string);
     }
 
