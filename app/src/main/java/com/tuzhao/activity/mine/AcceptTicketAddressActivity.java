@@ -81,14 +81,14 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity {
         AcceptTicketAddressInfo addressInfo;
         for (int i = 0; i < 10; i++) {
             addressInfo = new AcceptTicketAddressInfo();
-            addressInfo.setName("赤炎火狮");
-            addressInfo.setTelephone("18219111679");
+            addressInfo.setAcceptPersonName("赤炎火狮");
+            addressInfo.setAcceptPersonTelephone("18219111679");
             if (i % 2 == 0) {
-                addressInfo.setAddress("1247660633@qq.com");
+                addressInfo.setAcceptPersonEmail("1247660633@qq.com");
                 addressInfo.setType("电子");
             } else {
                 addressInfo.setType("普票");
-                addressInfo.setAddress("广东省中山市五桂山长命水长逸路5号1栋");
+                addressInfo.setAcceptAddress("广东省中山市五桂山长命水长逸路5号1栋");
             }
             if (i == 2) {
                 addressInfo.setIsDefault("ture");
@@ -105,10 +105,10 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity {
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final AcceptTicketAddressInfo acceptTicketAddressInfo, final int position) {
-            holder.setText(R.id.accept_ticket_address_name, acceptTicketAddressInfo.getName())
-                    .setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getTelephone())
+            holder.setText(R.id.accept_ticket_address_name, acceptTicketAddressInfo.getAcceptPersonName())
+                    .setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getAcceptPersonTelephone())
                     .setText(R.id.accept_ticket_address_type, acceptTicketAddressInfo.getType())
-                    .setText(R.id.accept_ticket_address_address, acceptTicketAddressInfo.getAddress())
+                    .setText(R.id.accept_ticket_address_address, acceptTicketAddressInfo.getAcceptAddress())
                     .setCheckboxCheck(R.id.accept_ticket_address_set_default, acceptTicketAddressInfo.getIsDefault().equals("ture"));
             if (acceptTicketAddressInfo.getIsDefault().equals("ture")) {
                 mDefaultAddressPosition = position;
