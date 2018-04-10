@@ -9,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.info.AcceptTicketAddressInfo;
@@ -21,19 +20,15 @@ import java.util.List;
  * Created by juncoder on 2018/3/29.
  */
 
-public class AcceptTicketAddressActivity extends BaseRefreshActivity {
+public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicketAddressInfo> {
 
     private int mDefaultAddressPosition;
-
-    private AcceptTicketAddressAdapter mAdapter;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
         mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.setEmptyView(R.layout.no_address_empty_layout);
-        mAdapter = new AcceptTicketAddressAdapter();
-        mRecyclerView.setAdapter(mAdapter);
         findViewById(R.id.accept_ticket_address_add_address).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,15 +49,70 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity {
         return new LinearLayoutManager(this);
     }
 
+
     @Override
-    protected void onRefresh() {
+    protected void loadData() {
         requestData();
-        mRecyclerView.setRefreshing(false);
     }
 
     @Override
-    protected void onLoadMore() {
+    protected int itemViewResourceId() {
+        return R.layout.item_accept_ticket_address_layout;
+    }
 
+    @Override
+    protected void bindData(BaseViewHolder holder, final AcceptTicketAddressInfo acceptTicketAddressInfo, final int position) {
+        String address = acceptTicketAddressInfo.getType().equals("电子") ? acceptTicketAddressInfo.getAcceptPersonEmail() :
+                acceptTicketAddressInfo.getAcceptArea() + acceptTicketAddressInfo.getAcceptAddress();
+        holder.setText(R.id.accept_ticket_address_name, acceptTicketAddressInfo.getAcceptPersonName())
+                .setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getAcceptPersonTelephone())
+                .setText(R.id.accept_ticket_address_type, acceptTicketAddressInfo.getType())
+                .setText(R.id.accept_ticket_address_address, address)
+                .setCheckboxCheck(R.id.accept_ticket_address_set_default, acceptTicketAddressInfo.getIsDefault().equals("1"));
+        if (acceptTicketAddressInfo.getIsDefault().equals("1")) {
+            mDefaultAddressPosition = position;
+        }
+        ((CheckBox) holder.getView(R.id.accept_ticket_address_set_default)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
+                        && !mRecyclerView.getRecyclerView().isComputingLayout()) {
+                    if (isChecked) {
+                        if (mDefaultAddressPosition >= 0) {
+                            mCommonAdapter.getData().get(mDefaultAddressPosition).setIsDefault("0");
+                        }
+                        acceptTicketAddressInfo.setIsDefault("1");
+                        mDefaultAddressPosition = position;
+                    } else {
+                        if (mDefaultAddressPosition == position) {
+                            mCommonAdapter.getData().get(mDefaultAddressPosition).setIsDefault("0");
+                        }
+                    }
+                    mCommonAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        holder.getView(R.id.accept_ticket_address_edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        holder.getView(R.id.accept_ticket_address_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (acceptTicketAddressInfo.getIsDefault().equals("ture")) {
+                    mDefaultAddressPosition = -1;
+                }
+                mCommonAdapter.getData().remove(position);
+                mCommonAdapter.notifyDataSetChanged();
+                if (mCommonAdapter.getData().isEmpty()) {
+                    mRecyclerView.showEmpty(null);
+                }
+            }
+        });
     }
 
     @Override
@@ -91,75 +141,14 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity {
                 addressInfo.setAcceptAddress("广东省中山市五桂山长命水长逸路5号1栋");
             }
             if (i == 2) {
-                addressInfo.setIsDefault("ture");
+                addressInfo.setIsDefault("1");
                 mDefaultAddressPosition = i;
             } else {
-                addressInfo.setIsDefault("false");
+                addressInfo.setIsDefault("0");
             }
             list.add(addressInfo);
         }
-        mAdapter.setNewData(list);
+        mCommonAdapter.addData(list);
     }
 
-    class AcceptTicketAddressAdapter extends BaseAdapter<AcceptTicketAddressInfo> {
-
-        @Override
-        protected void conver(@NonNull BaseViewHolder holder, final AcceptTicketAddressInfo acceptTicketAddressInfo, final int position) {
-            holder.setText(R.id.accept_ticket_address_name, acceptTicketAddressInfo.getAcceptPersonName())
-                    .setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getAcceptPersonTelephone())
-                    .setText(R.id.accept_ticket_address_type, acceptTicketAddressInfo.getType())
-                    .setText(R.id.accept_ticket_address_address, acceptTicketAddressInfo.getAcceptAddress())
-                    .setCheckboxCheck(R.id.accept_ticket_address_set_default, acceptTicketAddressInfo.getIsDefault().equals("ture"));
-            if (acceptTicketAddressInfo.getIsDefault().equals("ture")) {
-                mDefaultAddressPosition = position;
-            }
-            ((CheckBox) holder.getView(R.id.accept_ticket_address_set_default)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
-                            && !mRecyclerView.getRecyclerView().isComputingLayout()) {
-                        if (isChecked) {
-                            if (mDefaultAddressPosition >= 0) {
-                                getData().get(mDefaultAddressPosition).setIsDefault("false");
-                            }
-                            acceptTicketAddressInfo.setIsDefault("ture");
-                            mDefaultAddressPosition = position;
-                        } else {
-                            if (mDefaultAddressPosition == position) {
-                                getData().get(mDefaultAddressPosition).setIsDefault("false");
-                            }
-                            acceptTicketAddressInfo.setIsDefault("false");
-                        }
-                        notifyDataSetChanged();
-                    }
-                }
-            });
-
-            holder.getView(R.id.accept_ticket_address_edit).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-            holder.getView(R.id.accept_ticket_address_delete).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (acceptTicketAddressInfo.getIsDefault().equals("ture")) {
-                        mDefaultAddressPosition = -1;
-                    }
-                    getData().remove(position);
-                    notifyDataSetChanged();
-                    if (getData().isEmpty()) {
-                        mRecyclerView.showEmpty(null);
-                    }
-                }
-            });
-        }
-
-        @Override
-        protected int itemViewId() {
-            return R.layout.item_accept_ticket_address_layout;
-        }
-    }
 }

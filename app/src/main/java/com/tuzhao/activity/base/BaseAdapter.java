@@ -45,6 +45,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         mData = data;
     }
 
+    public BaseAdapter(RecyclerView recyclerView) {
+        mData = new ArrayList<>();
+        mRecyclerView = recyclerView;
+    }
+
     public BaseAdapter(List<T> data, RecyclerView recyclerView) {
         mData = data;
         mRecyclerView = recyclerView;

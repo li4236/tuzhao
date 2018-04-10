@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.info.ShareParkSpaceInfo;
@@ -24,15 +23,11 @@ import com.tuzhao.utils.ImageUtil;
  * Created by juncoder on 2018/4/9.
  */
 
-public class ShareParkSpaceActivity extends BaseRefreshActivity {
-
-    private ShareParkSpaceAdapter mSpaceAdapter;
+public class ShareParkSpaceActivity extends BaseRefreshActivity<ShareParkSpaceInfo> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        mSpaceAdapter = new ShareParkSpaceAdapter();
-        mRecyclerView.setAdapter(mSpaceAdapter);
         ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -49,7 +44,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity {
     @Override
     protected void initData() {
         super.initData();
-        if (mSpaceAdapter.getData().isEmpty()) {
+        if (mCommonAdapter.getData().isEmpty()) {
             mRecyclerView.showEmpty(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -92,44 +87,42 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity {
     }
 
     private void refreshData() {
-        mSpaceAdapter.clearAll();
+        mCommonAdapter.clearAll();
         ShareParkSpaceInfo shareParkSpaceInfo;
         for (int i = 0; i < 3; i++) {
             shareParkSpaceInfo = new ShareParkSpaceInfo();
             shareParkSpaceInfo.setCarOwnerName("天之力");
             shareParkSpaceInfo.setParkSpaceName("天之力停车场");
             shareParkSpaceInfo.setParkSpaceStatus(i % 2 == 0 ? "空闲中" : "使用中");
-            mSpaceAdapter.addData(shareParkSpaceInfo);
+            mCommonAdapter.addData(shareParkSpaceInfo);
         }
     }
 
-    private void loadData() {
+    @Override
+    protected void loadData() {
         ShareParkSpaceInfo shareParkSpaceInfo;
         for (int i = 0; i < 3; i++) {
             shareParkSpaceInfo = new ShareParkSpaceInfo();
             shareParkSpaceInfo.setCarOwnerName("新能源");
             shareParkSpaceInfo.setParkSpaceName("新能源停车场");
             shareParkSpaceInfo.setParkSpaceStatus(i % 2 == 0 ? "空闲中" : "使用中");
-            mSpaceAdapter.addData(shareParkSpaceInfo);
+            mCommonAdapter.addData(shareParkSpaceInfo);
         }
     }
 
-    class ShareParkSpaceAdapter extends BaseAdapter<ShareParkSpaceInfo> {
+    @Override
+    protected int itemViewResourceId() {
+        return R.layout.item_share_park_space_layout;
+    }
 
-        @Override
-        protected void conver(@NonNull BaseViewHolder holder, ShareParkSpaceInfo shareParkSpaceInfo, int position) {
-            holder.setText(R.id.share_park_space_space_name, shareParkSpaceInfo.getParkSpaceName())
-                    .setText(R.id.share_park_space_share_name, shareParkSpaceInfo.getCarOwnerName())
-                    .setText(R.id.share_park_space_status, shareParkSpaceInfo.getParkSpaceStatus());
-            ((ImageView) holder.getView(R.id.share_park_space_status_iv)).setImageDrawable(
-                    ContextCompat.getDrawable(ShareParkSpaceActivity.this,
-                            shareParkSpaceInfo.getParkSpaceStatus().equals("使用中") ? R.drawable.circle_r5 : R.drawable.circle_green7));
-        }
-
-        @Override
-        protected int itemViewId() {
-            return R.layout.item_share_park_space_layout;
-        }
+    @Override
+    protected void bindData(BaseViewHolder holder, ShareParkSpaceInfo shareParkSpaceInfo, int position) {
+        holder.setText(R.id.share_park_space_space_name, shareParkSpaceInfo.getParkSpaceName())
+                .setText(R.id.share_park_space_share_name, shareParkSpaceInfo.getCarOwnerName())
+                .setText(R.id.share_park_space_status, shareParkSpaceInfo.getParkSpaceStatus());
+        ((ImageView) holder.getView(R.id.share_park_space_status_iv)).setImageDrawable(
+                ContextCompat.getDrawable(ShareParkSpaceActivity.this,
+                        shareParkSpaceInfo.getParkSpaceStatus().equals("使用中") ? R.drawable.circle_r5 : R.drawable.circle_green7));
     }
 
 }

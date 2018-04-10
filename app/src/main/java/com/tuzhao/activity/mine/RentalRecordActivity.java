@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
-import com.tuzhao.adapter.RentalRecordAdapter;
+import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.info.RentalRecordInfo;
 import com.tuzhao.info.RentalRecordItemInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * </p>
  */
 
-public class RentalRecordActivity extends BaseRefreshActivity {
+public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemInfo> {
 
     private ImageView mRentalRecordIv;
 
@@ -36,10 +36,6 @@ public class RentalRecordActivity extends BaseRefreshActivity {
     private TextView mRentalRecordParkStatus;
 
     private TextView mRentalRecordElectricity;
-
-    private RentalRecordAdapter mAdapter;
-
-    private int mStartItme;
 
     @Override
     protected int resourceId() {
@@ -59,9 +55,7 @@ public class RentalRecordActivity extends BaseRefreshActivity {
                 startActivity(ParkSpaceSettingActivity.class);
             }
         });
-        mAdapter = new RentalRecordAdapter(new ArrayList<RentalRecordItemInfo>(), mRecyclerView.getRecyclerView());
-        mAdapter.setHeaderView(R.layout.layout_placeholder);
-        mRecyclerView.setAdapter(mAdapter);
+        mCommonAdapter.setHeaderView(R.layout.layout_placeholder);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
     }
 
@@ -142,13 +136,13 @@ public class RentalRecordActivity extends BaseRefreshActivity {
             rentalRecordItemInfos.add(itemInfo);
         }
         rentalRecordItemInfoBase_class_list_info.data = rentalRecordItemInfos;
-        if (rentalRecordItemInfoBase_class_list_info.data.isEmpty() && mAdapter.getData().isEmpty()) {
+        if (rentalRecordItemInfoBase_class_list_info.data.isEmpty() && mCommonAdapter.getData().isEmpty()) {
             mRecyclerView.showEmpty(null);
         } else {
             if (refresh) {
-                mAdapter.setNewData(rentalRecordItemInfoBase_class_list_info.data);
+                mCommonAdapter.setNewData(rentalRecordItemInfoBase_class_list_info.data);
             } else {
-                mAdapter.addData(rentalRecordItemInfoBase_class_list_info.data);
+                mCommonAdapter.addData(rentalRecordItemInfoBase_class_list_info.data);
             }
         }
         stopRefresh();
@@ -168,6 +162,24 @@ public class RentalRecordActivity extends BaseRefreshActivity {
     @Override
     protected void onLoadMore() {
         reqeustRentalRecordItme(false);
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
+
+    @Override
+    protected int itemViewResourceId() {
+        return R.layout.item_rental_record_layout;
+    }
+
+    @Override
+    protected void bindData(BaseViewHolder holder, RentalRecordItemInfo rentalRecordItemInfo, int position) {
+        holder.setText(R.id.rental_record_time_item, rentalRecordItemInfo.getRentalTime())
+                .setText(R.id.rental_record_car_number_item, rentalRecordItemInfo.getRentalCarNumber())
+                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalStartDate())
+                .setText(R.id.rental_record_earn_item, rentalRecordItemInfo.getRentalFee());
     }
 
 }

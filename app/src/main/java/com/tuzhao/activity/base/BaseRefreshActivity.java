@@ -1,7 +1,9 @@
 package com.tuzhao.activity.base;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
@@ -16,9 +18,11 @@ import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
  * </p>
  */
 
-public abstract class BaseRefreshActivity extends BaseStatusActivity {
+public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
 
     protected SuperRefreshRecyclerView mRecyclerView;
+
+    protected CommonAdapter mCommonAdapter;
 
     protected int mStartItme;
 
@@ -39,6 +43,14 @@ public abstract class BaseRefreshActivity extends BaseStatusActivity {
         mRecyclerView.setRefreshEnabled(true);
         mRecyclerView.setLoadingMoreEnable(true);
         mRecyclerView.setEmptyView(R.layout.layout_empty);
+        mCommonAdapter = new CommonAdapter(mRecyclerView.getRecyclerView());
+        mRecyclerView.setAdapter(mCommonAdapter);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        loadData();
     }
 
     /**
@@ -51,12 +63,17 @@ public abstract class BaseRefreshActivity extends BaseStatusActivity {
     /**
      * 当下拉刷新时将会回调该方法
      */
-    protected abstract void onRefresh();
+    protected void onRefresh() {
+        mStartItme = 0;
+        loadData();
+    }
 
     /**
      * 当上拉加载更多时将回调该方法
      */
-    protected abstract void onLoadMore();
+    protected void onLoadMore() {
+        loadData();
+    }
 
     /**
      * 停止下拉刷新
@@ -91,6 +108,42 @@ public abstract class BaseRefreshActivity extends BaseStatusActivity {
             stopRefresh();
         } else {
             stopLoadMore();
+        }
+    }
+
+    protected void showEmpty() {
+        if (mCommonAdapter.getData().isEmpty()) {
+            mRecyclerView.showEmpty(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mStartItme = 0;
+                    showLoadingDialog();
+                    loadData();
+                }
+            });
+        }
+    }
+
+    protected abstract void loadData();
+
+    protected abstract int itemViewResourceId();
+
+    protected abstract void bindData(BaseViewHolder holder, T t, int position);
+
+    protected class CommonAdapter extends BaseAdapter<T> {
+
+        CommonAdapter(RecyclerView recyclerView) {
+            super(recyclerView);
+        }
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, T t, int position) {
+            bindData(holder, t, position);
+        }
+
+        @Override
+        protected int itemViewId() {
+            return itemViewResourceId();
         }
     }
 
