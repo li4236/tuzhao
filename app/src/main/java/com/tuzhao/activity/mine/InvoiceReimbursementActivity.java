@@ -14,11 +14,18 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceInfo;
+import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.utils.DensityUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/28.
@@ -61,8 +68,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
     @Override
     protected void initData() {
         super.initData();
-        requestLoadMore();
-        dismmisLoadingDialog();
+        requestData();
     }
 
     @Override
@@ -72,31 +78,13 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
 
     @Override
     protected void onRefresh() {
-        List<InvoiceInfo> invoiceInfos = new ArrayList<>();
-        InvoiceInfo invoiceInfo;
-        mChooseInvoice.clear();
-        for (int i = 0; i < 3; i++) {
-            invoiceInfo = new InvoiceInfo();
-            invoiceInfo.setCheck(i % 2 == 0 ? "ture" : "false");
-            invoiceInfo.setPictures("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-            invoiceInfo.setParkspaceAddress("地下一层03车位");
-            invoiceInfo.setParkspaceName("天之力停车场");
-            invoiceInfo.setParkDuration(i + "小时3分");
-            invoiceInfo.setParkStartTime("2018-03-03 18:33");
-            invoiceInfo.setActualFee("15.54");
-            invoiceInfos.add(invoiceInfo);
-            if (invoiceInfo.getCheck().equals("ture")) {
-                mChooseInvoice.add(invoiceInfo);
-            }
-        }
-        mAdapter.setNewData(invoiceInfos);
-        calculateTotalPrice();
-        mRecyclerView.setRefreshing(false);
+        mStartItme = 0;
+        requestData();
     }
 
     @Override
     protected void onLoadMore() {
-        requestLoadMore();
+        requestData();
     }
 
     @Override
@@ -110,24 +98,30 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
         return "发票报销";
     }
 
-    private void requestLoadMore() {
-        InvoiceInfo invoiceInfo;
-        for (int i = 0; i < 3; i++) {
-            invoiceInfo = new InvoiceInfo();
-            invoiceInfo.setCheck(i % 2 == 0 ? "ture" : "false");
-            invoiceInfo.setPictures("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-            invoiceInfo.setParkspaceAddress("地下一层03车位");
-            invoiceInfo.setParkspaceName("天之力停车场");
-            invoiceInfo.setParkDuration(i + "小时3分");
-            invoiceInfo.setParkStartTime("2018-03-03 18:33");
-            invoiceInfo.setActualFee("15.54");
-            mAdapter.addData(invoiceInfo);
-            if (invoiceInfo.getCheck().equals("ture")) {
-                mChooseInvoice.add(invoiceInfo);
-            }
-        }
-        mRecyclerView.setLoadingMore(false);
-        calculateTotalPrice();
+    private void requestData() {
+        getOkgo(HttpConstants.getInvoice)
+                .execute(new JsonCallback<Base_Class_List_Info<InvoiceInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<InvoiceInfo> datas, Call call, Response response) {
+                        mAdapter.addData(datas.data);
+                        calculateTotalPrice();
+                        stopLoadStatus();
+                        increateStartItem();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        if (mAdapter.getData().isEmpty()) {
+                            mRecyclerView.showEmpty(null);
+                        }
+                        if (!DensityUtil.isException(InvoiceReimbursementActivity.this, e)) {
+                            Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
+                        }
+                    }
+                });
     }
 
     private void calculateTotalPrice() {
@@ -157,7 +151,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
         protected void conver(@NonNull BaseViewHolder holder, final InvoiceInfo invoiceInfo, int position) {
             holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                     .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
-                    .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStartTime())
+                    .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
                     .setText(R.id.invoice_reimbursement_location, invoiceInfo.getParkspaceName())
                     .setText(R.id.invoice_reimbursement_total_price, invoiceInfo.getActualFee())
                     .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
@@ -185,4 +179,5 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
         }
 
     }
+
 }

@@ -10,7 +10,7 @@ public class InvoiceInfo {
 
     private String parkspaceName;
 
-    private String parkStartTime;
+    private String parkStarttime;
 
     private String pictures;
 
@@ -38,12 +38,12 @@ public class InvoiceInfo {
         this.parkspaceName = parkspaceName;
     }
 
-    public String getParkStartTime() {
-        return parkStartTime;
+    public String getParkStarttime() {
+        return parkStarttime;
     }
 
-    public void setParkStartTime(String parkStartTime) {
-        this.parkStartTime = parkStartTime;
+    public void setParkStarttime(String parkStarttime) {
+        this.parkStarttime = parkStarttime;
     }
 
     public String getPictures() {

@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
-            android:text="开票总额:102.30元"
+            android:text="开票总额:0.00元"
             app:layout_constraintEnd_toStartOf="@+id/invoice_reimbursement_submit"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,6 +74,8 @@
             android:background="@drawable/bg_yellow"
             android:gravity="center"
             android:paddingBottom="12dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:paddingTop="12dp"
             android:text="提交申请"
             android:textColor="@color/b1"

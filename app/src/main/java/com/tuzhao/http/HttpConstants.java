@@ -8,7 +8,7 @@ package com.tuzhao.http;
 
 public class HttpConstants {
 
-//    private static String ROOT_URL = "http://120.78.54.188/Home/charge/";//真正服务器
+    //    private static String ROOT_URL = "http://120.78.54.188/Home/charge/";//真正服务器
 //    public static final String ROOT_IMG_URL = "http://120.78.54.188/Public/Uploads/";//真正服务器
     public static final String ROOT_URL = "https://api.toozhao.cn/public/index.php/tianzhili/";//测试服务器
     private static final String ROOT_BASE_IMG_URL = "https://api.toozhao.cn/public/uploads/";//测试服务器图片基本Url
@@ -26,17 +26,17 @@ public class HttpConstants {
     /**
      * 获取一个电站信息
      */
-    public static String getOneChargeStationData = ROOT_URL +  "getOneChargeStationData";
+    public static String getOneChargeStationData = ROOT_URL + "getOneChargeStationData";
 
     /**
      * 获取一个车场信息
      */
-    public static String getOneParkSpaceData =ROOT_URL +  "getOneParkSpaceData";
+    public static String getOneParkSpaceData = ROOT_URL + "getOneParkSpaceData";
 
     /**
      * 获取一个车场的所有评论
      */
-    public static String getParkspceComment =ROOT_URL +  "getParkspceComment";
+    public static String getParkspceComment = ROOT_URL + "getParkspceComment";
 
     /**
      * 登录的请求
@@ -46,27 +46,27 @@ public class HttpConstants {
     /**
      * 添加用户的车牌号
      */
-    public static String addUserCarNumber = ROOT_URL +  "addUserCarNumber";
+    public static String addUserCarNumber = ROOT_URL + "addUserCarNumber";
 
     /**
      * 删除用户的车牌号
      */
-    public static String deleteUserCarNumber = ROOT_URL +  "deleteUserCarNumber";
+    public static String deleteUserCarNumber = ROOT_URL + "deleteUserCarNumber";
 
     /**
      * 查询用户的优惠券
      */
-    public static String getUserDiscount = ROOT_URL +  "getUserDiscount";
+    public static String getUserDiscount = ROOT_URL + "getUserDiscount";
 
     /**
      * 新增停车预约订单接口
      */
-    public static String addNewParkOrder = ROOT_URL +  "addNewParkOrder";
+    public static String addNewParkOrder = ROOT_URL + "addNewParkOrder";
 
     /**
      * 预约被锁定车位
      */
-    public static String appointOrderLockPark = ROOT_URL +  "appointOrderLockPark";
+    public static String appointOrderLockPark = ROOT_URL + "appointOrderLockPark";
 
     /**
      * 获得用户收藏记录
@@ -156,7 +156,8 @@ public class HttpConstants {
     /**
      * 反馈意见
      */
-    public static String uploadSuggest = ROOT_URL + "uploadSuggest";;
+    public static String uploadSuggest = ROOT_URL + "uploadSuggest";
+    ;
 
     /**
      * 获取用户账单列表
@@ -344,4 +345,10 @@ public class HttpConstants {
      * 删除用户优惠券
      */
     public static String deleteUserDiscount = ROOT_URL + "deleteUserDiscount";
+
+    /**
+     * 获取未报销的发票
+     */
+    public static String getInvoice = ROOT_URL + "getInvoice";
+
 }

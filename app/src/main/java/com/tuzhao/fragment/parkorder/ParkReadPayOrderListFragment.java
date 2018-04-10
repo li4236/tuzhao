@@ -1,11 +1,12 @@
 package com.tuzhao.fragment.parkorder;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -74,7 +75,6 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
     /**
      * 支付宝支付完成的回调处理
      */
-    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @SuppressWarnings("unused")
         public void handleMessage(Message msg) {
@@ -84,6 +84,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
                     //如果消息是支付成功 则SDK正常运行，将随该消息附带的msg.obj强转回map中，建立新的payresult支付结果
                             MessageHolder messageHolder = (MessageHolder) msg.obj;
                     PayResult payResult = new PayResult(messageHolder.result);
+                    Log.e("TAG", "handleMessage: ");
                     /**
                      对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                      */
@@ -169,7 +170,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
             }
         });
         mRecycleview.setAdapter(mAdapter);
-        linearlayout_nodata =  mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
+        linearlayout_nodata = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
     }
 
     private void initData() {
@@ -177,6 +178,9 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
     }
 
     private void initEvent() {
+        if (getActivity() != null) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 0x111);
+        }
     }
 
     private class onMyRefresh implements OnRefreshListener {
@@ -323,7 +327,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
                                 Log.e("正在支付", s);
                                 PayTask alipay = new PayTask(activity);
                                 Map<String, String> result = alipay.payV2(s, true);
-                                Log.i("msp", result.toString());
+                                Log.e("msp", result.toString());
 
                                 Message msg = new Message();
                                 msg.what = SDK_PAY_FLAG;
@@ -374,7 +378,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
             requestGetAllOrdersAgain(0 + "", ((mLoadingtimes + 1) * 10) + "");
         } else if (!isVisibleToUser) {
             Log.e("我是待付款的页面", "我被隐藏啦setUserVisibleHint");
-        } else if ((isVisibleToUser && !isResumed())) {
+        } else if (!isResumed()) {
             Log.e("我是待付款的页面", "我被显示啦setUserVisibleHint");
             if (!isFirstIn) {
                 requestGetAllOrdersAgain(0 + "", ((mLoadingtimes + 1) * 10) + "");

@@ -3,6 +3,7 @@ package com.tuzhao.activity.base;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
+import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
@@ -18,6 +19,8 @@ import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
 public abstract class BaseRefreshActivity extends BaseStatusActivity {
 
     protected SuperRefreshRecyclerView mRecyclerView;
+
+    protected int mStartItme;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -70,6 +73,24 @@ public abstract class BaseRefreshActivity extends BaseStatusActivity {
     protected void stopLoadMore() {
         if (mRecyclerView.isLoadingMore()) {
             mRecyclerView.setLoadingMore(false);
+        }
+    }
+
+    protected BaseRequest getOkgo(String url) {
+        return getOkGo(url)
+                .params("startItme", mStartItme)
+                .params("pageSize", 15);
+    }
+
+    protected void increateStartItem() {
+        mStartItme += 15;
+    }
+
+    protected void stopLoadStatus() {
+        if (mStartItme == 0) {
+            stopRefresh();
+        } else {
+            stopLoadMore();
         }
     }
 
