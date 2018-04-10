@@ -78,12 +78,12 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
         for (int i = 0; i < 3; i++) {
             invoiceInfo = new InvoiceInfo();
             invoiceInfo.setCheck(i % 2 == 0 ? "ture" : "false");
-            invoiceInfo.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-            invoiceInfo.setLocation("地下一层03车位");
-            invoiceInfo.setParkLot("天之力停车场");
+            invoiceInfo.setPictures("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
+            invoiceInfo.setParkspaceAddress("地下一层03车位");
+            invoiceInfo.setParkspaceName("天之力停车场");
             invoiceInfo.setParkDuration(i + "小时3分");
-            invoiceInfo.setTime("2018-03-03 18:33");
-            invoiceInfo.setPrice("15.54");
+            invoiceInfo.setParkStartTime("2018-03-03 18:33");
+            invoiceInfo.setActualFee("15.54");
             invoiceInfos.add(invoiceInfo);
             if (invoiceInfo.getCheck().equals("ture")) {
                 mChooseInvoice.add(invoiceInfo);
@@ -115,12 +115,12 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
         for (int i = 0; i < 3; i++) {
             invoiceInfo = new InvoiceInfo();
             invoiceInfo.setCheck(i % 2 == 0 ? "ture" : "false");
-            invoiceInfo.setImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-            invoiceInfo.setLocation("地下一层03车位");
-            invoiceInfo.setParkLot("天之力停车场");
+            invoiceInfo.setPictures("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
+            invoiceInfo.setParkspaceAddress("地下一层03车位");
+            invoiceInfo.setParkspaceName("天之力停车场");
             invoiceInfo.setParkDuration(i + "小时3分");
-            invoiceInfo.setTime("2018-03-03 18:33");
-            invoiceInfo.setPrice("15.54");
+            invoiceInfo.setParkStartTime("2018-03-03 18:33");
+            invoiceInfo.setActualFee("15.54");
             mAdapter.addData(invoiceInfo);
             if (invoiceInfo.getCheck().equals("ture")) {
                 mChooseInvoice.add(invoiceInfo);
@@ -133,7 +133,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
     private void calculateTotalPrice() {
         double totolPric = 0;
         for (InvoiceInfo invoiceInfo : mChooseInvoice) {
-            totolPric += Double.valueOf(invoiceInfo.getPrice());
+            totolPric += Double.valueOf(invoiceInfo.getActualFee());
         }
 
         String string = "开票总额:Y" + mDecimalFormat.format(totolPric);
@@ -155,13 +155,13 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity {
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final InvoiceInfo invoiceInfo, int position) {
-            holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkLot())
+            holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                     .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
-                    .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getTime())
-                    .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocation())
-                    .setText(R.id.invoice_reimbursement_total_price, invoiceInfo.getPrice())
-                    .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkLot())
-                    .showPic(R.id.invoice_reimbursement_iv, invoiceInfo.getImg())
+                    .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStartTime())
+                    .setText(R.id.invoice_reimbursement_location, invoiceInfo.getParkspaceName())
+                    .setText(R.id.invoice_reimbursement_total_price, invoiceInfo.getActualFee())
+                    .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
+                    .showPic(R.id.invoice_reimbursement_iv, invoiceInfo.getPictures())
                     .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("ture"));
             final CheckBox radioButton = (CheckBox) holder.getView(R.id.invoice_reimbursement_rb);
             radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

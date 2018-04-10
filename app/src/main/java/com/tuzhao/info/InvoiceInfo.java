@@ -6,52 +6,52 @@ package com.tuzhao.info;
 
 public class InvoiceInfo {
 
-    private String id;
+    private String orderId;
 
-    private String parkLot;
+    private String parkspaceName;
 
-    private String time;
+    private String parkStartTime;
 
-    private String img;
+    private String pictures;
 
     private String check;
 
-    private String location;
+    private String parkspaceAddress;
 
     private String parkDuration;
 
-    private String price;
+    private String actualFee;
 
-    public String getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public String getParkLot() {
-        return parkLot;
+    public String getParkspaceName() {
+        return parkspaceName;
     }
 
-    public void setParkLot(String parkLot) {
-        this.parkLot = parkLot;
+    public void setParkspaceName(String parkspaceName) {
+        this.parkspaceName = parkspaceName;
     }
 
-    public String getTime() {
-        return time;
+    public String getParkStartTime() {
+        return parkStartTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setParkStartTime(String parkStartTime) {
+        this.parkStartTime = parkStartTime;
     }
 
-    public String getImg() {
-        return img;
+    public String getPictures() {
+        return pictures;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setPictures(String pictures) {
+        this.pictures = pictures;
     }
 
     public String getCheck() {
@@ -62,12 +62,12 @@ public class InvoiceInfo {
         this.check = check;
     }
 
-    public String getLocation() {
-        return location;
+    public String getParkspaceAddress() {
+        return parkspaceAddress;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setParkspaceAddress(String parkspaceAddress) {
+        this.parkspaceAddress = parkspaceAddress;
     }
 
     public String getParkDuration() {
@@ -78,11 +78,11 @@ public class InvoiceInfo {
         this.parkDuration = parkDuration;
     }
 
-    public String getPrice() {
-        return price;
+    public String getActualFee() {
+        return actualFee;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setActualFee(String actualFee) {
+        this.actualFee = actualFee;
     }
 }
