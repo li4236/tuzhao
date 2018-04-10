@@ -107,8 +107,8 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .showPic(R.id.invoice_reimbursement_iv, invoiceInfo.getPictures())
                 .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("ture"));
-        final CheckBox radioButton = (CheckBox) holder.getView(R.id.invoice_reimbursement_rb);
-        radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CheckBox checkBox = (CheckBox) holder.getView(R.id.invoice_reimbursement_rb);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -117,7 +117,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     mAllChoose.setChecked(false);
                     mChooseInvoice.remove(invoiceInfo);
                 }
-                radioButton.setChecked(isChecked);
+                checkBox.setChecked(isChecked);
                 calculateTotalPrice();
             }
         });

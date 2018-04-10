@@ -351,4 +351,35 @@ public class HttpConstants {
      */
     public static String getInvoice = ROOT_URL + "getInvoice";
 
+    /**
+     * 申请发票报销
+     */
+    public static String applyInvoiceReimbursement = ROOT_URL + "applyInvoiceReimbursement";
+
+    /**
+     * 添加收票地址
+     */
+    public static String addAcceptTicketAddress = ROOT_URL + "addAcceptTicketAddress";
+
+    /**
+     * 获取收票地址
+     */
+    public static String getAcceptTicketAddress = ROOT_URL + "getAcceptTicketAddress";
+
+    /**
+     * 删除收票地址
+     */
+    public static String deleteAcceptTicketAddress = ROOT_URL + "deleteAcceptTicketAddress";
+
+    /**
+     * 设置默认收票地址
+     */
+    public static String setDefaultAcceptTicketAddress = ROOT_URL + "setDefaultAcceptTicketAddress";
+
+    /**
+     * 获取出租记录
+     */
+    public static String getRentalRecord = ROOT_URL + "getRentalRecord";
+
+
 }

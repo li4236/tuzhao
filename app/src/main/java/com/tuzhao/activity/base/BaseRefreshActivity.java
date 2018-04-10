@@ -7,9 +7,15 @@ import android.view.View;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
+import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
+import com.tuzhao.utils.DensityUtil;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -97,6 +103,36 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         return getOkGo(url)
                 .params("startItme", mStartItme)
                 .params("pageSize", 15);
+    }
+
+    /**
+     * @param url      请求的url
+     * @param callback 当请求成功的时候会自动显示数据，然后回调onSuccess方法，接着会把请求状态取消
+     *                 当请求失败的时候如果没有数据则显示空数据并取消加载对话框，接着会回调onError方法
+     */
+    protected void requestData(String url, final BaseCallback<Base_Class_List_Info<T>> callback) {
+        getOkgo(url)
+                .execute(new JsonCallback<Base_Class_List_Info<T>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
+                        mRecyclerView.showData();
+                        mCommonAdapter.addData(t.data);
+                        callback.onSuccess(t, call, response);
+                        stopLoadStatus();
+                        increateStartItem();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showEmpty();
+                        if (!DensityUtil.isException(BaseRefreshActivity.this, e)) {
+                            callback.onError(call, response, e);
+                        }
+                    }
+                });
     }
 
     protected void increateStartItem() {

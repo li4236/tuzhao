@@ -9,20 +9,24 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseCallback;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.AcceptTicketAddressInfo;
+import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.utils.DensityUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/29.
  */
 
 public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicketAddressInfo> {
-
-    private int mDefaultAddressPosition;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -38,21 +42,92 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     }
 
     @Override
-    protected void initData() {
-        super.initData();
-        requestData();
-        dismmisLoadingDialog();
-    }
-
-    @Override
     protected RecyclerView.LayoutManager createLayouManager() {
         return new LinearLayoutManager(this);
     }
 
-
     @Override
     protected void loadData() {
-        requestData();
+        requestData(HttpConstants.getAcceptTicketAddress, new BaseCallback<Base_Class_List_Info<AcceptTicketAddressInfo>>() {
+            @Override
+            public void onSuccess(Base_Class_List_Info<AcceptTicketAddressInfo> acceptTicketAddressInfoBase_class_list_info, Call call, Response response) {
+
+            }
+
+            @Override
+            public void onError(Call call, Response response, Exception e) {
+
+            }
+        });
+    }
+
+    private void setDefaultAddress(final String ticketId, final String isDefault) {
+        showLoadingDialog();
+        getOkgo(HttpConstants.setDefaultAcceptTicketAddress)
+                .params("ticketId", ticketId)
+                .params("isDefault", isDefault)
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
+                        notifyDefaultAddressChange(ticketId);
+                        if (isDefault.equals("0")) {
+                            showFiveToast("设置默认地址成功");
+                        } else {
+                            showFiveToast("取消默认地址成功");
+                        }
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!DensityUtil.isException(AcceptTicketAddressActivity.this, e)) {
+                            if (isDefault.equals("0")) {
+                                showFiveToast("取消默认地址失败，请稍后重试");
+                            } else {
+                                showFiveToast("设置默认地址成功，请稍后重试");
+                            }
+                        }
+                        dismmisLoadingDialog();
+                    }
+                });
+    }
+
+    private void notifyDefaultAddressChange(String ticketId) {
+        for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
+            if (mCommonAdapter.getData().get(i).getTicketId().equals(ticketId)) {
+                mCommonAdapter.getData().get(i).setIsDefault(ticketId.equals("0") ? "1" : "0");
+                mCommonAdapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    private void deleteAddress(final String ticketId) {
+        getOkgo(HttpConstants.deleteAcceptTicketAddress)
+                .params("ticketId", ticketId)
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> base_class_info, Call call, Response response) {
+                        notifyAddressDelete(ticketId);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!DensityUtil.isException(AcceptTicketAddressActivity.this, e)) {
+                            showFiveToast("删除失败，请稍后重试");
+                        }
+                    }
+                });
+    }
+
+    private void notifyAddressDelete(String ticketId) {
+        for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
+            if (mCommonAdapter.getData().get(i).getTicketId().equals(ticketId)) {
+                mCommonAdapter.notifyRemoveData(i);
+            }
+        }
     }
 
     @Override
@@ -69,24 +144,17 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                 .setText(R.id.accept_ticket_address_type, acceptTicketAddressInfo.getType())
                 .setText(R.id.accept_ticket_address_address, address)
                 .setCheckboxCheck(R.id.accept_ticket_address_set_default, acceptTicketAddressInfo.getIsDefault().equals("1"));
-        if (acceptTicketAddressInfo.getIsDefault().equals("1")) {
-            mDefaultAddressPosition = position;
-        }
+
         ((CheckBox) holder.getView(R.id.accept_ticket_address_set_default)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
                         && !mRecyclerView.getRecyclerView().isComputingLayout()) {
                     if (isChecked) {
-                        if (mDefaultAddressPosition >= 0) {
-                            mCommonAdapter.getData().get(mDefaultAddressPosition).setIsDefault("0");
-                        }
+                        setDefaultAddress(acceptTicketAddressInfo.getTicketId(), "1");
                         acceptTicketAddressInfo.setIsDefault("1");
-                        mDefaultAddressPosition = position;
-                    } else {
-                        if (mDefaultAddressPosition == position) {
-                            mCommonAdapter.getData().get(mDefaultAddressPosition).setIsDefault("0");
-                        }
+                    } else if (acceptTicketAddressInfo.getTicketId().equals("1")) {
+                        setDefaultAddress(acceptTicketAddressInfo.getTicketId(), "0");
                     }
                     mCommonAdapter.notifyDataSetChanged();
                 }
@@ -96,16 +164,13 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         holder.getView(R.id.accept_ticket_address_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                deleteAddress(acceptTicketAddressInfo.getTicketId());
             }
         });
 
         holder.getView(R.id.accept_ticket_address_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (acceptTicketAddressInfo.getIsDefault().equals("ture")) {
-                    mDefaultAddressPosition = -1;
-                }
                 mCommonAdapter.getData().remove(position);
                 mCommonAdapter.notifyDataSetChanged();
                 if (mCommonAdapter.getData().isEmpty()) {
@@ -126,7 +191,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         return "收票地址";
     }
 
-    private void requestData() {
+  /*  private void requestData() {
         List<AcceptTicketAddressInfo> list = new ArrayList<>();
         AcceptTicketAddressInfo addressInfo;
         for (int i = 0; i < 10; i++) {
@@ -142,13 +207,12 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
             }
             if (i == 2) {
                 addressInfo.setIsDefault("1");
-                mDefaultAddressPosition = i;
             } else {
                 addressInfo.setIsDefault("0");
             }
             list.add(addressInfo);
         }
         mCommonAdapter.addData(list);
-    }
+    }*/
 
 }
