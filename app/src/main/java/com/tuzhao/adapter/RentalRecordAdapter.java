@@ -22,10 +22,10 @@ public class RentalRecordAdapter extends BaseAdapter<RentalRecordItemInfo> {
 
     @Override
     protected void conver(@NonNull BaseViewHolder holder, RentalRecordItemInfo rentalRecordItemInfo, int position) {
-        holder.setText(R.id.rental_record_time_item, rentalRecordItemInfo.getRentalRecordTime())
-                .setText(R.id.rental_record_car_number_item, rentalRecordItemInfo.getRentalRecordCarNumber())
-                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalRecordDate())
-                .setText(R.id.rental_record_earn_item, rentalRecordItemInfo.getRentalRecordEarn());
+        holder.setText(R.id.rental_record_time_item, rentalRecordItemInfo.getRentalTime())
+                .setText(R.id.rental_record_car_number_item, rentalRecordItemInfo.getRentalCarNumber())
+                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalStartDate())
+                .setText(R.id.rental_record_earn_item, rentalRecordItemInfo.getRentalFee());
     }
 
     @Override

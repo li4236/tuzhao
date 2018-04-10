@@ -1,59 +1,60 @@
 package com.tuzhao.info;
 
+import com.tuzhao.info.base_info.BaseInfo;
+
 /**
  * Created by juncoder on 2018/3/27.
  */
 
-public class RentalRecordInfo {
+public class RentalRecordInfo extends BaseInfo {
 
-    private String id;
+    private String parkSpaceId;
 
-    private String rentalRecordImg;
+    private String parkSpaceImg;
 
-    private String rentalRecordParkNumber;
+    private String parkSpaceNumber;
 
-    private String rentalRecordPackStatus;
+    private String packSpaceStatus;
 
-    private String rentalRecordElectricity;
+    private String voltage;
 
-    public String getId() {
-        return id;
+    public String getParkSpaceId() {
+        return parkSpaceId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setParkSpaceId(String parkSpaceId) {
+        this.parkSpaceId = parkSpaceId;
     }
 
-    public String getRentalRecordImg() {
-        return rentalRecordImg;
+    public String getParkSpaceImg() {
+        return parkSpaceImg;
     }
 
-    public void setRentalRecordImg(String rentalRecordImg) {
-        this.rentalRecordImg = rentalRecordImg;
+    public void setParkSpaceImg(String parkSpaceImg) {
+        this.parkSpaceImg = parkSpaceImg;
     }
 
-    public String getRentalRecordParkNumber() {
-        return rentalRecordParkNumber;
+    public String getParkSpaceNumber() {
+        return parkSpaceNumber;
     }
 
-    public void setRentalRecordParkNumber(String rentalRecordParkNumber) {
-        this.rentalRecordParkNumber = rentalRecordParkNumber;
+    public void setParkSpaceNumber(String parkSpaceNumber) {
+        this.parkSpaceNumber = parkSpaceNumber;
     }
 
-    public String getRentalRecordPackStatus() {
-        return rentalRecordPackStatus;
+    public String getPackSpaceStatus() {
+        return packSpaceStatus;
     }
 
-    public void setRentalRecordPackStatus(String rentalRecordPackStatus) {
-        this.rentalRecordPackStatus = rentalRecordPackStatus;
+    public void setPackSpaceStatus(String packSpaceStatus) {
+        this.packSpaceStatus = packSpaceStatus;
     }
 
-    public String getRentalRecordElectricity() {
-        return rentalRecordElectricity;
+    public String getVoltage() {
+        return voltage;
     }
 
-    public void setRentalRecordElectricity(String rentalRecordElectricity) {
-        this.rentalRecordElectricity = rentalRecordElectricity;
+    public void setVoltage(String voltage) {
+        this.voltage = voltage;
     }
-
 }

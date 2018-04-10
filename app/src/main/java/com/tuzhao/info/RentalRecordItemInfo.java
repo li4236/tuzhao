@@ -6,43 +6,50 @@ package com.tuzhao.info;
 
 public class RentalRecordItemInfo {
 
-    private String rentalRecordTime;
+    //订单id
+    private String orderId;
 
-    private String rentalRecordDate;
+    //出租时长
+    private String rentalTime;
 
-    private String rentalRecordCarNumber;
+    //出租的开始时间
+    private String rentalStartDate;
 
-    private String rentalRecordEarn;
+    //租用的车牌号码
+    private String rentalCarNumber;
 
-    public String getRentalRecordTime() {
-        return rentalRecordTime;
+    //获得收益
+    private String rentalFee;
+
+    public String getRentalTime() {
+        return rentalTime;
     }
 
-    public void setRentalRecordTime(String rentalRecordTime) {
-        this.rentalRecordTime = rentalRecordTime;
+    public void setRentalTime(String rentalTime) {
+        this.rentalTime = rentalTime;
     }
 
-    public String getRentalRecordDate() {
-        return rentalRecordDate;
+    public String getRentalStartDate() {
+        return rentalStartDate;
     }
 
-    public void setRentalRecordDate(String rentalRecordDate) {
-        this.rentalRecordDate = rentalRecordDate;
+    public void setRentalStartDate(String rentalStartDate) {
+        this.rentalStartDate = rentalStartDate;
     }
 
-    public String getRentalRecordCarNumber() {
-        return rentalRecordCarNumber;
+    public String getRentalCarNumber() {
+        return rentalCarNumber;
     }
 
-    public void setRentalRecordCarNumber(String rentalRecordCarNumber) {
-        this.rentalRecordCarNumber = rentalRecordCarNumber;
+    public void setRentalCarNumber(String rentalCarNumber) {
+        this.rentalCarNumber = rentalCarNumber;
     }
 
-    public String getRentalRecordEarn() {
-        return rentalRecordEarn;
+    public String getRentalFee() {
+        return rentalFee;
     }
 
-    public void setRentalRecordEarn(String rentalRecordEarn) {
-        this.rentalRecordEarn = rentalRecordEarn;
+    public void setRentalFee(String rentalFee) {
+        this.rentalFee = rentalFee;
     }
 }

@@ -86,28 +86,28 @@ public class RentalRecordActivity extends BaseRefreshActivity {
                     public void onSuccess(Base_Class_Info<RentalRecordInfo> rentalRecordInfo, Call call, Response response) {
                         rentalRecordInfo = new Base_Class_Info<>();
                         RentalRecordInfo recordInfo = new RentalRecordInfo();
-                        recordInfo.setRentalRecordImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-                        recordInfo.setRentalRecordElectricity("电量状态:50%");
-                        recordInfo.setRentalRecordPackStatus("车位状态:正在出租");
-                        recordInfo.setRentalRecordParkNumber("车位编号:10086");
-                        ImageUtil.showPic(mRentalRecordIv, rentalRecordInfo.data.getRentalRecordImg());
-                        mRentalRecordParkNumber.setText(rentalRecordInfo.data.getRentalRecordParkNumber());
-                        mRentalRecordParkStatus.setText(rentalRecordInfo.data.getRentalRecordPackStatus());
-                        mRentalRecordElectricity.setText(rentalRecordInfo.data.getRentalRecordElectricity());
+                        recordInfo.setParkSpaceImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
+                        recordInfo.setVoltage("电量状态:50%");
+                        recordInfo.setPackSpaceStatus("车位状态:正在出租");
+                        recordInfo.setParkSpaceNumber("车位编号:10086");
+                        ImageUtil.showPic(mRentalRecordIv, rentalRecordInfo.data.getParkSpaceImg());
+                        mRentalRecordParkNumber.setText(rentalRecordInfo.data.getParkSpaceNumber());
+                        mRentalRecordParkStatus.setText(rentalRecordInfo.data.getPackSpaceStatus());
+                        mRentalRecordElectricity.setText(rentalRecordInfo.data.getVoltage());
                     }
                 });*/
 
         Base_Class_Info<RentalRecordInfo> rentalRecordInfo = new Base_Class_Info<>();
         RentalRecordInfo recordInfo = new RentalRecordInfo();
-        recordInfo.setRentalRecordImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-        recordInfo.setRentalRecordElectricity("电量状态:50%");
-        recordInfo.setRentalRecordPackStatus("车位状态:正在出租");
-        recordInfo.setRentalRecordParkNumber("车位编号:10086");
+        recordInfo.setParkSpaceImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
+        recordInfo.setVoltage("电量状态:50%");
+        recordInfo.setPackSpaceStatus("车位状态:正在出租");
+        recordInfo.setParkSpaceNumber("车位编号:10086");
         rentalRecordInfo.data = recordInfo;
-        ImageUtil.showPic(mRentalRecordIv, rentalRecordInfo.data.getRentalRecordImg());
-        mRentalRecordParkNumber.setText(rentalRecordInfo.data.getRentalRecordParkNumber());
-        mRentalRecordParkStatus.setText(rentalRecordInfo.data.getRentalRecordPackStatus());
-        mRentalRecordElectricity.setText(rentalRecordInfo.data.getRentalRecordElectricity());
+        ImageUtil.showPic(mRentalRecordIv, rentalRecordInfo.data.getParkSpaceImg());
+        mRentalRecordParkNumber.setText(rentalRecordInfo.data.getParkSpaceNumber());
+        mRentalRecordParkStatus.setText(rentalRecordInfo.data.getPackSpaceStatus());
+        mRentalRecordElectricity.setText(rentalRecordInfo.data.getVoltage());
     }
 
     private void reqeustRentalRecordItme(final boolean refresh) {
@@ -135,10 +135,10 @@ public class RentalRecordActivity extends BaseRefreshActivity {
         RentalRecordItemInfo itemInfo;
         for (int i = 0; i < 3; i++) {
             itemInfo = new RentalRecordItemInfo();
-            itemInfo.setRentalRecordCarNumber("车牌编号:粤TBJ304");
-            itemInfo.setRentalRecordDate("2018-3-28 12:32");
-            itemInfo.setRentalRecordEarn("获得收益:14.00元");
-            itemInfo.setRentalRecordTime("出租时长:2小时03分");
+            itemInfo.setRentalCarNumber("车牌编号:粤TBJ304");
+            itemInfo.setRentalStartDate("2018-3-28 12:32");
+            itemInfo.setRentalFee("获得收益:14.00元");
+            itemInfo.setRentalTime("出租时长:2小时03分");
             rentalRecordItemInfos.add(itemInfo);
         }
         rentalRecordItemInfoBase_class_list_info.data = rentalRecordItemInfos;

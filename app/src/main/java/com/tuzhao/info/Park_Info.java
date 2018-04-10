@@ -33,7 +33,7 @@ public class Park_Info extends BaseInfo {
     private String citycode;//城市码
     private String create_time;//创建时间，主要是提交为了删除车位
     private String update_time;//更新时间，主要是为了核验是否新增订单号
-    private String voltage;//车位锁电压值
+    private String voltage;//车位锁电量值
 
     public String getPark_space_name() {
         return parkspace_name;

@@ -52,11 +52,11 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                         break;
                     case 2:
                         String[] aaa = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText((new Float(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
+                        holder.textview_shouyi.setText(( Float.valueOf(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
                         break;
                     case 3:
                         String[] bbb = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText((new Float(bbb[0]) + new Float(bbb[1])) + " : " + bbb[2] + " （物业 : 平台）");
+                        holder.textview_shouyi.setText((Float.valueOf(bbb[0]) + new Float(bbb[1])) + " : " + bbb[2] + " （物业 : 平台）");
                         break;
                 }
                 if (mData.get(position).getPark_status().equals("3")) {
@@ -88,11 +88,11 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                         break;
                     case 2:
                         String[] aaa = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText((new Float(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
+                        holder.textview_shouyi.setText(( Float.valueOf(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
                         break;
                     case 3:
                         String[] bbb = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText((new Float(bbb[0]) + new Float(bbb[1])) + " : " + bbb[2] + " （物业 : 平台）");
+                        holder.textview_shouyi.setText((Float.valueOf(bbb[0]) + new Float(bbb[1])) + " : " + bbb[2] + " （物业 : 平台）");
                         break;
                 }
                 if (mData.get(position).getPark_status().equals("1")) {
@@ -132,6 +132,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                 });
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -140,24 +141,24 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
         return mData == null || mData.isEmpty() ? 0 : mData.size();
     }
 
-    public class MyViewHolder extends ViewHolder {
+    class MyViewHolder extends ViewHolder {
 
-        public ImageView mIv_icon;
-        public TextView mTv_belongPark;
-        public TextView mTv_parkInfo;
-        public TextView textview_shouyi;
-        public TextView mTv_parkstatus, textview_cancle, textview_lockvoltage;
-        public View mItemView;
+        ImageView mIv_icon;
+        TextView mTv_belongPark;
+        TextView mTv_parkInfo;
+        TextView textview_shouyi;
+        TextView mTv_parkstatus, textview_cancle, textview_lockvoltage;
+        View mItemView;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-            mIv_icon = (ImageView) itemView.findViewById(R.id.id_item_parkstation_imageview_icon);
-            mTv_belongPark = (TextView) itemView.findViewById(R.id.id_item_parkstation_textview_belongpark);
-            mTv_parkInfo = (TextView) itemView.findViewById(R.id.id_item_parkstation_textview_parkinfo);
-            textview_shouyi = (TextView) itemView.findViewById(R.id.id_item_parkstation_textview_shouyi);
-            mTv_parkstatus = (TextView) itemView.findViewById(R.id.id_item_parkstation_textview_parkstatus);
-            textview_cancle = (TextView) itemView.findViewById(R.id.id_item_mypark_layout_textview_cancle);
-            textview_lockvoltage = (TextView) itemView.findViewById(R.id.id_item_parkstation_textview_lockvoltage);
+            mIv_icon = itemView.findViewById(R.id.id_item_parkstation_imageview_icon);
+            mTv_belongPark = itemView.findViewById(R.id.id_item_parkstation_textview_belongpark);
+            mTv_parkInfo = itemView.findViewById(R.id.id_item_parkstation_textview_parkinfo);
+            textview_shouyi = itemView.findViewById(R.id.id_item_parkstation_textview_shouyi);
+            mTv_parkstatus = itemView.findViewById(R.id.id_item_parkstation_textview_parkstatus);
+            textview_cancle = itemView.findViewById(R.id.id_item_mypark_layout_textview_cancle);
+            textview_lockvoltage = itemView.findViewById(R.id.id_item_parkstation_textview_lockvoltage);
             mItemView = itemView;
         }
     }

@@ -1,10 +1,12 @@
 package com.tuzhao.info;
 
+import com.tuzhao.info.base_info.BaseInfo;
+
 /**
  * Created by juncoder on 2018/3/29.
  */
 
-public class AcceptTicketAddressInfo {
+public class AcceptTicketAddressInfo extends BaseInfo{
 
     private String ticketId;
 
