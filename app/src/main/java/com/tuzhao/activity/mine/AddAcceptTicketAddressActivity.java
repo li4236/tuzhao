@@ -10,13 +10,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CityInfo;
+import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.CityUtil;
+import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/30.
@@ -124,7 +132,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                     closeKeyboard();
                     mTicketTypeOption.show();
                 } else if (allNoEmpty()) {
-                    finish();
+                    uploadNewAddress();
                 }
                 break;
         }
@@ -357,6 +365,104 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
+    }
+
+    private void uploadNewAddress() {
+        showLoadingDialog("正在保存");
+        switch (getText(mTicketType)) {
+            case "电子":
+                uploadElectronicAddress();
+                break;
+            case "普票":
+                uploadNormalAddress();
+                break;
+            case "专票":
+                uploadSpecialAddress();
+                break;
+        }
+
+    }
+
+    private void uploadElectronicAddress() {
+        getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        uploadSuccess();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        if (!DensityUtil.isException(AddAcceptTicketAddressActivity.this, e)) {
+                            showFiveToast("新建收票地址失败，请稍后重试");
+                        }
+                    }
+                });
+    }
+
+    private void uploadNormalAddress() {
+        getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
+                .params("acceptArea", getText(mAcceptArea))
+                .params("acceptAddress", getText(mAcceptDetailAddress))
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        uploadSuccess();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        if (!DensityUtil.isException(AddAcceptTicketAddressActivity.this, e)) {
+                            showFiveToast("新建收票地址失败，请稍后重试");
+                        }
+                    }
+                });
+    }
+
+    private void uploadSpecialAddress() {
+        getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
+                .params("acceptArea", getText(mAcceptArea))
+                .params("acceptAddress", getText(mAcceptDetailAddress))
+                .params("taxNumber", getText(mTaxNumber))
+                .params("bank", getText(mBank))
+                .params("bankNumber", getText(mBankNumber))
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        uploadSuccess();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        if (!DensityUtil.isException(AddAcceptTicketAddressActivity.this, e)) {
+                            showFiveToast("新建收票地址失败，请稍后重试");
+                        }
+                    }
+                });
+    }
+
+    private BaseRequest getCommonOkgo() {
+        return getOkGo(HttpConstants.addAcceptTicketAddress)
+                .params("type", getText(mTicketType))
+                .params("company", getText(mCompanyName))
+                .params("companyPhone", getText(mCompanyTelephone))
+                .params("acceptPersonName", getText(mAcceptPersonName));
+    }
+
+    private String getText(TextView textView) {
+        return textView.getText().toString();
+    }
+
+    private void uploadSuccess() {
+        dismmisLoadingDialog();
+        showFiveToast("新建收票地址成功");
+        finish();
     }
 
 }

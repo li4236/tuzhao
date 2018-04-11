@@ -3,6 +3,7 @@ package com.tuzhao.publicmanager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by TZL12 on 2017/11/13.
@@ -58,7 +59,7 @@ public class TimeManager {
 
     public void initTime(String serverTime){
         isServerTime = true;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         long newdifferencetime = 0;
         try {
             Date serverDate = df.parse(serverTime);
