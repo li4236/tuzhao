@@ -22,7 +22,6 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.alipay.AuthResult;
@@ -51,6 +50,7 @@ public class SetAccountAndSafeActivity extends BaseActivity {
     private LinearLayout linearlayout_changepass, linearlayout_tellnumber, linearlayout_alipay;
     private CustomDialog mCustomDialog;
     private TextView mUserName;
+    private TextView mUserBindingStatus;
 
     /**
      * 登录的广播接收器
@@ -76,6 +76,7 @@ public class SetAccountAndSafeActivity extends BaseActivity {
         linearlayout_changepass = findViewById(R.id.id_activity_setaccountandsafe_layout_linearlayout_changepass);
         linearlayout_tellnumber = findViewById(R.id.id_activity_setaccountandsafe_layout_linearlayout_tellnumber);
         linearlayout_alipay = findViewById(R.id.id_activity_setaccountandsafe_layout_linearlayout_alipay);
+        mUserBindingStatus = findViewById(R.id.id_activity_setaccountandsafe_layout_textview_alipay);
     }
 
     private void initData() {
@@ -86,12 +87,12 @@ public class SetAccountAndSafeActivity extends BaseActivity {
             mUserName.setText(userName);
             if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
                 if (!UserManager.getInstance().getUserInfo().getAlinumber().equals("-1")) {
-                    ((TextView) findViewById(R.id.id_activity_setaccountandsafe_layout_textview_alipay)).setText("已绑定");
+                    mUserBindingStatus.setText(UserManager.getInstance().getUserInfo().getAliNickName());
                 } else {
-                    ((TextView) findViewById(R.id.id_activity_setaccountandsafe_layout_textview_alipay)).setText("未绑定");
+                    mUserBindingStatus.setText("未绑定");
                 }
             } else {
-                ((TextView) findViewById(R.id.id_activity_setaccountandsafe_layout_textview_alipay)).setText("未绑定");
+                mUserBindingStatus.setText("未绑定");
             }
         } else {
             finish();
@@ -149,18 +150,21 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                     if (TextUtils.equals(authResult.getResultStatus(), "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
 
                         initLoading("绑定中...");
-                        requestUploadAliAuthMessage();
 
                         if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
                             if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
                                 MyToast.showToast(SetAccountAndSafeActivity.this, "账号和之前一样，未作修改", 5);
+                                if (mCustomDialog != null) {
+                                    mCustomDialog.dismiss();
+                                }
+
                             } else {
                                 initLoading("提交中...");
-                                requestUploadUserAliNumber(authResult.getUser_id());
+                                requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
                             }
                         } else {
                             initLoading("提交中...");
-                            requestUploadUserAliNumber(authResult.getUser_id());
+                            requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
                         }
                     } else {
                         // 其他状态值则为授权失败
@@ -205,21 +209,24 @@ public class SetAccountAndSafeActivity extends BaseActivity {
         builder.create().show();
     }
 
-    private void requestUploadUserAliNumber(final String aliuser_id) {
+    private void requestUploadUserAliNumber(final String aliuser_id, String authCode) {
         OkGo.post(HttpConstants.uploadUserAliNumber)
                 .tag(SetAccountAndSafeActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
                 .params("alinumber", aliuser_id + ",1")
-                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
+                .params("authCode", authCode)
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<User_Info> class_info, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<String> class_info, Call call, Response response) {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
                         MyToast.showToast(SetAccountAndSafeActivity.this, "绑定成功", 5);
                         UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
+                        UserManager.getInstance().getUserInfo().setAliNickName(class_info.data);
+                        mUserBindingStatus.setText(class_info.data);
                         Intent intent = new Intent(SetAccountAndSafeActivity.this, GetMoneyActivty.class);
                         startActivity(intent);
                     }
@@ -245,57 +252,6 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                 });
     }
 
-    private void requestUploadAliAuthMessage() {
-        OkGo.post(HttpConstants.uploadAliAuthMessage)
-                .tag(SetAccountAndSafeActivity.this)
-                .addInterceptor(new TokenInterceptor())
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .execute(new JsonCallback<Base_Class_Info<String>>() {
-                    @Override
-                    public void onSuccess(final Base_Class_Info<String> class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
-                        }
-                        Runnable authRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                // 构造AuthTask 对象
-                                AuthTask authTask = new AuthTask(SetAccountAndSafeActivity.this);
-                                // 调用授权接口，获取授权结果
-                                Map<String, String> result = authTask.authV2(class_info.data, true);
-
-                                Message msg = new Message();
-                                msg.what = SDK_AUTH_FLAG;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
-                            }
-                        };
-
-                        // 必须异步调用
-                        Thread authThread = new Thread(authRunnable);
-                        authThread.start();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
-                        }
-                        if (!DensityUtil.isException(SetAccountAndSafeActivity.this, e)) {
-                            Log.d("TAG", "请求失败， getAliAuthMessage：" + e.getMessage());
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 101:
-                                    MyToast.showToast(SetAccountAndSafeActivity.this, "请求授权信息失败", 5);
-                                    break;
-                                case 901:
-                                    MyToast.showToast(SetAccountAndSafeActivity.this, "服务器正在维护中", 5);
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
 
     private void reqeustAlipayLogin() {
         //去绑定
@@ -352,6 +308,9 @@ public class SetAccountAndSafeActivity extends BaseActivity {
 
     //初始化加载框控件
     private void initLoading(String what) {
+        if (mCustomDialog != null && mCustomDialog.isShowing()) {
+            mCustomDialog.dismiss();
+        }
         mCustomDialog = new CustomDialog(SetAccountAndSafeActivity.this, what);
         mCustomDialog.show();
     }

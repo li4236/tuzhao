@@ -23,6 +23,7 @@ public class User_Info extends BaseInfo {
     private int leave_time;//离开的弹性时间
     private String serect_code;//用户通行码
     private String alinumber = "-1";//支付宝账号
+    private String aliNickName = "";//支付宝用户昵称
 
     private String stage;//阶段分
     private String default_late_time;//默认晚退延时时间
@@ -264,11 +265,55 @@ public class User_Info extends BaseInfo {
         this.alinumber = alinumber;
     }
 
+    public String getAliNickName() {
+        return aliNickName;
+    }
+
+    public void setAliNickName(String aliNickName) {
+        this.aliNickName = aliNickName;
+    }
+
     public String getCreate_time() {
         return create_time;
     }
 
     public void setCreate_time(String create_time) {
         this.create_time = create_time;
+    }
+
+    @Override
+    public String toString() {
+        return "User_Info{" +
+                "token='" + token + '\'' +
+                ", id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", balance='" + balance + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", img_url='" + img_url + '\'' +
+                ", car_number='" + car_number + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", last_time='" + last_time + '\'' +
+                ", credit='" + credit + '\'' +
+                ", ride_time=" + ride_time +
+                ", leave_time=" + leave_time +
+                ", serect_code='" + serect_code + '\'' +
+                ", alinumber='" + alinumber + '\'' +
+                ", aliNickName='" + aliNickName + '\'' +
+                ", stage='" + stage + '\'' +
+                ", default_late_time='" + default_late_time + '\'' +
+                ", add_late_time='" + add_late_time + '\'' +
+                ", stage_add_late_time='" + stage_add_late_time + '\'' +
+                ", min_late_time='" + min_late_time + '\'' +
+                ", max_late_time='" + max_late_time + '\'' +
+                ", default_early_time='" + default_early_time + '\'' +
+                ", add_early_time='" + add_early_time + '\'' +
+                ", stage_add_early_time='" + stage_add_early_time + '\'' +
+                ", min_early_time='" + min_early_time + '\'' +
+                ", max_early_time='" + max_early_time + '\'' +
+                ", add_credit='" + add_credit + '\'' +
+                ", reduce_credit='" + reduce_credit + '\'' +
+                ", autologin='" + autologin + '\'' +
+                '}';
     }
 }

@@ -76,7 +76,6 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
      * 支付宝支付完成的回调处理
      */
     private Handler mHandler = new Handler() {
-        @SuppressWarnings("unused")
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SDK_PAY_FLAG: {
