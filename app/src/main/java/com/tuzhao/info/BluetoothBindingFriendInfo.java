@@ -6,33 +6,43 @@ package com.tuzhao.info;
 
 public class BluetoothBindingFriendInfo {
 
-    private String id;
+    private String friendDeviceId;
 
-    private String imagePath;
+    private String imgUrl;
 
-    private String name;
+    private String noteName;
 
-    public String getId() {
-        return id;
+    private String telephone;
+
+    public String getFriendDeviceId() {
+        return friendDeviceId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFriendDeviceId(String friendDeviceId) {
+        this.friendDeviceId = friendDeviceId;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
-    public String getName() {
-        return name;
+    public String getNoteName() {
+        return noteName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNoteName(String noteName) {
+        this.noteName = noteName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 }

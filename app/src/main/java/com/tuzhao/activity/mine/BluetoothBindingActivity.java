@@ -79,8 +79,8 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
         BluetoothBindingFriendInfo friendInfo;
         for (int i = 0; i < 3; i++) {
             friendInfo = new BluetoothBindingFriendInfo();
-            friendInfo.setName("亲友" + i);
-            friendInfo.setImagePath("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
+            friendInfo.setNoteName("亲友" + i);
+            friendInfo.setImgUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
             mAdapter.addData(friendInfo);
         }
         updateFriendNumber();
@@ -124,7 +124,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                             if (TextUtils.isEmpty(mFirendName.getText().toString().trim())) {
                                 showFiveToast("备注不能为空哦");
                             } else {
-                                mAdapter.getData().get(position).setName(mFirendName.getText().toString());
+                                mAdapter.getData().get(position).setNoteName(mFirendName.getText().toString());
                                 mAdapter.notifyItemChanged(position);
                             }
 
@@ -133,7 +133,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                     .create();
         }
         mModifyNameDialog.show();
-        mFirendName.setText(mAdapter.getData().get(position).getName());
+        mFirendName.setText(mAdapter.getData().get(position).getNoteName());
         mFirendName.setSelection(mFirendName.getText().toString().length());
     }
 
@@ -159,9 +159,9 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (mDateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
-                                BluetoothBindingFriendInfo friendInfo  = new BluetoothBindingFriendInfo();
-                                friendInfo.setName(mFriendPhone.getText().toString());
-                                friendInfo.setImagePath("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
+                                BluetoothBindingFriendInfo friendInfo = new BluetoothBindingFriendInfo();
+                                friendInfo.setNoteName(mFriendPhone.getText().toString());
+                                friendInfo.setImgUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
                                 mAdapter.addData(friendInfo);
                                 updateFriendNumber();
                                 mFriendPhone.setText("");
@@ -179,8 +179,8 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final BluetoothBindingFriendInfo bluetoothBindingFriendInfo, final int position) {
-            holder.showCirclePic(R.id.bluetooth_binding_friend_iv, bluetoothBindingFriendInfo.getImagePath())
-                    .setText(R.id.bluetooth_binding_friend_name, bluetoothBindingFriendInfo.getName())
+            holder.showCirclePic(R.id.bluetooth_binding_friend_iv, bluetoothBindingFriendInfo.getImgUrl())
+                    .setText(R.id.bluetooth_binding_friend_name, bluetoothBindingFriendInfo.getNoteName())
                     .getView(R.id.bluetooth_binding_edit_friend).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -191,7 +191,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
             holder.getView(R.id.bluetooth_binding_delete_friend).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String message = "确认删除" + bluetoothBindingFriendInfo.getName() + "的手机?";
+                    String message = "确认删除" + bluetoothBindingFriendInfo.getNoteName() + "的手机?";
                     new TipeDialog.Builder(BluetoothBindingActivity.this)
                             .setTitle("删除手机")
                             .setMessage(message)
