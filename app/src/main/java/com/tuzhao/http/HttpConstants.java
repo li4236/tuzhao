@@ -381,5 +381,8 @@ public class HttpConstants {
      */
     public static String getRentalRecord = ROOT_URL + "getRentalRecord";
 
+    public static String getShareTime = ROOT_URL + "getShareTime";
+
+    public static String modifyShareTime = ROOT_URL + "modifyShareTime";
 
 }

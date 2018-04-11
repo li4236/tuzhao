@@ -152,16 +152,16 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                         initLoading("绑定中...");
 
                         if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
-                            if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
+                            /*if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
                                 MyToast.showToast(SetAccountAndSafeActivity.this, "账号和之前一样，未作修改", 5);
                                 if (mCustomDialog != null) {
                                     mCustomDialog.dismiss();
                                 }
 
                             } else {
-                                initLoading("提交中...");
-                                requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
-                            }
+                            }*/
+                            initLoading("提交中...");
+                            requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
                         } else {
                             initLoading("提交中...");
                             requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
@@ -210,12 +210,12 @@ public class SetAccountAndSafeActivity extends BaseActivity {
     }
 
     private void requestUploadUserAliNumber(final String aliuser_id, String authCode) {
+        Log.e("TAG", "requestUploadUserAliNumber: " + authCode);
         OkGo.post(HttpConstants.uploadUserAliNumber)
                 .tag(SetAccountAndSafeActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
-                .params("alinumber", aliuser_id + ",1")
                 .params("authCode", authCode)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override

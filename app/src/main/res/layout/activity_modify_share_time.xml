@@ -48,7 +48,6 @@
                         android:layout_height="23dp"
                         android:background="@drawable/little_yuan_3dp_g10"
                         android:gravity="center"
-                        android:text="2019-03-15"
                         android:textColor="@color/b1"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"

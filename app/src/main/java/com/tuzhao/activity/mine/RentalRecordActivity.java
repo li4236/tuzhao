@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.RentalRecordInfo;
 import com.tuzhao.info.RentalRecordItemInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
     private TextView mRentalRecordElectricity;
 
+    private String mParkSpaceId;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_rental_record_layout;
@@ -45,18 +49,29 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+
+        Park_Info park_info;
+
+        if ((park_info = (Park_Info) getIntent().getSerializableExtra("parkdata")) == null) {
+            showFiveToast("获取出租记录失败，请返回重试");
+            finish();
+        } else {
+            mParkSpaceId = park_info.getId();
+        }
+
         mRentalRecordIv = findViewById(R.id.rental_record_iv);
         mRentalRecordParkNumber = findViewById(R.id.rental_record_car_number);
         mRentalRecordParkStatus = findViewById(R.id.rental_record_park_status);
         mRentalRecordElectricity = findViewById(R.id.rental_record_electricity);
+        mCommonAdapter.setHeaderView(R.layout.layout_placeholder);
+        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
+
         findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(ParkSpaceSettingActivity.class);
+                startActivity(ParkSpaceSettingActivity.class,ConstansUtil.PARK_SPACE_ID,mParkSpaceId);
             }
         });
-        mCommonAdapter.setHeaderView(R.layout.layout_placeholder);
-        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
     }
 
     @Override

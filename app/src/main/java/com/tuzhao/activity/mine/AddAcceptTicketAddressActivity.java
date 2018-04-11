@@ -181,15 +181,18 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         ArrayList<ArrayList<String>> countyList;
 
         for (CityInfo cityInfo : CityUtil.loadCityData(this)) {
+            //省
             mProvinces.add(cityInfo.getName());
 
             citys = new ArrayList<>();
             countyList = new ArrayList<>();
 
             for (CityInfo.CityListBeanX city : cityInfo.getCityList()) {
+                //市
                 citys.add(city.getName());
                 counties = new ArrayList<>();
                 for (CityInfo.CityListBeanX.CityListBean county : city.getCityList()) {
+                    //区
                     counties.add(county.getName());
                 }
                 countyList.add(counties);

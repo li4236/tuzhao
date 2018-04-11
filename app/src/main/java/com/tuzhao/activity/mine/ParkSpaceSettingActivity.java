@@ -12,6 +12,7 @@ import com.kyleduo.switchbutton.SwitchButton;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.adapter.ParkSpaceRentTimeAdapter;
+import com.tuzhao.utils.ConstansUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     private ParkSpaceRentTimeAdapter mAdapter;
 
+    private String mParkSpaceId;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_park_space_setting_layout;
@@ -37,6 +40,12 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+
+        if ((mParkSpaceId = getIntent().getStringExtra(ConstansUtil.PARK_SPACE_ID)) == null) {
+            showFiveToast("获取车位信息失败，请稍后重试");
+            finish();
+        }
+
         mParkSpaceNumber = findViewById(R.id.park_space_setting_space_number);
         mRentDate = findViewById(R.id.park_space_space_setting_renten_date);
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
@@ -57,7 +66,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         findViewById(R.id.park_space_space_setting_cl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ModifyShareTimeActivity.class);
+                startActivity(ModifyShareTimeActivity.class,ConstansUtil.PARK_SPACE_ID,mParkSpaceId);
             }
         });
 

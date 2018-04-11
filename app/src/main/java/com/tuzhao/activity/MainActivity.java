@@ -895,9 +895,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
             textview_credit.setText(crecdit);
-            Log.e(TAG, "onResume: login" );
+            Log.e(TAG, "onResume: login");
         }
-        Log.e(TAG, "onResume: un login" );
+        Log.e(TAG, "onResume: un login");
         ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                 R.mipmap.ic_usericon);
     }
@@ -1061,7 +1061,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UserManager.getInstance().hasLogined()) {
-                Log.e(TAG, "onReceive: " );
+                Log.e(TAG, "onReceive: ");
                 ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
                 ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
@@ -1082,10 +1082,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!UserManager.getInstance().hasLogined()) {
-                Log.e(TAG, "onReceive: logout" );
+                Log.e(TAG, "onReceive: logout");
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-                ImageUtil.showPic(imageview_huser,R.mipmap.ic_usericon);
+                ImageUtil.showPic(imageview_huser, R.mipmap.ic_usericon);
                /* ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);*/
             }

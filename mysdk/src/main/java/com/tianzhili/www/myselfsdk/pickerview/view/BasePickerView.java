@@ -2,6 +2,7 @@ package com.tianzhili.www.myselfsdk.pickerview.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -36,6 +37,8 @@ public class BasePickerView {
     private Animation outAnim;
     private Animation inAnim;
     private int gravity = Gravity.BOTTOM;
+
+    private boolean autoDismiss = true;
 
     public BasePickerView(Context context){
         this.context = context;
@@ -89,11 +92,17 @@ public class BasePickerView {
         View view = decorView.findViewById(R.id.outmost_container);
         return view != null;
     }
+
     public void dismiss() {
+        if (!autoDismiss) {
+            return;
+        }
+
         if (isDismissing) {
             return;
         }
 
+        Log.e("TAG", "dismiss: " );
         //消失动画
         outAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -165,5 +174,13 @@ public class BasePickerView {
 
     public View findViewById(int id){
         return contentContainer.findViewById(id);
+    }
+
+    public boolean isAutoDismiss() {
+        return autoDismiss;
+    }
+
+    public void setAutoDismiss(boolean autoDismiss) {
+        this.autoDismiss = autoDismiss;
     }
 }

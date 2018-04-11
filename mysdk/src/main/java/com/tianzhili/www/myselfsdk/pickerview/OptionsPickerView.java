@@ -36,7 +36,7 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         // ----转轮
         final View optionspicker = findViewById(R.id.optionspicker);
-        wheelOptions =new WheelOptions<>(optionspicker);
+        wheelOptions = new WheelOptions<>(optionspicker);
     }
 
     public void setPicker(ArrayList<T> optionsItems) {
@@ -129,11 +129,11 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
         wheelOptions.setCyclic(cyclic1, cyclic2, cyclic3);
     }
 
-
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
         if (tag.equals(TAG_CANCEL)) {
+            setAutoDismiss(true);
             dismiss();
         } else {
             if (optionsSelectListener != null) {
