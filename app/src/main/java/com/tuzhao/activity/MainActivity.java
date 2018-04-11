@@ -264,7 +264,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
         if (UserManager.getInstance().hasLogined()) {
-            Log.e(TAG, "initData: login" );
             ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
             ImageUtil.showPic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
@@ -346,7 +345,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 } else {
                     //弹出登陆窗口
                     mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-                    loginDialogFragment = new LoginDialogFragment();
                     login();
                 }
                 break;
@@ -806,7 +804,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     @Override
     public void activate(LocationSource.OnLocationChangedListener listener) {
         mListener = listener;
-        Log.e("TAG", "activate: ");
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(MainActivity.this);
             AMapLocationClientOption locationClientOption = new AMapLocationClientOption();
@@ -898,7 +895,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
             textview_credit.setText(crecdit);
+            Log.e(TAG, "onResume: login" );
         }
+        Log.e(TAG, "onResume: un login" );
         ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                 R.mipmap.ic_usericon);
     }
@@ -1061,8 +1060,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "onReceive: " );
             if (UserManager.getInstance().hasLogined()) {
+                Log.e(TAG, "onReceive: " );
                 ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
                 ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
@@ -1083,10 +1082,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!UserManager.getInstance().hasLogined()) {
+                Log.e(TAG, "onReceive: logout" );
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-                ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
-                        R.mipmap.ic_usericon);
+                ImageUtil.showPic(imageview_huser,R.mipmap.ic_usericon);
+               /* ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                        R.mipmap.ic_usericon);*/
             }
         }
     }

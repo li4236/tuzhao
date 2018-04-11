@@ -3,9 +3,11 @@ package com.tuzhao.application;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.iflytek.cloud.SpeechConstant;
@@ -97,7 +99,7 @@ public class MyApplication extends MultiDexApplication {
                     // 打开该调试开关,打印级别INFO,并不是异常,是为了显眼,不需要就不要加入该行
                     // 最后的true表示是否打印okgo的内部异常，一般打开方便调试错误
                     .debug("OKGO", Level.INFO, true)
-                    .addCommonParams(new HttpParams("base_prove","tuzhaoapp"))
+                    .addCommonParams(new HttpParams("base_prove", "tuzhaoapp"))
                     //如果使用默认的 10秒,以下三行也不需要传
                     .setConnectTimeout(OkGo.DEFAULT_MILLISECONDS)  //全局的连接超时时间
                     .setReadTimeOut(OkGo.DEFAULT_MILLISECONDS)     //全局的读取超时时间
@@ -153,26 +155,26 @@ public class MyApplication extends MultiDexApplication {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-    public static MyApplication getInstance(){
+    public static MyApplication getInstance() {
         return mApplication;
     }
 
     /**
      * 自动登录
      */
-    private void autoLogin(){
+    private void autoLogin() {
         databaseImp = new DatabaseImp(mApplication);
         User_Info user_info = databaseImp.getUserFormDatabase();
-        if (user_info != null){
-            Log.e("dsa","自动登录："+user_info.getUsername()+user_info.getPassword()+user_info.getAutologin());
+        if (user_info != null) {
+            Log.e("dsa", "自动登录：" + user_info.getUsername() + user_info.getPassword() + user_info.getAutologin());
             //本地数据库有之前登录过的用户信息，则后台自动登录
-            if (user_info.getUsername()!=null && user_info.getPassword()!=null && user_info.getAutologin().equals("1")){
-                requestLogin(user_info.getUsername(),user_info.getPassword());
+            if (user_info.getUsername() != null && user_info.getPassword() != null && user_info.getAutologin().equals("1")) {
+                requestLogin(user_info.getUsername(), user_info.getPassword());
             }
         }
     }
 
-    private void requestLogin(final String username, String password){
+    private void requestLogin(final String username, String password) {
 
         OkGo.post(HttpConstants.requestLogin)//请求数据的接口地址
                 .tag(HttpConstants.requestLogin)//
@@ -188,12 +190,13 @@ public class MyApplication extends MultiDexApplication {
                         //更新覆盖本地数据库的用户信息
                         databaseImp.insertUserToDatabase(userInfo);
 
-                        JPushInterface.setAlias(MyApplication.this,1,username);//登录成功后给该用户设置极光推送的别名
+                        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent("LOGIN_ACTION"));
+                        JPushInterface.setAlias(MyApplication.this, 1, username);//登录成功后给该用户设置极光推送的别名
 
                         //登录成功之后请求用户的收藏记录
                         OkGo.post(HttpConstants.getCollectionDatas)
                                 .tag(this)
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                                 .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
@@ -206,7 +209,7 @@ public class MyApplication extends MultiDexApplication {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (!DensityUtil.isException(getContext(),e)){
+                        if (!DensityUtil.isException(getContext(), e)) {
                             e.printStackTrace();
                         }
                     }
@@ -216,7 +219,8 @@ public class MyApplication extends MultiDexApplication {
     @Override
     protected void attachBaseContext(Context base) {
         //我修复重构项目后防止出现一些红色错误
-        super.attachBaseContext(base); MultiDex.install(this);
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     public DatabaseImp getDatabaseImp() {

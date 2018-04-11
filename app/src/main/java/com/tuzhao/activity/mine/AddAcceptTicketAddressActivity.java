@@ -367,6 +367,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         }
     }
 
+    /**
+     * 上传收票地址
+     */
     private void uploadNewAddress() {
         showLoadingDialog("正在保存");
         switch (getText(mTicketType)) {
@@ -383,6 +386,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     }
 
+    /**
+     * 上传地址收票地址
+     */
     private void uploadElectronicAddress() {
         getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -402,6 +408,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 });
     }
 
+    /**
+     * 上传普票收票地址
+     */
     private void uploadNormalAddress() {
         getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
                 .params("acceptArea", getText(mAcceptArea))
@@ -423,6 +432,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 });
     }
 
+    /**
+     * 上传专票收票地址
+     */
     private void uploadSpecialAddress() {
         getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
                 .params("acceptArea", getText(mAcceptArea))

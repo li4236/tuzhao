@@ -20,7 +20,6 @@ public class DatabaseImp
 	
 	/**
 	 * 从本地读取数据库读取
-	 * @return
 	 */
 	public User_Info getUserFormDatabase() {
 		SQLiteDatabase db = database.getReadableDatabase();
