@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -165,7 +164,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                         dismmisLoadingDialog();
                         if (!DensityUtil.isException(ModifyShareTimeActivity.this, e)) {
                             showFiveToast("获取共享时间失败，请稍后重试");
-                            finish();
                         }
                     }
                 });
@@ -200,7 +198,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                             }
                             checkPauseDate();
                         } else {
-                            Log.e(TAG, "onDateCheck: ");
                             showFiveToast("开始共享的时间不能小于当天哦");
                         }
                     }
@@ -257,7 +254,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                 } else {
                     Calendar calendar = Calendar.getInstance();
                     final EverydayShareTimeInfo shareTimeInfo = new EverydayShareTimeInfo();
-                    Log.e(TAG, "onClick: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
                     showTimePicker("开始时段", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true, new OnTimePickerListener() {
                         @Override
                         public void onStartTime(String hourOfDay, String minute) {
@@ -331,11 +327,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
             minutes = new ArrayList<>();
             for (int j = 0; j < 60; j++) {
-                if (j < 10) {
-                    minutes.add("0" + j);
-                } else {
-                    minutes.add(String.valueOf(j));
-                }
+                minutes.add(String.valueOf(j));
             }
             mMinutes.add(minutes);
         }
@@ -431,10 +423,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
      * @param dateCheck 日期的选择结果将回调到构造函数的接口方法中
      */
     private void showDatePicker(String title, final DateCheck dateCheck) {
-        if (mDateOption.isShowing()) {
-            mDateOption.dismiss();
-        }
-
         Calendar calendar = Calendar.getInstance();
         if (dateCheck.getYear() == 0) {
             int year = mYears.indexOf(String.valueOf(calendar.get(Calendar.YEAR)));

@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseCallback;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.RentalRecordInfo;
 import com.tuzhao.info.RentalRecordItemInfo;
@@ -21,6 +23,9 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -69,7 +74,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
         findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(ParkSpaceSettingActivity.class,ConstansUtil.PARK_SPACE_ID,mParkSpaceId);
+                startActivity(ParkSpaceSettingActivity.class, ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
             }
         });
     }
@@ -88,23 +93,6 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     }
 
     private void requestRentalRecord() {
-       /* getOkGo("")
-                .execute(new JsonCallback<Base_Class_Info<RentalRecordInfo>>() {
-
-                    @Override
-                    public void onSuccess(Base_Class_Info<RentalRecordInfo> rentalRecordInfo, Call call, Response response) {
-                        rentalRecordInfo = new Base_Class_Info<>();
-                        RentalRecordInfo recordInfo = new RentalRecordInfo();
-                        recordInfo.setParkSpaceImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-                        recordInfo.setVoltage("电量状态:50%");
-                        recordInfo.setPackSpaceStatus("车位状态:正在出租");
-                        recordInfo.setParkSpaceNumber("车位编号:10086");
-                        ImageUtil.showPic(mRentalRecordIv, rentalRecordInfo.data.getParkSpaceImg());
-                        mRentalRecordParkNumber.setText(rentalRecordInfo.data.getParkSpaceNumber());
-                        mRentalRecordParkStatus.setText(rentalRecordInfo.data.getPackSpaceStatus());
-                        mRentalRecordElectricity.setText(rentalRecordInfo.data.getVoltage());
-                    }
-                });*/
 
         Base_Class_Info<RentalRecordInfo> rentalRecordInfo = new Base_Class_Info<>();
         RentalRecordInfo recordInfo = new RentalRecordInfo();
@@ -120,24 +108,6 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     }
 
     private void reqeustRentalRecordItme(final boolean refresh) {
-        /*getOkGo("").execute(new JsonCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
-
-            @Override
-            public void onSuccess(Base_Class_List_Info<RentalRecordItemInfo> rentalRecordItemInfoBase_class_list_info, Call call, Response response) {
-                dismmisLoadingDialog();
-                if (rentalRecordItemInfoBase_class_list_info.data.isEmpty() && mAdapter.getData().isEmpty()) {
-                    mRecyclerView.showEmpty(null);
-                } else {
-                    if (refresh) {
-                        mAdapter.setNewData(rentalRecordItemInfoBase_class_list_info.data);
-                    } else {
-                        mAdapter.addData(rentalRecordItemInfoBase_class_list_info.data);
-                    }
-                }
-                stopRefresh();
-            }
-        });*/
-
         dismmisLoadingDialog();
         Base_Class_List_Info<RentalRecordItemInfo> rentalRecordItemInfoBase_class_list_info = new Base_Class_List_Info<>();
         ArrayList<RentalRecordItemInfo> rentalRecordItemInfos = new ArrayList<>();
@@ -181,7 +151,17 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
     @Override
     protected void loadData() {
+        requestData(HttpConstants.getRentalRecord, new BaseCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
+            @Override
+            public void onSuccess(Base_Class_List_Info<RentalRecordItemInfo> rentalRecordItemInfoBase_class_list_info, Call call, Response response) {
 
+            }
+
+            @Override
+            public void onError(Call call, Response response, Exception e) {
+
+            }
+        });
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.tuzhao.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -32,7 +33,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_mypark_layout, parent, false));
     }
 

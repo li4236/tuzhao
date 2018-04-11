@@ -66,7 +66,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         findViewById(R.id.park_space_space_setting_cl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ModifyShareTimeActivity.class,ConstansUtil.PARK_SPACE_ID,mParkSpaceId);
+                startActivity(ModifyShareTimeActivity.class, ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
             }
         });
 

@@ -116,6 +116,9 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
                         mRecyclerView.showData();
+                        if (mStartItme == 0&&!mCommonAdapter.getData().isEmpty()) {
+                            mCommonAdapter.clearAll();
+                        }
                         mCommonAdapter.addData(t.data);
                         callback.onSuccess(t, call, response);
                         stopLoadStatus();

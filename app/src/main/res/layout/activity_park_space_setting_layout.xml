@@ -85,7 +85,7 @@
         <TextView
             android:id="@+id/park_space_setting_pause_date_tv"
             style="@style/TwentyTextB1Style"
-            android:text="出租日期:"
+            android:text="停租日期:"
             app:layout_constraintStart_toStartOf="@id/park_space_setting_space_number_tv"
             app:layout_constraintTop_toBottomOf="@id/park_space_setting_rv" />
 
