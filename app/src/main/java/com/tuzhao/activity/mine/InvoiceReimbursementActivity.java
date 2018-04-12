@@ -55,7 +55,13 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         findViewById(R.id.invoice_reimbursement_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AcceptTicketAddressActivity.class);
+                if (mChooseInvoice.isEmpty()) {
+                    showFiveToast("你还没选择需要报销的发票哦");
+                } else if (calculateTotalPrice() <= 100) {
+                    showFiveToast("订单总额大于100才可以开票哦");
+                } else {
+                    startActivity(AcceptTicketAddressActivity.class);
+                }
             }
         });
     }
@@ -72,7 +78,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     @Override
                     public void onSuccess(Base_Class_List_Info<InvoiceInfo> datas, Call call, Response response) {
                         mCommonAdapter.addData(datas.data);
-                        calculateTotalPrice();
+                        setTotalPrice();
                         stopLoadStatus();
                         increateStartItem();
                         dismmisLoadingDialog();
@@ -115,7 +121,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     mChooseInvoice.remove(invoiceInfo);
                 }
                 checkBox.setChecked(isChecked);
-                calculateTotalPrice();
+                setTotalPrice();
             }
         });
     }
@@ -131,13 +137,16 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         return "发票报销";
     }
 
-    private void calculateTotalPrice() {
+    private double calculateTotalPrice() {
         double totolPric = 0;
         for (InvoiceInfo invoiceInfo : mChooseInvoice) {
             totolPric += Double.valueOf(invoiceInfo.getActualFee());
         }
+        return totolPric;
+    }
 
-        String string = "开票总额:￥" + mDecimalFormat.format(totolPric);
+    private void setTotalPrice() {
+        String string = "开票总额:" + mDecimalFormat.format(calculateTotalPrice()) + "元";
         mTotalPrice.setText(string);
     }
 
