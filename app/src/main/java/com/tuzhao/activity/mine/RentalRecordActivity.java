@@ -14,15 +14,11 @@ import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
-import com.tuzhao.info.RentalRecordInfo;
 import com.tuzhao.info.RentalRecordItemInfo;
-import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
-
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -42,9 +38,9 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
     private TextView mRentalRecordParkStatus;
 
-    private TextView mRentalRecordElectricity;
+    private TextView mRentalRecordVoltage;
 
-    private String mParkSpaceId;
+    private Park_Info mPark_info;
 
     @Override
     protected int resourceId() {
@@ -55,26 +51,22 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
-        Park_Info park_info;
-
-        if ((park_info = (Park_Info) getIntent().getSerializableExtra("parkdata")) == null) {
+        if ((mPark_info = (Park_Info) getIntent().getSerializableExtra("parkdata")) == null) {
             showFiveToast("获取出租记录失败，请返回重试");
             finish();
-        } else {
-            mParkSpaceId = park_info.getId();
         }
 
         mRentalRecordIv = findViewById(R.id.rental_record_iv);
         mRentalRecordParkNumber = findViewById(R.id.rental_record_car_number);
         mRentalRecordParkStatus = findViewById(R.id.rental_record_park_status);
-        mRentalRecordElectricity = findViewById(R.id.rental_record_electricity);
+        mRentalRecordVoltage = findViewById(R.id.rental_record_electricity);
         mCommonAdapter.setHeaderView(R.layout.layout_placeholder);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
 
         findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(ParkSpaceSettingActivity.class, ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
+                startActivity(ParkSpaceSettingActivity.class, ConstansUtil.PARK_SPACE_ID, mPark_info.getId());
             }
         });
     }
@@ -82,8 +74,28 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @Override
     protected void initData() {
         super.initData();
-        requestRentalRecord();
-        reqeustRentalRecordItme(true);
+        ImageUtil.showImpPic(mRentalRecordIv, mPark_info.getPark_img());
+        String parkNumber = "车位编号:" + mPark_info.getPark_number();
+        mRentalRecordParkNumber.setText(parkNumber);
+        String parkStatus;
+        switch (mPark_info.getPark_status()) {
+            case "1":
+                parkStatus = "车位状态:正在审核";
+                break;
+            case "2":
+                parkStatus = "车位状态:正在出租";
+                break;
+            case "3":
+                parkStatus = "车位状态:暂未开放";
+                break;
+            default:
+                parkStatus = "车位状态:未知状态";
+                break;
+        }
+        mRentalRecordParkStatus.setText(parkStatus);
+
+        String voltage = "电量状态" + mPark_info.getVoltage();
+        mRentalRecordVoltage.setText(voltage);
     }
 
     @NonNull
@@ -92,65 +104,14 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
         return "出租记录";
     }
 
-    private void requestRentalRecord() {
-
-        Base_Class_Info<RentalRecordInfo> rentalRecordInfo = new Base_Class_Info<>();
-        RentalRecordInfo recordInfo = new RentalRecordInfo();
-        recordInfo.setParkSpaceImg("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522131551312&di=52422f4384734a296b537d5040c2e89c&imgtype=0&src=http%3A%2F%2F4493bz.1985t.com%2Fuploads%2Fallimg%2F141025%2F4-141025144557.jpg");
-        recordInfo.setVoltage("电量状态:50%");
-        recordInfo.setPackSpaceStatus("车位状态:正在出租");
-        recordInfo.setParkSpaceNumber("车位编号:10086");
-        rentalRecordInfo.data = recordInfo;
-        ImageUtil.showPic(mRentalRecordIv, rentalRecordInfo.data.getParkSpaceImg());
-        mRentalRecordParkNumber.setText(rentalRecordInfo.data.getParkSpaceNumber());
-        mRentalRecordParkStatus.setText(rentalRecordInfo.data.getPackSpaceStatus());
-        mRentalRecordElectricity.setText(rentalRecordInfo.data.getVoltage());
-    }
-
-    private void reqeustRentalRecordItme(final boolean refresh) {
-        dismmisLoadingDialog();
-        Base_Class_List_Info<RentalRecordItemInfo> rentalRecordItemInfoBase_class_list_info = new Base_Class_List_Info<>();
-        ArrayList<RentalRecordItemInfo> rentalRecordItemInfos = new ArrayList<>();
-        RentalRecordItemInfo itemInfo;
-        for (int i = 0; i < 3; i++) {
-            itemInfo = new RentalRecordItemInfo();
-            itemInfo.setRentalCarNumber("车牌编号:粤TBJ304");
-            itemInfo.setRentalStartDate("2018-3-28 12:32");
-            itemInfo.setRentalFee("获得收益:14.00元");
-            itemInfo.setRentalTime("出租时长:2小时03分");
-            rentalRecordItemInfos.add(itemInfo);
-        }
-        rentalRecordItemInfoBase_class_list_info.data = rentalRecordItemInfos;
-        if (rentalRecordItemInfoBase_class_list_info.data.isEmpty() && mCommonAdapter.getData().isEmpty()) {
-            mRecyclerView.showEmpty(null);
-        } else {
-            if (refresh) {
-                mCommonAdapter.setNewData(rentalRecordItemInfoBase_class_list_info.data);
-            } else {
-                mCommonAdapter.addData(rentalRecordItemInfoBase_class_list_info.data);
-            }
-        }
-        stopRefresh();
-        stopLoadMore();
-    }
-
     @Override
     protected RecyclerView.LayoutManager createLayouManager() {
         return new LinearLayoutManager(this);
     }
 
     @Override
-    protected void onRefresh() {
-        reqeustRentalRecordItme(true);
-    }
-
-    @Override
-    protected void onLoadMore() {
-        reqeustRentalRecordItme(false);
-    }
-
-    @Override
     protected void loadData() {
+        showLoadingDialog();
         requestData(HttpConstants.getRentalRecord, new BaseCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
             @Override
             public void onSuccess(Base_Class_List_Info<RentalRecordItemInfo> rentalRecordItemInfoBase_class_list_info, Call call, Response response) {
@@ -161,7 +122,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
             public void onError(Call call, Response response, Exception e) {
                 handleException(e);
             }
-        }, "parkSpaceId", mParkSpaceId);
+        }, "parkSpaceId", mPark_info.getId());
     }
 
     @Override

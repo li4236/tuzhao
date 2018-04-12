@@ -12,7 +12,6 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
-import com.tuzhao.utils.DensityUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -107,7 +106,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
 
     protected BaseRequest getOkgo(String url, String... params) {
         BaseRequest baseRequest = getOkgo(url);
-        for (int i = 0; i < params.length; i+=2) {
+        for (int i = 0; i < params.length; i += 2) {
             baseRequest.params(params[i], params[i + i]);
         }
         return baseRequest
@@ -139,9 +138,8 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
                         showEmpty();
-                        if (!DensityUtil.isException(BaseRefreshActivity.this, e)) {
+                        if (!handleException(e)) {
                             callback.onError(call, response, e);
                         }
                     }
@@ -173,9 +171,8 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
                         showEmpty();
-                        if (!DensityUtil.isException(BaseRefreshActivity.this, e)) {
+                        if (!handleException(e)) {
                             callback.onError(call, response, e);
                         }
                     }
