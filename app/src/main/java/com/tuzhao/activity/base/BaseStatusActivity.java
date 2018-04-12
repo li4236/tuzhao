@@ -21,6 +21,8 @@ import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
+import java.io.Serializable;
+
 /**
  * Created by juncoder on 2018/3/27.
  * <p>
@@ -196,6 +198,13 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void startActivity(Class<?> tClass, String key, String value) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, value);
+        startActivity(intent);
+    }
+
+
+    protected void startActivity(Class<?> tClass, String key, Serializable data) {
+        Intent intent = new Intent(this, tClass);
+        intent.putExtra(key, data);
         startActivity(intent);
     }
 

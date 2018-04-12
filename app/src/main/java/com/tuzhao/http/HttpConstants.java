@@ -94,6 +94,11 @@ public class HttpConstants {
     public static String deleteParkForUser = ROOT_URL + "deleteParkForUser";
 
     /**
+     * 修改停车位出租状态
+     */
+    public static String changeParkSpaceStatus = ROOT_URL + "changeParkSpaceStatus";
+
+    /**
      * 获取一个停车场所有停车位的列表
      */
     public static String getParkList = ROOT_URL + "getParkList";

@@ -66,7 +66,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
         findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(ParkSpaceSettingActivity.class, ConstansUtil.PARK_SPACE_ID, mPark_info.getId());
+                startActivity(ParkSpaceSettingActivity.class, ConstansUtil.PARK_SPACE_INFO, mPark_info);
             }
         });
     }

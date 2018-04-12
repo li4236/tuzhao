@@ -8,4 +8,6 @@ public class ConstansUtil {
 
     public static final String PARK_SPACE_ID = "ParkSpaceId";
 
+    public static final String PARK_SPACE_INFO = "ParkSpaceInfo";
+
 }

@@ -61,12 +61,12 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initView() {
-        mRecyclerView =  findViewById(R.id.id_activity_mypark_layout_recyclerview);
-        mRecyclerView.init(new LinearLayoutManager(this),new onMyRefresh(),new onMyLoadMore());
+        mRecyclerView = findViewById(R.id.id_activity_mypark_layout_recyclerview);
+        mRecyclerView.init(new LinearLayoutManager(this), new onMyRefresh(), new onMyLoadMore());
         mRecyclerView.setRefreshEnabled(true);
         mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.setEmptyView(R.layout.layout_empty);
-        linearlayout_nodata =  findViewById(R.id.id_activity_mypark_layout_linearlayout_nodata);
+        linearlayout_nodata = findViewById(R.id.id_activity_mypark_layout_linearlayout_nodata);
     }
 
     private void initEvent() {
@@ -76,10 +76,10 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initLoading(String what) {
-        if (mCustomDialog==null){
+        if (mCustomDialog == null) {
             mCustomDialog = new CustomDialog(MyParkActivity.this, what);
         }
-        if (!mCustomDialog.isShowing()){
+        if (!mCustomDialog.isShowing()) {
             mCustomDialog.show();
         }
     }
@@ -87,7 +87,7 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.id_activity_mypark_textview_add:
                 intent = new Intent(MyParkActivity.this, AddParkActivity.class);
                 startActivity(intent);
@@ -116,49 +116,51 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
             //开始上拉加载更多数据
         }
     }
+
     private void requestParkData() {
         OkGo.post(HttpConstants.getParkFromUser)//请求数据的接口地址
                 .tag(MyParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
                         //请求成功
-                        if (mCustomDialog.isShowing()){
+                        if (mCustomDialog.isShowing()) {
                             mCustomDialog.hide();
                         }
                         linearlayout_nodata.setVisibility(View.GONE);
-                        if (mData.isEmpty()){
+                        if (mData.isEmpty()) {
                             mData = responseData.data;
                             mMyParkAdpater = new MyParkAdpater(MyParkActivity.this, mData);
                             mRecyclerView.setAdapter(mMyParkAdpater);
-                        }else {
+                        } else {
                             mData.clear();
                             mData.addAll(responseData.data);
                             mMyParkAdpater.notifyDataSetChanged();
                         }
-                        if (mRecyclerView.isRefreshing()){
+                        if (mRecyclerView.isRefreshing()) {
                             mRecyclerView.setRefreshing(false);
                         }
                     }
+
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.hide();
                         }
-                        if (!DensityUtil.isException(MyParkActivity.this,e)){
+                        if (!DensityUtil.isException(MyParkActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
-                            switch (code){
+                            switch (code) {
                                 case 101:
                                     //暂无自己的车位
                                     if (mRecyclerView.isRefreshing()) {
                                         mRecyclerView.setRefreshing(false);
                                     }
 
-                                    if (mMyParkAdpater!=null){
+                                    if (mMyParkAdpater != null) {
                                         mData.clear();
                                         mMyParkAdpater.notifyDataSetChanged();
                                     }
@@ -168,7 +170,7 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
                                     if (mRecyclerView.isRefreshing()) {
                                         mRecyclerView.setRefreshing(false);
                                     }
-                                    MyToast.showToast(MyParkActivity.this,"服务器正在维护中",5);
+                                    MyToast.showToast(MyParkActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         }
@@ -179,9 +181,9 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        if (isFirst){
+        if (isFirst) {
             isFirst = false;
-        }else {
+        } else {
             initLoading("加载中...");
             requestParkData();
         }
@@ -190,7 +192,7 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!= null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }
