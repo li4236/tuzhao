@@ -152,16 +152,15 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                         initLoading("绑定中...");
 
                         if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
-                            /*if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
+                            if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
                                 MyToast.showToast(SetAccountAndSafeActivity.this, "账号和之前一样，未作修改", 5);
                                 if (mCustomDialog != null) {
                                     mCustomDialog.dismiss();
                                 }
-
                             } else {
-                            }*/
-                            initLoading("提交中...");
-                            requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
+                                initLoading("提交中...");
+                                requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());
+                            }
                         } else {
                             initLoading("提交中...");
                             requestUploadUserAliNumber(authResult.getUser_id(), authResult.getAuthCode());

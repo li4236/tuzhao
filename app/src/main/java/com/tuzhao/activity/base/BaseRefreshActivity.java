@@ -105,6 +105,16 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                 .params("pageSize", 15);
     }
 
+    protected BaseRequest getOkgo(String url, String... params) {
+        BaseRequest baseRequest = getOkgo(url);
+        for (int i = 0; i < params.length / 2; i++) {
+            baseRequest.params(params[i], params[i + i]);
+        }
+        return baseRequest
+                .params("startItme", mStartItme)
+                .params("pageSize", 15);
+    }
+
     /**
      * @param url      请求的url
      * @param callback 当请求成功的时候会自动显示数据，然后回调onSuccess方法，接着会把请求状态取消
@@ -116,7 +126,41 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
                         mRecyclerView.showData();
-                        if (mStartItme == 0&&!mCommonAdapter.getData().isEmpty()) {
+                        if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
+                            mCommonAdapter.clearAll();
+                        }
+                        mCommonAdapter.addData(t.data);
+                        callback.onSuccess(t, call, response);
+                        stopLoadStatus();
+                        increateStartItem();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showEmpty();
+                        if (!DensityUtil.isException(BaseRefreshActivity.this, e)) {
+                            callback.onError(call, response, e);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * @param url      请求的url
+     * @param callback 当请求成功的时候会自动显示数据，然后回调onSuccess方法，接着会把请求状态取消
+     *                 当请求失败的时候如果没有数据则显示空数据并取消加载对话框，接着会回调onError方法
+     * @param params   当请求除了token和startItme，pageSize时可以在此添加，注意添加的键值对都需要匹配
+     */
+    protected void requestData(String url, final BaseCallback<Base_Class_List_Info<T>> callback, String... params) {
+        getOkgo(url, params)
+                .execute(new JsonCallback<Base_Class_List_Info<T>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
+                        mRecyclerView.showData();
+                        if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
                             mCommonAdapter.clearAll();
                         }
                         mCommonAdapter.addData(t.data);

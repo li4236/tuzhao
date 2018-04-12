@@ -381,8 +381,34 @@ public class HttpConstants {
      */
     public static String getRentalRecord = ROOT_URL + "getRentalRecord";
 
+    /**
+     * 获取共享时间
+     */
     public static String getShareTime = ROOT_URL + "getShareTime";
 
+    /**
+     * 修改共享时间
+     */
     public static String modifyShareTime = ROOT_URL + "modifyShareTime";
+
+    /**
+     * 添加亲友设备（蓝牙绑定）
+     */
+    public static String addFriendDevice = ROOT_URL + "addFriendDevice";
+
+    /**
+     * 删除亲友设备（蓝牙绑定）
+     */
+    public static String deleteFriendDevice = ROOT_URL + "deleteFriendDevice";
+
+    /**
+     * 修改亲友设备备注（蓝牙绑定）
+     */
+    public static String modifyFriendDeviceName = ROOT_URL + "modifyFriendDeviceName";
+
+    /**
+     * 获取亲友设备
+     */
+    public static String getFriendDevice = ROOT_URL + "getFriendDevice";
 
 }

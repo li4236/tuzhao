@@ -161,7 +161,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
             public void onError(Call call, Response response, Exception e) {
 
             }
-        });
+        }, "parkSpaceId", mParkSpaceId);
     }
 
     @Override
