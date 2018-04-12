@@ -2,6 +2,7 @@ package com.tuzhao.activity.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -205,6 +207,12 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void startActivity(Class<?> tClass, String key, Serializable data) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, data);
+        startActivity(intent);
+    }
+
+    protected void startActivity(Class<?> tClass, String key, ArrayList<? extends Parcelable> data) {
+        Intent intent = new Intent(this, tClass);
+        intent.putParcelableArrayListExtra(key, data);
         startActivity(intent);
     }
 

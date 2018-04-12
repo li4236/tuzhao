@@ -16,10 +16,10 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.utils.ConstansUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -30,7 +30,7 @@ import okhttp3.Response;
 
 public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInfo> {
 
-    private List<InvoiceInfo> mChooseInvoice;
+    private ArrayList<InvoiceInfo> mChooseInvoice;
 
     private TextView mTotalPrice;
 
@@ -60,7 +60,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 } else if (calculateTotalPrice() <= 100) {
                     showFiveToast("订单总额大于100才可以开票哦");
                 } else {
-                    startActivity(AcceptTicketAddressActivity.class);
+                    startActivity(AcceptTicketAddressActivity.class, ConstansUtil.INVOICE_LIST, mChooseInvoice);
                 }
             }
         });
@@ -160,5 +160,4 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         }
         mCommonAdapter.notifyDataSetChanged();
     }
-
 }

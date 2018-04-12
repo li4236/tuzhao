@@ -382,6 +382,11 @@ public class HttpConstants {
     public static String setDefaultAcceptTicketAddress = ROOT_URL + "setDefaultAcceptTicketAddress";
 
     /**
+     * 获取默认的收票地址
+     */
+    public static String getDefalutAcceptTicketAddress = ROOT_URL + "getDefalutAcceptTicketAddress";
+
+    /**
      * 获取出租记录
      */
     public static String getRentalRecord = ROOT_URL + "getRentalRecord";

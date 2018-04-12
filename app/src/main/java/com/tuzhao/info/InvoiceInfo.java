@@ -1,10 +1,13 @@
 package com.tuzhao.info;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by juncoder on 2018/3/28.
  */
 
-public class InvoiceInfo {
+public class InvoiceInfo implements Parcelable {
 
     private String orderId;
 
@@ -85,4 +88,47 @@ public class InvoiceInfo {
     public void setActualFee(String actualFee) {
         this.actualFee = actualFee;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.orderId);
+        dest.writeString(this.parkspaceName);
+        dest.writeString(this.parkStarttime);
+        dest.writeString(this.pictures);
+        dest.writeString(this.check);
+        dest.writeString(this.parkspaceAddress);
+        dest.writeString(this.parkDuration);
+        dest.writeString(this.actualFee);
+    }
+
+    public InvoiceInfo() {
+    }
+
+    protected InvoiceInfo(Parcel in) {
+        this.orderId = in.readString();
+        this.parkspaceName = in.readString();
+        this.parkStarttime = in.readString();
+        this.pictures = in.readString();
+        this.check = in.readString();
+        this.parkspaceAddress = in.readString();
+        this.parkDuration = in.readString();
+        this.actualFee = in.readString();
+    }
+
+    public static final Parcelable.Creator<InvoiceInfo> CREATOR = new Parcelable.Creator<InvoiceInfo>() {
+        @Override
+        public InvoiceInfo createFromParcel(Parcel source) {
+            return new InvoiceInfo(source);
+        }
+
+        @Override
+        public InvoiceInfo[] newArray(int size) {
+            return new InvoiceInfo[size];
+        }
+    };
 }

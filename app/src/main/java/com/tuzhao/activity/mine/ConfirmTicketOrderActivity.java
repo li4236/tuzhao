@@ -1,0 +1,253 @@
+package com.tuzhao.activity.mine;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.AcceptTicketAddressInfo;
+import com.tuzhao.info.InvoiceInfo;
+import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.utils.ConstansUtil;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
+/**
+ * Created by juncoder on 2018/4/12.
+ */
+
+public class ConfirmTicketOrderActivity extends BaseStatusActivity implements View.OnClickListener {
+
+    private TextView mCompany;
+
+    private TextView mName;
+
+    private TextView mTelephone;
+
+    private TextView mType;
+
+    private TextView mAddress;
+
+    private TextView mArriveDate;
+
+    private TextView mTotalMoney;
+
+    private ConstraintLayout mNoAddressCl;
+
+    private ConstraintLayout mOrderAddressCl;
+
+    private List<InvoiceInfo> mInvoiceInfos;
+
+    private TicketOrderAdapter mOrderAdapter;
+
+    private AcceptTicketAddressInfo mAddressInfo;
+
+    private java.text.DecimalFormat mDecimalFormat;
+
+    private double mTotalPrice;
+
+    @Override
+    protected int resourceId() {
+        return R.layout.activity_confirm_ticket_order_layout;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        if ((mInvoiceInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.INVOICE_LIST)) == null) {
+            showFiveToast("获取订单信息失败，请返回重试");
+            finish();
+        }
+
+        mDecimalFormat = new DecimalFormat("0.00");
+
+        mCompany = findViewById(R.id.confirm_ticket_order_company);
+        mName = findViewById(R.id.confirm_ticket_order_name);
+        mTelephone = findViewById(R.id.confirm_ticket_order_telephone);
+        mType = findViewById(R.id.confirm_ticket_order_type);
+        mAddress = findViewById(R.id.confirm_ticket_order_address);
+        mArriveDate = findViewById(R.id.confirm_ticket_order_arrive_time);
+        mTotalMoney = findViewById(R.id.confirm_ticket_order_total_money);
+        mOrderAddressCl = findViewById(R.id.confirm_ticket_order_address_cl);
+        mNoAddressCl = findViewById(R.id.confirm_ticket_order_no_address_cl);
+
+        RecyclerView recyclerView = findViewById(R.id.confirm_ticket_order_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, true));
+        mOrderAdapter = new TicketOrderAdapter();
+        recyclerView.setAdapter(mOrderAdapter);
+
+        mOrderAddressCl.setOnClickListener(this);
+        mNoAddressCl.setOnClickListener(this);
+        findViewById(R.id.confirm_ticket_order_confirm).setOnClickListener(this);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mOrderAdapter.setNewData(mInvoiceInfos);
+        calculateTotalPrice();
+        setTotalPrice();
+        getDefalutAddress();
+    }
+
+    @NonNull
+    @Override
+    protected String title() {
+        return "确认订单";
+    }
+
+    @Override
+    protected void turnBack() {
+        super.turnBack();
+
+    }
+
+    private void getDefalutAddress() {
+        getOkGo(HttpConstants.getDefalutAcceptTicketAddress)
+                .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
+                        mAddressInfo = o.data;
+                        mCompany.setText(mAddressInfo.getCompany());
+                        mName.setText(mAddressInfo.getAcceptPersonName());
+                        mTelephone.setText(mAddressInfo.getAcceptPersonTelephone() == null ? "" : mAddressInfo.getAcceptPersonTelephone());
+                        mType.setText(mAddressInfo.getType());
+                        String address;
+                        if (mAddressInfo.getType().equals("电子")) {
+                            address = mAddressInfo.getAcceptPersonEmail();
+                        } else {
+                            address = mAddressInfo.getAcceptArea() + mAddressInfo.getAcceptAddress();
+                        }
+                        mAddress.setText(address);
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mOrderAddressCl.setVisibility(View.INVISIBLE);
+                        mNoAddressCl.setVisibility(View.VISIBLE);
+                        dismmisLoadingDialog();
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void applyInvoiceReimbursement() {
+        showLoadingDialog();
+        StringBuilder orderId = new StringBuilder();
+        for (InvoiceInfo invoiceInfo : mOrderAdapter.getData()) {
+            orderId.append(invoiceInfo.getOrderId());
+            orderId.append(",");
+        }
+        orderId.deleteCharAt(orderId.length() - 1);
+        getOkGo(HttpConstants.applyInvoiceReimbursement)
+                .params("orderId", orderId.toString())
+                .params("ticketId", mAddressInfo.getTicketId())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        showFiveToast("开票成功,我们将尽快为您发货");
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void calculateTotalPrice() {
+        mTotalPrice = 0;
+        for (InvoiceInfo invoiceInfo : mOrderAdapter.getData()) {
+            mTotalPrice += Double.valueOf(invoiceInfo.getActualFee());
+        }
+        mTotalPrice = Double.parseDouble(mDecimalFormat.format(mTotalPrice));
+    }
+
+    private void setTotalPrice() {
+        String price = "开票总额:" + mTotalPrice + "元";
+        mTotalMoney.setText(price);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.confirm_ticket_order_no_address_cl:
+                startActivity(AcceptTicketAddressActivity.class);
+                break;
+            case R.id.confirm_ticket_order_address_cl:
+                startActivity(AcceptTicketAddressActivity.class);
+                break;
+            case R.id.confirm_ticket_order_confirm:
+                if (mAddressInfo == null) {
+                    showFiveToast("请先添加收票地址");
+                } else if (mOrderAdapter.getData().isEmpty()) {
+                    showFiveToast("没有需要开票的订单,请重新选择");
+                    finish();
+                } else {
+                    calculateTotalPrice();
+                    if (mTotalPrice <= 100) {
+                        showFiveToast("总额大于100才可以开票哦,请重新选择");
+                        finish();
+                    } else {
+                        applyInvoiceReimbursement();
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    class TicketOrderAdapter extends BaseAdapter<InvoiceInfo> {
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, final InvoiceInfo invoiceInfo, final int position) {
+            holder.setText(R.id.confirm_ticket_order_park_address_item, invoiceInfo.getParkspaceAddress() + invoiceInfo.getParkspaceName())
+                    .setText(R.id.confirm_ticket_order_park_date_item, invoiceInfo.getParkStarttime())
+                    .setText(R.id.confirm_ticket_order_total_money, "￥" + invoiceInfo.getActualFee())
+                    .getView(R.id.confirm_ticket_order_ticket_delete_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTotalPrice = Double.valueOf(mDecimalFormat.format(mTotalPrice - Double.valueOf(invoiceInfo.getActualFee())));
+                    setTotalPrice();
+                    notifyRemoveData(position);
+                }
+            });
+
+        }
+
+        @Override
+        protected int itemViewId() {
+            return R.layout.item_confirm_ticket_order_layout;
+        }
+    }
+}
