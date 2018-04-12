@@ -107,7 +107,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
 
     protected BaseRequest getOkgo(String url, String... params) {
         BaseRequest baseRequest = getOkgo(url);
-        for (int i = 0; i < params.length / 2; i++) {
+        for (int i = 0; i < params.length; i+=2) {
             baseRequest.params(params[i], params[i + i]);
         }
         return baseRequest
