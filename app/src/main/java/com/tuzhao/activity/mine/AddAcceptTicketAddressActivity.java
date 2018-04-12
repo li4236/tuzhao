@@ -19,7 +19,6 @@ import com.tuzhao.info.CityInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.CityUtil;
-import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
 
@@ -403,8 +402,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
-                        if (!DensityUtil.isException(AddAcceptTicketAddressActivity.this, e)) {
+                        if (!handleException(e)) {
                             showFiveToast("新建收票地址失败，请稍后重试");
                         }
                     }
@@ -427,8 +425,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
-                        if (!DensityUtil.isException(AddAcceptTicketAddressActivity.this, e)) {
+                        if (!handleException(e)) {
                             showFiveToast("新建收票地址失败，请稍后重试");
                         }
                     }
@@ -454,8 +451,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
-                        if (!DensityUtil.isException(AddAcceptTicketAddressActivity.this, e)) {
+                        if (!handleException(e)) {
                             showFiveToast("新建收票地址失败，请稍后重试");
                         }
                     }

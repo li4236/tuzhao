@@ -19,6 +19,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.DensityUtil;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -138,6 +139,38 @@ public abstract class BaseStatusActivity extends BaseActivity {
                 .headers("token", UserManager.getInstance().getUserInfo().getToken());
     }
 
+    protected boolean handleException(Exception e) {
+        dismmisLoadingDialog();
+        if (!DensityUtil.isException(this, e)) {
+            if (e instanceof IllegalStateException) {
+                switch (e.getMessage()) {
+                    case "801":
+                        showFiveToast("数据存储异常，请稍后重试");
+                        return true;
+                    case "802":
+                        showFiveToast("未传公共参数，请反馈");
+                        return true;
+                    case "803":
+                        showFiveToast("参数异常，请检查是否全都填写了哦");
+                        return true;
+                    case "804":
+                        showFiveToast("获取数据异常，请稍后重试");
+                        return true;
+                    case "805":
+                        showFiveToast("账号异常，请重新登录");
+                        startLogin();
+                        return true;
+                    default:
+                        return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     /**
      * 判断当前用户是否登录，如果登录了则会调用回调方法，没登录则弹出登录对话框
      */
@@ -145,9 +178,14 @@ public abstract class BaseStatusActivity extends BaseActivity {
         if (com.tuzhao.publicmanager.UserManager.getInstance().hasLogined()) {
             listener.onLogin();
         } else {
-            mLoginDialogFragment = new LoginDialogFragment();
-            mLoginDialogFragment.show(getSupportFragmentManager(), this.getClass().getName());
+            startLogin();
         }
+    }
+
+    protected void startLogin() {
+        dismmisLoadingDialog();
+        mLoginDialogFragment = new LoginDialogFragment();
+        mLoginDialogFragment.show(getSupportFragmentManager(), this.getClass().getName());
     }
 
     protected void startActivity(Class<?> tClass) {

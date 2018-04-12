@@ -110,11 +110,11 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                     return (T) base_class_List_info;
                 }else{
                     //抛出异常错误码
-                    throw new IllegalStateException(""+code);
+                    throw new IllegalStateException(String.valueOf(code));
                 }
             }catch (NumberFormatException e){
                 //抛出code转换异常错误码
-                throw new IllegalStateException("900");
+                throw new NumberFormatException("900");
             }
 
         }else if (rawType == Base_Class_Info.class){
@@ -134,7 +134,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                 }
             }catch (NumberFormatException e){
                 //抛出异常错误码
-                throw new IllegalStateException("900");
+                throw new NumberFormatException("900");
             }
         } else {
             //未设置实例的基类

@@ -159,7 +159,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
             @Override
             public void onError(Call call, Response response, Exception e) {
-
+                handleException(e);
             }
         }, "parkSpaceId", mParkSpaceId);
     }

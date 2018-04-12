@@ -21,7 +21,6 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.CheckTextView;
 import com.tuzhao.utils.ConstansUtil;
-import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -161,8 +160,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
-                        if (!DensityUtil.isException(ModifyShareTimeActivity.this, e)) {
+                        if (!handleException(e)) {
                             showFiveToast("获取共享时间失败，请稍后重试");
                         }
                     }
@@ -409,8 +407,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
-                        if (!DensityUtil.isException(ModifyShareTimeActivity.this, e)) {
+                        if (!handleException(e)) {
                             showFiveToast("修改失败" + e.getMessage());
                         }
                     }

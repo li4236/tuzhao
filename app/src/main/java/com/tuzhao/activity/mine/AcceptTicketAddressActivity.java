@@ -17,7 +17,6 @@ import com.tuzhao.info.AcceptTicketAddressInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.utils.DensityUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -81,14 +80,13 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (!DensityUtil.isException(AcceptTicketAddressActivity.this, e)) {
+                        if (!handleException(e)) {
                             if (isDefault.equals("0")) {
                                 showFiveToast("取消默认地址失败，请稍后重试");
                             } else {
                                 showFiveToast("设置默认地址成功，请稍后重试");
                             }
                         }
-                        dismmisLoadingDialog();
                     }
                 });
     }
@@ -115,7 +113,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (!DensityUtil.isException(AcceptTicketAddressActivity.this, e)) {
+                        if (!handleException(e)) {
                             showFiveToast("删除失败，请稍后重试");
                         }
                     }

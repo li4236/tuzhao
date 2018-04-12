@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,7 +16,6 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.utils.DensityUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,10 +81,9 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dismmisLoadingDialog();
                         showEmpty();
-                        if (!DensityUtil.isException(InvoiceReimbursementActivity.this, e)) {
-                            Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
+                        if (!handleException(e)) {
+
                         }
                     }
                 });
