@@ -460,10 +460,21 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     private BaseRequest getCommonOkgo() {
         return getOkGo(HttpConstants.addAcceptTicketAddress)
-                .params("type", getText(mTicketType))
+                .params("type", getType())
                 .params("company", getText(mCompanyName))
                 .params("companyPhone", getText(mCompanyTelephone))
                 .params("acceptPersonName", getText(mAcceptPersonName));
+    }
+
+    private String getType() {
+        switch (getText(mTicketType)) {
+            case "普票":
+                return "2";
+            case "专票":
+                return "3";
+            default:
+                return "1";
+        }
     }
 
     private String getText(TextView textView) {
