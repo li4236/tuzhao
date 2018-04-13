@@ -55,7 +55,9 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         findViewById(R.id.invoice_reimbursement_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mChooseInvoice.isEmpty()) {
+                if (mCommonAdapter.getData().isEmpty()) {
+                    showFiveToast("没有能够报销的发票哦");
+                } else if (mChooseInvoice.isEmpty()) {
                     showFiveToast("你还没选择需要报销的发票哦");
                 } else if (calculateTotalPrice() <= 100) {
                     showFiveToast("订单总额大于100才可以开票哦");

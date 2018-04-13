@@ -1,11 +1,15 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,6 +27,7 @@ import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -53,7 +58,11 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
     private ConstraintLayout mOrderAddressCl;
 
+    private ConstraintLayout mOrderUndoCl;
+
     private List<InvoiceInfo> mInvoiceInfos;
+
+    private List<InvoiceInfo> mUndoInvoiceInfos;
 
     private TicketOrderAdapter mOrderAdapter;
 
@@ -88,6 +97,14 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         mTotalMoney = findViewById(R.id.confirm_ticket_order_total_money);
         mOrderAddressCl = findViewById(R.id.confirm_ticket_order_address_cl);
         mNoAddressCl = findViewById(R.id.confirm_ticket_order_no_address_cl);
+        mOrderUndoCl = findViewById(R.id.confirm_ticket_order_undo_cl);
+
+        TextView orderUndo = findViewById(R.id.confirm_ticket_order_undo);
+        String undoString = orderUndo.getText().toString();
+        SpannableString spannableString = new SpannableString(undoString);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("ff564f")), undoString.indexOf("撤销"), undoString.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        orderUndo.setText(spannableString);
 
         RecyclerView recyclerView = findViewById(R.id.confirm_ticket_order_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -98,11 +115,13 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         mOrderAddressCl.setOnClickListener(this);
         mNoAddressCl.setOnClickListener(this);
         findViewById(R.id.confirm_ticket_order_confirm).setOnClickListener(this);
+        orderUndo.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
         super.initData();
+        mUndoInvoiceInfos = new ArrayList<>(mInvoiceInfos.size());
         mOrderAdapter.setNewData(mInvoiceInfos);
         calculateTotalPrice();
         setTotalPrice();
@@ -241,6 +260,12 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         mTotalMoney.setText(price);
     }
 
+    private void showOrderUndo() {
+        if (mOrderUndoCl.getVisibility() != View.VISIBLE) {
+            mOrderUndoCl.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -264,6 +289,15 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                     } else {
                         applyInvoiceReimbursement();
                     }
+                }
+                break;
+            case R.id.confirm_ticket_order_undo:
+                InvoiceInfo invoiceInfo = mUndoInvoiceInfos.remove(mUndoInvoiceInfos.size() - 1);
+                mOrderAdapter.addData(invoiceInfo);
+                mTotalPrice = Double.valueOf(mDecimalFormat.format(mTotalPrice + Double.valueOf(invoiceInfo.getActualFee())));
+                setTotalPrice();
+                if (mUndoInvoiceInfos.isEmpty()) {
+                    mOrderUndoCl.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -292,7 +326,9 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                 public void onClick(View v) {
                     mTotalPrice = Double.valueOf(mDecimalFormat.format(mTotalPrice - Double.valueOf(invoiceInfo.getActualFee())));
                     setTotalPrice();
+                    mUndoInvoiceInfos.add(invoiceInfo);
                     notifyRemoveData(position);
+                    showOrderUndo();
                 }
             });
 
