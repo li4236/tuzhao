@@ -20,6 +20,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 
 import java.io.Serializable;
@@ -220,6 +221,12 @@ public abstract class BaseStatusActivity extends BaseActivity {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, bundle);
         startActivity(intent);
+    }
+
+    protected void startActivityForResult(Class<?> tClass, int requestCode) {
+        Intent intent = new Intent(this, tClass);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
+        startActivityForResult(intent, requestCode);
     }
 
     protected void showSecondToast(String msg) {

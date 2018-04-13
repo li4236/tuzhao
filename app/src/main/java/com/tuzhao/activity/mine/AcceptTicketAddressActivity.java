@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.tuzhao.info.AcceptTicketAddressInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.utils.ConstansUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -27,9 +29,13 @@ import okhttp3.Response;
 
 public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicketAddressInfo> {
 
+    private boolean mIsForResult;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+        mIsForResult = getIntent().getBooleanExtra(ConstansUtil.FOR_REQUEST_RESULT, false);
+
         mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.setEmptyView(R.layout.no_address_empty_layout);
         findViewById(R.id.accept_ticket_address_add_address).setOnClickListener(new View.OnClickListener() {
@@ -38,6 +44,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                 startActivity(AddAcceptTicketAddressActivity.class);
             }
         });
+
     }
 
     @Override
@@ -176,6 +183,18 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                 }
             }
         });
+
+        if (mIsForResult) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra(ConstansUtil.ACCEPT_ADDRESS_INFO, acceptTicketAddressInfo);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
     }
 
     @Override
@@ -188,29 +207,5 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     protected String title() {
         return "收票地址";
     }
-
-  /*  private void requestData() {
-        List<AcceptTicketAddressInfo> list = new ArrayList<>();
-        AcceptTicketAddressInfo addressInfo;
-        for (int i = 0; i < 10; i++) {
-            addressInfo = new AcceptTicketAddressInfo();
-            addressInfo.setAcceptPersonName("赤炎火狮");
-            addressInfo.setAcceptPersonTelephone("18219111679");
-            if (i % 2 == 0) {
-                addressInfo.setAcceptPersonEmail("1247660633@qq.com");
-                addressInfo.setType("电子");
-            } else {
-                addressInfo.setType("普票");
-                addressInfo.setAcceptAddress("广东省中山市五桂山长命水长逸路5号1栋");
-            }
-            if (i == 2) {
-                addressInfo.setIsDefault("1");
-            } else {
-                addressInfo.setIsDefault("0");
-            }
-            list.add(addressInfo);
-        }
-        mCommonAdapter.addData(list);
-    }*/
 
 }

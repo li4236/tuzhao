@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
@@ -22,6 +23,7 @@ import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -60,6 +62,8 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
     private java.text.DecimalFormat mDecimalFormat;
 
     private double mTotalPrice;
+
+    private static final int REQUEST_ADDRESS = 0x286;
 
     @Override
     protected int resourceId() {
@@ -123,17 +127,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                     @Override
                     public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
                         mAddressInfo = o.data;
-                        mCompany.setText(mAddressInfo.getCompany());
-                        mName.setText(mAddressInfo.getAcceptPersonName());
-                        mTelephone.setText(mAddressInfo.getAcceptPersonTelephone() == null ? "" : mAddressInfo.getAcceptPersonTelephone());
-                        mType.setText(mAddressInfo.getType());
-                        String address;
-                        if (mAddressInfo.getType().equals("电子")) {
-                            address = mAddressInfo.getAcceptPersonEmail();
-                        } else {
-                            address = mAddressInfo.getAcceptArea() + mAddressInfo.getAcceptAddress();
-                        }
-                        mAddress.setText(address);
+                        setAddressInfo();
                         dismmisLoadingDialog();
                     }
 
@@ -145,6 +139,60 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                         dismmisLoadingDialog();
                         if (!handleException(e)) {
 
+                        }
+                    }
+                });
+    }
+
+    private void setAddressInfo() {
+        if (mAddressInfo == null || mAddressInfo.getType() == null) {
+            if (mOrderAddressCl.getVisibility() == View.VISIBLE) {
+                mOrderAddressCl.setVisibility(View.INVISIBLE);
+                mNoAddressCl.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mCompany.setText(mAddressInfo.getCompany());
+            mName.setText(mAddressInfo.getAcceptPersonName());
+            mTelephone.setText(mAddressInfo.getAcceptPersonTelephone() == null ? "" : mAddressInfo.getAcceptPersonTelephone());
+            mType.setText(mAddressInfo.getType());
+            String address;
+            if (mAddressInfo.getType().equals("电子")) {
+                address = mAddressInfo.getAcceptPersonEmail();
+            } else {
+                address = mAddressInfo.getAcceptArea() + mAddressInfo.getAcceptAddress();
+            }
+            mAddress.setText(address);
+
+            getInvoiceArriveTime();
+
+            if (mOrderAddressCl.getVisibility() != View.VISIBLE) {
+                mOrderAddressCl.setVisibility(View.VISIBLE);
+                mNoAddressCl.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void getInvoiceArriveTime() {
+        OkGo.post(HttpConstants.getInvoiceArriveTime)
+                .params("type", mAddressInfo.getType())
+                .params("acceptPersonEmail", mAddressInfo.getAcceptPersonEmail())
+                .params("acceptArea", mAddressInfo.getAcceptArea())
+                .params("acceptAddress", mAddressInfo.getAcceptAddress())
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<String> voidBase_class_info, Call call, Response response) {
+                        mArriveDate.setText(voidBase_class_info.data);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (mAddressInfo.getType().equals("电子")) {
+                            Calendar calendar = Calendar.getInstance();
+                            String arriveTime = (calendar.get(Calendar.MONTH) + 1) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "（今天）";
+                            mArriveDate.setText(arriveTime);
+                        } else if (!handleException(e)) {
+                            showFiveToast("获取预计到达时间失败，但我们会尽快为您发货");
                         }
                     }
                 });
@@ -197,10 +245,10 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.confirm_ticket_order_no_address_cl:
-                startActivity(AcceptTicketAddressActivity.class);
+                startActivityForResult(AcceptTicketAddressActivity.class, REQUEST_ADDRESS);
                 break;
             case R.id.confirm_ticket_order_address_cl:
-                startActivity(AcceptTicketAddressActivity.class);
+                startActivityForResult(AcceptTicketAddressActivity.class, REQUEST_ADDRESS);
                 break;
             case R.id.confirm_ticket_order_confirm:
                 if (mAddressInfo == null) {
@@ -224,7 +272,12 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        if (requestCode == REQUEST_ADDRESS && resultCode == RESULT_OK) {
+            if (data != null) {
+                mAddressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ACCEPT_ADDRESS_INFO);
+                setAddressInfo();
+            }
+        }
     }
 
     class TicketOrderAdapter extends BaseAdapter<InvoiceInfo> {

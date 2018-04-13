@@ -12,4 +12,8 @@ public class ConstansUtil {
 
     public static final String INVOICE_LIST = "InvoiceList";
 
+    public static final String ACCEPT_ADDRESS_INFO = "AcceptAddressInfo";
+
+    public static final String FOR_REQUEST_RESULT = "ForRequestResult";
+
 }

@@ -357,6 +357,11 @@ public class HttpConstants {
     public static String getInvoice = ROOT_URL + "getInvoice";
 
     /**
+     * 获取发票的到达时间
+     */
+    public static String getInvoiceArriveTime = ROOT_URL + "getInvoiceArriveTime";
+
+    /**
      * 申请发票报销
      */
     public static String applyInvoiceReimbursement = ROOT_URL + "applyInvoiceReimbursement";
