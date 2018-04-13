@@ -753,13 +753,24 @@ public class DateUtil {
      * @param phone_numble 手机号
      * @return
      */
-    public boolean isPhoneNumble(String phone_numble) {
+    public static boolean isPhoneNumble(String phone_numble) {
 //		Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
 //		Matcher m = p.matcher(phone_numble);
 //		return m.matches();
         String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(phone_numble);
+        return m.matches();
+    }
+
+    public static boolean isEmail(String string) {
+        if (string == null)
+            return false;
+        String regEx1 = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        Pattern p;
+        Matcher m;
+        p = Pattern.compile(regEx1);
+        m = p.matcher(string);
         return m.matches();
     }
 
@@ -771,7 +782,7 @@ public class DateUtil {
      */
     public boolean isCorrectPassword(String password) {
 
-        if (password != null && password != "") {
+        if (password != null && !password.equals("")) {
             if (password.length() >= 8 && password.length() <= 16) {
                 return true;
             } else {

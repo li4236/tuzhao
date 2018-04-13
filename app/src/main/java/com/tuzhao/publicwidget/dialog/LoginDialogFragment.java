@@ -164,7 +164,7 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (edittext_phonenumble.getText().length() > 0) {
-                    if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString())) {
+                    if (DateUtil.isPhoneNumble(edittext_phonenumble.getText().toString())) {
                         //获取验证码,并进入60秒倒计时状态
                         isGetCode = true;
                         textview_getconfirm_code.setText("发送中");

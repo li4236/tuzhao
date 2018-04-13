@@ -19,6 +19,7 @@ import com.tuzhao.info.CityInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.CityUtil;
+import com.tuzhao.utils.DateUtil;
 
 import java.util.ArrayList;
 
@@ -171,7 +172,8 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
      * 初始化城市列表选择器
      */
     private void initCityOption() {
-        mProvinces = new ArrayList<>();
+        ArrayList<CityInfo> cityInfoArrayList = CityUtil.loadCityData(this);
+        mProvinces = new ArrayList<>(cityInfoArrayList.size());
         mCitys = new ArrayList<>();
         mCounties = new ArrayList<>();
 
@@ -179,11 +181,11 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         ArrayList<String> counties;
         ArrayList<ArrayList<String>> countyList;
 
-        for (CityInfo cityInfo : CityUtil.loadCityData(this)) {
+        for (CityInfo cityInfo : cityInfoArrayList) {
             //省
             mProvinces.add(cityInfo.getName());
 
-            citys = new ArrayList<>();
+            citys = new ArrayList<>(cityInfo.getCityList().size());
             countyList = new ArrayList<>();
 
             for (CityInfo.CityListBeanX city : cityInfo.getCityList()) {
@@ -304,6 +306,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         } else if (isEmpty(mAcceptDetailAddress)) {
             showToast(mAcceptDetailAddress);
             return false;
+        } else if (DateUtil.isPhoneNumble(getText(mAcceptTelephone))) {
+            showFiveToast("手机号码不正确哦");
+            return false;
         }
         return true;
     }
@@ -338,6 +343,8 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
             case "电子":
                 if (isEmpty(mAcceptEmail)) {
                     showToast(mAcceptEmail);
+                } else if (!DateUtil.isEmail(getText(mAcceptEmail))) {
+                    showFiveToast("邮箱地址不正确哦");
                 } else {
                     noEmpty = true;
                 }
