@@ -30,7 +30,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/w0"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/confirm_ticket_order_address_cl"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/w0"
+                android:visibility="invisible"
                 app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
                 <ImageView
@@ -87,7 +87,6 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="16dp"
-                    android:text="天之力新能源科技有限公司"
                     app:layout_constraintStart_toEndOf="@id/confirm_ticket_order_company_iv"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,7 +95,6 @@
                     style="@style/TwentyTextG6Style"
                     android:layout_marginTop="12dp"
                     android:drawableStart="@null"
-                    android:text="我寮"
                     app:layout_constraintStart_toStartOf="@+id/confirm_ticket_order_company"
                     app:layout_constraintTop_toBottomOf="@+id/confirm_ticket_order_company" />
 
@@ -104,7 +102,6 @@
                     android:id="@+id/confirm_ticket_order_telephone"
                     style="@style/TwentyTextG6Style"
                     android:layout_marginStart="10dp"
-                    android:text="18218911154"
                     app:layout_constraintStart_toEndOf="@id/confirm_ticket_order_name"
                     app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_name" />
 
@@ -115,7 +112,6 @@
                     android:background="@drawable/hollow_y3_6dp"
                     android:paddingEnd="6dp"
                     android:paddingStart="6dp"
-                    android:text="普票"
                     app:layout_constraintBottom_toBottomOf="@id/confirm_ticket_order_telephone"
                     app:layout_constraintStart_toEndOf="@id/confirm_ticket_order_telephone"
                     app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_telephone" />
@@ -135,7 +131,6 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="广东省中山市五桂山"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/confirm_ticket_order_name"
                     app:layout_constraintTop_toBottomOf="@+id/confirm_ticket_order_name" />
@@ -149,6 +144,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
             </android.support.constraint.ConstraintLayout>
 
             <View

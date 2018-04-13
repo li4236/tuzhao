@@ -112,7 +112,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
         RecyclerView recyclerView = findViewById(R.id.confirm_ticket_order_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, false));
+        recyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, true));
         recyclerView.setNestedScrollingEnabled(false);
         mOrderAdapter = new TicketOrderAdapter(recyclerView);
         mOrderAdapter.setHeaderView(new View(this));
