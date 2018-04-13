@@ -148,7 +148,6 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                 if (msg.what == SDK_AUTH_FLAG) {
                     AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
                     if (TextUtils.equals(authResult.getResultStatus(), "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
-
                         initLoading("绑定中...");
 
                         if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
@@ -209,7 +208,6 @@ public class SetAccountAndSafeActivity extends BaseActivity {
     }
 
     private void requestUploadUserAliNumber(final String aliuser_id, String authCode) {
-        Log.e("TAG", "requestUploadUserAliNumber: " + authCode);
         OkGo.post(HttpConstants.uploadUserAliNumber)
                 .tag(SetAccountAndSafeActivity.this)
                 .addInterceptor(new TokenInterceptor())
@@ -226,8 +224,8 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                         UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
                         UserManager.getInstance().getUserInfo().setAliNickName(class_info.data);
                         mUserBindingStatus.setText(class_info.data);
-                        Intent intent = new Intent(SetAccountAndSafeActivity.this, GetMoneyActivty.class);
-                        startActivity(intent);
+                        /*Intent intent = new Intent(SetAccountAndSafeActivity.this, GetMoneyActivty.class);
+                        startActivity(intent);            ??????? */
                     }
 
                     @Override

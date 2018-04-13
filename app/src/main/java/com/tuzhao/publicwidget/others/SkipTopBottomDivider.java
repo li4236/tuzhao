@@ -4,10 +4,15 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.tuzhao.R;
+import com.tuzhao.utils.DensityUtil;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -39,19 +44,20 @@ public class SkipTopBottomDivider extends RecyclerView.ItemDecoration {
     }
 
     public SkipTopBottomDivider(Context context, int orientation) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider = a.getDrawable(0);
-        a.recycle();
+        init(context);
         setOrientation(orientation);
     }
 
     public SkipTopBottomDivider(Context context, boolean skipTop, boolean skipBottom) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider = a.getDrawable(0);
-        a.recycle();
+        init(context);
         setOrientation(VERTICAL_LIST);
         mSkipTop = skipTop;
         mSkipBottom = skipBottom;
+    }
+
+    private void init(Context context) {
+        mDivider = new ColorDrawable(ContextCompat.getColor(context, R.color.w5));;
+        mDivider.setBounds(0,  DensityUtil.dp2px(context, 10), 0, DensityUtil.dp2px(context, 5));
     }
 
     public void setOrientation(int orientation) {

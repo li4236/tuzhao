@@ -35,11 +35,14 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.7" />
 
-        <CheckBox
+        <com.tuzhao.publicwidget.others.CheckBox
             android:id="@+id/invoice_reimbursement_all_rb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp"
             android:text="全选"
             android:button="@null"
             android:drawablePadding="4dp"

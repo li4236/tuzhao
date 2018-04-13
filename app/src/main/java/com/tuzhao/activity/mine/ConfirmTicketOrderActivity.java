@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -39,6 +40,8 @@ import okhttp3.Response;
  */
 
 public class ConfirmTicketOrderActivity extends BaseStatusActivity implements View.OnClickListener {
+
+    private NestedScrollView mNestedScrollView;
 
     private TextView mCompany;
 
@@ -88,6 +91,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
         mDecimalFormat = new DecimalFormat("0.00");
 
+        mNestedScrollView = findViewById(R.id.confirm_ticket_order_nsv);
         mCompany = findViewById(R.id.confirm_ticket_order_company);
         mName = findViewById(R.id.confirm_ticket_order_name);
         mTelephone = findViewById(R.id.confirm_ticket_order_telephone);
@@ -102,14 +106,16 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         TextView orderUndo = findViewById(R.id.confirm_ticket_order_undo);
         String undoString = orderUndo.getText().toString();
         SpannableString spannableString = new SpannableString(undoString);
-        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("ff564f")), undoString.indexOf("撤销"), undoString.length(),
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff564f")), undoString.indexOf("撤销"), undoString.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         orderUndo.setText(spannableString);
 
         RecyclerView recyclerView = findViewById(R.id.confirm_ticket_order_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, true));
-        mOrderAdapter = new TicketOrderAdapter();
+        recyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, false));
+        recyclerView.setNestedScrollingEnabled(false);
+        mOrderAdapter = new TicketOrderAdapter(recyclerView);
+        mOrderAdapter.setHeaderView(new View(this));
         recyclerView.setAdapter(mOrderAdapter);
 
         mOrderAddressCl.setOnClickListener(this);
@@ -123,6 +129,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         super.initData();
         mUndoInvoiceInfos = new ArrayList<>(mInvoiceInfos.size());
         mOrderAdapter.setNewData(mInvoiceInfos);
+        mNestedScrollView.smoothScrollTo(0, 0);
         calculateTotalPrice();
         setTotalPrice();
         getDefalutAddress();
@@ -316,11 +323,15 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
     class TicketOrderAdapter extends BaseAdapter<InvoiceInfo> {
 
+        TicketOrderAdapter(RecyclerView recyclerView) {
+            super(recyclerView);
+        }
+
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final InvoiceInfo invoiceInfo, final int position) {
             holder.setText(R.id.confirm_ticket_order_park_address_item, invoiceInfo.getParkspaceAddress() + invoiceInfo.getParkspaceName())
                     .setText(R.id.confirm_ticket_order_park_date_item, invoiceInfo.getParkStarttime())
-                    .setText(R.id.confirm_ticket_order_total_money, "￥" + invoiceInfo.getActualFee())
+                    .setText(R.id.confirm_ticket_order_ticket_price_item, "￥" + invoiceInfo.getActualFee())
                     .getView(R.id.confirm_ticket_order_ticket_delete_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

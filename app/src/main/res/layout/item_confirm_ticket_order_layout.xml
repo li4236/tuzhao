@@ -29,8 +29,11 @@
         android:id="@+id/confirm_ticket_order_ticket_delete_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:contentDescription="@string/picture_description"
+        android:paddingBottom="16dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="15dp"
+        android:paddingTop="16dp"
         android:src="@mipmap/ic_del4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +42,6 @@
     <TextView
         android:id="@+id/confirm_ticket_order_ticket_price_item"
         style="@style/TenTextG6Stytle"
-        android:layout_marginEnd="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/confirm_ticket_order_ticket_delete_item"
         app:layout_constraintTop_toTopOf="parent" />

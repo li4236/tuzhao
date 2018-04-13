@@ -316,14 +316,14 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
     }
 
     private void initTimeOption() {
-        mHours = new ArrayList<>();
-        mMinutes = new ArrayList<>();
+        mHours = new ArrayList<>(24);
+        mMinutes = new ArrayList<>(60);
 
         ArrayList<String> minutes;
         for (int i = 0; i < 24; i++) {
             mHours.add(String.valueOf(i));
 
-            minutes = new ArrayList<>();
+            minutes = new ArrayList<>(60);
             for (int j = 0; j < 60; j++) {
                 minutes.add(String.valueOf(j));
             }

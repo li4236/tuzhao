@@ -100,7 +100,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
 
     protected BaseRequest getOkgo(String url) {
         return getOkGo(url)
-                .params("startItme", mStartItme)
+                .params("startItem", mStartItme)
                 .params("pageSize", 15);
     }
 
@@ -110,7 +110,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
             baseRequest.params(params[i], params[i + i]);
         }
         return baseRequest
-                .params("startItme", mStartItme)
+                .params("startItem", mStartItme)
                 .params("pageSize", 15);
     }
 
@@ -139,6 +139,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         showEmpty();
+                        dismmisLoadingDialog();
                         if (!handleException(e)) {
                             callback.onError(call, response, e);
                         }

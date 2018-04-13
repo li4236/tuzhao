@@ -1,6 +1,7 @@
 package com.tianzhili.www.myselfsdk.okgo.adapter;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.cache.CacheEntity;
@@ -152,6 +153,7 @@ public class CacheCall<T> implements Call<T> {
                 }
                 //响应失败，一般为服务器内部错误，或者找不到页面等
                 if (responseCode == 404 || responseCode >= 500) {
+                    Log.e(this.getClass().getName(), "onResponse: "+responseCode );
                     sendFailResultCallback(false, call, response, OkGoException.INSTANCE("901"));
                     return;
                 }

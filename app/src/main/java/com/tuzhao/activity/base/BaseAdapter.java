@@ -118,6 +118,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     public void setHeaderView(View headerView) {
+        if (mRecyclerView != null) {
+            headerView.setLayoutParams(mRecyclerView.getLayoutParams());
+        }
         mHeaderView = headerView;
     }
 

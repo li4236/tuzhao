@@ -3,11 +3,13 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tuzhao.info.base_info.BaseInfo;
+
 /**
  * Created by juncoder on 2018/3/28.
  */
 
-public class InvoiceInfo implements Parcelable {
+public class InvoiceInfo extends BaseInfo implements Parcelable {
 
     private String orderId;
 
@@ -17,7 +19,7 @@ public class InvoiceInfo implements Parcelable {
 
     private String pictures;
 
-    private String check;
+    private String check = "false";
 
     private String parkspaceAddress;
 

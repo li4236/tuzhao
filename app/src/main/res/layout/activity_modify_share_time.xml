@@ -294,6 +294,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <TextView
+                android:id="@+id/modify_share_time_hint"
                 style="@style/TwentyTextB1Style"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
@@ -309,7 +310,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/little_yuan_yellow_8dp"
                 android:gravity="center"
                 android:text="提交"
@@ -318,7 +319,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyday_share_date" />
+                app:layout_constraintTop_toBottomOf="@+id/modify_share_time_hint" />
 
         </android.support.constraint.ConstraintLayout>
 

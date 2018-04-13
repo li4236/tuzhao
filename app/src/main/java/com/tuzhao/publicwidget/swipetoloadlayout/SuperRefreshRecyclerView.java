@@ -86,7 +86,7 @@ public class SuperRefreshRecyclerView extends FrameLayout {
     }
 
     public void showData() {
-        if (emptyView.getVisibility() == GONE) {
+        if (emptyView.getVisibility() == VISIBLE) {
             swipeToLoadLayout.setVisibility(VISIBLE);
             emptyView.setVisibility(GONE);
             errorView.setVisibility(GONE);

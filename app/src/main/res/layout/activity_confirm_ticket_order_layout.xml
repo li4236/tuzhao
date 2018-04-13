@@ -15,6 +15,7 @@
         app:layout_constraintTop_toBottomOf="@+id/base_tb" />
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/confirm_ticket_order_nsv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/confirm_ticket_order_undo_cl"

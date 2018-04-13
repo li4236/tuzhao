@@ -2,6 +2,7 @@ package com.tuzhao.activity.mine;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -36,7 +37,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     private DecimalFormat mDecimalFormat;
 
-    private CheckBox mAllChoose;
+    private com.tuzhao.publicwidget.others.CheckBox mAllChoose;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -45,13 +46,16 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         mDecimalFormat = new DecimalFormat("0.00");
         mTotalPrice = findViewById(R.id.invoice_reimbursement_total_invoice);
         mAllChoose = findViewById(R.id.invoice_reimbursement_all_rb);
-        mAllChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mAllChoose.setCheckDrawable(ContextCompat.getDrawable(this, R.drawable.ic_chose));
+        mAllChoose.setNoCheckDrawble(ContextCompat.getDrawable(this, R.drawable.ic_nochose));
+        mAllChoose.setOnCheckChangeListener(new com.tuzhao.publicwidget.others.CheckBox.OnCheckChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setAllCheck(isChecked);
-                mAllChoose.setChecked(isChecked);
+            public void onCheckChange(boolean isCheck) {
+                setAllCheck(isCheck);
+                setTotalPrice();
             }
         });
+
         findViewById(R.id.invoice_reimbursement_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +66,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 } else if (calculateTotalPrice() <= 100) {
                     showFiveToast("订单总额大于100才可以开票哦");
                 } else {
-                    startActivity(AcceptTicketAddressActivity.class, ConstansUtil.INVOICE_LIST, mChooseInvoice);
+                    startActivity(ConfirmTicketOrderActivity.class, ConstansUtil.INVOICE_LIST, mChooseInvoice);
                 }
             }
         });
@@ -75,6 +79,17 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     @Override
     protected void loadData() {
+        /*requestData(HttpConstants.getInvoice, new BaseCallback<Base_Class_List_Info<InvoiceInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<InvoiceInfo> invoiceInfoBase_class_list_info, Call call, Response response) {
+
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+
+                    }
+                });*/
         getOkgo(HttpConstants.getInvoice)
                 .execute(new JsonCallback<Base_Class_List_Info<InvoiceInfo>>() {
                     @Override
@@ -104,26 +119,37 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     @Override
     protected void bindData(BaseViewHolder holder, final InvoiceInfo invoiceInfo, int position) {
+        String pic = invoiceInfo.getPictures();
+        if (pic.contains(",")) {
+            pic = pic.substring(0, pic.indexOf(","));
+        }
         holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
                 .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
                 .setText(R.id.invoice_reimbursement_location, invoiceInfo.getParkspaceName())
                 .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
                 .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
-                .showPic(R.id.invoice_reimbursement_iv, invoiceInfo.getPictures())
-                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("ture"));
+                .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic)
+                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"));
         final CheckBox checkBox = (CheckBox) holder.getView(R.id.invoice_reimbursement_rb);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mChooseInvoice.add(invoiceInfo);
-                } else {
-                    mAllChoose.setChecked(false);
-                    mChooseInvoice.remove(invoiceInfo);
+                if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
+                        && !mRecyclerView.getRecyclerView().isComputingLayout()) {
+                    if (isChecked) {
+                        invoiceInfo.setCheck("true");
+                        mChooseInvoice.add(invoiceInfo);
+                        if (mChooseInvoice.size() == mCommonAdapter.getData().size()) {
+                            mAllChoose.setChecked(true);
+                        }
+                    } else {
+                        invoiceInfo.setCheck("false");
+                        mAllChoose.setChecked(false);
+                        mChooseInvoice.remove(invoiceInfo);
+                    }
+                    setTotalPrice();
                 }
-                checkBox.setChecked(isChecked);
-                setTotalPrice();
             }
         });
     }
@@ -155,7 +181,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
     private void setAllCheck(boolean check) {
         mChooseInvoice.clear();
         for (InvoiceInfo invoiceInfo : mCommonAdapter.getData()) {
-            invoiceInfo.setCheck(check ? "ture" : "false");
+            invoiceInfo.setCheck(check ? "true" : "false");
             if (check) {
                 mChooseInvoice.add(invoiceInfo);
             }
