@@ -176,8 +176,8 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     private void initCityOption() {
         ArrayList<CityInfo> cityInfoArrayList = CityUtil.loadCityData(this);
         mProvinces = new ArrayList<>(cityInfoArrayList.size());
-        mCitys = new ArrayList<>();
-        mCounties = new ArrayList<>();
+        mCitys = new ArrayList<>(cityInfoArrayList.size());
+        mCounties = new ArrayList<>(cityInfoArrayList.size());
 
         ArrayList<String> citys;
         ArrayList<String> counties;
@@ -188,12 +188,12 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
             mProvinces.add(cityInfo.getName());
 
             citys = new ArrayList<>(cityInfo.getCityList().size());
-            countyList = new ArrayList<>();
+            countyList = new ArrayList<>(cityInfo.getCityList().size());
 
             for (CityInfo.CityListBeanX city : cityInfo.getCityList()) {
                 //市
                 citys.add(city.getName());
-                counties = new ArrayList<>();
+                counties = new ArrayList<>(city.getCityList().size());
                 for (CityInfo.CityListBeanX.CityListBean county : city.getCityList()) {
                     //区
                     counties.add(county.getName());
@@ -379,7 +379,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     }
 
     /**
-     * 上传收票地址
+     * 上传收票地址,只上传对应发票类型的数据
      */
     private void uploadNewAddress() {
         showLoadingDialog("正在保存");
@@ -388,20 +388,20 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 .params("company", getText(mCompanyName))
                 .params("companyPhone", getText(mCompanyTelephone))
                 .params("acceptPersonName", getText(mAcceptPersonName))
-                .params("acceptPersonTelephone", getText(mAcceptTelephone))
-                .params("acceptPersonEmail", getText(mAcceptEmail))
-                .params("acceptArea", getText(mAcceptArea))
-                .params("acceptAddress", getText(mAcceptDetailAddress))
-                .params("taxNumber", getText(mTaxNumber))
-                .params("bank", getText(mBank))
-                .params("bankNumber", getText(mBankNumber))
+                .params("acceptPersonTelephone", isTypeOne() ? "" : getText(mAcceptTelephone))
+                .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "")
+                .params("acceptArea", isTypeOne() ? "" : getText(mAcceptArea))
+                .params("acceptAddress", isTypeOne() ? "" : getText(mAcceptDetailAddress))
+                .params("taxNumber", isTypeThree() ? getText(mTaxNumber) : "")
+                .params("bank", isTypeThree() ? getText(mBank) : "")
+                .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "")
                 .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
                         dismmisLoadingDialog();
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.ADD_ACCEPT_ADDRESS, o.data);
-                        setResult(RESULT_OK,intent);
+                        setResult(RESULT_OK, intent);
                         finish();
                     }
 
@@ -425,6 +425,20 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
             default:
                 return "1";
         }
+    }
+
+    /**
+     * @return 发票类型为电子发票
+     */
+    private boolean isTypeOne() {
+        return getText(mTicketType).equals("电子");
+    }
+
+    /**
+     * @return 发票类型为专票
+     */
+    private boolean isTypeThree() {
+        return getText(mTicketType).equals("专票");
     }
 
 }
