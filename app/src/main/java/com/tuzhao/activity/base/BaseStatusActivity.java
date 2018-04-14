@@ -43,7 +43,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(resourceId());
+        setContentView(resourceId()==0?R.layout.activity_base_refresh_layout:resourceId());
         Toolbar toolbar = findViewById(R.id.base_tb);
         final ImageView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
         turnBackIv.setOnClickListener(new View.OnClickListener() {

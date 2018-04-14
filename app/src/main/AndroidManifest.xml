@@ -134,6 +134,7 @@
         <activity android:name=".activity.mine.AddAcceptTicketAddressActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:name=".activity.mine.ShareParkSpaceActivity" />
+        <activity android:name=".activity.mine.InvoiceSituationActivity" />
 
         <activity
             android:name=".activity.mine.ShareActivity"

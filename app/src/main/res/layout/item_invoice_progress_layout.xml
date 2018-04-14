@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/w0">
+
+    <ImageView
+        android:id="@+id/invoice_progress_company_iv_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@mipmap/ic_company"
+        app:layout_constraintBottom_toBottomOf="@+id/invoice_progress_company_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/invoice_progress_company_item" />
+
+    <TextView
+        android:id="@+id/invoice_progress_company_item"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@id/invoice_progress_company_iv_item"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/invoice_progress_type_item"
+        style="@style/TenTextY3Style"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/hollow_y3_6dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/invoice_progress_company_item"
+        app:layout_constraintStart_toEndOf="@+id/invoice_progress_company_item"
+        app:layout_constraintTop_toTopOf="@+id/invoice_progress_company_item" />
+
+    <TextView
+        android:id="@+id/invoice_progress_status_item"
+        style="@style/TwentyTextG6Style"
+        android:layout_width="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/invoice_progress_price_item"
+        app:layout_constraintStart_toStartOf="@id/invoice_progress_company_item"
+        app:layout_constraintTop_toBottomOf="@+id/invoice_progress_company_item" />
+
+    <TextView
+        android:id="@+id/invoice_progress_apply_item"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/invoice_progress_company_item" />
+
+    <TextView
+        android:id="@+id/invoice_progress_price_item"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@id/invoice_progress_apply_item"
+        app:layout_constraintTop_toBottomOf="@+id/invoice_progress_company_item" />
+
+</android.support.constraint.ConstraintLayout>
