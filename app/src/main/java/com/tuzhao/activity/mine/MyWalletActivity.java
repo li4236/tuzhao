@@ -22,7 +22,7 @@ public class MyWalletActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mywallet_layout);
+        setContentView(R.layout.activity_mywallet_refactory_layout);
 
         initView();//初始化控件
         initData();//初始化数据
@@ -32,7 +32,7 @@ public class MyWalletActivity extends BaseActivity {
 
     private void initView() {
 
-        imageview_back = (ImageView) findViewById(R.id.id_activity_mywallet_imageview_back);
+        imageview_back = findViewById(R.id.id_activity_mywallet_imageview_back);
         ((TextView) findViewById(R.id.id_activity_mywallet_layout_textview_yue)).setText(UserManager.getInstance().getUserInfo().getBalance());
     }
 
@@ -60,6 +60,13 @@ public class MyWalletActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MyWalletActivity.this, DiscountActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.id_activity_mywallet_layout_linearlayout_invoice_situation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyWalletActivity.this, InvoiceSituationActivity.class));
             }
         });
 
