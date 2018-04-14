@@ -22,7 +22,7 @@ public class MyWalletActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mywallet_refactory_layout);
+        setContentView(R.layout.activity_mywallet_layout);
 
         initView();//初始化控件
         initData();//初始化数据
