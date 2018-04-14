@@ -37,6 +37,11 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     private static final int REQUEST_CODE = 0x233;
 
     /**
+     * 修改发票地址的位置
+     */
+    private int mChangeAddressPosition;
+
+    /**
      * 默认收票地址的位置，用于选择别的收票地址为默认时把上一次的默认取消
      */
     private int mDefalutAddressPosition = -1;
@@ -172,14 +177,21 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                 });
     }
 
+    /**
+     * 删除收票地址
+     */
     private void notifyAddressDelete(String ticketId) {
-        for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
+        int position = 0;
+        for (int i = 0, size = mCommonAdapter.getData().size(); i < size; i++) {
             if (mCommonAdapter.getData().get(i).getTicketId().equals(ticketId)) {
+                position = i;
                 if (mCommonAdapter.getData().get(i).getIsDefault().equals("1")) {
                     mDefalutAddressPosition = -1;
                 }
+                break;
             }
         }
+        mCommonAdapter.getData().remove(position);
         mCommonAdapter.notifyDataSetChanged();
         if (mCommonAdapter.getData().isEmpty()) {
             mRecyclerView.showEmpty(null);
@@ -225,10 +237,12 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
             }
         });
 
+        //修改收票地址
         holder.getView(R.id.accept_ticket_address_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mChangeAddressPosition = position;
+                startActivityForResult(AddAcceptTicketAddressActivity.class, REQUEST_CODE, ConstansUtil.CHAGNE_ACCEPT_ADDRESS, acceptTicketAddressInfo);
             }
         });
 
@@ -267,8 +281,11 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS) != null) {
-                mCommonAdapter.addData((AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS));
+            AcceptTicketAddressInfo addressInfo;
+            if ((addressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS)) != null) {
+                mCommonAdapter.addData(addressInfo);
+            } else if ((addressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS)) != null) {
+                mCommonAdapter.notifyDataChange(mChangeAddressPosition, addressInfo);
             }
         }
     }

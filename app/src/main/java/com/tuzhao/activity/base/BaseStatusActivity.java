@@ -229,6 +229,20 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivityForResult(intent, requestCode);
     }
 
+    protected void startActivityForResult(Class<?> tClass, int requestCode,String key,String value) {
+        Intent intent = new Intent(this, tClass);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
+        intent.putExtra(key, value);
+        startActivityForResult(intent, requestCode);
+    }
+
+    protected void startActivityForResult(Class<?> tClass, int requestCode,String key,Serializable value) {
+        Intent intent = new Intent(this, tClass);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
+        intent.putExtra(key, value);
+        startActivityForResult(intent, requestCode);
+    }
+
     protected void showSecondToast(String msg) {
         MyToast.showToast(this, msg, 2);
     }

@@ -30,6 +30,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/30.
+ * <p>
+ * 新建收票地址和修改收票地址
+ * </p>
  */
 
 public class AddAcceptTicketAddressActivity extends BaseStatusActivity implements View.OnClickListener {
@@ -74,6 +77,8 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     private OptionsPickerView<String> mCityOption;
 
+    private AcceptTicketAddressInfo mAddressInfo;
+
     @Override
 
     protected int resourceId() {
@@ -82,6 +87,8 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mAddressInfo = (AcceptTicketAddressInfo) getIntent().getSerializableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS);
+
         mTicketType = findViewById(R.id.ticket_type);
         mCompanyName = findViewById(R.id.company_name);
         mCompanyTelephone = findViewById(R.id.company_telephone);
@@ -100,12 +107,15 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
         mTicketType.setOnClickListener(this);
         mAcceptArea.setOnClickListener(this);
-        findViewById(R.id.save_accept_ticket_address).setOnClickListener(this);
+        TextView saveTicketAddress = findViewById(R.id.save_accept_ticket_address);
+        saveTicketAddress.setText(mAddressInfo == null ? "新建收票地址" : "保存修改");
+        saveTicketAddress.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
         super.initData();
+        setTicketValue();
         initTicketTypes();
         initCityOption();
         dismmisLoadingDialog();
@@ -114,7 +124,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     @NonNull
     @Override
     protected String title() {
-        return "新建收票地址";
+        return mAddressInfo == null ? "修改收票地址" : "新建收票地址";
     }
 
     @Override
@@ -134,9 +144,46 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                     closeKeyboard();
                     mTicketTypeOption.show();
                 } else if (allNoEmpty()) {
-                    uploadNewAddress();
+                    if (mAddressInfo == null) {
+                        uploadNewAddress();
+                    } else {
+                        changeTicketAddress();
+                    }
                 }
                 break;
+        }
+    }
+
+    /**
+     * 如果是修改收票地址则把对应的值显示出来
+     */
+    private void setTicketValue() {
+        if (mAddressInfo != null) {
+            mTicketType.setText(mAddressInfo.getType());
+            mCompanyName.setText(mAddressInfo.getCompany());
+            mCompanyTelephone.setText(mAddressInfo.getCompanyPhone());
+            mAcceptPersonName.setText(mAddressInfo.getAcceptPersonName());
+            mCompanyName.setSelection(mCompanyName.getText().length());
+
+            switch (mAddressInfo.getType()) {
+                case "电子":
+                    mAcceptEmail.setText(mAddressInfo.getAcceptPersonEmail());
+                    showEmail();
+                    break;
+                case "专票":
+                    mTaxNumber.setText(mAddressInfo.getTaxNumber());
+                    mBank.setText(mAddressInfo.getBank());
+                    mBankNumber.setText(mAddressInfo.getBankNumber());
+                case "普票":
+                    mAcceptTelephone.setText(mAddressInfo.getAcceptPersonTelephone());
+                    mAcceptArea.setText(mAddressInfo.getAcceptArea());
+                    mAcceptDetailAddress.setText(mAddressInfo.getAcceptAddress());
+                    showAddress();
+                    break;
+            }
+            if (mAddressInfo.getType().equals("专票")) {
+                showBank();
+            }
         }
     }
 
@@ -401,6 +448,45 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                         dismmisLoadingDialog();
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.ADD_ACCEPT_ADDRESS, o.data);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        if (!handleException(e)) {
+                            showFiveToast(e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 上传修改后的收票地址,只上传对应发票类型的数据
+     */
+    private void changeTicketAddress() {
+        showLoadingDialog("正在修改");
+        getOkGo(HttpConstants.changeAcceptTicketAddress)
+                .params("ticketId", mAddressInfo.getTicketId())
+                .params("type", getType())
+                .params("company", getText(mCompanyName))
+                .params("companyPhone", getText(mCompanyTelephone))
+                .params("acceptPersonName", getText(mAcceptPersonName))
+                .params("acceptPersonTelephone", isTypeOne() ? "" : getText(mAcceptTelephone))
+                .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "")
+                .params("acceptArea", isTypeOne() ? "" : getText(mAcceptArea))
+                .params("acceptAddress", isTypeOne() ? "" : getText(mAcceptDetailAddress))
+                .params("taxNumber", isTypeThree() ? getText(mTaxNumber) : "")
+                .params("bank", isTypeThree() ? getText(mBank) : "")
+                .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "")
+                .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS, o.data);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

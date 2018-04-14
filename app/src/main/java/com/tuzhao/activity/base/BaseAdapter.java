@@ -186,6 +186,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         notifyItemInserted(size + getHeadViewCount());
     }
 
+    public void notifyDataChange(int changeDataPosition, T newData) {
+        mData.set(changeDataPosition, newData);
+        notifyItemChanged(changeDataPosition);
+    }
+
     /**
      * if you use clickListener you should call this method
      */

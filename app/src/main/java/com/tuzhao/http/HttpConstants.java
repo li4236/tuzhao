@@ -372,6 +372,11 @@ public class HttpConstants {
     public static String addAcceptTicketAddress = ROOT_URL + "addAcceptTicketAddress";
 
     /**
+     * 修改收票地址
+     */
+    public static String changeAcceptTicketAddress = ROOT_URL + "changeAcceptTicketAddress";
+
+    /**
      * 获取收票地址
      */
     public static String getAcceptTicketAddress = ROOT_URL + "getAcceptTicketAddress";

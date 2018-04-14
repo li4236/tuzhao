@@ -18,9 +18,14 @@ public class ConstansUtil {
     public static final String ACCEPT_ADDRESS_INFO = "AcceptAddressInfo";
 
     /**
-     *返回新建的收票地址给收票地址
+     * 返回新建的收票地址给收票地址
      */
     public static final String ADD_ACCEPT_ADDRESS = "AddAcceptAddress";
+
+    /**
+     * 修改收票地址
+     */
+    public static final String CHAGNE_ACCEPT_ADDRESS = "ChangeAcceptAddress";
 
     /**
      * activity返回给上个activity的结果的key
