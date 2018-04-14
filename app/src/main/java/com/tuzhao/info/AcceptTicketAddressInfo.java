@@ -10,7 +10,7 @@ public class AcceptTicketAddressInfo extends BaseInfo {
 
     private String ticketId;
 
-    //发票类型：电子，普票，专票  （非空）
+    //发票类型：电子(1)，普票(2)，专票(3)  （非空）
     private String type;
 
     //公司名称（非空）
@@ -44,7 +44,7 @@ public class AcceptTicketAddressInfo extends BaseInfo {
     private String bankNumber;
 
     //是否是默认收票地址（0：不是，1：是）
-    private String isDefault;
+    private String isDefault = "0";
 
     public String getTicketId() {
         return ticketId;
@@ -55,7 +55,15 @@ public class AcceptTicketAddressInfo extends BaseInfo {
     }
 
     public String getType() {
-        return type;
+        switch (type) {
+            case "1":
+                return "电子";
+            case "2":
+                return "普票";
+            case "3":
+                return "专票";
+        }
+        return "电子";
     }
 
     public void setType(String type) {

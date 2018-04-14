@@ -10,9 +10,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseCallback;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.AcceptTicketAddressInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -29,7 +29,17 @@ import okhttp3.Response;
 
 public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicketAddressInfo> {
 
+    /**
+     * 是否需要传选中的收票地址给确认订单
+     */
     private boolean mIsForResult;
+
+    private static final int REQUEST_CODE = 0x233;
+
+    /**
+     * 默认收票地址的位置，用于选择别的收票地址为默认时把上一次的默认取消
+     */
+    private int mDefalutAddressPosition = -1;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -41,7 +51,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         findViewById(R.id.accept_ticket_address_add_address).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AddAcceptTicketAddressActivity.class);
+                startActivityForResult(AddAcceptTicketAddressActivity.class, REQUEST_CODE);
             }
         });
 
@@ -54,19 +64,32 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
 
     @Override
     protected void loadData() {
-        requestData(HttpConstants.getAcceptTicketAddress, new BaseCallback<Base_Class_List_Info<AcceptTicketAddressInfo>>() {
-            @Override
-            public void onSuccess(Base_Class_List_Info<AcceptTicketAddressInfo> acceptTicketAddressInfoBase_class_list_info, Call call, Response response) {
+        getOkgo(HttpConstants.getAcceptTicketAddress)
+                .execute(new JsonCallback<Base_Class_List_Info<AcceptTicketAddressInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
+                        loadDataSuccess(o);
+                    }
 
-            }
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        loadDataFail(e, new LoadFailCallback() {
+                            @Override
+                            public void onLoadFail(Exception e) {
 
-            @Override
-            public void onError(Call call, Response response, Exception e) {
-
-            }
-        });
+                            }
+                        });
+                    }
+                });
     }
 
+    /**
+     * 设置是否是默认的收票地址
+     *
+     * @param ticketId  要设置的收票地址id
+     * @param isDefault 1：默认    0：取消默认
+     */
     private void setDefaultAddress(final String ticketId, final String isDefault) {
         showLoadingDialog();
         getOkgo(HttpConstants.setDefaultAcceptTicketAddress)
@@ -75,11 +98,11 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
-                        notifyDefaultAddressChange(ticketId);
                         if (isDefault.equals("0")) {
-                            showFiveToast("设置默认地址成功");
+                            notifyLastDefaultAddressChange();
+                            mDefalutAddressPosition = -1;
                         } else {
-                            showFiveToast("取消默认地址成功");
+                            notifyDefaultAddressChange(ticketId);
                         }
                         dismmisLoadingDialog();
                     }
@@ -91,23 +114,45 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                             if (isDefault.equals("0")) {
                                 showFiveToast("取消默认地址失败，请稍后重试");
                             } else {
-                                showFiveToast("设置默认地址成功，请稍后重试");
+                                showFiveToast("设置默认地址失败，请稍后重试");
                             }
                         }
                     }
                 });
     }
 
+    /**
+     * 把上次的默认地址取消并显示新的默认地址
+     *
+     * @param ticketId 新的地址的id
+     */
     private void notifyDefaultAddressChange(String ticketId) {
         for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
             if (mCommonAdapter.getData().get(i).getTicketId().equals(ticketId)) {
-                mCommonAdapter.getData().get(i).setIsDefault(ticketId.equals("0") ? "1" : "0");
+                mCommonAdapter.getData().get(i).setIsDefault("1");
+                notifyLastDefaultAddressChange();
+                mDefalutAddressPosition = i;
                 mCommonAdapter.notifyItemChanged(i);
                 break;
             }
         }
     }
 
+    /**
+     * 把上次的默认地址取消
+     */
+    private void notifyLastDefaultAddressChange() {
+        if (mDefalutAddressPosition != -1) {
+            mCommonAdapter.getData().get(mDefalutAddressPosition).setIsDefault("0");
+            mCommonAdapter.notifyItemChanged(mDefalutAddressPosition);
+        }
+    }
+
+    /**
+     * 删除收票地址
+     *
+     * @param ticketId 需要删除的收票地址的id
+     */
     private void deleteAddress(final String ticketId) {
         getOkgo(HttpConstants.deleteAcceptTicketAddress)
                 .params("ticketId", ticketId)
@@ -130,8 +175,14 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     private void notifyAddressDelete(String ticketId) {
         for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
             if (mCommonAdapter.getData().get(i).getTicketId().equals(ticketId)) {
-                mCommonAdapter.notifyRemoveData(i);
+                if (mCommonAdapter.getData().get(i).getIsDefault().equals("1")) {
+                    mDefalutAddressPosition = -1;
+                }
             }
+        }
+        mCommonAdapter.notifyDataSetChanged();
+        if (mCommonAdapter.getData().isEmpty()) {
+            mRecyclerView.showEmpty(null);
         }
     }
 
@@ -142,14 +193,24 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
 
     @Override
     protected void bindData(BaseViewHolder holder, final AcceptTicketAddressInfo acceptTicketAddressInfo, final int position) {
+        if (acceptTicketAddressInfo.getType().equals("电子")) {
+            holder.getView(R.id.accept_ticket_address_telephone).setVisibility(View.GONE);
+        } else {
+            holder.setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getAcceptPersonTelephone());
+        }
+
         String address = acceptTicketAddressInfo.getType().equals("电子") ? acceptTicketAddressInfo.getAcceptPersonEmail() :
                 acceptTicketAddressInfo.getAcceptArea() + acceptTicketAddressInfo.getAcceptAddress();
+        if (acceptTicketAddressInfo.getIsDefault().equals("1")) {
+            mDefalutAddressPosition = position;
+        }
+
         holder.setText(R.id.accept_ticket_address_name, acceptTicketAddressInfo.getAcceptPersonName())
-                .setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getAcceptPersonTelephone())
                 .setText(R.id.accept_ticket_address_type, acceptTicketAddressInfo.getType())
                 .setText(R.id.accept_ticket_address_address, address)
                 .setCheckboxCheck(R.id.accept_ticket_address_set_default, acceptTicketAddressInfo.getIsDefault().equals("1"));
 
+        //根据选择状态来设置默认的收票地址
         ((CheckBox) holder.getView(R.id.accept_ticket_address_set_default)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -157,11 +218,9 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                         && !mRecyclerView.getRecyclerView().isComputingLayout()) {
                     if (isChecked) {
                         setDefaultAddress(acceptTicketAddressInfo.getTicketId(), "1");
-                        acceptTicketAddressInfo.setIsDefault("1");
                     } else if (acceptTicketAddressInfo.getTicketId().equals("1")) {
                         setDefaultAddress(acceptTicketAddressInfo.getTicketId(), "0");
                     }
-                    mCommonAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -169,18 +228,14 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         holder.getView(R.id.accept_ticket_address_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteAddress(acceptTicketAddressInfo.getTicketId());
+
             }
         });
 
         holder.getView(R.id.accept_ticket_address_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCommonAdapter.getData().remove(position);
-                mCommonAdapter.notifyDataSetChanged();
-                if (mCommonAdapter.getData().isEmpty()) {
-                    mRecyclerView.showEmpty(null);
-                }
+                deleteAddress(acceptTicketAddressInfo.getTicketId());
             }
         });
 
@@ -206,6 +261,16 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     @Override
     protected String title() {
         return "收票地址";
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS) != null) {
+                mCommonAdapter.addData((AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS));
+            }
+        }
     }
 
 }

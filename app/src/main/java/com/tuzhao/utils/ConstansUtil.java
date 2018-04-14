@@ -12,8 +12,19 @@ public class ConstansUtil {
 
     public static final String INVOICE_LIST = "InvoiceList";
 
+    /**
+     * 返回收票地址给确认订单
+     */
     public static final String ACCEPT_ADDRESS_INFO = "AcceptAddressInfo";
 
+    /**
+     *返回新建的收票地址给收票地址
+     */
+    public static final String ADD_ACCEPT_ADDRESS = "AddAcceptAddress";
+
+    /**
+     * activity返回给上个activity的结果的key
+     */
     public static final String FOR_REQUEST_RESULT = "ForRequestResult";
 
 }

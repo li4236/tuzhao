@@ -3,12 +3,14 @@ package com.tuzhao.activity.base;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.callback.JsonListCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
@@ -121,9 +123,10 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      */
     protected void requestData(String url, final BaseCallback<Base_Class_List_Info<T>> callback) {
         getOkgo(url)
-                .execute(new JsonCallback<Base_Class_List_Info<T>>() {
+                .execute(new JsonListCallback<Base_Class_List_Info<T>, T>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
+                        Log.e(TAG, "onSuccess: " + t);
                         mRecyclerView.showData();
                         if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
                             mCommonAdapter.clearAll();
@@ -158,6 +161,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                 .execute(new JsonCallback<Base_Class_List_Info<T>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
+                        Log.e(TAG, "onSuccess: " + t);
                         mRecyclerView.showData();
                         if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
                             mCommonAdapter.clearAll();
@@ -178,6 +182,24 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                         }
                     }
                 });
+    }
+
+    protected void loadDataSuccess(Base_Class_List_Info<T> base_class_list_info) {
+        mRecyclerView.showData();
+        if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
+            mCommonAdapter.clearAll();
+        }
+        mCommonAdapter.addData(base_class_list_info.data);
+        stopLoadStatus();
+        increateStartItem();
+        dismmisLoadingDialog();
+    }
+
+    protected void loadDataFail(Exception e, LoadFailCallback callback) {
+        showEmpty();
+        if (!handleException(e)) {
+            callback.onLoadFail(e);
+        }
     }
 
     protected void increateStartItem() {

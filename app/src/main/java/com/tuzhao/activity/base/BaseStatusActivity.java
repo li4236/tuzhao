@@ -211,7 +211,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    protected void startActivity(Class<?> tClass, String key, ArrayList<? extends Parcelable> data) {
+    protected void startActivityWithList(Class<?> tClass, String key, ArrayList<? extends Parcelable> data) {
         Intent intent = new Intent(this, tClass);
         intent.putParcelableArrayListExtra(key, data);
         startActivity(intent);
@@ -240,6 +240,13 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected void showFiveToast(String msg) {
         MyToast.showToast(this, msg, 5);
+    }
+
+    /**
+     * @return textView里面的字符串
+     */
+    protected String getText(TextView textView) {
+        return textView.getText().toString();
     }
 
 }

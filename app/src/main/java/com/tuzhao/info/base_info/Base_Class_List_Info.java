@@ -12,4 +12,13 @@ public class Base_Class_List_Info<T> extends BaseInfo {
     public String code;
     public String time;
     public ArrayList<T> data;
+
+    @Override
+    public String toString() {
+        return "Base_Class_List_Info{" +
+                "code='" + code + '\'' +
+                ", time='" + time + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

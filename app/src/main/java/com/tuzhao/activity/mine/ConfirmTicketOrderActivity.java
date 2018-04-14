@@ -179,7 +179,15 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         } else {
             mCompany.setText(mAddressInfo.getCompany());
             mName.setText(mAddressInfo.getAcceptPersonName());
-            mTelephone.setText(mAddressInfo.getAcceptPersonTelephone() == null ? "" : mAddressInfo.getAcceptPersonTelephone());
+            if (mAddressInfo.getAcceptPersonTelephone() == null) {
+                mTelephone.setVisibility(View.GONE);
+            } else {
+                if (mTelephone.getVisibility() != View.VISIBLE) {
+                    mTelephone.setVisibility(View.VISIBLE);
+                }
+                mTelephone.setText(mAddressInfo.getAcceptPersonTelephone());
+            }
+
             mType.setText(mAddressInfo.getType());
             String address;
             if (mAddressInfo.getType().equals("电子")) {
@@ -215,9 +223,10 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                         super.onError(call, response, e);
                         if (mAddressInfo.getType().equals("电子")) {
                             Calendar calendar = Calendar.getInstance();
-                            String arriveTime = (calendar.get(Calendar.MONTH) + 1) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "（今天）";
+                            String arriveTime = (calendar.get(Calendar.MONTH) + 1) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日(今天)";
                             mArriveDate.setText(arriveTime);
                         } else if (!handleException(e)) {
+                            mArriveDate.setText("尽快");
                             showFiveToast("获取预计到达时间失败，但我们会尽快为您发货");
                         }
                     }

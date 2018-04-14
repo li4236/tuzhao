@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
@@ -66,7 +67,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 } else if (calculateTotalPrice() <= 100) {
                     showFiveToast("订单总额大于100才可以开票哦");
                 } else {
-                    startActivity(ConfirmTicketOrderActivity.class, ConstansUtil.INVOICE_LIST, mChooseInvoice);
+                    startActivityWithList(ConfirmTicketOrderActivity.class, ConstansUtil.INVOICE_LIST, mChooseInvoice);
                 }
             }
         });
@@ -79,35 +80,22 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     @Override
     protected void loadData() {
-        /*requestData(HttpConstants.getInvoice, new BaseCallback<Base_Class_List_Info<InvoiceInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_List_Info<InvoiceInfo> invoiceInfoBase_class_list_info, Call call, Response response) {
-
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-
-                    }
-                });*/
         getOkgo(HttpConstants.getInvoice)
                 .execute(new JsonCallback<Base_Class_List_Info<InvoiceInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InvoiceInfo> datas, Call call, Response response) {
-                        mCommonAdapter.addData(datas.data);
-                        setTotalPrice();
-                        stopLoadStatus();
-                        increateStartItem();
-                        dismmisLoadingDialog();
+                       loadDataSuccess(datas);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        showEmpty();
-                        if (!handleException(e)) {
+                        loadDataFail(e, new LoadFailCallback() {
+                            @Override
+                            public void onLoadFail(Exception e) {
 
-                        }
+                            }
+                        });
                     }
                 });
     }

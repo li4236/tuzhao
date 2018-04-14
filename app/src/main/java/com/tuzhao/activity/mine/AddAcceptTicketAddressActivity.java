@@ -1,6 +1,7 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -10,15 +11,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.AcceptTicketAddressInfo;
 import com.tuzhao.info.CityInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.CityUtil;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -306,7 +308,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         } else if (isEmpty(mAcceptDetailAddress)) {
             showToast(mAcceptDetailAddress);
             return false;
-        } else if (DateUtil.isPhoneNumble(getText(mAcceptTelephone))) {
+        } else if (!DateUtil.isPhoneNumble(getText(mAcceptTelephone))) {
             showFiveToast("手机号码不正确哦");
             return false;
         }
@@ -381,96 +383,37 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
      */
     private void uploadNewAddress() {
         showLoadingDialog("正在保存");
-        switch (getText(mTicketType)) {
-            case "电子":
-                uploadElectronicAddress();
-                break;
-            case "普票":
-                uploadNormalAddress();
-                break;
-            case "专票":
-                uploadSpecialAddress();
-                break;
-        }
-
-    }
-
-    /**
-     * 上传地址收票地址
-     */
-    private void uploadElectronicAddress() {
-        getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        uploadSuccess();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            showFiveToast("新建收票地址失败，请稍后重试");
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 上传普票收票地址
-     */
-    private void uploadNormalAddress() {
-        getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
-                .params("acceptArea", getText(mAcceptArea))
-                .params("acceptAddress", getText(mAcceptDetailAddress))
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        uploadSuccess();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            showFiveToast("新建收票地址失败，请稍后重试");
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 上传专票收票地址
-     */
-    private void uploadSpecialAddress() {
-        getCommonOkgo().params("acceptPersonTelephone", getText(mAcceptTelephone))
+        getOkGo(HttpConstants.addAcceptTicketAddress)
+                .params("type", getType())
+                .params("company", getText(mCompanyName))
+                .params("companyPhone", getText(mCompanyTelephone))
+                .params("acceptPersonName", getText(mAcceptPersonName))
+                .params("acceptPersonTelephone", getText(mAcceptTelephone))
+                .params("acceptPersonEmail", getText(mAcceptEmail))
                 .params("acceptArea", getText(mAcceptArea))
                 .params("acceptAddress", getText(mAcceptDetailAddress))
                 .params("taxNumber", getText(mTaxNumber))
                 .params("bank", getText(mBank))
                 .params("bankNumber", getText(mBankNumber))
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        uploadSuccess();
+                    public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.ADD_ACCEPT_ADDRESS, o.data);
+                        setResult(RESULT_OK,intent);
+                        finish();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        dismmisLoadingDialog();
                         if (!handleException(e)) {
-                            showFiveToast("新建收票地址失败，请稍后重试");
+                            showFiveToast(e.getMessage());
                         }
                     }
                 });
-    }
-
-    private BaseRequest getCommonOkgo() {
-        return getOkGo(HttpConstants.addAcceptTicketAddress)
-                .params("type", getType())
-                .params("company", getText(mCompanyName))
-                .params("companyPhone", getText(mCompanyTelephone))
-                .params("acceptPersonName", getText(mAcceptPersonName));
     }
 
     private String getType() {
@@ -482,16 +425,6 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
             default:
                 return "1";
         }
-    }
-
-    private String getText(TextView textView) {
-        return textView.getText().toString();
-    }
-
-    private void uploadSuccess() {
-        dismmisLoadingDialog();
-        showFiveToast("新建收票地址成功");
-        finish();
     }
 
 }

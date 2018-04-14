@@ -91,6 +91,21 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.actualFee = actualFee;
     }
 
+
+    @Override
+    public String toString() {
+        return "InvoiceInfo{" +
+                "orderId='" + orderId + '\'' +
+                ", parkspaceName='" + parkspaceName + '\'' +
+                ", parkStarttime='" + parkStarttime + '\'' +
+                ", pictures='" + pictures + '\'' +
+                ", check='" + check + '\'' +
+                ", parkspaceAddress='" + parkspaceAddress + '\'' +
+                ", parkDuration='" + parkDuration + '\'' +
+                ", actualFee='" + actualFee + '\'' +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;

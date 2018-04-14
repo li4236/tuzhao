@@ -112,30 +112,37 @@
                     android:background="@drawable/hollow_y3_6dp"
                     android:paddingEnd="6dp"
                     android:paddingStart="6dp"
-                    app:layout_constraintBottom_toBottomOf="@id/confirm_ticket_order_telephone"
-                    app:layout_constraintStart_toEndOf="@id/confirm_ticket_order_telephone"
-                    app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_telephone" />
+                    app:layout_constraintBottom_toBottomOf="@+id/confirm_ticket_order_name"
+                    app:layout_constraintStart_toEndOf="@+id/confirm_ticket_order_telephone"
+                    app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_name" />
 
                 <ImageView
                     android:id="@+id/confirm_ticket_order_address_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:contentDescription="@string/picture_description"
                     android:src="@mipmap/ic_gps"
-                    app:layout_constraintBottom_toBottomOf="@+id/confirm_ticket_order_address"
                     app:layout_constraintStart_toStartOf="@id/confirm_ticket_order_company_iv"
-                    app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_address" />
+                    app:layout_constraintTop_toBottomOf="@+id/confirm_ticket_order_name" />
 
                 <TextView
                     android:id="@+id/confirm_ticket_order_address"
-                    style="@style/TwentyTextB1Style"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="16dp"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:ellipsize="end"
+                    android:gravity="start|top"
+                    android:maxLines="2"
+                    android:paddingBottom="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/confirm_ticket_order_address_right"
                     app:layout_constraintStart_toStartOf="@id/confirm_ticket_order_name"
-                    app:layout_constraintTop_toBottomOf="@+id/confirm_ticket_order_name" />
+                    app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_address_iv" />
 
                 <ImageView
+                    android:id="@+id/confirm_ticket_order_address_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"

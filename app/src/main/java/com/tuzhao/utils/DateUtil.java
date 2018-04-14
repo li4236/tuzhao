@@ -347,7 +347,7 @@ public class DateUtil {
      * @param lowFee        0.0
      * @return
      */
-    public ParkFee countCost(String startParkTime, String endParkTime, String lastLeaveTime, String highStartTime, String highDndTime, String highFee, String lowFee , String fine) {
+    public ParkFee countCost(String startParkTime, String endParkTime, String lastLeaveTime, String highStartTime, String highDndTime, String highFee, String lowFee, String fine) {
 
         try {
             int highStartHour, highEndHour, highStartMin, highEndMin;
@@ -368,7 +368,8 @@ public class DateUtil {
             calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 2);
             hjFeiTongTime = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);//后一天
 
-            int sw = 0;boolean isOuttime = false;
+            int sw = 0;
+            boolean isOuttime = false;
 
             if (compareTwoTime(endParkTime, lastLeaveTime, true)) {
                 //未超时
@@ -449,11 +450,11 @@ public class DateUtil {
                         }
                         Log.e("开始时间在高峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
                         float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime){
+                        if (isOuttime) {
                             float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, (float)(Math.round(outfee*100))/100);
-                        }else {
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, 0);
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
+                        } else {
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
                         }
                     } else if (betweenStartAndEnd(startParkTime, hjFeiTongQTime + " " + highDndTime, hjTongTime + " " + highStartTime)) {
                         //开始时间在前一天到当天的低峰时段内
@@ -494,11 +495,11 @@ public class DateUtil {
                         }
                         Log.e("开始时间在前一天到当天的低峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
                         float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime){
+                        if (isOuttime) {
                             float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, (float)(Math.round(outfee*100))/100);
-                        }else {
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, 0);
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
+                        } else {
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
                         }
                     } else if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highDndTime, hjFeiTongTime + " " + highStartTime)) {
                         //开始时间在当天到后一天的高峰时段内
@@ -539,11 +540,11 @@ public class DateUtil {
                         }
                         Log.e("开始时间在当天到后一天的低峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
                         float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime){
+                        if (isOuttime) {
                             float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, (float)(Math.round(outfee*100))/100);
-                        }else {
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, 0);
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
+                        } else {
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
                         }
                     }
                 case 2:
@@ -587,11 +588,11 @@ public class DateUtil {
                         }
                         Log.e("开始时间在前一天到当天的高峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
                         float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime){
+                        if (isOuttime) {
                             float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, (float)(Math.round(outfee*100))/100);
-                        }else {
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, 0);
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
+                        } else {
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
                         }
                     } else if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highStartTime, hjFeiTongTime + " " + highDndTime)) {
                         //开始时间在当天到后一天的高峰时段内
@@ -632,11 +633,11 @@ public class DateUtil {
                         }
                         Log.e("开始时间在当天到后一天的高峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
                         float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime){
+                        if (isOuttime) {
                             float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, (float)(Math.round(outfee*100))/100);
-                        }else {
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, 0);
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
+                        } else {
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
                         }
                     } else if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highDndTime, hjTongTime + " " + highStartTime)) {
                         //开始时间在当天的低峰时段内
@@ -677,11 +678,11 @@ public class DateUtil {
                         }
                         Log.e("开始时间在当天的低峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
                         float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime){
+                        if (isOuttime) {
                             float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, (float)(Math.round(outfee*100))/100);
-                        }else {
-                            return new ParkFee((float)(Math.round(parkfee*100))/100, 0);
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
+                        } else {
+                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
                         }
                     }
                     break;
@@ -757,10 +758,17 @@ public class DateUtil {
 //		Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
 //		Matcher m = p.matcher(phone_numble);
 //		return m.matches();
-        String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
+       /* String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
         Pattern p = Pattern.compile(regExp);
-        Matcher m = p.matcher(phone_numble);
-        return m.matches();
+        Matcher m = p.matcher(phone_numble);*/
+        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+        if (phone_numble.length() != 11) {
+            return false;
+        } else {
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(phone_numble);
+            return m.matches();
+        }
     }
 
     public static boolean isEmail(String string) {
