@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/base_tb"
@@ -14,6 +14,237 @@
         style="@style/dividerStyle"
         app:layout_constraintTop_toBottomOf="@+id/base_tb" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0">
+
+            <ImageView
+                android:id="@+id/invoice_detail_status_bg"
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:background="@drawable/start_b3_end_b4_bg"
+                android:contentDescription="@string/picture_description"
+                android:theme="@style/TranslucentTheme"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:background="@drawable/ic_wave"
+                android:contentDescription="@string/picture_description"
+                app:layout_constraintBottom_toBottomOf="@+id/invoice_detail_status_bg" />
+
+            <TextView
+                android:id="@+id/invoice_detail_status_tv"
+                style="@style/ThirtyTextW0Style"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="25dp"
+                android:drawablePadding="7dp"
+                android:drawableStart="@mipmap/ic_sendout"
+                android:text="已发出"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/ElevenTextW0Style"
+                android:layout_marginTop="10dp"
+                android:text="敬请留意近期快递电话、邮件"
+                android:id="@+id/invoice_detail_status_description"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_status_tv"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_status_tv" />
+
+            <View
+                android:id="@+id/invoice_detail_status_bg_divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/w5"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_status_bg" />
+
+            <TextView
+                android:id="@+id/invoice_detail_company"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:paddingTop="15dp"
+                android:text="天之力新能源科技有限公司"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_status_bg_divider" />
+
+            <TextView
+                android:id="@+id/invoice_detail_name"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginTop="14dp"
+                android:text="钟某人"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_company" />
+
+            <TextView
+                android:id="@+id/invoice_detail_telephone"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/invoice_detail_name"
+                app:layout_constraintStart_toEndOf="@id/invoice_detail_name"
+                app:layout_constraintTop_toTopOf="@+id/invoice_detail_name" />
+
+            <TextView
+                android:id="@+id/invoice_detail_address"
+                style="@style/TenTextG6Stytle"
+                android:layout_marginTop="14dp"
+                android:gravity="top"
+                android:paddingBottom="15dp"
+                android:text="中山天之力"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_name"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_name" />
+
+            <View
+                android:id="@+id/invoice_detail_address_divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/w5"
+                android:theme="@style/TranslucentTheme"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_address" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_detail_tv"
+                style="@style/ThirtyTextB1Style"
+                android:paddingTop="11dp"
+                android:text="开票详情"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_address_divider" />
+
+            <View
+                android:id="@+id/invoice_detail_detail_divider"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="11dp"
+                android:background="#d8d8d8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_ticket_detail_tv" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_content"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="12dp"
+                android:text="发票内容"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_detail_divider" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_content_tv"
+                style="@style/ThirtyTextB1Style"
+                app:layout_constraintBottom_toBottomOf="@+id/invoice_detail_ticket_content"
+                app:layout_constraintEnd_toEndOf="@id/invoice_detail_detail_divider" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_type"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="10dp"
+                android:text="发票类型"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_ticket_content" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_type_tv"
+                style="@style/ThirtyTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/invoice_detail_detail_divider"
+                app:layout_constraintTop_toTopOf="@+id/invoice_detail_ticket_type" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_rise"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="10dp"
+                android:text="发票抬头"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_ticket_type" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_rise_tv"
+                style="@style/ThirtyTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/invoice_detail_detail_divider"
+                app:layout_constraintTop_toTopOf="@+id/invoice_detail_ticket_rise" />
+
+            <TextView
+                android:id="@+id/invoice_detail_taxpayer_number"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="10dp"
+                android:text="纳税人识别号"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_ticket_rise" />
+
+            <TextView
+                android:id="@+id/invoice_detail_taxpayer_number_tv"
+                style="@style/ThirtyTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/invoice_detail_detail_divider"
+                app:layout_constraintTop_toTopOf="@+id/invoice_detail_taxpayer_number" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_price"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="15dp"
+                android:text="发票金额"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_taxpayer_number" />
+
+            <TextView
+                android:id="@+id/invoice_detail_ticket_price_tv"
+                style="@style/ThirtyTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/invoice_detail_detail_divider"
+                app:layout_constraintTop_toTopOf="@+id/invoice_detail_ticket_price" />
+
+            <View
+                android:id="@+id/invoice_detail_ticket_price_divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/w5"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_ticket_price" />
+
+            <TextView
+                android:id="@+id/invoice_detail_logistics_status"
+                style="@style/ThirtyTextB1Style"
+                android:paddingTop="11dp"
+                android:text="物流状态"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_ticket_price_divider" />
+
+            <View
+                android:id="@+id/invoice_detail_logistics_status_divider"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="11dp"
+                android:background="#d8d8d8"
+                android:theme="@style/TranslucentTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_logistics_status" />
+
+            <TextView
+                android:id="@+id/invoice_detail_courier_number"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="12dp"
+                android:text="快递单号："
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_logistics_status_divider" />
+
+            <TextView
+                android:id="@+id/invoice_detail_dilivery_date"
+                style="@style/TwentyTextG6Style"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="15dp"
+                android:text="发货时间："
+                app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_courier_number" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

@@ -98,11 +98,11 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (holder instanceof AppointParkViewHolder) {
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showPic(((AppointParkViewHolder) holder).imageview_bigshow,
-                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"",R.mipmap.ic_img);
+                    urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "", R.mipmap.ic_img);
             ((AppointParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((AppointParkViewHolder) holder).textview_address.setText(mData.get(position).getPark_space_address());
             ((AppointParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
-            ((AppointParkViewHolder) holder).textview_startime.setText("进场时间："+mData.get(position).getOrder_starttime().substring(5,mData.get(position).getOrder_starttime().length()-3));
+            ((AppointParkViewHolder) holder).textview_startime.setText("进场时间：" + mData.get(position).getOrder_starttime().substring(5, mData.get(position).getOrder_starttime().length() - 3));
             ((AppointParkViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
 
             ((AppointParkViewHolder) holder).textview_openlock.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +110,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //立即开锁的点击事件
                     Intent intent = new Intent(mContext, OpenParkLockActivity.class);
-                    intent.putExtra("orderInfo",mData.get(position));
+                    intent.putExtra("orderInfo", mData.get(position));
                     mContext.startActivity(intent);
                 }
             });
@@ -146,16 +146,16 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (position == 0){
+            if (position == 0) {
                 lp.topMargin = DensityUtil.dp2px(mContext, 8);
-            }else {
+            } else {
                 lp.topMargin = DensityUtil.dp2px(mContext, 5);
             }
             ((AppointParkViewHolder) holder).linearlayout_all.setLayoutParams(lp);
         } else if (holder instanceof ReadyPayViewHolder) {
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showPic(((ReadyPayViewHolder) holder).imageview_bigshow,
-                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"",R.mipmap.ic_img);
+                    urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "", R.mipmap.ic_img);
             ((ReadyPayViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((ReadyPayViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
             ((ReadyPayViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
@@ -187,7 +187,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_fine)).setText("停车超出顺延时间按" + mData.get(position).getFine() + "元/小时收取额外超时费");
                     ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_heighfee)).setText(mData.get(position).getHigh_fee().equals("0.00") ? "免费停车" : mData.get(position).getHigh_fee() + "元/小时");
                     ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_lowfee)).setText(mData.get(position).getLow_fee().equals("0.00") ? "免费停车" : mData.get(position).getLow_fee() + "元/小时");
-                    ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_redpacket)).setText(discount_info.getId().equals("-1") ? "未优惠" : "已优惠" + ((float)(Math.round(new Float(discount_info.getDiscount())*100))/100) + "元");
+                    ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_redpacket)).setText(discount_info.getId().equals("-1") ? "未优惠" : "已优惠" + ((float) (Math.round(new Float(discount_info.getDiscount()) * 100)) / 100) + "元");
 
                     CustomPopWindow customPopWindow = new CustomPopWindow.PopupWindowBuilder(mContext)
                             .setView(view)
@@ -218,16 +218,16 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (position == 0){
+            if (position == 0) {
                 lp.topMargin = DensityUtil.dp2px(mContext, 8);
-            }else {
+            } else {
                 lp.topMargin = DensityUtil.dp2px(mContext, 5);
             }
             ((ReadyPayViewHolder) holder).linearlayout_all.setLayoutParams(lp);
         } else if (holder instanceof FinishParkViewHolder) {
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showImpPic(((FinishParkViewHolder) holder).imageview_bigshow,
-                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"");
+                    urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "");
 
             ((FinishParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((FinishParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
@@ -248,8 +248,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             //去评论按钮的点击事件
                             Intent intent = new Intent(mContext, CommentPsActivity.class);
                             intent.putExtra("parkspace_id", mData.get(position).getBelong_park_space());
-                            intent.putExtra("parkspace_img",mData.get(position).getPictures().split(",")[0]);
-                            intent.putExtra("order_id",mData.get(position).getId());
+                            intent.putExtra("parkspace_img", mData.get(position).getPictures().split(",")[0]);
+                            intent.putExtra("order_id", mData.get(position).getId());
                             intent.putExtra("city_code", mData.get(position).getCitycode());
                             intent.putExtra("park_time", mData.get(position).getPark_start_time());
                             mContext.startActivity(intent);
@@ -283,7 +283,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_fine)).setText("停车超出顺延时间按" + mData.get(position).getFine() + "元/小时收取额外超时费");
                     ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_heighfee)).setText(mData.get(position).getHigh_fee().equals("0.00") ? "免费停车" : mData.get(position).getHigh_fee() + "元/小时");
                     ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_lowfee)).setText(mData.get(position).getLow_fee().equals("0.00") ? "免费停车" : mData.get(position).getLow_fee() + "元/小时");
-                    ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_redpacket)).setText(discount_info.getId().equals("-1") ? "未优惠" : "已优惠" + ((float)(Math.round(new Float(discount_info.getDiscount())*100))/100) + "元");
+                    ((TextView) view.findViewById(R.id.id_popupwindow_parkorderfee_layout_textview_redpacket)).setText(discount_info.getId().equals("-1") ? "未优惠" : "已优惠" + ((float) (Math.round(new Float(discount_info.getDiscount()) * 100)) / 100) + "元");
 
                     CustomPopWindow customPopWindow = new CustomPopWindow.PopupWindowBuilder(mContext)
                             .setView(view)
@@ -341,9 +341,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (position == 0){
+            if (position == 0) {
                 lp.topMargin = DensityUtil.dp2px(mContext, 8);
-            }else {
+            } else {
                 lp.topMargin = DensityUtil.dp2px(mContext, 5);
             }
             ((FinishParkViewHolder) holder).linearlayout_all.setLayoutParams(lp);
@@ -351,11 +351,11 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showImpPic(((CancleParkViewHolder) holder).imageview_bigshow,
-                    urlList.length>0?HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"");
+                    urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "");
             ((CancleParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
             ((CancleParkViewHolder) holder).textview_address.setText(mData.get(position).getPark_space_address());
             ((CancleParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
-            ((CancleParkViewHolder) holder).textview_startime.setText("进场时间：" + mData.get(position).getOrder_starttime().substring(5,mData.get(position).getOrder_starttime().length()-3));
+            ((CancleParkViewHolder) holder).textview_startime.setText("进场时间：" + mData.get(position).getOrder_starttime().substring(5, mData.get(position).getOrder_starttime().length() - 3));
             ((CancleParkViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
 
             ((CancleParkViewHolder) holder).imageview_delete_order.setOnClickListener(new View.OnClickListener() {
@@ -410,9 +410,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     break;
             }
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (position == 0){
+            if (position == 0) {
                 lp.topMargin = DensityUtil.dp2px(mContext, 8);
-            }else {
+            } else {
                 lp.topMargin = DensityUtil.dp2px(mContext, 5);
             }
             ((CancleParkViewHolder) holder).linearlayout_all.setLayoutParams(lp);
@@ -422,42 +422,42 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class AppointParkViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageview_bigshow;
-        private TextView textview_parkspace_name, textview_startime, textview_address, textview_address_description, textview_cancleorder, textview_openlock,textview_carnumber;
-        private LinearLayout linearlayout_orderdetail,linearlayout_all;
+        private TextView textview_parkspace_name, textview_startime, textview_address, textview_address_description, textview_cancleorder, textview_openlock, textview_carnumber;
+        private LinearLayout linearlayout_orderdetail, linearlayout_all;
 
-        public AppointParkViewHolder(View itemView) {
+        AppointParkViewHolder(View itemView) {
             super(itemView);
-            imageview_bigshow = (ImageView) itemView.findViewById(R.id.id_item_appointparkorder_layout_imageview_bigshow);
-            textview_parkspace_name = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_parkspace_name);
-            textview_startime = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_startime);
-            textview_address = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_address);
-            textview_address_description = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_address_description);
-            textview_cancleorder = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_cancleorder);
-            textview_openlock = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_openlock);
-            textview_carnumber = (TextView) itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_carnumber);
-            linearlayout_orderdetail = (LinearLayout) itemView.findViewById(R.id.id_item_appointparkorder_layout_linearlayout_orderdetail);
-            linearlayout_all = (LinearLayout) itemView.findViewById(R.id.id_item_appointparkorder_layout_linearlayout_all);
+            imageview_bigshow = itemView.findViewById(R.id.id_item_appointparkorder_layout_imageview_bigshow);
+            textview_parkspace_name = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_parkspace_name);
+            textview_startime = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_startime);
+            textview_address = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_address);
+            textview_address_description = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_address_description);
+            textview_cancleorder = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_cancleorder);
+            textview_openlock = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_openlock);
+            textview_carnumber = itemView.findViewById(R.id.id_item_appointparkorder_layout_textview_carnumber);
+            linearlayout_orderdetail = itemView.findViewById(R.id.id_item_appointparkorder_layout_linearlayout_orderdetail);
+            linearlayout_all = itemView.findViewById(R.id.id_item_appointparkorder_layout_linearlayout_all);
         }
     }
 
     public class ReadyPayViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageview_bigshow;
-        private TextView textview_parkspace_name, textview_parktime, textview_address_description, textview_order_fee, textview_gopay,textview_carnumber;
-        private LinearLayout linearlayout_orderdetail, linearlayout_fee_details,linearlayout_all;
+        private TextView textview_parkspace_name, textview_parktime, textview_address_description, textview_order_fee, textview_gopay, textview_carnumber;
+        private LinearLayout linearlayout_orderdetail, linearlayout_fee_details, linearlayout_all;
 
-        public ReadyPayViewHolder(View itemView) {
+        ReadyPayViewHolder(View itemView) {
             super(itemView);
-            imageview_bigshow = (ImageView) itemView.findViewById(R.id.id_item_parkreadypay_layout_imageview_bigshow);
-            textview_parkspace_name = (TextView) itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_parkspace_name);
-            textview_parktime = (TextView) itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_parktime);
-            textview_address_description = (TextView) itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_address_description);
-            textview_order_fee = (TextView) itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_order_fee);
-            textview_gopay = (TextView) itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_gopay);
-            textview_carnumber = (TextView) itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_carnumber);
-            linearlayout_orderdetail = (LinearLayout) itemView.findViewById(R.id.id_item_parkreadypay_layout_linearlayout_orderdetail);
-            linearlayout_fee_details = (LinearLayout) itemView.findViewById(R.id.id_item_parkreadpay_layout_linearlayout_fee_details);
-            linearlayout_all = (LinearLayout) itemView.findViewById(R.id.id_item_parkreadypay_layout_linearlayout_all);
+            imageview_bigshow = itemView.findViewById(R.id.id_item_parkreadypay_layout_imageview_bigshow);
+            textview_parkspace_name = itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_parkspace_name);
+            textview_parktime = itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_parktime);
+            textview_address_description = itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_address_description);
+            textview_order_fee = itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_order_fee);
+            textview_gopay = itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_gopay);
+            textview_carnumber = itemView.findViewById(R.id.id_item_parkreadypay_layout_textview_carnumber);
+            linearlayout_orderdetail = itemView.findViewById(R.id.id_item_parkreadypay_layout_linearlayout_orderdetail);
+            linearlayout_fee_details = itemView.findViewById(R.id.id_item_parkreadpay_layout_linearlayout_fee_details);
+            linearlayout_all = itemView.findViewById(R.id.id_item_parkreadypay_layout_linearlayout_all);
         }
     }
 
@@ -465,37 +465,37 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private ImageView imageview_delete_order, imageview_bigshow;
         private TextView textview_parkspace_name, textview_order_state, textview_parktime, textview_address_description,
-                textview_order_fee, textview_goevaluate, textview_rent_again,textview_carnumber;
-        private LinearLayout linearlayout_fee_details, linearlayout_orderdetail,linearlayout_all;
+                textview_order_fee, textview_goevaluate, textview_rent_again, textview_carnumber;
+        private LinearLayout linearlayout_fee_details, linearlayout_orderdetail, linearlayout_all;
 
-        public FinishParkViewHolder(View itemView) {
+        FinishParkViewHolder(View itemView) {
             super(itemView);
-            imageview_delete_order = (ImageView) itemView.findViewById(R.id.id_item_finishparkorder_layout_imageview_delete_order);
-            imageview_bigshow = (ImageView) itemView.findViewById(R.id.id_item_finishparkorder_layout_imageview_bigshow);
-            textview_parkspace_name = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_parkspace_name);
-            textview_order_state = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_order_state);
-            textview_parktime = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_parktime);
-            textview_address_description = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_address_description);
-            textview_goevaluate = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_goevaluate);
-            textview_rent_again = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_rent_again);
-            textview_order_fee = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_order_fee);
-            textview_carnumber = (TextView) itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_carnumber);
-            linearlayout_fee_details = (LinearLayout) itemView.findViewById(R.id.id_item_finishparkorder_layout_linearlayout_fee_details);
-            linearlayout_orderdetail = (LinearLayout) itemView.findViewById(R.id.id_item_finishparkorder_layout_linearlayout_orderdetail);
-            linearlayout_all = (LinearLayout) itemView.findViewById(R.id.id_item_finishparkorder_layout_linearlayout_all);
+            imageview_delete_order = itemView.findViewById(R.id.id_item_finishparkorder_layout_imageview_delete_order);
+            imageview_bigshow = itemView.findViewById(R.id.id_item_finishparkorder_layout_imageview_bigshow);
+            textview_parkspace_name = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_parkspace_name);
+            textview_order_state = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_order_state);
+            textview_parktime = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_parktime);
+            textview_address_description = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_address_description);
+            textview_goevaluate = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_goevaluate);
+            textview_rent_again = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_rent_again);
+            textview_order_fee = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_order_fee);
+            textview_carnumber = itemView.findViewById(R.id.id_item_finishparkorder_layout_textview_carnumber);
+            linearlayout_fee_details = itemView.findViewById(R.id.id_item_finishparkorder_layout_linearlayout_fee_details);
+            linearlayout_orderdetail = itemView.findViewById(R.id.id_item_finishparkorder_layout_linearlayout_orderdetail);
+            linearlayout_all = itemView.findViewById(R.id.id_item_finishparkorder_layout_linearlayout_all);
         }
     }
 
     public class CancleParkViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageview_delete_order, imageview_bigshow;
-        private TextView textview_parkspace_name, textview_order_state, textview_startime, textview_address, textview_address_description, textview_rent_again,textview_carnumber;
-        private LinearLayout linearlayout_orderdetail,linearlayout_all;
+        private TextView textview_parkspace_name, textview_order_state, textview_startime, textview_address, textview_address_description, textview_rent_again, textview_carnumber;
+        private LinearLayout linearlayout_orderdetail, linearlayout_all;
 
         public CancleParkViewHolder(View itemView) {
             super(itemView);
-            imageview_delete_order = (ImageView) itemView.findViewById(R.id.id_item_cancleparkorder_layout_imageview_delete_order);
-            imageview_bigshow = (ImageView) itemView.findViewById(R.id.id_item_cancleparkorder_layout_imageview_bigshow);
+            imageview_delete_order = itemView.findViewById(R.id.id_item_cancleparkorder_layout_imageview_delete_order);
+            imageview_bigshow = itemView.findViewById(R.id.id_item_cancleparkorder_layout_imageview_bigshow);
             textview_parkspace_name = (TextView) itemView.findViewById(R.id.id_item_cancleparkorder_layout_textview_parkspace_name);
             textview_order_state = (TextView) itemView.findViewById(R.id.id_item_cancleparkorder_layout_textview_order_state);
             textview_startime = (TextView) itemView.findViewById(R.id.id_item_cancleparkorder_layout_textview_startime);

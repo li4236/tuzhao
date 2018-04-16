@@ -895,9 +895,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
             textview_credit.setText(crecdit);
-            Log.e(TAG, "onResume: login");
         }
-        Log.e(TAG, "onResume: un login");
         ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                 R.mipmap.ic_usericon);
     }

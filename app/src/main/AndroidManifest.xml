@@ -5,24 +5,24 @@
     <!--允许程序打开网络-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置，用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!--用于访问GPS定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--允许程序获取网络状态，用于获取运营商信息，用于支持提供运营商信息相关的接口-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--用于读取手机当前的状态和身份-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许程序设置内置sd卡的写权限，用于写入缓存数据到扩展存储卡-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -33,7 +33,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <!--添加可以向外拨打电话的权限  -->
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!--调用系统相册-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -91,8 +91,9 @@
         <activity
             android:name=".activity.ParkspaceDetailActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".activity.SearchAddressActivity"
-            android:windowSoftInputMode="stateHidden|adjustNothing"/>
+        <activity
+            android:name=".activity.SearchAddressActivity"
+            android:windowSoftInputMode="stateHidden|adjustNothing" />
         <activity android:name=".activity.navi.RouteNaviActivity" />
         <activity android:name=".activity.ParkOrderDetailsActivity" />
         <activity android:name=".activity.ChargestationDetailActivity" />
@@ -127,20 +128,22 @@
         <activity android:name=".activity.mine.ModifyShareTimeActivity" />
         <activity android:name=".activity.mine.ParkSpaceSettingActivity" />
         <activity android:name=".activity.mine.InvoiceReimbursementActivity" />
-        <activity android:name=".activity.mine.ConfirmTicketOrderActivity"/>
-        <activity android:name=".activity.mine.BluetoothBindingActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activity.mine.ConfirmTicketOrderActivity" />
+        <activity
+            android:name=".activity.mine.BluetoothBindingActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.mine.AcceptTicketAddressActivity" />
-        <activity android:name=".activity.mine.AddAcceptTicketAddressActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".activity.mine.AddAcceptTicketAddressActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activity.mine.ShareParkSpaceActivity" />
         <activity android:name=".activity.mine.InvoiceSituationActivity" />
+        <activity android:name=".activity.mine.InvoiceDetailActivity" />
 
         <activity
             android:name=".activity.mine.ShareActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity android:name=".activity.mine.TextActivity" />
         <activity android:name=".activity.BigPictureActivity" />
@@ -164,14 +167,13 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!--微信分享回调空页面-->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop" >
-        </activity>
+            android:launchMode="singleTop"></activity>
 
         <!--支付宝未安装软件的话打开网页支付-->
         <activity
@@ -179,13 +181,13 @@
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.alipay.sdk.app.H5AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!--扫码页面-->
         <!--<activity android:name=".zxing.app.CaptureActivity"></activity>-->
@@ -195,7 +197,7 @@
             android:name="com.amap.api.v2.apikey"
             android:value="9df9daec404de15ce47c824fc25a7506" />
 
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
 
         <!--极光推送内容-->
         <!--  Required SDK核心功能 -->

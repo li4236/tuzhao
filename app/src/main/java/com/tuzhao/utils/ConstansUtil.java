@@ -32,4 +32,9 @@ public class ConstansUtil {
      */
     public static final String FOR_REQUEST_RESULT = "ForRequestResult";
 
+    /**
+     * 报销的发票的详情
+     */
+    public static final String INVOICE_SITUATION = "InvoiceSituation";
+
 }
