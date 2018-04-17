@@ -79,12 +79,20 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
     }
 
     @Override
+    protected void onRefresh() {
+        super.onRefresh();
+        mChooseInvoice.clear();
+        mAllChoose.setChecked(false);
+        setTotalPrice();
+    }
+
+    @Override
     protected void loadData() {
         getOkgo(HttpConstants.getInvoice)
                 .execute(new JsonCallback<Base_Class_List_Info<InvoiceInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InvoiceInfo> datas, Call call, Response response) {
-                       loadDataSuccess(datas);
+                        loadDataSuccess(datas);
                     }
 
                     @Override
