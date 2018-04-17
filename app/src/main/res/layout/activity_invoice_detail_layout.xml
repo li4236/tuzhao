@@ -176,8 +176,12 @@
             <TextView
                 android:id="@+id/invoice_detail_taxpayer_number_tv"
                 style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:gravity="end|center_vertical"
+                app:layout_constraintBaseline_toBaselineOf="@+id/invoice_detail_taxpayer_number"
                 app:layout_constraintEnd_toEndOf="@id/invoice_detail_detail_divider"
-                app:layout_constraintTop_toTopOf="@+id/invoice_detail_taxpayer_number" />
+                app:layout_constraintStart_toEndOf="@id/invoice_detail_taxpayer_number" />
 
             <TextView
                 android:id="@+id/invoice_detail_ticket_price"
@@ -186,7 +190,7 @@
                 android:paddingBottom="15dp"
                 android:text="发票金额"
                 app:layout_constraintStart_toStartOf="@id/invoice_detail_company"
-                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_taxpayer_number" />
+                app:layout_constraintTop_toBottomOf="@+id/invoice_detail_taxpayer_number_tv" />
 
             <TextView
                 android:id="@+id/invoice_detail_ticket_price_tv"
