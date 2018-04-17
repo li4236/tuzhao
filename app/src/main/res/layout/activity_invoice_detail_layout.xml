@@ -24,21 +24,16 @@
             android:layout_height="wrap_content"
             android:background="@color/w0">
 
-            <ImageView
+            <com.tuzhao.publicwidget.others.WaveImageView
                 android:id="@+id/invoice_detail_status_bg"
-                android:layout_width="match_parent"
-                android:layout_height="84dp"
+                android:layout_width="0dp"
+                android:layout_height="87dp"
                 android:background="@drawable/start_b3_end_b4_bg"
                 android:contentDescription="@string/picture_description"
                 android:theme="@style/TranslucentTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="26dp"
-                android:background="@drawable/ic_wave"
-                android:contentDescription="@string/picture_description"
-                app:layout_constraintBottom_toBottomOf="@+id/invoice_detail_status_bg" />
 
             <TextView
                 android:id="@+id/invoice_detail_status_tv"
@@ -56,7 +51,7 @@
                 style="@style/ElevenTextW0Style"
                 android:layout_marginTop="10dp"
                 android:text="敬请留意近期快递电话、邮件"
-                app:layout_constraintStart_toStartOf="@id/invoice_detail_status_tv"
+                app:layout_constraintStart_toStartOf="@+id/invoice_detail_status_tv"
                 app:layout_constraintTop_toBottomOf="@+id/invoice_detail_status_tv" />
 
             <View
