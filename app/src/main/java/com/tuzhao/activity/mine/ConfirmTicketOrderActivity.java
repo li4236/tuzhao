@@ -14,7 +14,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
@@ -29,7 +28,6 @@ import com.tuzhao.utils.ConstansUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -52,8 +50,6 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
     private TextView mType;
 
     private TextView mAddress;
-
-    private TextView mArriveDate;
 
     private TextView mTotalMoney;
 
@@ -97,7 +93,6 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         mTelephone = findViewById(R.id.confirm_ticket_order_telephone);
         mType = findViewById(R.id.confirm_ticket_order_type);
         mAddress = findViewById(R.id.confirm_ticket_order_address);
-        mArriveDate = findViewById(R.id.confirm_ticket_order_arrive_time);
         mTotalMoney = findViewById(R.id.confirm_ticket_order_total_money);
         mOrderAddressCl = findViewById(R.id.confirm_ticket_order_address_cl);
         mNoAddressCl = findViewById(R.id.confirm_ticket_order_no_address_cl);
@@ -197,40 +192,11 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
             }
             mAddress.setText(address);
 
-            getInvoiceArriveTime();
-
             if (mOrderAddressCl.getVisibility() != View.VISIBLE) {
                 mOrderAddressCl.setVisibility(View.VISIBLE);
                 mNoAddressCl.setVisibility(View.GONE);
             }
         }
-    }
-
-    private void getInvoiceArriveTime() {
-        OkGo.post(HttpConstants.getInvoiceArriveTime)
-                .params("type", mAddressInfo.getType())
-                .params("acceptPersonEmail", mAddressInfo.getAcceptPersonEmail())
-                .params("acceptArea", mAddressInfo.getAcceptArea())
-                .params("acceptAddress", mAddressInfo.getAcceptAddress())
-                .execute(new JsonCallback<Base_Class_Info<String>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<String> voidBase_class_info, Call call, Response response) {
-                        mArriveDate.setText(voidBase_class_info.data);
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (mAddressInfo.getType().equals("电子")) {
-                            Calendar calendar = Calendar.getInstance();
-                            String arriveTime = (calendar.get(Calendar.MONTH) + 1) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日(今天)";
-                            mArriveDate.setText(arriveTime);
-                        } else if (!handleException(e)) {
-                            mArriveDate.setText("尽快");
-                            showFiveToast("获取预计到达时间失败，但我们会尽快为您发货");
-                        }
-                    }
-                });
     }
 
     private void applyInvoiceReimbursement() {
