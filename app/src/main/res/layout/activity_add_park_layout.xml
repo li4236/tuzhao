@@ -42,8 +42,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -183,68 +183,68 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/linebottom_white_gray_shallow_1px"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                <!-- <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="45dp"
+                     android:background="@drawable/linebottom_white_gray_shallow_1px"
+                     android:gravity="center_vertical"
+                     android:orientation="horizontal"
+                     android:paddingLeft="16dp"
+                     android:paddingRight="16dp">
 
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="出租日期"
-                        android:textColor="@color/b1"
-                        android:textSize="13sp" />
+                     <TextView
+                         android:layout_width="70dp"
+                         android:layout_height="match_parent"
+                         android:gravity="center_vertical"
+                         android:text="出租日期"
+                         android:textColor="@color/b1"
+                         android:textSize="13sp" />
 
-                    <TextView
-                        android:id="@+id/id_activity_add_park_layout_textview_begindate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@drawable/frame_gray_1px"
-                        android:gravity="center"
-                        android:hint="开始日期"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/b1"
-                        android:textSize="13sp" />
+                     <TextView
+                         android:id="@+id/id_activity_add_park_layout_textview_begindate"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:layout_weight="1"
+                         android:background="@drawable/frame_gray_1px"
+                         android:gravity="center"
+                         android:hint="开始日期"
+                         android:paddingBottom="8dp"
+                         android:paddingLeft="7dp"
+                         android:paddingRight="7dp"
+                         android:paddingTop="8dp"
+                         android:textColor="@color/b1"
+                         android:textSize="13sp" />
 
-                    <TextView
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:hint="—"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/g6"
-                        android:textSize="13sp" />
+                     <TextView
+                         android:layout_width="30dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:gravity="center"
+                         android:hint="—"
+                         android:paddingBottom="8dp"
+                         android:paddingLeft="10dp"
+                         android:paddingRight="10dp"
+                         android:paddingTop="8dp"
+                         android:textColor="@color/g6"
+                         android:textSize="13sp" />
 
-                    <TextView
-                        android:id="@+id/id_activity_add_park_layout_textview_enddate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@drawable/frame_gray_1px"
-                        android:gravity="center"
-                        android:hint="结束日期"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/b1"
-                        android:textSize="13sp" />
-                </LinearLayout>
+                     <TextView
+                         android:id="@+id/id_activity_add_park_layout_textview_enddate"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:layout_weight="1"
+                         android:background="@drawable/frame_gray_1px"
+                         android:gravity="center"
+                         android:hint="结束日期"
+                         android:paddingBottom="8dp"
+                         android:paddingLeft="7dp"
+                         android:paddingRight="7dp"
+                         android:paddingTop="8dp"
+                         android:textColor="@color/b1"
+                         android:textSize="13sp" />
+                 </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -292,7 +292,7 @@
                         android:id="@+id/id_activity_add_park_layout_linearlayout_sd"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -307,75 +307,76 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:text="按日租"
                             android:textColor="@color/b1"
                             android:textSize="13sp" />
                     </LinearLayout>
+
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:background="@drawable/linebottom_white_gray_shallow_1px"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                <!-- <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="45dp"
+                     android:gravity="center_vertical"
+                     android:orientation="horizontal"
+                     android:background="@drawable/linebottom_white_gray_shallow_1px"
+                     android:paddingLeft="16dp"
+                     android:paddingRight="16dp">
 
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="出租时段"
-                        android:textColor="@color/b1"
-                        android:textSize="13sp" />
+                     <TextView
+                         android:layout_width="70dp"
+                         android:layout_height="match_parent"
+                         android:gravity="center_vertical"
+                         android:text="出租时段"
+                         android:textColor="@color/b1"
+                         android:textSize="13sp" />
 
-                    <TextView
-                        android:id="@+id/id_activity_add_park_layout_textview_begintime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@drawable/frame_gray_1px"
-                        android:gravity="center"
-                        android:hint="开始时间"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/b1"
-                        android:textSize="13sp" />
+                     <TextView
+                         android:id="@+id/id_activity_add_park_layout_textview_begintime"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:layout_weight="1"
+                         android:background="@drawable/frame_gray_1px"
+                         android:gravity="center"
+                         android:hint="开始时间"
+                         android:paddingBottom="8dp"
+                         android:paddingLeft="7dp"
+                         android:paddingRight="7dp"
+                         android:paddingTop="8dp"
+                         android:textColor="@color/b1"
+                         android:textSize="13sp" />
 
-                    <TextView
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:hint="—"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/g6"
-                        android:textSize="13sp" />
+                     <TextView
+                         android:layout_width="30dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:gravity="center"
+                         android:hint="—"
+                         android:paddingBottom="8dp"
+                         android:paddingLeft="10dp"
+                         android:paddingRight="10dp"
+                         android:paddingTop="8dp"
+                         android:textColor="@color/g6"
+                         android:textSize="13sp" />
 
-                    <TextView
-                        android:id="@+id/id_activity_add_park_layout_textview_endtime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@drawable/frame_gray_1px"
-                        android:gravity="center"
-                        android:hint="结束时间"
-                        android:paddingBottom="8dp"
-                        android:paddingLeft="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/b1"
-                        android:textSize="13sp" />
-                </LinearLayout>
+                     <TextView
+                         android:id="@+id/id_activity_add_park_layout_textview_endtime"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:layout_weight="1"
+                         android:background="@drawable/frame_gray_1px"
+                         android:gravity="center"
+                         android:hint="结束时间"
+                         android:paddingBottom="8dp"
+                         android:paddingLeft="7dp"
+                         android:paddingRight="7dp"
+                         android:paddingTop="8dp"
+                         android:textColor="@color/b1"
+                         android:textSize="13sp" />
+                 </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -448,7 +449,7 @@
         android:gravity="center"
         android:paddingBottom="11dp"
         android:paddingTop="11dp"
-        android:text="提交审核"
+        android:text="下一步"
         android:textColor="@color/b1"
         android:textSize="13sp"
         android:visibility="visible" />

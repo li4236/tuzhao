@@ -1,6 +1,7 @@
 package com.tuzhao.activity.mine;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,18 +17,22 @@ import com.tuzhao.adapter.EverydayShareTimeAdapter;
 import com.tuzhao.adapter.PauseShareDateAdapter;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.EverydayShareTimeInfo;
+import com.tuzhao.info.NewParkSpaceInfo;
 import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.CheckTextView;
 import com.tuzhao.utils.ConstansUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -64,6 +69,8 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
     private OptionsPickerView<String> mTimeOption;
 
+    private NewParkSpaceInfo mParkSpaceInfo;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_modify_share_time;
@@ -72,9 +79,13 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
     @Override
     protected void initView(Bundle savedInstanceState) {
 
-        if ((mParkSpaceId = getIntent().getStringExtra(ConstansUtil.PARK_SPACE_ID)) == null) {
-            showFiveToast("打开失败，请返回重试");
-            finish();
+        if ((mParkSpaceInfo = (NewParkSpaceInfo) getIntent().getSerializableExtra(ConstansUtil.ADD_PARK_SPACE_TEME)) == null) {
+
+            if ((mParkSpaceId = getIntent().getStringExtra(ConstansUtil.PARK_SPACE_ID)) == null) {
+                showFiveToast("打开失败，请返回重试");
+                finish();
+            }
+
         }
 
         mCheckTextViews = new CheckTextView[7];
@@ -115,12 +126,41 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         mAddPauseShareDate.setOnClickListener(this);
         mAddEverydayShareTime.setOnClickListener(this);
         findViewById(R.id.modify_share_time_submit).setOnClickListener(this);
+
+        if (mParkSpaceInfo != null && mParkSpaceInfo.isHourRent()) {
+            if (mParkSpaceInfo.isHourRent()) {
+                findViewById(R.id.modify_share_time_everyday_share_date).setVisibility(View.GONE);
+            }
+            for (CheckTextView checkTextView : mCheckTextViews) {
+                checkTextView.setChecked(true);
+            }
+        }
     }
 
     @Override
     protected void initData() {
         super.initData();
 
+        if (mParkSpaceInfo == null) {
+            getOriginTime();
+        } else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = new Date();
+            date.setTime(System.currentTimeMillis());
+            mStartShareDate.setText(dateFormat.format(date));
+
+            long nextMonth = 1000 * 60 * 60 * 24 * 60;
+
+            date.setTime(System.currentTimeMillis() + nextMonth);
+            mEndShareDate.setText(dateFormat.format(date));
+            dismmisLoadingDialog();
+        }
+
+        initDateOption();
+        initTimeOption();
+    }
+
+    private void getOriginTime() {
         getOkGo(HttpConstants.getShareTime)
                 .params("parkSpaceId", mParkSpaceId)
                 .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
@@ -166,15 +206,12 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                         }
                     }
                 });
-
-        initDateOption();
-        initTimeOption();
     }
 
     @NonNull
     @Override
     protected String title() {
-        return "共享时间修改";
+        return mParkSpaceInfo == null ? "共享时间修改" : "设置共享时间";
     }
 
     @Override
@@ -277,7 +314,11 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                 }
                 break;
             case R.id.modify_share_time_submit:
-                modifyShareTime();
+                if (mParkSpaceInfo == null) {
+                    modifyShareTime();
+                } else {
+                    requestAddParkSpace();
+                }
                 break;
         }
     }
@@ -413,6 +454,84 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                         super.onError(call, response, e);
                         if (!handleException(e)) {
                             showFiveToast("修改失败" + e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    private void requestAddParkSpace() {
+
+        showLoadingDialog("正在提交");
+        String shareDate = mStartShareDate.getText().toString() + "," + mEndShareDate.getText().toString();
+
+        StringBuilder shareDay = new StringBuilder();
+        for (int i = 0; i < 7; i++) {
+            if (mCheckTextViews[i].isChecked()) {
+                shareDay.append("1");
+            } else {
+                shareDay.append("0");
+            }
+            shareDay.append(i + 1);
+            shareDay.append(",");
+        }
+        shareDay.deleteCharAt(shareDay.length() - 1);
+
+        StringBuilder pauseShareDate = new StringBuilder();
+        if (!mPauseShareDateAdapter.getData().isEmpty()) {
+            for (String pause : mPauseShareDateAdapter.getData()) {
+                pauseShareDate.append(pause);
+                pauseShareDate.append(",");
+            }
+            pauseShareDate.deleteCharAt(pauseShareDate.length() - 1);
+        }
+
+        StringBuilder everyDayShareTime = new StringBuilder();
+        if (mParkSpaceInfo.isHourRent() && !mEverydayShareTimeAdapter.getData().isEmpty()) {
+            for (EverydayShareTimeInfo everydayShareTimeInfo : mEverydayShareTimeAdapter.getData()) {
+                everyDayShareTime.append(everydayShareTimeInfo.getStartTime());
+                everyDayShareTime.append("-");
+                everyDayShareTime.append(everydayShareTimeInfo.getEndTime());
+                everyDayShareTime.append(",");
+            }
+            everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
+        }
+
+        getOkGo(HttpConstants.addUserPark)
+                .params("parkspace_id", mParkSpaceInfo.getParkspace_id())
+                .params("citycode", mParkSpaceInfo.getCitycode())
+                .params("address_memo", mParkSpaceInfo.getAddress_memo())
+                .params("available_date", shareDate)
+                .params("dayRent", mParkSpaceInfo.isHourRent() ? "0" : "1")
+                .params("shareDay", shareDay.toString())
+                .params("available_time", everyDayShareTime.toString())
+                .params("pauseShareDate", pauseShareDate.toString())
+                .params("applicant_name", mParkSpaceInfo.getApplicant_name())
+                .params("install_time", mParkSpaceInfo.getInstall_time())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> responseData, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
+                        setResult(RESULT_OK, intent);
+                        showFiveToast("提交成功");
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        if (!handleException(e)) {
+                            if (e instanceof IllegalStateException) {
+                                int code = Integer.parseInt(e.getMessage());
+                                switch (code) {
+                                    case 108:
+                                        showFiveToast("添加失败");
+                                        break;
+                                    case 901:
+                                        showFiveToast("服务器拥挤，请稍后重试");
+                                        break;
+                                }
+                            }
                         }
                     }
                 });

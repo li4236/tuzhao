@@ -55,9 +55,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
         });
 
         TextView textView = toolbar.findViewById(R.id.toolbar_title);
-        textView.setText(title());
 
         initView(savedInstanceState);
+        textView.setText(title());
         initData();
     }
 

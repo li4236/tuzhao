@@ -40,4 +40,9 @@ public class ConstansUtil {
      */
     public static final String INVOICE_SITUATION = "InvoiceSituation";
 
+    /**
+     * 从添加车位跳转到修改共享时间
+     */
+    public static final String ADD_PARK_SPACE_TEME = "AddParkSpaceTime";
+
 }

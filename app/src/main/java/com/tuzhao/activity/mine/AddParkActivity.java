@@ -1,7 +1,6 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,15 +21,15 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InstallWorkerInfo;
-import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.NewParkSpaceInfo;
 import com.tuzhao.info.Park_Space_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 
 import java.net.ConnectException;
@@ -45,7 +44,6 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.tianzhili.www.myselfsdk.pickerview.TimePickerView.Type.HOURS_MINS;
-import static com.tianzhili.www.myselfsdk.pickerview.TimePickerView.Type.YEAR_MONTH_DAY;
 
 /**
  * Created by TZL13 on 2017/6/30.
@@ -53,14 +51,16 @@ import static com.tianzhili.www.myselfsdk.pickerview.TimePickerView.Type.YEAR_MO
 
 public class AddParkActivity extends BaseActivity implements View.OnClickListener {
 
-    private EditText mEt_park,et_realname;
-    private TextView mTt_parkSpace,textview_installtime;
-    private TextView textview_begindate, textview_enddate, textview_begintime, textview_endtime, textview_profit_ratio;
+    private static final int REQUEST_CODE = 0x952;
+
+    private EditText mEt_park, et_realname;
+    private TextView mTt_parkSpace, textview_installtime;
+    private TextView textview_profit_ratio;
     private ParkBean mPark = new ParkBean();
-    private LinearLayout linearlayout_chooseparkspace, linearlayout_profit_ratio,linearlayout_sd,linearlayout_sh;
+    private LinearLayout linearlayout_chooseparkspace, linearlayout_profit_ratio, linearlayout_sd, linearlayout_sh;
     private CustomDialog mCustomDialog;
     private boolean isSelectHour = true;
-    private ImageView imageview_sh,imageview_sd;
+    private ImageView imageview_sh, imageview_sd;
 
     //选择器UI
     TimePickerView timePickerView;
@@ -85,21 +85,17 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initView() {
-        mEt_park = (EditText) findViewById(R.id.id_activity_add_park_layout_et_park);
-        et_realname = (EditText) findViewById(R.id.id_activity_add_park_layout_et_realname);
-        textview_installtime = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_installtime);
-        mTt_parkSpace = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_parkspace);
-        textview_begindate = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_begindate);
-        textview_enddate = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_enddate);
-        textview_begintime = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_begintime);
-        textview_endtime = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_endtime);
-        textview_profit_ratio = (TextView) findViewById(R.id.id_activity_add_park_layout_textview_profit_ratio);
-        linearlayout_chooseparkspace = (LinearLayout) findViewById(R.id.id_activity_add_park_layout_linearlayout_chooseparkspace);
-        linearlayout_profit_ratio = (LinearLayout) findViewById(R.id.id_activity_add_park_layout_linearlayout_profit_ratio);
-        linearlayout_sh = (LinearLayout) findViewById(R.id.id_activity_add_park_layout_linearlayout_sh);
-        linearlayout_sd = (LinearLayout) findViewById(R.id.id_activity_add_park_layout_linearlayout_sd);
-        imageview_sh = (ImageView) findViewById(R.id.id_activity_add_park_layout_imageview_sh);
-        imageview_sd = (ImageView) findViewById(R.id.id_activity_add_park_layout_imageview_sd);
+        mEt_park = findViewById(R.id.id_activity_add_park_layout_et_park);
+        et_realname = findViewById(R.id.id_activity_add_park_layout_et_realname);
+        textview_installtime = findViewById(R.id.id_activity_add_park_layout_textview_installtime);
+        mTt_parkSpace = findViewById(R.id.id_activity_add_park_layout_textview_parkspace);
+        textview_profit_ratio = findViewById(R.id.id_activity_add_park_layout_textview_profit_ratio);
+        linearlayout_chooseparkspace = findViewById(R.id.id_activity_add_park_layout_linearlayout_chooseparkspace);
+        linearlayout_profit_ratio = findViewById(R.id.id_activity_add_park_layout_linearlayout_profit_ratio);
+        linearlayout_sh = findViewById(R.id.id_activity_add_park_layout_linearlayout_sh);
+        linearlayout_sd = findViewById(R.id.id_activity_add_park_layout_linearlayout_sd);
+        imageview_sh = findViewById(R.id.id_activity_add_park_layout_imageview_sh);
+        imageview_sd = findViewById(R.id.id_activity_add_park_layout_imageview_sd);
     }
 
     private void initData() {
@@ -109,10 +105,6 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.id_activity_add_park_layout_imageview_back).setOnClickListener(this);
         findViewById(R.id.id_activity_add_park_layout_textview_ensure).setOnClickListener(this);
         linearlayout_chooseparkspace.setOnClickListener(this);
-        textview_begindate.setOnClickListener(this);
-        textview_enddate.setOnClickListener(this);
-        textview_begintime.setOnClickListener(this);
-        textview_endtime.setOnClickListener(this);
         linearlayout_sh.setOnClickListener(this);
         linearlayout_sd.setOnClickListener(this);
         textview_installtime.setOnClickListener(this);
@@ -120,40 +112,46 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case 1:
-                //选择停车场页面返回的数据
-                if (data.hasExtra("park")) {
-                    mPark = (ParkBean) data.getSerializableExtra("park");
-                    mTt_parkSpace.setText(mPark.getparkStation());
-                    String[] ccc = mPark.getProfit_ratio().split(":");
-                    textview_profit_ratio.setText(ccc[0]+" : "+ccc[1]+" : "+ccc[2] + " （车位主 : 物业 : 平台）");
-                    linearlayout_profit_ratio.setVisibility(View.VISIBLE);
-                }
-                break;
-            case 2:
-                if (data.hasExtra("park")) {
-                    mPark = (ParkBean) data.getSerializableExtra("park");
-                    mTt_parkSpace.setText(mPark.getparkStation());
-                    String[] ccc = mPark.getProfit_ratio().split(":");
-                    textview_profit_ratio.setText(ccc[0]+" : "+ccc[1]+" : "+ccc[2] + " （车位主 : 物业 : 平台）");
-                    linearlayout_profit_ratio.setVisibility(View.VISIBLE);
-                }
-                break;
-            case 102:
-                //搜索停车场页面返回的数据
-                if (data.hasExtra("park")) {
-                    Park_Space_Info park_space_info = (Park_Space_Info) data.getSerializableExtra("park");
-                    mPark.setParkID(park_space_info.getId());
-                    mPark.setparkStation(park_space_info.getPark_space_name());
-                    mPark.setCitycode(park_space_info.getCity_code());
-                    mPark.setProfit_ratio(park_space_info.getProfit_ratio());
-                    mTt_parkSpace.setText(mPark.getparkStation());
-                    String[] ccc = mPark.getProfit_ratio().split(":");
-                    textview_profit_ratio.setText(ccc[0]+" : "+ccc[1]+" : "+ccc[2] + " （车位主 : 物业 : 平台）");
-                    linearlayout_profit_ratio.setVisibility(View.VISIBLE);
-                }
-                break;
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getBooleanExtra(ConstansUtil.FOR_REQUEST_RESULT, false)) {
+                finish();
+            }
+        } else {
+            switch (resultCode) {
+                case 1:
+                    //选择停车场页面返回的数据
+                    if (data.hasExtra("park")) {
+                        mPark = (ParkBean) data.getSerializableExtra("park");
+                        mTt_parkSpace.setText(mPark.getparkStation());
+                        String[] ccc = mPark.getProfit_ratio().split(":");
+                        textview_profit_ratio.setText(ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）");
+                        linearlayout_profit_ratio.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case 2:
+                    if (data.hasExtra("park")) {
+                        mPark = (ParkBean) data.getSerializableExtra("park");
+                        mTt_parkSpace.setText(mPark.getparkStation());
+                        String[] ccc = mPark.getProfit_ratio().split(":");
+                        textview_profit_ratio.setText(ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）");
+                        linearlayout_profit_ratio.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case 102:
+                    //搜索停车场页面返回的数据
+                    if (data.hasExtra("park")) {
+                        Park_Space_Info park_space_info = (Park_Space_Info) data.getSerializableExtra("park");
+                        mPark.setParkID(park_space_info.getId());
+                        mPark.setparkStation(park_space_info.getPark_space_name());
+                        mPark.setCitycode(park_space_info.getCity_code());
+                        mPark.setProfit_ratio(park_space_info.getProfit_ratio());
+                        mTt_parkSpace.setText(mPark.getparkStation());
+                        String[] ccc = mPark.getProfit_ratio().split(":");
+                        textview_profit_ratio.setText(ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）");
+                        linearlayout_profit_ratio.setVisibility(View.VISIBLE);
+                    }
+                    break;
+            }
         }
     }
 
@@ -164,17 +162,18 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.id_activity_add_park_layout_textview_ensure:
-                if (mTt_parkSpace.getText().length() > 0 && mEt_park.getText().length() > 0 && et_realname.getText().length() > 0 && textview_begindate.getText().length() > 0 && textview_enddate.getText().length() > 0 && textview_begintime.getText().length() > 0 && textview_endtime.getText().length() > 0 && textview_installtime.getText().length()>0) {
+                if (mTt_parkSpace.getText().toString().trim().length() > 0 && mEt_park.getText().toString().trim().length() > 0
+                        && et_realname.getText().toString().trim().length() > 0 && textview_installtime.getText().toString().trim().length() > 0) {
                     showAlertDialog();
                 } else {
-                    MyToast.showToast(this, "要将信息填写完整哦", 2);
+                    MyToast.showToast(this, "要将信息填写完整哦", 5);
                 }
                 break;
             case R.id.id_activity_add_park_layout_linearlayout_chooseparkspace:
                 Intent intent = new Intent(AddParkActivity.this, SelectParkSpaceActivity.class);
                 startActivityForResult(intent, 1);
                 break;
-            case R.id.id_activity_add_park_layout_textview_begintime:
+            /*case R.id.id_activity_add_park_layout_textview_begintime:
                 //选择开始时间
                 closeKeyboard();
                 showOptions(true);
@@ -191,35 +190,35 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
             case R.id.id_activity_add_park_layout_textview_enddate:
                 closeKeyboard();
                 showDateOptions(false);
-                break;
+                break;*/
             case R.id.id_activity_add_park_layout_linearlayout_sh:
-                if (!isSelectHour){
+                if (!isSelectHour) {
                     isSelectHour = true;
-                    imageview_sh.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this,R.mipmap.ic_xuanzhong5));
-                    imageview_sd.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this,R.mipmap.ic_weixuanzhong5));
-                    textview_begintime.setEnabled(true);
+                    imageview_sh.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this, R.mipmap.ic_xuanzhong5));
+                    imageview_sd.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this, R.mipmap.ic_weixuanzhong5));
+                    /*textview_begintime.setEnabled(true);
                     textview_begintime.setBackground(ContextCompat.getDrawable(AddParkActivity.this,R.drawable.frame_gray_1px));
                     textview_begintime.setText("");
                     textview_begintime.setTextColor(ContextCompat.getColor(AddParkActivity.this,R.color.b1));
                     textview_endtime.setEnabled(true);
                     textview_endtime.setBackground(ContextCompat.getDrawable(AddParkActivity.this,R.drawable.frame_gray_1px));
                     textview_endtime.setText("");
-                    textview_endtime.setTextColor(ContextCompat.getColor(AddParkActivity.this,R.color.b1));
+                    textview_endtime.setTextColor(ContextCompat.getColor(AddParkActivity.this,R.color.b1));*/
                 }
                 break;
             case R.id.id_activity_add_park_layout_linearlayout_sd:
-                if (isSelectHour){
+                if (isSelectHour) {
                     isSelectHour = false;
-                    imageview_sh.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this,R.mipmap.ic_weixuanzhong5));
-                    imageview_sd.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this,R.mipmap.ic_xuanzhong5));
-                    textview_begintime.setEnabled(false);
+                    imageview_sh.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this, R.mipmap.ic_weixuanzhong5));
+                    imageview_sd.setImageDrawable(ContextCompat.getDrawable(AddParkActivity.this, R.mipmap.ic_xuanzhong5));
+                   /* textview_begintime.setEnabled(false);
                     textview_begintime.setBackground(ContextCompat.getDrawable(AddParkActivity.this,R.drawable.frame_gray_noselect_2px));
                     textview_begintime.setText("00:00");
                     textview_begintime.setTextColor(ContextCompat.getColor(AddParkActivity.this,R.color.g6));
                     textview_endtime.setEnabled(false);
                     textview_endtime.setBackground(ContextCompat.getDrawable(AddParkActivity.this,R.drawable.frame_gray_noselect_2px));
                     textview_endtime.setText("23:59");
-                    textview_endtime.setTextColor(ContextCompat.getColor(AddParkActivity.this,R.color.g6));
+                    textview_endtime.setTextColor(ContextCompat.getColor(AddParkActivity.this,R.color.g6));*/
                 }
                 break;
             case R.id.id_activity_add_park_layout_textview_installtime:
@@ -230,7 +229,18 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void showAlertDialog() {
-        final TipeDialog.Builder builder = new TipeDialog.Builder(this);
+        Intent intent = new Intent(this, ModifyShareTimeActivity.class);
+        NewParkSpaceInfo parkSpaceInfo = new NewParkSpaceInfo();
+        parkSpaceInfo.setParkspace_id(mPark.getParkID());
+        parkSpaceInfo.setCitycode(mPark.getCitycode());
+        parkSpaceInfo.setApplicant_name(et_realname.getText().toString());
+        parkSpaceInfo.setAddress_memo(mEt_park.getText().toString());
+        parkSpaceInfo.setInstall_time(install_time);
+        parkSpaceInfo.setHourRent(isSelectHour);
+        intent.putExtra(ConstansUtil.ADD_PARK_SPACE_TEME, parkSpaceInfo);
+        startActivityForResult(intent, REQUEST_CODE);
+
+       /* final TipeDialog.Builder builder = new TipeDialog.Builder(this);
         builder.setMessage("是否确定出租车位\n请保持手机通讯正常");
         builder.setTitle("提示");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -245,11 +255,12 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
-        builder.create().show();
+        builder.create().show();*/
     }
 
     private void sendPark() {
-        OkGo.post(HttpConstants.addUserPark)
+
+       /* OkGo.post(HttpConstants.addUserPark)
                 .tag(AddParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
@@ -293,7 +304,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                             }
                         }
                     }
-                });
+                });*/
     }
 
     private void getInstallWorkerTime() {
@@ -302,11 +313,11 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("parkspace_id", mPark.getParkID())
-                .params("citycode",mPark.getCitycode())
+                .params("citycode", mPark.getCitycode())
                 .execute(new JsonCallback<Base_Class_List_Info<InstallWorkerInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InstallWorkerInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()){
+                        if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
                         MyToast.showToast(AddParkActivity.this, "提交成功", 2);
@@ -315,7 +326,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()){
+                        if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
                         if (e instanceof ConnectException) {
@@ -328,16 +339,16 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
                                 case 108:
-                                    MyToast.showToast(AddParkActivity.this,"添加失败", 2);
+                                    MyToast.showToast(AddParkActivity.this, "添加失败", 2);
                                     break;
                                 case 109:
-                                    MyToast.showToast(AddParkActivity.this,"读取用户信息失败", 2);
+                                    MyToast.showToast(AddParkActivity.this, "读取用户信息失败", 2);
                                     break;
                                 case 101:
-                                    MyToast.showToast(AddParkActivity.this,"数据库连接失败", 2);
+                                    MyToast.showToast(AddParkActivity.this, "数据库连接失败", 2);
                                     break;
                                 case 203:
-                                    MyToast.showToast(AddParkActivity.this,"服务器拥挤，请稍后重试", 2);
+                                    MyToast.showToast(AddParkActivity.this, "服务器拥挤，请稍后重试", 2);
                                     break;
                             }
                         }
@@ -355,15 +366,15 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
             public void onTimeSelect(Date date) {
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 if (isStart) {
-                    textview_begintime.setText(sdf.format(date));
+                    //textview_begintime.setText(sdf.format(date));
                 } else {
-                    textview_endtime.setText(sdf.format(date));
+                    //textview_endtime.setText(sdf.format(date));
                 }
             }
         });
     }
 
-    private void showDateOptions(final boolean isStart) {
+    /*private void showDateOptions(final boolean isStart) {
         //选项选择器
         timePickerView = new TimePickerView(this, YEAR_MONTH_DAY);
         timePickerView.show();
@@ -397,7 +408,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         });
-    }
+    }*/
 
     private void showDateAndTimeOptions() {
         //选项选择器
@@ -423,7 +434,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
                 //返回的分别是三个级别的选中位置
-                String tx = options1Items.get(options1) + " "+ options2Items.get(options1).get(option2) + " 点 " + options3Items.get(options1).get(option2).get(options3) + " 分";
+                String tx = options1Items.get(options1) + " " + options2Items.get(options1).get(option2) + " 点 " + options3Items.get(options1).get(option2).get(options3) + " 分";
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
@@ -454,10 +465,12 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
         mCustomDialog = new CustomDialog(this, what);
         mCustomDialog.show();
     }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!= null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }

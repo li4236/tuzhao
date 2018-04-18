@@ -13,10 +13,12 @@ public class Park_Info extends BaseInfo {
     private String park_number;//停车位的编号
     private String open_date;//可开放日期
     private String open_time;//可开放时段
+    private String shareDay;//每周共享的时间，（11,12,03,14,05,06,17）  注：总共7天，用“，”隔开，第一位数字为1代表该天是共享的，为0代表不共享。例子为周一二四七为共享
+    private String pauseShareDate;//暂停共享日期（2018-4-12,2018-4-16）  注：可有多个时间段，用“，”隔开，如果日期已经过了就删掉
     private String location_describe;//地址备注
-//    private String lock_password;//车位锁蓝牙密钥
+    //    private String lock_password;//车位锁蓝牙密钥
     private String parking_user_id;//使用者
-//    private String park_is_public;//公共或者个人
+    //    private String park_is_public;//公共或者个人
     private String park_img;//停车位图片
     private String parkspace_name;//停车场名字
     private String park_status;//停车位状态 1审核、2开放、3暂停
