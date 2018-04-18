@@ -77,6 +77,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     private OptionsPickerView<String> mCityOption;
 
+    //如果是要编辑收票地址则不为空
     private AcceptTicketAddressInfo mAddressInfo;
 
     @Override
@@ -107,6 +108,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
         mTicketType.setOnClickListener(this);
         mAcceptArea.setOnClickListener(this);
+
         TextView saveTicketAddress = findViewById(R.id.save_accept_ticket_address);
         saveTicketAddress.setText(mAddressInfo == null ? "新建收票地址" : "保存修改");
         saveTicketAddress.setOnClickListener(this);
@@ -155,7 +157,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     }
 
     /**
-     * 如果是修改收票地址则把对应的值显示出来
+     * 如果是编辑收票地址则把对应的值显示出来
      */
     private void setTicketValue() {
         if (mAddressInfo != null) {
@@ -191,7 +193,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
      * 初始化发票类型选择器
      */
     private void initTicketTypes() {
-        mTicketTypes = new ArrayList<>();
+        mTicketTypes = new ArrayList<>(3);
         mTicketTypes.add("电子");
         mTicketTypes.add("普票");
         mTicketTypes.add("专票");
@@ -317,10 +319,16 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         }
     }
 
+    /**
+     * 把textView的hint显示出来
+     */
     private void showToast(TextView textView) {
         showFiveToast(textView.getHint().toString());
     }
 
+    /**
+     * @return true(textView有内容)
+     */
     private boolean isEmpty(TextView textView) {
         return TextUtils.isEmpty(textView.getText().toString().trim());
     }
@@ -380,7 +388,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     }
 
     /**
-     * @return ture:全部内容都不为空
+     * @return ture:全部内容都不为空，并且手机号和邮箱验证通过
      */
     private boolean allNoEmpty() {
         if (!commonNoEmpty()) {
@@ -502,6 +510,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 });
     }
 
+    /**
+     * 根据选择的发票类型返回后台需要的数字类型
+     */
     private String getType() {
         switch (getText(mTicketType)) {
             case "普票":
@@ -514,14 +525,14 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     }
 
     /**
-     * @return 发票类型为电子发票
+     * @return true(发票类型为电子发票)
      */
     private boolean isTypeOne() {
         return getText(mTicketType).equals("电子");
     }
 
     /**
-     * @return 发票类型为专票
+     * @return true(发票类型为专票)
      */
     private boolean isTypeThree() {
         return getText(mTicketType).equals("专票");
