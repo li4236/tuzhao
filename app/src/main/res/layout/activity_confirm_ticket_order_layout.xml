@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="@+id/confirm_ticket_order_address_cl">
 
                 <TextView
-                    style="@style/TenTextG6Stytle"
+                    style="@style/TwentyTextG6Style"
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/ic_addwhere"
                     android:text="尚未添加收票地址"

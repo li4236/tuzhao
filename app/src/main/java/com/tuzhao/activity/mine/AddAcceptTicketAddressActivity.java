@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -59,11 +60,15 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     private EditText mBankNumber;
 
+    private ConstraintLayout mAcceptTicketMainCl;
+
     private ConstraintLayout mAcceptEmailCl;
 
     private ConstraintLayout mAcceptAddressCl;
 
     private ConstraintLayout mAcceptBankCl;
+
+    private ConstraintSet mConstraintSet;
 
     private ArrayList<String> mTicketTypes;
 
@@ -102,6 +107,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         mBank = findViewById(R.id.accept_ticket_bank);
         mBankNumber = findViewById(R.id.accept_ticket_bank_number);
 
+        mAcceptTicketMainCl = findViewById(R.id.add_accept_ticket_address_main_cl);
         mAcceptEmailCl = findViewById(R.id.add_accept_ticket_address_email_cl);
         mAcceptAddressCl = findViewById(R.id.add_accept_ticket_address_address_cl);
         mAcceptBankCl = findViewById(R.id.add_accept_ticket_address_bank_cl);
@@ -117,6 +123,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     @Override
     protected void initData() {
         super.initData();
+        mConstraintSet = new ConstraintSet();
         setTicketValue();
         initTicketTypes();
         initCityOption();
@@ -283,6 +290,10 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         if (mAcceptAddressCl.getVisibility() != View.GONE) {
             mAcceptAddressCl.setVisibility(View.GONE);
         }
+
+        mConstraintSet.clone(mAcceptTicketMainCl);
+        mConstraintSet.connect(R.id.add_accept_ticket_address_tax_number_cl, ConstraintSet.TOP, R.id.add_accept_ticket_address_email_cl, ConstraintSet.BOTTOM);
+        mConstraintSet.applyTo(mAcceptTicketMainCl);
     }
 
     /**
@@ -300,6 +311,11 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         if (mAcceptBankCl.getVisibility() != View.GONE) {
             mAcceptBankCl.setVisibility(View.GONE);
         }
+
+        mConstraintSet.clone(mAcceptTicketMainCl);
+        mConstraintSet.connect(R.id.add_accept_ticket_address_tax_number_cl, ConstraintSet.TOP, R.id.add_accept_ticket_address_address_cl, ConstraintSet.BOTTOM);
+        mConstraintSet.applyTo(mAcceptTicketMainCl);
+
     }
 
     /**
@@ -317,6 +333,10 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         if (mAcceptBankCl.getVisibility() == View.GONE) {
             mAcceptBankCl.setVisibility(View.VISIBLE);
         }
+
+        mConstraintSet.clone(mAcceptTicketMainCl);
+        mConstraintSet.connect(R.id.add_accept_ticket_address_tax_number_cl, ConstraintSet.TOP, R.id.add_accept_ticket_address_address_cl, ConstraintSet.BOTTOM);
+        mConstraintSet.applyTo(mAcceptTicketMainCl);
     }
 
     /**
@@ -346,6 +366,12 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         } else if (isEmpty(mAcceptPersonName)) {
             showToast(mAcceptPersonName);
             return false;
+        } else if (isEmpty(mTaxNumber)) {
+            showToast(mTaxNumber);
+            return false;
+        } else if (getText(mTaxNumber).length() < 15) {
+            showFiveToast("你的纳税人识别号长度不够哦");
+            return false;
         }
         return true;
     }
@@ -371,13 +397,10 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     }
 
     /**
-     * @return ture:税务编号，对公银行，银行卡号都不为空
+     * @return ture:对公银行，银行卡号都不为空
      */
     private boolean bankNoEmpty() {
-        if (isEmpty(mTaxNumber)) {
-            showToast(mTaxNumber);
-            return false;
-        } else if (isEmpty(mBank)) {
+        if (isEmpty(mBank)) {
             showToast(mBank);
             return false;
         } else if (isEmpty(mBankNumber)) {
