@@ -549,10 +549,12 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
          */
         DateCheck(OnDateCheckListener listener, String dateText) {
             mDateCheckListener = listener;
-            String[] date = dateText.split("-");
-            mYear = Integer.parseInt(date[0]);
-            mMonth = Integer.parseInt(date[1]);
-            mDayOfMonth = Integer.parseInt(date[2]);
+            if (!dateText.equals("")) {
+                String[] date = dateText.split("-");
+                mYear = Integer.parseInt(date[0]);
+                mMonth = Integer.parseInt(date[1]);
+                mDayOfMonth = Integer.parseInt(date[2]);
+            }
         }
 
         @Override

@@ -49,7 +49,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
                 @Override
                 public void onClick(View v) {
                     if (mBaseAdapter.getOnItemClickListener() != null) {
-                        Log.e("tag", "onClick: "+getAdapterPosition());
+                        Log.e("tag", "onClick: " + getAdapterPosition());
                         mBaseAdapter.getOnItemClickListener().onItemClick(view, getAdapterPosition() - mBaseAdapter.getHeadViewCount());
                     }
                 }
@@ -57,9 +57,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public View getView(@IdRes int id) {
+    public <T extends View> T getView(@IdRes int id) {
         putView(id);
-        return mViews.get(id);
+        return (T) mViews.get(id);
     }
 
     private void putView(@IdRes int id) {
@@ -99,7 +99,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseViewHolder showCirclePic(@IdRes int id, String url) {
-        ImageUtil.showCirclePic((ImageView) getView(id),url);
+        ImageUtil.showCirclePic((ImageView) getView(id), url);
         return this;
     }
 

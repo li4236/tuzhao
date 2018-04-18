@@ -122,11 +122,17 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
         return "蓝牙绑定";
     }
 
+    /**
+     * 更新显示当前亲友绑定的数量
+     */
     private void updateFriendNumber() {
         String friendNumber = "亲友绑定(" + mAdapter.getData().size() + "/5)";
         mBindindFriendNumber.setText(friendNumber);
     }
 
+    /**
+     * 显示修改亲友备注的对话框
+     */
     private void showNameDialog(final int position) {
         if (mModifyNameDialog == null) {
             ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.dialog_edit_layout, null);
@@ -160,6 +166,9 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
         mFirendName.setSelection(mFirendName.getText().toString().length());
     }
 
+    /**
+     * 显示修改手机号的对话框
+     */
     private void showPhoneDialog() {
         if (mAddFriendPhoneDialog == null) {
             mDateUtil = new DateUtil();
@@ -181,7 +190,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                     .setPositiveButton("确认修改", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (mDateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
+                            if (DateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
                                 addFriendDevice(mFriendPhone.getText().toString().trim());
                             } else {
                                 showFiveToast("你输入的手机不正确");

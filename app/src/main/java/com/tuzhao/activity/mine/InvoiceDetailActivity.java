@@ -98,7 +98,7 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
     @NonNull
     @Override
     protected String title() {
-        return "开票详情";
+        return "开票记录";
     }
 
 }
