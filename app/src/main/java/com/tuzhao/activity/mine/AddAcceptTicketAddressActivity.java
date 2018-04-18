@@ -173,6 +173,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
             mCompanyTelephone.setText(mAddressInfo.getCompanyPhone());
             mAcceptPersonName.setText(mAddressInfo.getAcceptPersonName());
             mCompanyName.setSelection(mCompanyName.getText().length());
+            mTaxNumber.setText(mAddressInfo.getTaxNumber());
 
             switch (mAddressInfo.getType()) {
                 case "电子":

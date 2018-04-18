@@ -3,6 +3,7 @@ package com.tuzhao.activity.mine;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -215,6 +216,9 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         dismmisLoadingDialog();
                         showFiveToast("开票成功,我们将尽快为您发货");
+                        Intent intent = new Intent();
+                        intent.putParcelableArrayListExtra(ConstansUtil.FOR_REQUEST_RESULT, (ArrayList<? extends Parcelable>) mOrderAdapter.getData());
+                        setResult(RESULT_OK, intent);
                         finish();
                     }
 
@@ -223,7 +227,28 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
                         if (!handleException(e)) {
-
+                            if (e instanceof IllegalStateException) {
+                                switch (e.getMessage()) {
+                                    case "101":
+                                        showFiveToast("用户不存在");
+                                        break;
+                                    case "102":
+                                        showFiveToast("发票地址不存在，请重新选择");
+                                        break;
+                                    case "103":
+                                        showFiveToast("订单不存在");
+                                        break;
+                                    case "104":
+                                        showFiveToast("停车订单不存在");
+                                        break;
+                                    case "105":
+                                        showFiveToast("停车订单不可报销");
+                                        break;
+                                    case "106":
+                                        showFiveToast("服务器异常，请稍后再试");
+                                        break;
+                                }
+                            }
                         }
                     }
                 });

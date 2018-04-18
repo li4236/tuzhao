@@ -165,6 +165,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
         mAdapter.setOnItemOrderToPay(new ParkOrderAdapter.OnItemOrderToPay() {
             @Override
             public void onItemOrderToPay(int position) {
+                Log.e("TAG", "onItemOrderToPay: ");
                 payV2(mContext, mOrdersData.get(position).getId(), mOrdersData.get(position).getCitycode(), position);
             }
         });
@@ -342,8 +343,6 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
                         payThread.start();
                     }
                 });
-
-
     }
 
     private void requetFinishOrder(final int position) {

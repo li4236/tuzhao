@@ -10,6 +10,9 @@ public class ConstansUtil {
 
     public static final String PARK_SPACE_INFO = "ParkSpaceInfo";
 
+    /**
+     * 传递选中的发票给确认订单
+     */
     public static final String INVOICE_LIST = "InvoiceList";
 
     /**

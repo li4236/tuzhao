@@ -231,15 +231,19 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     protected void startActivityForResult(Class<?> tClass, int requestCode,String key,String value) {
         Intent intent = new Intent(this, tClass);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
         intent.putExtra(key, value);
         startActivityForResult(intent, requestCode);
     }
 
     protected void startActivityForResult(Class<?> tClass, int requestCode,String key,Serializable value) {
         Intent intent = new Intent(this, tClass);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
         intent.putExtra(key, value);
+        startActivityForResult(intent, requestCode);
+    }
+
+    protected void startActivityForResult(Class<?> tClass, int requestCode,String key,ArrayList<? extends Parcelable> data) {
+        Intent intent = new Intent(this, tClass);
+        intent.putParcelableArrayListExtra(key, data);
         startActivityForResult(intent, requestCode);
     }
 

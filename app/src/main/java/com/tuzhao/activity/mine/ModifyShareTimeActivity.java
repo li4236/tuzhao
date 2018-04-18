@@ -162,6 +162,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                         super.onError(call, response, e);
                         if (!handleException(e)) {
                             showFiveToast("获取共享时间失败，请稍后重试");
+                            finish();
                         }
                     }
                 });
@@ -187,9 +188,12 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                             String startDate = year + "-" + month + "-" + dayOfMonth;
                             mStartShareDate.setText(startDate);
 
-                            String[] endDate = mEndShareDate.getText().toString().split("-");
                             Calendar endCalendar = Calendar.getInstance();
-                            endCalendar.set(Integer.valueOf(endDate[0]), Integer.valueOf(endDate[1]), Integer.valueOf(endDate[2]));
+                            if (!mEndShareDate.getText().toString().equals("")) {
+                                String[] endDate = mEndShareDate.getText().toString().split("-");
+                                endCalendar.set(Integer.valueOf(endDate[0]), Integer.valueOf(endDate[1]), Integer.valueOf(endDate[2]));
+                            }
+
                             if (calendar.compareTo(endCalendar) == 1) {
                                 mEndShareDate.setText(startDate);
                                 showFiveToast("已自动为你修改结束的共享时间");

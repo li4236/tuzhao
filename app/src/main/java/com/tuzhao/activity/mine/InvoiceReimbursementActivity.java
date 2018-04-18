@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -40,6 +41,8 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     private com.tuzhao.publicwidget.others.CheckBox mAllChoose;
 
+    private static final int REQUEST_CODE = 0x372;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
@@ -67,7 +70,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 } else if (calculateTotalPrice() <= 100) {
                     showFiveToast("订单总额大于100才可以开票哦");
                 } else {
-                    startActivityWithList(ConfirmTicketOrderActivity.class, ConstansUtil.INVOICE_LIST, mChooseInvoice);
+                    startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
                 }
             }
         });
@@ -127,7 +130,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic)
                 .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"));
-        final CheckBox checkBox = (CheckBox) holder.getView(R.id.invoice_reimbursement_rb);
+        final CheckBox checkBox = holder.getView(R.id.invoice_reimbursement_rb);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -183,5 +186,16 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
             }
         }
         mCommonAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            ArrayList<InvoiceInfo> arrayList;
+            if ((arrayList = data.getParcelableArrayListExtra(ConstansUtil.FOR_REQUEST_RESULT)) != null) {
+                mCommonAdapter.removeData(arrayList);
+            }
+        }
     }
 }
