@@ -3,6 +3,7 @@ package com.tuzhao.publicwidget.others;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -17,6 +18,8 @@ import java.util.List;
 
 /**
  * Created by juncoder on 2018/4/17.
+ * <p>
+ * 发票详情的水波浪
  */
 
 public class WaveImageView extends AppCompatImageView {
@@ -49,6 +52,7 @@ public class WaveImageView extends AppCompatImageView {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(Color.parseColor("#69ffffff"));
+        mPaint.setPathEffect(new CornerPathEffect(10));
 
         mPath = new Path();
         mPoints = new ArrayList<>();
@@ -59,6 +63,7 @@ public class WaveImageView extends AppCompatImageView {
         }
         mScreenPoint.y = DensityUtil.dp2px(getContext(), 87);
 
+        //最里面波浪的控制点和结束点
         mPoints.add(new Point(dpToPx(100), dpToPx(59)));
         mPoints.add(new Point(dpToPx(150), dpToPx(76)));
         mPoints.add(new Point(dpToPx(221), dpToPx(93)));
@@ -79,6 +84,7 @@ public class WaveImageView extends AppCompatImageView {
         mPoints.add(new Point(dpToPx(387), dpToPx(62)));
         mPoints.add(new Point(dpToPx(422), dpToPx(80)));*/
 
+       //外层波浪的控制点和结束点
         mPoints.add(new Point(dpToPx(35), dpToPx(56)));
         mPoints.add(new Point(dpToPx(80), dpToPx(77)));
         mPoints.add(new Point(dpToPx(158), dpToPx(94)));
@@ -95,11 +101,11 @@ public class WaveImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mPath.reset();
-        mPath.moveTo(dpToPx(76), dpToPx(87));
+        mPath.moveTo(dpToPx(76), dpToPx(87));   //先移动到里层波浪的起始点
         for (int i = 0; i < 8; i += 2) {
             mPath.quadTo(mPoints.get(i).x, mPoints.get(i).y, mPoints.get(i + 1).x, mPoints.get(i + 1).y);
         }
-        mPath.lineTo(mScreenPoint.x, dpToPx(87));
+        mPath.lineTo(mScreenPoint.x, dpToPx(87));       //移动到View的右下角坐标，用来闭合
         mPath.close();
         canvas.drawPath(mPath, mPaint);
 

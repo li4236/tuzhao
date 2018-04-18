@@ -205,15 +205,20 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
 
     @Override
     protected void bindData(BaseViewHolder holder, final AcceptTicketAddressInfo acceptTicketAddressInfo, final int position) {
+
+        //如果发票类型是电子发票则把手机号隐藏
         if (acceptTicketAddressInfo.getType().equals("电子")) {
             holder.getView(R.id.accept_ticket_address_telephone).setVisibility(View.GONE);
         } else {
             holder.setText(R.id.accept_ticket_address_telephone, acceptTicketAddressInfo.getAcceptPersonTelephone());
         }
 
+        //如果发票类型是电子发票则地址显示邮箱地址，否则显示物理地址
         String address = acceptTicketAddressInfo.getType().equals("电子") ? acceptTicketAddressInfo.getAcceptPersonEmail() :
                 acceptTicketAddressInfo.getAcceptArea() + acceptTicketAddressInfo.getAcceptAddress();
-        if (acceptTicketAddressInfo.getIsDefault().equals("1")) {
+
+        //记录默认收货地址的位置
+        if (mDefalutAddressPosition == -1 && acceptTicketAddressInfo.getIsDefault().equals("1")) {
             mDefalutAddressPosition = position;
         }
 
@@ -253,6 +258,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
             }
         });
 
+        //如果是确认订单跳转过来的，则点击发票后把发票传回去作为收票地址
         if (mIsForResult) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -283,9 +289,9 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             AcceptTicketAddressInfo addressInfo;
             if ((addressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS)) != null) {
-                mCommonAdapter.addData(addressInfo);
+                mCommonAdapter.addData(addressInfo);        //如果是新增发票则返回后把新增的发票添加
             } else if ((addressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS)) != null) {
-                mCommonAdapter.notifyDataChange(mChangeAddressPosition, addressInfo);
+                mCommonAdapter.notifyDataChange(mChangeAddressPosition, addressInfo);       //如果是编辑发票则更新编辑后的发票
             }
         }
     }
