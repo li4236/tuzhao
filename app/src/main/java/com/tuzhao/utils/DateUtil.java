@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,13 +30,48 @@ import static com.tianzhili.www.myselfsdk.pickerview.view.WheelTime.dateFormat;
 
 public class DateUtil {
 
+    private static SimpleDateFormat mDetailDateFormat;
+
+    private static SimpleDateFormat mDayDateFormat;
+
+    private static Date mDate;
+
+    private static SimpleDateFormat getDetailDateFormat() {
+        if (mDetailDateFormat == null) {
+            mDetailDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        }
+        return mDetailDateFormat;
+    }
+
+    private static SimpleDateFormat getDayDateFormat() {
+        if (mDayDateFormat == null) {
+            mDayDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        }
+        return mDayDateFormat;
+    }
+
+    private static Date getDate() {
+        if (mDate == null) {
+            mDate = new Date();
+        }
+        return mDate;
+    }
+
+    public static String getCurrentDate(boolean isDetail) {
+        getDate().setTime(System.currentTimeMillis());
+
+        if (isDetail) {
+            return getDetailDateFormat().format(getDate());
+        } else {
+            return getDayDateFormat().format(getDate());
+        }
+    }
+
     /**
      * 获取当前时间
-     *
-     * @return
      */
     public String getNowTime(boolean isdetail) {
-        String timeString = null;
+        String timeString;
         Time time = new Time();
         time.setToNow();
         String year = thanTen(time.year);
@@ -55,20 +91,16 @@ public class DateUtil {
 
     public Date stringToDate(String dateString) {
         ParsePosition position = new ParsePosition(0);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date dateValue = simpleDateFormat.parse(dateString, position);
-        return dateValue;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        return simpleDateFormat.parse(dateString, position);
     }
 
     /**
      * 十以下的数加零
-     *
-     * @param str
-     * @return
      */
     public String thanTen(int str) {
 
-        String string = null;
+        String string;
 
         if (str < 10) {
             string = "0" + str;
@@ -85,11 +117,10 @@ public class DateUtil {
      *
      * @param starTime
      * @param endTime
-     * @return
      */
     public float getTimeDifferenceHour(String starTime, String endTime) {
         float hour = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.getDefault());
         try {
             Date parse = dateFormat.parse(starTime);
             Date parse1 = dateFormat.parse(endTime);
@@ -118,9 +149,9 @@ public class DateUtil {
         int minute = 0;
         SimpleDateFormat dateFormat;
         if (issample) {
-            dateFormat = new SimpleDateFormat("HH:mm");
+            dateFormat = new SimpleDateFormat("HH:mm",Locale.getDefault());
         } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.getDefault());
         }
         try {
             Date parse = dateFormat.parse(starTime);
@@ -147,7 +178,7 @@ public class DateUtil {
      */
     public int getTimeDifferenceMinuteMoreDetail(String starTime, String endTime) {
         int secend = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
         try {
             Date parse = dateFormat.parse(starTime);
             Date parse1 = dateFormat.parse(endTime);
@@ -173,9 +204,9 @@ public class DateUtil {
         boolean isDayu = false;
         SimpleDateFormat dateFormat;
         if (isDetail) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         }
 
         try {
@@ -212,9 +243,9 @@ public class DateUtil {
         boolean isDayu = false;
         SimpleDateFormat dateFormat;
         if (isDetail) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         }
 
         try {
@@ -244,7 +275,7 @@ public class DateUtil {
      */
     public boolean betweenStartAndEnd(String thetime, String starttime, String endtime) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         try {
             Date time = dateFormat.parse(thetime);
             Date start = dateFormat.parse(starttime);
@@ -273,7 +304,7 @@ public class DateUtil {
      */
     public boolean isTheIntervalBeginorEnd(String thetime1, String thetime2, String starttime, String endtime) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         try {
             Date time1 = dateFormat.parse(thetime1);
             Date time2 = dateFormat.parse(thetime2);
@@ -303,7 +334,7 @@ public class DateUtil {
      */
     public boolean betweenStartAndEndSimple(String thetime, String starttime, String endtime) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
             Date time = dateFormat.parse(thetime);
             Date start = dateFormat.parse(starttime);
@@ -323,7 +354,7 @@ public class DateUtil {
     }
 
     public String addTime(String thetime, int addtime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         if (!thetime.equals("") && addtime > 0) {
             try {
                 Date date = dateFormat.parse(thetime);

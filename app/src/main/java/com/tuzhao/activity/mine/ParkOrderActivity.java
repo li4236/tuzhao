@@ -52,11 +52,9 @@ public class ParkOrderActivity extends BaseActivity {
     }
 
     private void initView() {
-
         viewpager = findViewById(R.id.id_activity_parkorder_layout_viewpager);
         viewPagerTab = findViewById(R.id.id_activity_parkorder_layout_pagetab);
         imageview_backbotton = findViewById(R.id.id_activity_parkorder_imageview_back);
-
 
         fragmentList = new ArrayList<>();
 

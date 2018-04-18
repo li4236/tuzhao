@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -73,41 +74,15 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
     //优惠券
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            String obj = (String) msg.obj;
-            textview_carnumble.setText(obj);
-            if (order_list.size() > 0) {
-                for (ParkOrderInfo parkOrderInfo : order_list) {
-                    if (parkOrderInfo.getOrder_status().equals("2")) {
-                        if (parkOrderInfo.getCar_numble().equals(obj)) {
-                            MyToast.showToast(OrderParkActivity.this, "该车辆当前正在停车中，请重新选择哦", 5);
-                            textview_carnumble.setText("");
-                            return;
-                        }
-                    }
-                }
-            }
-            if (obj == null) {
-                textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
-                textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
-            } else {
-                if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mChooseData.size() > 0) {
-                    textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.little_yuan_yellow_8dp));
-                    textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
-                    try {
-                        DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
-                        textview_fee.setText("约￥" + parkFee.parkfee);
-                    } catch (Exception e) {
-                    }
-                } else {
-                    textview_fee.setText("约￥0.00");
-                }
-            }
-            super.handleMessage(msg);
-        }
-    };
+    private Handler mHandler;
+
+    private ArrayList<String> mDays;
+
+    private ArrayList<ArrayList<String>> mHours;
+
+    private ArrayList<ArrayList<ArrayList<String>>> mMinutes;
+
+    private OptionsPickerView<String> mStartTimeOption;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,18 +103,55 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         } else {
             finish();
         }
+
+        mHandler = new Handler(Looper.myLooper(), new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                String obj = (String) msg.obj;
+                textview_carnumble.setText(obj);
+                if (order_list.size() > 0) {
+                    for (ParkOrderInfo parkOrderInfo : order_list) {
+                        if (parkOrderInfo.getOrder_status().equals("2")) {
+                            if (parkOrderInfo.getCar_numble().equals(obj)) {
+                                MyToast.showToast(OrderParkActivity.this, "该车辆当前正在停车中，请重新选择哦", 5);
+                                textview_carnumble.setText("");
+                                return true;
+                            }
+                        }
+                    }
+                }
+                if (obj == null) {
+                    textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
+                    textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
+                } else {
+                    if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mChooseData.size() > 0) {
+                        textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.little_yuan_yellow_8dp));
+                        textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
+                        try {
+                            DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
+                            textview_fee.setText("约￥" + parkFee.parkfee);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        textview_fee.setText("约￥0.00");
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private void initView() {
-        imageView_back = (ImageView) findViewById(R.id.id_activity_orderpark_layout_imageView_back);
-        linearlayout_carnumble = (LinearLayout) findViewById(R.id.id_activity_orderpark_layout_linearlayout_carnumble);
-        linearlayout_starttime = (LinearLayout) findViewById(R.id.id_activity_orderpark_layout_linearlayout_starttime);
-        linearlayout_parktime = (LinearLayout) findViewById(R.id.id_activity_orderpark_layout_linearlayout_parktime);
-        textview_carnumble = (TextView) findViewById(R.id.id_activity_orderpark_layout_textview_carnumble);
-        textview_starttime = (TextView) findViewById(R.id.id_activity_orderpark_layout_textview_starttime);
-        textview_parktime = (TextView) findViewById(R.id.id_activity_orderpark_layout_textview_parktime);
-        textview_fee = (TextView) findViewById(R.id.id_activity_orderpark_layout_textview_fee);
-        textview_ordernow = (TextView) findViewById(R.id.id_activity_orderpark_layout_textview_ordernow);
+        imageView_back = findViewById(R.id.id_activity_orderpark_layout_imageView_back);
+        linearlayout_carnumble = findViewById(R.id.id_activity_orderpark_layout_linearlayout_carnumble);
+        linearlayout_starttime = findViewById(R.id.id_activity_orderpark_layout_linearlayout_starttime);
+        linearlayout_parktime = findViewById(R.id.id_activity_orderpark_layout_linearlayout_parktime);
+        textview_carnumble = findViewById(R.id.id_activity_orderpark_layout_textview_carnumble);
+        textview_starttime = findViewById(R.id.id_activity_orderpark_layout_textview_starttime);
+        textview_parktime = findViewById(R.id.id_activity_orderpark_layout_textview_parktime);
+        textview_fee = findViewById(R.id.id_activity_orderpark_layout_textview_fee);
+        textview_ordernow = findViewById(R.id.id_activity_orderpark_layout_textview_ordernow);
     }
 
     private void initEvent() {
@@ -193,93 +205,107 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private void showStartTimeOptions() {
         textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
         textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
-        options1Items.clear();
-        options2Items.clear();
-        options3Items.clear();
-        //选项选择器
-        pvOptions = new OptionsPickerView<>(OrderParkActivity.this);
-        // 初始化列表数据
-        dateUtil.initStartParkTimeData(options1Items, options2Items, options3Items);
-        //三级联动效果
-        pvOptions.setPicker(options1Items, options2Items, options3Items, false);        //设置选择的三级单位
-        pvOptions.setLabels(null, "点", "分");
+        if (mStartTimeOption == null) {
+            mDays = new ArrayList<>(10);
+            mHours = new ArrayList<>(24);
+            mMinutes = new ArrayList<>(60);
+            dateUtil.initStartParkTimeData(mDays, mHours, mMinutes);
+            mStartTimeOption = new OptionsPickerView<>(this);
+            mStartTimeOption.setPicker(mDays, mHours, mMinutes, false);
+            mStartTimeOption.setLabels(null, "点", "分");
+            mStartTimeOption.setCyclic(false);
+            mStartTimeOption.setTextSize(18);
+            mStartTimeOption.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+                @Override
+                public void onOptionsSelect(int options1, int option2, int options3) {
+                    //返回的分别是三个级别的选中位置
+                    String tx = mDays.get(options1) + " " + mHours.get(options1).get(option2) + " 点 " + mMinutes.get(options1).get(option2).get(options3) + " 分";
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date());
+                    calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + options1);//让日期加N
+                    start_time = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + mHours.get(options1).get(option2) + ":" + mMinutes.get(options1).get(option2).get(options3);
 
-        pvOptions.setCyclic(false);
-        //设置默认选中的三级项目
-        pvOptions.setSelectOptions(0, 0, 0);
-        pvOptions.setTextSize(18);
-        //监听确定选择按钮
-        pvOptions.show();
-        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3) {
-                //返回的分别是三个级别的选中位置
-                String tx = options1Items.get(options1) + " " + options2Items.get(options1).get(option2) + " 点 " + options3Items.get(options1).get(option2).get(options3) + " 分";
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date());
-                calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + options1);//让日期加N
-                start_time = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + options2Items.get(options1).get(option2) + ":" + options3Items.get(options1).get(option2).get(options3);
-
-                Log.e("哈哈哈，", "选中时间" + start_time);
-                if (dateUtil.compareNowTime(start_time, true)) {
-                    textview_starttime.setText(tx);
-                    end_time = dateUtil.addTime(start_time, park_time);
-                    if (order_list.size() > 0) {
-                        for (ParkOrderInfo parkOrderInfo : order_list) {
-                            if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
-                                //预约订单
-                                MyToast.showToast(OrderParkActivity.this, "在该时间您已有过预约，请重新选择哦", 5);
-                                return;
+                    Log.e("哈哈哈，", "选中时间" + start_time);
+                    if (dateUtil.compareNowTime(start_time, true)) {
+                        textview_starttime.setText(tx);
+                        end_time = dateUtil.addTime(start_time, park_time);
+                        if (order_list.size() > 0) {
+                            for (ParkOrderInfo parkOrderInfo : order_list) {
+                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                    //预约订单
+                                    MyToast.showToast(OrderParkActivity.this, "在该时间您已有过预约，请重新选择哦", 5);
+                                    return;
+                                }
                             }
                         }
+                        if (textview_parktime.getText().length() > 0 && park_time > 0) {
+                            screenPark();
+                        }
+                    } else {
+                        start_time = "";
+                        textview_starttime.setText("");
+                        MyToast.showToast(OrderParkActivity.this, "请选择有效时间哦", 5);
                     }
-                    if (textview_parktime.getText().length() > 0 && park_time > 0) {
-                        screenPark();
-                    }
-                } else {
-                    start_time = "";
-                    textview_starttime.setText("");
-                    MyToast.showToast(OrderParkActivity.this, "请选择有效时间哦", 5);
                 }
-            }
-        });
+            });
+        }
+        String[] currentHourAndMinute = DateUtil.getCurrentDate(false).split(":");
+        mStartTimeOption.setSelectOptions(0, Integer.valueOf(currentHourAndMinute[0]), Integer.valueOf(currentHourAndMinute[1]));
+        mStartTimeOption.show();
     }
 
     private void showParktimeOptions() {
         textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
         textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
-        options1Items.clear();
-        options2Items.clear();
-        options3Items.clear();
         //选项选择器
-        pvOptions = new OptionsPickerView(OrderParkActivity.this);
-        // 初始化列表数据
-        dateUtil.initParktimeData(options1Items, options2Items, options3Items);
-        //三级联动效果
-        pvOptions.setPicker(options1Items, options2Items, options3Items, false);
-        //设置选择的三级单位
-        pvOptions.setLabels("天", "小时", "分钟");
-        pvOptions.setCyclic(false);
-        //设置默认选中的三级项目
-        pvOptions.setSelectOptions(0, 0, 0);
-        pvOptions.setTextSize(18);
-        //监听确定选择按钮
-        pvOptions.show();
-        pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+        if (pvOptions == null) {
+            pvOptions = new OptionsPickerView<>(OrderParkActivity.this);
+            // 初始化列表数据
+            dateUtil.initParktimeData(options1Items, options2Items, options3Items);
+            //三级联动效果
+            pvOptions.setPicker(options1Items, options2Items, options3Items, false);
+            //设置选择的三级单位
+            pvOptions.setLabels("天", "小时", "分钟");
+            pvOptions.setCyclic(false);
+            //设置默认选中的三级项目
+            pvOptions.setSelectOptions(0, 1, 0);
+            pvOptions.setTextSize(18);
 
-            @Override
-            public void onOptionsSelect(int options1, int option2, int options3) {
-                //返回的分别是三个级别的选中位置
-                String tx = "";
-                if (options1Items.get(options1).equals("0")) {
-                    if (options2Items.get(options1).get(option2).equals("0")) {
-                        if (options3Items.get(options1).get(option2).get(options3).equals("0")) {
-                            MyToast.showToast(OrderParkActivity.this, "请选择有效时段哦", 5);
-                            textview_parktime.setText("");
-                            park_time = 0;
+            pvOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+
+                @Override
+                public void onOptionsSelect(int options1, int option2, int options3) {
+                    //返回的分别是三个级别的选中位置
+                    String tx;
+                    if (options1Items.get(options1).equals("0")) {
+                        if (options2Items.get(options1).get(option2).equals("0")) {
+                            if (options3Items.get(options1).get(option2).get(options3).equals("0")) {
+                                MyToast.showToast(OrderParkActivity.this, "请选择有效时段哦", 5);
+                                textview_parktime.setText("");
+                                park_time = 0;
+                            } else {
+                                tx = options3Items.get(options1).get(option2).get(options3) + "分钟";
+                                textview_parktime.setText(tx);
+                                park_time = Integer.parseInt(options1Items.get(options1)) * 60 * 24 + Integer.parseInt(options2Items.get(options1).get(option2)) * 60 + Integer.parseInt(options3Items.get(options1).get(option2).get(options3));
+                                end_time = dateUtil.addTime(start_time, park_time);
+                                if (order_list.size() > 0) {
+                                    for (ParkOrderInfo parkOrderInfo : order_list) {
+                                        if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                            //预约订单
+                                            MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
+                                            end_time = "";
+                                            textview_parktime.setText("");
+                                            park_time = 0;
+                                            return;
+                                        }
+                                    }
+                                }
+                                if (textview_starttime.getText().length() > 0 && !start_time.equals("")) {
+                                    screenPark();
+                                }
+                            }
                         } else {
-                            tx = options3Items.get(options1).get(option2).get(options3) + "分钟";
+                            tx = options2Items.get(options1).get(option2) + "小时" + options3Items.get(options1).get(option2).get(options3) + "分钟";
                             textview_parktime.setText(tx);
                             park_time = Integer.parseInt(options1Items.get(options1)) * 60 * 24 + Integer.parseInt(options2Items.get(options1).get(option2)) * 60 + Integer.parseInt(options3Items.get(options1).get(option2).get(options3));
                             end_time = dateUtil.addTime(start_time, park_time);
@@ -300,7 +326,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                             }
                         }
                     } else {
-                        tx = options2Items.get(options1).get(option2) + "小时" + options3Items.get(options1).get(option2).get(options3) + "分钟";
+                        tx = options1Items.get(options1) + "天" + options2Items.get(options1).get(option2) + "小时" + options3Items.get(options1).get(option2).get(options3) + "分钟";
                         textview_parktime.setText(tx);
                         park_time = Integer.parseInt(options1Items.get(options1)) * 60 * 24 + Integer.parseInt(options2Items.get(options1).get(option2)) * 60 + Integer.parseInt(options3Items.get(options1).get(option2).get(options3));
                         end_time = dateUtil.addTime(start_time, park_time);
@@ -320,29 +346,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                             screenPark();
                         }
                     }
-                } else {
-                    tx = options1Items.get(options1) + "天" + options2Items.get(options1).get(option2) + "小时" + options3Items.get(options1).get(option2).get(options3) + "分钟";
-                    textview_parktime.setText(tx);
-                    park_time = Integer.parseInt(options1Items.get(options1)) * 60 * 24 + Integer.parseInt(options2Items.get(options1).get(option2)) * 60 + Integer.parseInt(options3Items.get(options1).get(option2).get(options3));
-                    end_time = dateUtil.addTime(start_time, park_time);
-                    if (order_list.size() > 0) {
-                        for (ParkOrderInfo parkOrderInfo : order_list) {
-                            if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
-                                //预约订单
-                                MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
-                                end_time = "";
-                                textview_parktime.setText("");
-                                park_time = 0;
-                                return;
-                            }
-                        }
-                    }
-                    if (textview_starttime.getText().length() > 0 && !start_time.equals("")) {
-                        screenPark();
-                    }
                 }
-            }
-        });
+            });
+        }
+        //监听确定选择按钮
+        pvOptions.show();
     }
 
     private void screenPark() {
@@ -854,5 +862,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
+        mHandler.removeCallbacksAndMessages(null);
     }
 }
