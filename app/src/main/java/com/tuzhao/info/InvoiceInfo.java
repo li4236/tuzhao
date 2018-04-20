@@ -21,7 +21,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
 
     private String check = "false";
 
-    private String parkspaceAddress;
+    private String locationDescribe;
 
     private String parkDuration;
 
@@ -67,12 +67,12 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.check = check;
     }
 
-    public String getParkspaceAddress() {
-        return parkspaceAddress;
+    public String getLocationDescribe() {
+        return locationDescribe;
     }
 
-    public void setParkspaceAddress(String parkspaceAddress) {
-        this.parkspaceAddress = parkspaceAddress;
+    public void setLocationDescribe(String locationDescribe) {
+        this.locationDescribe = locationDescribe;
     }
 
     public String getParkDuration() {
@@ -100,7 +100,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
                 ", parkStarttime='" + parkStarttime + '\'' +
                 ", pictures='" + pictures + '\'' +
                 ", check='" + check + '\'' +
-                ", parkspaceAddress='" + parkspaceAddress + '\'' +
+                ", locationDescribe='" + locationDescribe + '\'' +
                 ", parkDuration='" + parkDuration + '\'' +
                 ", actualFee='" + actualFee + '\'' +
                 '}';
@@ -118,7 +118,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.parkStarttime);
         dest.writeString(this.pictures);
         dest.writeString(this.check);
-        dest.writeString(this.parkspaceAddress);
+        dest.writeString(this.locationDescribe);
         dest.writeString(this.parkDuration);
         dest.writeString(this.actualFee);
     }
@@ -132,7 +132,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.parkStarttime = in.readString();
         this.pictures = in.readString();
         this.check = in.readString();
-        this.parkspaceAddress = in.readString();
+        this.locationDescribe = in.readString();
         this.parkDuration = in.readString();
         this.actualFee = in.readString();
     }

@@ -329,7 +329,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final InvoiceInfo invoiceInfo, final int position) {
-            holder.setText(R.id.confirm_ticket_order_park_address_item, invoiceInfo.getParkspaceAddress() + invoiceInfo.getParkspaceName())
+            holder.setText(R.id.confirm_ticket_order_park_address_item, invoiceInfo.getLocationDescribe() + invoiceInfo.getParkspaceName())
                     .setText(R.id.confirm_ticket_order_park_date_item, invoiceInfo.getParkStarttime())
                     .setText(R.id.confirm_ticket_order_ticket_price_item, "￥" + invoiceInfo.getActualFee())
                     .getView(R.id.confirm_ticket_order_ticket_delete_item).setOnClickListener(new View.OnClickListener() {

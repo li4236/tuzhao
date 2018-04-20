@@ -125,9 +125,8 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
                 .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
-                .setText(R.id.invoice_reimbursement_location, invoiceInfo.getParkspaceName())
+                .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
                 .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
-                .setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic)
                 .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"));
         final CheckBox checkBox = holder.getView(R.id.invoice_reimbursement_rb);

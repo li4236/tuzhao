@@ -35,14 +35,15 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,6 +65,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private Park_Space_Info parkspace_info;
     private ArrayList<Park_Info> park_list;
     private ArrayList<ParkOrderInfo> order_list;
+    private List<Park_Info> mCanParkInfo;
     private ArrayList<Holder> mChooseData = new ArrayList<>();//以选择时间来比较可以停的车位
     private DateUtil dateUtil = new DateUtil();
     private String start_time = "", end_time = "";//预定开始和结束的停车时间
@@ -83,6 +85,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<ArrayList<ArrayList<String>>> mMinutes;
 
     private OptionsPickerView<String> mStartTimeOption;
+
+    private DecimalFormat mDecimalFormat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,6 +144,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 return false;
             }
         });
+
+        mDecimalFormat = new DecimalFormat("0.00");
     }
 
     private void initView() {
@@ -223,7 +229,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(new Date());
                     calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + options1);//让日期加N
-                    start_time = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + mHours.get(options1).get(option2) + ":" + mMinutes.get(options1).get(option2).get(options3);
+                    start_time = calendar.get(Calendar.YEAR) + "-" + DateUtil.thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" +
+                            DateUtil.thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " " + mHours.get(options1).get(option2) + ":" + mMinutes.get(options1).get(option2).get(options3);
 
                     Log.e("哈哈哈，", "选中时间" + start_time);
                     if (dateUtil.compareNowTime(start_time, true)) {
@@ -354,7 +361,70 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void screenPark() {
-        mChooseData.clear();
+        Log.e("TAG", "startDate: " + start_time + "  endDate:" + end_time);
+        if (mCanParkInfo == null) {
+            mCanParkInfo = new LinkedList<>();
+        }
+        mCanParkInfo.clear();
+        mCanParkInfo.addAll(park_list);
+
+        long shareTimeDistance;
+        for (Park_Info parkInfo : park_list) {
+            //排除不在共享日期之内的(根据共享日期)
+            if (!DateUtil.isInShareDate(start_time, end_time, parkInfo.getOpen_date())) {
+                mCanParkInfo.remove(parkInfo);
+                break;
+            }
+
+            //排除暂停时间在预定时间内的(根据暂停日期)
+            if (DateUtil.isInPauseDate(start_time, end_time, parkInfo.getPauseShareDate())) {
+                mCanParkInfo.remove(parkInfo);
+                break;
+            }
+
+            //排除预定时间当天不共享的(根据共享星期)
+            if (!DateUtil.isInShareDay(start_time, end_time, parkInfo.getShareDay())) {
+                mCanParkInfo.remove(parkInfo);
+                break;
+            }
+
+            //排除该时间段被别人预约过的(根据车位的被预约时间)
+            if (DateUtil.isInOrderDate(start_time, end_time, parkInfo.getOrder_times())) {
+                mCanParkInfo.remove(parkInfo);
+                break;
+            }
+
+            //排除不在共享时间段内的(根据共享的时间段)
+            if ((shareTimeDistance = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time())) != 0) {
+                //获取车位可共享的时间差
+                Log.e("TAG", "screenPark: " + shareTimeDistance);
+                int position = mCanParkInfo.indexOf(parkInfo);
+                parkInfo.setShareTimeDistance(shareTimeDistance);
+                mCanParkInfo.set(position, parkInfo);
+                break;
+            } else {
+                mCanParkInfo.remove(parkInfo);
+                break;
+            }
+        }
+
+        Collections.sort(mCanParkInfo, new Comparator<Park_Info>() {
+            @Override
+            public int compare(Park_Info o1, Park_Info o2) {
+                int result;
+                //根据车位的指标排序
+                result = Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
+                if (result == 0) {
+                    //如果指标一样则根据可共享的时间排序
+                    result = (int) (o1.getShareTimeDistance() - o2.getShareTimeDistance());
+                }
+                return result;
+            }
+        });
+
+        Log.e("TAG", "screenPark: " + mCanParkInfo);
+        setOrderFee();
+        /*mChooseData.clear();
         int my_leavetime = UserManager.getInstance().getUserInfo().getLeave_time();
         try {
             if (park_time >= 1440) {
@@ -571,7 +641,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     }
                 }
             }
-
             if (textview_carnumble.getText().length() > 0 && mChooseData.size() > 0) {
                 textview_ordernow.setBackground(getResources().getDrawable(R.drawable.little_yuan_yellow_8dp));
                 textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
@@ -579,6 +648,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
                     textview_fee.setText("约￥" + parkFee.parkfee);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
                 textview_fee.setText("约￥0.00");
@@ -587,6 +657,21 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+    }
+
+    private void setOrderFee() {
+        if (textview_carnumble.getText().length() > 0 && mCanParkInfo.size() > 0) {
+            textview_ordernow.setBackground(getResources().getDrawable(R.drawable.little_yuan_yellow_8dp));
+            textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
+            double orderFee = DateUtil.caculateParkFee(start_time, end_time, mCanParkInfo.get(0).getHigh_time(),
+                    Double.valueOf(mCanParkInfo.get(0).getHigh_fee()) / 60,
+                    Double.valueOf(mCanParkInfo.get(0).getLow_fee()) / 60);
+            textview_fee.setText("约￥" + orderFee);
+        } else {
+            textview_fee.setText("约￥0.00");
+            textview_ordernow.setBackground(getResources().getDrawable(R.drawable.yuan_little_graynall_8dp));
+            textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
         }
     }
 
@@ -594,7 +679,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         private String park_id, parktime_qujian, update_time;
         private int rest_time;
 
-        public Holder(String park_id, String parktime_qujian, String update_time, int rest_time) {
+        Holder(String park_id, String parktime_qujian, String update_time, int rest_time) {
             this.park_id = park_id;
             this.parktime_qujian = parktime_qujian;
             this.update_time = update_time;
@@ -642,9 +727,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Collections.sort(mChooseData, new Comparator<Holder>() {
             @Override
             public int compare(Holder o1, Holder o2) {
-                float s1 = o1.rest_time;
-                float s2 = o2.rest_time;
-                return new Integer((int) s1).compareTo(new Integer((int) s2));
+                return Integer.valueOf(o1.rest_time).compareTo(o2.rest_time);
             }
         });
 

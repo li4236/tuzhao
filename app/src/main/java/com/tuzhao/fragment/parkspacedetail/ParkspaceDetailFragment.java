@@ -61,26 +61,24 @@ public class ParkspaceDetailFragment extends BaseFragment {
     private View mContentView;
     private CustomDialog mCustomDialog;
     private Banner banner_image;
-    private TextView textview_hightime,textview_highfee,textview_lowtime,textview_lowfee,textview_finewarm
-            ,textview_distance,textview_distance_dw,textview_parkspacename,textview_parkspaceaddress,textview_parkcount,textview_grade,textview_opentime;
-    private LinearLayout linearlayout_goorder,linearlayout_daohang;
+    private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance, textview_distance_dw, textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime;
+    private LinearLayout linearlayout_goorder, linearlayout_daohang;
     private LoginDialogFragment loginDialogFragment;
     private CBRatingBar cbratingbar;
 
     /**
-     *页面相关
+     * 页面相关
      */
-    private String parkspace_id,city_code;
+    private String parkspace_id, city_code;
     private Park_Space_Info parkspace_info = null;
     private ArrayList<Park_Info> mData = null;
-    private boolean parkspace_issuccess = false,park_issuccess = false;
+    private boolean parkspace_issuccess = false, park_issuccess = false;
     private ArrayList<String> imgData;
     private ArrayList<ParkOrderInfo> mOrderList = null;
     private DateUtil dateUtil = new DateUtil();
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
         mContentView = inflater.inflate(R.layout.fragment_parkspacedetail_layout, container, false);
 
@@ -96,26 +94,26 @@ public class ParkspaceDetailFragment extends BaseFragment {
         parkspace_info = (Park_Space_Info) getArguments().getSerializable("parkspace_info");
         mData = (ArrayList<Park_Info>) getArguments().getSerializable("park_info");
 
-        if (parkspace_info == null){
+        if (parkspace_info == null) {
             parkspace_id = getArguments().getString("parkspace_id");
             city_code = getArguments().getString("city_code");
             initLoading("加载中...");
             requestGetParkspaceData();
-        }else {
+        } else {
             parkspace_issuccess = true;
             initViewData(parkspace_info);
         }
 
-        if (mData == null){
+        if (mData == null) {
             parkspace_id = getArguments().getString("parkspace_id");
             city_code = getArguments().getString("city_code");
-            if (mCustomDialog ==null){
+            if (mCustomDialog == null) {
                 initLoading("加载中...");
-            }else if (!mCustomDialog.isShowing()){
+            } else if (!mCustomDialog.isShowing()) {
                 initLoading("加载中...");
             }
             requestGetParkListData();
-        }else {
+        } else {
             park_issuccess = true;
             textview_parkcount.setText(mData.size() + "车位");
         }
@@ -126,22 +124,22 @@ public class ParkspaceDetailFragment extends BaseFragment {
     }
 
     private void initView() {
-        banner_image = (Banner) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_banner_image);
-        textview_hightime = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_hightime);
-        textview_highfee = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_highfee);
-        textview_opentime = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_opentime);
-        textview_lowtime = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_lowtime);
-        textview_lowfee = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_lowfee);
-        textview_finewarm = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_finewarm);
-        textview_parkspacename = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkspacename);
-        textview_distance = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_distance);
-        textview_distance_dw = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_distance_dw);
-        textview_parkspaceaddress = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkspaceaddress);
-        textview_parkcount = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkcount);
-        textview_grade = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_grade);
-        linearlayout_goorder = (LinearLayout) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_goorder);
-        linearlayout_daohang = (LinearLayout) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
-        cbratingbar = (CBRatingBar) mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_cbratingbar);
+        banner_image = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_banner_image);
+        textview_hightime = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_hightime);
+        textview_highfee = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_highfee);
+        textview_opentime = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_opentime);
+        textview_lowtime = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_lowtime);
+        textview_lowfee = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_lowfee);
+        textview_finewarm = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_finewarm);
+        textview_parkspacename = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkspacename);
+        textview_distance = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_distance);
+        textview_distance_dw = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_distance_dw);
+        textview_parkspaceaddress = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkspaceaddress);
+        textview_parkcount = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkcount);
+        textview_grade = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_grade);
+        linearlayout_goorder = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_goorder);
+        linearlayout_daohang = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
+        cbratingbar = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_cbratingbar);
 
         banner_image.setOnBannerListener(new OnBannerListener() {
             @Override
@@ -149,6 +147,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
             }
         });
     }
+
     private void initEvent() {
 
         linearlayout_goorder.setOnClickListener(new View.OnClickListener() {
@@ -167,20 +166,19 @@ public class ParkspaceDetailFragment extends BaseFragment {
                                 if (parkOrderInfo.getOrder_status().equals("3")) {
                                     MyToast.showToast(mContext, "您当前还有为付款订单", 5);
                                     return;
-                                }else {
-                                    if (parkOrderInfo.getOrder_status().equals("1")||parkOrderInfo.getOrder_status().equals("2")){
+                                } else {
+                                    if (parkOrderInfo.getOrder_status().equals("1") || parkOrderInfo.getOrder_status().equals("2")) {
                                         aingcount++;
                                     }
                                 }
                             }
-                            if (aingcount>1){
+                            if (aingcount > 1) {
                                 MyToast.showToast(mContext, "预定订单数量已达上限哦", 5);
-                                return;
-                            }else {
+                            } else {
                                 Intent intent = new Intent(mContext, OrderParkActivity.class);
-                                intent.putExtra("parkspace_info",parkspace_info);
-                                intent.putExtra("park_list",mData);
-                                intent.putExtra("order_list",mOrderList);
+                                intent.putExtra("parkspace_info", parkspace_info);
+                                intent.putExtra("park_list", mData);
+                                intent.putExtra("order_list", mOrderList);
                                 startActivity(intent);
                             }
                         }
@@ -206,14 +204,14 @@ public class ParkspaceDetailFragment extends BaseFragment {
     private void requestGetParkspaceData() {
         OkGo.post(HttpConstants.getOneParkSpaceData)
                 .tag(HttpConstants.getOneParkSpaceData)
-                .params("parkspace_id",parkspace_id)
+                .params("parkspace_id", parkspace_id)
                 .params("citycode", city_code)
-                .params("ad_position","2")
+                .params("ad_position", "2")
                 .execute(new JsonCallback<Base_Class_Info<Park_Space_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Park_Space_Info> park_space_infoBase_class_info, Call call, Response response) {
                         parkspace_issuccess = true;
-                        if (park_issuccess){
+                        if (park_issuccess) {
                             if (mCustomDialog.isShowing()) {
                                 mCustomDialog.dismiss();
                             }
@@ -229,13 +227,14 @@ public class ParkspaceDetailFragment extends BaseFragment {
         OkGo.post(HttpConstants.getParkList)//请求数据的接口地址
                 .tag(HttpConstants.getParkList)
                 .params("parkspace_id", parkspace_id)
-                .params("citycode",city_code)
+                .params("citycode", city_code)
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(final Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
                         //请求成功
+                        Log.e("TAG", "onSuccess: "+responseData.data );
                         park_issuccess = true;
-                        if (parkspace_issuccess){
+                        if (parkspace_issuccess) {
                             if (mCustomDialog.isShowing()) {
                                 mCustomDialog.dismiss();
                             }
@@ -251,7 +250,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
                             mCustomDialog.dismiss();
                         }
                         textview_parkcount.setText("暂无车位");
-                        if (!DensityUtil.isException(mContext,e)){
+                        if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                         }
                     }
@@ -262,7 +261,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
         OkGo.post(HttpConstants.getUserParkOrderForAppoint)
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(final Base_Class_List_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -271,7 +270,9 @@ public class ParkspaceDetailFragment extends BaseFragment {
                                 mCustomDialog.dismiss();
                             }
                         }
-                        mOrderList = new ArrayList<>();
+                        if (mOrderList != null) {
+                            mOrderList.clear();
+                        }
                         mOrderList = responseData.data;
                     }
 
@@ -296,15 +297,15 @@ public class ParkspaceDetailFragment extends BaseFragment {
                                     MyToast.showToast(mContext, "服务器正在维护中", 5);
                                     break;
                             }
-                        }else {
+                        } else {
                             mOrderList = null;
                         }
                     }
                 });
     }
 
-    private void initViewData(Park_Space_Info parkspace_info){
-        try{
+    private void initViewData(Park_Space_Info parkspace_info) {
+        try {
             final String img_Url[] = parkspace_info.getParkspace_img().split(",");
             imgData = new ArrayList<>();
             if (img_Url.length > 0) {
@@ -359,16 +360,18 @@ public class ParkspaceDetailFragment extends BaseFragment {
             }
             textview_highfee.setText(parkspace_info.getHigh_fee());
             textview_lowfee.setText(parkspace_info.getLow_fee());
-            textview_finewarm.setText("※ 停车超过顺延时间会按"+parkspace_info.getFine()+"元/小时收取额外超时费哦 ※");
-            cbratingbar.setStarProgress(parkspace_info.getGrade() == null?80:(new Float(parkspace_info.getGrade())*100/5));
-            textview_grade.setText(parkspace_info.getGrade()+"分");
-            textview_opentime.setText("营业时间（"+parkspace_info.getOpentime()+"）");
-        }catch (Exception e){}
+            textview_finewarm.setText("※ 停车超过顺延时间会按" + parkspace_info.getFine() + "元/小时收取额外超时费哦 ※");
+            cbratingbar.setStarProgress(parkspace_info.getGrade() == null ? 80 : (new Float(parkspace_info.getGrade()) * 100 / 5));
+            textview_grade.setText(parkspace_info.getGrade() + "分");
+            textview_opentime.setText("营业时间（" + parkspace_info.getOpentime() + "）");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void login() {
         loginDialogFragment = new LoginDialogFragment();
-        loginDialogFragment.show(((BaseActivity)mContext).getSupportFragmentManager(), "hahah");
+        loginDialogFragment.show(((BaseActivity) mContext).getSupportFragmentManager(), "hahah");
     }
 
     private void initLoading(String what) {
@@ -379,7 +382,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!= null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }

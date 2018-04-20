@@ -28,7 +28,7 @@ public class Park_Info extends BaseInfo {
     private String low_fee;//低峰时段单价
     private String high_max_fee;//高峰时段封顶价格。0代表不封顶
     private String low_max_fee;//低峰时段封顶价格。0代表不封顶
-    private String order_times;//所有用户所预定的时间，逗号隔开
+    private String order_times;//所有用户所预定的时间，逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
     private String fine;//罚金：滞留金
     private String profit_ratio;//收益比
     private String type;//车位归属类型
@@ -36,6 +36,8 @@ public class Park_Info extends BaseInfo {
     private String create_time;//创建时间，主要是提交为了删除车位
     private String update_time;//更新时间，主要是为了核验是否新增订单号
     private String voltage;//车位锁电量值
+    private String indicator;//指标，代表该车位被停车的次数，用于预定车位排序
+    private long shareTimeDistance;     //能共享的时间段只差，仅用于预定车位排序
 
     public String getPark_space_name() {
         return parkspace_name;
@@ -236,5 +238,120 @@ public class Park_Info extends BaseInfo {
 
     public void setVoltage(String voltage) {
         this.voltage = voltage;
+    }
+
+    public String getParkspace_id() {
+        return parkspace_id;
+    }
+
+    public void setParkspace_id(String parkspace_id) {
+        this.parkspace_id = parkspace_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getShareDay() {
+        return shareDay;
+    }
+
+    public void setShareDay(String shareDay) {
+        this.shareDay = shareDay;
+    }
+
+    public String getPauseShareDate() {
+        return pauseShareDate;
+    }
+
+    public void setPauseShareDate(String pauseShareDate) {
+        this.pauseShareDate = pauseShareDate;
+    }
+
+    public String getParking_user_id() {
+        return parking_user_id;
+    }
+
+    public void setParking_user_id(String parking_user_id) {
+        this.parking_user_id = parking_user_id;
+    }
+
+    public String getParkspace_name() {
+        return parkspace_name;
+    }
+
+    public void setParkspace_name(String parkspace_name) {
+        this.parkspace_name = parkspace_name;
+    }
+
+    public String getCitycode() {
+        return citycode;
+    }
+
+    public void setCitycode(String citycode) {
+        this.citycode = citycode;
+    }
+
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
+    }
+
+    public String getIndicator() {
+        return indicator;
+    }
+
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
+    }
+
+    public long getShareTimeDistance() {
+        return shareTimeDistance;
+    }
+
+    public void setShareTimeDistance(long shareTimeDistance) {
+        this.shareTimeDistance = shareTimeDistance;
+    }
+
+    @Override
+    public String toString() {
+        return "Park_Info{" +
+                "id='" + id + '\'' +
+                ", parkspace_id='" + parkspace_id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", park_number='" + park_number + '\'' +
+                ", open_date='" + open_date + '\'' +
+                ", open_time='" + open_time + '\'' +
+                ", shareDay='" + shareDay + '\'' +
+                ", pauseShareDate='" + pauseShareDate + '\'' +
+                ", location_describe='" + location_describe + '\'' +
+                ", parking_user_id='" + parking_user_id + '\'' +
+                ", park_img='" + park_img + '\'' +
+                ", parkspace_name='" + parkspace_name + '\'' +
+                ", park_status='" + park_status + '\'' +
+                ", high_time='" + high_time + '\'' +
+                ", low_time='" + low_time + '\'' +
+                ", high_fee='" + high_fee + '\'' +
+                ", low_fee='" + low_fee + '\'' +
+                ", high_max_fee='" + high_max_fee + '\'' +
+                ", low_max_fee='" + low_max_fee + '\'' +
+                ", order_times='" + order_times + '\'' +
+                ", fine='" + fine + '\'' +
+                ", profit_ratio='" + profit_ratio + '\'' +
+                ", type='" + type + '\'' +
+                ", citycode='" + citycode + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", voltage='" + voltage + '\'' +
+                ", indicator='" + indicator + '\'' +
+                ", shareTimeDistance=" + shareTimeDistance +
+                '}';
     }
 }

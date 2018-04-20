@@ -467,11 +467,11 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 .params("company", getText(mCompanyName))
                 .params("companyPhone", getText(mCompanyTelephone))
                 .params("acceptPersonName", getText(mAcceptPersonName))
+                .params("taxNumber", getText(mTaxNumber))
                 .params("acceptPersonTelephone", isTypeOne() ? "" : getText(mAcceptTelephone))
                 .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "")
                 .params("acceptArea", isTypeOne() ? "" : getText(mAcceptArea))
                 .params("acceptAddress", isTypeOne() ? "" : getText(mAcceptDetailAddress))
-                .params("taxNumber", isTypeThree() ? getText(mTaxNumber) : "")
                 .params("bank", isTypeThree() ? getText(mBank) : "")
                 .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "")
                 .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {

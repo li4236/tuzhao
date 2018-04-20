@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -127,8 +128,8 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         mAddEverydayShareTime.setOnClickListener(this);
         findViewById(R.id.modify_share_time_submit).setOnClickListener(this);
 
-        if (mParkSpaceInfo != null && mParkSpaceInfo.isHourRent()) {
-            if (mParkSpaceInfo.isHourRent()) {
+        if (mParkSpaceInfo != null) {
+            if (!mParkSpaceInfo.isHourRent()) {
                 findViewById(R.id.modify_share_time_everyday_share_date).setVisibility(View.GONE);
             }
             for (CheckTextView checkTextView : mCheckTextViews) {
@@ -149,9 +150,10 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
             date.setTime(System.currentTimeMillis());
             mStartShareDate.setText(dateFormat.format(date));
 
-            long nextMonth = 1000 * 60 * 60 * 24 * 60;
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH,1);
 
-            date.setTime(System.currentTimeMillis() + nextMonth);
+            date.setTime(calendar.getTimeInMillis());
             mEndShareDate.setText(dateFormat.format(date));
             dismmisLoadingDialog();
         }
@@ -268,7 +270,10 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                                 Calendar startCalendar = getDateCalendar(mStartShareDate.getText().toString());
                                 Calendar endCalendar = getDateCalendar(mEndShareDate.getText().toString());
                                 Calendar pauseCalendar = getDateCalendar(pausDate);
-                                if (startCalendar.compareTo(pauseCalendar) != -1 || endCalendar.compareTo(pauseCalendar) == -1) {
+                                Log.e(TAG, "startCalendar: " + startCalendar.toString());
+                                Log.e(TAG, "endCalendar: " + endCalendar.toString());
+                                Log.e(TAG, "pauseCalendar: " + pauseCalendar.toString());
+                                if (startCalendar.compareTo(pauseCalendar) < 0 || endCalendar.compareTo(pauseCalendar) > 0) {
                                     showFiveToast("暂停共享日期要在共享日期之内哦");
                                 } else {
                                     mPauseShareDateAdapter.justAddData(pausDate);
@@ -307,7 +312,14 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                             if (isRepeat(shareTimeInfo)) {
                                 showFiveToast("不能选择有重叠的时间哦");
                             } else {
-                                mEverydayShareTimeAdapter.addData(shareTimeInfo);
+                                mEverydayShareTimeAdapter.justAddData(shareTimeInfo);
+                                Collections.sort(mEverydayShareTimeAdapter.getData(), new Comparator<EverydayShareTimeInfo>() {
+                                    @Override
+                                    public int compare(EverydayShareTimeInfo o1, EverydayShareTimeInfo o2) {
+                                        return getTimeCalendar(o1.getStartTime()).compareTo(getTimeCalendar(o2.getStartTime()));
+                                    }
+                                });
+                                mEverydayShareTimeAdapter.notifyDataSetChanged();
                             }
                         }
                     });
@@ -501,7 +513,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                 .params("citycode", mParkSpaceInfo.getCitycode())
                 .params("address_memo", mParkSpaceInfo.getAddress_memo())
                 .params("available_date", shareDate)
-                .params("dayRent", mParkSpaceInfo.isHourRent() ? "0" : "1")
                 .params("shareDay", shareDay.toString())
                 .params("available_time", everyDayShareTime.toString())
                 .params("pauseShareDate", pauseShareDate.toString())
@@ -622,7 +633,6 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
         return calendar;
     }
-
 
     /**
      * @param shareTimeInfo 需要比较的时间段

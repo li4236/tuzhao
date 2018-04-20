@@ -53,13 +53,13 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     private SuperRefreshRecyclerView mRecycleview;
     private ParkOrChargeListAdapter mAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private LinearLayout linearlayout_nodata,linearlayout_address;
-    private TextView textview_address,textview_nodata;
+    private LinearLayout linearlayout_nodata, linearlayout_address;
+    private TextView textview_address, textview_nodata;
     private CustomDialog mCustomDialog;
 
     //筛选菜单
     private String[] titleList;//标题
-    private List<InstitutionPriceBean> sortListData,kindListData,distanceListData;//排序,类别,距离
+    private List<InstitutionPriceBean> sortListData, kindListData, distanceListData;//排序,类别,距离
 
     private String citycode;
     private LatLng latLng;
@@ -87,8 +87,8 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     }
 
     private void initView() {
-        dropDownMenu = (DropDownMenu) findViewById(R.id.id_activity_parkorcharge_layout_dropdownmenu);
-        mRecycleview = (SuperRefreshRecyclerView)findViewById(R.id.mFilterRecyclerView);
+        dropDownMenu = findViewById(R.id.id_activity_parkorcharge_layout_dropdownmenu);
+        mRecycleview = findViewById(R.id.mFilterRecyclerView);
         linearLayoutManager = new LinearLayoutManager(ParkOrChargeListActivity.this);
         mRecycleview.init(linearLayoutManager, new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
@@ -109,11 +109,11 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                 }
             }
         });
-        mAdapter = new ParkOrChargeListAdapter(ParkOrChargeListActivity.this,mData);
-        textview_address = (TextView) findViewById(R.id.id_activity_parkorcharge_layout_textview_address);
-        textview_nodata = (TextView) findViewById(R.id.id_activity_parkorcharge_layout_textview_nodata);
-        linearlayout_nodata = (LinearLayout) findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_nodata);
-        linearlayout_address = (LinearLayout) findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_address);
+        mAdapter = new ParkOrChargeListAdapter(ParkOrChargeListActivity.this, mData);
+        textview_address = findViewById(R.id.id_activity_parkorcharge_layout_textview_address);
+        textview_nodata = findViewById(R.id.id_activity_parkorcharge_layout_textview_nodata);
+        linearlayout_nodata = findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_nodata);
+        linearlayout_address = findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_address);
     }
 
     private void initData() {
@@ -173,10 +173,10 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         distanceListData.add(bean1);
 
         citycode = getIntent().getStringExtra("citycode");
-        latLng = new LatLng(getIntent().getDoubleExtra("lat",22.481234),getIntent().getDoubleExtra("lon",113.411234));
+        latLng = new LatLng(getIntent().getDoubleExtra("lat", 22.481234), getIntent().getDoubleExtra("lon", 113.411234));
         initLoading("加载中...");
         getAddress();
-        requestHomePCLocData(citycode, latLng.latitude+"", latLng.longitude+"",null, null);
+        requestHomePCLocData(citycode, latLng.latitude + "", latLng.longitude + "", null, null);
     }
 
     private void initEvent() {
@@ -213,13 +213,13 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         dropDownMenu.setOnOpenWindow(new DropDownMenu.OnOpenWindow() {
             @Override
             public void onDoVisible(boolean a) {
-                if (a){
-                    if (mData.size()<=0){
+                if (a) {
+                    if (mData.size() <= 0) {
                         linearlayout_nodata.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         linearlayout_nodata.setVisibility(View.GONE);
                     }
-                }else {
+                } else {
                     linearlayout_nodata.setVisibility(View.GONE);
                 }
             }
@@ -228,26 +228,26 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         //04 dropMenuAdapter 排序回调 0 1 2
         dropMenuAdapter.setOnSortCallbackListener(new DropMenuAdapter.OnSortCallbackListener() {
             @Override
-            public void onSortCallbackListener(int item,int tabposition) {
-                switch (tabposition){
+            public void onSortCallbackListener(int item, int tabposition) {
+                switch (tabposition) {
                     case 0:
-                        mLineType = (item+1)+"";
+                        mLineType = (item + 1) + "";
                         mRecycleview.setRefreshing(true);
                         break;
                     case 1:
-                        mType = (item+2)+"";
+                        mType = (item + 2) + "";
                         mRecycleview.setRefreshing(true);
                         break;
                     case 2:
-                        if (item == 0){
+                        if (item == 0) {
                             mRadius = "2";
-                        }else if (item ==1){
+                        } else if (item == 1) {
                             mRadius = "5";
-                        }else if (item ==2){
+                        } else if (item == 2) {
                             mRadius = "10";
-                        }else if (item ==3){
+                        } else if (item == 3) {
                             mRadius = "18";
-                        }else if (item ==4){
+                        } else if (item == 4) {
                             mRadius = "25";
                         }
                         mRecycleview.setRefreshing(true);
@@ -260,7 +260,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         dropMenuAdapter.setOnMultiFilterCallbackListener(new DropMenuAdapter.OnMultiFilterCallbackListener() {
             @Override
             public void onMultiFilterCallbackListener(int objId, int propertyId, int bedId, int typeId, String serviceId) {
-                MyToast.showToast(ParkOrChargeListActivity.this,"多选的i依次是=" + objId + "--" + propertyId + "--" + bedId + "--" + typeId + "--" + serviceId,5);
+                MyToast.showToast(ParkOrChargeListActivity.this, "多选的i依次是=" + objId + "--" + propertyId + "--" + bedId + "--" + typeId + "--" + serviceId, 5);
             }
         });
     }
@@ -270,7 +270,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         public void onRefresh() {
             //开始下拉刷新
             mLoadingtimes = 0;
-            requestHomePCLocData(citycode, latLng.latitude+"", latLng.longitude+"",null, null);
+            requestHomePCLocData(citycode, latLng.latitude + "", latLng.longitude + "", null, null);
         }
     }
 
@@ -279,7 +279,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         public void onLoadMore() {
             //开始上拉加载更多数据
             mLoadingtimes++;
-            requestHomePCLocData(citycode, latLng.latitude+"", latLng.longitude+"",(mLoadingtimes * 10) + "", null);
+            requestHomePCLocData(citycode, latLng.latitude + "", latLng.longitude + "", (mLoadingtimes * 10) + "", null);
         }
     }
 
@@ -299,7 +299,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
             @Override
             public void onRegeocodeSearched(final RegeocodeResult result, int rCode) {
                 if (rCode == 1000) {
-                    if (result.getRegeocodeAddress().getFormatAddress() .equals("")) {
+                    if (result.getRegeocodeAddress().getFormatAddress().equals("")) {
                         textview_address.setText("不支持当前位置，请点击尝试查找其他位置");
                     } else {
                         textview_address.setText(result.getRegeocodeAddress().getFormatAddress());
@@ -317,15 +317,15 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         geocoderSearch.getFromLocationAsyn(query);
     }
 
-    private void requestHomePCLocData(final String citycode, String lat, String lon,String startItem, String pageSize) {
+    private void requestHomePCLocData(final String citycode, String lat, String lon, String startItem, String pageSize) {
         OkGo.post(HttpConstants.getNearPointLocData)
                 .tag(HttpConstants.getNearPointLocData)
                 .params("citycode", citycode)
                 .params("lat", lat)
                 .params("lon", lon)
                 .params("radius", mRadius)
-                .params("type",mType)
-                .params("order_type",mLineType)
+                .params("type", mType)
+                .params("order_type", mLineType)
                 .params("startItem", startItem == null ? "0" : startItem)
                 .params("pageSize", pageSize == null ? "10" : pageSize)
                 .execute(new JsonCallback<Base_Class_List_Info<NearPointPCInfo>>() {
@@ -483,7 +483,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!=null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }

@@ -55,18 +55,18 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         try {
             ((MyViewHolder) holder).textview_name.setText(mData.get(position).getName());
-            ((MyViewHolder) holder).textview_grade.setText(mData.get(position).getGrade()+"");
-            ((MyViewHolder) holder).textview_price.setText(mData.get(position).getPrice()+"");
+            ((MyViewHolder) holder).textview_grade.setText(mData.get(position).getGrade() + "");
+            ((MyViewHolder) holder).textview_price.setText(mData.get(position).getPrice() + "");
             ((MyViewHolder) holder).textview_address.setText(mData.get(position).getAddress());
-            ((MyViewHolder) holder).cbratingbar.setStarProgress((float) (mData.get(position).getGrade()*100/5));
-            if (LocationManager.getInstance().hasLocation()){
+            ((MyViewHolder) holder).cbratingbar.setStarProgress((float) (mData.get(position).getGrade() * 100 / 5));
+            if (LocationManager.getInstance().hasLocation()) {
                 DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(mData.get(position).getLatitude(), mData.get(position).getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));
-                ((MyViewHolder) holder).textview_distance.setText(distanceAndDanwei.getDistance()+distanceAndDanwei.getDanwei());
-            }else {
+                ((MyViewHolder) holder).textview_distance.setText(distanceAndDanwei.getDistance() + distanceAndDanwei.getDanwei());
+            } else {
                 ((MyViewHolder) holder).textview_distance.setText("未知");
             }
 
-            switch (Integer.parseInt(mData.get(position).getIsparkspace())){
+            switch (Integer.parseInt(mData.get(position).getIsparkspace())) {
                 case 1:
                     ((MyViewHolder) holder).textview_price1.setText(" 元/小时");
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -85,8 +85,8 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(mContext, ChargestationDetailActivity.class);
-                            intent.putExtra("chargestation_id",mData.get(position).getId());
-                            intent.putExtra("city_code",mData.get(position).getCity_code());
+                            intent.putExtra("chargestation_id", mData.get(position).getId());
+                            intent.putExtra("city_code", mData.get(position).getCity_code());
                             mContext.startActivity(intent);
                         }
                     });
@@ -94,28 +94,28 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             String[] urlList = mData.get(position).getPicture().split(",");
             ImageUtil.showImpPic(((MyViewHolder) holder).imageview_bigshow,
-                    urlList.length>0? HttpConstants.ROOT_IMG_URL_PS + urlList[0]:"");
-        }catch (Exception e){
+                    urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textview_name, textview_grade, textview_price,textview_price1,textview_address,textview_distance;
+        private TextView textview_name, textview_grade, textview_price, textview_price1, textview_address, textview_distance;
         private ImageView imageview_bigshow;
         private CBRatingBar cbratingbar;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-            textview_name = (TextView) itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_name);
-            textview_grade = (TextView) itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_grade);
-            textview_price = (TextView) itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_price);
-            textview_price1 = (TextView) itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_price1);
-            textview_address = (TextView) itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_address);
-            textview_distance = (TextView) itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_distance);
-            imageview_bigshow = (ImageView) itemView.findViewById(R.id.id_item_parkorcharge_layout_imageview_bigshow);
-            cbratingbar = (CBRatingBar) itemView.findViewById(R.id.id_item_parkorcharge_layout_cbratingbar);
+            textview_name = itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_name);
+            textview_grade = itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_grade);
+            textview_price = itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_price);
+            textview_price1 = itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_price1);
+            textview_address = itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_address);
+            textview_distance = itemView.findViewById(R.id.id_item_parkorcharge_layout_textview_distance);
+            imageview_bigshow = itemView.findViewById(R.id.id_item_parkorcharge_layout_imageview_bigshow);
+            cbratingbar = itemView.findViewById(R.id.id_item_parkorcharge_layout_cbratingbar);
         }
     }
 }

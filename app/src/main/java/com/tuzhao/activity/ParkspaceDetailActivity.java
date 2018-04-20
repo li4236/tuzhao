@@ -96,10 +96,10 @@ public class ParkspaceDetailActivity extends BaseActivity {
 
     private void initView() {
 
-        imageView_back = (ImageView) findViewById(R.id.id_activity_parkspacedetail_imageView_back);
-        imageview_collection = (ImageView) findViewById(R.id.id_activity_parkspacedetail_imageview_collection);
-        viewpager = (ViewPager) findViewById(R.id.id_activity_parkspacedetail_layout_viewpager);
-        viewPagerTab = (SmartTabLayout) findViewById(R.id.id_activity_parkspacedetail_layout_pagetab);
+        imageView_back =  findViewById(R.id.id_activity_parkspacedetail_imageView_back);
+        imageview_collection =  findViewById(R.id.id_activity_parkspacedetail_imageview_collection);
+        viewpager =  findViewById(R.id.id_activity_parkspacedetail_layout_viewpager);
+        viewPagerTab = findViewById(R.id.id_activity_parkspacedetail_layout_pagetab);
 
         parkspaceDetailFragment = new ParkspaceDetailFragment();
         parkspaceCommentFragment = new ParkspaceCommentFragment();
