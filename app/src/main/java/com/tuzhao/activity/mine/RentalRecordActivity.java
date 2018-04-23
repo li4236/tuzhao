@@ -9,13 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseCallback;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.RentalRecordItemInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -112,17 +113,43 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @Override
     protected void loadData() {
         showLoadingDialog();
-        requestData(HttpConstants.getRentalRecord, new BaseCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
-            @Override
-            public void onSuccess(Base_Class_List_Info<RentalRecordItemInfo> rentalRecordItemInfoBase_class_list_info, Call call, Response response) {
+        getOkgo(HttpConstants.getRentalRecord, "cityCode", mPark_info.getCitycode(), "parkId", mPark_info.getId())
+                .execute(new JsonCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<RentalRecordItemInfo> o, Call call, Response response) {
+                        loadDataSuccess(o);
+                    }
 
-            }
-
-            @Override
-            public void onError(Call call, Response response, Exception e) {
-                handleException(e);
-            }
-        }, "parkSpaceId", mPark_info.getId());
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        loadDataFail(e, new LoadFailCallback() {
+                            @Override
+                            public void onLoadFail(Exception e) {
+                                switch (e.getMessage()) {
+                                    case "101":
+                                        userNotExist();
+                                        break;
+                                    case "102":
+                                        showFiveToast("");
+                                        break;
+                                    case "103":
+                                        showFiveToast("该车位已被删除，请重新选择");
+                                        finish();
+                                        break;
+                                    case "104":
+                                        userNotExist();
+                                        break;
+                                    case "105":
+                                        if (mCommonAdapter.getData().size() > 0) {
+                                            showFiveToast("没有更多数据了哦");
+                                        }
+                                        break;
+                                }
+                            }
+                        });
+                    }
+                });
     }
 
     @Override

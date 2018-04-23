@@ -733,7 +733,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
         Holder ctpark = null;
         int pos = 0;
-        final ArrayList<Holder> readypark = new ArrayList<>();
         for (int i = 0; i < mChooseData.size(); i++) {
             if (mChooseData.get(i).rest_time >= UserManager.getInstance().getUserInfo().getLeave_time()) {
                 ctpark = mChooseData.get(i);
@@ -741,6 +740,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 break;
             }
         }
+
+        final ArrayList<Holder> readypark = new ArrayList<>();
         final TipeDialog.Builder builder = new TipeDialog.Builder(OrderParkActivity.this);
         if (ctpark == null) {
             if (mChooseData.size() > 1) {

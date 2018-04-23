@@ -100,16 +100,24 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         }
     }
 
+    /**
+     * 获取包括startItem和pageSize的Okgo
+     */
     protected BaseRequest getOkgo(String url) {
         return getOkGo(url)
                 .params("startItem", mStartItme)
                 .params("pageSize", 15);
     }
 
+    /**
+     * 获取包括startItem和pageSize的Okgo
+     *
+     * @param params 如果还需要其他参数则按键值对输入
+     */
     protected BaseRequest getOkgo(String url, String... params) {
         BaseRequest baseRequest = getOkgo(url);
         for (int i = 0; i < params.length; i += 2) {
-            baseRequest.params(params[i], params[i + i]);
+            baseRequest.params(params[i], params[i + 1]);
         }
         return baseRequest
                 .params("startItem", mStartItme)
@@ -185,18 +193,21 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
     }
 
     protected void loadDataSuccess(Base_Class_List_Info<T> base_class_list_info) {
-        mRecyclerView.showData();
         if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
             mCommonAdapter.clearAll();
         }
         mCommonAdapter.addData(base_class_list_info.data);
+        mRecyclerView.showData();
         stopLoadStatus();
         increateStartItem();
         dismmisLoadingDialog();
     }
 
     protected void loadDataFail(Exception e, LoadFailCallback callback) {
-        showEmpty();
+        if (mCommonAdapter.getData().size() == 0) {
+            showEmpty();
+        }
+        stopLoadStatus();
         if (!handleException(e)) {
             callback.onLoadFail(e);
         }
