@@ -197,7 +197,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 if (!(textview_starttime.getText().length() > 0) || !(textview_carnumble.getText().length() > 0) || !(textview_parktime.getText().length() > 0)) {
                     MyToast.showToast(OrderParkActivity.this, "请确认信息是否填写完整", 5);
                 } else {
-                    if (mChooseData.size() > 0) {
+                    if (mCanParkInfo.size() > 0) {
                         showAlertDialog();
                     } else {
                         textview_fee.setText("约￥0.00");
@@ -665,9 +665,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             textview_ordernow.setBackground(getResources().getDrawable(R.drawable.little_yuan_yellow_8dp));
             textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
             double orderFee = DateUtil.caculateParkFee(start_time, end_time, mCanParkInfo.get(0).getHigh_time(),
-                    Double.valueOf(mCanParkInfo.get(0).getHigh_fee()) / 60,
-                    Double.valueOf(mCanParkInfo.get(0).getLow_fee()) / 60);
-            textview_fee.setText("约￥" + orderFee);
+                    Double.valueOf(mCanParkInfo.get(0).getHigh_fee()),
+                    Double.valueOf(mCanParkInfo.get(0).getLow_fee()));
+            textview_fee.setText("约￥" + mDecimalFormat.format(orderFee));
         } else {
             textview_fee.setText("约￥0.00");
             textview_ordernow.setBackground(getResources().getDrawable(R.drawable.yuan_little_graynall_8dp));
