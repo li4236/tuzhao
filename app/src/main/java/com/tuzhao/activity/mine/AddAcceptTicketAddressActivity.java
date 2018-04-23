@@ -133,7 +133,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     @NonNull
     @Override
     protected String title() {
-        return mAddressInfo == null ? "修改收票地址" : "新建收票地址";
+        return mAddressInfo == null ? "新建收票地址" : "修改收票地址";
     }
 
     @Override
