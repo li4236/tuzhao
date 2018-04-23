@@ -125,7 +125,7 @@
         <activity android:name=".activity.mine.PersonalCreditActivity" />
         <activity android:name=".activity.mine.OpenParkLockActivity" />
         <activity android:name=".activity.mine.RentalRecordActivity" />
-        <activity android:name=".activity.mine.ModifyShareTimeActivity" />
+        <activity android:name=".activity.mine.EditShareTimeActivity" />
         <activity android:name=".activity.mine.ParkSpaceSettingActivity" />
         <activity android:name=".activity.mine.InvoiceReimbursementActivity" />
         <activity android:name=".activity.mine.ConfirmTicketOrderActivity" />

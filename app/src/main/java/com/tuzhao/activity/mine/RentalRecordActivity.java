@@ -159,10 +159,20 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
     @Override
     protected void bindData(BaseViewHolder holder, RentalRecordItemInfo rentalRecordItemInfo, int position) {
-        holder.setText(R.id.rental_record_time_item, rentalRecordItemInfo.getRentalTime())
+        String[] rentalTimes = rentalRecordItemInfo.getRentalTime().split(":");
+        StringBuilder time = new StringBuilder("出租时长:");
+
+        if (!rentalTimes[0].equals("0")) {
+            time.append(rentalTimes[0]);
+            time.append("小时");
+        }
+        time.append(rentalTimes[1]);
+        time.append("分");
+
+        holder.setText(R.id.rental_record_time_item, time.toString())
                 .setText(R.id.rental_record_car_number_item, rentalRecordItemInfo.getRentalCarNumber())
-                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalStartDate())
-                .setText(R.id.rental_record_earn_item, rentalRecordItemInfo.getRentalFee());
+                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalStartDate().substring(0,rentalRecordItemInfo.getRentalStartDate().length()-3))
+                .setText(R.id.rental_record_earn_item, "获得收益:" + rentalRecordItemInfo.getRentalFee() + "元");
     }
 
 }

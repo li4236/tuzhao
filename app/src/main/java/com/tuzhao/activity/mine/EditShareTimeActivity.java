@@ -42,7 +42,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/3/27.
  */
 
-public class ModifyShareTimeActivity extends BaseStatusActivity implements View.OnClickListener {
+public class EditShareTimeActivity extends BaseStatusActivity implements View.OnClickListener {
 
     private TextView mStartShareDate;
 
@@ -143,8 +143,10 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         super.initData();
 
         if (mParkSpaceInfo == null) {
+            //从车位设置跳转过来的则请求该车位的共享时间
             getOriginTime();
         } else {
+            //从添加车位跳转过来的则共享日期显示为当天-之后一个月
             SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
             Date date = new Date();
             Calendar calendar = Calendar.getInstance();
@@ -235,8 +237,11 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                                 endCalendar.set(Integer.valueOf(endDate[0]), Integer.valueOf(endDate[1]), Integer.valueOf(endDate[2]));
                             }
 
+                            //如果共享的开始日期比结束日期大，则自动修改结束日期
                             if (calendar.compareTo(endCalendar) == 1) {
-                                mEndShareDate.setText(startDate);
+                                Calendar startCalend = getDateCalendar(startDate);
+                                startCalend.add(Calendar.MONTH, 1);
+                                mEndShareDate.setText(DateUtil.getYearToDayFormat().format(new Date(startCalend.getTimeInMillis())));
                                 showFiveToast("已自动为你修改结束的共享时间");
                             }
                             checkPauseDate();
@@ -448,7 +453,8 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
             everyDayShareTime.append("00:00 - 23:59");
         }
 
-        getOkGo(HttpConstants.modifyShareTime)
+        getOkGo(HttpConstants.editShareTime)
+                .params("cityCode",mParkInfo.getCitycode())
                 .params("parkSpaceId", mParkInfo.getId())
                 .params("shareDate", shareDate)
                 .params("shareDay", shareDay.toString())

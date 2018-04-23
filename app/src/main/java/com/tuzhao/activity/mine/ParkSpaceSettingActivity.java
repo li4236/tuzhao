@@ -82,7 +82,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         findViewById(R.id.park_space_space_setting_cl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(ModifyShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
+                startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
             }
         });
 
@@ -114,7 +114,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         String[] shareDays = mPark_info.getShareDay().split(",");
         for (int i = 0; i < shareDays.length; i++) {
             if (shareDays[i].charAt(0) == '1') {
-                if (mPark_info.getOpen_time().equals("00:00 - 23:59")||mPark_info.getOpen_time().equals("")) {
+                if (mPark_info.getOpen_time().equals("00:00 - 23:59") || mPark_info.getOpen_time().equals("")) {
                     mAdapter.addData("全天" + dayToWeek(i + 1));
                 } else {
                     mAdapter.addData(mPark_info.getOpen_time() + dayToWeek(i + 1));
@@ -123,9 +123,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         }
 
         if (mPark_info.getPauseShareDate() == null || mPark_info.getPauseShareDate().equals("")) {
-            if (mPauseRentDate.getVisibility() == View.VISIBLE) {
-                mPauseRentDate.setVisibility(View.GONE);
-            }
+            mPauseRentDate.setText("无");
         } else {
             SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日", Locale.getDefault());
@@ -152,10 +150,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             mPauseRentDate.setText(stringBuilder.toString());
-
-            if (mPauseRentDate.getVisibility() == View.GONE) {
-                mPauseRentDate.setVisibility(View.VISIBLE);
-            }
 
         }
 

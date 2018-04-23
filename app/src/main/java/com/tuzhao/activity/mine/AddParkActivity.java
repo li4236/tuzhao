@@ -229,7 +229,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void showAlertDialog() {
-        Intent intent = new Intent(this, ModifyShareTimeActivity.class);
+        Intent intent = new Intent(this, EditShareTimeActivity.class);
         NewParkSpaceInfo parkSpaceInfo = new NewParkSpaceInfo();
         parkSpaceInfo.setParkspace_id(mPark.getParkID());
         parkSpaceInfo.setCitycode(mPark.getCitycode());

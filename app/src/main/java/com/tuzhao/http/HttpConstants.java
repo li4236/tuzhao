@@ -414,7 +414,7 @@ public class HttpConstants {
     /**
      * 修改共享时间
      */
-    public static String modifyShareTime = ROOT_URL + "modifyShareTime";
+    public static String editShareTime = ROOT_URL + "editShareTime";
 
     /**
      * 添加亲友设备（蓝牙绑定）
