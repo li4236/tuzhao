@@ -114,7 +114,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         String[] shareDays = mPark_info.getShareDay().split(",");
         for (int i = 0; i < shareDays.length; i++) {
             if (shareDays[i].charAt(0) == '1') {
-                if (mPark_info.getOpen_time().equals("00:00 - 23:59")) {
+                if (mPark_info.getOpen_time().equals("00:00 - 23:59")||mPark_info.getOpen_time().equals("")) {
                     mAdapter.addData("全天" + dayToWeek(i + 1));
                 } else {
                     mAdapter.addData(mPark_info.getOpen_time() + dayToWeek(i + 1));

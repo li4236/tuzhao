@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -148,12 +147,12 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         } else {
             SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
             Date date = new Date();
-            date.setTime(System.currentTimeMillis());
+            Calendar calendar = Calendar.getInstance();
+            date.setTime(calendar.getTimeInMillis());
+
             mStartShareDate.setText(dateFormat.format(date));
 
-            Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MONTH, 1);
-
             date.setTime(calendar.getTimeInMillis());
             mEndShareDate.setText(dateFormat.format(date));
             dismmisLoadingDialog();
@@ -227,7 +226,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                     @Override
                     public void onDateCheck(Calendar calendar, int year, int month, int dayOfMonth, int compareResult) {
                         if (compareResult > -1) {
-                            String startDate = year + "-" + month + "-" + dayOfMonth;
+                            String startDate = year + "-" + DateUtil.thanTen(month) + "-" + DateUtil.thanTen(dayOfMonth);
                             mStartShareDate.setText(startDate);
 
                             Calendar endCalendar = Calendar.getInstance();
@@ -252,7 +251,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                     @Override
                     public void onDateCheck(Calendar calendar, int year, int month, int dayOfMonth, int compareResult) {
                         if (compareResult > -1) {
-                            String endDate = year + "-" + month + "-" + dayOfMonth;
+                            String endDate = year + "-" + DateUtil.thanTen(month) + "-" + DateUtil.thanTen(dayOfMonth);
                             mEndShareDate.setText(endDate);
                             checkPauseDate();
                         } else {
@@ -266,19 +265,14 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                     @Override
                     public void onDateCheck(Calendar calendar, int year, int month, int dayOfMonth, int compareResult) {
                         if (compareResult > -1) {
-                            String pausDate = year + "-" + month + "-" + dayOfMonth;
+                            String pausDate = year + "-" + DateUtil.thanTen(month) + "-" + DateUtil.thanTen(dayOfMonth);
                             if (mPauseShareDateAdapter.getData().contains(pausDate)) {
                                 showFiveToast("不能重复添加哦");
                             } else {
                                 Calendar startCalendar = getDateCalendar(mStartShareDate.getText().toString());
                                 Calendar endCalendar = getDateCalendar(mEndShareDate.getText().toString());
                                 Calendar pauseCalendar = getDateCalendar(pausDate);
-                                Log.e(TAG, "startCalendar: " + startCalendar.toString());
-                                Log.e(TAG, "endCalendar: " + endCalendar.toString());
-                                Log.e(TAG, "pauseCalendar: " + pauseCalendar.toString());
-                                if (startCalendar.compareTo(pauseCalendar) < 0 || endCalendar.compareTo(pauseCalendar) > 0) {
-                                    showFiveToast("暂停共享日期要在共享日期之内哦");
-                                } else {
+                                if (pauseCalendar.compareTo(startCalendar) >= 0 && pauseCalendar.compareTo(endCalendar) <= 0) {
                                     mPauseShareDateAdapter.justAddData(pausDate);
                                     Collections.sort(mPauseShareDateAdapter.getData(), new Comparator<String>() {
                                         @Override
@@ -287,6 +281,8 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                                         }
                                     });
                                     mPauseShareDateAdapter.notifyDataSetChanged();
+                                } else {
+                                    showFiveToast("暂停共享日期要在共享日期之内哦");
                                 }
                             }
                         } else {
@@ -304,13 +300,13 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                     showTimePicker("开始时段", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true, new OnTimePickerListener() {
                         @Override
                         public void onStartTime(String hourOfDay, String minute) {
-                            String startTime = hourOfDay + ":" + minute;
+                            String startTime = DateUtil.thanTen(Integer.valueOf(hourOfDay)) + ":" + DateUtil.thanTen(Integer.valueOf(minute));
                             shareTimeInfo.setStartTime(startTime);
                         }
 
                         @Override
                         public void onEndTime(String hourOfDay, String minute) {
-                            String endTime = hourOfDay + ":" + minute;
+                            String endTime = DateUtil.thanTen(Integer.valueOf(hourOfDay)) + ":" + DateUtil.thanTen(Integer.valueOf(minute));
                             shareTimeInfo.setEndTime(endTime);
                             if (isRepeat(shareTimeInfo)) {
                                 showFiveToast("不能选择有重叠的时间哦");
@@ -632,6 +628,9 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         Calendar calendar = Calendar.getInstance();
         String[] date = s.split("-");
         calendar.set(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
     }
 
