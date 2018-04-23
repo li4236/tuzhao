@@ -489,7 +489,14 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
                         if (!handleException(e)) {
-                            showFiveToast(e.getMessage());
+                            switch (e.getMessage()) {
+                                case "803":
+                                    showFiveToast("数据异常，请稍后再试");
+                                    finish();
+                                case "806":
+                                    showFiveToast("最多只能创建10个地址哦");
+                                    break;
+                            }
                         }
                     }
                 });
@@ -528,7 +535,24 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
                         if (!handleException(e)) {
-                            showFiveToast(e.getMessage());
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("你填写的信息有误哦");
+                                    break;
+                                case "102":
+                                    showFiveToast("邮箱格式错误");
+                                    break;
+                                case "103":
+                                    showFiveToast("邮箱类型只能是电子，普票，专票");
+                                    break;
+                                case "104":
+                                    showFiveToast("你的收票地址不存在");
+                                    finish();
+                                    break;
+                                case "105":
+                                    finish();
+                                    break;
+                            }
                         }
                     }
                 });

@@ -9,12 +9,16 @@ import android.view.View;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceSituation;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 
-import java.util.ArrayList;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/4/14.
@@ -35,7 +39,7 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
 
     @Override
     protected void loadData() {
-        ArrayList<InvoiceSituation> list = new ArrayList<>();
+        /*ArrayList<InvoiceSituation> list = new ArrayList<>();
         InvoiceSituation situation;
         for (int i = 0; i < 3; i++) {
             situation = new InvoiceSituation();
@@ -57,8 +61,8 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
         Base_Class_List_Info<InvoiceSituation> base_class_list_info = new Base_Class_List_Info<>();
         base_class_list_info.code = "0";
         base_class_list_info.data = list;
-        loadDataSuccess(base_class_list_info);
-        /*getOkgo(HttpConstants.getInvoiceSituation)
+        loadDataSuccess(base_class_list_info);*/
+        getOkgo(HttpConstants.getInvoiceSituation)
                 .execute(new JsonCallback<Base_Class_List_Info<InvoiceSituation>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InvoiceSituation> o, Call call, Response response) {
@@ -66,16 +70,27 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
                     }
 
                     @Override
-                    public void onError(Call call, Response response, Exception e) {
+                    public void onError(final Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
-
+                                switch (e.getMessage()) {
+                                    case "101":
+                                        userNotExist();
+                                        break;
+                                    case "102":
+                                        showFiveToast("你还没选择发票哦");
+                                        break;
+                                    case "103":
+                                    case "104":
+                                        showFiveToast("请求失败，请稍后重试");
+                                        break;
+                                }
                             }
                         });
                     }
-                });*/
+                });
     }
 
     @Override

@@ -43,7 +43,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(resourceId()==0?R.layout.activity_base_refresh_layout:resourceId());
+        setContentView(resourceId() == 0 ? R.layout.activity_base_refresh_layout : resourceId());
         Toolbar toolbar = findViewById(R.id.base_tb);
         final ImageView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
         turnBackIv.setOnClickListener(new View.OnClickListener() {
@@ -162,18 +162,23 @@ public abstract class BaseStatusActivity extends BaseActivity {
                         showFiveToast("获取数据异常，请稍后重试");
                         return true;
                     case "805":
-                        showFiveToast("账号异常，请重新登录");
-                        startLogin();
+                       userNotExist();
                         return true;
                     default:
                         return false;
                 }
             } else {
-                return false;
+                showFiveToast(e.getMessage());
+                return true;
             }
         } else {
             return true;
         }
+    }
+
+    protected void userNotExist() {
+        showFiveToast("账号异常，请重新登录");
+        startLogin();
     }
 
     /**
@@ -229,19 +234,19 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivityForResult(intent, requestCode);
     }
 
-    protected void startActivityForResult(Class<?> tClass, int requestCode,String key,String value) {
+    protected void startActivityForResult(Class<?> tClass, int requestCode, String key, String value) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, value);
         startActivityForResult(intent, requestCode);
     }
 
-    protected void startActivityForResult(Class<?> tClass, int requestCode,String key,Serializable value) {
+    protected void startActivityForResult(Class<?> tClass, int requestCode, String key, Serializable value) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, value);
         startActivityForResult(intent, requestCode);
     }
 
-    protected void startActivityForResult(Class<?> tClass, int requestCode,String key,ArrayList<? extends Parcelable> data) {
+    protected void startActivityForResult(Class<?> tClass, int requestCode, String key, ArrayList<? extends Parcelable> data) {
         Intent intent = new Intent(this, tClass);
         intent.putParcelableArrayListExtra(key, data);
         startActivityForResult(intent, requestCode);

@@ -56,7 +56,11 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         findViewById(R.id.accept_ticket_address_add_address).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(AddAcceptTicketAddressActivity.class, REQUEST_CODE);
+                if (mCommonAdapter.getData().size() < 10) {
+                    startActivityForResult(AddAcceptTicketAddressActivity.class, REQUEST_CODE);
+                } else {
+                    showFiveToast("最多只能有10个收票地址哦");
+                }
             }
         });
 
@@ -77,12 +81,22 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                     }
 
                     @Override
-                    public void onError(Call call, Response response, Exception e) {
+                    public void onError(final Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
-
+                                if (e instanceof IllegalStateException) {
+                                    switch (e.getMessage()) {
+                                        case "101":
+                                            showFiveToast("账号异常，请重新登录");
+                                            startLogin();
+                                            break;
+                                        case "102":
+                                            showFiveToast("你还没有收票地址哦");
+                                            break;
+                                    }
+                                }
                             }
                         });
                     }
@@ -116,10 +130,24 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            if (isDefault.equals("0")) {
-                                showFiveToast("取消默认地址失败，请稍后重试");
-                            } else {
-                                showFiveToast("设置默认地址失败，请稍后重试");
+                            switch (e.getMessage()) {
+                                case "101":
+                                    userNotExist();
+                                    break;
+                                case "102":
+                                    showFiveToast("该地址已被删除，请检查后重试");
+                                    finish();
+                                    break;
+                                case "103":
+                                    if (isDefault.equals("0")) {
+                                        showFiveToast("取消默认地址失败，请稍后重试");
+                                    } else {
+                                        showFiveToast("设置默认地址失败，请稍后重试");
+                                    }
+                                    break;
+                                case "104":
+                                    showFiveToast("设置默认地址参数错误，请检查重试");
+                                    break;
                             }
                         }
                     }
@@ -171,7 +199,17 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            showFiveToast("删除失败，请稍后重试");
+                            switch (e.getMessage()) {
+                                case "101":
+                                    userNotExist();
+                                    break;
+                                case "102":
+                                    notifyAddressDelete(ticketId);
+                                    break;
+                                case "103":
+                                    showFiveToast("网络请求失败，请稍后再试");
+                                    break;
+                            }
                         }
                     }
                 });

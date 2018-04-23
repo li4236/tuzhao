@@ -104,7 +104,16 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
-
+                                switch (e.getMessage()) {
+                                    case "101":
+                                        showFiveToast("账号异常，请重新登录");
+                                        startLogin();
+                                        break;
+                                    case "102":
+                                        showFiveToast("查询不到订单信息，请稍后再试");
+                                        finish();
+                                        break;
+                                }
                             }
                         });
                     }
