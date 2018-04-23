@@ -52,7 +52,7 @@ public class DateUtil {
         return sAllDateFormat;
     }
 
-    private static SimpleDateFormat getYearToDayFormat() {
+    public static SimpleDateFormat getYearToDayFormat() {
         if (sYearToDayFormat == null) {
             sYearToDayFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         }

@@ -19,11 +19,13 @@ import com.tuzhao.adapter.PauseShareDateAdapter;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.EverydayShareTimeInfo;
 import com.tuzhao.info.NewParkSpaceInfo;
+import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.CheckTextView;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +35,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -43,8 +44,6 @@ import okhttp3.Response;
  */
 
 public class ModifyShareTimeActivity extends BaseStatusActivity implements View.OnClickListener {
-
-    private String mParkSpaceId;
 
     private TextView mStartShareDate;
 
@@ -72,6 +71,8 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
     private NewParkSpaceInfo mParkSpaceInfo;
 
+    private Park_Info mParkInfo;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_modify_share_time;
@@ -82,7 +83,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
         if ((mParkSpaceInfo = (NewParkSpaceInfo) getIntent().getSerializableExtra(ConstansUtil.ADD_PARK_SPACE_TEME)) == null) {
 
-            if ((mParkSpaceId = getIntent().getStringExtra(ConstansUtil.PARK_SPACE_ID)) == null) {
+            if ((mParkInfo = (Park_Info) getIntent().getSerializableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
                 showFiveToast("打开失败，请返回重试");
                 finish();
             }
@@ -145,13 +146,13 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         if (mParkSpaceInfo == null) {
             getOriginTime();
         } else {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
             Date date = new Date();
             date.setTime(System.currentTimeMillis());
             mStartShareDate.setText(dateFormat.format(date));
 
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH,1);
+            calendar.add(Calendar.MONTH, 1);
 
             date.setTime(calendar.getTimeInMillis());
             mEndShareDate.setText(dateFormat.format(date));
@@ -164,13 +165,14 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
     private void getOriginTime() {
         getOkGo(HttpConstants.getShareTime)
-                .params("parkSpaceId", mParkSpaceId)
+                .params("parkSpaceId", mParkInfo.getId())
+                .params("cityCode", mParkInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
                         ShareTimeInfo shareTimeInfo = o.data;
 
-                        String[] shareDate = shareTimeInfo.getShareDate().split(",");
+                        String[] shareDate = shareTimeInfo.getShareDate().split(" - ");
 
                         mStartShareDate.setText(shareDate[0]);
                         mEndShareDate.setText(shareDate[1]);
@@ -189,11 +191,12 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
                         String[] everyDayShareTime = shareTimeInfo.getEveryDayShareTime().split(",");
                         EverydayShareTimeInfo everydayShareTimeInfo;
+                        int position;
                         for (String dayShareTime : everyDayShareTime) {
                             everydayShareTimeInfo = new EverydayShareTimeInfo();
-                            int position = dayShareTime.indexOf("-");
+                            position = dayShareTime.indexOf(" - ");
                             everydayShareTimeInfo.setStartTime(dayShareTime.substring(0, position));
-                            everydayShareTimeInfo.setEndTime(dayShareTime.substring(position + 1, dayShareTime.length()));
+                            everydayShareTimeInfo.setEndTime(dayShareTime.substring(position + 3, dayShareTime.length()));
                             mEverydayShareTimeAdapter.addData(everydayShareTimeInfo);
                         }
                         dismmisLoadingDialog();
@@ -413,9 +416,9 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
 
     private void modifyShareTime() {
         showLoadingDialog("正在修改");
-        String shareDate = mStartShareDate + "," + mEndShareDate;
+        final String shareDate = mStartShareDate + "," + mEndShareDate;
 
-        StringBuilder shareDay = new StringBuilder();
+        final StringBuilder shareDay = new StringBuilder();
         for (int i = 0; i < 7; i++) {
             if (mCheckTextViews[i].isChecked()) {
                 shareDay.append("1");
@@ -427,7 +430,7 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         }
         shareDay.deleteCharAt(shareDay.length() - 1);
 
-        StringBuilder pauseShareDate = new StringBuilder();
+        final StringBuilder pauseShareDate = new StringBuilder();
         if (!mPauseShareDateAdapter.getData().isEmpty()) {
             for (String pause : mPauseShareDateAdapter.getData()) {
                 pauseShareDate.append(pause);
@@ -436,19 +439,21 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
             pauseShareDate.deleteCharAt(pauseShareDate.length() - 1);
         }
 
-        StringBuilder everyDayShareTime = new StringBuilder();
+        final StringBuilder everyDayShareTime = new StringBuilder();
         if (!mEverydayShareTimeAdapter.getData().isEmpty()) {
             for (EverydayShareTimeInfo everydayShareTimeInfo : mEverydayShareTimeAdapter.getData()) {
                 everyDayShareTime.append(everydayShareTimeInfo.getStartTime());
-                everyDayShareTime.append("-");
+                everyDayShareTime.append(" - ");
                 everyDayShareTime.append(everydayShareTimeInfo.getEndTime());
                 everyDayShareTime.append(",");
             }
             everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
+        } else {
+            everyDayShareTime.append("00:00 - 23:59");
         }
 
         getOkGo(HttpConstants.modifyShareTime)
-                .params("parkSpaceId", mParkSpaceId)
+                .params("parkSpaceId", mParkInfo.getId())
                 .params("shareDate", shareDate)
                 .params("shareDay", shareDay.toString())
                 .params("pauseShareDate", pauseShareDate.toString())
@@ -456,6 +461,13 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        mParkInfo.setOpen_date(shareDate);
+                        mParkInfo.setShareDay(shareDay.toString());
+                        mParkInfo.setPauseShareDate(pauseShareDate.toString());
+                        mParkInfo.setOpen_time(everyDayShareTime.toString());
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mParkInfo);
+                        setResult(RESULT_OK, intent);
                         dismmisLoadingDialog();
                         showFiveToast("修改成功");
                         finish();
@@ -501,11 +513,13 @@ public class ModifyShareTimeActivity extends BaseStatusActivity implements View.
         if (mParkSpaceInfo.isHourRent() && !mEverydayShareTimeAdapter.getData().isEmpty()) {
             for (EverydayShareTimeInfo everydayShareTimeInfo : mEverydayShareTimeAdapter.getData()) {
                 everyDayShareTime.append(everydayShareTimeInfo.getStartTime());
-                everyDayShareTime.append("-");
+                everyDayShareTime.append(" - ");
                 everyDayShareTime.append(everydayShareTimeInfo.getEndTime());
                 everyDayShareTime.append(",");
             }
             everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
+        } else {
+            everyDayShareTime.append("00:00 - 23:59");
         }
 
         getOkGo(HttpConstants.addUserPark)

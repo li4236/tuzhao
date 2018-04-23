@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,9 +18,14 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -41,6 +47,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     private ParkSpaceRentTimeAdapter mAdapter;
 
     private Park_Info mPark_info;
+
+    private static final int REQUEST_CODE = 0x111;
 
     @Override
     protected int resourceId() {
@@ -64,7 +72,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         recyclerView.setAdapter(mAdapter);
 
         mSwitchButton = findViewById(R.id.park_space_setting_renten_sb);
-        mSwitchButton.setChecked(mPark_info.getPark_status().equals("2"));
         mSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -75,7 +82,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         findViewById(R.id.park_space_space_setting_cl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ModifyShareTimeActivity.class, ConstansUtil.PARK_SPACE_ID, mPark_info.getId());
+                startActivityForResult(ModifyShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
             }
         });
 
@@ -96,15 +103,84 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     @Override
     protected void initData() {
         super.initData();
-        mParkSpaceNumber.setText(mPark_info.getPark_number());
-        mRentDate.setText(mPark_info.getOpen_date());
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            list.add("9:00 - 18:00 (每周六)");
-        }
-        mAdapter.setNewData(list);
-        mPauseRentDate.setText("8月20日，9月1日，10月1日，10月11日");
+        setParkSpaceInfo();
         dismmisLoadingDialog();
+    }
+
+    private void setParkSpaceInfo() {
+        mParkSpaceNumber.setText(mPark_info.getPark_number());
+        mRentDate.setText(mPark_info.getOpen_date().replace(",", "-"));
+
+        String[] shareDays = mPark_info.getShareDay().split(",");
+        for (int i = 0; i < shareDays.length; i++) {
+            if (shareDays[i].charAt(0) == '1') {
+                if (mPark_info.getOpen_time().equals("00:00 - 23:59")) {
+                    mAdapter.addData("全天" + dayToWeek(i + 1));
+                } else {
+                    mAdapter.addData(mPark_info.getOpen_time() + dayToWeek(i + 1));
+                }
+            }
+        }
+
+        if (mPark_info.getPauseShareDate() == null || mPark_info.getPauseShareDate().equals("")) {
+            if (mPauseRentDate.getVisibility() == View.VISIBLE) {
+                mPauseRentDate.setVisibility(View.GONE);
+            }
+        } else {
+            SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日", Locale.getDefault());
+            String[] pauseDate = mPark_info.getPauseShareDate().split(",");
+            Date[] dates = new Date[pauseDate.length];
+            for (int i = 0; i < pauseDate.length; i++) {
+                try {
+                    dates[i] = dateFormat.parse(pauseDate[i]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            Arrays.sort(dates, new Comparator<Date>() {
+                @Override
+                public int compare(Date o1, Date o2) {
+                    return o1.compareTo(o2);
+                }
+            });
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < dates.length; i++) {
+                stringBuilder.append(simpleDateFormat.format(dates[i]));
+                stringBuilder.append(",");
+            }
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            mPauseRentDate.setText(stringBuilder.toString());
+
+            if (mPauseRentDate.getVisibility() == View.GONE) {
+                mPauseRentDate.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+        mSwitchButton.setChecked(mPark_info.getPark_status().equals("2"));
+    }
+
+    private String dayToWeek(int day) {
+        switch (day) {
+            case 1:
+                return "(每周一)";
+            case 2:
+                return "(每周二)";
+            case 3:
+                return "(每周三)";
+            case 4:
+                return "(每周四)";
+            case 5:
+                return "(每周五)";
+            case 6:
+                return "(每周六)";
+            case 7:
+                return "(每周日)";
+            default:
+                return "每周一";
+        }
     }
 
     private void changeParkSpaceStatus(final boolean open) {
@@ -127,5 +203,16 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT) != null) {
+                mPark_info = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                setParkSpaceInfo();
+            }
+        }
     }
 }
