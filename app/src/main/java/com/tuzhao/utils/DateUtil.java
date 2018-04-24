@@ -133,11 +133,10 @@ public class DateUtil {
      * @return true（暂停时间在开始时间和结束时间之间）
      */
     public static boolean isInPauseDate(String startDate, String endDate, String pauseDate) {
-        if (pauseDate.equals("")) {
+        if (pauseDate.equals("-1")) {
             return false;
         }
 
-        boolean inPauseDate = false;
         Calendar startCalendar = getYearToDayCalendar(startDate, true);
         Calendar endCalendar = getYearToDayCalendar(endDate, true);
         String[] pause = pauseDate.split(",");
@@ -145,10 +144,10 @@ public class DateUtil {
         for (int i = 0; i < pause.length; i++) {
             pauseCalendar = getYearToDayCalendar(pause[i], false);
             if (startCalendar.compareTo(pauseCalendar) <= 0 && endCalendar.compareTo(pauseCalendar) >= 0) {
-                inPauseDate = true;
+                return true;
             }
         }
-        return inPauseDate;
+        return false;
     }
 
     /**
@@ -191,17 +190,17 @@ public class DateUtil {
      * @return true（开始时间和结束时间之间在共享时间之内）
      */
     public static boolean isInShareDate(String startDate, String endDate, String shareDate) {
-        boolean inPauseDate = false;
+        if (shareDate.equals("-1") || shareDate.equals("")) {
+            return true;
+        }
+
         String[] date = shareDate.split(" - ");
         Calendar startCalendar = getYearToDayCalendar(startDate, true);
         Calendar endCalendar = getYearToDayCalendar(endDate, true);
         Calendar startShareCalendar = getYearToDayCalendar(date[0], false);
         Calendar endShareCalendar = getYearToDayCalendar(date[1], false);
 
-        if (startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0) {
-            inPauseDate = true;
-        }
-        return inPauseDate;
+        return startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0;
     }
 
     /**
@@ -262,7 +261,7 @@ public class DateUtil {
      */
     public static boolean isInOrderDate(String startDate, String endDate, String orderDate) {
         Log.e(TAG, "isInOrderDate: " + orderDate);
-        if (orderDate.equals("")) {
+        if (orderDate.equals("-1") || orderDate.equals("")) {
             return false;
         }
 
@@ -328,59 +327,32 @@ public class DateUtil {
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
-     * @param shareTime 共享时间段(08:00-12:00,14:00-18:00) 注：最多3个，用“，”隔开
+     * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00) 注：最多3个，用“,”隔开
      * @return true(共享时间段内至少有一个包含开始时间和结束时间的)
      */
     public static long isInShareTime(String startDate, String endDate, String shareTime) {
-        Log.e(TAG, "isInShareTime: " + shareTime);
-        String startYearToDay = startDate.split(" ")[0];
-        String endYearToDay = endDate.split(" ")[0];
-        String shareStartTime;
-        String shareEndTime;
-        if (shareTime.equals("00:00 - 23:59")) {
-            shareStartTime = startYearToDay + " 00:00";
-            shareEndTime = endYearToDay + " 23:59";
+        if (shareTime.equals("-1")||shareTime.equals("")) {
             //如果是全天共享的那直接就可以了
-            return getTimeDistance(shareStartTime, shareEndTime);
-
+            return getTimeDistance(startDate, endDate);
         } else if (getDateDistance(startDate, endDate) < 1) {
+            //停车时长不大于24小时
+            Calendar startTime = getYearToMinuteCalendar(startDate);
+            Calendar endTime = getYearToMinuteCalendar(endDate);
+
             //获取停车位共享的各个时间段
             String[] times = shareTime.split(",");
             Calendar[] calendars = new Calendar[times.length * 2];
             for (int i = 0; i < times.length; i++) {
-                calendars[i * 2] = getHourMinuteCalendar(times[i].substring(0, times[i].indexOf(" - ")), false);
-                calendars[i * 2 + 1] = getHourMinuteCalendar(times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()), false);
+                calendars[i * 2] = getHighCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
+                calendars[i * 2 + 1] = getHighCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
+                if (calendars[i * 2].compareTo(calendars[i * 2 + 1]) >= 0) {
+                    calendars[i * 2 + 1].add(Calendar.DAY_OF_MONTH, 1);
+                }
             }
 
-            Calendar startTime = getHourMinuteCalendar(startDate, true);
-            Calendar endTime = getHourMinuteCalendar(endDate, true);
-            if (startDate.split(" ")[0].equals(endDate.split(" ")[0])) {
-                //如果只在同一天停车，则如果有停车时间段在共享的时间段内即可
-                for (int i = 0; i < calendars.length; i += 2) {
-                    if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
-                        shareStartTime = startYearToDay + " " + times[i].substring(0, times[i].indexOf("-"));
-                        shareEndTime = endYearToDay + " " + times[i].substring(times[i].indexOf("-") + 1, times[i].length());
-                        Log.e(TAG, "isInShareTime1: " + getTimeDistance(shareStartTime, shareEndTime));
-                        return getTimeDistance(shareStartTime, shareEndTime);
-                    }
-                }
-            } else {
-                //如果停车时间是跨了两天的比如23:00-08:00，则比较共享时间段是否有包括23:00开始到08:00
-                Calendar todayEndTime = getHourMinuteCalendar("23:59", false);
-                Calendar todayStartTime = getHourMinuteCalendar("00:00", false);
-                boolean allIn = false;
-                for (int i = 0; i < calendars.length; i += 2) {
-                    if (startTime.compareTo(calendars[i]) >= 0 && todayEndTime.compareTo(calendars[i + 1]) <= 0
-                            || todayStartTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
-                        if (allIn) {
-                            shareStartTime = startYearToDay + " " + times[i].substring(0, times[i].indexOf("-"));
-                            shareEndTime = endYearToDay + " " + times[i].substring(times[i].indexOf("-") + 1, times[i].length());
-                            Log.e(TAG, "isInShareTime2: " + getTimeDistance(shareStartTime, shareEndTime));
-                            return getTimeDistance(shareStartTime, shareEndTime);
-                        } else {
-                            allIn = true;
-                        }
-                    }
+            for (int i = 0; i < calendars.length; i += 2) {
+                if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
+                    return calendars[i + 1].getTimeInMillis() - calendars[i].getTimeInMillis();
                 }
             }
         }

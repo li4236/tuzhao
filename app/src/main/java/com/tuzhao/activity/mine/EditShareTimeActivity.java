@@ -137,7 +137,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 checkTextView.setChecked(true);
             }
         } else if (mParkInfo != null) {
-            if (mParkInfo.getOpen_time().equals("")) {
+            if (mParkInfo.getOpen_time().equals("-1") || mParkInfo.getOpen_time().equals("")) {
                 findViewById(R.id.modify_share_time_everyday_share_date).setVisibility(View.GONE);
             }
         }
@@ -190,12 +190,12 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                             }
                         }
 
-                        if (shareTimeInfo.getPauseShareDate() != null && !shareTimeInfo.getPauseShareDate().equals("")) {
+                        if (shareTimeInfo.getPauseShareDate() != null && !shareTimeInfo.getPauseShareDate().equals("-1")) {
                             String[] pauseShareDate = shareTimeInfo.getPauseShareDate().split(",");
                             mPauseShareDateAdapter.addData(Arrays.asList(pauseShareDate));
                         }
 
-                        if (!shareTimeInfo.getEveryDayShareTime().equals("")) {
+                        if (!shareTimeInfo.getEveryDayShareTime().equals("-1")) {
                             String[] everyDayShareTime = shareTimeInfo.getEveryDayShareTime().split(",");
                             EverydayShareTimeInfo everydayShareTimeInfo;
                             String startTime;
@@ -444,7 +444,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             } else {
                 shareDay.append("0");
             }
-            shareDay.append(i + 1);
             shareDay.append(",");
         }
         shareDay.deleteCharAt(shareDay.length() - 1);
@@ -456,6 +455,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 pauseShareDate.append(",");
             }
             pauseShareDate.deleteCharAt(pauseShareDate.length() - 1);
+        } else {
+            pauseShareDate.append("-1");
         }
 
         final StringBuilder everyDayShareTime = new StringBuilder();
@@ -467,6 +468,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 everyDayShareTime.append(",");
             }
             everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
+        } else {
+            everyDayShareTime.append("-1");
         }
 
         getOkGo(HttpConstants.editShareTime)
@@ -532,7 +535,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             } else {
                 shareDay.append("0");
             }
-            shareDay.append(i + 1);
             shareDay.append(",");
         }
         shareDay.deleteCharAt(shareDay.length() - 1);

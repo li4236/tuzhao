@@ -368,6 +368,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         mCanParkInfo.clear();
         mCanParkInfo.addAll(park_list);
 
+        Log.e("TAG", "screenPark: " + park_list);
         long shareTimeDistance;
         for (Park_Info parkInfo : park_list) {
             //排除不在共享日期之内的(根据共享日期)
@@ -385,6 +386,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             //排除预定时间当天不共享的(根据共享星期)
             if (!DateUtil.isInShareDay(start_time, end_time, parkInfo.getShareDay())) {
                 mCanParkInfo.remove(parkInfo);
+                Log.e("TAG", "screenPark: notInShareDay");
                 break;
             }
 
@@ -793,7 +795,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private void addNewParkOrder() {
         StringBuilder readyParkId = new StringBuilder();
         StringBuilder readyParkUpdateTime = new StringBuilder();
-        for (int i = 1,size=mCanParkInfo.size() > 3? 3 : mCanParkInfo.size(); i <size; i++) {
+        for (int i = 1, size = mCanParkInfo.size() > 3 ? 3 : mCanParkInfo.size(); i < size; i++) {
             readyParkId.append(mCanParkInfo.get(i).getId());
             readyParkId.append(",");
 
