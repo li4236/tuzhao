@@ -45,6 +45,10 @@ public class DateUtil {
 
     private static Calendar sCalendar;
 
+    private static Calendar sSpecialToadyStartCalendar;
+
+    private static Calendar sSpecialTodayEndCalendar;
+
     private static SimpleDateFormat getAllDateFormat() {
         if (sAllDateFormat == null) {
             sAllDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -87,6 +91,20 @@ public class DateUtil {
         return sCalendar;
     }
 
+    public static Calendar getSpecialTodayStartCalendar() {
+        if (sSpecialToadyStartCalendar == null) {
+            sSpecialToadyStartCalendar = getYearToMinuteCalendar("2018-04-24 00:00");
+        }
+        return sSpecialToadyStartCalendar;
+    }
+
+    public static Calendar getSpecialTodayEndCalendar() {
+        if (sSpecialTodayEndCalendar == null) {
+            sSpecialTodayEndCalendar = getYearToMinuteCalendar("2018-04-24 23:59");
+        }
+        return sSpecialTodayEndCalendar;
+    }
+
     /**
      * @param isDetail true(2018-04-19 11:15:00) false(11:15:00)
      */
@@ -98,6 +116,14 @@ public class DateUtil {
         } else {
             return getDayDateFormat().format(getDate());
         }
+    }
+
+    /**
+     * @param date 格式yyyy-MM-dd HH:ss
+     * @return HH:ss
+     */
+    public static String getHourWithMinutes(String date) {
+        return date.substring(date.indexOf(" ") + 1, date.length());
     }
 
     /**

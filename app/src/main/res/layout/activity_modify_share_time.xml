@@ -234,12 +234,15 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
                     android:drawableStart="@mipmap/ic_add3"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
                     android:text="添加日期"
                     android:textColor="@color/y3"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_pause_time" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/modify_share_time_pause_date_rv"
@@ -270,7 +273,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="每日共享时段"
+                    android:text="共享时段"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -280,12 +283,15 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
                     android:drawableStart="@mipmap/ic_add3"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
                     android:text="添加时段"
                     android:textColor="@color/y3"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyday_share_time" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/modify_share_time_everyday_share_ime_rv"

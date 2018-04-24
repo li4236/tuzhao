@@ -7,6 +7,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.info.EverydayShareTimeInfo;
+import com.tuzhao.utils.DateUtil;
 
 /**
  * Created by juncoder on 2018/3/28.
@@ -20,8 +21,8 @@ public class EverydayShareTimeAdapter extends BaseAdapter<EverydayShareTimeInfo>
 
     @Override
     protected void conver(@NonNull BaseViewHolder holder, EverydayShareTimeInfo everydayShareTimeInfo, final int poisition) {
-        holder.setText(R.id.add_everyday_share_start_time, everydayShareTimeInfo.getStartTime())
-                .setText(R.id.add_everyday_share_end_time, everydayShareTimeInfo.getEndTime())
+        holder.setText(R.id.add_everyday_share_start_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getStartTime()))
+                .setText(R.id.add_everyday_share_end_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getEndTime()))
                 .getView(R.id.delete_everyday_share_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

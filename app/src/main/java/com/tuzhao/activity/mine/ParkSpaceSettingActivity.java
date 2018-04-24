@@ -108,6 +108,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     }
 
     private void setParkSpaceInfo() {
+        mAdapter.clearAll();
         mParkSpaceNumber.setText(mPark_info.getPark_number());
         mRentDate.setText(mPark_info.getOpen_date().replace(",", "-"));
 
