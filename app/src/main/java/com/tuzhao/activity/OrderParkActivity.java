@@ -723,8 +723,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void showAlertDialog() {
+        final TipeDialog.Builder builder = new TipeDialog.Builder(OrderParkActivity.this);
         //给mChooseData进行排序
-        Collections.sort(mChooseData, new Comparator<Holder>() {
+        /*Collections.sort(mChooseData, new Comparator<Holder>() {
             @Override
             public int compare(Holder o1, Holder o2) {
                 return Integer.valueOf(o1.rest_time).compareTo(o2.rest_time);
@@ -742,7 +743,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         }
 
         final ArrayList<Holder> readypark = new ArrayList<>();
-        final TipeDialog.Builder builder = new TipeDialog.Builder(OrderParkActivity.this);
         if (ctpark == null) {
             if (mChooseData.size() > 1) {
                 readypark.add(mChooseData.get(mChooseData.size() - 1));
@@ -770,13 +770,14 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
         }
         Log.e("哈哈哈", "时间范围是" + pos + "   " + mChooseData.size() + "   " + readypark.size() + "   " + (readypark.size() > 0 ? (readypark.get(0).park_id + (readypark.size() > 1 ? "," + readypark.get(1).park_id : "")) : ""));
-        final Holder perfectpark = ctpark;
+        final Holder perfectpark = ctpark;*/
 
         builder.setTitle("确认预定");
         builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 initLoading("匹配中...");
-                sendOrder(perfectpark, readypark);
+                addNewParkOrder();
+                //sendOrder(perfectpark, readypark);
             }
         });
 
@@ -788,6 +789,122 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
         builder.create().show();
     }
+
+    private void addNewParkOrder() {
+        StringBuilder readyParkId = new StringBuilder();
+        StringBuilder readyParkUpdateTime = new StringBuilder();
+        for (int i = 1,size=mCanParkInfo.size() > 3? 3 : mCanParkInfo.size(); i <size; i++) {
+            readyParkId.append(mCanParkInfo.get(i).getId());
+            readyParkId.append(",");
+
+            readyParkUpdateTime.append(mCanParkInfo.get(i).getUpdate_time());
+            readyParkUpdateTime.append(",");
+        }
+        if (readyParkId.length() > 0) {
+            readyParkId.deleteCharAt(readyParkId.length() - 1);
+            readyParkUpdateTime.deleteCharAt(readyParkUpdateTime.length() - 1);
+        }
+
+        OkGo.post(HttpConstants.addNewParkOrder)
+                .tag(OrderParkActivity.this)
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("parkspace_id", parkspace_info.getId())
+                .params("park_id", mCanParkInfo.get(0).getId())
+                .params("car_number", textview_carnumble.getText().toString())
+                .params("park_interval", start_time + "*" + end_time)
+                .params("park_updatetime", mCanParkInfo.get(0).getUpdate_time())
+                .params("readypark_id", readyParkId.toString())
+                .params("readypark_updatetime", readyParkUpdateTime.toString())
+                .params("citycode", parkspace_info.getCity_code())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        if (mCustomDialog.isShowing()) {
+                            mCustomDialog.dismiss();
+                        }
+                        MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
+                        Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
+                        intent.putExtra("parkorder_number", responseData.data.getOrder_number());
+                        intent.putExtra("citycode", parkspace_info.getCity_code());
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        if (mCustomDialog.isShowing()) {
+                            mCustomDialog.dismiss();
+                        }
+                        if (!DensityUtil.isException(OrderParkActivity.this, e)) {
+                            int code = Integer.parseInt(e.getMessage());
+                            TipeDialog.Builder builder;
+                            switch (code) {
+                                case 101:
+                                    //
+                                   /* builder = new TipeDialog.Builder(OrderParkActivity.this);
+                                    builder.setMessage("最优车位顺延时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
+                                    builder.setTitle("确认预定");
+                                    builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            initLoading("提交中...");
+                                            requestAppointOrderLockPark(readypark.get(0));
+                                        }
+                                    });
+
+                                    builder.setNegativeButton("取消",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            });
+
+                                    builder.create().show();*/
+                                    break;
+                                case 106:
+                                   /* //
+                                    builder = new TipeDialog.Builder(OrderParkActivity.this);
+                                    builder.setMessage("最优车位顺延时长为" + readypark.get(1).rest_time + "分钟，是否预定？");
+                                    builder.setTitle("确认预定");
+                                    builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            initLoading("提交中...");
+                                            requestAppointOrderLockPark(readypark.get(1));
+                                        }
+                                    });
+
+                                    builder.setNegativeButton("取消",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            });
+
+                                    builder.create().show();*/
+                                    break;
+                                case 102:
+                                    //
+                                    MyToast.showToast(OrderParkActivity.this, "未匹配到合适您时间的车位，请尝试更换时间", 5);
+                                    break;
+                                case 104:
+                                    //
+                                    MyToast.showToast(OrderParkActivity.this, "您有效订单已达上限，暂不可预约车位哦", 5);
+                                    break;
+                                case 105:
+                                    //
+                                    MyToast.showToast(OrderParkActivity.this, "您当前车位在该时段内已有过预约，请尝试更换时间", 5);
+                                    break;
+                                case 107:
+                                    //
+                                    MyToast.showToast(OrderParkActivity.this, "您有订单需要前去付款，要先处理哦", 5);
+                                    break;
+                                case 901:
+                                    MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
 
     private void sendOrder(Holder park, final ArrayList<Holder> readypark) {
 

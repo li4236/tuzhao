@@ -166,7 +166,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
     private void getOriginTime() {
         getOkGo(HttpConstants.getShareTime)
-                .params("parkSpaceId", mParkInfo.getId())
+                .params("parkId", mParkInfo.getId())
                 .params("cityCode", mParkInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
                     @Override
@@ -454,8 +454,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         }
 
         getOkGo(HttpConstants.editShareTime)
-                .params("cityCode",mParkInfo.getCitycode())
-                .params("parkSpaceId", mParkInfo.getId())
+                .params("cityCode", mParkInfo.getCitycode())
+                .params("parkId", mParkInfo.getId())
                 .params("shareDate", shareDate)
                 .params("shareDay", shareDay.toString())
                 .params("pauseShareDate", pauseShareDate.toString())
