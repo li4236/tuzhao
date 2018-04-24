@@ -58,8 +58,8 @@ public class BillActivity extends BaseActivity {
     }
 
     private void initView() {
-        mRecycleview = (SuperRefreshRecyclerView) findViewById(R.id.id_activity_bill_layout_recycleview);
-        linearlayout_norecord = (LinearLayout) findViewById(R.id.id_activity_bill_layout_linearlayout_nodata);
+        mRecycleview = findViewById(R.id.id_activity_bill_layout_recycleview);
+        linearlayout_norecord =  findViewById(R.id.id_activity_bill_layout_linearlayout_nodata);
         mRecycleview.init(new LinearLayoutManager(BillActivity.this), new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
         mRecycleview.setLoadingMoreEnable(true);
