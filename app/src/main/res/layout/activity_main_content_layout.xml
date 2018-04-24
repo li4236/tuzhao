@@ -151,7 +151,7 @@
         android:layout_width="0dp"
         android:layout_height="53dp"
         android:layout_marginBottom="25dp"
-        android:background="@drawable/normal_y6_press_y7_round"
+        android:background="@drawable/all_27_g1_bg"
         android:gravity="center"
         android:text="@string/park_now"
         android:textColor="@color/b1"

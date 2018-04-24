@@ -331,7 +331,8 @@ public class DateUtil {
      * @return true(共享时间段内至少有一个包含开始时间和结束时间的)
      */
     public static long isInShareTime(String startDate, String endDate, String shareTime) {
-        if (shareTime.equals("-1")||shareTime.equals("")) {
+        Log.e(TAG, "isInShareTime shareTime: " + shareTime);
+        if (shareTime.equals("-1") || shareTime.equals("")) {
             //如果是全天共享的那直接就可以了
             return getTimeDistance(startDate, endDate);
         } else if (getDateDistance(startDate, endDate) < 1) {
@@ -435,6 +436,10 @@ public class DateUtil {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+    }
+
+    private static String printCalendar(Calendar calendar) {
+        return calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     /**

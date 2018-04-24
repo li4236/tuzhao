@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private TextView textview_username, textview_citynodata, textview_credit;
     private TextView textview_mywallet, textview_parkorder, textview_share,
             textview_mycarnumble, textview_mypark, textview_set, textview_mycollection, textview_find;
+    private TextView mParkNow;
     private ConstraintLayout constraintLayout_openuser, constraintLayout_user;
     private LoginDialogFragment loginDialogFragment;
     private CustomDialog mCustomDialog;
@@ -251,6 +252,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         textview_citynodata = findViewById(R.id.id_content_main_layout_textview_citynodata);
         constraintLayout_openuser = findViewById(R.id.id_content_main_layout_relativelayout_openuser);
         textview_credit = findViewById(R.id.id_activity_main_layout_textview_credit);
+        mParkNow = findViewById(R.id.id_content_main_layout_textview_parknow);
 
         int barHeight = setStyle(false);
         ConstraintSet userConstraintSet = new ConstraintSet();
@@ -295,7 +297,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         imageview_spark.setOnClickListener(this);
         imageview_scharge.setOnClickListener(this);
         textview_credit.setOnClickListener(this);
-        findViewById(R.id.id_content_main_layout_textview_parknow).setOnClickListener(this);
+        mParkNow.setOnClickListener(this);
+        mParkNow.setClickable(false);
         findViewById(R.id.id_activity_main_layout_linearlayout_friend_park).setOnClickListener(this);
 
         //等地图绘制完成后，获得地图宽高，来实现转到地图上部中心点
@@ -766,6 +769,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             if (amapLocation.getErrorCode() == 0) {
                 Log.e("TAG", "定位成功" + isFirstloc);
                 LocationManager.getInstance().setmAmapLocation(amapLocation);
+                setViewClick();
                 mLastlocationLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 lastLatlng = mLastlocationLatlng;
                 if (isFirstloc) {
@@ -1415,6 +1419,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         }
                     });
         }
+    }
+
+    private void setViewClick() {
+        mParkNow.setClickable(true);
+        mParkNow.setBackground(ContextCompat.getDrawable(this, R.drawable.normal_y6_press_y7_round));
+    }
+
+    private void setViewNotClick() {
+        mParkNow.setClickable(false);
+        mParkNow.setBackground(ContextCompat.getDrawable(this, R.drawable.all_27_g1_bg));
     }
 
     private void checkPermission(final String permission, String message, final int requestCode) {

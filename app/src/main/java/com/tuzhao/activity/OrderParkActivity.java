@@ -368,45 +368,47 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         mCanParkInfo.clear();
         mCanParkInfo.addAll(park_list);
 
-        Log.e("TAG", "screenPark: " + park_list);
+        Log.e("TAG", "park_list: " + park_list);
         long shareTimeDistance;
+        int size=0;
         for (Park_Info parkInfo : park_list) {
+            Log.e("TAG", "screenPark: " +(++size));
             //排除不在共享日期之内的(根据共享日期)
             if (!DateUtil.isInShareDate(start_time, end_time, parkInfo.getOpen_date())) {
                 mCanParkInfo.remove(parkInfo);
-                break;
+                continue;
             }
 
             //排除暂停时间在预定时间内的(根据暂停日期)
             if (DateUtil.isInPauseDate(start_time, end_time, parkInfo.getPauseShareDate())) {
                 mCanParkInfo.remove(parkInfo);
-                break;
+                continue;
             }
 
             //排除预定时间当天不共享的(根据共享星期)
             if (!DateUtil.isInShareDay(start_time, end_time, parkInfo.getShareDay())) {
                 mCanParkInfo.remove(parkInfo);
                 Log.e("TAG", "screenPark: notInShareDay");
-                break;
+                continue;
             }
 
             //排除该时间段被别人预约过的(根据车位的被预约时间)
             if (DateUtil.isInOrderDate(start_time, end_time, parkInfo.getOrder_times())) {
                 mCanParkInfo.remove(parkInfo);
-                break;
+                continue;
             }
 
+            Log.e("TAG", "parkInfo: "+parkInfo );
+            Log.e("TAG", "Open_time: "+parkInfo.getOpen_time() );
             //排除不在共享时间段内的(根据共享的时间段)
             if ((shareTimeDistance = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time())) != 0) {
                 //获取车位可共享的时间差
-                Log.e("TAG", "screenPark: " + shareTimeDistance);
+                Log.e("TAG", "shareTimeDistance: " + shareTimeDistance);
                 int position = mCanParkInfo.indexOf(parkInfo);
                 parkInfo.setShareTimeDistance(shareTimeDistance);
                 mCanParkInfo.set(position, parkInfo);
-                break;
             } else {
                 mCanParkInfo.remove(parkInfo);
-                break;
             }
         }
 
@@ -424,7 +426,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        Log.e("TAG", "screenPark: " + mCanParkInfo);
+        Log.e("TAG", "mCanParkInfo: " + mCanParkInfo);
         setOrderFee();
         /*mChooseData.clear();
         int my_leavetime = UserManager.getInstance().getUserInfo().getLeave_time();
