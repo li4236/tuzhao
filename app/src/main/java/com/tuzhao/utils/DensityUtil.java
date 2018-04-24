@@ -76,7 +76,7 @@ public class DensityUtil {
             user_info.setAutologin("0");
             MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(user_info);
             //清空缓存的登录信息
-            UserManager.getInstance().setUserInfo(null);
+            UserManager.getInstance().setUserInfo(new User_Info());
             //发送退出登录的广播
             LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(LOGOUT_ACTION));
             MyToast.showToast(context, "账户异常，请重新登录", 5);

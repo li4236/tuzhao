@@ -123,7 +123,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
         }
 
-        if (mPark_info.getPauseShareDate() == null || mPark_info.getPauseShareDate().equals("")) {
+        if (mPark_info.getPauseShareDate() == null || mPark_info.getPauseShareDate().equals("-1")
+                || mPark_info.getPauseShareDate().equals("")) {
             mPauseRentDate.setText("无");
         } else {
             SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
