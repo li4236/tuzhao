@@ -1,5 +1,7 @@
 package com.tuzhao.info;
 
+import android.util.Log;
+
 import com.tuzhao.info.base_info.BaseInfo;
 
 /**
@@ -250,6 +252,7 @@ public class User_Info extends BaseInfo {
     }
 
     public int getLeave_time() {
+        Log.e("TAG", "getLeave_time: "+leave_time );
         return leave_time;
     }
 

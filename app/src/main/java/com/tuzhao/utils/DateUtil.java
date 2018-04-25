@@ -219,7 +219,7 @@ public class DateUtil {
             }
         } else {
             String[] days = shareDays.split(",");
-            if (getDateDistance(startDate, endDate) >= 6) {
+            if (getDateDayDistance(startDate, endDate) >= 6) {
                 //如果停车时间超过6天则需要判断是否整个星期都共享
                 for (int i = 0; i < days.length; i++) {
                     if (days[i].charAt(0) != '1') {
@@ -261,7 +261,6 @@ public class DateUtil {
      * @return true(停车时间在预约时间内)
      */
     public static boolean isInOrderDate(String startDate, String endDate, String orderDate) {
-        Log.e(TAG, "isInOrderDate: " + orderDate);
         if (orderDate.equals("-1") || orderDate.equals("")) {
             return false;
         }
@@ -289,7 +288,7 @@ public class DateUtil {
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
      * @return 返回两个时间段相差的天数，因为是根据时间戳来算的如果两个时间段相差的时间毫秒不够一天的毫秒还是回返回0
      */
-    public static int getDateDistance(String startDate, String endDate) {
+    public static int getDateDayDistance(String startDate, String endDate) {
         SimpleDateFormat dateFormat = getYearToMinutesFormat();
         Date start = new Date();
         Date end = new Date();
@@ -300,6 +299,42 @@ public class DateUtil {
             e.printStackTrace();
         }
         return (int) ((end.getTime() / 1000 - start.getTime() / 1000) / 3600 / 24);
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
+     * @return 返回两个时间段相差的天数，因为是根据时间戳来算的如果两个时间段相差的时间毫秒不够一天的毫秒还是回返回0
+     */
+    public static int getDateMinutesDistance(String startDate, String endDate) {
+        SimpleDateFormat dateFormat = getYearToMinutesFormat();
+        Date start = new Date();
+        Date end = new Date();
+        try {
+            start = dateFormat.parse(startDate);
+            end = dateFormat.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return (int) ((end.getTime() / 1000 - start.getTime() / 1000) / 60);
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
+     * @return 返回两个时间段相差的天数，因为是根据时间戳来算的如果两个时间段相差的时间毫秒不够一天的毫秒还是回返回0
+     */
+    public static long getDateMillisDistance(String startDate, String endDate) {
+        SimpleDateFormat dateFormat = getYearToMinutesFormat();
+        Date start = new Date();
+        Date end = new Date();
+        try {
+            start = dateFormat.parse(startDate);
+            end = dateFormat.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return ((end.getTime() - start.getTime()));
     }
 
     /**
@@ -336,7 +371,7 @@ public class DateUtil {
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
             return getTimeDistance(startDate, endDate);
-        } else if (getDateDistance(startDate, endDate) < 1) {
+        } else if (getDateDayDistance(startDate, endDate) < 1) {
             System.out.println("isInShareTime: leastOneDay");
             //停车时长不大于24小时
             Calendar startTime = getYearToMinuteCalendar(startDate);
@@ -496,7 +531,7 @@ public class DateUtil {
         boolean highDateInSameDay = isHighDateInSameDay(highDate);
         Calendar hightStartCalendar;
         Calendar hightEndCalendar;
-        int parkDay = getDateDistance(startDate, endDate);
+        int parkDay = getDateDayDistance(startDate, endDate);
         if (parkDay >= 1) {
             Log.e(TAG, "caculateParkFee: 1");
             //停车时间超过一天

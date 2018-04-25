@@ -136,10 +136,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             for (CheckTextView checkTextView : mCheckTextViews) {
                 checkTextView.setChecked(true);
             }
-        } else if (mParkInfo != null) {
-            if (mParkInfo.getOpen_time().equals("-1") || mParkInfo.getOpen_time().equals("")) {
-                findViewById(R.id.modify_share_time_everyday_share_date).setVisibility(View.GONE);
-            }
         }
     }
 
@@ -546,6 +542,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 pauseShareDate.append(",");
             }
             pauseShareDate.deleteCharAt(pauseShareDate.length() - 1);
+        } else {
+            pauseShareDate.append("-1");
         }
 
         StringBuilder everyDayShareTime = new StringBuilder();
@@ -557,6 +555,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 everyDayShareTime.append(",");
             }
             everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
+        } else {
+            everyDayShareTime.append("-1");
         }
 
         getOkGo(HttpConstants.addUserPark)
