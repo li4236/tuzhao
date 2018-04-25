@@ -50,6 +50,9 @@ public class InvoiceSituation extends BaseInfo {
     //发货时间
     private String deliveryDate;
 
+    //开票时间
+    private String invoiceDate;
+
     //开票的总金额
     private String totalPrice;
 
@@ -70,7 +73,12 @@ public class InvoiceSituation extends BaseInfo {
     }
 
     public String getType() {
-        return type;
+        if (type.equals("1")) {
+            return "电子";
+        } else if (type.equals("2")) {
+            return "普票";
+        }
+        return "专票";
     }
 
     public void setType(String type) {
@@ -94,6 +102,18 @@ public class InvoiceSituation extends BaseInfo {
     }
 
     public String getStatus() {
+        switch (status) {
+            case "0":
+                return "未开票";
+            case "1":
+                return "未发出";
+            case "2":
+                return progress;
+            case "3":
+                return "待收货";
+            case "4":
+                return "已收货";
+        }
         return status;
     }
 
@@ -163,5 +183,13 @@ public class InvoiceSituation extends BaseInfo {
 
     public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
+    }
+
+    public String getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    public void setInvoiceDate(String invoiceDate) {
+        this.invoiceDate = invoiceDate;
     }
 }

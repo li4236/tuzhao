@@ -53,8 +53,8 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         if ((mInvoiceSituation = (InvoiceSituation) getIntent().getSerializableExtra(ConstansUtil.INVOICE_SITUATION)) == null) {
-           /* showFiveToast("获取发票详情失败，请返回重试");
-            finish();*/
+            showFiveToast("获取发票详情失败，请返回重试");
+            finish();
         }
         mInvoiceDetailStatus = findViewById(R.id.invoice_detail_status_tv);
         mInvoiceDetailStatusDescription = findViewById(R.id.invoice_detail_status_description);
@@ -79,7 +79,7 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
         //mInvoiceDetailStatusDescription.setText();
         mCompany.setText(mInvoiceSituation.getCompany());
         mName.setText(mInvoiceSituation.getPersonName());
-        mTelephone.setText(mInvoiceSituation.getTelephone());
+        mTelephone.setText(mInvoiceSituation.getTelephone().equals("-1") ? "" : mInvoiceSituation.getTelephone());
         mAddress.setText(mInvoiceSituation.getAddress());
         mTicketContent.setText(mInvoiceSituation.getTicketContent());
         mTicketType.setText(mInvoiceSituation.getType());
