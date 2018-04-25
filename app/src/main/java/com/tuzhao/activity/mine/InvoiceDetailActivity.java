@@ -76,7 +76,22 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
     protected void initData() {
         super.initData();
         mInvoiceDetailStatus.setText(mInvoiceSituation.getStatus());
-        //mInvoiceDetailStatusDescription.setText();
+        String statusDescription;
+        switch (mInvoiceSituation.getStatus()) {
+            case "未开票":
+                statusDescription = "我们会尽快为您开票，请耐心等待";
+                break;
+            case "未发出":
+                statusDescription = "我们会尽快为您发出，请耐心等待";
+                break;
+            case "已收货":
+                statusDescription = "您已签收，如遇到问题请联系工作人员";
+                break;
+            default:
+                statusDescription = "敬请留意近期快递电话、邮件";
+                break;
+        }
+        mInvoiceDetailStatusDescription.setText(statusDescription);
         mCompany.setText(mInvoiceSituation.getCompany());
         mName.setText(mInvoiceSituation.getPersonName());
         mTelephone.setText(mInvoiceSituation.getTelephone().equals("-1") ? "" : mInvoiceSituation.getTelephone());
@@ -87,10 +102,12 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
         mTaxpayerNumber.setText(mInvoiceSituation.getTaxpayerNumber());
         mTicketPrice.setText(mInvoiceSituation.getTotalPrice());
 
-        String courierNumber = "快递单号：" + mInvoiceSituation.getCourierNumber();
+        StringBuilder courierNumber = new StringBuilder("快递单号：");
+        courierNumber.append(mInvoiceSituation.getCourierNumber().equals("-1") ? "暂无" : mInvoiceSituation.getCourierNumber());
         mCourierNumber.setText(courierNumber);
 
-        String deliveryDate = "发货时间：" + mInvoiceSituation.getDeliveryDate();
+        StringBuilder deliveryDate = new StringBuilder("发货时间：");
+        deliveryDate.append(mInvoiceSituation.getDeliveryDate() == null ? "暂未发货" : mInvoiceSituation.getDeliveryDate());
         mDeliveryDate.setText(deliveryDate);
         dismmisLoadingDialog();
     }
