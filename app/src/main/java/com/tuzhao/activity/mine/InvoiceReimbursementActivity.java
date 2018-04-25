@@ -67,7 +67,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     showFiveToast("没有能够报销的发票哦");
                 } else if (mChooseInvoice.isEmpty()) {
                     showFiveToast("你还没选择需要报销的发票哦");
-                } else if (calculateTotalPrice() <= 100) {
+                } else if (calculateTotalPrice() < 100) {
                     showFiveToast("订单总额大于100才可以开票哦");
                 } else {
                     startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);

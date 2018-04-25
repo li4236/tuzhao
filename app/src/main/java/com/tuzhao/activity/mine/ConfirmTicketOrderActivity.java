@@ -290,7 +290,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                     finish();
                 } else {
                     calculateTotalPrice();
-                    if (mTotalPrice <= 100) {
+                    if (mTotalPrice < 100) {
                         showFiveToast("总额大于100才可以开票哦,请重新选择");
                         finish();
                     } else {
