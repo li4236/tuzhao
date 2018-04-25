@@ -128,16 +128,18 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
                     textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
                 } else {
-                    if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mChooseData.size() > 0) {
+                    if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mCanParkInfo.size() > 0) {
                         textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.little_yuan_yellow_8dp));
                         textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
                         try {
-                            DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
-                            textview_fee.setText("约￥" + parkFee.parkfee);
+                            setOrderFee();
+                          /*  DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
+                            textview_fee.setText("约￥" + parkFee.parkfee);*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
+                        Log.e("TAG", "handleMessage4: ");
                         textview_fee.setText("约￥0.00");
                     }
                 }
@@ -370,9 +372,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
         Log.e("TAG", "park_list: " + park_list);
         long shareTimeDistance;
-        int size=0;
+        int size = 0;
         for (Park_Info parkInfo : park_list) {
-            Log.e("TAG", "screenPark: " +(++size));
+            Log.e("TAG", "screenPark: " + (++size));
             //排除不在共享日期之内的(根据共享日期)
             if (!DateUtil.isInShareDate(start_time, end_time, parkInfo.getOpen_date())) {
                 mCanParkInfo.remove(parkInfo);
@@ -398,8 +400,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 continue;
             }
 
-            Log.e("TAG", "parkInfo: "+parkInfo );
-            Log.e("TAG", "Open_time: "+parkInfo.getOpen_time() );
+            Log.e("TAG", "parkInfo: " + parkInfo);
+            Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
             //排除不在共享时间段内的(根据共享的时间段)
             if ((shareTimeDistance = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time())) != 0) {
                 //获取车位可共享的时间差

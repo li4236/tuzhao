@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -332,32 +333,68 @@ public class DateUtil {
      */
     public static long isInShareTime(String startDate, String endDate, String shareTime) {
         Log.e(TAG, "isInShareTime shareTime: " + shareTime);
-        if (shareTime.equals("-1") || shareTime.equals("")) {
+        if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
             return getTimeDistance(startDate, endDate);
         } else if (getDateDistance(startDate, endDate) < 1) {
+            System.out.println("isInShareTime: leastOneDay");
             //停车时长不大于24小时
             Calendar startTime = getYearToMinuteCalendar(startDate);
             Calendar endTime = getYearToMinuteCalendar(endDate);
 
             //获取停车位共享的各个时间段
             String[] times = shareTime.split(",");
-            Calendar[] calendars = new Calendar[times.length * 2];
-            for (int i = 0; i < times.length; i++) {
-                calendars[i * 2] = getHighCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
-                calendars[i * 2 + 1] = getHighCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
-                if (calendars[i * 2].compareTo(calendars[i * 2 + 1]) >= 0) {
-                    calendars[i * 2 + 1].add(Calendar.DAY_OF_MONTH, 1);
-                }
-            }
 
-            for (int i = 0; i < calendars.length; i += 2) {
-                if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
-                    return calendars[i + 1].getTimeInMillis() - calendars[i].getTimeInMillis();
+            if (!isInSameDay(startDate, endDate)) {
+                Calendar[] calendars = new Calendar[times.length * 2];
+                for (int i = 0; i < times.length; i++) {
+                    calendars[i * 2] = getHighCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
+                    calendars[i * 2 + 1] = getHighCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
+                    if (calendars[i * 2].compareTo(calendars[i * 2 + 1]) >= 0) {
+                        calendars[i * 2 + 1].add(Calendar.DAY_OF_MONTH, 1);
+                    }
                 }
+
+                for (int i = 0; i < calendars.length; i += 2) {
+                    if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
+                        return calendars[i + 1].getTimeInMillis() - calendars[i].getTimeInMillis();
+                    }
+                }
+            } else {
+                List<Calendar> list = new ArrayList<>(times.length * 2);
+                Calendar startCalendar;
+                Calendar endCalendar;
+                for (int i = 0; i < times.length; i++) {
+                    startCalendar = getHighCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
+                    endCalendar = getHighCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
+                    list.add(startCalendar);
+                    list.add(endCalendar);
+
+                    if (startCalendar.compareTo(endCalendar) >= 0) {
+                        list.set(list.size() - 1, getTodayEndCalendar(startCalendar));
+                        list.add(getTodayStartCalendar(endCalendar));
+                        list.add((Calendar) endCalendar.clone());
+                    }
+                }
+
+                for (int i = 0; i < list.size(); i += 2) {
+                    if (startTime.compareTo(list.get(i)) >= 0 && endTime.compareTo(list.get(i + 1)) <= 0) {
+                        return list.get(i + 1).getTimeInMillis() - list.get(i).getTimeInMillis();
+                    }
+                }
+
             }
         }
         return 0;
+    }
+
+    /**
+     * @param startDate 格式为yyyy-MM-dd HH:mm
+     * @param endDate   格式为yyyy-MM-dd HH:mm
+     * @return true(两天是在同一天)
+     */
+    private static boolean isInSameDay(String startDate, String endDate) {
+        return startDate.split(" ")[0].endsWith(endDate.split(" ")[1]);
     }
 
     /**
@@ -517,15 +554,14 @@ public class DateUtil {
                 Log.e(TAG, "caculateParkFee: 8");
                 //停车时间为同一天
                 hightStartCalendar = getHighCalendar(startDateCalendar, highDates[0]);
-
-                if (highDateInSameDay) {
+                hightEndCalendar = getHighCalendar(startDateCalendar, highDates[1]);
+                /*if (highDateInSameDay) {
                     Log.e(TAG, "caculateParkFee: 9");
                     //判断高峰期是否同一天判断出高峰期结束的时间
-                    hightEndCalendar = getHighCalendar(startDateCalendar, highDates[1]);
                 } else {
                     Log.e(TAG, "caculateParkFee: 10");
                     hightEndCalendar = getHighCalendar(startDateCalendar, highDates[1], 1);
-                }
+                }*/
                 result = calculateSameDay(startDateCalendar, endDateCalendar, hightStartCalendar, hightEndCalendar, highFee, lowFee);
                 Log.e(TAG, "caculateParkFee result: " + result);
             } else {
