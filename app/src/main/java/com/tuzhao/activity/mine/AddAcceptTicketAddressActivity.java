@@ -171,23 +171,22 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
             mTicketType.setText(mAddressInfo.getType());
             mCompanyName.setText(mAddressInfo.getCompany());
             mCompanyTelephone.setText(mAddressInfo.getCompanyPhone());
-            mAcceptPersonName.setText(mAddressInfo.getAcceptPersonName());
+            mAcceptPersonName.setText(mAddressInfo.getAcceptPersonName().equals("-1") ? "" : mAddressInfo.getAcceptPersonName());
             mCompanyName.setSelection(mCompanyName.getText().length());
-            mTaxNumber.setText(mAddressInfo.getTaxNumber());
+            mTaxNumber.setText(mAddressInfo.getTaxNumber().equals("-1") ? "" : mAddressInfo.getTaxNumber());
 
             switch (mAddressInfo.getType()) {
                 case "电子":
-                    mAcceptEmail.setText(mAddressInfo.getAcceptPersonEmail());
+                    mAcceptEmail.setText(mAddressInfo.getAcceptPersonEmail().equals("-1") ? "" : mAddressInfo.getAcceptPersonEmail());
                     showEmail();
                     break;
                 case "专票":
-                    mTaxNumber.setText(mAddressInfo.getTaxNumber());
-                    mBank.setText(mAddressInfo.getBank());
-                    mBankNumber.setText(mAddressInfo.getBankNumber());
+                    mBank.setText(mAddressInfo.getBank().equals("-1") ? "" : mAddressInfo.getBank());
+                    mBankNumber.setText(mAddressInfo.getBankNumber().equals("-1") ? "" : mAddressInfo.getBankNumber());
                 case "普票":
-                    mAcceptTelephone.setText(mAddressInfo.getAcceptPersonTelephone());
-                    mAcceptArea.setText(mAddressInfo.getAcceptArea());
-                    mAcceptDetailAddress.setText(mAddressInfo.getAcceptAddress());
+                    mAcceptTelephone.setText(mAddressInfo.getAcceptPersonTelephone().equals("-1") ? "" : mAddressInfo.getAcceptPersonTelephone());
+                    mAcceptArea.setText(mAddressInfo.getAcceptArea().equals("-1") ? "" : mAddressInfo.getAcceptArea());
+                    mAcceptDetailAddress.setText(mAddressInfo.getAcceptAddress().equals("-1") ? "" : mAddressInfo.getAcceptAddress());
                     showAddress();
                     break;
             }
@@ -468,12 +467,12 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 .params("companyPhone", getText(mCompanyTelephone))
                 .params("acceptPersonName", getText(mAcceptPersonName))
                 .params("taxNumber", getText(mTaxNumber))
-                .params("acceptPersonTelephone", isTypeOne() ? "" : getText(mAcceptTelephone))
-                .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "")
-                .params("acceptArea", isTypeOne() ? "" : getText(mAcceptArea))
-                .params("acceptAddress", isTypeOne() ? "" : getText(mAcceptDetailAddress))
-                .params("bank", isTypeThree() ? getText(mBank) : "")
-                .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "")
+                .params("acceptPersonTelephone", isTypeOne() ? "-1" : getText(mAcceptTelephone))
+                .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "-1")
+                .params("acceptArea", isTypeOne() ? "-1" : getText(mAcceptArea))
+                .params("acceptAddress", isTypeOne() ? "-1" : getText(mAcceptDetailAddress))
+                .params("bank", isTypeThree() ? getText(mBank) : "-1")
+                .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "-1")
                 .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
@@ -513,13 +512,13 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 .params("company", getText(mCompanyName))
                 .params("companyPhone", getText(mCompanyTelephone))
                 .params("acceptPersonName", getText(mAcceptPersonName))
-                .params("acceptPersonTelephone", isTypeOne() ? "" : getText(mAcceptTelephone))
-                .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "")
-                .params("acceptArea", isTypeOne() ? "" : getText(mAcceptArea))
-                .params("acceptAddress", isTypeOne() ? "" : getText(mAcceptDetailAddress))
-                .params("taxNumber", isTypeThree() ? getText(mTaxNumber) : "")
-                .params("bank", isTypeThree() ? getText(mBank) : "")
-                .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "")
+                .params("acceptPersonTelephone", isTypeOne() ? "-1" : getText(mAcceptTelephone))
+                .params("acceptPersonEmail", isTypeOne() ? getText(mAcceptEmail) : "-1")
+                .params("acceptArea", isTypeOne() ? "-1" : getText(mAcceptArea))
+                .params("acceptAddress", isTypeOne() ? "-1" : getText(mAcceptDetailAddress))
+                .params("taxNumber", getText(mTaxNumber))
+                .params("bank", isTypeThree() ? getText(mBank) : "-1")
+                .params("bankNumber", isTypeThree() ? getText(mBankNumber) : "-1")
                 .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<AcceptTicketAddressInfo> o, Call call, Response response) {

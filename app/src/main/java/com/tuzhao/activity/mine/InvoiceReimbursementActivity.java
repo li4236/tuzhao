@@ -109,10 +109,11 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                                         showFiveToast("账号异常，请重新登录");
                                         startLogin();
                                         break;
-                                    case "102":
-                                        showFiveToast("查询不到订单信息，请稍后再试");
-                                        finish();
-                                        break;
+                                    /*case "102":
+
+                                       *//* showFiveToast("查询不到订单信息，请稍后再试");
+                                        finish();*//*
+                                        break;*/
                                 }
                             }
                         });

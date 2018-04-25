@@ -175,7 +175,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         } else {
             mCompany.setText(mAddressInfo.getCompany());
             mName.setText(mAddressInfo.getAcceptPersonName());
-            if (mAddressInfo.getAcceptPersonTelephone() == null) {
+            if (mAddressInfo.getAcceptPersonTelephone().equals("-1")) {
                 mTelephone.setVisibility(View.GONE);
             } else {
                 if (mTelephone.getVisibility() != View.VISIBLE) {
