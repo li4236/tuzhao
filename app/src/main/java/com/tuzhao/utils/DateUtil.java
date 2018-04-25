@@ -384,7 +384,7 @@ public class DateUtil {
 
                 for (int i = 0; i < list.size(); i += 2) {
                     if (startTime.compareTo(list.get(i)) >= 0 && endTime.compareTo(list.get(i + 1)) <= 0) {
-                        return list.get(i + 1).getTimeInMillis() - list.get(i).getTimeInMillis();
+                        return list.get(i + 1).getTimeInMillis() - list.get(i - 2).getTimeInMillis();
                     }
                 }
 
