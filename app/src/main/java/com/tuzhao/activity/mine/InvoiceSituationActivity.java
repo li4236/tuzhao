@@ -57,7 +57,6 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
                                         userNotExist();
                                         break;
                                     case "102":
-                                        showFiveToast("你还没选择发票哦");
                                         break;
                                     case "103":
                                     case "104":
