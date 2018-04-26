@@ -469,7 +469,7 @@ public class DateUtil {
 
                 for (int i = 0; i < list.size(); i += 2) {
                     if (startTime.compareTo(list.get(i)) >= 0 && endTime.compareTo(list.get(i + 1)) <= 0) {
-                        return list.get(i + 1).getTimeInMillis() - list.get(i - 2).getTimeInMillis();
+                        return list.get(i - 2).getTimeInMillis() - list.get(i + 1).getTimeInMillis();
                     }
                 }
 
@@ -484,7 +484,7 @@ public class DateUtil {
      * @return true(两天是在同一天)
      */
     private static boolean isInSameDay(String startDate, String endDate) {
-        return startDate.split(" ")[0].endsWith(endDate.split(" ")[1]);
+        return startDate.split(" ")[0].endsWith(endDate.split(" ")[0]);
     }
 
     /**

@@ -15,6 +15,7 @@ import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.adapter.ParkSpaceRentTimeAdapter;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
@@ -103,8 +104,34 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     @Override
     protected void initData() {
         super.initData();
-        setParkSpaceInfo();
-        dismmisLoadingDialog();
+        getOriginTime();
+    }
+
+    private void getOriginTime() {
+        getOkGo(HttpConstants.getShareTime)
+                .params("parkId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
+                        ShareTimeInfo shareTimeInfo = o.data;
+                        mPark_info.setOpen_date(shareTimeInfo.getShareDate());
+                        mPark_info.setOpen_time(shareTimeInfo.getEveryDayShareTime());
+                        mPark_info.setShareDay(shareTimeInfo.getShareDay());
+                        mPark_info.setPauseShareDate(shareTimeInfo.getPauseShareDate());
+                        setParkSpaceInfo();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast("获取共享时间失败，请稍后重试");
+                            finish();
+                        }
+                    }
+                });
     }
 
     private void setParkSpaceInfo() {

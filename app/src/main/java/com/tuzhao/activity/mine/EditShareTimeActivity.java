@@ -145,7 +145,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
         if (mParkSpaceInfo == null) {
             //从车位设置跳转过来的则请求该车位的共享时间
-            getOriginTime();
+            setOriginTime();
         } else {
             //从添加车位跳转过来的则共享日期显示为当天-之后一个月
             SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
@@ -158,70 +158,56 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             calendar.add(Calendar.MONTH, 1);
             date.setTime(calendar.getTimeInMillis());
             mEndShareDate.setText(dateFormat.format(date));
-            dismmisLoadingDialog();
         }
 
         initDateOption();
         initTimeOption();
+        dismmisLoadingDialog();
     }
 
-    private void getOriginTime() {
-        getOkGo(HttpConstants.getShareTime)
-                .params("parkId", mParkInfo.getId())
-                .params("cityCode", mParkInfo.getCitycode())
-                .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
-                        ShareTimeInfo shareTimeInfo = o.data;
+    private void setOriginTime() {
+        ShareTimeInfo shareTimeInfo = new ShareTimeInfo();
+        shareTimeInfo.setShareDate(mParkInfo.getOpen_date());
+        shareTimeInfo.setEveryDayShareTime(mParkInfo.getOpen_time());
+        shareTimeInfo.setPauseShareDate(mParkInfo.getPauseShareDate());
+        shareTimeInfo.setShareDay(mParkInfo.getShareDay());
 
-                        String[] shareDate = shareTimeInfo.getShareDate().split(" - ");
+        String[] shareDate = shareTimeInfo.getShareDate().split(" - ");
 
-                        mStartShareDate.setText(shareDate[0]);
-                        mEndShareDate.setText(shareDate[1]);
+        mStartShareDate.setText(shareDate[0]);
+        mEndShareDate.setText(shareDate[1]);
 
-                        String[] shareDay = shareTimeInfo.getShareDay().split(",");
-                        for (int i = 0; i < shareDay.length; i++) {
-                            if (shareDay[i].charAt(0) == '1') {
-                                mCheckTextViews[i].setChecked(true);
-                            }
-                        }
+        String[] shareDay = shareTimeInfo.getShareDay().split(",");
+        for (int i = 0; i < shareDay.length; i++) {
+            if (shareDay[i].charAt(0) == '1') {
+                mCheckTextViews[i].setChecked(true);
+            }
+        }
 
-                        if (shareTimeInfo.getPauseShareDate() != null && !shareTimeInfo.getPauseShareDate().equals("-1")) {
-                            String[] pauseShareDate = shareTimeInfo.getPauseShareDate().split(",");
-                            mPauseShareDateAdapter.addData(Arrays.asList(pauseShareDate));
-                        }
+        if (shareTimeInfo.getPauseShareDate() != null && !shareTimeInfo.getPauseShareDate().equals("-1")) {
+            String[] pauseShareDate = shareTimeInfo.getPauseShareDate().split(",");
+            mPauseShareDateAdapter.addData(Arrays.asList(pauseShareDate));
+        }
 
-                        if (!shareTimeInfo.getEveryDayShareTime().equals("-1")) {
-                            String[] everyDayShareTime = shareTimeInfo.getEveryDayShareTime().split(",");
-                            EverydayShareTimeInfo everydayShareTimeInfo;
-                            String startTime;
-                            String endTime;
-                            int position;
-                            for (String dayShareTime : everyDayShareTime) {
-                                everydayShareTimeInfo = new EverydayShareTimeInfo();
-                                position = dayShareTime.indexOf(" - ");
-                                startTime = "2018-04-24 " + dayShareTime.substring(0, position);
-                                endTime = "2018-04-24 " + dayShareTime.substring(position + 3, dayShareTime.length());
-                                if (DateUtil.getYearToMinuteCalendar(startTime).compareTo(DateUtil.getYearToMinuteCalendar(endTime)) >= 0) {
-                                    endTime = "2018-04-25 " + dayShareTime.substring(position + 3, dayShareTime.length());
-                                }
-                                everydayShareTimeInfo.setStartTime(startTime);
-                                everydayShareTimeInfo.setEndTime(endTime);
-                                mEverydayShareTimeAdapter.addData(everydayShareTimeInfo);
-                            }
-                        }
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            showFiveToast("获取共享时间失败，请稍后重试");
-                            finish();
-                        }
-                    }
-                });
+        if (!shareTimeInfo.getEveryDayShareTime().equals("-1")) {
+            String[] everyDayShareTime = shareTimeInfo.getEveryDayShareTime().split(",");
+            EverydayShareTimeInfo everydayShareTimeInfo;
+            String startTime;
+            String endTime;
+            int position;
+            for (String dayShareTime : everyDayShareTime) {
+                everydayShareTimeInfo = new EverydayShareTimeInfo();
+                position = dayShareTime.indexOf(" - ");
+                startTime = "2018-04-24 " + dayShareTime.substring(0, position);
+                endTime = "2018-04-24 " + dayShareTime.substring(position + 3, dayShareTime.length());
+                if (DateUtil.getYearToMinuteCalendar(startTime).compareTo(DateUtil.getYearToMinuteCalendar(endTime)) >= 0) {
+                    endTime = "2018-04-25 " + dayShareTime.substring(position + 3, dayShareTime.length());
+                }
+                everydayShareTimeInfo.setStartTime(startTime);
+                everydayShareTimeInfo.setEndTime(endTime);
+                mEverydayShareTimeAdapter.addData(everydayShareTimeInfo);
+            }
+        }
     }
 
     @NonNull
