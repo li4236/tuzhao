@@ -295,8 +295,8 @@ public class RentingParkOrderFragment extends BaseFragment {
 
         OkGo.post(HttpConstants.endParking)
                 .tag(mContext)
-                .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .addInterceptor(new TokenInterceptor())
                 .params("order_id", parkOrderInfo.getId())
                 .params("citycode", parkOrderInfo.getCitycode())
                 .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
