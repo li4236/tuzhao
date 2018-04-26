@@ -429,29 +429,30 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
+        //停车时间加上顺延时长
+        final long canParkTime = DateUtil.getDateMillisDistance(start_time, end_time) + UserManager.getInstance().getUserInfo().getLeave_time() * 60 * 1000;
         Collections.sort(mCanParkInfo, new Comparator<Park_Info>() {
             @Override
             public int compare(Park_Info o1, Park_Info o2) {
                 long result;
 
-                //根据车位的指标排序
-                result = Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
-                if (result == 0) {
-                    result = DateUtil.getDateMillisDistance(start_time, end_time) + UserManager.getInstance().getUserInfo().getLeave_time() * 60 * 1000;    //停车时间加上顺延时长
-                    if ((o1.getShareTimeDistance() - result) >= 0 && (o2.getShareTimeDistance() - result) >= 0) {
-                        //如果两个车位的共享时段都大于等于停车时间加上顺延时间则按照车位的共享时段的大小从小到大排序
-                        result = (int) (o1.getShareTimeDistance() - o2.getShareTimeDistance());
-                    } else if ((o1.getShareTimeDistance() - result) > 0) {
-                        result = -1;
-                    } else if ((o2.getShareTimeDistance() - result) > 0) {
-                        result = -1;
-                    } else {
-                        result = (o2.getShareTimeDistance() - result) - (o1.getShareTimeDistance() - result);
-                    }
+                if ((o1.getShareTimeDistance() - canParkTime) >= 0 && (o2.getShareTimeDistance() - canParkTime) >= 0) {
+                    //如果两个车位的共享时段都大于等于停车时间加上顺延时间则按照车位的共享时段的大小从小到大排序
+                    result = (int) (o1.getShareTimeDistance() - o2.getShareTimeDistance());
+                } else if ((o1.getShareTimeDistance() - canParkTime) > 0) {
+                    result = -1;
+                } else if ((o2.getShareTimeDistance() - canParkTime) > 0) {
+                    result = -1;
+                } else {
+                    result = (o2.getShareTimeDistance() - canParkTime) - (o1.getShareTimeDistance() - canParkTime);
                 }
                 return (int) result;
             }
         });
+
+        if (mCanParkInfo.size() > 1) {
+            sortCanParkByIndicator(canParkTime);
+        }
 
         Log.e("TAG", "mCanParkInfo: " + mCanParkInfo);
         setOrderFee();
@@ -689,6 +690,48 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+    }
+
+    /**
+     * 把共享时长大于canParkTime的前三个预选车位按照指标排序
+     *
+     * @param canParkTime 用户预约的停车时长加上顺延时长
+     */
+    private void sortCanParkByIndicator(long canParkTime) {
+        if (mCanParkInfo.get(1).getShareTimeDistance() - canParkTime <= 0) {
+            //如果第二个的共享时间没有比停车时间加上顺延时间更长则不用比较了
+            return;
+        }
+
+        if (mCanParkInfo.size() == 2 || (mCanParkInfo.size() >= 3 && mCanParkInfo.get(2).getShareTimeDistance() - canParkTime <= 0)) {
+            //如果只有两个预选车位或者预选车位大于三个，但是第三个的共享时间没有比停车时间加上顺延时间更长
+            Park_Info parkInfoOne = mCanParkInfo.get(0);
+            Park_Info parkInfoTwo = mCanParkInfo.get(1);
+            if (Integer.valueOf(parkInfoOne.getIndicator()) > Integer.valueOf(parkInfoTwo.getIndicator())) {
+                mCanParkInfo.set(0, parkInfoTwo);
+                mCanParkInfo.set(1, parkInfoOne);
+            }
+        } else if (mCanParkInfo.size() >= 3) {
+
+            //预选车位大于等于三个则只需要比较前三个
+            List<Park_Info> list = new ArrayList<>(3);
+            for (int i = 0; i < 3; i++) {
+                list.add(mCanParkInfo.get(i));
+            }
+
+            //把前三个预选车位按照指标从小到大排序
+            Collections.sort(list, new Comparator<Park_Info>() {
+                @Override
+                public int compare(Park_Info o1, Park_Info o2) {
+                    return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
+                }
+            });
+
+            for (int i = 0; i < 3; i++) {
+                mCanParkInfo.set(i, list.get(i));
+            }
+        }
+
     }
 
     private void setOrderFee() {

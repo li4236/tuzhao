@@ -330,6 +330,14 @@ public class DateUtil {
     }
 
     /**
+     * @param calendar 比较的时间，格式为yyyy-MM-dd HH:mm
+     * @return true(HH:mm 为00:00或者0都行)
+     */
+    private static boolean isInStartDay(Calendar calendar) {
+        return calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.MINUTE) == 0;
+    }
+
+    /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
      * @return 返回两个时间段相差的天数，因为是根据时间戳来算的如果两个时间段相差的时间毫秒不够一天的毫秒还是回返回0
@@ -430,8 +438,8 @@ public class DateUtil {
                 //停车时间跨了一天的
                 Calendar[] calendars = new Calendar[times.length * 2];
                 for (int i = 0; i < times.length; i++) {
-                    calendars[i * 2] = getHighCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
-                    calendars[i * 2 + 1] = getHighCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
+                    calendars[i * 2] = getSameYearToDayCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
+                    calendars[i * 2 + 1] = getSameYearToDayCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
 
                     //共享日期跨了一天的，则把结束的日期加一天
                     if (calendars[i * 2].compareTo(calendars[i * 2 + 1]) >= 0) {
@@ -450,26 +458,53 @@ public class DateUtil {
                 }
             } else {
                 //停车时间在同一天的
+
+                if (times.length == 2) {
+                    //如果有两个时间段，如果第二个时间段是从凌晨开始的则放在数组前面。主要是为了之后判断这个时间段是不会跨天了的
+                    if (isInStartDay(getSameYearToDayCalendar(startTime, times[1].substring(0, times[1].indexOf(" - "))))) {
+                        String temp = times[0];
+                        times[0] = times[1];
+                        times[1] = temp;
+                    }
+                } else if (times.length >= 3) {
+                    if (!isInStartDay(getSameYearToDayCalendar(startTime, times[0].substring(0, times[0].indexOf(" - "))))) {
+                        //如果第一个不是从凌晨开始的，则判断其他时间段是否是从凌晨开始的
+                        for (int i = 1; i < times.length; i++) {
+                            if (isInStartDay(getSameYearToDayCalendar(startTime, times[i].substring(0, times[i].indexOf(" - "))))) {
+                                String temp = times[0];
+                                times[0] = times[i];
+                                times[i] = temp;
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 List<Calendar> list = new ArrayList<>(times.length * 2);
                 Calendar startCalendar;
                 Calendar endCalendar;
                 for (int i = 0; i < times.length; i++) {
-                    startCalendar = getHighCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
-                    endCalendar = getHighCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
+                    startCalendar = getSameYearToDayCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
+                    endCalendar = getSameYearToDayCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
                     list.add(startCalendar);
                     list.add(endCalendar);
 
                     //如果共享日期跨天了的，则把共享时间拆成当天共享的开始时间到当天的结束时间，当天的开始时间到当天的共享结束时间
                     if (startCalendar.compareTo(endCalendar) >= 0) {
                         list.set(list.size() - 1, getTodayEndCalendar(startCalendar));
-                        list.add(getTodayStartCalendar(endCalendar));
-                        list.add((Calendar) endCalendar.clone());
+                        list.add(0, getTodayStartCalendar(endCalendar));
+                        list.add(1, (Calendar) endCalendar.clone());
                     }
                 }
 
                 for (int i = 0; i < list.size(); i += 2) {
                     if (startTime.compareTo(list.get(i)) >= 0 && endTime.compareTo(list.get(i + 1)) <= 0) {
-                        return list.get(i - 2).getTimeInMillis() - list.get(i + 1).getTimeInMillis();
+                        if (i - 2 >= 0 && isInStartDay(list.get(i))) {
+                            //如果是从凌晨开始的，并且i-2大于等于0的，则这个时间段是跨天的
+                            return list.get(i - 2).getTimeInMillis() - list.get(i + 1).getTimeInMillis();
+                        } else {
+                            return list.get(i + 1).getTimeInMillis() - list.get(i).getTimeInMillis();
+                        }
                     }
                 }
 
@@ -506,7 +541,6 @@ public class DateUtil {
      * @return 格式为yyyy-MM-dd对应的Calendar,时分秒和毫秒都会清零
      */
     public static Calendar getYearToDayCalendar(String date, boolean containHourAndMinute) {
-        Log.e(TAG, "getYearToDayCalendar: " + date);
         Calendar calendar = Calendar.getInstance();
         String[] yearToDay = date.split("-");
         calendar.set(Calendar.YEAR, Integer.valueOf(yearToDay[0]));
@@ -586,16 +620,16 @@ public class DateUtil {
             Log.e(TAG, "caculateParkFee: 1");
             //停车时间超过一天
             int hightTotalMinutes;
-            hightStartCalendar = getHighCalendar(startDateCalendar, highDates[0]);
+            hightStartCalendar = getSameYearToDayCalendar(startDateCalendar, highDates[0]);
 
             //判断高峰期是否同一天判断出高峰期结束的时间
             if (highDateInSameDay) {
                 Log.e(TAG, "caculateParkFee: 2");
-                hightEndCalendar = getHighCalendar(startDateCalendar, highDates[1]);
+                hightEndCalendar = getSameYearToDayCalendar(startDateCalendar, highDates[1]);
                 hightTotalMinutes = getDateMinutes(hightStartCalendar, hightEndCalendar);
             } else {
                 Log.e(TAG, "caculateParkFee: 3");
-                hightEndCalendar = getHighCalendar(startDateCalendar, highDates[1], 1);
+                hightEndCalendar = getSameYearToDayCalendar(startDateCalendar, highDates[1], 1);
                 hightTotalMinutes = getDateMinutes(hightStartCalendar, getTodayEndCalendar(hightStartCalendar)) +
                         getDateMinutes(getTodayStartCalendar(hightEndCalendar), hightEndCalendar);
             }
@@ -628,8 +662,8 @@ public class DateUtil {
             }
 
         } else {
-            hightStartCalendar = getHighCalendar(startDateCalendar, highDates[0]);
-            hightEndCalendar = getHighCalendar(startDateCalendar, highDates[1]);
+            hightStartCalendar = getSameYearToDayCalendar(startDateCalendar, highDates[0]);
+            hightEndCalendar = getSameYearToDayCalendar(startDateCalendar, highDates[1]);
             if (parkStartDate[0].equals(parkEndDate[0])) {
                 Log.e(TAG, "caculateParkFee: 8");
                 //停车时间为同一天
@@ -727,7 +761,7 @@ public class DateUtil {
      * @param date     参照的那一天，格式为yyyy-MM-dd HH:mm
      * @param highDate 高峰期的时分，格式为HH:mm
      */
-    private static Calendar getHighCalendar(Calendar date, String highDate) {
+    private static Calendar getSameYearToDayCalendar(Calendar date, String highDate) {
         Calendar calendar = (Calendar) date.clone();
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(highDate.substring(0, highDate.indexOf(":"))));
         calendar.set(Calendar.MINUTE, Integer.valueOf(highDate.substring(highDate.indexOf(":") + 1, highDate.length())));
@@ -739,7 +773,7 @@ public class DateUtil {
      * @param highDate 高峰期的时分，格式为HH:mm
      * @param nextDays 比参照的那一天往后推迟几天
      */
-    private static Calendar getHighCalendar(Calendar date, String highDate, int nextDays) {
+    private static Calendar getSameYearToDayCalendar(Calendar date, String highDate, int nextDays) {
         Calendar calendar = (Calendar) date.clone();
         calendar.add(Calendar.DAY_OF_MONTH, nextDays);
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(highDate.substring(0, highDate.indexOf(":"))));
