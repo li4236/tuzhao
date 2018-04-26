@@ -373,27 +373,40 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         mCanParkInfo.addAll(park_list);
 
         long shareTimeDistance;
+        int status;
         for (Park_Info parkInfo : park_list) {
             Log.e("TAG", "screenPark parkInfo:" + parkInfo);
+
+            int currentStatus;
             //排除不在共享日期之内的(根据共享日期)
-            if (!DateUtil.isInShareDate(start_time, end_time, parkInfo.getOpen_date())) {
+            if ((currentStatus = DateUtil.isInShareDate(start_time, end_time, parkInfo.getOpen_date())) == 0) {
                 mCanParkInfo.remove(parkInfo);
                 Log.e(TAG, "screenPark: notInShareDate");
                 continue;
+            } else {
+                status = currentStatus;
             }
 
             //排除暂停时间在预定时间内的(根据暂停日期)
-            if (DateUtil.isInPauseDate(start_time, end_time, parkInfo.getPauseShareDate())) {
+            if ((currentStatus = DateUtil.isInPauseDate(start_time, end_time, parkInfo.getPauseShareDate())) == 0) {
                 mCanParkInfo.remove(parkInfo);
                 Log.e(TAG, "screenPark: inPauseDate");
                 continue;
+            } else {
+                if (status != 1) {
+                    status = currentStatus;
+                }
             }
 
             //排除预定时间当天不共享的(根据共享星期)
-            if (!DateUtil.isInShareDay(start_time, end_time, parkInfo.getShareDay())) {
+            if ((currentStatus = DateUtil.isInShareDay(start_time, end_time, parkInfo.getShareDay())) == 0) {
                 mCanParkInfo.remove(parkInfo);
                 Log.e("TAG", "screenPark: notInShareDay");
                 continue;
+            } else {
+                if (status != 1) {
+                    status = currentStatus;
+                }
             }
 
             //排除该时间段被别人预约过的(根据车位的被预约时间)
@@ -405,7 +418,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
             Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
             //排除不在共享时间段内的(根据共享的时间段)
-            if ((shareTimeDistance = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time())) != 0) {
+            if ((shareTimeDistance = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time(), status == 1)) != 0) {
                 //获取车位可共享的时间差
                 Log.e("TAG", "shareTimeDistance: " + shareTimeDistance);
                 int position = mCanParkInfo.indexOf(parkInfo);
@@ -424,14 +437,16 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 //根据车位的指标排序
                 result = Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
                 if (result == 0) {
-                    //如果指标一样则根据可共享的时间排序
-                    result = DateUtil.getDateMillisDistance(start_time, end_time) + UserManager.getInstance().getUserInfo().getLeave_time() * 60 * 1000;
+                    result = DateUtil.getDateMillisDistance(start_time, end_time) + UserManager.getInstance().getUserInfo().getLeave_time() * 60 * 1000;    //停车时间加上顺延时长
                     if ((o1.getShareTimeDistance() - result) >= 0 && (o2.getShareTimeDistance() - result) >= 0) {
+                        //如果两个车位的共享时段都大于等于停车时间加上顺延时间则按照车位的共享时段的大小从小到大排序
                         result = (int) (o1.getShareTimeDistance() - o2.getShareTimeDistance());
                     } else if ((o1.getShareTimeDistance() - result) > 0) {
                         result = -1;
-                    } else {
+                    } else if ((o2.getShareTimeDistance() - result) > 0) {
                         result = -1;
+                    } else {
+                        result = (o2.getShareTimeDistance() - result) - (o1.getShareTimeDistance() - result);
                     }
                 }
                 return (int) result;

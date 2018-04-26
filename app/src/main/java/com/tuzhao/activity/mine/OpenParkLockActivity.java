@@ -69,17 +69,17 @@ public class OpenParkLockActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(ctrlMessage);
                     if (jsonObject.optString("type").equals("ctrl")) {
                         if (jsonObject.optString("msg").equals("open_successful")) {
-                            circleProgress.setValue(100,Constant.DEFAULT_ANIM_TIME);
+                            circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
                             textview_state.setText("成功开锁！");
                             startfinish();
                         } else if (jsonObject.optString("msg").equals("open_successful_car")) {
-                            circleProgress.setValue(100,Constant.DEFAULT_ANIM_TIME);
+                            circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
                             startfinish();
                             textview_state.setText("车锁已开，因为车位上方有车辆滞留");
                         } else if (jsonObject.optString("msg").equals("open_failed")) {
                             textview_state.setText("开锁失败！");
                         } else if (jsonObject.optString("msg").equals("close_successful")) {
-                            circleProgress.setValue(100,Constant.DEFAULT_ANIM_TIME);
+                            circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
                             textview_state.setText("成功关锁！");
                         } else if (jsonObject.optString("msg").equals("close_failed")) {
                             textview_state.setText("关锁失败！");
@@ -93,12 +93,12 @@ public class OpenParkLockActivity extends BaseActivity {
         };
         MyReceiver.setOnCtrlLockListener(onCtrlLockListener);
 
-        circleProgress = (CircleProgress) findViewById(R.id.id_activity_openparklock_layout_circleprogress);
-        circleProgress.setValue(30,Constant.DEFAULT_ANIM_TIME);
+        circleProgress = findViewById(R.id.id_activity_openparklock_layout_circleprogress);
+        circleProgress.setValue(30, Constant.DEFAULT_ANIM_TIME);
 
-        textview_tryagain = (TextView) findViewById(R.id.id_activity_openparklock_layout_textview_tryagain);
+        textview_tryagain = findViewById(R.id.id_activity_openparklock_layout_textview_tryagain);
         textview_tryagain.setEnabled(false);
-        textview_state = (TextView) findViewById(R.id.id_activity_openparklock_layout_textview_state);
+        textview_state = findViewById(R.id.id_activity_openparklock_layout_textview_state);
     }
 
     private void startfinish() {
@@ -128,14 +128,14 @@ public class OpenParkLockActivity extends BaseActivity {
         OkGo.post(controlParkLock)
                 .tag(OpenParkLockActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("ctrl_type", "1")
                 .params("order_id", parkOrderInfo.getId())
                 .params("citycode", parkOrderInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
-                        circleProgress.setValue(70,Constant.DEFAULT_ANIM_TIME);
+                        circleProgress.setValue(70, Constant.DEFAULT_ANIM_TIME);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -189,7 +189,7 @@ public class OpenParkLockActivity extends BaseActivity {
                 textview_tryagain.setTextColor(Color.WHITE);
                 controlParkLock();
                 textview_state.setText("开锁中...");
-                circleProgress.setValue(0,100);
+                circleProgress.setValue(0, 100);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -212,7 +212,7 @@ public class OpenParkLockActivity extends BaseActivity {
         });
     }
 
-    private Handler mzhuanHandle = new Handler(){
+    private Handler mzhuanHandle = new Handler() {
         public void handleMessage(Message msg) {
             circleProgress.setValue(30, Constant.DEFAULT_ANIM_TIME);
         }

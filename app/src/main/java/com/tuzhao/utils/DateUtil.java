@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -127,29 +126,6 @@ public class DateUtil {
         return date.substring(date.indexOf(" ") + 1, date.length());
     }
 
-    /**
-     * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
-     * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
-     * @param pauseDate 暂停时间，格式为yyyy-MM-dd
-     * @return true（暂停时间在开始时间和结束时间之间）
-     */
-    public static boolean isInPauseDate(String startDate, String endDate, String pauseDate) {
-        if (pauseDate.equals("-1")) {
-            return false;
-        }
-
-        Calendar startCalendar = getYearToDayCalendar(startDate, true);
-        Calendar endCalendar = getYearToDayCalendar(endDate, true);
-        String[] pause = pauseDate.split(",");
-        Calendar pauseCalendar;
-        for (int i = 0; i < pause.length; i++) {
-            pauseCalendar = getYearToDayCalendar(pause[i], false);
-            if (startCalendar.compareTo(pauseCalendar) <= 0 && endCalendar.compareTo(pauseCalendar) >= 0) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * @param startCalendar 开始时间的日历，格式为yyyy-MM-dd HH:mm，可通过getYearToDayCalendar(startDate,true)获取
@@ -188,11 +164,12 @@ public class DateUtil {
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareDate 共享时间，格式为yyyy-MM-dd - yyyy-MM-dd(包括了开始共享的时间和结束共享的时间)
-     * @return true（开始时间和结束时间之间在共享时间之内）
+     * @return 0:(开始时间和结束时间之间不在在共享时间之内) 1:(开始时间和结束时间之间在共享时间之内,但是结束时间刚好是最后共享日期的第二天凌晨的)
+     * 2:(开始时间和结束时间之间在共享时间之内)
      */
-    public static boolean isInShareDate(String startDate, String endDate, String shareDate) {
+    public static int isInShareDate(String startDate, String endDate, String shareDate) {
         if (shareDate.equals("-1") || shareDate.equals("")) {
-            return true;
+            return 0;
         }
 
         String[] date = shareDate.split(" - ");
@@ -201,59 +178,118 @@ public class DateUtil {
         Calendar startShareCalendar = getYearToDayCalendar(date[0], false);
         Calendar endShareCalendar = getYearToDayCalendar(date[1], false);
 
-        return startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0;
+        if (startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0) {
+            //在共享的日期内
+            return 2;
+        } else {
+            String[] endHourWithMinutes = endDate.split(" ")[1].split(":");
+            if (endHourWithMinutes[0].equals("00") && endHourWithMinutes[1].equals("00")) {
+                //如果不在共享日期内，但是结束时间为凌晨的，则把共享结束时间加一天再比较
+                endShareCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                if (endCalendar.compareTo(endShareCalendar) == 0) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
+     * @param pauseDate 暂停时间，格式为yyyy-MM-dd,yyyy-MM-dd
+     * @return 0:(暂停时间在开始时间和结束时间之间) 1:(结束时间为暂停时间的00:00)
+     * 2:(暂停时间不在开始时间和结束时间之间)
+     */
+    public static int isInPauseDate(String startDate, String endDate, String pauseDate) {
+        if (pauseDate.equals("-1")) {
+            return 2;
+        }
+
+        Calendar startCalendar = getYearToDayCalendar(startDate, true);
+        Calendar endCalendar = getYearToDayCalendar(endDate, true);
+        String[] pause = pauseDate.split(",");
+        Calendar pauseCalendar;
+        int inPauseDate = 2;
+        for (int i = 0; i < pause.length; i++) {
+            pauseCalendar = getYearToDayCalendar(pause[i], false);
+            if (startCalendar.compareTo(pauseCalendar) <= 0 && endCalendar.compareTo(pauseCalendar) >= 0) {
+                //暂停时间在停车时间内
+                if (endDate.split(" ")[0].equals(pause[i]) && isInStartDay(endDate)) {
+                    //判断最后一天是否是暂停时间的00:00，不直接返回是因为如果停车时间为2018-04-26 10:00 - 2018-04-29:00，如果暂停时间为2018-04-29,2018-04-28则不正确
+                    inPauseDate = 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+        return inPauseDate;
     }
 
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareDays 每周共享的星期，
-     * @return 停车时间是否在停车位的共享星期内
+     * @return 0:(开始时间和结束时间之间不在在共享星期之内) 1:(开始时间和结束时间之间在共享星期之内,但是结束时间刚好是最后共享日期的第二天凌晨的)
+     * 2:(开始时间和结束时间之间在共享星期之内)
      */
-    public static boolean isInShareDay(String startDate, String endDate, String shareDays) {
+    public static int isInShareDay(String startDate, String endDate, String shareDays) {
         //如果是同一天则只需要判断当天是否共享
         if (startDate.split(" ")[0].equals(endDate.split(" ")[0])) {
             int parkDay = getDayOfWeek(startDate, true);
             if (shareDays.split(",")[parkDay - 1].charAt(0) != '1') {
-                return false;
+                return 0;
             }
         } else {
             String[] days = shareDays.split(",");
-            if (getDateDayDistance(startDate, endDate) >= 6) {
+            if (getDateDayDistance(startDate, endDate) > 6) {
                 //如果停车时间超过6天则需要判断是否整个星期都共享
                 for (int i = 0; i < days.length; i++) {
                     if (days[i].charAt(0) != '1') {
-                        return false;
+                        return 0;
                     }
                 }
             } else {
+                //停车时间为一到六天的
                 int startDay = getDayOfWeek(startDate, true);
                 int endDay = getDayOfWeek(endDate, true);
+                boolean isInStartDay = isInStartDay(endDate);
                 if (startDay < endDay) {
                     //如果停车时间是在同一个星期内则只需要判断停车的星期是否都在共享的星期内
                     for (int i = startDay; i <= endDay; i++) {
                         if (days[i - 1].charAt(0) != '1') {
-                            return false;
+                            if (i == endDay && isInStartDay) {
+                                //如果最后一天不共享但是是只停00:00的
+                                return 1;
+                            }
+                            return 0;
                         }
                     }
                 } else {
                     //如果是停车时间是在两个星期之间的，则判断停车的星期是否都在共享的星期内
-                    HashSet<Integer> hashSet = new HashSet<>();
+                    List<Integer> list = new ArrayList<>();
+                    //保存停车所在的星期
                     for (int i = startDay; i <= 7; i++) {
-                        hashSet.add(i);
+                        list.add(i);
                     }
                     for (int i = 1; i <= endDay; i++) {
-                        hashSet.add(i);
+                        list.add(i);
                     }
-                    for (Integer integer : hashSet) {
-                        if (days[integer - 1].charAt(0) != '1') {
-                            return false;
+
+                    for (int i = 0; i < list.size(); i++) {
+                        if (days[list.get(i) - 1].charAt(0) != '1') {
+                            //如果是最后一天的凌晨的则也可以
+                            if (i == list.size() - 1 && isInStartDay) {
+                                return 1;
+                            }
+                            //否则就是不在共享星期内
+                            return 0;
                         }
                     }
                 }
             }
         }
-        return true;
+        return 2;
     }
 
     /**
@@ -265,6 +301,7 @@ public class DateUtil {
             return false;
         }
 
+        //保存预约时间
         String[] orderDates = orderDate.split(",");
         Calendar[] calendars = new Calendar[orderDates.length * 2];
         for (int i = 0; i < orderDates.length; i++) {
@@ -281,6 +318,15 @@ public class DateUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * @param date 比较的时间，格式为yyyy-MM-dd HH:mm
+     * @return true(HH:mm 为00:00)
+     */
+    private static boolean isInStartDay(String date) {
+        String[] hourWithMinutes = date.split(" ")[1].split(":");
+        return (hourWithMinutes[0].equals("00") || hourWithMinutes[0].equals("0")) && (hourWithMinutes[1].equals("00") || hourWithMinutes[1].equals("0"));
     }
 
     /**
@@ -339,7 +385,7 @@ public class DateUtil {
 
     /**
      * @param containHourAndMinute true(格式为yyyy-MM-dd HH:mm)   false(格式为yyyy-MM-dd)
-     * @return 获取当天是星期几
+     * @return 获取当天是星期几(星期一到星期七)
      */
     private static int getDayOfWeek(String date, boolean containHourAndMinute) {
         int day;
@@ -364,9 +410,9 @@ public class DateUtil {
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00) 注：最多3个，用“,”隔开
-     * @return true(共享时间段内至少有一个包含开始时间和结束时间的)
+     * @return 0(共享时间段内没有一个包含开始时间和结束时间的)  其他(能停车的时间段的结束时间和开始时间的时间差)
      */
-    public static long isInShareTime(String startDate, String endDate, String shareTime) {
+    public static long isInShareTime(String startDate, String endDate, String shareTime, boolean isInStartDay) {
         Log.e(TAG, "isInShareTime shareTime: " + shareTime);
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
@@ -395,6 +441,10 @@ public class DateUtil {
 
                 for (int i = 0; i < calendars.length; i += 2) {
                     if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
+                        if (isInStartDay) {
+                            //结束时间为00:00的，但是那天是不共享的，则返回共享开始的时间段到共享结束时间段那天的凌晨的时间差
+                            return getTodayStartCalendar(calendars[i + 1]).getTimeInMillis() - calendars[i].getTimeInMillis();
+                        }
                         return calendars[i + 1].getTimeInMillis() - calendars[i].getTimeInMillis();
                     }
                 }
