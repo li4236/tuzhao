@@ -877,47 +877,13 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         }
                         if (!DensityUtil.isException(OrderParkActivity.this, e)) {
                             int code = Integer.parseInt(e.getMessage());
-                            TipeDialog.Builder builder;
                             switch (code) {
                                 case 101:
                                     //
-                                   /* builder = new TipeDialog.Builder(OrderParkActivity.this);
-                                    builder.setMessage("最优车位顺延时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
-                                    builder.setTitle("确认预定");
-                                    builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            initLoading("提交中...");
-                                            requestAppointOrderLockPark(readypark.get(0));
-                                        }
-                                    });
-
-                                    builder.setNegativeButton("取消",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                }
-                                            });
-
-                                    builder.create().show();*/
+                                    showRequestAppointOrderDialog(mCanParkInfo.get(1));
                                     break;
                                 case 106:
-                                   /* //
-                                    builder = new TipeDialog.Builder(OrderParkActivity.this);
-                                    builder.setMessage("最优车位顺延时长为" + readypark.get(1).rest_time + "分钟，是否预定？");
-                                    builder.setTitle("确认预定");
-                                    builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            initLoading("提交中...");
-                                            requestAppointOrderLockPark(readypark.get(1));
-                                        }
-                                    });
-
-                                    builder.setNegativeButton("取消",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                }
-                                            });
-
-                                    builder.create().show();*/
+                                    showRequestAppointOrderDialog(mCanParkInfo.get(2));
                                     break;
                                 case 102:
                                     //
@@ -944,8 +910,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 });
     }
 
-
-    private void sendOrder(Holder park, final ArrayList<Holder> readypark) {
+   /* private void sendOrder(Holder park, final ArrayList<Holder> readypark) {
 
         OkGo.post(HttpConstants.addNewParkOrder)
                 .tag(OrderParkActivity.this)
@@ -1045,9 +1010,77 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
                 });
+    }*/
+
+    private void showRequestAppointOrderDialog(final Park_Info park_info) {
+        TipeDialog.Builder builder = new TipeDialog.Builder(this);
+        long time = DateUtil.getDateMillisDistance(start_time, end_time) + UserManager.getInstance().getUserInfo().getLeave_time() * 60 * 1000;
+        if (park_info.getShareTimeDistance() - time >= 0) {
+            builder.setMessage("最优车位顺延时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");
+        } else {
+            builder.setMessage("可分配车位顺延时长为" + park_info.getShareTimeDistance() / 1000 / 60 + "分钟，是否预定？");
+        }
+        builder.setTitle("确认预定");
+        builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                initLoading("提交中...");
+                requestAppointOrderLockPark(park_info);
+            }
+        });
+
+        builder.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        builder.create().show();
     }
 
-    private void requestAppointOrderLockPark(Holder lockpark) {
+    private void requestAppointOrderLockPark(Park_Info park_info) {
+        OkGo.post(HttpConstants.appointOrderLockPark)
+                .tag(OrderParkActivity.this)
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("parkspace_id", parkspace_info.getId())
+                .params("car_number", textview_carnumble.getText().toString())
+                .params("park_id", park_info.getId())
+                .params("park_interval", start_time + "*" + end_time)
+                .params("citycode", parkspace_info.getCity_code())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        if (mCustomDialog.isShowing()) {
+                            mCustomDialog.dismiss();
+                        }
+                        MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
+                        Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
+                        intent.putExtra("parkorder_number", responseData.data.getOrder_number());
+                        intent.putExtra("citycode", parkspace_info.getCity_code());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        if (mCustomDialog.isShowing()) {
+                            mCustomDialog.dismiss();
+                        }
+                        if (!DensityUtil.isException(OrderParkActivity.this, e)) {
+                            int code = Integer.parseInt(e.getMessage());
+                            switch (code) {
+                                case 102:
+                                    MyToast.showToast(OrderParkActivity.this, "请求已超时，请重新预定", 5);
+                                    break;
+                                case 901:
+                                    MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
+    /*private void requestAppointOrderLockPark(Holder lockpark) {
 
         OkGo.post(HttpConstants.appointOrderLockPark)
                 .tag(OrderParkActivity.this)
@@ -1089,7 +1122,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
                 });
-    }
+    }*/
 
     private void initLoading(String what) {
         mCustomDialog = new CustomDialog(this, what);

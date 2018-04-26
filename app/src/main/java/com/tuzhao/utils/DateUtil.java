@@ -416,7 +416,7 @@ public class DateUtil {
         Log.e(TAG, "isInShareTime shareTime: " + shareTime);
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
-            return getTimeDistance(startDate, endDate);
+            return getTimeDistance("2018-04-26 00:00", "2018-04-27 00:00");
         } else if (getDateDayDistance(startDate, endDate) < 1) {
             System.out.println("isInShareTime: leastOneDay");
             //停车时长不大于24小时
