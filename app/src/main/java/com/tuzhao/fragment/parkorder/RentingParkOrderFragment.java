@@ -58,7 +58,6 @@ public class RentingParkOrderFragment extends BaseFragment {
 
     private List<ParkOrderInfo> mData;
 
-    private CustomPopWindow mCustomPopWindow;
     private DateUtil.ParkFee parkFee;
     private boolean isFirstIn = true, isFirstOrder = true;
     DateUtil dateUtil = new DateUtil();
@@ -79,19 +78,19 @@ public class RentingParkOrderFragment extends BaseFragment {
     }
 
     private void initView() {
-        linearlayout_nodata = (LinearLayout) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_linearlayout_nodata);
-        linearlayout12 = (LinearLayout) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_linearlayout12);
-        relativelayout_orderdetail = (RelativeLayout) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_relativelayout_orderdetail);
-        relativelayout_detailmoney = (RelativeLayout) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_relativelayout_detailmoney);
-        textview_fee = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_fee);
-        textview_warm1 = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_warm1);
-        textview_warm2 = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_warm2);
-        textview_finish = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_finish);
-        textview_order_1 = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_order_1);
-        textview_order_2 = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_order_2);
-        textview_zheceng1 = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_zheceng1);
-        textview_zheceng2 = (TextView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_zheceng2);
-        countdownview = (CountupView) mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_countdownview);
+        linearlayout_nodata = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_linearlayout_nodata);
+        linearlayout12 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_linearlayout12);
+        relativelayout_orderdetail = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_relativelayout_orderdetail);
+        relativelayout_detailmoney = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_relativelayout_detailmoney);
+        textview_fee = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_fee);
+        textview_warm1 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_warm1);
+        textview_warm2 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_warm2);
+        textview_finish = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_finish);
+        textview_order_1 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_order_1);
+        textview_order_2 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_order_2);
+        textview_zheceng1 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_zheceng1);
+        textview_zheceng2 = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_textview_zheceng2);
+        countdownview = mContentView.findViewById(R.id.id_fragment_rentingparkorder_layout_countdownview);
     }
 
     private void initData() {
@@ -151,9 +150,11 @@ public class RentingParkOrderFragment extends BaseFragment {
         if (mData.size() > 0) {
             linearlayout_nodata.setVisibility(View.GONE);
             if (isFirstOrder && mData.size() == 1) {
-                textview_order_1.setBackgroundColor(ContextCompat.getColor(mContext, R.color.w1));
+                textview_order_1.setVisibility(View.GONE);
+                textview_order_2.setVisibility(View.GONE);
+                /*textview_order_1.setBackgroundColor(ContextCompat.getColor(mContext, R.color.w1));
                 textview_order_2.setText("暂无订单");
-                textview_order_2.setBackgroundColor(Color.WHITE);
+                textview_order_2.setBackgroundColor(Color.WHITE);*/
                 textview_zheceng1.setVisibility(View.VISIBLE);
                 textview_zheceng2.setVisibility(View.GONE);
                 initDataView1(mData.get(0));
