@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/center_gl"
+        style="@style/VerticalGuideLine"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/guide_one_floor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginStart="42dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_floor3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="836:487"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/guide_one_park"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="96dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginStart="12dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_park3"
+        app:layout_constraintBottom_toBottomOf="@+id/guide_one_floor"
+        app:layout_constraintDimensionRatio="379:591"
+        app:layout_constraintEnd_toEndOf="@id/center_gl"
+        app:layout_constraintStart_toStartOf="@+id/guide_one_floor" />
+
+    <ImageView
+        android:id="@+id/guide_one_car"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="9dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_car3"
+        app:layout_constraintBottom_toBottomOf="@+id/guide_one_floor"
+        app:layout_constraintDimensionRatio="365:583"
+        app:layout_constraintEnd_toEndOf="@+id/guide_one_floor"
+        app:layout_constraintStart_toStartOf="@+id/center_gl" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guide_one_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guide_one_floor">
+
+        <View
+            android:id="@+id/guide_one_indicator"
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:background="@drawable/yuan_little_y2_all_5dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/guide_two_indicator"
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/yuan_little_gray_5dp"
+            app:layout_constraintStart_toEndOf="@+id/guide_one_indicator" />
+
+        <View
+            android:id="@+id/guide_three_indicator"
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/yuan_little_gray_5dp"
+            app:layout_constraintStart_toEndOf="@+id/guide_two_indicator" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/guide_one_top"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginStart="80dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/guide_one_top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="636:71"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guide_one_floor" />
+
+    <ImageView
+        android:id="@+id/guide_one_bottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="108dp"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/guide_one_bottom"
+        app:layout_constraintDimensionRatio="502:46"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guide_one_top" />
+
+</android.support.constraint.ConstraintLayout>

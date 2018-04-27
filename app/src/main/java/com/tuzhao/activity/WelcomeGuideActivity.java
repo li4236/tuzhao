@@ -1,23 +1,22 @@
 package com.tuzhao.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.tuzhao.R;
 import com.tuzhao.adapter.GuideViewPagerAdapter;
-import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.fragment.GuideOneFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +26,12 @@ import java.util.List;
  *
  * @author wwj_748
  */
-public class WelcomeGuideActivity extends Activity implements OnClickListener {
+public class WelcomeGuideActivity extends AppCompatActivity{
 
     private ViewPager vp;
+
+    private List<Fragment> mFragments;
+
     private GuideViewPagerAdapter adapter;
     private List<View> views;
     private Button startBtn;
@@ -48,8 +50,10 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_layout);
+        mFragments = new ArrayList<>();
+        mFragments.add(new GuideOneFragment());
 
-        views = new ArrayList<>();
+        /*views = new ArrayList<>();
 
         ImageView imageView;
         // 初始化引导页视图列表
@@ -67,15 +71,15 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
         startBtn = view.findViewById(R.id.btn_login);
         startBtn.setTag("enter");
         startBtn.setOnClickListener(this);
-        views.add(view);
+        views.add(view);*/
 
         vp = findViewById(R.id.vp_guide);
+        vp.setAdapter(new GuideViewpagerAdapter(getSupportFragmentManager()));
         // 初始化adapter
-        adapter = new GuideViewPagerAdapter(views);
-        vp.setAdapter(adapter);
-        vp.addOnPageChangeListener(new PageChangeListener());
+        /*adapter = new GuideViewPagerAdapter(views);
+        vp.setAdapter(adapter);*/
 
-        initDots();
+        //initDots();
 
     }
 
@@ -105,7 +109,7 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
-    private void initDots() {
+    /*private void initDots() {
         LinearLayout ll =findViewById(R.id.ll);
         dots = new ImageView[pics.length];
 
@@ -121,25 +125,24 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
         currentIndex = 0;
         dots[currentIndex].setEnabled(true); // 设置为白色，即选中状态
 
-    }
+    }*/
 
     /**
      * 设置当前view
      *
      * @param position
      */
-    private void setCurView(int position) {
+    /*private void setCurView(int position) {
         if (position < 0 || position >= pics.length) {
             return;
         }
         vp.setCurrentItem(position);
     }
 
-    /**
+    *//**
      * 设置当前指示点
      *
-     * @param position
-     */
+     *//*
     private void setCurDot(int position) {
         if (position < 0 || position > pics.length || currentIndex == position) {
             return;
@@ -159,7 +162,7 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
         int position = (Integer) v.getTag();
         setCurView(position);
         setCurDot(position);
-    }
+    }*/
 
 
     private void enterMainActivity() {
@@ -170,6 +173,24 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
         editor.putBoolean("first_open", true);
         editor.apply();
         finish();
+    }
+
+    private class GuideViewpagerAdapter extends FragmentPagerAdapter {
+
+        GuideViewpagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
     }
 
     private class PageChangeListener implements OnPageChangeListener {
@@ -193,7 +214,7 @@ public class WelcomeGuideActivity extends Activity implements OnClickListener {
         @Override
         public void onPageSelected(int position) {
             // 设置底部小点选中状态
-            setCurDot(position);
+            //setCurDot(position);
         }
 
     }

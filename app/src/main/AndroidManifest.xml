@@ -67,7 +67,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".activity.WelcomeGuideActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,9 +75,9 @@
             </intent-filter>
         </activity>
 
-        <activity
+        <!--<activity
             android:name=".activity.WelcomeGuideActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />-->
 
         <activity
             android:name=".activity.MainActivity"
