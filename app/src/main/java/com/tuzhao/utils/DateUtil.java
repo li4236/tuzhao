@@ -1167,7 +1167,7 @@ public class DateUtil {
     }
 
     public String addTime(String thetime, int addtime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat = getYearToMinutesFormat();
         if (!thetime.equals("") && addtime > 0) {
             try {
                 Date date = dateFormat.parse(thetime);

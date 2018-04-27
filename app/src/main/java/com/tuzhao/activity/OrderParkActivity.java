@@ -69,7 +69,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<Park_Info> park_list;
     private ArrayList<ParkOrderInfo> order_list;
     private List<Park_Info> mCanParkInfo;
-    private ArrayList<Holder> mChooseData = new ArrayList<>();//以选择时间来比较可以停的车位
     private DateUtil dateUtil = new DateUtil();
     private String start_time = "", end_time = "";//预定开始和结束的停车时间
     private int park_time = 0;//预定停车时长（分钟）
@@ -245,6 +244,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 }
                 hourWithMinute.add(minute);
 
+                //添加往后一小时到23点的时分
                 for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
                     hours.add(String.valueOf(i));
                     minute = new ArrayList<>();
@@ -270,7 +270,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
 
-            //dateUtil.initStartParkTimeData(mDays, mHours, mMinutes);
             mStartTimeOption = new OptionsPickerView<>(this);
             mStartTimeOption.setPicker(mDays, mHours, mMinutes, true);
             mStartTimeOption.setLabels(null, "点", "分");
@@ -283,10 +282,10 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     //返回的分别是三个级别的选中位置
                     String tx = mDays.get(options1) + " " + mHours.get(options1).get(option2) + " 点 " + mMinutes.get(options1).get(option2).get(options3) + " 分";
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(new Date());
                     calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + options1);//让日期加N
                     start_time = calendar.get(Calendar.YEAR) + "-" + DateUtil.thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" +
-                            DateUtil.thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " " + mHours.get(options1).get(option2) + ":" + mMinutes.get(options1).get(option2).get(options3);
+                            DateUtil.thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " " + DateUtil.thanTen(Integer.parseInt(mHours.get(options1).get(option2)))
+                            + ":" + DateUtil.thanTen(Integer.parseInt(mMinutes.get(options1).get(option2).get(options3)));
 
                     Log.e("哈哈哈，", "选中时间" + start_time);
                     if (dateUtil.compareNowTime(start_time, true)) {
