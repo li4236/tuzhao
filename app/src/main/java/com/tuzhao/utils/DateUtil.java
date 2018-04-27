@@ -418,13 +418,13 @@ public class DateUtil {
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00) 注：最多3个，用“,”隔开
-     * @return 0(共享时间段内没有一个包含开始时间和结束时间的)  其他(能停车的时间段的结束时间和开始时间的时间差)
+     * @return null(共享时间段内没有一个包含开始时间和结束时间的)  Calendar[]{能停车的时间段的开始时间,结束时间}
      */
-    public static long isInShareTime(String startDate, String endDate, String shareTime, boolean isInStartDay) {
+    public static Calendar[] isInShareTime(String startDate, String endDate, String shareTime, boolean isInStartDay) {
         Log.e(TAG, "isInShareTime shareTime: " + shareTime);
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
-            return getTimeDistance("2018-04-26 00:00", "2018-04-27 00:00");
+            return new Calendar[]{getTodayStartCalendar(getYearToMinuteCalendar(startDate)), getTodayEndCalendar(getYearToMinuteCalendar(endDate))};
         } else if (getDateDayDistance(startDate, endDate) < 1) {
             System.out.println("isInShareTime: leastOneDay");
             //停车时长不大于24小时
@@ -451,9 +451,9 @@ public class DateUtil {
                     if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
                         if (isInStartDay) {
                             //结束时间为00:00的，但是那天是不共享的，则返回共享开始的时间段到共享结束时间段那天的凌晨的时间差
-                            return getTodayStartCalendar(calendars[i + 1]).getTimeInMillis() - calendars[i].getTimeInMillis();
+                            return new Calendar[]{calendars[i], getTodayStartCalendar(calendars[i + 1])};
                         }
-                        return calendars[i + 1].getTimeInMillis() - calendars[i].getTimeInMillis();
+                        return new Calendar[]{calendars[i], calendars[i + 1]};
                     }
                 }
             } else {
@@ -501,16 +501,16 @@ public class DateUtil {
                     if (startTime.compareTo(list.get(i)) >= 0 && endTime.compareTo(list.get(i + 1)) <= 0) {
                         if (i - 2 >= 0 && isInStartDay(list.get(i))) {
                             //如果是从凌晨开始的，并且i-2大于等于0的，则这个时间段是跨天的
-                            return list.get(i - 2).getTimeInMillis() - list.get(i + 1).getTimeInMillis();
+                            return new Calendar[]{list.get(i + 1), list.get(i - 2)};
                         } else {
-                            return list.get(i + 1).getTimeInMillis() - list.get(i).getTimeInMillis();
+                            return new Calendar[]{list.get(i), list.get(i + 1)};
                         }
                     }
                 }
 
             }
         }
-        return 0;
+        return null;
     }
 
     /**
@@ -593,7 +593,10 @@ public class DateUtil {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
-    private static String printCalendar(Calendar calendar) {
+    public static String printCalendar(Calendar calendar) {
+        if (calendar == null) {
+            return "";
+        }
         return calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
@@ -640,9 +643,9 @@ public class DateUtil {
             result *= parkDay;  //停了parkDay那么多天所需的费用
             Log.e(TAG, "caculateParkFee: parkDayResult:" + result);
 
-            startDateCalendar = getSpecialCalendar(startDateCalendar, endDateCalendar);         //把停车开始时间改到最后那天的开始时间,22号12:00
-            hightStartCalendar = getSpecialCalendar(hightStartCalendar, startDateCalendar);     //高峰开始时间为22号xx:xx
-            hightEndCalendar = getSpecialCalendar(hightEndCalendar, endDateCalendar);           //高峰结束时间为22号xx:xx
+            startDateCalendar = transformYearToDay(startDateCalendar, endDateCalendar);         //把停车开始时间改到最后那天的开始时间,22号12:00
+            hightStartCalendar = transformYearToDay(hightStartCalendar, startDateCalendar);     //高峰开始时间为22号xx:xx
+            hightEndCalendar = transformYearToDay(hightEndCalendar, endDateCalendar);           //高峰结束时间为22号xx:xx
 
             if (isStartAndEndInSameDay(startDateCalendar, endDateCalendar)) {
                 Log.e(TAG, "caculateParkFee: 4");
@@ -656,8 +659,8 @@ public class DateUtil {
                     Log.e(TAG, "caculateParkFee: 7");
                     hightEndCalendar.add(Calendar.DAY_OF_MONTH, -1);                     //高峰结束时间为21号xx:xx
                 }*/
-                hightStartCalendar = getSpecialCalendar(hightStartCalendar, startDateCalendar);     //高峰开始时间为22号xx:xx
-                hightEndCalendar = getSpecialCalendar(hightEndCalendar, startDateCalendar);           //高峰结束时间为22号xx:xx
+                hightStartCalendar = transformYearToDay(hightStartCalendar, startDateCalendar);     //高峰开始时间为22号xx:xx
+                hightEndCalendar = transformYearToDay(hightEndCalendar, startDateCalendar);           //高峰结束时间为22号xx:xx
                 result += calculateDifferentDay(startDateCalendar, endDateCalendar, hightStartCalendar, hightEndCalendar, highFee, lowFee);
             }
 
@@ -784,7 +787,7 @@ public class DateUtil {
     /**
      * @return 把originCalendar的年月日转化为targetCalendar的年月日
      */
-    private static Calendar getSpecialCalendar(Calendar originCalendar, Calendar targetCalendar) {
+    private static Calendar transformYearToDay(Calendar originCalendar, Calendar targetCalendar) {
         originCalendar.set(Calendar.YEAR, targetCalendar.get(Calendar.YEAR));
         originCalendar.set(Calendar.MONTH, targetCalendar.get(Calendar.MONTH));
         originCalendar.set(Calendar.DAY_OF_MONTH, targetCalendar.get(Calendar.DAY_OF_MONTH));
@@ -855,6 +858,28 @@ public class DateUtil {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         return calendar;
+    }
+
+    /**
+     * @return 两个日历相差的分钟数
+     */
+    public static long getCalendarDistance(Calendar startCalendar, Calendar endCalendar) {
+        return (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60;
+    }
+
+    /**
+     * @return yyyy-MM-dd HH:mm - yyyy-MM-dd HH:mm
+     */
+    public static String getTwoYearToMinutesString(Calendar startCalendar, Calendar endCalendar) {
+        return getYearToMinutesString(startCalendar) + " - " + getYearToMinutesString(endCalendar);
+    }
+
+    /**
+     * @return 日历对应的yyyy-MM-dd HH:mm(如果是01则只会返回1)
+     */
+    private static String getYearToMinutesString(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
+                + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     /**

@@ -2,6 +2,8 @@ package com.tuzhao.info;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Calendar;
+
 /**
  * Created by TZL12 on 2017/5/19.
  */
@@ -37,7 +39,7 @@ public class Park_Info extends BaseInfo {
     private String update_time;//更新时间，主要是为了核验是否新增订单号
     private String voltage;//车位锁电量值
     private String indicator;//指标，代表该车位被停车的次数，用于预定车位排序
-    private long shareTimeDistance;     //能共享的时间段只差，仅用于预定车位排序
+    private Calendar[] shareTimeCalendar;     //能共享的时间段的开始时间和结束时间，仅用于预定车位排序
 
     public String getPark_space_name() {
         return parkspace_name;
@@ -312,12 +314,12 @@ public class Park_Info extends BaseInfo {
         this.indicator = indicator;
     }
 
-    public long getShareTimeDistance() {
-        return shareTimeDistance;
+    public Calendar[] getShareTimeCalendar() {
+        return shareTimeCalendar;
     }
 
-    public void setShareTimeDistance(long shareTimeDistance) {
-        this.shareTimeDistance = shareTimeDistance;
+    public void setShareTimeCalendar(Calendar[] shareTimeCalendar) {
+        this.shareTimeCalendar = shareTimeCalendar;
     }
 
     @Override
@@ -351,7 +353,7 @@ public class Park_Info extends BaseInfo {
                 ", update_time='" + update_time + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
-                ", shareTimeDistance=" + shareTimeDistance +
                 '}';
     }
+
 }
