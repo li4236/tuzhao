@@ -63,7 +63,7 @@ public class DateUtil {
         return sYearToDayFormat;
     }
 
-    private static SimpleDateFormat getDayDateFormat() {
+    public static SimpleDateFormat getDayDateFormat() {
         if (sDayDateFormat == null) {
             sDayDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         }
@@ -689,22 +689,22 @@ public class DateUtil {
         if (highStartCalendar.compareTo(highEndCalendar) <= 0) {
             //高峰时段在同一天
             Log.e(TAG, "calculateSameDay1");
-            result = getHighAndParkInSameDay(startDate, endDate, highStartCalendar, highEndCalendar, highFee, lowFee);
+            result = calculateHighAndParkInSameDay(startDate, endDate, highStartCalendar, highEndCalendar, highFee, lowFee);
         } else {
             //高峰时段不在同一天     2018-4-23 12:00-2018-4-24 08:00
             if (highEndCalendar.compareTo(startDate) <= 0) {
                 Log.e(TAG, "calculateSameDay3");
                 //停车时间为 2018-4-23 10:00-14:00,不包括第二天的高峰时段的
-                result = getHighAndParkInSameDay(startDate, endDate, highStartCalendar, getTodayEndCalendar(highStartCalendar), highFee, lowFee);
+                result = calculateHighAndParkInSameDay(startDate, endDate, highStartCalendar, getTodayEndCalendar(highStartCalendar), highFee, lowFee);
             } else if (highEndCalendar.compareTo(startDate) > 0 && highEndCalendar.compareTo(endDate) <= 0) {
                 Log.e(TAG, "calculateSameDay: 4");
                 //停车时间的一部分在高峰时段的第二天,    2018-4-23 06:00-13:00
-                result = getHighAndParkInSameDay(startDate, highEndCalendar, getTodayStartCalendar(startDate), highEndCalendar, highFee, lowFee); //计算2018-4-23 06:00-2018-4-23 08:00
-                result += getHighAndParkInSameDay(highEndCalendar, endDate, highStartCalendar, getTodayEndCalendar(highStartCalendar), highFee, lowFee);  //2018-4-23 08:00-2018-4-23 11:00
+                result = calculateHighAndParkInSameDay(startDate, highEndCalendar, getTodayStartCalendar(startDate), highEndCalendar, highFee, lowFee); //计算2018-4-23 06:00-2018-4-23 08:00
+                result += calculateHighAndParkInSameDay(highEndCalendar, endDate, highStartCalendar, getTodayEndCalendar(highStartCalendar), highFee, lowFee);  //2018-4-23 08:00-2018-4-23 11:00
             } else {
                 Log.e(TAG, "calculateSameDay: 5");
                 //停车时间全部在第二天的高峰时段的  2018-4-23 06:00-07:00
-                result = getHighAndParkInSameDay(startDate, endDate, getTodayStartCalendar(startDate), highEndCalendar, highFee, lowFee);
+                result = calculateHighAndParkInSameDay(startDate, endDate, getTodayStartCalendar(startDate), highEndCalendar, highFee, lowFee);
             }
 
         }
@@ -794,32 +794,32 @@ public class DateUtil {
     /**
      * 计算高峰时段和停车时间都在同一天的费用
      */
-    private static double getHighAndParkInSameDay(Calendar startDate, Calendar endDate, Calendar highStartCalendar, Calendar highEndCalendar,
-                                                  double highFee, double lowFee) {
+    private static double calculateHighAndParkInSameDay(Calendar startDate, Calendar endDate, Calendar highStartCalendar, Calendar highEndCalendar,
+                                                        double highFee, double lowFee) {
         double result;
         int totalParkMinutes = getDateMinutes(startDate, endDate);  //停车的总分钟数
-        Log.e(TAG, "getHighAndParkInSameDay totalParkMinutes:" + totalParkMinutes);
+        Log.e(TAG, "calculateHighAndParkInSameDay totalParkMinutes:" + totalParkMinutes);
         int totalHighMinutes = getDateMinutes(highStartCalendar, highEndCalendar);  //高峰时段的总分钟数
         if (startDate.compareTo(highStartCalendar) <= 0 && endDate.compareTo(highEndCalendar) >= 0) {
             //停车时间完全包括高峰期的
             result = totalHighMinutes * highFee + (totalParkMinutes - totalHighMinutes) * lowFee;
-            Log.e(TAG, "getHighAndParkInSameDay -1: " + "totalHighMinutes * highFee:" + totalHighMinutes * highFee + "  (totalParkMinutes - highFee) * lowFee:" + (totalParkMinutes - totalHighMinutes) * lowFee);
-            Log.e(TAG, "getHighAndParkInSameDay -2: " + "totalParkMinutes:" + totalParkMinutes + "  totalHighMinutes:" + totalHighMinutes + "  result:" + result);
+            Log.e(TAG, "calculateHighAndParkInSameDay -1: " + "totalHighMinutes * highFee:" + totalHighMinutes * highFee + "  (totalParkMinutes - highFee) * lowFee:" + (totalParkMinutes - totalHighMinutes) * lowFee);
+            Log.e(TAG, "calculateHighAndParkInSameDay -2: " + "totalParkMinutes:" + totalParkMinutes + "  totalHighMinutes:" + totalHighMinutes + "  result:" + result);
         } else if (startDate.compareTo(highStartCalendar) >= 0 && endDate.compareTo(highEndCalendar) <= 0) {
             //停车时间完全在高峰期内的
             result = totalParkMinutes * highFee;
-            Log.e(TAG, "getHighAndParkInSameDay 1:" + result);
+            Log.e(TAG, "calculateHighAndParkInSameDay 1:" + result);
         } else if (startDate.compareTo(highStartCalendar) < 0 && endDate.compareTo(highStartCalendar) > 0 && endDate.compareTo(highEndCalendar) <= 0) {
             //停车的开始时间不在高峰时段内，但是结束时间在高峰时段内，则高峰时段的开始时间到停车的结束时间为需要交纳高峰费用的时间
             result = getDateMinutes(highStartCalendar, endDate) * highFee + getDateMinutes(startDate, highStartCalendar) * lowFee;
-            Log.e(TAG, "getHighAndParkInSameDay 2: " + result);
+            Log.e(TAG, "calculateHighAndParkInSameDay 2: " + result);
         } else if (startDate.compareTo(highStartCalendar) >= 0 && startDate.compareTo(highEndCalendar) < 0 && endDate.compareTo(highEndCalendar) > 0) {
             //停车的开始时间小于高峰时段的结束时间，但是停车的时间大于高峰时段的结束时间，则停车的开始时间到高峰时段的结束时间为需要交纳高峰费用的时间
             result = getDateMinutes(startDate, highEndCalendar) * highFee + getDateMinutes(highEndCalendar, endDate) * lowFee;
-            Log.e(TAG, "getHighAndParkInSameDay 3: " + result);
+            Log.e(TAG, "calculateHighAndParkInSameDay 3: " + result);
         } else {
             result = totalParkMinutes * lowFee;
-            Log.e(TAG, "getHighAndParkInSameDay 4:" + result);
+            Log.e(TAG, "calculateHighAndParkInSameDay 4:" + result);
         }
 
         return result;
@@ -831,9 +831,9 @@ public class DateUtil {
      * @return 两个时间相差的分钟数
      */
     private static int getDateMinutes(Calendar startCalendar, Calendar endCalendar) {
-        if (endCalendar.get(Calendar.HOUR_OF_DAY) == 23 && endCalendar.get(Calendar.MINUTE) == 59) {
+       /* if (endCalendar.get(Calendar.HOUR_OF_DAY) == 23 && endCalendar.get(Calendar.MINUTE) == 59) {
             return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60 + 1);
-        }
+        }*/
         return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
     }
 
@@ -842,8 +842,8 @@ public class DateUtil {
      */
     private static Calendar getTodayEndCalendar(Calendar originCalendar) {
         Calendar calendar = (Calendar) originCalendar.clone();
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 24);
+        calendar.set(Calendar.MINUTE, 0);
         return calendar;
     }
 
