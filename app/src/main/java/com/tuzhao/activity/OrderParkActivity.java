@@ -37,16 +37,12 @@ import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -204,7 +200,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     if (mCanParkInfo.size() > 0) {
                         showAlertDialog();
                     } else {
-                        textview_fee.setText("约￥0.00");
+                        String price = "约￥0.00";
+                        textview_fee.setText(price);
                         MyToast.showToast(OrderParkActivity.this, "未能匹配到合适的车位，请尝试更换时间", 5);
                     }
                 }
@@ -523,10 +520,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        if (mCanParkInfo.size() > 1) {
-            sortCanParkByIndicator(canParkCanlendar);
+        if (mCanParkInfo.size() >= 1) {
             if (TextUtils.isEmpty(textview_carnumble.getText())) {
                 MyToast.showToast(this, "选了车牌号码才可以预定车位哦", 5);
+            }
+            if (mCanParkInfo.size() != 1) {
+                sortCanParkByIndicator(canParkCanlendar);
             }
         }
 
@@ -812,61 +811,22 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void setOrderFee() {
+        String price;
         if (textview_carnumble.getText().length() > 0 && mCanParkInfo.size() > 0) {
             textview_ordernow.setBackground(getResources().getDrawable(R.drawable.little_yuan_yellow_8dp));
             textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
             double orderFee = DateUtil.caculateParkFee(start_time, end_time, mCanParkInfo.get(0).getHigh_time(),
                     Double.valueOf(mCanParkInfo.get(0).getHigh_fee()),
                     Double.valueOf(mCanParkInfo.get(0).getLow_fee()));
-            textview_fee.setText("约￥" + mDecimalFormat.format(orderFee));
+            price = "约￥" + mDecimalFormat.format(orderFee);
+            textview_fee.setText(price);
         } else {
-            textview_fee.setText("约￥0.00");
+            price = "约￥0.00";
+            textview_fee.setText(price);
             textview_ordernow.setBackground(getResources().getDrawable(R.drawable.yuan_little_graynall_8dp));
             textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
         }
     }
-
-    private class Holder {
-        private String park_id, parktime_qujian, update_time;
-        private int rest_time;
-
-        Holder(String park_id, String parktime_qujian, String update_time, int rest_time) {
-            this.park_id = park_id;
-            this.parktime_qujian = parktime_qujian;
-            this.update_time = update_time;
-            this.rest_time = rest_time;
-        }
-    }
-
-    private String reduceOneDay(String thedate, Park_Info info) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        try {
-            Date date = dateFormat.parse(thedate);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 1);//让日期减1
-            String month = (calendar.get(Calendar.MONTH) + 1) >= 10 ? String.valueOf((calendar.get(Calendar.MONTH) + 1)) : "0" + String.valueOf((calendar.get(Calendar.MONTH) + 1));
-            return calendar.get(Calendar.YEAR) + "-" + month + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + info.getOpen_time().substring(0, info.getOpen_time().indexOf(" - "));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String addOneDay(String thedate, Park_Info info) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        try {
-            Date date = dateFormat.parse(thedate);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);//让日期加1
-            return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + info.getOpen_time().substring(info.getOpen_time().indexOf(" - ") + 3, info.getOpen_time().length());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     private void login() {
         loginDialogFragment = new LoginDialogFragment();
