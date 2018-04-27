@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -219,12 +220,63 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             mDays = new ArrayList<>(10);
             mHours = new ArrayList<>(24);
             mMinutes = new ArrayList<>(60);
-            dateUtil.initStartParkTimeData(mDays, mHours, mMinutes);
+
+            Calendar nowCalendar = Calendar.getInstance();
+            Calendar todayEndCalendar = Calendar.getInstance();
+            todayEndCalendar.set(Calendar.HOUR_OF_DAY, 24);
+            todayEndCalendar.set(Calendar.MINUTE, 0);
+            todayEndCalendar.set(Calendar.SECOND, 0);
+            todayEndCalendar.set(Calendar.MILLISECOND, 0);
+
+            ArrayList<String> hours;
+            ArrayList<ArrayList<String>> hourWithMinute;
+            ArrayList<String> minute;
+            if (DateUtil.getCalendarDistance(nowCalendar, todayEndCalendar) > 1) {
+                //如果距离凌晨大于一分钟才显示今天可选
+                mDays.add("今天");
+
+                hours = new ArrayList<>();
+                hourWithMinute = new ArrayList<>();
+                minute = new ArrayList<>();
+                //添加现在的时分
+                hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
+                for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
+                    minute.add(String.valueOf(j));
+                }
+                hourWithMinute.add(minute);
+
+                for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
+                    hours.add(String.valueOf(i));
+                    minute = new ArrayList<>();
+                    for (int j = 0; j < 60; j++) {
+                        minute.add(String.valueOf(j));
+                    }
+                    hourWithMinute.add(minute);
+                }
+
+                mHours.add(hours);
+                mMinutes.add(hourWithMinute);
+            }
+
+            mDays.add("明天");
+            mDays.add("后天");
+            for (int i = 0; i < 2; i++) {
+                addhourWithMinutes();
+            }
+
+            for (int i = 0; i < 7; i++) {
+                mDays.add(nowCalendar.get(Calendar.MONTH) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
+                addhourWithMinutes();
+                nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+
+            //dateUtil.initStartParkTimeData(mDays, mHours, mMinutes);
             mStartTimeOption = new OptionsPickerView<>(this);
-            mStartTimeOption.setPicker(mDays, mHours, mMinutes, false);
+            mStartTimeOption.setPicker(mDays, mHours, mMinutes, true);
             mStartTimeOption.setLabels(null, "点", "分");
             mStartTimeOption.setCyclic(false);
             mStartTimeOption.setTextSize(18);
+            mStartTimeOption.setSelectOptions(0, 0, 0);
             mStartTimeOption.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
@@ -260,9 +312,24 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 }
             });
         }
-        String[] currentHourAndMinute = DateUtil.getCurrentDate(false).split(":");
-        mStartTimeOption.setSelectOptions(0, Integer.valueOf(currentHourAndMinute[0]), Integer.valueOf(currentHourAndMinute[1]));
+
         mStartTimeOption.show();
+    }
+
+    private void addhourWithMinutes() {
+        ArrayList<String> hour = new ArrayList<>();
+        ArrayList<ArrayList<String>> hourWithMinute = new ArrayList<>();
+        ArrayList<String> minutes;
+        for (int i = 0; i < 24; i++) {
+            hour.add(String.valueOf(i));
+            minutes = new ArrayList<>();
+            for (int j = 0; j < 60; j++) {
+                minutes.add(String.valueOf(j));
+            }
+            hourWithMinute.add(minutes);
+        }
+        mHours.add(hour);
+        mMinutes.add(hourWithMinute);
     }
 
     private void showParktimeOptions() {
@@ -459,6 +526,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
         if (mCanParkInfo.size() > 1) {
             sortCanParkByIndicator(canParkCanlendar);
+            if (TextUtils.isEmpty(textview_carnumble.getText())) {
+                MyToast.showToast(this, "选了车牌号码才可以预定车位哦", 5);
+            }
         }
 
         Log.e("TAG", "mCanParkInfo: " + mCanParkInfo);
