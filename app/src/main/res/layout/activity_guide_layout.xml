@@ -11,6 +11,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <android.support.constraint.Guideline
+        android:id="@+id/bottom_gl"
+        style="@style/HorizontalGuideLine"
+        app:layout_constraintGuide_percent="0.71" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bottom_gl">
+
+        <View
+            android:id="@+id/guide_one_indicator"
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:background="@drawable/yuan_little_y2_all_5dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/guide_two_indicator"
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/yuan_little_gray_5dp"
+            app:layout_constraintStart_toEndOf="@+id/guide_one_indicator" />
+
+        <View
+            android:id="@+id/guide_three_indicator"
+            android:layout_width="40dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/yuan_little_gray_5dp"
+            app:layout_constraintStart_toEndOf="@+id/guide_two_indicator" />
+
+    </android.support.constraint.ConstraintLayout>
+
     <!--<Button
         android:id="@+id/btn_enter"
         android:layout_width="200dp"

@@ -1,13 +1,10 @@
-package com.tuzhao.fragment;
+package com.tuzhao.fragment.welcome;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +13,14 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.tuzhao.R;
-import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.activity.base.BaseGuideFragment;
+import com.tuzhao.utils.ImageUtil;
 
 /**
  * Created by juncoder on 2018/4/27.
  */
 
-public class GuideOneFragment extends Fragment {
-
-    private static final String TAG = "GuideOneFragment";
+public class GuideOneFragment extends BaseGuideFragment {
 
     private ConstraintLayout mConstraintLayout;
 
@@ -34,8 +30,6 @@ public class GuideOneFragment extends Fragment {
 
     private ImageView mFloor;
 
-    private boolean mCanPlay;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +37,11 @@ public class GuideOneFragment extends Fragment {
         mPark = mConstraintLayout.findViewById(R.id.guide_one_park);
         mCar = mConstraintLayout.findViewById(R.id.guide_one_car);
         mFloor = mConstraintLayout.findViewById(R.id.guide_one_floor);
+        ImageUtil.showPic(mPark, R.drawable.ic_park3);
+        ImageUtil.showPic(mCar, R.drawable.ic_car3);
+        ImageUtil.showPic(mFloor, R.drawable.ic_floor3);
+        ImageUtil.showPic((ImageView) mConstraintLayout.findViewById(R.id.guide_one_top), R.drawable.guide_one_top);
+        ImageUtil.showPic((ImageView) mConstraintLayout.findViewById(R.id.guide_one_bottom), R.drawable.guide_one_bottom);
         return mConstraintLayout;
     }
 
@@ -52,17 +51,12 @@ public class GuideOneFragment extends Fragment {
         setCoorDinates();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e(TAG, "onResume: ");
-    }
-
     private void setCoorDinates() {
         final ViewTreeObserver treeObserver = mConstraintLayout.getViewTreeObserver();
         treeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                //测量出floor后把park和car移动到距离floor底部的高度的0.52的位置上，再执行动画
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(mConstraintLayout);
                 int height = mFloor.getHeight();
@@ -74,28 +68,23 @@ public class GuideOneFragment extends Fragment {
                 showDownAnimator(mCar);
                 showUpAnimator(mFloor);
 
-                Log.e(TAG, "onGlobalLayout: ");
                 treeObserver.removeOnGlobalLayoutListener(this);
             }
         });
     }
 
-    private void showDownAnimator(ImageView imageView) {
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(imageView, "translationY", -DensityUtil.dp2px(getContext(), 108), 0);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(imageView, "alpha", 0, 1);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(1000);
-        animatorSet.playTogether(translationY, alpha);
-        animatorSet.start();
-    }
-
-    private void showUpAnimator(ImageView imageView) {
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(imageView, "translationY", 360, 0);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(imageView, "alpha", 0, 1);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(1000);
-        animatorSet.playTogether(translationY, alpha);
-        animatorSet.start();
+    @Override
+    public void isVisibilityToUser(boolean visibility) {
+        if (visibility) {
+            showDownAnimator(mPark);
+            showDownAnimator(mCar);
+            showUpAnimator(mFloor);
+        } else {
+            setViewAlpha(mPark);
+            setViewAlpha(mCar);
+            setViewAlpha(mFloor);
+        }
+        Log.e(TAG, "isVisibilityToUser: ");
     }
 
 }

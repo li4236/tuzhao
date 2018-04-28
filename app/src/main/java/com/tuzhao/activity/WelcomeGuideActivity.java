@@ -7,16 +7,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseGuideFragment;
 import com.tuzhao.adapter.GuideViewPagerAdapter;
-import com.tuzhao.fragment.GuideOneFragment;
+import com.tuzhao.fragment.welcome.GuideOneFragment;
+import com.tuzhao.fragment.welcome.GuideTwoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +30,13 @@ import java.util.List;
  *
  * @author wwj_748
  */
-public class WelcomeGuideActivity extends AppCompatActivity{
+public class WelcomeGuideActivity extends AppCompatActivity {
 
     private ViewPager vp;
 
-    private List<Fragment> mFragments;
+    private List<BaseGuideFragment> mFragments;
+
+    private View[] mIndicators;
 
     private GuideViewPagerAdapter adapter;
     private List<View> views;
@@ -52,35 +58,16 @@ public class WelcomeGuideActivity extends AppCompatActivity{
         setContentView(R.layout.activity_guide_layout);
         mFragments = new ArrayList<>();
         mFragments.add(new GuideOneFragment());
+        mFragments.add(new GuideTwoFragment());
 
-        /*views = new ArrayList<>();
-
-        ImageView imageView;
-        // 初始化引导页视图列表
-        for (int i = 0; i < pics.length - 1; i++) {
-            imageView = new ImageView(this);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-            imageView.setLayoutParams(layoutParams);
-            ImageUtil.showPic(imageView, pics[i]);
-            views.add(imageView);
-        }
-
-        View view = LayoutInflater.from(this).inflate(R.layout.guid_view4, null, false);
-        imageView = view.findViewById(R.id.guide_4);
-        ImageUtil.showPic(imageView, pics[3]);
-        startBtn = view.findViewById(R.id.btn_login);
-        startBtn.setTag("enter");
-        startBtn.setOnClickListener(this);
-        views.add(view);*/
+        mIndicators = new View[3];
+        mIndicators[0] = findViewById(R.id.guide_one_indicator);
+        mIndicators[1] = findViewById(R.id.guide_two_indicator);
+        mIndicators[2] = findViewById(R.id.guide_three_indicator);
 
         vp = findViewById(R.id.vp_guide);
         vp.setAdapter(new GuideViewpagerAdapter(getSupportFragmentManager()));
-        // 初始化adapter
-        /*adapter = new GuideViewPagerAdapter(views);
-        vp.setAdapter(adapter);*/
-
-        //initDots();
-
+        vp.addOnPageChangeListener(new PageChangeListener());
     }
 
     @Override
@@ -99,71 +86,13 @@ public class WelcomeGuideActivity extends AppCompatActivity{
         finish();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    private void setCurrentIndex(int currentIndex) {
+        mIndicators[this.currentIndex].setBackground(ContextCompat.getDrawable(this, R.drawable.yuan_little_gray_5dp));
+        mIndicators[currentIndex].setBackground(ContextCompat.getDrawable(this, R.drawable.yuan_little_y2_all_5dp));
+        mFragments.get(this.currentIndex).isVisibilityToUser(false);
+        mFragments.get(currentIndex).isVisibilityToUser(true);
+        this.currentIndex = currentIndex;
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    /*private void initDots() {
-        LinearLayout ll =findViewById(R.id.ll);
-        dots = new ImageView[pics.length];
-
-        // 循环取得小点图片
-        for (int i = 0; i < pics.length; i++) {
-            // 得到一个LinearLayout下面的每一个子元素
-            dots[i] = (ImageView) ll.getChildAt(i);
-            dots[i].setEnabled(false);// 都设为灰色
-            dots[i].setOnClickListener(this);
-            dots[i].setTag(i);// 设置位置tag，方便取出与当前位置对应
-        }
-
-        currentIndex = 0;
-        dots[currentIndex].setEnabled(true); // 设置为白色，即选中状态
-
-    }*/
-
-    /**
-     * 设置当前view
-     *
-     * @param position
-     */
-    /*private void setCurView(int position) {
-        if (position < 0 || position >= pics.length) {
-            return;
-        }
-        vp.setCurrentItem(position);
-    }
-
-    *//**
-     * 设置当前指示点
-     *
-     *//*
-    private void setCurDot(int position) {
-        if (position < 0 || position > pics.length || currentIndex == position) {
-            return;
-        }
-        dots[position].setEnabled(true);
-        dots[currentIndex].setEnabled(false);
-        currentIndex = position;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getTag().equals("enter")) {
-            enterMainActivity();
-            return;
-        }
-
-        int position = (Integer) v.getTag();
-        setCurView(position);
-        setCurDot(position);
-    }*/
-
 
     private void enterMainActivity() {
         Intent intent = new Intent(WelcomeGuideActivity.this, SplashActivity.class);
@@ -215,6 +144,8 @@ public class WelcomeGuideActivity extends AppCompatActivity{
         public void onPageSelected(int position) {
             // 设置底部小点选中状态
             //setCurDot(position);
+            Log.e("TAG", "onPageSelected: " + position);
+            setCurrentIndex(position);
         }
 
     }
