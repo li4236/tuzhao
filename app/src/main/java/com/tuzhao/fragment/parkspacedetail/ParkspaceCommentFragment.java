@@ -75,7 +75,7 @@ public class ParkspaceCommentFragment extends BaseFragment {
     }
 
     private void initView() {
-        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_recycleview);
+        mRecycleview = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_recycleview);
         mRecycleview.init(new LinearLayoutManager(mContext), new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
         mRecycleview.setLoadingMoreEnable(true);
@@ -98,14 +98,14 @@ public class ParkspaceCommentFragment extends BaseFragment {
         mAdapter = new ParkspaceCommentAdapter(mContext, mChooseData);
         mRecycleview.setAdapter(mAdapter);
 
-        textview_all = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_all);
-        textview_good = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_good);
-        textview_bad = (TextView) mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_bad);
-        imageview_seeic = (ImageView) mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_imageview_seeic);
+        textview_all = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_all);
+        textview_good = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_good);
+        textview_bad = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_bad);
+        imageview_seeic = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_imageview_seeic);
 
-        linearlayout_nodata = (LinearLayout) mContentView.findViewById(R.id.id_fragment_parkspacecomment_linearlayout_nodata);
+        linearlayout_nodata = mContentView.findViewById(R.id.id_fragment_parkspacecomment_linearlayout_nodata);
 
-        linearlayout_seeimg = (LinearLayout) mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_linearlayout_seeimg);
+        linearlayout_seeimg = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_linearlayout_seeimg);
     }
 
     private void initData() {

@@ -47,27 +47,29 @@ public class BigPictureActivity extends BaseActivity {
 
     private void initView() {
 
-        viewpager = (FixViewPager) findViewById(R.id.id_activity_bigpicture_layout_viewpager);
-        textview_selectcount = (TextView) findViewById(R.id.id_activity_bigpicture_layout_textview_selectcount);
-        linearlayout_selectcount = (LinearLayout) findViewById(R.id.id_activity_bigpicture_layout_linearlayout_selectcount);
+        viewpager = findViewById(R.id.id_activity_bigpicture_layout_viewpager);
+        textview_selectcount = findViewById(R.id.id_activity_bigpicture_layout_textview_selectcount);
+        linearlayout_selectcount = findViewById(R.id.id_activity_bigpicture_layout_linearlayout_selectcount);
         int barheigh = setStyle(false);
         RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rp.setMargins(0, barheigh, 0, 0);
         linearlayout_selectcount.setLayoutParams(rp);
     }
+
     private void initData() {
 
-        if (getIntent().hasExtra("picture_list")){
+        if (getIntent().hasExtra("picture_list")) {
             imgList = getIntent().getStringArrayListExtra("picture_list");
-            position = getIntent().getIntExtra("position",1);
+            position = getIntent().getIntExtra("position", 1);
         }
-        textview_selectcount.setText((position+1)+"/"+imgList.size());
-        mAdapter = new PicturePagerAdapter(this,imgList,this);
+        textview_selectcount.setText((position + 1) + "/" + imgList.size());
+        mAdapter = new PicturePagerAdapter(this, imgList, this);
         viewpager.setAdapter(mAdapter);
-        if (position != 0){
+        if (position != 0) {
             viewpager.setCurrentItem(position);
         }
     }
+
     private void initEvent() {
 
         viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -78,7 +80,7 @@ public class BigPictureActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                textview_selectcount.setText((position+1)+"/"+imgList.size());
+                textview_selectcount.setText((position + 1) + "/" + imgList.size());
             }
 
             @Override

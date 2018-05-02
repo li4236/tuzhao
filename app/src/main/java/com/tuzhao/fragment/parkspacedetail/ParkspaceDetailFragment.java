@@ -232,7 +232,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
                     @Override
                     public void onSuccess(final Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
                         //请求成功
-                        Log.e("TAG", "onSuccess: "+responseData.data );
+                        Log.e("TAG", "onSuccess: " + responseData.data);
                         park_issuccess = true;
                         if (parkspace_issuccess) {
                             if (mCustomDialog.isShowing()) {

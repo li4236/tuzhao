@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.callback.JsonListCallback;
+import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
@@ -130,7 +132,37 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      *                 当请求失败的时候如果没有数据则显示空数据并取消加载对话框，接着会回调onError方法
      */
     protected void requestData(String url, final BaseCallback<Base_Class_List_Info<T>> callback) {
-        getOkgo(url)
+        OkGo.<Base_Class_List_Info<T>>post(url)
+                .tag(this.getClass().getName())
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("startItem", mStartItme)
+                .params("pageSize", 15)
+                .execute(new JsonCallback<Base_Class_List_Info<T>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<T> base_class_list_info, Call call, Response response) {
+                        mRecyclerView.showData();
+                        if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
+                            mCommonAdapter.clearAll();
+                        }
+                        mCommonAdapter.addData(base_class_list_info.data);
+                        callback.onSuccess(base_class_list_info, call, response);
+                        stopLoadStatus();
+                        increateStartItem();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        showEmpty();
+                        dismmisLoadingDialog();
+                        if (!handleException(e)) {
+                            callback.onError(call, response, e);
+                        }
+                    }
+                });
+    /*    getOkgo(url)
                 .execute(new JsonListCallback<Base_Class_List_Info<T>, T>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<T> t, Call call, Response response) {
@@ -155,7 +187,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                             callback.onError(call, response, e);
                         }
                     }
-                });
+                });*/
     }
 
     /**
