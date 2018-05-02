@@ -3,11 +3,11 @@ package com.tuzhao.fragment.parkspacedetail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
@@ -62,7 +62,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
     private CustomDialog mCustomDialog;
     private Banner banner_image;
     private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance, textview_distance_dw, textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime;
-    private LinearLayout linearlayout_goorder, linearlayout_daohang;
+    private ConstraintLayout linearlayout_goorder, linearlayout_daohang;
     private LoginDialogFragment loginDialogFragment;
     private CBRatingBar cbratingbar;
 
@@ -80,7 +80,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
-        mContentView = inflater.inflate(R.layout.fragment_parkspacedetail_layout, container, false);
+        mContentView = inflater.inflate(R.layout.fragment_parkspace_detail_layout, container, false);
 
         initView();//初始化控件
         initData();//初始化数据
@@ -361,9 +361,9 @@ public class ParkspaceDetailFragment extends BaseFragment {
             textview_highfee.setText(parkspace_info.getHigh_fee());
             textview_lowfee.setText(parkspace_info.getLow_fee());
             textview_finewarm.setText("※ 停车超过顺延时间会按" + parkspace_info.getFine() + "元/小时收取额外超时费哦 ※");
-            cbratingbar.setStarProgress(parkspace_info.getGrade() == null ? 80 : (new Float(parkspace_info.getGrade()) * 100 / 5));
+            cbratingbar.setStarProgress(parkspace_info.getGrade() == null ? 80 : (Float.valueOf(parkspace_info.getGrade()) * 100 / 5));
             textview_grade.setText(parkspace_info.getGrade() + "分");
-            textview_opentime.setText("营业时间（" + parkspace_info.getOpentime() + "）");
+            textview_opentime.setText("(" + parkspace_info.getOpentime() + ")");
         } catch (Exception e) {
             e.printStackTrace();
         }
