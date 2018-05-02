@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
@@ -20,6 +21,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +39,13 @@ import okhttp3.Response;
 
 public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
-    private TextView mParkSpaceNumber;
+    //private TextView mParkSpaceNumber;
+
+    private ImageView mRentalRecordIv;
+
+    private TextView mRentalRecordParkNumber;
+
+    private TextView mRentalRecordParkStatus;
 
     private TextView mRentDate;
 
@@ -64,7 +72,11 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             finish();
         }
 
-        mParkSpaceNumber = findViewById(R.id.park_space_setting_space_number);
+        //mParkSpaceNumber = findViewById(R.id.park_space_setting_space_number);
+        mRentalRecordIv = findViewById(R.id.rental_record_iv);
+        mRentalRecordParkNumber = findViewById(R.id.rental_record_car_number);
+        mRentalRecordParkStatus = findViewById(R.id.rental_record_park_status);
+
         mRentDate = findViewById(R.id.park_space_space_setting_renten_date);
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
         RecyclerView recyclerView = findViewById(R.id.park_space_setting_rv);
@@ -93,6 +105,13 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 startActivity(BluetoothBindingActivity.class, ConstansUtil.PARK_SPACE_ID, mPark_info.getId());
             }
         });
+
+        findViewById(R.id.park_space_setting_renten_record).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(RentalRecordActivity.class, "parkdata", mPark_info);
+            }
+        });
     }
 
     @NonNull
@@ -105,6 +124,25 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void initData() {
         super.initData();
         getOriginTime();
+        ImageUtil.showImpPic(mRentalRecordIv, mPark_info.getPark_img());
+        String parkNumber = "车位编号:" + mPark_info.getPark_number();
+        mRentalRecordParkNumber.setText(parkNumber);
+        String parkStatus;
+        switch (mPark_info.getPark_status()) {
+            case "1":
+                parkStatus = "车位状态:正在审核";
+                break;
+            case "2":
+                parkStatus = "车位状态:正在出租";
+                break;
+            case "3":
+                parkStatus = "车位状态:暂未开放";
+                break;
+            default:
+                parkStatus = "车位状态:未知状态";
+                break;
+        }
+        mRentalRecordParkStatus.setText(parkStatus);
     }
 
     private void getOriginTime() {
@@ -136,7 +174,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     private void setParkSpaceInfo() {
         mAdapter.clearAll();
-        mParkSpaceNumber.setText(mPark_info.getPark_number());
         mRentDate.setText(mPark_info.getOpen_date().replace(",", "-"));
 
         String[] shareDays = mPark_info.getShareDay().split(",");

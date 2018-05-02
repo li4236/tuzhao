@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
@@ -18,8 +15,6 @@ import com.tuzhao.info.RentalRecordItemInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
-import com.tuzhao.utils.ConstansUtil;
-import com.tuzhao.utils.ImageUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -33,19 +28,19 @@ import okhttp3.Response;
 
 public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemInfo> {
 
-    private ImageView mRentalRecordIv;
+   /* private ImageView mRentalRecordIv;
 
     private TextView mRentalRecordParkNumber;
 
     private TextView mRentalRecordParkStatus;
 
-    private TextView mRentalRecordVoltage;
+    private TextView mRentalRecordVoltage;*/
 
     private Park_Info mPark_info;
 
     @Override
     protected int resourceId() {
-        return R.layout.activity_rental_record_layout;
+        return 0;
     }
 
     @Override
@@ -57,25 +52,18 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
             finish();
         }
 
-        mRentalRecordIv = findViewById(R.id.rental_record_iv);
+        /*mRentalRecordIv = findViewById(R.id.rental_record_iv);
         mRentalRecordParkNumber = findViewById(R.id.rental_record_car_number);
         mRentalRecordParkStatus = findViewById(R.id.rental_record_park_status);
-        mRentalRecordVoltage = findViewById(R.id.rental_record_electricity);
-        mCommonAdapter.setHeaderView(R.layout.layout_placeholder);
+        mRentalRecordVoltage = findViewById(R.id.rental_record_electricity);*/
+        //mCommonAdapter.setHeaderView(R.layout.layout_placeholder);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
-
-        findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(ParkSpaceSettingActivity.class, ConstansUtil.PARK_SPACE_INFO, mPark_info);
-            }
-        });
     }
 
     @Override
     protected void initData() {
         super.initData();
-        ImageUtil.showImpPic(mRentalRecordIv, mPark_info.getPark_img());
+        /*ImageUtil.showImpPic(mRentalRecordIv, mPark_info.getPark_img());
         String parkNumber = "车位编号:" + mPark_info.getPark_number();
         mRentalRecordParkNumber.setText(parkNumber);
         String parkStatus;
@@ -96,7 +84,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
         mRentalRecordParkStatus.setText(parkStatus);
 
         String voltage = "电量状态" + mPark_info.getVoltage();
-        mRentalRecordVoltage.setText(voltage);
+        mRentalRecordVoltage.setText(voltage);*/
     }
 
     @NonNull
@@ -171,7 +159,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
         holder.setText(R.id.rental_record_time_item, time.toString())
                 .setText(R.id.rental_record_car_number_item, rentalRecordItemInfo.getRentalCarNumber())
-                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalStartDate().substring(0,rentalRecordItemInfo.getRentalStartDate().length()-3))
+                .setText(R.id.rental_record_data_item, rentalRecordItemInfo.getRentalStartDate().substring(0, rentalRecordItemInfo.getRentalStartDate().length() - 3))
                 .setText(R.id.rental_record_earn_item, "获得收益:" + rentalRecordItemInfo.getRentalFee() + "元");
     }
 

@@ -12,9 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.mine.RentalRecordActivity;
+import com.tuzhao.activity.mine.ParkSpaceSettingActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
@@ -70,8 +71,8 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                     @Override
                     public void onClick(View v) {
                         if (!mData.get(position).getPark_status().equals("1")) {
-                            Intent intent = new Intent(mContext, RentalRecordActivity.class);
-                            intent.putExtra("parkdata", mData.get(position));
+                            Intent intent = new Intent(mContext, ParkSpaceSettingActivity.class);
+                            intent.putExtra(ConstansUtil.PARK_SPACE_INFO, mData.get(position));
                             mContext.startActivity(intent);
                         }
                     }
