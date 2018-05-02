@@ -119,7 +119,7 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.id_activity_carnumber_textView_add:
-                Intent intent = new Intent(CarNumberActivity.this, AddCarNumbleActivity.class);
+                Intent intent = new Intent(CarNumberActivity.this, AddNewCarActivity.class);
                 startActivityForResult(intent, 0);
                 break;
         }

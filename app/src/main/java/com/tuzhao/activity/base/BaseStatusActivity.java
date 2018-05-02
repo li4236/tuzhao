@@ -162,7 +162,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
                         showFiveToast("获取数据异常，请稍后重试");
                         return true;
                     case "805":
-                       userNotExist();
+                        userNotExist();
                         return true;
                     default:
                         return false;

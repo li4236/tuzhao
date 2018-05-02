@@ -55,7 +55,7 @@ public class GuideTwoFragment extends BaseGuideFragment {
         treeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                //测量出floor后把park和car移动到距离floor底部的高度的0.52的位置上，再执行动画
+                //测量出floor后把charge和electric移动到距离floor底部的高度的0.52的位置上
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(mConstraintLayout);
                 int height = mFloor.getHeight();

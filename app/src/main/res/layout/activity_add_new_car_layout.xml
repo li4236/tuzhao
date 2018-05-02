@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/car_number_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <TextView
+            android:id="@+id/car_number_tv"
+            style="@style/ThirtyTextB1Style"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="车牌号码:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/car_number_et"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:background="@null"
+            android:gravity="center_vertical|start"
+            android:inputType="text"
+            android:maxLength="7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/car_number_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/car_number_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/car_number_cl" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/car_owner_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        app:layout_constraintTop_toBottomOf="@+id/car_number_divider">
+
+        <TextView
+            android:id="@+id/car_owner_tv"
+            style="@style/ThirtyTextB1Style"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="车辆所有人:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/car_owner_et"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:background="@null"
+            android:gravity="center_vertical|start"
+            android:inputType="text"
+            android:labelFor="@id/car_owner_et"
+            android:maxLength="12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/car_owner_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/car_owner_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/car_owner_cl" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        app:layout_constraintTop_toBottomOf="@+id/car_owner_divider">
+
+        <TextView
+            android:id="@+id/drive_license_photo_tv"
+            style="@style/ThirtyTextB1Style"
+            android:layout_marginBottom="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="44dp"
+            android:text="驾驶证照片:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/drive_license_photo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_addimg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toEndOf="@id/drive_license_photo_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/delete_drive_license_photo"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@mipmap/ic_delimg"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/drive_license_photo"
+            app:layout_constraintEnd_toEndOf="@id/drive_license_photo"
+            app:layout_constraintStart_toEndOf="@id/drive_license_photo"
+            app:layout_constraintTop_toTopOf="@id/drive_license_photo" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/apply_add_new_car"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginStart="45dp"
+        android:background="@drawable/little_yuan_yellow_8dp"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="提交申请"
+        android:textColor="@color/b1"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +47,10 @@ public class GuideOneFragment extends BaseGuideFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setCoorDinates();
+        setCoordinates();
     }
 
-    private void setCoorDinates() {
+    private void setCoordinates() {
         final ViewTreeObserver treeObserver = mConstraintLayout.getViewTreeObserver();
         treeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -80,11 +79,11 @@ public class GuideOneFragment extends BaseGuideFragment {
             showDownAnimator(mCar);
             showUpAnimator(mFloor);
         } else {
+            //如果不可见则把图片隐藏，否则第二次执行移动动画的时候会看到图片消失再执行动画
             setViewAlpha(mPark);
             setViewAlpha(mCar);
             setViewAlpha(mFloor);
         }
-        Log.e(TAG, "isVisibilityToUser: ");
     }
 
 }

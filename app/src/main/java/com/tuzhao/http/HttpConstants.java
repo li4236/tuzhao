@@ -436,4 +436,9 @@ public class HttpConstants {
      */
     public static String getFriendDevice = ROOT_URL + "getFriendDevice";
 
+    /**
+     * 申请添加车辆
+     */
+    public static String applyAddNewCar = ROOT_URL + "applyAddNewCar";
+
 }
