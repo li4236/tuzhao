@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.adapter.ParkSpaceRentTimeAdapter;
 import com.tuzhao.http.HttpConstants;
@@ -89,6 +90,13 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 changeParkSpaceStatus(isChecked);
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
             }
         });
 
