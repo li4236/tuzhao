@@ -120,6 +120,22 @@ public class DateUtil {
     }
 
     /**
+     * @return 当前的yyyy-MM-dd HH:mm
+     */
+    public static String getCurrentYearToMinutes() {
+        getDate().setTime(System.currentTimeMillis());
+        return getYearToMinutesFormat().format(getDate());
+    }
+
+    /**
+     * @return timeMillis对应的yyyy-MM-dd HH:mm
+     */
+    public static String getCurrentYearToMinutes(long timeMillis) {
+        getDate().setTime(timeMillis);
+        return getYearToMinutesFormat().format(getDate());
+    }
+
+    /**
      * @param date 格式yyyy-MM-dd HH:ss
      * @return HH:ss
      */

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/base_tb"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/w0">
+
+        <ImageView
+            android:id="@+id/toolbar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:contentDescription="@string/picture_description"
+            android:paddingBottom="8dp"
+            android:paddingEnd="32dp"
+            android:paddingTop="8dp"
+            android:src="@mipmap/ic_left" />
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/my_parkspace_audit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:text="审核"
+            android:textColor="@color/b1"
+            android:textSize="12sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView
+        android:id="@+id/base_srrv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/id_activity_mypark_textview_add"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+    <TextView
+        android:id="@+id/id_activity_mypark_textview_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/little_yuan_yellow_8dp"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="添加车位"
+        android:textColor="@color/b1"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

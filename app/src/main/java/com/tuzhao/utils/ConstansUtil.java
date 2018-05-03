@@ -30,6 +30,8 @@ public class ConstansUtil {
      */
     public static final String CHAGNE_ACCEPT_ADDRESS = "ChangeAcceptAddress";
 
+    public static final int REQUSET_CODE = 0x111;
+
     /**
      * activity返回给上个activity的结果的key
      */

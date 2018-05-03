@@ -50,14 +50,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/id_activity_mypark_layout_relativelayouttop"
-        android:layout_marginBottom="54dp"/>
+        android:layout_marginBottom="54dp" />
 
     <LinearLayout
         android:id="@+id/id_activity_mypark_layout_linearlayout_nodata"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:layout_below="@id/id_activity_mypark_layout_relativelayouttop"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 

@@ -252,6 +252,14 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mSwitchButton.setChecked(open);
+                        if (open) {
+                            mPark_info.setPark_status("2");
+                        } else {
+                            mPark_info.setPark_status("3");
+                        }
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
+                        setResult(RESULT_OK, intent);
                         dismmisLoadingDialog();
                     }
 

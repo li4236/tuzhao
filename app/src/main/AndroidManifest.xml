@@ -75,9 +75,9 @@
             </intent-filter>
         </activity>
 
-        <!--<activity
+        <activity
             android:name=".activity.WelcomeGuideActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />-->
+            android:theme="@style/AppTheme.Fullscreen" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -149,6 +149,7 @@
         <activity android:name=".activity.mine.TextActivity" />
         <activity android:name=".activity.BigPictureActivity" />
         <activity android:name=".activity.ParkOrChargeListActivity" />
+        <activity android:name=".activity.mine.MyParkSpaceActivity" />
 
         <!--QQ分享-->
         <activity
