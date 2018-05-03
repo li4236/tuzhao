@@ -8,8 +8,12 @@
     <TextView
         android:id="@+id/confirm_ticket_order_park_address_item"
         style="@style/TwentyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:gravity="start"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_ticket_order_ticket_price_item"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
