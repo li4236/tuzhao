@@ -4,26 +4,32 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
-import com.tuzhao.info.ShareParkSpaceInfo;
+import com.tuzhao.activity.base.LoadFailCallback;
+import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/4/9.
  */
 
-public class ShareParkSpaceActivity extends BaseRefreshActivity<ShareParkSpaceInfo> {
+public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -42,37 +48,8 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<ShareParkSpaceIn
     }
 
     @Override
-    protected void initData() {
-        super.initData();
-        if (mCommonAdapter.getData().isEmpty()) {
-            mRecyclerView.showEmpty(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showLoadingDialog();
-                    loadData();
-                    dismmisLoadingDialog();
-                    mRecyclerView.showData();
-                }
-            });
-        }
-        dismmisLoadingDialog();
-    }
-
-    @Override
     protected RecyclerView.LayoutManager createLayouManager() {
         return new LinearLayoutManager(this);
-    }
-
-    @Override
-    protected void onRefresh() {
-        refreshData();
-        stopRefresh();
-    }
-
-    @Override
-    protected void onLoadMore() {
-        loadData();
-        stopLoadMore();
     }
 
     @Override
@@ -86,28 +63,52 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<ShareParkSpaceIn
         return "分享车位";
     }
 
-    private void refreshData() {
-        mCommonAdapter.clearAll();
-        ShareParkSpaceInfo shareParkSpaceInfo;
-        for (int i = 0; i < 3; i++) {
-            shareParkSpaceInfo = new ShareParkSpaceInfo();
-            shareParkSpaceInfo.setCarOwnerName("天之力");
-            shareParkSpaceInfo.setParkSpaceName("天之力停车场");
-            shareParkSpaceInfo.setParkSpaceStatus(i % 2 == 0 ? "空闲中" : "使用中");
-            mCommonAdapter.addData(shareParkSpaceInfo);
-        }
-    }
-
     @Override
     protected void loadData() {
-        ShareParkSpaceInfo shareParkSpaceInfo;
-        for (int i = 0; i < 3; i++) {
-            shareParkSpaceInfo = new ShareParkSpaceInfo();
-            shareParkSpaceInfo.setCarOwnerName("新能源");
-            shareParkSpaceInfo.setParkSpaceName("新能源停车场");
-            shareParkSpaceInfo.setParkSpaceStatus(i % 2 == 0 ? "空闲中" : "使用中");
-            mCommonAdapter.addData(shareParkSpaceInfo);
+        getOkgo(HttpConstants.getFriendShareParkspace)
+                .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {
+                        loadDataSuccess(o);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        loadDataFail(e, new LoadFailCallback() {
+                            @Override
+                            public void onLoadFail(Exception e) {
+
+                            }
+                        });
+                    }
+                });
+    }
+
+    private String getParkspaceStatus(Park_Info park_info) {
+        String nowDate = DateUtil.getCurrentYearToMinutes();
+        String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60 * 2);
+
+        if (DateUtil.isInShareDate(nowDate, afterTwoMinutesDate, park_info.getOpen_date()) == 0) {
+            return "停租中";
         }
+
+        if (0 == DateUtil.isInPauseDate(nowDate, afterTwoMinutesDate, park_info.getPauseShareDate())) {
+            return "停租中";
+        }
+
+        if (0 == DateUtil.isInShareDay(nowDate, afterTwoMinutesDate, park_info.getShareDay())) {
+            return "停租中";
+        }
+
+        if (null == DateUtil.isInShareTime(nowDate, afterTwoMinutesDate, park_info.getOpen_time(), false)) {
+            return "停租中";
+        }
+
+        if (DateUtil.isInOrderDate(nowDate, afterTwoMinutesDate, park_info.getOrder_times())) {
+            return "出租中";
+        }
+        return "空闲中";
     }
 
     @Override
@@ -116,13 +117,17 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<ShareParkSpaceIn
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, ShareParkSpaceInfo shareParkSpaceInfo, int position) {
-        holder.setText(R.id.share_park_space_space_name, shareParkSpaceInfo.getParkSpaceName())
-                .setText(R.id.share_park_space_share_name, shareParkSpaceInfo.getCarOwnerName())
-                .setText(R.id.share_park_space_status, shareParkSpaceInfo.getParkSpaceStatus());
-        ((ImageView) holder.getView(R.id.share_park_space_status_iv)).setImageDrawable(
-                ContextCompat.getDrawable(ShareParkSpaceActivity.this,
-                        shareParkSpaceInfo.getParkSpaceStatus().equals("使用中") ? R.drawable.circle_r5 : R.drawable.circle_green7));
+    protected void bindData(BaseViewHolder holder, Park_Info park_info, int position) {
+        holder.setText(R.id.share_park_space_space_name, park_info.getParkspace_name())
+                .setText(R.id.share_park_space_share_name, park_info.getUserName());
+        TextView status = holder.getView(R.id.share_park_space_status);
+        ImageView statusIv = holder.getView(R.id.share_park_space_status_iv);
+        status.setText(getParkspaceStatus(park_info));
+        if (status.getText().toString().equals("空闲中")) {
+            statusIv.setBackgroundResource(R.drawable.circle_green7);
+        } else {
+            statusIv.setBackgroundResource(R.drawable.circle_r5);
+        }
     }
 
 }

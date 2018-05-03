@@ -2,6 +2,7 @@ package com.tuzhao.info;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -12,6 +13,7 @@ public class Park_Info extends BaseInfo {
     private String id;
     private String parkspace_id;//停车位所属停车场
     private String user_id;//停车位所属用户
+    private String userName;//停车位所属用户名称
     private String park_number;//停车位的编号
     private String open_date;//可开放日期
     private String open_time;//可开放时段
@@ -322,12 +324,21 @@ public class Park_Info extends BaseInfo {
         this.shareTimeCalendar = shareTimeCalendar;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     @Override
     public String toString() {
         return "Park_Info{" +
                 "id='" + id + '\'' +
                 ", parkspace_id='" + parkspace_id + '\'' +
                 ", user_id='" + user_id + '\'' +
+                ", userName='" + userName + '\'' +
                 ", park_number='" + park_number + '\'' +
                 ", open_date='" + open_date + '\'' +
                 ", open_time='" + open_time + '\'' +
@@ -353,7 +364,7 @@ public class Park_Info extends BaseInfo {
                 ", update_time='" + update_time + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
+                ", shareTimeCalendar=" + Arrays.toString(shareTimeCalendar) +
                 '}';
     }
-
 }

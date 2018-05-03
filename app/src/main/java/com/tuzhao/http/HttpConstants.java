@@ -441,4 +441,9 @@ public class HttpConstants {
      */
     public static String applyAddNewCar = ROOT_URL + "applyAddNewCar";
 
+    /**
+     * 获取好友分享给我的车位
+     */
+    public static String getFriendShareParkspace = ROOT_URL + "getFriendShareParkspace";
+
 }
