@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.publicwidget.others.Voltage;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
@@ -36,6 +36,8 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+
+        mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, true));
 
         findViewById(R.id.my_parkspace_audit).setOnClickListener(new View.OnClickListener() {
             @Override

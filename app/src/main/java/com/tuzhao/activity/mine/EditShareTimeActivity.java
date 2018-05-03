@@ -29,7 +29,6 @@ import com.tuzhao.utils.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -186,7 +185,14 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
         if (shareTimeInfo.getPauseShareDate() != null && !shareTimeInfo.getPauseShareDate().equals("-1")) {
             String[] pauseShareDate = shareTimeInfo.getPauseShareDate().split(",");
-            mPauseShareDateAdapter.addData(Arrays.asList(pauseShareDate));
+            Calendar calendar = DateUtil.getYearToDayCalendar();
+            Calendar pauseCalendar;
+            for (String date : pauseShareDate) {
+                pauseCalendar = DateUtil.getYearToDayCalendar(date, false);
+                if (pauseCalendar.compareTo(calendar) >= 0) {
+                    mPauseShareDateAdapter.addData(date);
+                }
+            }
         }
 
         if (!shareTimeInfo.getEveryDayShareTime().equals("-1")) {
@@ -262,35 +268,41 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 }, mStartShareDate.getText().toString()));
                 break;
             case R.id.modify_share_time_add_pause_date:
-                showDatePicker("暂停共享日期", new DateCheck(new OnDateCheckListener() {
-                    @Override
-                    public void onDateCheck(Calendar calendar, int year, int month, int dayOfMonth, int compareResult) {
-                        if (compareResult > -1) {
-                            String pausDate = year + "-" + DateUtil.thanTen(month) + "-" + DateUtil.thanTen(dayOfMonth);
-                            if (mPauseShareDateAdapter.getData().contains(pausDate)) {
-                                showFiveToast("不能重复添加哦");
-                            } else {
-                                Calendar startCalendar = getDateCalendar(mStartShareDate.getText().toString());
-                                Calendar endCalendar = getDateCalendar(mEndShareDate.getText().toString());
-                                Calendar pauseCalendar = getDateCalendar(pausDate);
-                                if (pauseCalendar.compareTo(startCalendar) >= 0 && pauseCalendar.compareTo(endCalendar) <= 0) {
-                                    mPauseShareDateAdapter.justAddData(pausDate);
-                                    Collections.sort(mPauseShareDateAdapter.getData(), new Comparator<String>() {
-                                        @Override
-                                        public int compare(String o1, String o2) {
-                                            return getDateCalendar(o1).compareTo(getDateCalendar(o2));
-                                        }
-                                    });
-                                    mPauseShareDateAdapter.notifyDataSetChanged();
+                if (mPauseShareDateAdapter.getData().size() >= 5) {
+                    showFiveToast("最多只能选择5个暂停日期哦");
+                } else {
+                    showDatePicker("暂停共享日期", new DateCheck(new OnDateCheckListener() {
+                        @Override
+                        public void onDateCheck(Calendar calendar, int year, int month, int dayOfMonth, int compareResult) {
+                            Log.e(TAG, "onDateCheck: " + DateUtil.printCalendar(calendar));
+                            Log.e(TAG, "onDateCheck compareResult:" + compareResult);
+                            if (compareResult > -1) {
+                                String pausDate = year + "-" + DateUtil.thanTen(month) + "-" + DateUtil.thanTen(dayOfMonth);
+                                if (mPauseShareDateAdapter.getData().contains(pausDate)) {
+                                    showFiveToast("不能重复添加哦");
                                 } else {
-                                    showFiveToast("暂停共享日期要在共享日期之内哦");
+                                    Calendar startCalendar = getDateCalendar(mStartShareDate.getText().toString());
+                                    Calendar endCalendar = getDateCalendar(mEndShareDate.getText().toString());
+                                    Calendar pauseCalendar = getDateCalendar(pausDate);
+                                    if (pauseCalendar.compareTo(startCalendar) >= 0 && pauseCalendar.compareTo(endCalendar) <= 0) {
+                                        mPauseShareDateAdapter.justAddData(pausDate);
+                                        Collections.sort(mPauseShareDateAdapter.getData(), new Comparator<String>() {
+                                            @Override
+                                            public int compare(String o1, String o2) {
+                                                return getDateCalendar(o1).compareTo(getDateCalendar(o2));
+                                            }
+                                        });
+                                        mPauseShareDateAdapter.notifyDataSetChanged();
+                                    } else {
+                                        showFiveToast("暂停共享日期要在共享日期之内哦");
+                                    }
                                 }
+                            } else {
+                                showFiveToast("要选择不小于当天的日期哦");
                             }
-                        } else {
-                            showFiveToast("要选择不小于当天的日期哦");
                         }
-                    }
-                }));
+                    }));
+                }
                 break;
             case R.id.modify_share_time_add_everyday_share_time:
                 if (mEverydayShareTimeAdapter.getData().size() == 3) {
@@ -634,7 +646,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                             false, listener);
                 } else {
                     if (hourOfDayParams == Integer.valueOf(mHours.get(options1)) && minuteParams == Integer.valueOf(mMinutes.get(options1).get(option2))) {
-                        showFiveToast("全天共享不用选哦");
+                        showFiveToast("全天共享不用设置哦");
                     } else {
                         listener.onEndTime(mHours.get(options1), mMinutes.get(options1).get(option2));
                     }
@@ -667,9 +679,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
     private boolean isRepeat(EverydayShareTimeInfo shareTimeInfo) {
         Calendar otherStartCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getStartTime());
         Calendar otherEndCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getEndTime());
-        Log.e(TAG, "isRepeat shareTimeInfo: " + shareTimeInfo);
         for (EverydayShareTimeInfo timeInfo : mEverydayShareTimeAdapter.getData()) {
-            Log.e(TAG, "isRepeat timeInfo: " + timeInfo);
             Calendar startCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getStartTime());
             Calendar endCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getEndTime());
             if (otherStartCalendar.compareTo(startCalendar) >= 0 && otherStartCalendar.compareTo(endCalendar) < 0) {
@@ -748,14 +758,17 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            Calendar otherCanlendar = Calendar.getInstance();
+            DateUtil.initHourToMilli(calendar);
 
             //如果输入指定的日期则与指定的日期进行比较，否则与当天日期进行比较
+            Calendar otherCanlendar = Calendar.getInstance();
+            otherCanlendar.add(Calendar.MONTH, 1);
             if (mYear != 0) {
                 otherCanlendar.set(Calendar.YEAR, mYear);
                 otherCanlendar.set(Calendar.MONTH, mMonth);
                 otherCanlendar.set(Calendar.DAY_OF_MONTH, mDayOfMonth);
             }
+            DateUtil.initHourToMilli(otherCanlendar);
             mDateCheckListener.onDateCheck(calendar, year, month, dayOfMonth, calendar.compareTo(otherCanlendar));
         }
 

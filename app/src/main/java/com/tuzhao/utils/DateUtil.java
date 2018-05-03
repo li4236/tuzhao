@@ -554,6 +554,16 @@ public class DateUtil {
     }
 
     /**
+     * @return 格式为yyyy-MM-dd对应的Calendar,时分秒和毫秒都会清零,月为对应的月
+     */
+    public static Calendar getYearToDayCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        initHourToMilli(calendar);
+        return calendar;
+    }
+
+    /**
      * @param containHourAndMinute true(格式为yyyy-MM-dd HH:mm)   false(格式为yyyy-MM-dd)
      * @return 格式为yyyy-MM-dd对应的Calendar,时分秒和毫秒都会清零
      */
@@ -601,9 +611,9 @@ public class DateUtil {
     }
 
     /**
-     * 将calendar的时分秒和毫秒都清零，否则比较的时候会因为毫秒不一致而导致结果出错
+     * 将calendar的时分秒和毫秒都清零，否则比较的时候会因为时分秒毫秒不一致而导致结果出错
      */
-    private static void initHourToMilli(Calendar calendar) {
+    public static void initHourToMilli(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -672,10 +682,6 @@ public class DateUtil {
                 Log.e(TAG, "caculateParkFee: 6");
                 //比如从20号12:00停到22号10:00，则还需要计算21号12:00到22号10:00的费用
                 startDateCalendar.add(Calendar.DAY_OF_MONTH, -1);                       //把停车开始时间改到最后那天的前一天,21号12:00
-                /*if (highDateInSameDay) {
-                    Log.e(TAG, "caculateParkFee: 7");
-                    hightEndCalendar.add(Calendar.DAY_OF_MONTH, -1);                     //高峰结束时间为21号xx:xx
-                }*/
                 hightStartCalendar = transformYearToDay(hightStartCalendar, startDateCalendar);     //高峰开始时间为22号xx:xx
                 hightEndCalendar = transformYearToDay(hightEndCalendar, startDateCalendar);           //高峰结束时间为22号xx:xx
                 result += calculateDifferentDay(startDateCalendar, endDateCalendar, hightStartCalendar, hightEndCalendar, highFee, lowFee);
@@ -851,9 +857,6 @@ public class DateUtil {
      * @return 两个时间相差的分钟数
      */
     private static int getDateMinutes(Calendar startCalendar, Calendar endCalendar) {
-       /* if (endCalendar.get(Calendar.HOUR_OF_DAY) == 23 && endCalendar.get(Calendar.MINUTE) == 59) {
-            return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60 + 1);
-        }*/
         return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
     }
 
