@@ -61,7 +61,7 @@
         android:id="@+id/id_activity_mypark_textview_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:background="@drawable/little_yuan_yellow_8dp"
