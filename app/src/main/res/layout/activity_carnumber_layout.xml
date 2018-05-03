@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/w3">
+    android:background="@color/w3"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/id_activity_carnumble_layout_relativelayouttop"
@@ -16,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="我的车牌"
+            android:text="我的车辆"
             android:textColor="@android:color/black"
             android:textSize="15sp" />
 
@@ -42,7 +41,7 @@
             android:id="@+id/id_activity_carnumber_listview_carnumber"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true" />
 
         <LinearLayout
             android:id="@+id/id_activity_carnumber_linearlayout_nodata"
@@ -82,7 +81,7 @@
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="添加车牌"
+        android:text="添加车辆"
         android:textColor="@color/b1"
         android:textSize="14sp" />
 

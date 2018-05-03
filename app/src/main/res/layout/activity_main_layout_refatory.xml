@@ -126,7 +126,7 @@
                     android:paddingBottom="15dp"
                     android:paddingStart="30dp"
                     android:paddingTop="15dp"
-                    android:text="@string/my_card_number"
+                    android:text="@string/my_car"
                     android:textColor="@color/b1"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"

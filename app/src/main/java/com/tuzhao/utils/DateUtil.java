@@ -330,7 +330,9 @@ public class DateUtil {
         Calendar endCalendar = getYearToMinuteCalendar(endDate);
         for (int i = 0; i < calendars.length; i += 2) {
             if (startCalendar.compareTo(calendars[i]) >= 0 && startCalendar.compareTo(calendars[i + 1]) < 0
-                    || endCalendar.compareTo(calendars[i]) > 0 && endCalendar.compareTo(calendars[i + 1]) <= 0) {
+                    || endCalendar.compareTo(calendars[i]) > 0 && endCalendar.compareTo(calendars[i + 1]) <= 0
+                    || startCalendar.compareTo(calendars[i]) <= 0 && endCalendar.compareTo(calendars[i + 1]) >= 0
+                    || startCalendar.compareTo(calendars[i]) >= 0 && endCalendar.compareTo(calendars[i + 1]) <= 0) {
                 return true;
             }
         }
@@ -341,6 +343,7 @@ public class DateUtil {
      * @param date 比较的时间，格式为yyyy-MM-dd HH:mm
      * @return true(HH:mm 为00:00)
      */
+
     private static boolean isInStartDay(String date) {
         String[] hourWithMinutes = date.split(" ")[1].split(":");
         return (hourWithMinutes[0].equals("00") || hourWithMinutes[0].equals("0")) && (hourWithMinutes[1].equals("00") || hourWithMinutes[1].equals("0"));
