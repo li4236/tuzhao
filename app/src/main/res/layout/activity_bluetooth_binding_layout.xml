@@ -14,36 +14,36 @@
         style="@style/dividerStyle"
         app:layout_constraintTop_toBottomOf="@id/base_tb" />
 
-    <TextView
-        android:id="@+id/bluetooth_binding_bing"
-        style="@style/ThirtyTextB1Style"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@color/w0"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:text="绑定我的蓝牙"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+    <!-- <TextView
+         android:id="@+id/bluetooth_binding_bing"
+         style="@style/ThirtyTextB1Style"
+         android:layout_width="0dp"
+         android:layout_height="45dp"
+         android:background="@color/w0"
+         android:gravity="start|center_vertical"
+         android:paddingStart="16dp"
+         android:text="绑定我的蓝牙"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/top_divider" />
 
-    <TextView
-        android:id="@+id/bluetooth_binding_bing_status"
-        style="@style/ThirtyTextG6Style"
-        android:layout_marginEnd="16dp"
-        android:text="本机蓝牙已绑定"
-        app:layout_constraintBottom_toBottomOf="@+id/bluetooth_binding_bing"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/bluetooth_binding_bing" />
+     <TextView
+         android:id="@+id/bluetooth_binding_bing_status"
+         style="@style/ThirtyTextG6Style"
+         android:layout_marginEnd="16dp"
+         android:text="本机蓝牙已绑定"
+         app:layout_constraintBottom_toBottomOf="@+id/bluetooth_binding_bing"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintTop_toTopOf="@+id/bluetooth_binding_bing" />-->
 
     <TextView
         android:id="@+id/bluetooth_binding_bind_number"
         style="@style/TwentyTextB1Style"
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
-        android:text="亲友绑定(3/5)"
+        android:text="亲友绑定(0/5)"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetooth_binding_bing" />
+        app:layout_constraintTop_toBottomOf="@+id/top_divider" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/base_rv"
@@ -69,7 +69,7 @@
         android:id="@+id/bluetooth_binding_add_device"
         android:layout_width="0dp"
         android:layout_height="49dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:background="@drawable/little_yuan_yellow_8dp"

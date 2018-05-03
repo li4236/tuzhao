@@ -40,10 +40,10 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
     private TextView mBindindFriendNumber;
 
-    private TextView mBindindTv;
+    /*private TextView mBindindTv;
 
     private TextView mBindingStatus;
-
+*/
     private EditText mFirendName;
 
     private EditText mFriendPhone;
@@ -51,8 +51,6 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     private TipeDialog mModifyNameDialog;
 
     private TipeDialog mAddFriendPhoneDialog;
-
-    private DateUtil mDateUtil;
 
     private String mParkSpaceId;
 
@@ -69,8 +67,8 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
         mAdapter = new BluetoothBindingAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        mBindindTv = findViewById(R.id.bluetooth_binding_bing);
-        mBindingStatus = findViewById(R.id.bluetooth_binding_bing_status);
+       /* mBindindTv = findViewById(R.id.bluetooth_binding_bing);
+        mBindingStatus = findViewById(R.id.bluetooth_binding_bing_status);*/
         mBindindFriendNumber = findViewById(R.id.bluetooth_binding_bind_number);
         TextView bindingHint = findViewById(R.id.bluetooth_binding_hint);
         String hint = "温馨提醒:\n1、蓝牙绑定后，当绑定蓝牙的手机靠近车位锁时，车位锁将自动放下";
@@ -96,7 +94,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                 .execute(new JsonCallback<Base_Class_List_Info<BluetoothBindingFriendInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<BluetoothBindingFriendInfo> o, Call call, Response response) {
-                        mAdapter.addData(o.data);
+                        mAdapter.setNewData(o.data);
                         updateFriendNumber();
                         dismmisLoadingDialog();
                     }
@@ -171,7 +169,6 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
      */
     private void showPhoneDialog() {
         if (mAddFriendPhoneDialog == null) {
-            mDateUtil = new DateUtil();
 
             ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.dialog_edit_layout, null);
             mFriendPhone = constraintLayout.findViewById(R.id.dialog_et);
@@ -193,7 +190,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                             if (DateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
                                 addFriendDevice(mFriendPhone.getText().toString().trim());
                             } else {
-                                showFiveToast("你输入的手机不正确");
+                                showFiveToast("你输入的手机不正确哦");
                             }
                         }
                     })
