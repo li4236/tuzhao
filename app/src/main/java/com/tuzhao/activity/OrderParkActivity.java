@@ -970,6 +970,10 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                     //
                                     MyToast.showToast(OrderParkActivity.this, "未匹配到合适您时间的车位，请尝试更换时间", 5);
                                     break;
+                                case 103:
+                                    MyToast.showToast(OrderParkActivity.this, "内部错误，请重新选择", 5);
+                                    finish();
+                                    break;
                                 case 104:
                                     //
                                     MyToast.showToast(OrderParkActivity.this, "您有效订单已达上限，暂不可预约车位哦", 5);
@@ -981,6 +985,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 case 107:
                                     //
                                     MyToast.showToast(OrderParkActivity.this, "您有订单需要前去付款，要先处理哦", 5);
+                                    break;
+                                case 109:
+                                case 110:
+                                case 111:
+                                    MyToast.showToast(OrderParkActivity.this, "该日期暂无车位可预约，请尝试更换时间", 5);
                                     break;
                                 case 901:
                                     MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
