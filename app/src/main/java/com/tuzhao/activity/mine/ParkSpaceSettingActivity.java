@@ -288,6 +288,10 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             if (data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT) != null) {
                 mPark_info = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
                 setParkSpaceInfo();
+
+                Intent intent = new Intent();
+                intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
+                setResult(RESULT_OK, intent);
             }
         }
     }
