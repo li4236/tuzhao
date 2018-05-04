@@ -27,25 +27,25 @@ public class PersonalCreditActivity extends BaseActivity {
     }
 
     private void initView() {
-        dashboardView = (DashboardView) findViewById(R.id.id_activity_personaldredit_layout_dashboardview);
+        dashboardView = findViewById(R.id.id_activity_personaldredit_layout_dashboardview);
     }
 
     private void initData() {
         try {
             int a = Integer.parseInt(UserManager.getInstance().getUserInfo().getCredit());
             dashboardView.setValue(a);
-            if (a>=0 && a<= 300){
+            if (a >= 0 && a <= 300) {
                 dashboardView.setText("信用极差");
-            }else if (a>300 && a<= 500){
+            } else if (a > 300 && a <= 500) {
                 dashboardView.setText("信用一般");
-            }else if (a>500 && a<= 650){
+            } else if (a > 500 && a <= 650) {
                 dashboardView.setText("信用良好");
-            } else if (a>650 && a<= 800){
+            } else if (a > 650 && a <= 800) {
                 dashboardView.setText("信用优秀");
-            }else if (a>800 && a<= 1000){
+            } else if (a > 800 && a <= 1000) {
                 dashboardView.setText("信用极好");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

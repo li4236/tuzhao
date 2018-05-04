@@ -12,12 +12,9 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseGuideFragment;
-import com.tuzhao.adapter.GuideViewPagerAdapter;
 import com.tuzhao.fragment.welcome.GuideOneFragment;
 import com.tuzhao.fragment.welcome.GuideThreeFragment;
 import com.tuzhao.fragment.welcome.GuideTwoFragment;
@@ -32,22 +29,9 @@ import java.util.List;
  */
 public class WelcomeGuideActivity extends AppCompatActivity {
 
-    private ViewPager vp;
-
     private List<BaseGuideFragment> mFragments;
 
     private View[] mIndicators;
-
-    private GuideViewPagerAdapter adapter;
-    private List<View> views;
-    private Button startBtn;
-
-    // 引导页图片资源
-    private static final int[] pics = {R.drawable.pic_guidepage_1,
-            R.drawable.pic_guidepage_2, R.drawable.pic_guidepage_3, R.drawable.pic_guidepage_4};
-
-    // 底部小点图片
-    private ImageView[] dots;
 
     // 记录当前选中位置
     private int currentIndex;
@@ -66,9 +50,9 @@ public class WelcomeGuideActivity extends AppCompatActivity {
         mIndicators[1] = findViewById(R.id.guide_two_indicator);
         mIndicators[2] = findViewById(R.id.guide_three_indicator);
 
-        vp = findViewById(R.id.vp_guide);
-        vp.setAdapter(new GuideViewpagerAdapter(getSupportFragmentManager()));
-        vp.addOnPageChangeListener(new PageChangeListener());
+        ViewPager viewPager = findViewById(R.id.vp_guide);
+        viewPager.setAdapter(new GuideViewpagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new PageChangeListener());
     }
 
     @Override

@@ -263,7 +263,7 @@ public class DashboardView extends View {
 
 
     private int startMeasure(int msSpec) {
-        int result = 0;
+        int result;
         int mode = MeasureSpec.getMode(msSpec);
         int size = MeasureSpec.getSize(msSpec);
         if (mode == MeasureSpec.EXACTLY) {
@@ -277,17 +277,15 @@ public class DashboardView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        this.percent = percent / 100f;
         canvas.translate(mWidth / 2, mHight / 2);//移动坐标原点到中心
         //背景
         drawBackground(canvas);
         //表盘
         drawPanel(canvas);
         //绘制指针和进度弧
-        drawPointerAndProgress(canvas, percent);
+        drawPointerAndProgress(canvas, percent / 100f);
         //绘制矩形和文字
-        drawText(canvas, percent);
-
+        drawText(canvas, percent / 100f);
     }
 
     private void drawPointerAndProgress(Canvas canvas, float percent) {
@@ -312,7 +310,7 @@ public class DashboardView extends View {
         length = paintText.measureText(mText);
         float dsa;
         Paint.FontMetrics fontMetrics = paintText.getFontMetrics();
-        dsa = mWidth / 30 + (Math.abs(fontMetrics.ascent) - fontMetrics.descent) / 2+mWidth / 25;
+        dsa = mWidth / 30 + (Math.abs(fontMetrics.ascent) - fontMetrics.descent) / 2 + mWidth / 25;
         canvas.drawText(mText, -length / 2, dsa, paintText);
         paintText.setTextSize(mTextSize);
         speed = StringUtil.floatFormat(startNum + (maxNum - startNum) * percent);
@@ -424,13 +422,6 @@ public class DashboardView extends View {
         }
     }
 
-    //每次view被隐藏在显示出来之后percent都会变成一个0.000000x的值，原因未知，暂时采取暴力方式处理。
-    @Override
-    protected void onVisibilityChanged(View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        percent = oldPercent;
-    }
-
     /**
      * 设置百分比
      *
@@ -485,7 +476,7 @@ public class DashboardView extends View {
             value = maxNum;
         }
         float start = percent;
-        float end = value / maxNum*100;
+        float end = value / maxNum * 100;
         startAnimator(start, end, 1000);
     }
 
