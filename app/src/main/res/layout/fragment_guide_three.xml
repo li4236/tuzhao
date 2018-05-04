@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/center_gl"
+        style="@style/VerticalGuideLine"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/guide_three_floor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="84dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="277:264"
+        app:layout_constraintEnd_toEndOf="@+id/guide_three_car"
+        app:layout_constraintStart_toStartOf="@+id/guide_three_park"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/guide_three_park"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="13dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="43dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toBottomOf="@+id/guide_three_floor"
+        app:layout_constraintDimensionRatio="130:208"
+        app:layout_constraintEnd_toEndOf="@+id/center_gl"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/guide_three_car"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toBottomOf="@+id/guide_three_floor"
+        app:layout_constraintDimensionRatio="130:208"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/center_gl" />
+
+    <ImageView
+        android:id="@+id/guide_three_top"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginStart="28dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="412:46"
+        app:layout_constraintEnd_toEndOf="@+id/guide_three_bottom"
+        app:layout_constraintStart_toStartOf="@+id/guide_three_bottom"
+        app:layout_constraintTop_toBottomOf="@+id/guide_three_floor" />
+
+    <ImageView
+        android:id="@+id/guide_three_bottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintDimensionRatio="559:69"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guide_three_top" />
+
+    <TextView
+        android:id="@+id/guide_three_start_use"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="108dp"
+        android:layout_marginStart="108dp"
+        android:background="@drawable/normal_y2_press_y9_all_20dp"
+        android:gravity="center"
+        android:text="@string/park_now"
+        android:textColor="@color/b1"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guide_three_bottom" />
+
+</android.support.constraint.ConstraintLayout>

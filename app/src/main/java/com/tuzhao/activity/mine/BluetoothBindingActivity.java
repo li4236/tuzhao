@@ -89,7 +89,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     @Override
     protected void initData() {
         super.initData();
-        getOkGo(HttpConstants.getFriendDevice)
+        getOkGo(HttpConstants.getBindingFriends)
                 .params("parkSpaceId", mParkSpaceId)
                 .execute(new JsonCallback<Base_Class_List_Info<BluetoothBindingFriendInfo>>() {
                     @Override
@@ -117,7 +117,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     @NonNull
     @Override
     protected String title() {
-        return "蓝牙绑定";
+        return "我的亲友";
     }
 
     /**
@@ -206,7 +206,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
      */
     private void modifyFriendName(String friendDeviceId, final String noteName, final int position) {
         showLoadingDialog("正在修改");
-        getOkGo(HttpConstants.modifyFriendDeviceName)
+        getOkGo(HttpConstants.modifyFriendNickname)
                 .params("parkSpaceId", mParkSpaceId)
                 .params("friendDeviceId", friendDeviceId)
                 .params("noteName", noteName)
@@ -229,7 +229,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
     private void deleteFriendDevice(final int position) {
         showLoadingDialog("正在删除");
-        getOkGo(HttpConstants.deleteFriendDevice)
+        getOkGo(HttpConstants.deleteFriend)
                 .params("friendDeviceId", mAdapter.getData().get(position).getFriendDeviceId())
                 .execute(new JsonCallback() {
                     @Override
@@ -251,7 +251,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
     private void addFriendDevice(String telephone) {
         showLoadingDialog("正在添加");
-        getOkGo(HttpConstants.addFriendDevice)
+        getOkGo(HttpConstants.addFriend)
                 .params("parkSpaceId", mParkSpaceId)
                 .params("teltephone", telephone)
                 .execute(new JsonCallback<Base_Class_Info<BluetoothBindingFriendInfo>>() {

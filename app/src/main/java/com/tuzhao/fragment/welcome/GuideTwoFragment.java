@@ -38,7 +38,7 @@ public class GuideTwoFragment extends BaseGuideFragment {
         mFloor = mConstraintLayout.findViewById(R.id.guide_two_floor);
         ImageUtil.showPic(mCharge, R.drawable.ic_charge);
         ImageUtil.showPic(mElectric, R.drawable.ic_electric);
-        ImageUtil.showPic(mFloor, R.drawable.ic_floor4);
+        ImageUtil.showPic(mFloor, R.drawable.ic_floor2);
         ImageUtil.showPic((ImageView) mConstraintLayout.findViewById(R.id.guide_two_top), R.drawable.guide_two_top);
         ImageUtil.showPic((ImageView) mConstraintLayout.findViewById(R.id.guide_two_bottom), R.drawable.guide_two_bottom);
         return mConstraintLayout;

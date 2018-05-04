@@ -293,6 +293,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
                                     //预约订单
                                     MyToast.showToast(OrderParkActivity.this, "在该时间您已有过预约，请重新选择哦", 5);
+                                    textview_starttime.setText("");
                                     return;
                                 }
                             }

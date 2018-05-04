@@ -38,7 +38,7 @@ public class GuideOneFragment extends BaseGuideFragment {
         mFloor = mConstraintLayout.findViewById(R.id.guide_one_floor);
         ImageUtil.showPic(mPark, R.drawable.ic_park3);
         ImageUtil.showPic(mCar, R.drawable.ic_car3);
-        ImageUtil.showPic(mFloor, R.drawable.ic_floor3);
+        ImageUtil.showPic(mFloor, R.drawable.ic_floor1);
         ImageUtil.showPic((ImageView) mConstraintLayout.findViewById(R.id.guide_one_top), R.drawable.guide_one_top);
         ImageUtil.showPic((ImageView) mConstraintLayout.findViewById(R.id.guide_one_bottom), R.drawable.guide_one_bottom);
         return mConstraintLayout;

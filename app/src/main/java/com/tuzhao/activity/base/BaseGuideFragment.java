@@ -3,6 +3,7 @@ package com.tuzhao.activity.base;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.tuzhao.utils.DensityUtil;
@@ -41,8 +42,8 @@ public abstract class BaseGuideFragment extends Fragment {
         animatorSet.start();
     }
 
-    protected void setViewAlpha(ImageView imageView) {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView, "alpha", 1, 0);
+    protected void setViewAlpha(View view) {
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "alpha", 1, 0);
         objectAnimator.setDuration(300);
         objectAnimator.start();
     }

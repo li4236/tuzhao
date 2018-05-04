@@ -18,7 +18,6 @@ public class HttpConstants {
     public static final String ROOT_IMG_URL_PSCOM = ROOT_BASE_IMG_URL + "comments/";//车场评论
     public static final String ROOT_IMG_URL_CS = ROOT_BASE_IMG_URL + "chargestations/";//电场
 
-
     /**
      * 请求主页地图页面停车位和充电桩的具体位置的经纬度
      */
@@ -417,24 +416,24 @@ public class HttpConstants {
     public static String editShareTime = ROOT_URL + "editShareTime";
 
     /**
-     * 添加亲友设备（蓝牙绑定）
+     * 添加亲友
      */
-    public static String addFriendDevice = ROOT_URL + "addFriendDevice";
+    public static String addFriend = ROOT_URL + "addFriend";
 
     /**
-     * 删除亲友设备（蓝牙绑定）
+     * 删除亲友
      */
-    public static String deleteFriendDevice = ROOT_URL + "deleteFriendDevice";
+    public static String deleteFriend = ROOT_URL + "deleteFriend";
 
     /**
-     * 修改亲友设备备注（蓝牙绑定）
+     * 修改亲友备注
      */
-    public static String modifyFriendDeviceName = ROOT_URL + "modifyFriendDeviceName";
+    public static String modifyFriendNickname = ROOT_URL + "modifyFriendNickname";
 
     /**
-     * 获取亲友设备
+     * 获取亲友
      */
-    public static String getFriendDevice = ROOT_URL + "getFriendDevice";
+    public static String getBindingFriends = ROOT_URL + "getBindingFriends";
 
     /**
      * 申请添加车辆

@@ -84,7 +84,7 @@
             android:drawablePadding="9dp"
             android:drawableStart="@drawable/ic_add"
             android:gravity="center"
-            android:text="添加亲友设备"
+            android:text="添加亲友"
             android:textColor="@color/b1"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

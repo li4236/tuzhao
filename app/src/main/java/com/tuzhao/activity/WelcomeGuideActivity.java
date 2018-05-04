@@ -1,7 +1,6 @@
 package com.tuzhao.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +19,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseGuideFragment;
 import com.tuzhao.adapter.GuideViewPagerAdapter;
 import com.tuzhao.fragment.welcome.GuideOneFragment;
+import com.tuzhao.fragment.welcome.GuideThreeFragment;
 import com.tuzhao.fragment.welcome.GuideTwoFragment;
 
 import java.util.ArrayList;
@@ -59,6 +59,7 @@ public class WelcomeGuideActivity extends AppCompatActivity {
         mFragments = new ArrayList<>();
         mFragments.add(new GuideOneFragment());
         mFragments.add(new GuideTwoFragment());
+        mFragments.add(new GuideThreeFragment());
 
         mIndicators = new View[3];
         mIndicators[0] = findViewById(R.id.guide_one_indicator);
@@ -92,16 +93,6 @@ public class WelcomeGuideActivity extends AppCompatActivity {
         mFragments.get(this.currentIndex).isVisibilityToUser(false);
         mFragments.get(currentIndex).isVisibilityToUser(true);
         this.currentIndex = currentIndex;
-    }
-
-    private void enterMainActivity() {
-        Intent intent = new Intent(WelcomeGuideActivity.this, SplashActivity.class);
-        startActivity(intent);
-        SharedPreferences activityPreferences = WelcomeGuideActivity.this.getSharedPreferences("tuzhaoapp", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = activityPreferences.edit();
-        editor.putBoolean("first_open", true);
-        editor.apply();
-        finish();
     }
 
     private class GuideViewpagerAdapter extends FragmentPagerAdapter {

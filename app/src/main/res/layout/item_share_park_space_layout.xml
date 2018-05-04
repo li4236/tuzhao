@@ -10,7 +10,6 @@
         style="@style/TwentyTextB1Style"
         android:layout_marginStart="14dp"
         android:layout_marginTop="14dp"
-        android:text="天之力停车场"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,7 +18,6 @@
         style="@style/TwentyTextG6Style"
         android:layout_marginBottom="14dp"
         android:layout_marginTop="10dp"
-        android:text="车主:天之力"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/share_park_space_space_name"
         app:layout_constraintTop_toBottomOf="@+id/share_park_space_space_name" />
@@ -29,8 +27,8 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_marginBottom="5dp"
-        android:src="@drawable/circle_green7"
         android:contentDescription="@string/picture_description"
+        android:src="@drawable/circle_green7"
         app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
         app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
         app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
