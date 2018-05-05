@@ -35,6 +35,8 @@ public class Park_Info extends BaseInfo {
     private String order_times;//所有用户所预定的时间，逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
     private String fine;//罚金：滞留金
     private String profit_ratio;//收益比
+    private String installTime;//预计安装时间
+    private String reason;//审核未通过原因
     private String type;//车位归属类型
     private String citycode;//城市码
     private String create_time;//创建时间，主要是提交为了删除车位
@@ -332,6 +334,22 @@ public class Park_Info extends BaseInfo {
         this.userName = userName;
     }
 
+    public String getInstallTime() {
+        return installTime;
+    }
+
+    public void setInstallTime(String installTime) {
+        this.installTime = installTime;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public String toString() {
         return "Park_Info{" +
@@ -358,6 +376,8 @@ public class Park_Info extends BaseInfo {
                 ", order_times='" + order_times + '\'' +
                 ", fine='" + fine + '\'' +
                 ", profit_ratio='" + profit_ratio + '\'' +
+                ", installTime='" + installTime + '\'' +
+                ", reason='" + reason + '\'' +
                 ", type='" + type + '\'' +
                 ", citycode='" + citycode + '\'' +
                 ", create_time='" + create_time + '\'' +

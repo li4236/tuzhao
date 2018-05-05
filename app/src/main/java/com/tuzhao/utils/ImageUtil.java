@@ -38,6 +38,13 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    public static void showNoCenterPic(ImageView imageView, int resourceId) {
+        GlideApp.with(imageView.getContext())
+                .load(resourceId)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
     public static void showImpPic(ImageView imageView, String url) {
         GlideApp.with(imageView.getContext())
                 .load(url)

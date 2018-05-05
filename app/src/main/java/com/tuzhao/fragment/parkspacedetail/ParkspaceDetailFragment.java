@@ -43,6 +43,7 @@ import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 
@@ -142,6 +143,8 @@ public class ParkspaceDetailFragment extends BaseFragment {
         linearlayout_goorder = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_goorder);
         linearlayout_daohang = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
         cbratingbar = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_cbratingbar);
+
+        ImageUtil.showNoCenterPic(mNoPictureIv, R.mipmap.ic_img);
 
         banner_image.setOnBannerListener(new OnBannerListener() {
             @Override

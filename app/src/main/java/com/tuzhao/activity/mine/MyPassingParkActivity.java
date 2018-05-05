@@ -60,12 +60,12 @@ public class MyPassingParkActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initView() {
-        mRecyclerView = (SuperRefreshRecyclerView) findViewById(R.id.id_activity_mypassingpark_layout_recyclerview);
-        mRecyclerView.init(new LinearLayoutManager(this),new onMyRefresh(),new onMyLoadMore());
+        mRecyclerView = findViewById(R.id.id_activity_mypassingpark_layout_recyclerview);
+        mRecyclerView.init(new LinearLayoutManager(this), new onMyRefresh(), new onMyLoadMore());
         mRecyclerView.setRefreshEnabled(true);
         mRecyclerView.setLoadingMoreEnable(false);
 
-        linearlayout_nodata = (LinearLayout) findViewById(R.id.id_activity_mypassingpark_layout_linearlayout_nodata);
+        linearlayout_nodata = findViewById(R.id.id_activity_mypassingpark_layout_linearlayout_nodata);
     }
 
     private void initEvent() {
@@ -79,7 +79,7 @@ public class MyPassingParkActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.id_activity_mypassingpark_layout_imageview_back:
                 finish();
                 break;
@@ -105,38 +105,39 @@ public class MyPassingParkActivity extends BaseActivity implements View.OnClickL
         OkGo.post(HttpConstants.getPassingParkFromUser)
                 .tag(MyPassingParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
                         //请求成功
-                        if (mCustomDialog.isShowing()){
+                        if (mCustomDialog.isShowing()) {
                             mCustomDialog.hide();
                         }
                         linearlayout_nodata.setVisibility(View.GONE);
-                        if (mData.isEmpty()){
+                        if (mData.isEmpty()) {
                             mData = responseData.data;
                             mMyParkAdpater = new MyParkAdpater(MyPassingParkActivity.this, mData);
                             mRecyclerView.setAdapter(mMyParkAdpater);
-                        }else {
+                        } else {
                             mData.clear();
                             mData.addAll(responseData.data);
                             mMyParkAdpater.notifyDataSetChanged();
                         }
-                        if (mRecyclerView.isRefreshing()){
+                        if (mRecyclerView.isRefreshing()) {
                             mRecyclerView.setRefreshing(false);
                         }
                     }
+
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.hide();
                         }
-                        if (!DensityUtil.isException(MyPassingParkActivity.this,e)){
+                        if (!DensityUtil.isException(MyPassingParkActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
-                            switch (code){
+                            switch (code) {
                                 case 101:
                                     //暂无自己的车位
                                     if (mRecyclerView.isRefreshing()) {
@@ -148,7 +149,7 @@ public class MyPassingParkActivity extends BaseActivity implements View.OnClickL
                                     if (mRecyclerView.isRefreshing()) {
                                         mRecyclerView.setRefreshing(false);
                                     }
-                                    MyToast.showToast(MyPassingParkActivity.this,"服务器正在维护中",5);
+                                    MyToast.showToast(MyPassingParkActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         }
@@ -159,9 +160,9 @@ public class MyPassingParkActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        if (isFirst){
+        if (isFirst) {
             isFirst = false;
-        }else {
+        } else {
             initLoading("加载中...");
             requestParkData();
         }
@@ -170,7 +171,7 @@ public class MyPassingParkActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!= null){
+        if (mCustomDialog != null) {
             mCustomDialog.cancel();
         }
     }

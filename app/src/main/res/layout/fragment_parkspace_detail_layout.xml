@@ -26,8 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/g13"
-                android:contentDescription="@string/picture_description"
-                android:src="@mipmap/ic_img" />
+                android:contentDescription="@string/picture_description" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/id_fragment_parkspacedetail_layout_top_cl"
@@ -169,7 +168,7 @@
                     android:id="@+id/id_fragment_parkspacedetail_layout_textview_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3000.00"
+                    android:text="30"
                     android:textColor="@color/b1"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspacedetail_layout_textview_distance_dw"
