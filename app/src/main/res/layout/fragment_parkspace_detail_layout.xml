@@ -19,9 +19,15 @@
             <com.tianzhili.www.myselfsdk.banner.Banner
                 android:id="@+id/id_fragment_parkspacedetail_layout_banner_image"
                 android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+            <ImageView
+                android:id="@+id/parkspace_detail_no_picture"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_alignParentTop="true"
-                android:background="#e6e6e6" />
+                android:background="@color/g13"
+                android:contentDescription="@string/picture_description"
+                android:src="@mipmap/ic_img" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/id_fragment_parkspacedetail_layout_top_cl"

@@ -180,4 +180,29 @@ public class Park_Space_Info extends BaseInfo {
     public void setProfit_ratio(String profit_ratio) {
         this.profit_ratio = profit_ratio;
     }
+
+    @Override
+    public String toString() {
+        return "Park_Space_Info{" +
+                "id='" + id + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", park_space_name='" + park_space_name + '\'' +
+                ", park_address='" + park_address + '\'' +
+                ", grade='" + grade + '\'' +
+                ", opentime='" + opentime + '\'' +
+                ", parkspace_img='" + parkspace_img + '\'' +
+                ", high_time='" + high_time + '\'' +
+                ", low_time='" + low_time + '\'' +
+                ", high_fee='" + high_fee + '\'' +
+                ", low_fee='" + low_fee + '\'' +
+                ", high_max_fee='" + high_max_fee + '\'' +
+                ", low_max_fee='" + low_max_fee + '\'' +
+                ", fine='" + fine + '\'' +
+                ", ad_img='" + ad_img + '\'' +
+                ", ad_web='" + ad_web + '\'' +
+                ", city_code='" + city_code + '\'' +
+                ", profit_ratio='" + profit_ratio + '\'' +
+                '}';
+    }
 }

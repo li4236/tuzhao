@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
@@ -44,7 +45,6 @@ import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -61,6 +61,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
     private View mContentView;
     private CustomDialog mCustomDialog;
     private Banner banner_image;
+    private ImageView mNoPictureIv;
     private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance, textview_distance_dw, textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime;
     private ConstraintLayout linearlayout_goorder, linearlayout_daohang;
     private LoginDialogFragment loginDialogFragment;
@@ -125,6 +126,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
 
     private void initView() {
         banner_image = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_banner_image);
+        mNoPictureIv = mContentView.findViewById(R.id.parkspace_detail_no_picture);
         textview_hightime = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_hightime);
         textview_highfee = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_highfee);
         textview_opentime = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_opentime);
@@ -306,9 +308,10 @@ public class ParkspaceDetailFragment extends BaseFragment {
 
     private void initViewData(Park_Space_Info parkspace_info) {
         try {
-            final String img_Url[] = parkspace_info.getParkspace_img().split(",");
+            String imgUrl = parkspace_info.getParkspace_img();
             imgData = new ArrayList<>();
-            if (img_Url.length > 0) {
+            if (imgUrl != null && !imgUrl.equals("")) {
+                final String img_Url[] = imgUrl.split(",");
                 for (int i = 0; i < img_Url.length; i++) {
                     imgData.add(HttpConstants.ROOT_IMG_URL_PS + img_Url[i]);
                 }
@@ -318,30 +321,24 @@ public class ParkspaceDetailFragment extends BaseFragment {
                         .setImageLoader(new GlideImageLoader())
                         .setDelayTime(6000)
                         .start();
-            } else {
-                List<Integer> noImg = new ArrayList<>();
-                noImg.add(R.mipmap.ic_img);
-                banner_image.setImages(noImg)
-                        .setImageLoader(new GlideImageLoader())
-                        .start();
+
+                banner_image.setOnBannerListener(new OnBannerListener() {
+                    @Override
+                    public void OnBannerClick(int position) {
+                        if (imgData.size() == 0) {
+                            MyToast.showToast(mContext, "暂无图片哦", 5);
+                        } else {
+                            Intent intent = new Intent(mContext, BigPictureActivity.class);
+                            intent.putStringArrayListExtra("picture_list", imgData);
+                            intent.putExtra("position", position);
+                            startActivity(intent);
+                        }
+                    }
+                });
+
+                mNoPictureIv.setVisibility(View.GONE);
+
             }
-            banner_image.setOnBannerListener(new OnBannerListener() {
-                @Override
-                public void OnBannerClick(int position) {
-                    ArrayList<String> imgList = new ArrayList<>();
-                    for (String aa : img_Url) {
-                        imgList.add(HttpConstants.ROOT_IMG_URL_PS + aa);
-                    }
-                    if (imgList.size() == 0) {
-                        MyToast.showToast(mContext, "暂无图片哦", 5);
-                    } else {
-                        Intent intent = new Intent(mContext, BigPictureActivity.class);
-                        intent.putStringArrayListExtra("picture_list", imgList);
-                        intent.putExtra("position", position);
-                        startActivity(intent);
-                    }
-                }
-            });
             textview_parkspacename.setText(parkspace_info.getPark_space_name());
             textview_parkspaceaddress.setText(parkspace_info.getPark_address());
             DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));
