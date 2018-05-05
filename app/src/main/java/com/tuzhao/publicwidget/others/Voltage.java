@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -98,32 +99,46 @@ public class Voltage extends View {
         int height = getMeasuredHeight();
         mHeadRect.set(width - height / 4, height * 3 / 8, width, height * 5 / 8);
         mBorderRect.set(mBorderPaint.getStrokeWidth(), mBorderPaint.getStrokeWidth(), mHeadRect.left, height - mBorderPaint.getStrokeWidth());
-
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mBorderPaint.setStyle(Paint.Style.STROKE);
-        mBorderPaint.setStrokeWidth(mBorderWidth);
-        canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
 
-        mBorderPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(mHeadRect, mBorderPaint);
+        if (mVoltage > 0) {
+            mBorderPaint.setColor(mBorderColor);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+            mBorderPaint.setStrokeWidth(mBorderWidth);
+            canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
 
-        mVoltageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top + mBorderWidth, mBorderRect.right * mVoltage / 100 - mBorderWidth, mBorderRect.bottom - mBorderWidth);
-        if (mVoltage <= 20) {
-            mVoltagePaint.setColor(mLowVoltageColor);
-        } else if (mVoltage >= 70) {
-            mVoltagePaint.setColor(mHeighVoltageColor);
+            mBorderPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(mHeadRect, mBorderPaint);
+
+            //电量的总宽度
+            float voltageWidth = mBorderRect.right - mBorderRect.left - mBorderWidth * 2;
+            mVoltageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top + mBorderWidth,
+                    voltageWidth * mVoltage / 100 + mBorderRect.left + mBorderWidth, mBorderRect.bottom - mBorderWidth);
+            if (mVoltage <= 20) {
+                mVoltagePaint.setColor(mLowVoltageColor);
+            } else if (mVoltage >= 70) {
+                mVoltagePaint.setColor(mHeighVoltageColor);
+            } else {
+                mVoltagePaint.setColor(mMiddleVoltageColor);
+            }
+
+            canvas.drawRect(mVoltageRect, mVoltagePaint);
         } else {
-            mVoltagePaint.setColor(mMiddleVoltageColor);
-        }
+            mBorderPaint.setColor(Color.RED);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+            mBorderPaint.setStrokeWidth(mBorderWidth);
+            canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
 
-        canvas.drawRect(mVoltageRect, mVoltagePaint);
+            mBorderPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRect(mHeadRect, mBorderPaint);
+        }
     }
 
-    public void setVoltage(int voltage) {
+    public void setVoltage(@IntRange(from = 0, to = 100) int voltage) {
         if (voltage < 0) {
             mVoltage = 0;
         } else if (voltage > 100) {
