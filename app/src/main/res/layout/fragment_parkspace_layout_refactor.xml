@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/ic_jianjie"
     android:id="@+id/id_fragment_parkspace_layout_linearlayout_allclick"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_jianjie">
 
     <TextView
         android:id="@+id/id_fragment_parkspace_layout_textview_psname"
         android:layout_width="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspace_layout_textview_look"
-        android:layout_marginEnd="16dp"
-        android:ellipsize="end"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/b1"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspace_layout_textview_look"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/id_fragment_parkspace_layout_textview_psprice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/b1"
-        android:gravity="bottom"
-        app:layout_constraintEnd_toEndOf="@id/id_fragment_parkspace_layout_textview_psname"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="12dp"
+        android:layout_marginTop="16dp"
+        android:gravity="bottom"
+        android:textColor="@color/b1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/id_fragment_parkspace_layout_textview_psname"
         app:layout_constraintStart_toStartOf="@id/id_fragment_parkspace_layout_textview_psname"
-        app:layout_constraintTop_toBottomOf="@id/id_fragment_parkspace_layout_textview_psname"
-        android:textSize="12sp"/>
+        app:layout_constraintTop_toBottomOf="@id/id_fragment_parkspace_layout_textview_psname" />
 
     <TextView
+        android:id="@+id/id_fragment_parkspace_layout_textview_look"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="16dp"
         android:drawablePadding="7dp"
-        android:id="@+id/id_fragment_parkspace_layout_textview_look"
         android:drawableStart="@mipmap/ic_detailed"
-        android:textColor="@color/b1"
         android:text="@string/look"
-        android:textSize="14sp"/>
+        android:textColor="@color/b1"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
