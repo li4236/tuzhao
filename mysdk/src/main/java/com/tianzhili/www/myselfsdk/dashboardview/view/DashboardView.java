@@ -316,7 +316,6 @@ public class DashboardView extends View {
         speed = StringUtil.floatFormat(startNum + (maxNum - startNum) * percent);
         length = paintText.measureText(speed);
         canvas.drawText(speed, -length / 2, mWidth / 12000, paintText);
-
     }
 
     private void drawerPointer(Canvas canvas, float percent) {

@@ -111,7 +111,7 @@ public class Voltage extends View {
         mBorderPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(mHeadRect, mBorderPaint);
 
-        mVoltageRect.set(mBorderRect.left + mBorderWidth / 2, mBorderRect.top + mBorderWidth / 2, mBorderRect.right * mVoltage / 100 - mBorderWidth / 2, mBorderRect.bottom - mBorderWidth / 2);
+        mVoltageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top + mBorderWidth, mBorderRect.right * mVoltage / 100 - mBorderWidth, mBorderRect.bottom - mBorderWidth);
         if (mVoltage <= 20) {
             mVoltagePaint.setColor(mLowVoltageColor);
         } else if (mVoltage >= 70) {
