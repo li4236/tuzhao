@@ -16,6 +16,7 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.adapter.ParkSpaceRentTimeAdapter;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.EverydayShareTimeInfo;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -81,6 +82,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
         RecyclerView recyclerView = findViewById(R.id.park_space_setting_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
         mAdapter = new ParkSpaceRentTimeAdapter();
         recyclerView.setAdapter(mAdapter);
 
@@ -183,14 +185,55 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
         //显示出租时段
         String[] shareDays = mPark_info.getShareDay().split(",");
-        for (int i = 0; i < shareDays.length; i++) {
-            if (shareDays[i].charAt(0) == '1') {
-                if (mPark_info.getOpen_time().equals("-1") || mPark_info.getOpen_time().equals("")) {
+        if (mPark_info.getOpen_time().equals("-1")) {
+            //全天出租的则显示全天
+            for (int i = 0; i < shareDays.length; i++) {
+                if (shareDays[i].charAt(0) == '1') {
                     mAdapter.addData("全天" + dayToWeek(i + 1));
-                } else {
-                    mAdapter.addData(mPark_info.getOpen_time() + dayToWeek(i + 1));
                 }
             }
+        } else {
+            //判断出租时段是否有跨天的，并且按开始时段排序
+            List<EverydayShareTimeInfo> shareTimeInfos = new ArrayList<>(6);
+            String startTime;
+            String endTime;
+            int position;
+            for (String dayShareTime : mPark_info.getOpen_time().split(",")) {
+                position = dayShareTime.indexOf(" - ");
+                startTime = dayShareTime.substring(0, position);
+                endTime = dayShareTime.substring(position + 3, dayShareTime.length());
+                if (DateUtil.getYearToMinuteCalendar("2018-04-24 " + startTime).compareTo(DateUtil.getYearToMinuteCalendar("2018-04-24 " + endTime)) >= 0) {
+                    //如果出租时间是跨天的则分别显示两个时间段
+                    shareTimeInfos.add(new EverydayShareTimeInfo("00:00", endTime));
+                    shareTimeInfos.add(new EverydayShareTimeInfo(startTime, "24:00"));
+                } else {
+                    shareTimeInfos.add(new EverydayShareTimeInfo(startTime, endTime));
+                }
+            }
+
+            //根据开始的出租时段排序
+            Collections.sort(shareTimeInfos, new Comparator<EverydayShareTimeInfo>() {
+                @Override
+                public int compare(EverydayShareTimeInfo o1, EverydayShareTimeInfo o2) {
+                    return DateUtil.getHourMinuteCalendar(o1.getStartTime()).compareTo(DateUtil.getHourMinuteCalendar(o2.getStartTime()));
+                }
+            });
+
+            StringBuilder stringBuilder = new StringBuilder();
+            for (EverydayShareTimeInfo shareTimeInfo : shareTimeInfos) {
+                stringBuilder.append(shareTimeInfo.getStartTime());
+                stringBuilder.append(" - ");
+                stringBuilder.append(shareTimeInfo.getEndTime());
+                stringBuilder.append(",");
+            }
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+            for (int i = 0; i < shareDays.length; i++) {
+                if (shareDays[i].charAt(0) == '1') {
+                    mAdapter.justAddData(stringBuilder.toString() + dayToWeek(i + 1));
+                }
+            }
+            mAdapter.notifyDataSetChanged();
         }
 
         //显示暂停出租日期
@@ -236,7 +279,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     }
                 });
 
-                StringBuilder usefulPauseDate = new StringBuilder();    //在今后的暂停日期，重新设置，如果跳到修改共享时间那就不用再判断了
+                StringBuilder usefulPauseDate = new StringBuilder();    //在今后的暂停日期，重新设置，这样跳到修改共享时间那就不用再判断了
                 StringBuilder stringBuilder = new StringBuilder();
                 for (Calendar calendar : pauseCalendars) {
                     usefulPauseDate.append(DateUtil.getCalendarYearToDay(calendar));
@@ -298,7 +341,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             case 7:
                 return "(每周日)";
             default:
-                return "每周一";
+                return "(每周一)";
         }
     }
 

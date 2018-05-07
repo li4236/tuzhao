@@ -621,7 +621,7 @@ public class DateUtil {
     /**
      * date格式为HH:mm
      */
-    private static Calendar getHourMinuteCalendar(String date) {
+    public static Calendar getHourMinuteCalendar(String date) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(date.substring(0, date.indexOf(":"))));
         calendar.set(Calendar.MINUTE, Integer.valueOf(date.substring(date.indexOf(":") + 1, date.length())));

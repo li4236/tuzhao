@@ -15,189 +15,203 @@
         style="@style/dividerStyle"
         app:layout_constraintTop_toBottomOf="@+id/base_tb" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/rental_record_edit"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
-        <ImageView
-            android:id="@+id/parkspace_iv"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:contentDescription="@string/picture_description"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/parkspace_number"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginStart="15dp"
-            app:layout_constraintStart_toEndOf="@id/parkspace_iv"
-            app:layout_constraintTop_toTopOf="@+id/parkspace_iv" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/rental_record_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/rental_record_park_status"
-            style="@style/TwentyTextB1Style"
-            app:layout_constraintBottom_toBottomOf="@id/parkspace_iv"
-            app:layout_constraintStart_toStartOf="@id/parkspace_number"
-            app:layout_constraintTop_toTopOf="@id/parkspace_iv" />
+                <ImageView
+                    android:id="@+id/parkspace_iv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/rental_record_electricity"
-            style="@style/TwentyTextB1Style"
-            app:layout_constraintBottom_toBottomOf="@+id/parkspace_iv"
-            app:layout_constraintStart_toStartOf="@id/parkspace_number" />
+                <TextView
+                    android:id="@+id/parkspace_number"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="15dp"
+                    app:layout_constraintStart_toEndOf="@id/parkspace_iv"
+                    app:layout_constraintTop_toTopOf="@+id/parkspace_iv" />
 
-    </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/rental_record_park_status"
+                    style="@style/TwentyTextB1Style"
+                    app:layout_constraintBottom_toBottomOf="@id/parkspace_iv"
+                    app:layout_constraintStart_toStartOf="@id/parkspace_number"
+                    app:layout_constraintTop_toTopOf="@id/parkspace_iv" />
 
-    <View
-        android:id="@+id/center_divider"
-        style="@style/dividerStyle"
-        android:layout_height="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/rental_record_edit" />
+                <TextView
+                    android:id="@+id/rental_record_electricity"
+                    style="@style/TwentyTextB1Style"
+                    app:layout_constraintBottom_toBottomOf="@+id/parkspace_iv"
+                    app:layout_constraintStart_toStartOf="@id/parkspace_number" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/park_space_space_setting_cl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/center_divider">
+            </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/park_space_space_setting_renten_date_tv"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:text="出租日期:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/center_divider"
+                style="@style/dividerStyle"
+                android:layout_height="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/rental_record_edit" />
 
-        <TextView
-            android:id="@+id/park_space_space_setting_renten_date"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/park_space_space_setting_renten_date_tv"
-            app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_date_tv"
-            app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_date_tv" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/park_space_space_setting_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/center_divider">
 
-        <TextView
-            android:id="@+id/park_space_space_setting_renten_time"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginTop="8dp"
-            android:text="出租时段:"
-            app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_date_tv"
-            app:layout_constraintTop_toBottomOf="@+id/park_space_space_setting_renten_date_tv" />
+                <TextView
+                    android:id="@+id/park_space_space_setting_renten_date_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:text="出租日期:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/park_space_setting_rv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_time"
-            app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_time" />
+                <TextView
+                    android:id="@+id/park_space_space_setting_renten_date"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/park_space_space_setting_renten_date_tv"
+                    app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_date_tv"
+                    app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_date_tv" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="@string/picture_description"
-            android:src="@mipmap/ic_right"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/park_space_space_setting_renten_time"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="8dp"
+                    android:text="出租时段:"
+                    app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_date_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/park_space_space_setting_renten_date_tv" />
 
-        <TextView
-            android:id="@+id/park_space_setting_pause_date_tv"
-            style="@style/TwentyTextB1Style"
-            android:text="停租日期:"
-            app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_date_tv"
-            app:layout_constraintTop_toBottomOf="@id/park_space_setting_rv" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/park_space_setting_rv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/parkspace_rent_right"
+                    app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_time"
+                    app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_time" />
 
-        <TextView
-            android:id="@+id/park_space_setting_pause_date"
-            style="@style/TwentyTextB1Style"
-            android:layout_width="0dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="8dp"
-            android:gravity="start"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/park_space_setting_pause_date_tv"
-            app:layout_constraintTop_toTopOf="@+id/park_space_setting_pause_date_tv" />
+                <ImageView
+                    android:id="@+id/parkspace_rent_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/park_space_setting_pause_date_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:text="停租日期:"
+                    app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_date_tv"
+                    app:layout_constraintTop_toBottomOf="@id/park_space_setting_rv" />
 
-    <View
-        android:id="@+id/bottom_divider"
-        style="@style/dividerStyle"
-        app:layout_constraintTop_toBottomOf="@id/park_space_space_setting_cl" />
+                <TextView
+                    android:id="@+id/park_space_setting_pause_date"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="start"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/park_space_setting_pause_date_tv"
+                    app:layout_constraintTop_toTopOf="@+id/park_space_setting_pause_date_tv" />
 
-    <TextView
-        android:id="@+id/park_space_setting_renten_tv"
-        style="@style/TwentyTextB1Style"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="车位出租"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
+            </android.support.constraint.ConstraintLayout>
 
-    <com.kyleduo.switchbutton.SwitchButton
-        android:id="@+id/park_space_setting_renten_sb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        app:kswBackDrawable="@drawable/switch_back_drawable"
-        app:kswThumbDrawable="@drawable/switch_thumb_drawable"
-        app:kswThumbHeight="18dp"
-        app:kswThumbMargin="2.8dp"
-        app:kswThumbRangeRatio="2.25"
-        app:kswThumbWidth="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/renten_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
+            <View
+                android:id="@+id/bottom_divider"
+                style="@style/dividerStyle"
+                app:layout_constraintTop_toBottomOf="@id/park_space_space_setting_cl" />
 
-    <View
-        android:id="@+id/renten_divider"
-        style="@style/dividerStyle"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/park_space_setting_renten_tv" />
+            <TextView
+                android:id="@+id/park_space_setting_renten_tv"
+                style="@style/TwentyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="车位出租"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
-    <TextView
-        android:id="@+id/park_space_setting_bluetooth_binding"
-        style="@style/TwentyTextB1Style"
-        android:layout_width="0dp"
-        android:gravity="start"
-        android:paddingBottom="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:text="我的亲友"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/renten_divider" />
+            <com.kyleduo.switchbutton.SwitchButton
+                android:id="@+id/park_space_setting_renten_sb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:kswBackDrawable="@drawable/switch_back_drawable"
+                app:kswThumbDrawable="@drawable/switch_thumb_drawable"
+                app:kswThumbHeight="18dp"
+                app:kswThumbMargin="2.8dp"
+                app:kswThumbRangeRatio="2.25"
+                app:kswThumbWidth="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/renten_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
-    <View
-        android:id="@+id/bluetooth_divider"
-        style="@style/dividerStyle"
-        app:layout_constraintTop_toBottomOf="@+id/park_space_setting_bluetooth_binding" />
+            <View
+                android:id="@+id/renten_divider"
+                style="@style/dividerStyle"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/park_space_setting_renten_tv" />
 
-    <TextView
-        android:id="@+id/park_space_setting_renten_record"
-        style="@style/TwentyTextB1Style"
-        android:layout_width="0dp"
-        android:gravity="start"
-        android:paddingBottom="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:text="出租记录"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetooth_divider" />
+            <TextView
+                android:id="@+id/park_space_setting_bluetooth_binding"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:gravity="start"
+                android:paddingBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:text="我的亲友"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/renten_divider" />
+
+            <View
+                android:id="@+id/bluetooth_divider"
+                style="@style/dividerStyle"
+                app:layout_constraintTop_toBottomOf="@+id/park_space_setting_bluetooth_binding" />
+
+            <TextView
+                android:id="@+id/park_space_setting_renten_record"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:gravity="start"
+                android:paddingBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:text="出租记录"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bluetooth_divider" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>

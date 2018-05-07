@@ -10,6 +10,15 @@ public class EverydayShareTimeInfo {
 
     private String endTime;
 
+    public EverydayShareTimeInfo() {
+
+    }
+
+    public EverydayShareTimeInfo(String startTime, String endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
     public String getStartTime() {
         return startTime;
     }
