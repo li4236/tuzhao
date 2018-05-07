@@ -131,7 +131,7 @@
         <activity android:name=".activity.mine.InvoiceReimbursementActivity" />
         <activity android:name=".activity.mine.ConfirmTicketOrderActivity" />
         <activity
-            android:name=".activity.mine.BluetoothBindingActivity"
+            android:name=".activity.mine.MyFriendsActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.mine.AcceptTicketAddressActivity" />
         <activity

@@ -104,16 +104,14 @@ public class Voltage extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setStrokeWidth(mBorderWidth);
+        canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
+
+        mBorderPaint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(mHeadRect, mBorderPaint);
 
         if (mVoltage > 0) {
-            mBorderPaint.setColor(mBorderColor);
-            mBorderPaint.setStyle(Paint.Style.STROKE);
-            mBorderPaint.setStrokeWidth(mBorderWidth);
-            canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
-
-            mBorderPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(mHeadRect, mBorderPaint);
-
             //电量的总宽度
             float voltageWidth = mBorderRect.right - mBorderRect.left - mBorderWidth * 2;
             mVoltageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top + mBorderWidth,
@@ -127,20 +125,12 @@ public class Voltage extends View {
             }
 
             canvas.drawRect(mVoltageRect, mVoltagePaint);
-        } else {
-            mBorderPaint.setColor(Color.RED);
-            mBorderPaint.setStyle(Paint.Style.STROKE);
-            mBorderPaint.setStrokeWidth(mBorderWidth);
-            canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
-
-            mBorderPaint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(mHeadRect, mBorderPaint);
         }
     }
 
     public void setVoltage(@IntRange(from = 0, to = 100) int voltage) {
-        if (voltage < 0) {
-            mVoltage = 0;
+        if (voltage < 5) {
+            mVoltage = 5;
         } else if (voltage > 100) {
             mVoltage = 100;
         } else {

@@ -4,22 +4,22 @@ package com.tuzhao.info;
  * Created by juncoder on 2018/4/8.
  */
 
-public class BluetoothBindingFriendInfo {
+public class FriendInfo {
 
-    private String friendDeviceId;
+    private String friendId;
 
-    private String imgUrl;
+    private String imgUrl = "";
 
-    private String noteName;
+    private String noteName = "";
 
     private String telephone;
 
-    public String getFriendDeviceId() {
-        return friendDeviceId;
+    public String getFriendId() {
+        return friendId;
     }
 
-    public void setFriendDeviceId(String friendDeviceId) {
-        this.friendDeviceId = friendDeviceId;
+    public void setFriendId(String friendId) {
+        this.friendId = friendId;
     }
 
     public String getImgUrl() {

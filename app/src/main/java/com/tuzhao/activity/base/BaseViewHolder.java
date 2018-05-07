@@ -21,6 +21,8 @@ import java.util.HashSet;
 
 public class BaseViewHolder extends RecyclerView.ViewHolder {
 
+    private static final String TAG = "BaseViewHolder";
+
     private SparseArray<View> mViews;
 
     private View mItemView;
@@ -89,6 +91,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseViewHolder showPic(@IdRes int id, String url) {
+        if (url == null || url.equals("")) {
+            Log.e(TAG, "showPic: url is null or empty");
+            return this;
+        }
+
         ImageUtil.showPic((ImageView) getView(id), url);
         return this;
     }
@@ -99,6 +106,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseViewHolder showCirclePic(@IdRes int id, String url) {
+        if (url == null || url.equals("")) {
+            Log.e(TAG, "showCirclePic: url is null or empty");
+            return this;
+        }
+
         ImageUtil.showCirclePic((ImageView) getView(id), url);
         return this;
     }

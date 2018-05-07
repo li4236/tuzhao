@@ -18,9 +18,11 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.BluetoothBindingFriendInfo;
+import com.tuzhao.info.FriendInfo;
+import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
@@ -34,16 +36,12 @@ import okhttp3.Response;
  * Created by juncoder on 2018/4/8.
  */
 
-public class BluetoothBindingActivity extends BaseStatusActivity {
+public class MyFriendsActivity extends BaseStatusActivity {
 
     private BluetoothBindingAdapter mAdapter;
 
     private TextView mBindindFriendNumber;
 
-    /*private TextView mBindindTv;
-
-    private TextView mBindingStatus;
-*/
     private EditText mFirendName;
 
     private EditText mFriendPhone;
@@ -52,11 +50,11 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
     private TipeDialog mAddFriendPhoneDialog;
 
-    private String mParkSpaceId;
+    private Park_Info mPark_info;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        if ((mParkSpaceId = getIntent().getStringExtra(ConstansUtil.PARK_SPACE_ID)) == null) {
+        if ((mPark_info = (Park_Info) getIntent().getSerializableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
             showFiveToast("打开失败，请退出重试");
             finish();
         }
@@ -67,8 +65,6 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
         mAdapter = new BluetoothBindingAdapter();
         recyclerView.setAdapter(mAdapter);
 
-       /* mBindindTv = findViewById(R.id.bluetooth_binding_bing);
-        mBindingStatus = findViewById(R.id.bluetooth_binding_bing_status);*/
         mBindindFriendNumber = findViewById(R.id.bluetooth_binding_bind_number);
         TextView bindingHint = findViewById(R.id.bluetooth_binding_hint);
         String hint = "温馨提醒:\n1、蓝牙绑定后，当绑定蓝牙的手机靠近车位锁时，车位锁将自动放下";
@@ -90,10 +86,11 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     protected void initData() {
         super.initData();
         getOkGo(HttpConstants.getBindingFriends)
-                .params("parkSpaceId", mParkSpaceId)
-                .execute(new JsonCallback<Base_Class_List_Info<BluetoothBindingFriendInfo>>() {
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCitycode())
+                .execute(new JsonCallback<Base_Class_List_Info<FriendInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<BluetoothBindingFriendInfo> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_List_Info<FriendInfo> o, Call call, Response response) {
                         mAdapter.setNewData(o.data);
                         updateFriendNumber();
                         dismmisLoadingDialog();
@@ -152,7 +149,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                             if (TextUtils.isEmpty(mFirendName.getText().toString().trim())) {
                                 showFiveToast("备注不能为空哦");
                             } else {
-                                modifyFriendName(mAdapter.getData().get(position).getFriendDeviceId(), mFirendName.getText().toString(), position);
+                                modifyFriendName(mAdapter.getData().get(position).getFriendId(), mFirendName.getText().toString(), position);
                             }
 
                         }
@@ -187,8 +184,24 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                     .setPositiveButton("确认修改", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (DateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
-                                addFriendDevice(mFriendPhone.getText().toString().trim());
+                            String phone = mFriendPhone.getText().toString().trim();
+                            if (TextUtils.isEmpty(phone)) {
+                                showFiveToast("请输入手机号");
+                            } else if (TextUtils.equals(phone, UserManager.getInstance().getUserInfo().getUsername())) {
+                                showFiveToast("不能添加自己哦");
+                            } else if (DateUtil.isPhoneNumble(mFriendPhone.getText().toString().trim())) {
+                                boolean isRepeat = false;
+                                for (FriendInfo friendInfo : mAdapter.getData()) {
+                                    if (friendInfo.getTelephone().equals(phone)) {
+                                        isRepeat = true;
+                                        break;
+                                    }
+                                }
+                                if (isRepeat) {
+                                    showFiveToast("该亲友已经添加过了哦");
+                                } else {
+                                    addFriendDevice(phone);
+                                }
                             } else {
                                 showFiveToast("你输入的手机不正确哦");
                             }
@@ -207,7 +220,8 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     private void modifyFriendName(String friendDeviceId, final String noteName, final int position) {
         showLoadingDialog("正在修改");
         getOkGo(HttpConstants.modifyFriendNickname)
-                .params("parkSpaceId", mParkSpaceId)
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCitycode())
                 .params("friendDeviceId", friendDeviceId)
                 .params("noteName", noteName)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -230,7 +244,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     private void deleteFriendDevice(final int position) {
         showLoadingDialog("正在删除");
         getOkGo(HttpConstants.deleteFriend)
-                .params("friendDeviceId", mAdapter.getData().get(position).getFriendDeviceId())
+                .params("friendDeviceId", mAdapter.getData().get(position).getFriendId())
                 .execute(new JsonCallback() {
                     @Override
                     public void onSuccess(Object o, Call call, Response response) {
@@ -252,11 +266,12 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
     private void addFriendDevice(String telephone) {
         showLoadingDialog("正在添加");
         getOkGo(HttpConstants.addFriend)
-                .params("parkSpaceId", mParkSpaceId)
-                .params("teltephone", telephone)
-                .execute(new JsonCallback<Base_Class_Info<BluetoothBindingFriendInfo>>() {
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCitycode())
+                .params("telephone", telephone)
+                .execute(new JsonCallback<Base_Class_Info<FriendInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<BluetoothBindingFriendInfo> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<FriendInfo> o, Call call, Response response) {
                         mAdapter.addData(o.data);
                         updateFriendNumber();
                         mFriendPhone.setText("");
@@ -267,19 +282,38 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "103":
+                                    showFiveToast("账号异常，请重新登录");
+                                    startLogin();
+                                    break;
+                                case "104":
+                                    showFiveToast("最多只能有5个共享亲友哦");
+                                    break;
+                                case "105":
+                                    showFiveToast("你已经添加过该亲友了哦");
+                                    break;
+                                case "106":
+                                    showFiveToast("服务器异常，请稍后重试");
+                                    break;
+                                case "107":
+                                    showFiveToast("手机号不正确，请重新输入");
+                                    break;
+                            }
                         }
                     }
                 });
 
     }
 
-    private class BluetoothBindingAdapter extends BaseAdapter<BluetoothBindingFriendInfo> {
+    private class BluetoothBindingAdapter extends BaseAdapter<FriendInfo> {
 
         @Override
-        protected void conver(@NonNull BaseViewHolder holder, final BluetoothBindingFriendInfo bluetoothBindingFriendInfo, final int position) {
-            holder.showCirclePic(R.id.bluetooth_binding_friend_iv, bluetoothBindingFriendInfo.getImgUrl())
-                    .setText(R.id.bluetooth_binding_friend_name, bluetoothBindingFriendInfo.getNoteName())
+        protected void conver(@NonNull BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
+            holder.showCirclePic(R.id.bluetooth_binding_friend_iv, friendInfo.getImgUrl())
+                    .setText(R.id.bluetooth_binding_friend_name, friendInfo.getNoteName())
                     .getView(R.id.bluetooth_binding_edit_friend).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -290,8 +324,8 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
             holder.getView(R.id.bluetooth_binding_delete_friend).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String message = "确认删除" + bluetoothBindingFriendInfo.getNoteName() + "的手机?";
-                    new TipeDialog.Builder(BluetoothBindingActivity.this)
+                    String message = "确认删除" + friendInfo.getNoteName() + "的手机?";
+                    new TipeDialog.Builder(MyFriendsActivity.this)
                             .setTitle("删除手机")
                             .setMessage(message)
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -314,7 +348,7 @@ public class BluetoothBindingActivity extends BaseStatusActivity {
 
         @Override
         protected int itemViewId() {
-            return R.layout.item_bluetooth_binding_friends;
+            return R.layout.item_my_friends_layout;
         }
     }
 
