@@ -24,12 +24,11 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -86,6 +85,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         recyclerView.setAdapter(mAdapter);
 
         mSwitchButton = findViewById(R.id.park_space_setting_renten_sb);
+        mSwitchButton.setCheckedNoEvent(!mPark_info.getPark_status().equals("10"));
         mSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -135,31 +135,19 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     @Override
     protected void initData() {
         super.initData();
-        getOriginTime();
+        getShareTime();
         ImageUtil.showImpPic(mParkspaceIv, mPark_info.getPark_img());
         String parkNumber = "车位编号:" + mPark_info.getPark_number();
         mParkspaceNumber.setText(parkNumber);
-        String parkStatus;
-        switch (mPark_info.getPark_status()) {
-            case "1":
-                parkStatus = "车位状态:正在审核";
-                break;
-            case "2":
-                parkStatus = "车位状态:正在出租";
-                break;
-            case "3":
-                parkStatus = "车位状态:暂未开放";
-                break;
-            default:
-                parkStatus = "车位状态:未知状态";
-                break;
-        }
-        mParkspaceStatus.setText(parkStatus);
+        setParkspaceStatus();
         String voltage = "电量:" + (int) ((Double.valueOf(mPark_info.getVoltage()) - 4.8) * 100 / 1.2) + "%";
         mParkspaceLockVoltage.setText(voltage);
     }
 
-    private void getOriginTime() {
+    /**
+     * 获取车位的共享时间
+     */
+    private void getShareTime() {
         getOkGo(HttpConstants.getShareTime)
                 .params("parkId", mPark_info.getId())
                 .params("cityCode", mPark_info.getCitycode())
@@ -186,10 +174,14 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 });
     }
 
+    /**
+     * 设置车位的共享时间以及出租状态
+     */
     private void setParkSpaceInfo() {
         mAdapter.clearAll();
-        mRentDate.setText(mPark_info.getOpen_date().replace(",", "-"));
+        mRentDate.setText(mPark_info.getOpen_date());
 
+        //显示出租时段
         String[] shareDays = mPark_info.getShareDay().split(",");
         for (int i = 0; i < shareDays.length; i++) {
             if (shareDays[i].charAt(0) == '1') {
@@ -201,39 +193,92 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
         }
 
+        //显示暂停出租日期
         if (mPark_info.getPauseShareDate().equals("-1")
                 || mPark_info.getPauseShareDate().equals("")) {
             mPauseRentDate.setText("无");
         } else {
-            SimpleDateFormat dateFormat = DateUtil.getYearToDayFormat();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM月dd日", Locale.getDefault());
             String[] pauseDate = mPark_info.getPauseShareDate().split(",");
-            Date[] dates = new Date[pauseDate.length];
-            for (int i = 0; i < pauseDate.length; i++) {
-                try {
-                    dates[i] = dateFormat.parse(pauseDate[i]);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-            Arrays.sort(dates, new Comparator<Date>() {
-                @Override
-                public int compare(Date o1, Date o2) {
-                    return o1.compareTo(o2);
-                }
-            });
 
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < dates.length; i++) {
-                stringBuilder.append(simpleDateFormat.format(dates[i]));
-                stringBuilder.append(",");
+            Calendar nowCalendar = DateUtil.getYearToDayCalendar();
+            Calendar pauseCalendar;
+            List<Calendar> pauseCalendars = new ArrayList<>(pauseDate.length);
+
+            boolean hasDifferentYear = false;
+            int year = 2018;
+            for (int i = 0; i < pauseDate.length; i++) {
+                pauseCalendar = DateUtil.getYearToDayCalendar(pauseDate[i], false);
+                if (i == 0) {
+                    year = pauseCalendar.get(Calendar.YEAR);
+                }
+
+                if (pauseCalendar.compareTo(nowCalendar) >= 0) {
+                    //如果暂停日期在今后的则添加
+                    pauseCalendars.add(pauseCalendar);
+
+                    //判断暂停日期是否有隔年的
+                    if (i != 0 && !hasDifferentYear) {
+                        if (year != (pauseCalendar.get(Calendar.YEAR))) {
+                            hasDifferentYear = true;
+                        }
+                    }
+                }
             }
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            mPauseRentDate.setText(stringBuilder.toString());
+
+            if (pauseCalendars.isEmpty()) {
+                mPauseRentDate.setText("无");
+                mPark_info.setPauseShareDate("-1");
+            } else {
+                Collections.sort(pauseCalendars, new Comparator<Calendar>() {
+                    @Override
+                    public int compare(Calendar o1, Calendar o2) {
+                        return o1.compareTo(o2);
+                    }
+                });
+
+                StringBuilder usefulPauseDate = new StringBuilder();    //在今后的暂停日期，重新设置，如果跳到修改共享时间那就不用再判断了
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Calendar calendar : pauseCalendars) {
+                    usefulPauseDate.append(DateUtil.getCalendarYearToDay(calendar));
+                    usefulPauseDate.append(",");
+
+                    if (hasDifferentYear) {
+                        //如果有跨年了的，则显示xxxx年xx月xx日
+                        stringBuilder.append(DateUtil.getCalendarYearToDayWithText(calendar));
+                    } else {
+                        //都在同一年的，则显示xx月xx日
+                        stringBuilder.append(DateUtil.getCalendarMonthToDayWithText(calendar));
+                    }
+                    stringBuilder.append(",");
+                }
+                usefulPauseDate.deleteCharAt(usefulPauseDate.length() - 1);
+                mPark_info.setPauseShareDate(usefulPauseDate.toString());
+
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                mPauseRentDate.setText(stringBuilder.toString());
+            }
 
         }
 
-        mSwitchButton.setChecked(mPark_info.getPark_status().equals("2"));
+    }
+
+    private void setParkspaceStatus() {
+        String parkStatus;
+        switch (mPark_info.getPark_status()) {
+            case "1":
+                parkStatus = "车位状态:正在审核";
+                break;
+            case "10":
+                parkStatus = "车位状态:暂停出租";
+                break;
+            case "3":
+                parkStatus = "车位状态:正在出租";
+                break;
+            default:
+                parkStatus = "车位状态:未知状态";
+                break;
+        }
+        mParkspaceStatus.setText(parkStatus);
     }
 
     private String dayToWeek(int day) {

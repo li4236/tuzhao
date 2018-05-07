@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tianzhili.www.myselfsdk.okgo.exception.OkGoException;
 import com.tianzhili.www.myselfsdk.okgo.interceptor.TokenInvalideException;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.info.User_Info;
@@ -81,6 +82,11 @@ public class DensityUtil {
             LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(LOGOUT_ACTION));
             MyToast.showToast(context, "账户异常，请重新登录", 5);
             return true;
+        } else if (e instanceof OkGoException) {
+            if (e.getMessage().equals("901")) {
+                MyToast.showToast(context, "服务器异常，请稍后重试", 5);
+                return true;
+            }
         }
         return false;
     }

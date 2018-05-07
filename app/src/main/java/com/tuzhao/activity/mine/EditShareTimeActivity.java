@@ -185,13 +185,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
         if (shareTimeInfo.getPauseShareDate() != null && !shareTimeInfo.getPauseShareDate().equals("-1")) {
             String[] pauseShareDate = shareTimeInfo.getPauseShareDate().split(",");
-            Calendar calendar = DateUtil.getYearToDayCalendar();
-            Calendar pauseCalendar;
             for (String date : pauseShareDate) {
-                pauseCalendar = DateUtil.getYearToDayCalendar(date, false);
-                if (pauseCalendar.compareTo(calendar) >= 0) {
-                    mPauseShareDateAdapter.addData(date);
-                }
+                mPauseShareDateAdapter.addData(date);
             }
         }
 

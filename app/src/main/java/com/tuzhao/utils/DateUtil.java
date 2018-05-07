@@ -640,6 +640,27 @@ public class DateUtil {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
+    /**
+     * @return 日历对应的年月日，格式2018年05月07日
+     */
+    public static String getCalendarYearToDayWithText(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "年" + thanTen(calendar.get(Calendar.MONTH)) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日";
+    }
+
+    /**
+     * @return 日历对应的月日, 格式05月07日
+     */
+    public static String getCalendarMonthToDayWithText(Calendar calendar) {
+        return thanTen(calendar.get(Calendar.MONTH)) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日";
+    }
+
+    /**
+     * @return 日历对应的年月日，格式2018-05-07
+     */
+    public static String getCalendarYearToDay(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "-" + thanTen(calendar.get(Calendar.MONTH)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
     public static String printCalendar(Calendar calendar) {
         if (calendar == null) {
             return "";
