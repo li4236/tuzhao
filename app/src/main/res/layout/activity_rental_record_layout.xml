@@ -22,7 +22,7 @@
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
         <ImageView
-            android:id="@+id/rental_record_iv"
+            android:id="@+id/parkspace_iv"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
@@ -33,24 +33,24 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/rental_record_car_number"
+            android:id="@+id/parkspace_number"
             style="@style/TwentyTextB1Style"
             android:layout_marginStart="15dp"
-            app:layout_constraintStart_toEndOf="@id/rental_record_iv"
-            app:layout_constraintTop_toTopOf="@+id/rental_record_iv" />
+            app:layout_constraintStart_toEndOf="@id/parkspace_iv"
+            app:layout_constraintTop_toTopOf="@+id/parkspace_iv" />
 
         <TextView
             android:id="@+id/rental_record_park_status"
             style="@style/TwentyTextB1Style"
-            app:layout_constraintBottom_toBottomOf="@id/rental_record_iv"
-            app:layout_constraintStart_toStartOf="@id/rental_record_car_number"
-            app:layout_constraintTop_toTopOf="@id/rental_record_iv" />
+            app:layout_constraintBottom_toBottomOf="@id/parkspace_iv"
+            app:layout_constraintStart_toStartOf="@id/parkspace_number"
+            app:layout_constraintTop_toTopOf="@id/parkspace_iv" />
 
         <TextView
             android:id="@+id/rental_record_electricity"
             style="@style/TwentyTextB1Style"
-            app:layout_constraintBottom_toBottomOf="@+id/rental_record_iv"
-            app:layout_constraintStart_toStartOf="@id/rental_record_car_number" />
+            app:layout_constraintBottom_toBottomOf="@+id/parkspace_iv"
+            app:layout_constraintStart_toStartOf="@id/parkspace_number" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
             android:contentDescription="@string/picture_description"
             android:src="@mipmap/ic_write"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rental_record_iv" />
+            app:layout_constraintTop_toTopOf="@+id/parkspace_iv" />
 
     </android.support.constraint.ConstraintLayout>
 

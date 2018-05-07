@@ -318,12 +318,29 @@ public class DateUtil {
             return false;
         }
 
-        //保存预约时间
+        //保存在现在时刻以后的预约时间（既是排除掉在现在以前那些被预约的时间）
         String[] orderDates = orderDate.split(",");
-        Calendar[] calendars = new Calendar[orderDates.length * 2];
-        for (int i = 0; i < orderDates.length; i++) {
-            calendars[i * 2] = getYearToMinuteCalendar(orderDates[i].substring(0, orderDates[i].indexOf("*")));
-            calendars[i * 2 + 1] = getYearToMinuteCalendar(orderDates[i].substring(orderDates[i].indexOf("*") + 1, orderDates[i].length()));
+        List<String> usefulDates = new ArrayList<>(orderDates.length);
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.add(Calendar.MONTH, 1);
+        nowCalendar.set(Calendar.SECOND, 0);
+        nowCalendar.set(Calendar.MILLISECOND, 0);
+
+        for (String date : orderDates) {
+            if (nowCalendar.compareTo(getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()))) == -1) {
+                usefulDates.add(date);
+            }
+        }
+
+        if (usefulDates.isEmpty()) {
+            return false;
+        }
+
+        //将已被预约的时间用Calendar保存
+        Calendar[] calendars = new Calendar[usefulDates.size()];
+        for (int i = 0; i < usefulDates.size(); i++) {
+            calendars[i * 2] = getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*")));
+            calendars[i * 2 + 1] = getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()));
         }
 
         Calendar startCalendar = getYearToMinuteCalendar(startDate);

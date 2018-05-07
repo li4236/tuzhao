@@ -153,7 +153,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
                         showFiveToast("数据存储异常，请稍后重试");
                         return true;
                     case "802":
-                        showFiveToast("未传公共参数，请反馈");
+                        showFiveToast("客户端异常，请稍后重试");
                         return true;
                     case "803":
                         showFiveToast("参数异常，请检查是否全都填写了哦");
@@ -163,6 +163,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
                         return true;
                     case "805":
                         userNotExist();
+                        return true;
+                    case "901":
+                        showFiveToast("服务器异常，请稍后重试");
                         return true;
                     default:
                         return false;

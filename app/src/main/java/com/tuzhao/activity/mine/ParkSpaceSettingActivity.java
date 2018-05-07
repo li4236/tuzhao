@@ -40,13 +40,13 @@ import okhttp3.Response;
 
 public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
-    //private TextView mParkSpaceNumber;
+    private ImageView mParkspaceIv;
 
-    private ImageView mRentalRecordIv;
+    private TextView mParkspaceNumber;
 
-    private TextView mRentalRecordParkNumber;
+    private TextView mParkspaceStatus;
 
-    private TextView mRentalRecordParkStatus;
+    private TextView mParkspaceLockVoltage;
 
     private TextView mRentDate;
 
@@ -73,10 +73,10 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             finish();
         }
 
-        //mParkSpaceNumber = findViewById(R.id.park_space_setting_space_number);
-        mRentalRecordIv = findViewById(R.id.rental_record_iv);
-        mRentalRecordParkNumber = findViewById(R.id.rental_record_car_number);
-        mRentalRecordParkStatus = findViewById(R.id.rental_record_park_status);
+        mParkspaceIv = findViewById(R.id.parkspace_iv);
+        mParkspaceNumber = findViewById(R.id.parkspace_number);
+        mParkspaceStatus = findViewById(R.id.rental_record_park_status);
+        mParkspaceLockVoltage = findViewById(R.id.rental_record_electricity);
 
         mRentDate = findViewById(R.id.park_space_space_setting_renten_date);
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
@@ -89,7 +89,11 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         mSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                changeParkSpaceStatus(isChecked);
+                if (!isChecked) {
+                    stopParkspaceRent();
+                } else {
+                    changeParkSpaceStatus(true);
+                }
             }
         });
 
@@ -132,9 +136,9 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void initData() {
         super.initData();
         getOriginTime();
-        ImageUtil.showImpPic(mRentalRecordIv, mPark_info.getPark_img());
+        ImageUtil.showImpPic(mParkspaceIv, mPark_info.getPark_img());
         String parkNumber = "车位编号:" + mPark_info.getPark_number();
-        mRentalRecordParkNumber.setText(parkNumber);
+        mParkspaceNumber.setText(parkNumber);
         String parkStatus;
         switch (mPark_info.getPark_status()) {
             case "1":
@@ -150,7 +154,9 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 parkStatus = "车位状态:未知状态";
                 break;
         }
-        mRentalRecordParkStatus.setText(parkStatus);
+        mParkspaceStatus.setText(parkStatus);
+        String voltage = "电量:" + (int) ((Double.valueOf(mPark_info.getVoltage()) - 4.8) * 100 / 1.2) + "%";
+        mParkspaceLockVoltage.setText(voltage);
     }
 
     private void getOriginTime() {
@@ -251,6 +257,15 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         }
     }
 
+    private void stopParkspaceRent() {
+        if (DateUtil.isInOrderDate(DateUtil.getCurrentYearToMinutes(), mPark_info.getOpen_date().split(" - ")[1] + " 24:00", mPark_info.getOrder_times())) {
+            mSwitchButton.setCheckedNoEvent(true);
+            showFiveToast("车位已有人预约，暂时不能停止出租哦");
+        } else {
+            changeParkSpaceStatus(false);
+        }
+    }
+
     private void changeParkSpaceStatus(final boolean open) {
         showLoadingDialog("正在修改出租状态");
         getOkGo(HttpConstants.changeParkSpaceStatus)
@@ -259,7 +274,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        mSwitchButton.setChecked(open);
+                        mSwitchButton.setCheckedNoEvent(open);
                         if (open) {
                             mPark_info.setPark_status("2");
                         } else {
@@ -274,6 +289,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        mSwitchButton.setCheckedNoEvent(!open);
                         if (!handleException(e)) {
 
                         }
