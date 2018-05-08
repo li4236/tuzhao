@@ -154,11 +154,13 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
                         }
                     })
-                    .setPositiveButton("确认修改", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("修改", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (TextUtils.isEmpty(mFirendName.getText().toString().trim())) {
                                 showFiveToast("备注不能为空哦");
+                            } else if (mFirendName.getText().toString().contains("*")) {
+                                showFiveToast("不能包含特殊字符哦");
                             } else {
                                 modifyFriendName(mAdapter.getData().get(position).getFriendId(), mFirendName.getText().toString(), position);
                             }
@@ -192,7 +194,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
                         }
                     })
-                    .setPositiveButton("确认修改", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String phone = mFriendPhone.getText().toString().trim();
@@ -240,6 +242,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mAdapter.getData().get(position).setNoteName(noteName);
                         mAdapter.notifyItemChanged(position);
+                        dismmisLoadingDialog();
                     }
 
                     @Override
@@ -352,7 +355,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
                                 }
                             })
-                            .setPositiveButton("确定删除", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     deleteFriendDevice(position);

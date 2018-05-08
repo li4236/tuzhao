@@ -7,12 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.adapter.ParkSpaceRentTimeAdapter;
 import com.tuzhao.http.HttpConstants;
@@ -23,7 +21,6 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
-import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,15 +37,17 @@ import okhttp3.Response;
 
 public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
-    private ImageView mParkspaceIv;
+    //private ImageView mParkspaceIv;
 
     private TextView mParkspaceNumber;
 
-    private TextView mParkspaceStatus;
+  /*  private TextView mParkspaceStatus;
 
-    private TextView mParkspaceLockVoltage;
+    private TextView mParkspaceLockVoltage;*/
 
     private TextView mRentDate;
+
+    private TextView[] mTextViews;
 
     private TextView mPauseRentDate;
 
@@ -73,13 +72,23 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             finish();
         }
 
-        mParkspaceIv = findViewById(R.id.parkspace_iv);
+        //mParkspaceIv = findViewById(R.id.parkspace_iv);
         mParkspaceNumber = findViewById(R.id.parkspace_number);
-        mParkspaceStatus = findViewById(R.id.rental_record_park_status);
-        mParkspaceLockVoltage = findViewById(R.id.rental_record_electricity);
+       /* mParkspaceStatus = findViewById(R.id.rental_record_park_status);
+        mParkspaceLockVoltage = findViewById(R.id.rental_record_electricity);*/
 
         mRentDate = findViewById(R.id.park_space_space_setting_renten_date);
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
+
+        mTextViews = new TextView[7];
+        mTextViews[0] = findViewById(R.id.modify_share_time_monday);
+        mTextViews[1] = findViewById(R.id.modify_share_time_tuesday);
+        mTextViews[2] = findViewById(R.id.modify_share_time_wednesday);
+        mTextViews[3] = findViewById(R.id.modify_share_time_thursday);
+        mTextViews[4] = findViewById(R.id.modify_share_time_friday);
+        mTextViews[5] = findViewById(R.id.modify_share_time_saturday);
+        mTextViews[6] = findViewById(R.id.modify_share_time_sunday);
+
         RecyclerView recyclerView = findViewById(R.id.park_space_setting_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setNestedScrollingEnabled(false);
@@ -99,14 +108,14 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
         });
 
-        mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
+        /*mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
                 startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
             }
-        });
+        });*/
 
-        findViewById(R.id.park_space_space_setting_cl).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
@@ -138,12 +147,11 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void initData() {
         super.initData();
         getShareTime();
-        ImageUtil.showImpPic(mParkspaceIv, mPark_info.getPark_img());
-        String parkNumber = "车位编号:" + mPark_info.getPark_number();
-        mParkspaceNumber.setText(parkNumber);
-        setParkspaceStatus();
+        //ImageUtil.showImpPic(mParkspaceIv, mPark_info.getPark_img());
+        mParkspaceNumber.setText(mPark_info.getPark_number());
+        /*setParkspaceStatus();
         String voltage = "电量:" + (int) ((Double.valueOf(mPark_info.getVoltage()) - 4.8) * 100 / 1.2) + "%";
-        mParkspaceLockVoltage.setText(voltage);
+        mParkspaceLockVoltage.setText(voltage);*/
     }
 
     /**
@@ -183,15 +191,19 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         mAdapter.clearAll();
         mRentDate.setText(mPark_info.getOpen_date());
 
-        //显示出租时段
         String[] shareDays = mPark_info.getShareDay().split(",");
+        for (int i = 0; i < shareDays.length; i++) {
+            if (shareDays[i].equals("1")) {
+                mTextViews[i].setBackgroundResource(R.drawable.yuan_little_y2_all_5dp);
+            } else {
+                mTextViews[i].setBackgroundResource(R.drawable.little_yuan_5dp_g10);
+            }
+        }
+
+        //显示出租时段
         if (mPark_info.getOpen_time().equals("-1")) {
             //全天出租的则显示全天
-            for (int i = 0; i < shareDays.length; i++) {
-                if (shareDays[i].charAt(0) == '1') {
-                    mAdapter.addData("全天" + dayToWeek(i + 1));
-                }
-            }
+            mAdapter.addData("全天");
         } else {
             //判断出租时段是否有跨天的，并且按开始时段排序
             List<EverydayShareTimeInfo> shareTimeInfos = new ArrayList<>(6);
@@ -219,19 +231,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 }
             });
 
-            StringBuilder stringBuilder = new StringBuilder();
             for (EverydayShareTimeInfo shareTimeInfo : shareTimeInfos) {
-                stringBuilder.append(shareTimeInfo.getStartTime());
-                stringBuilder.append(" - ");
-                stringBuilder.append(shareTimeInfo.getEndTime());
-                stringBuilder.append(",");
-            }
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-
-            for (int i = 0; i < shareDays.length; i++) {
-                if (shareDays[i].charAt(0) == '1') {
-                    mAdapter.justAddData(stringBuilder.toString() + dayToWeek(i + 1));
-                }
+                mAdapter.justAddData(shareTimeInfo.getStartTime() + " - " + shareTimeInfo.getEndTime());
             }
             mAdapter.notifyDataSetChanged();
         }
@@ -247,24 +248,12 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             Calendar pauseCalendar;
             List<Calendar> pauseCalendars = new ArrayList<>(pauseDate.length);
 
-            boolean hasDifferentYear = false;
-            int year = 2018;
             for (int i = 0; i < pauseDate.length; i++) {
                 pauseCalendar = DateUtil.getYearToDayCalendar(pauseDate[i], false);
-                if (i == 0) {
-                    year = pauseCalendar.get(Calendar.YEAR);
-                }
 
                 if (pauseCalendar.compareTo(nowCalendar) >= 0) {
                     //如果暂停日期在今后的则添加
                     pauseCalendars.add(pauseCalendar);
-
-                    //判断暂停日期是否有隔年的
-                    if (i != 0 && !hasDifferentYear) {
-                        if (year != (pauseCalendar.get(Calendar.YEAR))) {
-                            hasDifferentYear = true;
-                        }
-                    }
                 }
             }
 
@@ -280,25 +269,14 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 });
 
                 StringBuilder usefulPauseDate = new StringBuilder();    //在今后的暂停日期，重新设置，这样跳到修改共享时间那就不用再判断了
-                StringBuilder stringBuilder = new StringBuilder();
                 for (Calendar calendar : pauseCalendars) {
                     usefulPauseDate.append(DateUtil.getCalendarYearToDay(calendar));
-                    usefulPauseDate.append(",");
-
-                    if (hasDifferentYear) {
-                        //如果有跨年了的，则显示xxxx年xx月xx日
-                        stringBuilder.append(DateUtil.getCalendarYearToDayWithText(calendar));
-                    } else {
-                        //都在同一年的，则显示xx月xx日
-                        stringBuilder.append(DateUtil.getCalendarMonthToDayWithText(calendar));
-                    }
-                    stringBuilder.append(",");
+                    usefulPauseDate.append("，");
                 }
-                usefulPauseDate.deleteCharAt(usefulPauseDate.length() - 1);
-                mPark_info.setPauseShareDate(usefulPauseDate.toString());
 
-                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-                mPauseRentDate.setText(stringBuilder.toString());
+                usefulPauseDate.deleteCharAt(usefulPauseDate.length() - 1);
+                mPauseRentDate.setText(usefulPauseDate.toString());
+                mPark_info.setPauseShareDate(usefulPauseDate.toString().replaceAll("，",","));
             }
 
         }
@@ -321,7 +299,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 parkStatus = "车位状态:未知状态";
                 break;
         }
-        mParkspaceStatus.setText(parkStatus);
+        //mParkspaceStatus.setText(parkStatus);
     }
 
     private String dayToWeek(int day) {

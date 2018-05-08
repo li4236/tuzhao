@@ -29,38 +29,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/parkspace_iv"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginBottom="16dp"
+                <!-- <ImageView
+                     android:id="@+id/parkspace_iv"
+                     android:layout_width="60dp"
+                     android:layout_height="60dp"
+                     android:layout_marginBottom="16dp"
+                     android:layout_marginStart="16dp"
+                     android:layout_marginTop="16dp"
+                     android:contentDescription="@string/picture_description"
+                     android:scaleType="centerCrop"
+                     app:layout_constraintBottom_toBottomOf="parent"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintTop_toTopOf="parent" />-->
+
+                <TextView
+                    android:id="@+id/parkspace_number_tv"
+                    style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/picture_description"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="14dp"
+                    android:text="车位编号:"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/parkspace_number"
                     style="@style/TwentyTextB1Style"
-                    android:layout_marginStart="15dp"
-                    app:layout_constraintStart_toEndOf="@id/parkspace_iv"
-                    app:layout_constraintTop_toTopOf="@+id/parkspace_iv" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="14dp"
+                    app:layout_constraintStart_toEndOf="@+id/parkspace_number_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/rental_record_park_status"
                     style="@style/TwentyTextB1Style"
                     app:layout_constraintBottom_toBottomOf="@id/parkspace_iv"
                     app:layout_constraintStart_toStartOf="@id/parkspace_number"
-                    app:layout_constraintTop_toTopOf="@id/parkspace_iv" />
+                    app:layout_constraintTop_toTopOf="@id/parkspace_iv" />-->
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/rental_record_electricity"
                     style="@style/TwentyTextB1Style"
                     app:layout_constraintBottom_toBottomOf="@+id/parkspace_iv"
-                    app:layout_constraintStart_toStartOf="@id/parkspace_number" />
+                    app:layout_constraintStart_toStartOf="@id/parkspace_number" />-->
+
+                <TextView
+                    android:id="@+id/park_space_space_setting_renten_date_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:text="共享日期:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/parkspace_number" />
+
+                <TextView
+                    android:id="@+id/park_space_space_setting_renten_date"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_date_tv"
+                    app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_date_tv" />
+
+                <ImageView
+                    android:id="@+id/parkspace_rent_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="@+id/park_space_space_setting_renten_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_date" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -77,55 +116,147 @@
                 app:layout_constraintTop_toBottomOf="@+id/center_divider">
 
                 <TextView
-                    android:id="@+id/park_space_space_setting_renten_date_tv"
+                    android:id="@+id/modify_share_time_everyweek_share"
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="10dp"
-                    android:text="出租日期:"
+                    android:layout_marginTop="16dp"
+                    android:text="每周共享"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/park_space_space_setting_renten_date"
+                    android:id="@+id/modify_share_time_monday"
                     style="@style/TwentyTextB1Style"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/park_space_space_setting_renten_date_tv"
-                    app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_date_tv"
-                    app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_date_tv" />
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="一"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_tuesday"
+                    app:layout_constraintStart_toEndOf="@id/modify_share_time_everyweek_share"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_tuesday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="二"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_wednesday"
+                    app:layout_constraintStart_toEndOf="@id/modify_share_time_monday"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_wednesday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="三"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_thursday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_tuesday"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_thursday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="四"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_friday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_wednesday"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_friday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="五"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_saturday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_thursday"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_saturday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="六"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toStartOf="@+id/modify_share_time_sunday"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_friday"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:id="@+id/modify_share_time_sunday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/every_week_share_checkbox"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="日"
+                    app:layout_constraintBottom_toBottomOf="@+id/modify_share_time_everyweek_share"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/modify_share_time_saturday"
+                    app:layout_constraintTop_toTopOf="@+id/modify_share_time_everyweek_share" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="注:灰色代表暂停共享"
+                    android:textColor="#ff0000"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="@+id/modify_share_time_sunday"
+                    app:layout_constraintTop_toBottomOf="@+id/modify_share_time_sunday" />
 
                 <TextView
                     android:id="@+id/park_space_space_setting_renten_time"
                     style="@style/TwentyTextB1Style"
-                    android:layout_marginTop="8dp"
-                    android:text="出租时段:"
-                    app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_date_tv"
-                    app:layout_constraintTop_toBottomOf="@+id/park_space_space_setting_renten_date_tv" />
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="28dp"
+                    android:text="共享时段:"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/modify_share_time_monday" />
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/park_space_setting_rv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toStartOf="@+id/parkspace_rent_right"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/park_space_space_setting_renten_time"
                     app:layout_constraintTop_toTopOf="@+id/park_space_space_setting_renten_time" />
-
-                <ImageView
-                    android:id="@+id/parkspace_rent_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="@string/picture_description"
-                    android:src="@mipmap/ic_right"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/park_space_setting_pause_date_tv"
                     style="@style/TwentyTextB1Style"
-                    android:text="停租日期:"
-                    app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_date_tv"
+                    android:text="暂停共享:"
+                    app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_time"
                     app:layout_constraintTop_toBottomOf="@id/park_space_setting_rv" />
 
                 <TextView
@@ -153,7 +284,7 @@
                 style="@style/TwentyTextB1Style"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="车位出租"
+                android:text="车位共享"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
