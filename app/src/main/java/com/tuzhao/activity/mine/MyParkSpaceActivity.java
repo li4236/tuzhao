@@ -31,8 +31,6 @@ import okhttp3.Response;
 
 public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
-    private int mCurrentVoltage;
-
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
@@ -134,6 +132,7 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null && data.hasExtra(ConstansUtil.FOR_REQUEST_RESULT)) {
             Park_Info parkInfo = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
+            //如果在车位设置或者共享时间修改那里改了数据的则同步数据
             for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
                 if (parkInfo.getId().equals(mCommonAdapter.getData().get(i).getId())) {
                     mCommonAdapter.getData().set(i, parkInfo);
@@ -148,8 +147,7 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     protected void bindData(BaseViewHolder holder, final Park_Info park_info, int position) {
         holder.setText(R.id.my_parkspace_description, park_info.getLocation_describe())
                 .setText(R.id.my_parkspace_park_location, park_info.getParkspace_name());
-        mCurrentVoltage = (int) ((Double.valueOf(park_info.getVoltage()) - 4.8) * 100 / 1.2);
-        ((Voltage) holder.getView(R.id.my_parkspace_voltage)).setVoltage(mCurrentVoltage);
+        ((Voltage) holder.getView(R.id.my_parkspace_voltage)).setVoltage((int) ((Double.valueOf(park_info.getVoltage()) - 4.8) * 100 / 1.2));
         TextView status = holder.getView(R.id.my_parkspace_status);
         ImageView statusIv = holder.getView(R.id.my_parkspace_status_iv);
         if (park_info.getPark_status().equals("10")) {

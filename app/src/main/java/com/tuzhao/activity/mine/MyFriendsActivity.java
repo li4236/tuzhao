@@ -100,7 +100,18 @@ public class MyFriendsActivity extends BaseStatusActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    showFiveToast("获取亲友列表失败，请退出重试");
+                                    break;
+                                case "103":
+                                    showFiveToast("数据异常，请退出重试");
+                                    break;
+                                case "104":
+                                    showFiveToast("你还没有添加亲友哦");
+                                    break;
+                            }
                         }
                     }
                 });
@@ -121,7 +132,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
      * 更新显示当前亲友绑定的数量
      */
     private void updateFriendNumber() {
-        String friendNumber = "亲友绑定(" + mAdapter.getData().size() + "/5)";
+        String friendNumber = "亲友(" + mAdapter.getData().size() + "/5)";
         mBindindFriendNumber.setText(friendNumber);
     }
 
@@ -162,7 +173,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
     }
 
     /**
-     * 显示修改手机号的对话框
+     * 显示添加亲友手机号的对话框
      */
     private void showPhoneDialog() {
         if (mAddFriendPhoneDialog == null) {
@@ -200,7 +211,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                                 if (isRepeat) {
                                     showFiveToast("该亲友已经添加过了哦");
                                 } else {
-                                    addFriendDevice(phone);
+                                    addFriend(phone);
                                 }
                             } else {
                                 showFiveToast("你输入的手机不正确哦");
@@ -263,7 +274,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                 });
     }
 
-    private void addFriendDevice(String telephone) {
+    private void addFriend(String telephone) {
         showLoadingDialog("正在添加");
         getOkGo(HttpConstants.addFriend)
                 .params("parkSpaceId", mPark_info.getId())
@@ -301,6 +312,9 @@ public class MyFriendsActivity extends BaseStatusActivity {
                                 case "107":
                                     showFiveToast("手机号不正确，请重新输入");
                                     break;
+                                case "108":
+                                    showFiveToast("不能添加自己哦");
+                                    break;
                             }
                         }
                     }
@@ -312,7 +326,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
-            holder.showCirclePic(R.id.bluetooth_binding_friend_iv, friendInfo.getImgUrl())
+            holder.showCircleUserPic(R.id.bluetooth_binding_friend_iv, friendInfo.getImgUrl())
                     .setText(R.id.bluetooth_binding_friend_name, friendInfo.getNoteName())
                     .getView(R.id.bluetooth_binding_edit_friend).setOnClickListener(new View.OnClickListener() {
                 @Override

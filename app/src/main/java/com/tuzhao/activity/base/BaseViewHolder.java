@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.tuzhao.R;
+import com.tuzhao.http.HttpConstants;
+import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.utils.ImageUtil;
-
-import java.util.HashSet;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -29,13 +30,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private BaseAdapter mBaseAdapter;
 
-    private HashSet<Integer> mChildClickIds;
-
     BaseViewHolder(View itemView) {
         super(itemView);
         mItemView = itemView;
         mViews = new SparseArray<>();
-        mChildClickIds = new HashSet<>();
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,18 +43,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        for (Integer integer : mChildClickIds) {
-            final View view = getView(integer);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mBaseAdapter.getOnItemClickListener() != null) {
-                        Log.e("tag", "onClick: " + getAdapterPosition());
-                        mBaseAdapter.getOnItemClickListener().onItemClick(view, getAdapterPosition() - mBaseAdapter.getHeadViewCount());
-                    }
-                }
-            });
-        }
     }
 
     public <T extends View> T getView(@IdRes int id) {
@@ -115,19 +101,18 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    private int getClickPosition() {
-        if (getLayoutPosition() > mBaseAdapter.getHeadViewCount()) {
-            return getLayoutPosition() - mBaseAdapter.getHeadViewCount();
+    public BaseViewHolder showCircleUserPic(@IdRes int id, String url) {
+        if (url == null || url.equals("")) {
+            Log.e(TAG, "showCircleUserPic: url is null or empty");
+            return this;
         }
-        return 0;
+
+        ImageUtil.showPic((CircleImageView) getView(id), HttpConstants.ROOT_IMG_URL_USER + url, R.mipmap.ic_usericon);
+        return this;
     }
 
-    public void setBaseAdapter(BaseAdapter baseAdapter) {
+    void setBaseAdapter(BaseAdapter baseAdapter) {
         mBaseAdapter = baseAdapter;
-    }
-
-    public void addChildClickId(@IdRes int id) {
-        mChildClickIds.add(id);
     }
 
 }
