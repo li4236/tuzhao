@@ -295,7 +295,11 @@ public class MyFriendsActivity extends BaseStatusActivity {
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
+                                    showFiveToast("添加亲友失败，请退出重试");
+                                    break;
                                 case "102":
+                                    showFiveToast("该手机号还没注册过哦");
+                                    break;
                                 case "103":
                                     showFiveToast("账号异常，请重新登录");
                                     startLogin();

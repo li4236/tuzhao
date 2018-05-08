@@ -85,7 +85,7 @@
                             android:textSize="11sp" />
 
                         <com.cb.ratingbar.CBRatingBar
-                            android:id="@+id/id_activity_commentps_layout_cbratingbar"
+                            android:id="@+id/comment_order_crb"
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginTop="6dp"
@@ -116,7 +116,7 @@
                     android:background="@color/g7" />
 
                 <EditText
-                    android:id="@+id/id_activity_commentps_layout_edittext_comment"
+                    android:id="@+id/comment_order_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"

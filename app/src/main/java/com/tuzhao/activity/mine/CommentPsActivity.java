@@ -94,8 +94,8 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
         imageview_del1 = findViewById(R.id.id_activity_commentps_layout_imageview_del1);
         imageview_del2 = findViewById(R.id.id_activity_commentps_layout_imageview_del2);
         imageview_del3 = findViewById(R.id.id_activity_commentps_layout_imageview_del3);
-        cbratingbar = findViewById(R.id.id_activity_commentps_layout_cbratingbar);
-        edittext_comment = findViewById(R.id.id_activity_commentps_layout_edittext_comment);
+        cbratingbar = findViewById(R.id.comment_order_crb);
+        edittext_comment = findViewById(R.id.comment_order_et);
         textview_count = findViewById(R.id.id_activity_commentps_layout_textview_count);
         textview_go = findViewById(R.id.id_activity_commentps_layout_textview_go);
         relativelayout_img1 = findViewById(R.id.id_activity_commentps_layout_relativelayout_img1);

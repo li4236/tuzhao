@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.ParkOrderDetailsActivity;
 import com.tuzhao.activity.ParkspaceDetailActivity;
-import com.tuzhao.activity.mine.CommentPsActivity;
+import com.tuzhao.activity.mine.CommentOrderActivity;
 import com.tuzhao.activity.mine.OpenParkLockActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Discount_Info;
@@ -246,7 +246,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         @Override
                         public void onClick(View v) {
                             //去评论按钮的点击事件
-                            Intent intent = new Intent(mContext, CommentPsActivity.class);
+                            Intent intent = new Intent(mContext, CommentOrderActivity.class);
                             intent.putExtra("parkspace_id", mData.get(position).getBelong_park_space());
                             intent.putExtra("parkspace_img", mData.get(position).getPictures().split(",")[0]);
                             intent.putExtra("order_id", mData.get(position).getId());

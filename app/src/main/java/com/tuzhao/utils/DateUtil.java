@@ -337,7 +337,7 @@ public class DateUtil {
         }
 
         //将已被预约的时间用Calendar保存
-        Calendar[] calendars = new Calendar[usefulDates.size()];
+        Calendar[] calendars = new Calendar[usefulDates.size()*2];
         for (int i = 0; i < usefulDates.size(); i++) {
             calendars[i * 2] = getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*")));
             calendars[i * 2 + 1] = getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()));
