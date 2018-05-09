@@ -1,6 +1,7 @@
 package com.tuzhao.activity;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -1004,7 +1005,15 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private void controlAnimfragment(final View ll_view) {
         show = !show;
-        ValueAnimator va;
+        ObjectAnimator objectAnimator;
+        if (show) {
+            objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", -960, 0);
+        } else {
+            objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", 0, -960);
+        }
+        objectAnimator.setDuration(500);
+        objectAnimator.start();
+        /*ValueAnimator va;
         int height = 73;
         if (show) {
             //显示view，高度从0变到height值
@@ -1029,7 +1038,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             }
         });
         va.setDuration(700);
-        va.start();
+        va.start();*/
     }
 
     private void controlAnim(boolean show) {
