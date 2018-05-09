@@ -13,8 +13,20 @@ public class FriendInfo {
 
     private String imgUrl = "";
 
-    @SerializedName(value = "noteName", alternate = {"realName"})
+    /**
+     * 备注名
+     */
     private String noteName;
+
+    /**
+     * 真实姓名
+     */
+    private String realName;
+
+    /**
+     * 用户昵称
+     */
+    private String userName;
 
     private String telephone;
 
@@ -50,13 +62,20 @@ public class FriendInfo {
         this.telephone = telephone;
     }
 
-    @Override
-    public String toString() {
-        return "FriendInfo{" +
-                "friendId='" + friendId + '\'' +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", noteName='" + noteName + '\'' +
-                ", telephone='" + telephone + '\'' +
-                '}';
+    public String getRealName() {
+        return realName;
     }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 }

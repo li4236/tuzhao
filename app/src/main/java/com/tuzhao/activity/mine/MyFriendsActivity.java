@@ -339,7 +339,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                         mAddFriendDialogBuilder.setNegativeButtonText("返回");
                         mAddFriendDialogBuilder.setPositiveButtonText("添加");
                         ImageUtil.showPic(mFriendPortrait, HttpConstants.ROOT_IMG_URL_USER + o.data.getImgUrl());
-                        String name = o.data.getNoteName();
+                        String name = o.data.getRealName();
                         if (name.length() == 2) {
                             name = o.data.getTelephone() + "(" + "*" + name.substring(1, 2) + ")";
                         } else if (name.length() > 2) {
@@ -446,7 +446,25 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
-            String noteName = friendInfo.getNoteName() == null ? friendInfo.getTelephone() == null ? "亲友" + (++mNotNameNum) : friendInfo.getTelephone() : friendInfo.getNoteName();
+            String noteName;
+            if (friendInfo.getNoteName() == null || friendInfo.getNoteName().equals("-1")) {
+                if (friendInfo.getUserName() == null || friendInfo.getUserName().equals("-1")) {
+                    if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
+                        if (friendInfo.getTelephone() == null || friendInfo.getTelephone().equals("-1")) {
+                            noteName = "亲友" + (++mNotNameNum);
+                        } else {
+                            noteName = friendInfo.getTelephone();
+                        }
+                    } else {
+                        noteName = friendInfo.getRealName();
+                    }
+                } else {
+                    noteName = friendInfo.getUserName();
+                }
+            } else {
+                noteName = friendInfo.getNoteName();
+            }
+
             holder.showCircleUserPic(R.id.bluetooth_binding_friend_iv, friendInfo.getImgUrl())
                     .setText(R.id.bluetooth_binding_friend_name, noteName)
                     .getView(R.id.bluetooth_binding_edit_friend).setOnClickListener(new View.OnClickListener() {
