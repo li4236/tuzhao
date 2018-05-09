@@ -164,7 +164,6 @@ public class MyFriendsActivity extends BaseStatusActivity {
             mModifyNameDialog = new TipeDialog.Builder(this)
                     .setContentView(constraintLayout)
                     .setTitle("修改备注")
-                    .setCancelable(false)
                     .autoDissmiss(false)
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         @Override
@@ -210,7 +209,6 @@ public class MyFriendsActivity extends BaseStatusActivity {
                     .setContentView(frameLayout)
                     .setTitle("添加亲友")
                     .autoDissmiss(false)
-                    .setCancelable(false)
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

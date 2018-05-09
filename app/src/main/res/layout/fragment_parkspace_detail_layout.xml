@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/parkspace_detail_bottom_cl"
+        app:layout_constraintBottom_toTopOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
@@ -498,57 +498,56 @@
     </ScrollView>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/parkspace_detail_bottom_cl"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/w0"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:id="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/little_yuan_yellow_5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_goorder"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_goorder"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="10dp"
-                android:drawableStart="@mipmap/ic_daohanggo"
-                android:text="导航"
-                android:textColor="@color/b1"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/id_fragment_parkspacedetail_layout_linearlayout_goorder"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:gravity="center"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:drawableStart="@mipmap/ic_daohanggo"
+            android:text="导航"
+            android:textColor="@color/b1"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/id_fragment_parkspacedetail_layout_linearlayout_daohang">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="10dp"
-                android:drawableStart="@mipmap/ic_yuyue"
-                android:text="预定"
-                android:textColor="@color/b1"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/id_fragment_parkspacedetail_layout_linearlayout_goorder"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/little_yuan_yellow_5dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/id_fragment_parkspacedetail_layout_linearlayout_daohang">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:drawableStart="@mipmap/ic_yuyue"
+            android:text="预定"
+            android:textColor="@color/b1"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

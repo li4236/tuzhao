@@ -1,9 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'realm-android'
+/*apply plugin: 'realm-android'*/
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 19

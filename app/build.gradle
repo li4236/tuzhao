@@ -4,7 +4,7 @@ configurations.all {
 }
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion '27.0.3'
 
     dexOptions {
         jumboMode true //重构项目后防止出现一些红色错误
@@ -19,6 +19,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true // dex突破65535的限制
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Tuzhao"]//默认官方渠道打包
+        flavorDimensions "1"
     }
 
     signingConfigs {
@@ -40,7 +41,7 @@ android {
             signingConfig signingConfigs.release
 
             //指定我们release包的输出文件名就是我们的渠道名字
-            applicationVariants.all { variant ->
+            /*applicationVariants.all { variant ->
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith(".apk")) {
@@ -48,6 +49,11 @@ android {
                         def fileName = "${variant.productFlavors[0].name}" + ".apk"
                         output.outputFile = new File(outputFile.parent, fileName);
                     }
+                }
+            }*/
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${variant.productFlavors[0].name}" + ".apk"
                 }
             }
         }
@@ -84,7 +90,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.0'
     compile 'com.android.support:appcompat-v7:27.1.0'
     compile 'com.android.support:design:27.1.0'
-    compile project(':mysdk')
+    implementation project(':mysdk')
     testCompile 'junit:junit:4.12'
 
     //控件圆角美化控件
