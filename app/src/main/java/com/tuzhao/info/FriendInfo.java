@@ -1,16 +1,20 @@
 package com.tuzhao.info;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by juncoder on 2018/4/8.
  */
 
 public class FriendInfo {
 
+    @SerializedName(value = "friendId", alternate = {"userId"})
     private String friendId;
 
     private String imgUrl = "";
 
-    private String noteName = "";
+    @SerializedName(value = "noteName", alternate = {"realName"})
+    private String noteName;
 
     private String telephone;
 
@@ -44,5 +48,15 @@ public class FriendInfo {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    @Override
+    public String toString() {
+        return "FriendInfo{" +
+                "friendId='" + friendId + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", noteName='" + noteName + '\'' +
+                ", telephone='" + telephone + '\'' +
+                '}';
     }
 }

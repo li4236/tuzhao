@@ -33,6 +33,11 @@ public class TipeDialog extends Dialog {
         private String positiveButtonText;
         private String negativeButtonText;
         private View contentView;
+        private TextView mTitleView;
+        private TextView mNegativeView;
+        private TextView mPositiveView;
+        private boolean autoDissmiss = true;
+        private boolean cancelable = true;
         private OnClickListener positiveButtonClickListener;
         private OnClickListener negativeButtonClickListener;
 
@@ -47,9 +52,6 @@ public class TipeDialog extends Dialog {
 
         /**
          * Set the Dialog message from resource
-         *
-         * @param message
-         * @return
          */
         public Builder setMessage(int message) {
             this.message = (String) context.getText(message);
@@ -58,24 +60,24 @@ public class TipeDialog extends Dialog {
 
         /**
          * Set the Dialog title from resource
-         *
-         * @param title
-         * @return
          */
         public Builder setTitle(int title) {
             this.title = (String) context.getText(title);
+            if (mTitleView != null) {
+                mTitleView.setText(title);
+            }
             return this;
         }
 
         /**
          * Set the Dialog title from String
-         *
-         * @param title
-         * @return
          */
 
         public Builder setTitle(String title) {
             this.title = title;
+            if (mTitleView != null) {
+                mTitleView.setText(title);
+            }
             return this;
         }
 
@@ -85,16 +87,30 @@ public class TipeDialog extends Dialog {
         }
 
         /**
+         * @param autoDissmiss true(点击确认或取消按钮时自动取消对话框)
+         */
+        public Builder autoDissmiss(boolean autoDissmiss) {
+            this.autoDissmiss = autoDissmiss;
+            return this;
+        }
+
+        public Builder setCancelable(boolean cancelable) {
+            this.cancelable = cancelable;
+            return this;
+        }
+
+        /**
          * Set the positive button resource and it's listener
-         *
-         * @param positiveButtonText
-         * @return
          */
         public Builder setPositiveButton(int positiveButtonText,
                                          OnClickListener listener) {
             this.positiveButtonText = (String) context
                     .getText(positiveButtonText);
             this.positiveButtonClickListener = listener;
+
+            if (mPositiveView != null) {
+                mPositiveView.setText(positiveButtonText);
+            }
             return this;
         }
 
@@ -102,7 +118,25 @@ public class TipeDialog extends Dialog {
                                          OnClickListener listener) {
             this.positiveButtonText = positiveButtonText;
             this.positiveButtonClickListener = listener;
+
+            if (mPositiveView != null) {
+                mPositiveView.setText(positiveButtonText);
+            }
             return this;
+        }
+
+        public void setPositiveButtonText(String positiveButtonText) {
+            this.positiveButtonText = positiveButtonText;
+            if (mPositiveView != null) {
+                mPositiveView.setText(positiveButtonText);
+            }
+        }
+
+        public void setNegativeButtonText(String negativeButtonText) {
+            this.negativeButtonText = negativeButtonText;
+            if (mNegativeView != null) {
+                mNegativeView.setText(negativeButtonText);
+            }
         }
 
         public Builder setNegativeButton(int negativeButtonText,
@@ -110,6 +144,10 @@ public class TipeDialog extends Dialog {
             this.negativeButtonText = (String) context
                     .getText(negativeButtonText);
             this.negativeButtonClickListener = listener;
+
+            if (mNegativeView != null) {
+                mNegativeView.setText(negativeButtonText);
+            }
             return this;
         }
 
@@ -117,6 +155,10 @@ public class TipeDialog extends Dialog {
                                          OnClickListener listener) {
             this.negativeButtonText = negativeButtonText;
             this.negativeButtonClickListener = listener;
+
+            if (mNegativeView != null) {
+                mNegativeView.setText(negativeButtonText);
+            }
             return this;
         }
 
@@ -124,48 +166,51 @@ public class TipeDialog extends Dialog {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
             final TipeDialog dialog = new TipeDialog(context, R.style.Dialog);
+            dialog.setCancelable(cancelable);
             View layout = inflater.inflate(R.layout.dialog_normal_layout_refator, null);
             dialog.addContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title
-            ((TextView) layout.findViewById(R.id.title)).setText(title);
+            mTitleView = layout.findViewById(R.id.title);
+            mTitleView.setText(title);
+
+            mPositiveView = layout.findViewById(R.id.positiveButton);
+            mNegativeView = layout.findViewById(R.id.negativeButton);
             // set the confirm button
             if (positiveButtonText != null) {
-                ((TextView) layout.findViewById(R.id.positiveButton))
-                        .setText(positiveButtonText);
+                mPositiveView.setText(positiveButtonText);
+
                 if (positiveButtonClickListener != null) {
-                    (layout.findViewById(R.id.positiveButton))
-                            .setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    positiveButtonClickListener.onClick(dialog,
-                                            DialogInterface.BUTTON_POSITIVE);
-                                    dialog.dismiss();
-                                }
-                            });
+                    mPositiveView.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE);
+                            if (autoDissmiss) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
                 }
             } else {
-                // if no confirm button just set the visibility to GONE
-                layout.findViewById(R.id.positiveButton).setVisibility(
-                        View.GONE);
+                mPositiveView.setText("确定");
             }
-            // set the cancel button
+
             if (negativeButtonText != null) {
-                ((TextView) layout.findViewById(R.id.negativeButton))
-                        .setText(negativeButtonText);
+                mNegativeView.setText(negativeButtonText);
+
                 if (negativeButtonClickListener != null) {
                     (layout.findViewById(R.id.negativeButton))
                             .setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View v) {
-                                    negativeButtonClickListener.onClick(dialog,
-                                            DialogInterface.BUTTON_NEGATIVE);
-                                    dialog.dismiss();
+                                    negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+                                    if (autoDissmiss) {
+                                        dialog.dismiss();
+                                    }
                                 }
                             });
                 }
             } else {
-                // if no confirm button just set the visibility to GONE
-                layout.findViewById(R.id.negativeButton).setVisibility(
-                        View.GONE);
+                mNegativeView.setText("取消");
             }
+
             // set the content message
             if (message != null) {
                 ((TextView) layout.findViewById(R.id.message)).setText(message);
@@ -179,6 +224,6 @@ public class TipeDialog extends Dialog {
             dialog.setContentView(layout);
             return dialog;
         }
-
     }
+
 }

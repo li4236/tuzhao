@@ -55,8 +55,8 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         try {
             ((MyViewHolder) holder).textview_name.setText(mData.get(position).getName());
-            ((MyViewHolder) holder).textview_grade.setText(mData.get(position).getGrade() + "");
-            ((MyViewHolder) holder).textview_price.setText(mData.get(position).getPrice() + "");
+            ((MyViewHolder) holder).textview_grade.setText(String.valueOf(mData.get(position).getGrade()));
+            ((MyViewHolder) holder).textview_price.setText(String.valueOf(mData.get(position).getPrice()));
             ((MyViewHolder) holder).textview_address.setText(mData.get(position).getAddress());
             ((MyViewHolder) holder).cbratingbar.setStarProgress((float) (mData.get(position).getGrade() * 100 / 5));
             if (LocationManager.getInstance().hasLocation()) {

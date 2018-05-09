@@ -421,6 +421,11 @@ public class HttpConstants {
     public static String addFriend = ROOT_URL + "addFriend";
 
     /**
+     * 获取亲友信息
+     */
+    public static String getUserInfo = ROOT_URL + "getUserInfo";
+
+    /**
      * 删除亲友
      */
     public static String deleteFriend = ROOT_URL + "deleteFriend";
