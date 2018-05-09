@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private AMapLocationClient mlocationClient;
     private Marker mLocationMarker;//定位marker
     private Marker mSearchMarker = null;//查找地址marker
-    private Marker screenMarker;//选择中心点坐标的marker
+    //private Marker screenMarker;//选择中心点坐标的marker
 
     private boolean mHadShowGps;
     private boolean isFirstloc = true;
@@ -618,14 +618,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void addMarkerInScreenCenter() {
-        if (screenMarker == null) {
+        /*if (screenMarker == null) {
             screenMarker = aMap.addMarker(new MarkerOptions().zIndex(2).icon(BitmapDescriptorFactory.fromResource(R.mipmap.biaozhu2)));
         }
-        screenMarker.setAnchor(0.5f, 1.0f);
+        screenMarker.setAnchor(0.5f, 1.0f);*/
         LatLng latLng = aMap.getCameraPosition().target;
         Point screenPosition = aMap.getProjection().toScreenLocation(latLng);
-        screenMarker.setPositionByPixels(screenPosition.x, screenPosition.y);
-        screenMarker.setClickable(false);
+       /* screenMarker.setPositionByPixels(screenPosition.x, screenPosition.y);
+        screenMarker.setClickable(false);*/
     }
 
     private void requestHomePCLocData(final String citycode, String lat, String lon, String radius, final boolean isLc, final String cityname) {
@@ -962,7 +962,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             LatLngBounds latLngBounds = builder.build();
             aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 1000 / clusterItems.size()));
         } else {
-            screenMarker.setVisible(false);
+            //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
             markerAnimation.setDuration(700);  //设置动画时间 单位毫秒
             marker.setAnimation(markerAnimation);
@@ -1402,9 +1402,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 }
             }
         });
-        if (screenMarker != null) {
+        /*if (screenMarker != null) {
             mClusterOverlay.setScreeMarker(screenMarker);
-        }
+        }*/
     }
 
     private void initMapStyle() {
