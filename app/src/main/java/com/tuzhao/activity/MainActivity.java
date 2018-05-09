@@ -544,6 +544,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_content_main_layout_textview_parknow:
+                // TODO: 2018/5/9 取消加载框，删除中心点，修改定位点，修改动画，修改marker显示和动画
                 intent = new Intent(MainActivity.this, ParkOrChargeListActivity.class);
                 intent.putExtra("citycode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
                 if (mLastlocationLatlng != null) {
@@ -1380,12 +1381,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     if (lastLatlng != null) {
                         if (AMapUtils.calculateLineDistance(lastLatlng, aMap.getCameraPosition().target) > moveDistance) {
                             lastLatlng = aMap.getCameraPosition().target;
-                            initLoading("加载中...");
                             getAddressOrCitycode(aMap.getCameraPosition().target, true);
                         }
                     } else {
                         lastLatlng = aMap.getCameraPosition().target;
-                        initLoading("加载中...");
                         getAddressOrCitycode(aMap.getCameraPosition().target, true);
                     }
 

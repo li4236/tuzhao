@@ -43,7 +43,6 @@ import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
-import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
 
@@ -144,7 +143,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
         linearlayout_daohang = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
         cbratingbar = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_cbratingbar);
 
-        ImageUtil.showNoCenterPic(mNoPictureIv, R.mipmap.ic_img);
+        //ImageUtil.showNoCenterPic(mNoPictureIv, R.mipmap.ic_img);
 
         banner_image.setOnBannerListener(new OnBannerListener() {
             @Override
@@ -312,12 +311,18 @@ public class ParkspaceDetailFragment extends BaseFragment {
     private void initViewData(Park_Space_Info parkspace_info) {
         try {
             String imgUrl = parkspace_info.getParkspace_img();
-            imgData = new ArrayList<>();
-            if (imgUrl != null && !imgUrl.equals("")) {
+            if (imgData == null) {
+                imgData = new ArrayList<>();
+            } else {
+                imgData.clear();
+            }
+
+            if (imgUrl != null && !imgUrl.equals("-1") && imgUrl.equals("")) {
                 final String img_Url[] = imgUrl.split(",");
                 for (int i = 0; i < img_Url.length; i++) {
                     imgData.add(HttpConstants.ROOT_IMG_URL_PS + img_Url[i]);
                 }
+                Log.e("TAG", "initViewData: has_pic" + imgData);
                 banner_image.setImages(imgData)
                         .setBannerStyle(BannerConfig.NUM_INDICATOR)
                         .setBannerAnimation(DefaultTransformer.class)
@@ -340,8 +345,17 @@ public class ParkspaceDetailFragment extends BaseFragment {
                 });
 
                 mNoPictureIv.setVisibility(View.GONE);
-
+            } else {
+                Log.e("TAG", "initViewData: no_pic");
+                imgData.add("place");
+                banner_image.setImages(imgData)
+                        .setBannerStyle(BannerConfig.NUM_INDICATOR)
+                        .setBannerAnimation(DefaultTransformer.class)
+                        .setImageLoader(new GlideImageLoader())
+                        .setDelayTime(6000)
+                        .start();
             }
+
             textview_parkspacename.setText(parkspace_info.getPark_space_name());
             textview_parkspaceaddress.setText(parkspace_info.getPark_address());
             DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));

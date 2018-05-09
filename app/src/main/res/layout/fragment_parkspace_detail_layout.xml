@@ -16,17 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.tianzhili.www.myselfsdk.banner.Banner
-                android:id="@+id/id_fragment_parkspacedetail_layout_banner_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp" />
-
             <ImageView
                 android:id="@+id/parkspace_detail_no_picture"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@color/g13"
                 android:contentDescription="@string/picture_description" />
+
+            <com.tianzhili.www.myselfsdk.banner.Banner
+                android:id="@+id/id_fragment_parkspacedetail_layout_banner_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/id_fragment_parkspacedetail_layout_top_cl"
