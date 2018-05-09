@@ -25,7 +25,7 @@ public class Park_Info extends BaseInfo {
     //    private String park_is_public;//公共或者个人
     private String park_img;//停车位图片
     private String parkspace_name;//停车场名字
-    private String park_status;//1安装审核、2安装、3通过 、4未通过 5 拆卸审核、6拆卸、7退押金、8已删除、9未通过,10暂停
+    private String park_status;//1(未开放)   2(开放)     3(暂停)
     private String high_time;//高峰时段
     private String low_time;//低峰时段
     private String high_fee;//高峰时段单价

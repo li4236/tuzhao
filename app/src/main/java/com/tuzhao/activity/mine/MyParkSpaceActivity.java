@@ -150,10 +150,13 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         ((Voltage) holder.getView(R.id.my_parkspace_voltage)).setVoltage((int) ((Double.valueOf(park_info.getVoltage()) - 4.8) * 100 / 1.2));
         TextView status = holder.getView(R.id.my_parkspace_status);
         ImageView statusIv = holder.getView(R.id.my_parkspace_status_iv);
-        if (park_info.getPark_status().equals("10")) {
-            status.setText("停租");
+        if (park_info.getPark_status().equals("1")) {
+            status.setText("未开放");
             statusIv.setBackgroundResource(R.drawable.circle_r5);
         } else if (park_info.getPark_status().equals("3")) {
+            status.setText("停租");
+            statusIv.setBackgroundResource(R.drawable.circle_r5);
+        } else if (park_info.getPark_status().equals("2")) {
             status.setText(getParkSpaceStatus(park_info));
             if (status.getText().toString().equals("空闲")) {
                 statusIv.setBackgroundResource(R.drawable.circle_green7);

@@ -54,7 +54,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                         break;
                     case 2:
                         String[] aaa = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText(( Float.valueOf(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
+                        holder.textview_shouyi.setText((Float.valueOf(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
                         break;
                     case 3:
                         String[] bbb = mData.get(position).getProfit_ratio().split(":");
@@ -90,7 +90,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                         break;
                     case 2:
                         String[] aaa = mData.get(position).getProfit_ratio().split(":");
-                        holder.textview_shouyi.setText(( Float.valueOf(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
+                        holder.textview_shouyi.setText((Float.valueOf(aaa[0]) + new Float(aaa[1])) + " : " + aaa[2] + " （车位主 : 平台）");
                         break;
                     case 3:
                         String[] bbb = mData.get(position).getProfit_ratio().split(":");
