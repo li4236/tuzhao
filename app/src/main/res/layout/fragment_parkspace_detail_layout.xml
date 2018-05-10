@@ -9,6 +9,7 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:scrollbars="none"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
         app:layout_constraintTop_toTopOf="parent">
 

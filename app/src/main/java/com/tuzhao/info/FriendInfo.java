@@ -78,4 +78,15 @@ public class FriendInfo {
         this.userName = userName;
     }
 
+    @Override
+    public String toString() {
+        return "FriendInfo{" +
+                "friendId='" + friendId + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", noteName='" + noteName + '\'' +
+                ", realName='" + realName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", telephone='" + telephone + '\'' +
+                '}';
+    }
 }

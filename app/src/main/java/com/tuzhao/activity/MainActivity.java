@@ -2,7 +2,6 @@ package com.tuzhao.activity;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -1043,7 +1042,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private void controlAnim(boolean show) {
         show1 = show;
-        ValueAnimator va;
+        ObjectAnimator objectAnimator;
+        if (show) {
+            textview_citynodata.setVisibility(View.VISIBLE);
+            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", -960, 0);
+        } else {
+            textview_citynodata.setVisibility(View.GONE);
+            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", 0, -960);
+        }
+        objectAnimator.setDuration(500);
+        objectAnimator.start();
+
+        /*ValueAnimator va;
         int height = 40;
         if (show) {
             //显示view，高度从0变到height值
@@ -1062,7 +1072,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             }
         });
         va.setDuration(150);
-        va.start();
+        va.start();*/
     }
 
     /**
@@ -1432,11 +1442,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private void setViewClick() {
         mParkNow.setClickable(true);
         mParkNow.setBackground(ContextCompat.getDrawable(this, R.drawable.normal_y6_press_y7_round));
-    }
-
-    private void setViewNotClick() {
-        mParkNow.setClickable(false);
-        mParkNow.setBackground(ContextCompat.getDrawable(this, R.drawable.all_27_g1_bg));
     }
 
     private void checkPermission(final String permission, String message, final int requestCode) {

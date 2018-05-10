@@ -260,16 +260,16 @@ public class MyFriendsActivity extends BaseStatusActivity {
     }
 
     /**
-     * @param friendDeviceId 亲友设备的id
-     * @param noteName       亲友设备的备注
-     * @param position       所在的位置
+     * @param friendId 亲友设备的id
+     * @param noteName 亲友设备的备注
+     * @param position 所在的位置
      */
-    private void modifyFriendName(String friendDeviceId, final String noteName, final int position) {
+    private void modifyFriendName(String friendId, final String noteName, final int position) {
         showLoadingDialog("正在修改");
         getOkGo(HttpConstants.modifyFriendNickname)
                 .params("parkSpaceId", mPark_info.getId())
                 .params("cityCode", mPark_info.getCitycode())
-                .params("friendDeviceId", friendDeviceId)
+                .params("friendId", friendId)
                 .params("noteName", noteName)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
@@ -309,10 +309,12 @@ public class MyFriendsActivity extends BaseStatusActivity {
     private void deleteFriendDevice(final int position) {
         showLoadingDialog("正在删除");
         getOkGo(HttpConstants.deleteFriend)
-                .params("friendDeviceId", mAdapter.getData().get(position).getFriendId())
-                .execute(new JsonCallback() {
+                .params("friendId", mAdapter.getData().get(position).getFriendId())
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
-                    public void onSuccess(Object o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mAdapter.notifyRemoveData(position);
                         updateFriendNumber();
                         dismmisLoadingDialog();
@@ -391,6 +393,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                 .params("parkSpaceId", mPark_info.getId())
                 .params("cityCode", mPark_info.getCitycode())
                 .params("telephone", telephone)
+                .params("noteName", mFriendNotename.getText().toString())
                 .execute(new JsonCallback<Base_Class_Info<FriendInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<FriendInfo> o, Call call, Response response) {
@@ -445,7 +448,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
     private class BluetoothBindingAdapter extends BaseAdapter<FriendInfo> {
 
         @Override
-        protected void conver(@NonNull BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
+        protected void conver(@NonNull final BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
             String noteName;
             if (friendInfo.getNoteName() == null || friendInfo.getNoteName().equals("-1")) {
                 if (friendInfo.getUserName() == null || friendInfo.getUserName().equals("-1")) {
@@ -477,7 +480,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
             holder.getView(R.id.bluetooth_binding_delete_friend).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String message = "确认删除" + friendInfo.getNoteName() + "的手机?";
+                    String message = "确认删除 " + ((TextView) holder.getView(R.id.bluetooth_binding_friend_name)).getText() + " 的手机?";
                     new TipeDialog.Builder(MyFriendsActivity.this)
                             .setTitle("删除手机")
                             .setMessage(message)

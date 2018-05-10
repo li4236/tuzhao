@@ -12,14 +12,11 @@ import java.util.List;
 
 public class Cluster {
 
-
     private LatLng mLatLng;
     private List<ClusterItem> mClusterItems;
     private Marker mMarker;
 
-
-    Cluster( LatLng latLng) {
-
+    Cluster(LatLng latLng) {
         mLatLng = latLng;
         mClusterItems = new ArrayList<ClusterItem>();
     }
@@ -31,8 +28,6 @@ public class Cluster {
     int getClusterCount() {
         return mClusterItems.size();
     }
-
-
 
     LatLng getCenterLatLng() {
         return mLatLng;
@@ -48,5 +43,20 @@ public class Cluster {
 
     List<ClusterItem> getClusterItems() {
         return mClusterItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LatLng latLng = ((Cluster) o).getCenterLatLng();
+
+        return mLatLng.latitude == latLng.latitude && mLatLng.longitude == latLng.longitude;
+    }
+
+    @Override
+    public int hashCode() {
+        return mLatLng.hashCode();
     }
 }
