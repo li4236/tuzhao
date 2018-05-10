@@ -60,9 +60,9 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/white_all_20dp"
         android:gravity="center"
-        android:visibility="gone"
         android:textColor="@color/b1"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/six_gl"
         app:layout_constraintStart_toStartOf="@id/third_gl"
         app:layout_constraintTop_toTopOf="parent" />

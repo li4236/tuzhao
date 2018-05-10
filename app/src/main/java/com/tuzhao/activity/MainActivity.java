@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -96,7 +98,9 @@ import com.tuzhao.publicwidget.map.ClusterOverlay;
 import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.others.ArcView;
 import com.tuzhao.publicwidget.others.CircleImageView;
+import com.tuzhao.publicwidget.others.CircleView;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
@@ -104,6 +108,8 @@ import com.tuzhao.utils.ImageUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -148,6 +154,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private LocationSource.OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private Marker mLocationMarker;//定位marker
+    private Marker mLocationCircleMarker; //定位圆点marker
     private Marker mSearchMarker = null;//查找地址marker
     //private Marker screenMarker;//选择中心点坐标的marker
 
@@ -176,6 +183,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private LogoutBroadcastReceiver logoutBroadcastReceiver = new LogoutBroadcastReceiver();
 
     protected NetChangeObserver mNetChangeObserver = null;
+
+    private Timer mTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -783,6 +792,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         mSensorHelper.registerSensorListener();
                     }
                     mSensorHelper.setCurrentMarker(mLocationMarker);//定位图标旋转
+                    //mLocationCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
                     Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
@@ -792,6 +802,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
+                    mLocationCircleMarker.setPosition(new LatLng(mLastlocationLatlng.latitude + 0.0004, mLastlocationLatlng.longitude));
                 }
                 // mListener.onLocationChanged(amapLocation);
             } else {
@@ -844,11 +855,75 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (mLocationMarker != null) {
             return;
         }
+
+        ArcView arcView = new ArcView(this);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 40), DensityUtil.dp2px(this, 40));
+        arcView.setLayoutParams(params);
+
+        CircleView backgroundCirclView = new CircleView(this);
+        backgroundCirclView.setPaintColor(Color.WHITE);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 20), DensityUtil.dp2px(this, 20));
+        backgroundCirclView.setLayoutParams(layoutParams);
+
+        CircleView circleView = new CircleView(this);
+        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 14), DensityUtil.dp2px(this, 14));
+        circleView.setLayoutParams(circleLayoutParams);
+
         MarkerOptions options = new MarkerOptions();
-        options.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_fangxiang));
+        options.icon(BitmapDescriptorFactory.fromView(arcView));
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
         mLocationMarker = aMap.addMarker(options);
+
+        MarkerOptions backgroundOptions = new MarkerOptions();
+        backgroundOptions.icon(BitmapDescriptorFactory.fromView(backgroundCirclView));
+        backgroundOptions.anchor(0.5f, 0.5f);
+        backgroundOptions.position(latlng);
+        aMap.addMarker(backgroundOptions);
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.icon(BitmapDescriptorFactory.fromView(circleView));
+        markerOptions.anchor(0.5f, 0.5f);
+        markerOptions.position(latlng);
+
+        mLocationCircleMarker = aMap.addMarker(markerOptions);
+        startMarkerAnimation();
+    }
+
+    private void startMarkerAnimation() {
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (mLocationCircleMarker != null) {
+                    markerAnimation(mLocationCircleMarker);
+                }
+            }
+        }, 0, 1600);
+    }
+
+    private void markerAnimation(final Marker marker) {
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.1f, 0.6f, 1.1f, 0.6f);
+        scaleAnimation.setDuration(800);
+        marker.setAnimation(scaleAnimation);
+        marker.startAnimation();
+        scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart() {
+
+            }
+
+            @Override
+            public void onAnimationEnd() {
+                ScaleAnimation animation = new ScaleAnimation(0.6f, 1.1f, 0.6f, 1.1f);
+                animation.setDuration(800);
+                marker.setAnimation(animation);
+                marker.startAnimation();
+            }
+        });
     }
 
     public void login() {
@@ -859,12 +934,17 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     @Override
     public void onStart() {
         super.onStart();
+        startMarkerAnimation();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mlocationClient.stopLocation();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
     }
 
     @Override
