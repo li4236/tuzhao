@@ -46,6 +46,8 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     private File mCarNumberFile;
 
+    private String mCityCode;
+
     private static final int REQUEST_CODE_PICKER = 0x111;
 
     @Override
@@ -55,6 +57,10 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        if ((mCityCode = getIntent().getStringExtra("cityCode")) == null) {
+            showFiveToast("获取当前位置失败，暂不能添加车辆");
+            finish();
+        }
         mCarNumber = findViewById(R.id.car_number_et);
         mCarOwner = findViewById(R.id.car_owner_et);
         mDriveLicensePhoto = findViewById(R.id.drive_license_photo);
@@ -142,11 +148,20 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 .params("carNumberFile", mCarNumberFile)
                 .params("carNumber", mCarNumber.getText().toString())
                 .params("carOwner", mCarOwner.getText().toString())
+                .params("cityCode", mCityCode)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
                         showFiveToast("提交成功，我们会尽快为你审核");
                         finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
                     }
                 });
 

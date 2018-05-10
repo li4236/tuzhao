@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -269,8 +268,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                     showDatePicker("暂停共享日期", new DateCheck(new OnDateCheckListener() {
                         @Override
                         public void onDateCheck(Calendar calendar, int year, int month, int dayOfMonth, int compareResult) {
-                            Log.e(TAG, "onDateCheck: " + DateUtil.printCalendar(calendar));
-                            Log.e(TAG, "onDateCheck compareResult:" + compareResult);
                             if (compareResult > -1) {
                                 String pausDate = year + "-" + DateUtil.thanTen(month) + "-" + DateUtil.thanTen(dayOfMonth);
                                 if (mPauseShareDateAdapter.getData().contains(pausDate)) {
@@ -319,7 +316,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                                 endTime = "2018-04-25 " + DateUtil.thanTen(Integer.valueOf(hourOfDay)) + ":" + DateUtil.thanTen(Integer.valueOf(minute));
                             }
                             shareTimeInfo.setEndTime(endTime);
-                            Log.e(TAG, "onEndTime: " + shareTimeInfo);
                             if (isRepeat(shareTimeInfo)) {
                                 showFiveToast("不能选择有重叠的时间哦");
                             } else {
@@ -513,7 +509,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
     }
 
     private void requestAddParkSpace() {
-
         showLoadingDialog("正在提交");
         String shareDate = mStartShareDate.getText().toString() + " - " + mEndShareDate.getText().toString();
 

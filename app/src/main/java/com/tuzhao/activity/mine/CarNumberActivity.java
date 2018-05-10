@@ -77,7 +77,7 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        if (mCar_numbers.size()<=0){
+        if (mCar_numbers.size() <= 0) {
             linearLayout_nadata.setVisibility(View.VISIBLE);
         }
     }
@@ -105,11 +105,11 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initView() {
-        mIv_back = (ImageView) findViewById(R.id.id_activity_carnumber_imageView_back);
-        mTv_add = (TextView) findViewById(R.id.id_activity_carnumber_textView_add);
-        mCarnumber = (RecyclerView) findViewById(R.id.id_activity_carnumber_listview_carnumber);
+        mIv_back = findViewById(R.id.id_activity_carnumber_imageView_back);
+        mTv_add = findViewById(R.id.id_activity_carnumber_textView_add);
+        mCarnumber = findViewById(R.id.id_activity_carnumber_listview_carnumber);
         mCarnumber.setItemAnimator(new DefaultItemAnimator());
-        linearLayout_nadata = (LinearLayout) findViewById(R.id.id_activity_carnumber_linearlayout_nodata);
+        linearLayout_nadata = findViewById(R.id.id_activity_carnumber_linearlayout_nodata);
     }
 
     @Override
@@ -120,6 +120,7 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.id_activity_carnumber_textView_add:
                 Intent intent = new Intent(CarNumberActivity.this, AddNewCarActivity.class);
+                intent.putExtra("cityCode", getIntent().getStringExtra("cityCode"));
                 startActivityForResult(intent, 0);
                 break;
         }

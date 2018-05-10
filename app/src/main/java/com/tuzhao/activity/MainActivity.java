@@ -398,6 +398,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.id_activity_main_layout_linearlayout_mycarnumble:
                 intent = new Intent(MainActivity.this, CarNumberActivity.class);
+                intent.putExtra("cityCode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_mypark:
