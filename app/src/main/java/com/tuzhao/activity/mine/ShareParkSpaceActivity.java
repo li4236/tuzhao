@@ -118,7 +118,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
     @Override
     protected void bindData(BaseViewHolder holder, Park_Info park_info, int position) {
-        holder.setText(R.id.share_park_space_space_name, park_info.getParkspace_name())
+        holder.setText(R.id.share_park_space_space_name, park_info.getLocation_describe())
                 .setText(R.id.share_park_space_share_name, "车主：" + park_info.getUserName());
         TextView status = holder.getView(R.id.share_park_space_status);
         ImageView statusIv = holder.getView(R.id.share_park_space_status_iv);

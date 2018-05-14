@@ -110,8 +110,8 @@ public class AuditParkspaceActivity extends BaseRefreshActivity<Park_Info> {
                 auditStatus = "未知状态";
                 break;
         }
-        holder.setText(R.id.my_parkspace_description, park_info.getParkspace_name())
-                .setText(R.id.my_parkspace_park_location, park_info.getLocation_describe())
+        holder.setText(R.id.my_parkspace_description, park_info.getLocation_describe())
+                .setText(R.id.my_parkspace_park_location, park_info.getParkspace_name())
                 .setText(R.id.audit_parkspace_status, auditStatus);
 
         if (auditStatus.equals("待安装")) {
