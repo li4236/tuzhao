@@ -23,6 +23,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.animation.AlphaAnimation;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
@@ -42,11 +43,17 @@ import static com.tuzhao.utils.DensityUtil.dp2px;
  * 整体设计采用了两个线程,一个线程用于计算组织聚合数据,一个线程负责处理Marker相关操作
  */
 public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarkerClickListener {
+    private static final String TAG = "ClusterOverlay";
+
     private AMap mAMap;
     private Context mContext;
-    private List<ClusterItem> mClusterItems;
+    private List<ClusterItem> mClusterItems;        //全部的聚合点位置
     private List<Cluster> mClusters;
-    private List<Cluster> mAddClusters; //已经添加过的Cluster
+    private List<Cluster> mLastClusters; //已经添加过的Cluster
+    private List<Cluster> mCurrentClusters; //当前的
+    private List<Cluster> mNewClusters;     //新增的
+    private List<Cluster> mDisappearClusters;   //消失的
+
     private int mClusterSize;
     private ClusterClickListener mClusterClickListener;
     private ClusterRender mClusterRender;
@@ -103,7 +110,10 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         }
         mContext = context;
         mClusters = new ArrayList<>();
-        mAddClusters = new ArrayList<>();
+        mLastClusters = new ArrayList<>();
+        mCurrentClusters = new ArrayList<>();
+        mNewClusters = new ArrayList<>();
+        mDisappearClusters = new ArrayList<>();
         this.mAMap = amap;
         mClusterSize = clusterSize;
         mPXInMeters = mAMap.getScalePerPixel();
@@ -205,7 +215,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
      * 将聚合元素添加至地图上
      */
     private void addClusterToMap(List<Cluster> clusters) {
-       /* ArrayList<Marker> removeMarkers = new ArrayList<>();
+        ArrayList<Marker> removeMarkers = new ArrayList<>();
         removeMarkers.addAll(mAddMarkers);
         AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
         MyAnimationListener myAnimationListener = new MyAnimationListener(removeMarkers);
@@ -213,11 +223,54 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
             marker.setAnimation(alphaAnimation);
             marker.setAnimationListener(myAnimationListener);
             marker.startAnimation();
-        }*/
+        }
 
         for (Cluster cluster : clusters) {
             addSingleClusterToMap(cluster);
         }
+    }
+
+    /**
+     * 将聚合元素添加至地图上
+     */
+    private void justAddClusterToMap(List<Cluster> clusters) {
+        int nullPosition = 0;
+        List<Marker> removeMarkers = new ArrayList<>(clusters.size() - nullPosition);
+        Marker removeMarker;
+        for (int i = 0; i < clusters.size(); i++) {
+            if (clusters.get(i) == null) {
+                nullPosition = i;
+                break;
+            } else {
+                if ((removeMarker = findMarker(clusters.get(i))) != null) {
+                    removeMarkers.add(removeMarker);
+                }
+            }
+        }
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
+        MyAnimationListener myAnimationListener = new MyAnimationListener(removeMarkers);
+        for (Marker marker : removeMarkers) {
+            marker.setAnimation(alphaAnimation);
+            marker.setAnimationListener(myAnimationListener);
+            marker.startAnimation();
+        }
+
+        for (int i = nullPosition + 1; i < clusters.size(); i++) {
+            addSingleClusterToMap(clusters.get(i));
+        }
+    }
+
+    private Marker findMarker(Cluster cluster) {
+        LatLng latLng = cluster.getCenterLatLng();
+        LatLng markerLatLng;
+        for (int i = 0; i < mAddMarkers.size(); i++) {
+            markerLatLng = mAddMarkers.get(i).getPosition();
+            if (markerLatLng.latitude == latLng.latitude && markerLatLng.longitude == latLng.longitude) {
+                return mAddMarkers.remove(i);
+            }
+        }
+        return null;
     }
 
     private ScaleAnimation mADDAnimation = new ScaleAnimation(0, 1, 0, 1);
@@ -240,11 +293,18 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mAddMarkers.add(marker);
     }
 
+    /**
+     * 计算出在当前地图上的聚合点
+     */
     private void calculateClusters() {
         mIsCanceled = false;
         mClusters.clear();
+        mCurrentClusters.clear();
+        mNewClusters.clear();
+        mDisappearClusters.clear();
+
         //复制一份数据，规避同步
-        List<Cluster> clusters = new ArrayList<>();
+        List<Cluster> copyClusters = new ArrayList<>();
 
         LatLngBounds visibleBounds = mAMap.getProjection().getVisibleRegion().latLngBounds;
         for (ClusterItem clusterItem : mClusterItems) {
@@ -252,33 +312,74 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
                 return;
             }
             LatLng latlng = clusterItem.getPosition();
+
+            //如果聚合点在地图可视范围内
             if (visibleBounds.contains(latlng)) {
                 Cluster cluster = getCluster(latlng, mClusters);
                 if (cluster != null) {
+                    //把能聚合的点聚合成一个点
                     cluster.addClusterItem(clusterItem);
-                } else {
-                    cluster = new Cluster(latlng);
-                    mClusters.add(cluster);
-                    cluster.addClusterItem(clusterItem);
+                    mCurrentClusters.add(cluster);
+                    Log.e(TAG, "calculateClusters: not null");
 
-                    if (!mAddClusters.contains(cluster)) {
-                        //如果没有添加过则添加，这样新添加的才有动画
-                        mAddClusters.add(cluster);
-                        clusters.add(cluster);
+                    mDisappearClusters.add(cluster);
+                    mNewClusters.add(cluster);
+                    /*if (!mLastClusters.contains(cluster)) {
+                        Log.e(TAG, "calculateClusters: not null and not contain");
+                        mNewClusters.add(cluster);
+                    }*/
+                } else {
+                    //没有能聚合的点
+                    cluster = new Cluster(latlng);
+                    cluster.addClusterItem(clusterItem);
+                    mClusters.add(cluster);
+                    mCurrentClusters.add(cluster);
+                    Log.e(TAG, "calculateClusters: null");
+                    if (!mLastClusters.contains(cluster)) {
+                        mNewClusters.add(cluster);
                     }
                 }
 
             }
         }
 
-        //clusters.addAll(mClusters);
+        for (Cluster cluster : mLastClusters) {
+            if (!mCurrentClusters.contains(cluster)) {
+                mDisappearClusters.add(cluster);
+            }
+        }
+        Log.e(TAG, "calculateClusters  mLastClusters: " + mLastClusters.size());
+        mLastClusters.clear();
+        mLastClusters.addAll(mCurrentClusters);
+
+        copyClusters.addAll(mDisappearClusters);
+        copyClusters.add(null);
+        copyClusters.addAll(mNewClusters);
+
+        Log.e(TAG, "calculateClusters  mCurrentClusters: " + mCurrentClusters.size());
+        Log.e(TAG, "calculateClusters  mClusters: " + mClusters.size());
+        Log.e(TAG, "calculateClusters  copyClusters: " + copyClusters.size());
+        Log.e(TAG, "calculateClusters mNewClusters: " + mNewClusters.size());
+        Log.e(TAG, "calculateClusters  mDisappearClusters: " + mDisappearClusters.size());
         Message message = Message.obtain();
-        message.what = MarkerHandler.ADD_CLUSTER_LIST;
-        message.obj = clusters;
+        message.what = MarkerHandler.JUST_ADD_CLUSTER_LIST;
+        message.obj = copyClusters;
         if (mIsCanceled) {
             return;
         }
         mMarkerhandler.sendMessage(message);
+    }
+
+    private boolean containCluster(Cluster cluster, List<Cluster> clusters) {
+        LatLng latLng = cluster.getCenterLatLng();
+        LatLng clusterLatLng;
+        for (Cluster cluster1 : clusters) {
+            clusterLatLng = cluster1.getCenterLatLng();
+            if (latLng.latitude == clusterLatLng.latitude && latLng.longitude == clusterLatLng.longitude) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -334,9 +435,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
     /**
      * 根据一个点获取是否可以依附的聚合点，没有则返回null
-     *
-     * @param latLng
-     * @return
      */
     private Cluster getCluster(LatLng latLng, List<Cluster> clusters) {
         for (Cluster cluster : clusters) {
@@ -445,6 +543,11 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
      */
     class MarkerHandler extends Handler {
 
+        /**
+         * 没有能聚合起来的点，仅添加新的聚合点
+         */
+        static final int JUST_ADD_CLUSTER_LIST = 3;
+
         static final int ADD_CLUSTER_LIST = 0;
 
         static final int ADD_SINGLE_CLUSTER = 1;
@@ -461,6 +564,10 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
                 case ADD_CLUSTER_LIST:
                     List<Cluster> clusters = (List<Cluster>) message.obj;
                     addClusterToMap(clusters);
+                    break;
+                case JUST_ADD_CLUSTER_LIST:
+                    List<Cluster> clusterList = (List<Cluster>) message.obj;
+                    justAddClusterToMap(clusterList);
                     break;
                 case ADD_SINGLE_CLUSTER:
                     Cluster cluster = (Cluster) message.obj;

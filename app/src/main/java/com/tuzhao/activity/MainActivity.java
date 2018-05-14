@@ -802,7 +802,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
-                    mLocationCircleMarker.setPosition(new LatLng(mLastlocationLatlng.latitude + 0.0004, mLastlocationLatlng.longitude));
                 }
                 // mListener.onLocationChanged(amapLocation);
             } else {
@@ -866,7 +865,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         backgroundCirclView.setLayoutParams(layoutParams);
 
         CircleView circleView = new CircleView(this);
-        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 14), DensityUtil.dp2px(this, 14));
+        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 16), DensityUtil.dp2px(this, 16));
         circleView.setLayoutParams(circleLayoutParams);
 
         MarkerOptions options = new MarkerOptions();
@@ -906,7 +905,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void markerAnimation(final Marker marker) {
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1.1f, 0.6f, 1.1f, 0.6f);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 0.7f, 1f, 0.7f);
         scaleAnimation.setDuration(800);
         marker.setAnimation(scaleAnimation);
         marker.startAnimation();
@@ -918,7 +917,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
             @Override
             public void onAnimationEnd() {
-                ScaleAnimation animation = new ScaleAnimation(0.6f, 1.1f, 0.6f, 1.1f);
+                ScaleAnimation animation = new ScaleAnimation(0.7f, 1f, 0.7f, 1f);
                 animation.setDuration(800);
                 marker.setAnimation(animation);
                 marker.startAnimation();
