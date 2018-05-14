@@ -3,6 +3,7 @@ package com.tuzhao.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -53,9 +54,10 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     private SuperRefreshRecyclerView mRecycleview;
     private ParkOrChargeListAdapter mAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private LinearLayout linearlayout_nodata, linearlayout_address;
+    private LinearLayout linearlayout_nodata;
     private TextView textview_address, textview_nodata;
     private CustomDialog mCustomDialog;
+    private ConstraintLayout linearlayout_address;
 
     //筛选菜单
     private String[] titleList;//标题

@@ -192,6 +192,9 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                                 case "107":
                                     showFiveToast("服务器异常，请稍后重试");
                                     break;
+                                case "108":
+                                    showFiveToast("你已添加过该车辆了哦");
+                                    break;
                             }
                         }
                     }

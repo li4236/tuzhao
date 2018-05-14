@@ -25,37 +25,83 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:paddingBottom="10dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="20dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="16dp"
             android:paddingTop="10dp"
             android:src="@mipmap/ic_left" />
     </RelativeLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/w0">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/id_activity_parkorcharge_layout_linearlayout_address"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/w5_all_15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/parkorcharge_search_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@drawable/ic_search_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/id_activity_parkorcharge_layout_textview_address"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:textColor="@color/b1"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/parkorcharge_search_iv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!--<LinearLayout
         android:id="@+id/id_activity_parkorcharge_layout_linearlayout_address"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:background="@drawable/white_click_gray"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:background="@drawable/white_click_gray">
+        android:paddingRight="16dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_gps"/>
+            android:src="@mipmap/ic_gps" />
 
         <TextView
             android:id="@+id/id_activity_parkorcharge_layout_textview_address"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="7dp"
-            android:gravity="center_vertical"
             android:layout_marginRight="7dp"
-            android:textSize="12sp"
-            android:textColor="@color/b1"/>
+            android:gravity="center_vertical"
+            android:textColor="@color/b1"
+            android:textSize="12sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -63,29 +109,33 @@
             android:layout_marginTop="1dp"
             android:scaleType="centerInside"
             android:src="@mipmap/ic_right" />
-    </LinearLayout>
+
+    </LinearLayout>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.tianzhili.www.myselfsdk.filter.DropDownMenu
             android:id="@+id/id_activity_parkorcharge_layout_dropdownmenu"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView
                 android:id="@id/mFilterRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/w3"/>
+                android:background="@color/w3" />
         </com.tianzhili.www.myselfsdk.filter.DropDownMenu>
+
         <LinearLayout
             android:id="@+id/id_activity_parkorcharge_layout_linearlayout_nodata"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginTop="40dp">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="95dp"

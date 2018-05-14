@@ -46,6 +46,7 @@
             android:id="@+id/id_activity_searchaddress_layout_etextview_input"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="8dp"
             android:background="@color/nocolor"
             android:completionThreshold="1"
             android:dropDownHeight="wrap_content"
@@ -63,6 +64,7 @@
             android:textCursorDrawable="@null"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/id_activity_searchaddress_layout_imageview_clean"
             app:layout_constraintStart_toEndOf="@id/search_address_icon"
             tools:ignore="RtlSymmetry" />
 
