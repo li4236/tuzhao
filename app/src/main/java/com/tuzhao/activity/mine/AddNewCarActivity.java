@@ -17,7 +17,9 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.callback.OnLoginListener;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -72,6 +74,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     @Override
     protected void initData() {
+
     }
 
     @NonNull
@@ -103,7 +106,16 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 } else if (mDeleteDriveLicensePhoto.getVisibility() != View.VISIBLE) {
                     showFiveToast("请选择你的驾驶证照片");
                 } else {
-                    applyAddNewCar();
+                    judgeLogin(new OnLoginListener() {
+                        @Override
+                        public void onLogin() {
+                            if (UserManager.getInstance().getUserInfo().getCar_number().contains(mCarNumber.getText().toString())) {
+                                showFiveToast("你已添加过该车辆了哦");
+                            } else {
+                                applyAddNewCar();
+                            }
+                        }
+                    });
                 }
                 break;
         }
@@ -160,7 +172,27 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    break;
+                                case "103":
+                                    showFiveToast("该车牌号码已被删除");
+                                    break;
+                                case "104":
+                                    showFiveToast("该车主已被删除");
+                                    break;
+                                case "105":
+                                    showFiveToast("请选择你的驾驶证照片");
+                                    break;
+                                case "106":
+                                    showFiveToast("该照片异常，请重新选择");
+                                    break;
+                                case "107":
+                                    showFiveToast("服务器异常，请稍后重试");
+                                    break;
+                            }
                         }
                     }
                 });

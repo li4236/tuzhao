@@ -121,6 +121,7 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
             case R.id.id_activity_carnumber_textView_add:
                 Intent intent = new Intent(CarNumberActivity.this, AddNewCarActivity.class);
                 intent.putExtra("cityCode", getIntent().getStringExtra("cityCode"));
+
                 startActivityForResult(intent, 0);
                 break;
         }
