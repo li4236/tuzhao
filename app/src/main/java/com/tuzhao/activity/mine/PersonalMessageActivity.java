@@ -140,7 +140,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PICKER && data!=null) {
+        if (requestCode == REQUEST_CODE_PICKER && data != null) {
             final List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             initLoading("正在更换...");
             Log.e("hhaha", getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath());

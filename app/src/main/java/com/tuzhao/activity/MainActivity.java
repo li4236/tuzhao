@@ -72,6 +72,7 @@ import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
 import com.tuzhao.activity.mine.PersonalCreditActivity;
 import com.tuzhao.activity.mine.PersonalMessageActivity;
+import com.tuzhao.activity.mine.PhotoActivity;
 import com.tuzhao.activity.mine.SetActivity;
 import com.tuzhao.activity.mine.ShareActivity;
 import com.tuzhao.activity.mine.ShareParkSpaceActivity;
@@ -101,6 +102,7 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.others.ArcView;
 import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.publicwidget.others.CircleView;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
@@ -309,6 +311,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mParkNow.setOnClickListener(this);
         mParkNow.setClickable(false);
         findViewById(R.id.id_activity_main_layout_linearlayout_friend_park).setOnClickListener(this);
+        findViewById(R.id.id_activity_main_layout_imageview_user).setOnClickListener(this);
 
         //等地图绘制完成后，获得地图宽高，来实现转到地图上部中心点
         ViewTreeObserver vto = mapView.getViewTreeObserver();
@@ -344,6 +347,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
+            case R.id.id_activity_main_layout_imageview_user:
+                intent = new Intent(MainActivity.this, PhotoActivity.class);
+                intent.putExtra(ConstansUtil.PHOTO_IMAGE, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+                startActivity(intent);
+                break;
             case R.id.id_content_main_layout_relativelayout_openuser:
                 if (UserManager.getInstance().hasLogined()) {
                     ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),

@@ -47,4 +47,8 @@ public class ConstansUtil {
      */
     public static final String ADD_PARK_SPACE_TEME = "AddParkSpaceTime";
 
+    /**
+     * 查看大图的图片
+     */
+    public static final String PHOTO_IMAGE = "PhotoImage";
 }

@@ -130,6 +130,7 @@
         <activity android:name=".activity.mine.ParkSpaceSettingActivity" />
         <activity android:name=".activity.mine.InvoiceReimbursementActivity" />
         <activity android:name=".activity.mine.ConfirmTicketOrderActivity" />
+        <activity android:name=".activity.mine.PhotoActivity" />
 
         <activity
             android:name=".activity.mine.MyFriendsActivity"

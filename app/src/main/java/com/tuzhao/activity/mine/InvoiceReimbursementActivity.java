@@ -137,7 +137,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
                 .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
                 .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
-                .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic)
+                .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic, R.mipmap.ic_img)
                 .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"));
         final CheckBox checkBox = holder.getView(R.id.invoice_reimbursement_rb);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
