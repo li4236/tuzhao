@@ -373,7 +373,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         for (Cluster cluster : mLastHash) {
             if (!mCurrentClusters.contains(cluster)) {
                 mDisappearClusters.add(cluster);
-                Log.e(TAG, "calculateClusters: mDisappearClusters");
             }
         }
 

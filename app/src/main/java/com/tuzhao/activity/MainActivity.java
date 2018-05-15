@@ -934,6 +934,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onStart() {
         super.onStart();
         startMarkerAnimation();
+        if (mSensorHelper == null) {
+            mSensorHelper = new SensorEventHelper(this);
+            mSensorHelper.registerSensorListener();
+        }
+        if (mLocationMarker != null) {
+            mSensorHelper.setCurrentMarker(mLocationMarker);
+        }
     }
 
     @Override
@@ -944,6 +951,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mTimer.cancel();
             mTimer = null;
         }
+
+        if (mSensorHelper != null) {
+            mSensorHelper.unRegisterSensorListener();
+            mSensorHelper.setCurrentMarker(null);
+            mSensorHelper = null;
+        }
+
     }
 
     @Override
@@ -971,9 +985,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        if (mSensorHelper != null) {
-            mSensorHelper.registerSensorListener();
-        }
+
         if (UserManager.getInstance().hasLogined()) {
             ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
@@ -989,12 +1001,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onPause() {
         super.onPause();
         mapView.onPause();
-        mlocationClient.stopLocation();
-        if (mSensorHelper != null) {
-            mSensorHelper.unRegisterSensorListener();
-            mSensorHelper.setCurrentMarker(null);
-            mSensorHelper = null;
-        }
     }
 
     @Override
@@ -1049,7 +1055,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             showmarklal = clusterItems.get(0).getPosition();
             NearPointPCInfo info = new NearPointPCInfo();
             info.setId(clusterItems.get(0).getId());
-            info.setLongitude(clusterItems.get(0).getPosition().latitude);
+            info.setLatitude(clusterItems.get(0).getPosition().latitude);
             info.setLongitude(clusterItems.get(0).getPosition().longitude);
             info.setCancharge(clusterItems.get(0).getCancharge());
             info.setCity_code(clusterItems.get(0).getCity_code());
