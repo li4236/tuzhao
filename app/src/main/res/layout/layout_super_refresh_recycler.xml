@@ -1,7 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <com.tuzhao.publicwidget.swipetoloadlayout.SwipeToLoadLayout
         android:id="@+id/swipe_to_load"
@@ -17,8 +16,8 @@
             android:id="@+id/swipe_target"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:overScrollMode="never"/>
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical" />
 
         <com.tuzhao.publicwidget.swipetoloadlayout.SwipeLoadMoreFooterLayout
             android:id="@+id/swipe_load_more_footer"
@@ -39,8 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="20sp"
-            android:text="没有数据" />
+            android:text="没有数据"
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -54,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="20sp"
-            android:text="请求失败" />
+            android:text="请求失败"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 </FrameLayout>
