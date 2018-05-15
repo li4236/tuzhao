@@ -57,7 +57,6 @@ public class BigPictureActivity extends BaseActivity {
     }
 
     private void initData() {
-
         if (getIntent().hasExtra("picture_list")) {
             imgList = getIntent().getStringArrayListExtra("picture_list");
             position = getIntent().getIntExtra("position", 1);

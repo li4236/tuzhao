@@ -3,12 +3,12 @@ package com.tuzhao.activity.mine;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.GlideApp;
 
@@ -16,7 +16,7 @@ import com.tuzhao.utils.GlideApp;
  * Created by juncoder on 2018/5/15.
  */
 
-public class PhotoActivity extends AppCompatActivity {
+public class PhotoActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,6 +25,7 @@ public class PhotoActivity extends AppCompatActivity {
         if (!getIntent().hasExtra(ConstansUtil.PHOTO_IMAGE)) {
             finish();
         } else {
+            setStyle(false);
             final PhotoView photoView = findViewById(R.id.photo_view);
             GlideApp.with(this)
                     .load(getIntent().getStringExtra(ConstansUtil.PHOTO_IMAGE))

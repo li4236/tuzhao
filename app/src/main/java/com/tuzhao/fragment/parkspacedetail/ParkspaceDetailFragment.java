@@ -317,12 +317,11 @@ public class ParkspaceDetailFragment extends BaseFragment {
                 imgData.clear();
             }
 
-            if (imgUrl != null && !imgUrl.equals("-1") && imgUrl.equals("")) {
+            if (imgUrl != null && !imgUrl.equals("-1") && !imgUrl.equals("")) {
                 final String img_Url[] = imgUrl.split(",");
                 for (int i = 0; i < img_Url.length; i++) {
                     imgData.add(HttpConstants.ROOT_IMG_URL_PS + img_Url[i]);
                 }
-                Log.e("TAG", "initViewData: has_pic" + imgData);
                 banner_image.setImages(imgData)
                         .setBannerStyle(BannerConfig.NUM_INDICATOR)
                         .setBannerAnimation(DefaultTransformer.class)
