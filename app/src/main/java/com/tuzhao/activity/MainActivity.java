@@ -271,6 +271,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         userConstraintSet.setMargin(R.id.id_activity_main_layout_imageview_user, ConstraintSet.TOP, DensityUtil.dp2px(this, 30) + barHeight);
         userConstraintSet.applyTo(constraintLayout_user);
         showMarkers(mMarkerData);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout_openuser);
+        constraintSet.setMargin(R.id.id_content_main_layout_imageview_huser, ConstraintSet.BOTTOM, DensityUtil.dp2px(this, 1.5f));
+        constraintSet.applyTo(constraintLayout_openuser);
     }
 
     private void initData() {

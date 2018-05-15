@@ -101,6 +101,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        mCommonAdapter.clearAll();
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
