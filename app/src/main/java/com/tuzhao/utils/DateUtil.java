@@ -143,40 +143,6 @@ public class DateUtil {
         return date.substring(date.indexOf(" ") + 1, date.length());
     }
 
-
-    /**
-     * @param startCalendar 开始时间的日历，格式为yyyy-MM-dd HH:mm，可通过getYearToDayCalendar(startDate,true)获取
-     * @param endCalendar   结束时间，格式为yyyy-MM-dd HH:mm,可通过getYearToDayCalendar(startDate,true)获取
-     * @param pauseDate     暂停时间，格式为yyyy-MM-dd
-     * @return true（暂停时间在开始时间和结束时间之间）
-     */
-    public static boolean isInPauseDate(Calendar startCalendar, Calendar endCalendar, String pauseDate) {
-        boolean inPauseDate = false;
-        Calendar pauseCalendar = getYearToDayCalendar(pauseDate, false);
-        if (startCalendar.compareTo(pauseCalendar) <= 0 && endCalendar.compareTo(pauseCalendar) >= 0) {
-            inPauseDate = true;
-        }
-        return inPauseDate;
-    }
-
-    /**
-     * @param startCalendar 开始时间的日历，格式为yyyy-MM-dd HH:mm，可通过getYearToDayCalendar(startDate,true)获取
-     * @param endCalendar   结束时间，格式为yyyy-MM-dd HH:mm,可通过getYearToDayCalendar(startDate,true)获取
-     * @param shareDate     共享时间，格式为yyyy-MM-dd,yyyy-MM-dd(包括了开始共享的时间和结束共享的时间)
-     * @return true（开始时间和结束时间之间在共享时间之内）
-     */
-    public static boolean isInShareDate(Calendar startCalendar, Calendar endCalendar, String shareDate) {
-        boolean inPauseDate = false;
-        String[] date = shareDate.split(",");
-        Calendar startShareCalendar = getYearToDayCalendar(date[0], false);
-        Calendar endShareCalendar = getYearToDayCalendar(date[1], false);
-
-        if (startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0) {
-            inPauseDate = true;
-        }
-        return inPauseDate;
-    }
-
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm

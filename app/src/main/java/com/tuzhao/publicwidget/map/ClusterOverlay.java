@@ -30,6 +30,7 @@ import com.amap.api.maps.model.animation.TranslateAnimation;
 import com.tuzhao.info.RegionItem;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.tuzhao.activity.MainActivity.ONLYCHARGE;
@@ -49,10 +50,12 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     private Context mContext;
     private List<ClusterItem> mClusterItems;        //全部的聚合点位置
     private List<Cluster> mClusters;
-    private List<Cluster> mLastClusters; //已经添加过的Cluster
     private List<Cluster> mCurrentClusters; //当前的
     private List<Cluster> mNewClusters;     //新增的
     private List<Cluster> mDisappearClusters;   //消失的
+
+    private HashSet<Cluster> mLastHash;
+    private HashSet<Cluster> mCurrentHash;
 
     private int mClusterSize;
     private ClusterClickListener mClusterClickListener;
@@ -110,10 +113,13 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         }
         mContext = context;
         mClusters = new ArrayList<>();
-        mLastClusters = new ArrayList<>();
         mCurrentClusters = new ArrayList<>();
         mNewClusters = new ArrayList<>();
         mDisappearClusters = new ArrayList<>();
+
+        mLastHash = new HashSet<>();
+        mCurrentHash = new HashSet<>();
+
         this.mAMap = amap;
         mClusterSize = clusterSize;
         mPXInMeters = mAMap.getScalePerPixel();
@@ -235,7 +241,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
      */
     private void justAddClusterToMap(List<Cluster> clusters) {
         int nullPosition = 0;
-        List<Marker> removeMarkers = new ArrayList<>(clusters.size() - nullPosition);
+        List<Marker> removeMarkers = new ArrayList<>(clusters.size());
         Marker removeMarker;
         for (int i = 0; i < clusters.size(); i++) {
             if (clusters.get(i) == null) {
@@ -259,6 +265,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         for (int i = nullPosition + 1; i < clusters.size(); i++) {
             addSingleClusterToMap(clusters.get(i));
         }
+
     }
 
     private Marker findMarker(Cluster cluster) {
@@ -300,8 +307,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mIsCanceled = false;
         mClusters.clear();
         mCurrentClusters.clear();
-        mNewClusters.clear();
-        mDisappearClusters.clear();
+        mCurrentHash.clear();
 
         //复制一份数据，规避同步
         List<Cluster> copyClusters = new ArrayList<>();
@@ -313,54 +319,56 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
             }
             LatLng latlng = clusterItem.getPosition();
 
-            //如果聚合点在地图可视范围内
+            //如果点在地图可视范围内
             if (visibleBounds.contains(latlng)) {
                 Cluster cluster = getCluster(latlng, mClusters);
                 if (cluster != null) {
                     //把能聚合的点聚合成一个点
                     cluster.addClusterItem(clusterItem);
-                    mCurrentClusters.add(cluster);
-                    Log.e(TAG, "calculateClusters: not null");
-
-                    mDisappearClusters.add(cluster);
-                    mNewClusters.add(cluster);
-                    /*if (!mLastClusters.contains(cluster)) {
-                        Log.e(TAG, "calculateClusters: not null and not contain");
-                        mNewClusters.add(cluster);
-                    }*/
+                    cluster.setAggregation(true);
+                    mCurrentHash.add(cluster);
                 } else {
                     //没有能聚合的点
                     cluster = new Cluster(latlng);
                     cluster.addClusterItem(clusterItem);
                     mClusters.add(cluster);
-                    mCurrentClusters.add(cluster);
-                    Log.e(TAG, "calculateClusters: null");
-                    if (!mLastClusters.contains(cluster)) {
-                        mNewClusters.add(cluster);
-                    }
+                    mCurrentHash.add(cluster);
                 }
-
             }
         }
 
-        for (Cluster cluster : mLastClusters) {
+        Cluster sameCluster;
+        for (Cluster cluster : mCurrentHash) {
+            if (mLastHash.contains(cluster)) {
+                mCurrentClusters.add(cluster);
+                sameCluster = findCluster(cluster, mLastHash);
+                if (sameCluster != null) {
+                    if (cluster.isAggregation() && !sameCluster.isAggregation()) {
+                        mDisappearClusters.add(sameCluster);
+                        mNewClusters.add(cluster);
+                    } else if (!cluster.isAggregation() && sameCluster.isAggregation()) {
+                        mDisappearClusters.add(sameCluster);
+                        mNewClusters.add(cluster);
+                    }
+                }
+            } else {
+                mNewClusters.add(cluster);
+            }
+        }
+
+        for (Cluster cluster : mLastHash) {
             if (!mCurrentClusters.contains(cluster)) {
                 mDisappearClusters.add(cluster);
             }
         }
-        Log.e(TAG, "calculateClusters  mLastClusters: " + mLastClusters.size());
-        mLastClusters.clear();
-        mLastClusters.addAll(mCurrentClusters);
+
+        mLastHash.clear();
+        mLastHash.addAll(mCurrentHash);
 
         copyClusters.addAll(mDisappearClusters);
         copyClusters.add(null);
         copyClusters.addAll(mNewClusters);
 
-        Log.e(TAG, "calculateClusters  mCurrentClusters: " + mCurrentClusters.size());
-        Log.e(TAG, "calculateClusters  mClusters: " + mClusters.size());
-        Log.e(TAG, "calculateClusters  copyClusters: " + copyClusters.size());
-        Log.e(TAG, "calculateClusters mNewClusters: " + mNewClusters.size());
-        Log.e(TAG, "calculateClusters  mDisappearClusters: " + mDisappearClusters.size());
         Message message = Message.obtain();
         message.what = MarkerHandler.JUST_ADD_CLUSTER_LIST;
         message.obj = copyClusters;
@@ -370,16 +378,28 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mMarkerhandler.sendMessage(message);
     }
 
-    private boolean containCluster(Cluster cluster, List<Cluster> clusters) {
+    private Cluster findCluster(Cluster cluster, HashSet<Cluster> hashSet) {
+        LatLng latLng = cluster.getCenterLatLng();
+        LatLng clusterLatLng;
+        for (Cluster cluster1 : hashSet) {
+            clusterLatLng = cluster1.getCenterLatLng();
+            if (latLng.latitude == clusterLatLng.latitude && latLng.longitude == clusterLatLng.longitude) {
+                return cluster1;
+            }
+        }
+        return null;
+    }
+
+    private Cluster containCluster(Cluster cluster, List<Cluster> clusters) {
         LatLng latLng = cluster.getCenterLatLng();
         LatLng clusterLatLng;
         for (Cluster cluster1 : clusters) {
             clusterLatLng = cluster1.getCenterLatLng();
             if (latLng.latitude == clusterLatLng.latitude && latLng.longitude == clusterLatLng.longitude) {
-                return true;
+                return cluster1;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -441,13 +461,14 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
             LatLng clusterCenterPoint = cluster.getCenterLatLng();
             double distance = AMapUtils.calculateLineDistance(latLng, clusterCenterPoint);
             if (distance < mClusterDistance && mAMap.getCameraPosition().zoom < 19) {
+                //cluster.setCenterLatLng(latLng);
+                Log.e(TAG, "getCluster getCluster longitude: " + latLng.longitude + "  latitude:" + latLng.latitude);
+                Log.e(TAG, "calculateClusters: getCluster " + " longitude:" + cluster.getCenterLatLng().longitude + "  latitude:" + cluster.getCenterLatLng().latitude);
                 return cluster;
             }
         }
-
         return null;
     }
-
 
     /**
      * 获取每个聚合点的绘制样式

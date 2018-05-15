@@ -36,6 +36,7 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         super.initView(savedInstanceState);
 
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, false, true));
+        mRecyclerView.setLoadingMoreEnable(false);
 
         findViewById(R.id.my_parkspace_audit).setOnClickListener(new View.OnClickListener() {
             @Override

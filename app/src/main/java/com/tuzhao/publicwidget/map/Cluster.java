@@ -15,6 +15,7 @@ public class Cluster {
     private LatLng mLatLng;
     private List<ClusterItem> mClusterItems;
     private Marker mMarker;
+    private boolean mAggregation;
 
     Cluster(LatLng latLng) {
         mLatLng = latLng;
@@ -33,6 +34,10 @@ public class Cluster {
         return mLatLng;
     }
 
+    void setCenterLatLng(LatLng latLng) {
+        mLatLng = latLng;
+    }
+
     void setMarker(Marker marker) {
         mMarker = marker;
     }
@@ -43,6 +48,14 @@ public class Cluster {
 
     List<ClusterItem> getClusterItems() {
         return mClusterItems;
+    }
+
+    public boolean isAggregation() {
+        return mAggregation;
+    }
+
+    public void setAggregation(boolean aggregation) {
+        mAggregation = aggregation;
     }
 
     @Override

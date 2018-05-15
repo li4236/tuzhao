@@ -108,9 +108,7 @@ public class ParkOrderActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             return fragmentList.get(position);
-
         }
 
         @Override

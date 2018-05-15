@@ -48,7 +48,7 @@ public class ArcView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        mRectF.top = -height / 4;
+        mRectF.top = -height / 7;
         mRectF.left = -width / 2;
         mRectF.right = width / 2;
         mRectF.bottom = height / 2;
