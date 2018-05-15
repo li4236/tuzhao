@@ -24,6 +24,8 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
 
     private Drawable mNoCheckDrawble;
 
+    private OnCheckChangeListener mOnCheckChangeListener;
+
     public CheckTextView(Context context) {
         super(context);
     }
@@ -39,7 +41,11 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            setChecked(!mIsCheck);
+            if (mOnCheckChangeListener != null) {
+                mOnCheckChangeListener.onCheckChange(!mIsCheck);
+            } else {
+                setChecked(!mIsCheck);
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -52,6 +58,10 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
         } else {
             setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_5dp_g10));
         }
+    }
+
+    public void setOnCheckChangeListener(OnCheckChangeListener onCheckChangeListener) {
+        mOnCheckChangeListener = onCheckChangeListener;
     }
 
     @Override
@@ -86,6 +96,10 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
 
     public void setNoCheckDrawble(Drawable noCheckDrawble) {
         mNoCheckDrawble = noCheckDrawble;
+    }
+
+    public interface OnCheckChangeListener {
+        void onCheckChange(boolean isCheck);
     }
 
 }

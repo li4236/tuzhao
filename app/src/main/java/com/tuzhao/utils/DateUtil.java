@@ -275,6 +275,12 @@ public class DateUtil {
         return 2;
     }
 
+    public static boolean isInShareDay(int day,String startDate,String endDate, String orderTime) {
+
+
+        return false;
+    }
+
     /**
      * @param orderDate 逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
      * @return true(停车时间在预约时间内)

@@ -185,6 +185,34 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     }
 
     /**
+     * 排除掉那些已过期的订单
+     */
+    private void scrennOrderTime() {
+        if (!mPark_info.getOrder_times().equals("-1") && !mPark_info.getOrder_times().equals("")) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            calendar.add(Calendar.MONTH, 1);
+
+            Calendar orderCalendar;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String string : mPark_info.getOrder_times().split(",")) {
+                orderCalendar = DateUtil.getYearToMinuteCalendar(string.substring(string.indexOf("*") + 1, string.length()));
+                if (orderCalendar.compareTo(calendar) >= 0) {
+                    stringBuilder.append(string);
+                    stringBuilder.append(",");
+                }
+            }
+
+            if (stringBuilder.length() > 0) {
+                stringBuilder.deleteCharAt(stringBuilder.length());
+            }
+
+            mPark_info.setOrder_times(stringBuilder.toString());
+        }
+    }
+
+    /**
      * 设置车位的共享时间以及出租状态
      */
     private void setParkSpaceInfo() {
@@ -276,51 +304,11 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
                 usefulPauseDate.deleteCharAt(usefulPauseDate.length() - 1);
                 mPauseRentDate.setText(usefulPauseDate.toString());
-                mPark_info.setPauseShareDate(usefulPauseDate.toString().replaceAll("，",","));
+                mPark_info.setPauseShareDate(usefulPauseDate.toString().replaceAll("，", ","));
             }
 
         }
 
-    }
-
-    private void setParkspaceStatus() {
-        String parkStatus;
-        switch (mPark_info.getPark_status()) {
-            case "1":
-                parkStatus = "车位状态:正在审核";
-                break;
-            case "10":
-                parkStatus = "车位状态:暂停出租";
-                break;
-            case "3":
-                parkStatus = "车位状态:正在出租";
-                break;
-            default:
-                parkStatus = "车位状态:未知状态";
-                break;
-        }
-        //mParkspaceStatus.setText(parkStatus);
-    }
-
-    private String dayToWeek(int day) {
-        switch (day) {
-            case 1:
-                return "(每周一)";
-            case 2:
-                return "(每周二)";
-            case 3:
-                return "(每周三)";
-            case 4:
-                return "(每周四)";
-            case 5:
-                return "(每周五)";
-            case 6:
-                return "(每周六)";
-            case 7:
-                return "(每周日)";
-            default:
-                return "(每周一)";
-        }
     }
 
     private void stopParkspaceRent() {
