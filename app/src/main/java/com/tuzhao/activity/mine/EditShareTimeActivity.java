@@ -136,7 +136,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             for (CheckTextView checkTextView : mCheckTextViews) {
                 checkTextView.setChecked(true);
             }
-        } else {
+        } else if (mParkInfo != null && !mParkInfo.getOrder_times().equals("-1") && !mParkInfo.getOrder_times().equals("")) {
             mMondayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
