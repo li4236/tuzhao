@@ -133,4 +133,8 @@
         <attr name="inner_radius" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="CircleView">
+        <attr name="color" format="color" />
+    </declare-styleable>
+
 </resources>

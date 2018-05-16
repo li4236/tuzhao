@@ -886,7 +886,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             startCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getStartDate());
             endCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getEndDate());
 
-            if (isInExitTime(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
+            if (DateUtil.isIntersection(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
                 return true;
             }
 
@@ -894,7 +894,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 //如果是跨天的则再比较第二天的时段是否有重复
                 startCalendar = DateUtil.getSpecialTodayStartCalendar();
                 endCalendar.add(Calendar.DAY_OF_MONTH, -1);
-                if (isInExitTime(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
+                if (DateUtil.isIntersection(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
                     return true;
                 }
             }
@@ -902,33 +902,11 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             if (otherEndCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) > 0) {
                 otherStartCalendar = DateUtil.getSpecialTodayStartCalendar();
                 otherEndCalendar.add(Calendar.DAY_OF_MONTH, -1);
-                if (isInExitTime(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
+                if (DateUtil.isIntersection(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
                     return true;
                 }
             }
         }
-        return false;
-    }
-
-    /**
-     * @return true(otherStartCalendar-otherEndCalendar在startCalendar-endCalendar内)
-     */
-    private boolean isInExitTime(Calendar otherStartCalendar, Calendar otherEndCalendar, Calendar startCalendar, Calendar endCalendar) {
-        if (otherStartCalendar.compareTo(startCalendar) >= 0 && otherStartCalendar.compareTo(endCalendar) < 0) {
-            //开始时间在startCalendar-endCalendar内
-            return true;
-        }
-
-        if (otherEndCalendar.compareTo(startCalendar) > 0 && otherEndCalendar.compareTo(endCalendar) <= 0) {
-            //结束时间在startCalendar-endCalendar内
-            return true;
-        }
-
-        if (otherStartCalendar.compareTo(startCalendar) <= 0 && otherEndCalendar.compareTo(endCalendar) >= 0) {
-            //startCalendar-endCalendar完全在otherStartCalendar-otherEndCalendar内
-            return true;
-        }
-
         return false;
     }
 

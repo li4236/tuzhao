@@ -750,7 +750,7 @@ public class DateUtil {
     /**
      * @return true(两个时间段有交集)
      */
-    private static boolean isIntersection(Calendar startCalendar, Calendar endCalendar, Calendar otherStartCalendar, Calendar otherEndCalendar) {
+    public static boolean isIntersection(Calendar startCalendar, Calendar endCalendar, Calendar otherStartCalendar, Calendar otherEndCalendar) {
         if (startCalendar.compareTo(otherStartCalendar) >= 0 && startCalendar.compareTo(otherEndCalendar) < 0
                 || endCalendar.compareTo(otherStartCalendar) > 0 && endCalendar.compareTo(otherEndCalendar) <= 0
                 || startCalendar.compareTo(otherStartCalendar) <= 0 && endCalendar.compareTo(otherEndCalendar) >= 0

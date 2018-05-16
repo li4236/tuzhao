@@ -1,12 +1,16 @@
 package com.tuzhao.publicwidget.others;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.tuzhao.R;
+
+import static android.graphics.Color.parseColor;
 
 /**
  * Created by juncoder on 2018/5/10.
@@ -22,25 +26,36 @@ public class CircleView extends View {
 
     private float mRadius;
 
+    private int mColor;
+
     public CircleView(Context context) {
         super(context);
+        mColor = parseColor("#f2ac4c");
         init();
     }
 
     public CircleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        initAttribute(context, attrs, 0);
         init();
     }
 
     public CircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initAttribute(context, attrs, defStyleAttr);
         init();
+    }
+
+    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CircleView, defStyleAttr, 0);
+        mColor = typedArray.getColor(R.styleable.CircleView_color, parseColor("#f2ac4c"));
+        typedArray.recycle();
     }
 
     private void init() {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.parseColor("#f2ac4c"));
+        mPaint.setColor(mColor);
         mPaint.setAntiAlias(true);
     }
 
@@ -49,7 +64,7 @@ public class CircleView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
-        mRadius = Math.min(mWidth * 7 / 20, mHeight * 7 / 20);
+        mRadius = Math.min(mWidth / 2, mHeight / 2);
     }
 
     @Override
@@ -62,7 +77,8 @@ public class CircleView extends View {
     }
 
     public void setPaintColor(int color) {
-        mPaint.setColor(color);
+        mColor = color;
+        mPaint.setColor(mColor);
     }
 
 }

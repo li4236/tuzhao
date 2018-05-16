@@ -869,16 +869,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
 
         ArcView arcView = new ArcView(this);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 40), DensityUtil.dp2px(this, 40));
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 36), DensityUtil.dp2px(this, 36));
         arcView.setLayoutParams(params);
 
         CircleView backgroundCirclView = new CircleView(this);
         backgroundCirclView.setPaintColor(Color.WHITE);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 20), DensityUtil.dp2px(this, 20));
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 18), DensityUtil.dp2px(this, 18));
         backgroundCirclView.setLayoutParams(layoutParams);
 
         CircleView circleView = new CircleView(this);
-        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 16), DensityUtil.dp2px(this, 16));
+        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 14), DensityUtil.dp2px(this, 14));
         circleView.setLayoutParams(circleLayoutParams);
 
         MarkerOptions options = new MarkerOptions();

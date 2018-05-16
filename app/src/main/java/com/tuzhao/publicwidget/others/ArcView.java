@@ -48,7 +48,7 @@ public class ArcView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        mRectF.top = -height / 7;
+        mRectF.top = -height / 2;
         mRectF.left = -width / 2;
         mRectF.right = width / 2;
         mRectF.bottom = height / 2;
@@ -59,7 +59,7 @@ public class ArcView extends View {
         super.onDraw(canvas);
         canvas.save();
         canvas.translate((mRectF.right - mRectF.left) / 2, 0);
-        canvas.drawArc(mRectF, 70, 40, true, mPaint);
+        canvas.drawArc(mRectF, 65, 50, true, mPaint);
         canvas.restore();
     }
 
