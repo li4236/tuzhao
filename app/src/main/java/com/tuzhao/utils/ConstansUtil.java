@@ -51,4 +51,5 @@ public class ConstansUtil {
      * 查看大图的图片
      */
     public static final String PHOTO_IMAGE = "PhotoImage";
+
 }

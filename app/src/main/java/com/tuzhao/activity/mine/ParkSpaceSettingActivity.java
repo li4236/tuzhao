@@ -1,11 +1,11 @@
 package com.tuzhao.activity.mine;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -20,6 +20,7 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 
@@ -38,13 +39,9 @@ import okhttp3.Response;
 
 public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
-    //private ImageView mParkspaceIv;
-
     private TextView mParkspaceNumber;
 
-  /*  private TextView mParkspaceStatus;
-
-    private TextView mParkspaceLockVoltage;*/
+    private TextView mParkspaceStatus;
 
     private TextView mRentDate;
 
@@ -74,10 +71,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         }
 
         scrennOrderTime();
-        //mParkspaceIv = findViewById(R.id.parkspace_iv);
         mParkspaceNumber = findViewById(R.id.parkspace_number);
-       /* mParkspaceStatus = findViewById(R.id.rental_record_park_status);
-        mParkspaceLockVoltage = findViewById(R.id.rental_record_electricity);*/
+        mParkspaceStatus = findViewById(R.id.park_space_status);
 
         mRentDate = findViewById(R.id.park_space_space_setting_renten_date);
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
@@ -110,14 +105,9 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
         });
 
-        /*mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int position) {
-                startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
-            }
-        });*/
+        setParkspaceStatus();
 
-        findViewById(R.id.rental_record_edit).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.edit_share_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
@@ -137,6 +127,35 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 startActivity(RentalRecordActivity.class, "parkdata", mPark_info);
             }
         });
+
+        findViewById(R.id.delete_park_space).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mPark_info.getParking_user_id().equals("-1")) {
+                    showFiveToast("该车位已有人停车了，暂时不能删除哦");
+                } else if (!mPark_info.getOrder_times().equals("-1") && !mPark_info.getOrder_times().equals("")) {
+                    showFiveToast("该车位还有预约的订单，暂时不能删除哦");
+                } else {
+                    TipeDialog dialog = new TipeDialog.Builder(ParkSpaceSettingActivity.this)
+                            .setMessage("删除车位")
+                            .setMessage("删除车位后将无法恢复，是否删除?")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteParkspace();
+                                }
+                            })
+                            .create();
+                    dialog.show();
+                }
+            }
+        });
     }
 
     @NonNull
@@ -149,11 +168,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void initData() {
         super.initData();
         getShareTime();
-        //ImageUtil.showImpPic(mParkspaceIv, mPark_info.getPark_img());
         mParkspaceNumber.setText(mPark_info.getPark_number());
-        /*setParkspaceStatus();
-        String voltage = "电量:" + (int) ((Double.valueOf(mPark_info.getVoltage()) - 4.8) * 100 / 1.2) + "%";
-        mParkspaceLockVoltage.setText(voltage);*/
     }
 
     /**
@@ -211,6 +226,16 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
 
             mPark_info.setOrder_times(stringBuilder.toString());
+        }
+    }
+
+    private void setParkspaceStatus() {
+        if (mPark_info.getPark_status().equals("1")) {
+            mParkspaceStatus.setText("未开放");
+        } else if (mPark_info.getPark_status().equals("2")) {
+            mParkspaceStatus.setText("开放");
+        } else if (mPark_info.getPark_status().equals("3")) {
+            mParkspaceStatus.setText("暂停");
         }
     }
 
@@ -322,11 +347,29 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         }
     }
 
+    private void deleteParkspace() {
+        showLoadingDialog("正在删除车位");
+        getOkGo(HttpConstants.deleteParkSpace)
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.PARK_SPACE_ID, mPark_info.getId());
+                        setResult(RESULT_OK, intent);
+                        showFiveToast("删除成功");
+                        finish();
+                    }
+                });
+    }
+
     private void changeParkSpaceStatus(final boolean open) {
         showLoadingDialog("正在修改出租状态");
         getOkGo(HttpConstants.changeParkSpaceStatus)
                 .params("parkSpaceId", mPark_info.getId())
-                .params("parkSpaceStatus", open ? "1" : "2")
+                .params("cityCode", mPark_info.getCitycode())
+                .params("parkSpaceStatus", open ? "2" : "3")
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
@@ -336,6 +379,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                         } else {
                             mPark_info.setPark_status("3");
                         }
+                        setParkspaceStatus();
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
                         setResult(RESULT_OK, intent);

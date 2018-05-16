@@ -90,7 +90,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @NonNull
     @Override
     protected String title() {
-        return "出租记录";
+        return "共享记录";
     }
 
     @Override
