@@ -61,9 +61,9 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                         holder.textview_shouyi.setText((Float.valueOf(bbb[0]) + new Float(bbb[1])) + " : " + bbb[2] + " （物业 : 平台）");
                         break;
                 }
-                if (mData.get(position).getPark_status().equals("3")) {
+                if (mData.get(position).getPark_status().equals("2")) {
                     holder.mTv_parkstatus.setText("正在出租");
-                } else if (mData.get(position).getPark_status().equals("10")) {
+                } else if (mData.get(position).getPark_status().equals("3")) {
                     holder.mTv_parkstatus.setText("暂停出租");
                 }
                 holder.textview_cancle.setVisibility(View.GONE);

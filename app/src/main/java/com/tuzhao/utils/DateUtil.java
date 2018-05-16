@@ -444,12 +444,10 @@ public class DateUtil {
      * @return null(共享时间段内没有一个包含开始时间和结束时间的)  Calendar[]{能停车的时间段的开始时间,结束时间}
      */
     public static Calendar[] isInShareTime(String startDate, String endDate, String shareTime, boolean isInStartDay) {
-        Log.e(TAG, "isInShareTime shareTime: " + shareTime);
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
             return new Calendar[]{getTodayStartCalendar(getYearToMinuteCalendar(startDate)), getTodayEndCalendar(getYearToMinuteCalendar(endDate))};
         } else if (getDateDayDistance(startDate, endDate) < 1) {
-            System.out.println("isInShareTime: leastOneDay");
             //停车时长不大于24小时
             Calendar startTime = getYearToMinuteCalendar(startDate);
             Calendar endTime = getYearToMinuteCalendar(endDate);
@@ -541,7 +539,6 @@ public class DateUtil {
      * @return null(在共享时间段内没有预约订单)     yyyy-MM-dd HH:mm至yyyy-MM-dd HH:mm(在共享时间内有预约订单,并返回该订单的时间)
      */
     public static String isInShareTime(String orderDate, String shareTime) {
-        Log.e(TAG, "isInShareTime   shareTime: " + shareTime);
         if (!orderDate.equals("") && !orderDate.equals("-1")) {
             String[] order = orderDate.split(",");
             Calendar orderStartCalendar;

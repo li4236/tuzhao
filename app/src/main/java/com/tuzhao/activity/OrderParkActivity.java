@@ -440,6 +440,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         int status;
         for (Park_Info parkInfo : park_list) {
             Log.e("TAG", "scanPark parkInfo:" + parkInfo);
+            if (!parkInfo.getPark_status().equals("2")) {
+                continue;
+            }
 
             int currentStatus;
             //排除不在共享日期之内的(根据共享日期)

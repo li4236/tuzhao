@@ -93,7 +93,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         recyclerView.setAdapter(mAdapter);
 
         mSwitchButton = findViewById(R.id.park_space_setting_renten_sb);
-        mSwitchButton.setCheckedNoEvent(!mPark_info.getPark_status().equals("10"));
+        mSwitchButton.setCheckedNoEvent(mPark_info.getPark_status().equals("2"));
         mSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -137,7 +137,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     showFiveToast("该车位还有预约的订单，暂时不能删除哦");
                 } else {
                     TipeDialog dialog = new TipeDialog.Builder(ParkSpaceSettingActivity.this)
-                            .setMessage("删除车位")
+                            .setTitle("删除车位")
                             .setMessage("删除车位后将无法恢复，是否删除?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
@@ -391,7 +391,18 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                         super.onError(call, response, e);
                         mSwitchButton.setCheckedNoEvent(!open);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "103":
+                                    showFiveToast("客户端异常，请退出重试");
+                                    break;
+                                case "104":
+                                    break;
+                                case "105":
+                                    showFiveToast("修改失败，请稍后重试");
+                                    break;
+                            }
                         }
                     }
                 });
