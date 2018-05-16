@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -72,6 +73,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             finish();
         }
 
+        scrennOrderTime();
         //mParkspaceIv = findViewById(R.id.parkspace_iv);
         mParkspaceNumber = findViewById(R.id.parkspace_number);
        /* mParkspaceStatus = findViewById(R.id.rental_record_park_status);
@@ -190,9 +192,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     private void scrennOrderTime() {
         if (!mPark_info.getOrder_times().equals("-1") && !mPark_info.getOrder_times().equals("")) {
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-            calendar.add(Calendar.MONTH, 1);
 
             Calendar orderCalendar;
             StringBuilder stringBuilder = new StringBuilder();
@@ -205,7 +205,9 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             }
 
             if (stringBuilder.length() > 0) {
-                stringBuilder.deleteCharAt(stringBuilder.length());
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            } else {
+                stringBuilder.append("-1");
             }
 
             mPark_info.setOrder_times(stringBuilder.toString());
@@ -255,12 +257,12 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             Collections.sort(shareTimeInfos, new Comparator<EverydayShareTimeInfo>() {
                 @Override
                 public int compare(EverydayShareTimeInfo o1, EverydayShareTimeInfo o2) {
-                    return DateUtil.getHourMinuteCalendar(o1.getStartTime()).compareTo(DateUtil.getHourMinuteCalendar(o2.getStartTime()));
+                    return DateUtil.getHourMinuteCalendar(o1.getStartDate()).compareTo(DateUtil.getHourMinuteCalendar(o2.getStartDate()));
                 }
             });
 
             for (EverydayShareTimeInfo shareTimeInfo : shareTimeInfos) {
-                mAdapter.justAddData(shareTimeInfo.getStartTime() + " - " + shareTimeInfo.getEndTime());
+                mAdapter.justAddData(shareTimeInfo.getStartDate() + " - " + shareTimeInfo.getEndDate());
             }
             mAdapter.notifyDataSetChanged();
         }

@@ -21,8 +21,8 @@ public class EverydayShareTimeAdapter extends BaseAdapter<EverydayShareTimeInfo>
 
     @Override
     protected void conver(@NonNull BaseViewHolder holder, EverydayShareTimeInfo everydayShareTimeInfo, final int poisition) {
-        holder.setText(R.id.add_everyday_share_start_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getStartTime()))
-                .setText(R.id.add_everyday_share_end_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getEndTime()))
+        holder.setText(R.id.add_everyday_share_start_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getStartDate()))
+                .setText(R.id.add_everyday_share_end_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getEndDate()))
                 .getView(R.id.delete_everyday_share_time).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

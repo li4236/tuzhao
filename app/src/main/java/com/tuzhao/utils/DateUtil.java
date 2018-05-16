@@ -99,11 +99,25 @@ public class DateUtil {
         return sSpecialToadyStartCalendar;
     }
 
+    /**
+     * 因为选择的时间没24:00的，所以当天的结束时间为23:59
+     */
     public static Calendar getSpecialTodayEndCalendar() {
         if (sSpecialTodayEndCalendar == null) {
             sSpecialTodayEndCalendar = getYearToMinuteCalendar("2018-04-24 23:59");
         }
         return sSpecialTodayEndCalendar;
+    }
+
+    /**
+     * @param hourWithMinute HH:mm
+     */
+    public static Calendar getSpecialCalendar(String hourWithMinute) {
+        Calendar calendar = getSpecialTodayStartCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hourWithMinute.substring(0, hourWithMinute.indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(hourWithMinute.substring(hourWithMinute.indexOf(":") + 1, hourWithMinute.length())));
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 
     /**
@@ -141,6 +155,13 @@ public class DateUtil {
      */
     public static String getHourWithMinutes(String date) {
         return date.substring(date.indexOf(" ") + 1, date.length());
+    }
+
+    /**
+     * @return HH:ss
+     */
+    public static String getHourWithMinutes(Calendar calendar) {
+        return thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
     }
 
     /**
@@ -275,12 +296,6 @@ public class DateUtil {
         return 2;
     }
 
-    public static boolean isInShareDay(int day,String startDate,String endDate, String orderTime) {
-
-
-        return false;
-    }
-
     /**
      * @param orderDate 逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
      * @return true(停车时间在预约时间内)
@@ -294,7 +309,6 @@ public class DateUtil {
         String[] orderDates = orderDate.split(",");
         List<String> usefulDates = new ArrayList<>(orderDates.length);
         Calendar nowCalendar = Calendar.getInstance();
-        nowCalendar.add(Calendar.MONTH, 1);
         nowCalendar.set(Calendar.SECOND, 0);
         nowCalendar.set(Calendar.MILLISECOND, 0);
 
@@ -367,7 +381,7 @@ public class DateUtil {
     /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
-     * @return 返回两个时间段相差的天数，因为是根据时间戳来算的如果两个时间段相差的时间毫秒不够一天的毫秒还是回返回0
+     * @return 返回两个时间段相差的分钟数
      */
     public static int getDateMinutesDistance(String startDate, String endDate) {
         SimpleDateFormat dateFormat = getYearToMinutesFormat();
@@ -385,7 +399,7 @@ public class DateUtil {
     /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
-     * @return 返回两个时间段相差的天数，因为是根据时间戳来算的如果两个时间段相差的时间毫秒不够一天的毫秒还是回返回0
+     * @return 返回两个时间段相差的毫秒数
      */
     public static long getDateMillisDistance(String startDate, String endDate) {
         SimpleDateFormat dateFormat = getYearToMinutesFormat();
@@ -467,7 +481,6 @@ public class DateUtil {
                 }
             } else {
                 //停车时间在同一天的
-
                 if (times.length == 2) {
                     //如果有两个时间段，如果第二个时间段是从凌晨开始的则放在数组前面。主要是为了之后判断这个时间段是不会跨天了的
                     if (isInStartDay(getSameYearToDayCalendar(startTime, times[1].substring(0, times[1].indexOf(" - "))))) {
@@ -523,6 +536,73 @@ public class DateUtil {
     }
 
     /**
+     * @param orderDate 逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
+     * @param shareTime 共享时间段(08:00 - 12:00)只有一个
+     * @return null(在共享时间段内没有预约订单)     yyyy-MM-dd HH:mm至yyyy-MM-dd HH:mm(在共享时间内有预约订单,并返回该订单的时间)
+     */
+    public static String isInShareTime(String orderDate, String shareTime) {
+        Log.e(TAG, "isInShareTime   shareTime: " + shareTime);
+        if (!orderDate.equals("") && !orderDate.equals("-1")) {
+            String[] order = orderDate.split(",");
+            Calendar orderStartCalendar;
+            Calendar orderEndCalendar;
+            Calendar shareStartCalendar;
+            Calendar shareEndCalendar;
+            String shareStartTime = shareTime.substring(0, shareTime.indexOf(" - "));
+            String shareEndTime = shareTime.substring(shareTime.indexOf(" - ") + 3, shareTime.length());
+            String result;
+            boolean isInTwoDay = false;
+            for (String date : order) {
+                orderStartCalendar = getYearToMinuteCalendar(date.substring(0, date.indexOf("*")));
+                orderEndCalendar = getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()));
+
+                if (getCalendarDistance(orderStartCalendar, orderEndCalendar) >= 1440) {
+                    //如果有订单跨了一天的则肯定在共享时间段内有订单
+                    return getYearToMinutesString(orderStartCalendar) + "至" + getYearToMinutesString(orderEndCalendar);
+                }
+
+                shareStartCalendar = getSameYearToDayCalendar(orderStartCalendar, shareStartTime);
+                shareEndCalendar = getSameYearToDayCalendar(orderStartCalendar, shareEndTime);
+
+                Log.e(TAG, "isInShareTime   shareStartCalendar0: " + printCalendar(shareStartCalendar));
+                Log.e(TAG, "isInShareTime   shareEndCalendar0: " + printCalendar(shareEndCalendar));
+                if (shareStartCalendar.compareTo(shareEndCalendar) > 0) {
+                    //共享日期跨天的   2018-05-16 09:00 - 2018-05-17 05:00
+                    shareEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    isInTwoDay = true;
+                }
+                if ((result = isInShareTime(orderStartCalendar, orderEndCalendar, shareStartCalendar, shareEndCalendar)) != null) {
+                    return result;
+                }
+
+                if (isInTwoDay) {
+                    //如果跨天的则还需要比较2018-05-16 00:00 - 2018-05-16 05:00
+                    shareEndCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                    shareStartCalendar = getSameYearToDayCalendar(shareEndCalendar, "00:00");
+                    if ((result = isInShareTime(orderStartCalendar, orderEndCalendar, shareStartCalendar, shareEndCalendar)) != null) {
+                        return result;
+                    }
+                }
+
+                isInTwoDay = false;
+            }
+        }
+
+        return null;
+    }
+
+    private static String isInShareTime(Calendar startCalendar, Calendar endCalendar, Calendar shareStartCalendar, Calendar shareEndCalendar) {
+        Log.e(TAG, "isInShareTime   startCalendar: " + printCalendar(startCalendar));
+        Log.e(TAG, "isInShareTime   endCalendar: " + printCalendar(endCalendar));
+        Log.e(TAG, "isInShareTime   shareStartCalendar: " + printCalendar(shareStartCalendar));
+        Log.e(TAG, "isInShareTime   shareEndCalendar: " + printCalendar(shareEndCalendar));
+        if (isIntersection(startCalendar, endCalendar, shareStartCalendar, shareEndCalendar)) {
+            return getYearToMinutesString(startCalendar) + "至" + getYearToMinutesString(endCalendar);
+        }
+        return null;
+    }
+
+    /**
      * @param startDate 格式为yyyy-MM-dd HH:mm
      * @param endDate   格式为yyyy-MM-dd HH:mm
      * @return true(两天是在同一天)
@@ -546,11 +626,11 @@ public class DateUtil {
     }
 
     /**
-     * @return 格式为yyyy-MM-dd对应的Calendar,时分秒和毫秒都会清零,月为对应的月
+     * @return 格式为yyyy-MM-dd对应的Calendar,时分秒和毫秒都会清零,月为对应的月(0-11)
      */
     public static Calendar getYearToDayCalendar() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, 1);
+        //calendar.add(Calendar.MONTH, 1);
         initHourToMilli(calendar);
         return calendar;
     }
@@ -563,7 +643,7 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         String[] yearToDay = date.split("-");
         calendar.set(Calendar.YEAR, Integer.valueOf(yearToDay[0]));
-        calendar.set(Calendar.MONTH, Integer.valueOf(yearToDay[1]));
+        calendar.set(Calendar.MONTH, Integer.valueOf(yearToDay[1]) - 1);
         if (containHourAndMinute) {
             calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToDay[2].substring(0, yearToDay[2].indexOf(" "))));
         } else {
@@ -581,7 +661,7 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         String[] yearToMinute = date.split("-");
         calendar.set(Calendar.YEAR, Integer.valueOf(yearToMinute[0]));
-        calendar.set(Calendar.MONTH, Integer.valueOf(yearToMinute[1]));
+        calendar.set(Calendar.MONTH, Integer.valueOf(yearToMinute[1]) - 1);
         calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToMinute[2].substring(0, yearToMinute[2].indexOf(" "))));
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(" ") + 1, yearToMinute[2].indexOf(":"))));
         calendar.set(Calendar.MINUTE, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(":") + 1, yearToMinute[2].length())));
@@ -613,31 +693,102 @@ public class DateUtil {
     }
 
     /**
+     * @param day       周一至七
+     * @param startDate yyyy-MM-dd
+     * @param endDate   yyyy-MM-dd
+     * @return 在startDate-endDate之内星期为day的Calendar
+     */
+    private static List<Calendar> getDayCalendar(int day, String startDate, String endDate) {
+        List<Calendar> calendars = new ArrayList<>();
+        Calendar calendar = getYearToDayCalendar(startDate, false);
+        Calendar startCalendar = getYearToDayCalendar(startDate, false);
+        Calendar endCalendar = getYearToDayCalendar(endDate, false);
+        int calendarDay = getDayOfWeek(startDate, false);
+        calendar.add(Calendar.DAY_OF_MONTH, day - calendarDay);
+
+        while (calendar.compareTo(endCalendar) <= 0) {
+            if (calendar.compareTo(startCalendar) >= 0) {
+                calendars.add(calendar);
+            }
+            calendar = (Calendar) calendar.clone();
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+        }
+        return calendars;
+    }
+
+    /**
+     * @param day       周一至七
+     * @param startDate yyyy-MM-dd
+     * @param endDate   yyyy-MM-dd
+     * @param orderDate 订单时间
+     * @return true(星期day在订单时间内)
+     */
+    public static boolean isInOrderDay(int day, String startDate, String endDate, String orderDate) {
+        List<Calendar> list = getDayCalendar(day, startDate, endDate);
+        if (!list.isEmpty()) {
+            String[] order = orderDate.split(",");
+            Calendar endDayCalendar;
+            Calendar startOrderCalendar;
+            Calendar endOrderCalendar;
+            for (String date : order) {
+                startOrderCalendar = getYearToMinuteCalendar(date.substring(0, date.indexOf("*")));
+                if (startOrderCalendar.compareTo(DateUtil.getYearToDayCalendar()) < 0) {
+                    startOrderCalendar = DateUtil.getYearToDayCalendar();
+                }
+                endOrderCalendar = getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()));
+                for (Calendar calendar : list) {
+                    endDayCalendar = (Calendar) calendar.clone();
+                    endDayCalendar.set(Calendar.HOUR_OF_DAY, 24);
+                    endDayCalendar.set(Calendar.MINUTE, 0);
+                    if (isIntersection(calendar, endDayCalendar, startOrderCalendar, endOrderCalendar)) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * @return true(两个时间段有交集)
+     */
+    private static boolean isIntersection(Calendar startCalendar, Calendar endCalendar, Calendar otherStartCalendar, Calendar otherEndCalendar) {
+        if (startCalendar.compareTo(otherStartCalendar) >= 0 && startCalendar.compareTo(otherEndCalendar) < 0
+                || endCalendar.compareTo(otherStartCalendar) > 0 && endCalendar.compareTo(otherEndCalendar) <= 0
+                || startCalendar.compareTo(otherStartCalendar) <= 0 && endCalendar.compareTo(otherEndCalendar) >= 0
+                || otherStartCalendar.compareTo(startCalendar) <= 0 && otherEndCalendar.compareTo(endCalendar) >= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @return 日历对应的年月日，格式2018年05月07日
      */
     public static String getCalendarYearToDayWithText(Calendar calendar) {
-        return calendar.get(Calendar.YEAR) + "年" + thanTen(calendar.get(Calendar.MONTH)) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日";
+        return calendar.get(Calendar.YEAR) + "年" + thanTen(calendar.get(Calendar.MONTH) + 1) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日";
     }
 
     /**
      * @return 日历对应的月日, 格式05月07日
      */
     public static String getCalendarMonthToDayWithText(Calendar calendar) {
-        return thanTen(calendar.get(Calendar.MONTH)) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日";
+        return thanTen(calendar.get(Calendar.MONTH) + 1) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日";
     }
 
     /**
      * @return 日历对应的年月日，格式2018-05-07
      */
     public static String getCalendarYearToDay(Calendar calendar) {
-        return calendar.get(Calendar.YEAR) + "-" + thanTen(calendar.get(Calendar.MONTH)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH));
+        return calendar.get(Calendar.YEAR) + "-" + thanTen(calendar.get(Calendar.MONTH) + 1) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     public static String printCalendar(Calendar calendar) {
         if (calendar == null) {
             return "";
         }
-        return calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
     /**
@@ -797,13 +948,13 @@ public class DateUtil {
     }
 
     /**
-     * @param date     参照的那一天，格式为yyyy-MM-dd HH:mm
-     * @param highDate 高峰期的时分，格式为HH:mm
+     * @param date          参照的那一天，格式为yyyy-MM-dd HH:mm
+     * @param hourAndMinute 格式为HH:mm
      */
-    private static Calendar getSameYearToDayCalendar(Calendar date, String highDate) {
+    private static Calendar getSameYearToDayCalendar(Calendar date, String hourAndMinute) {
         Calendar calendar = (Calendar) date.clone();
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(highDate.substring(0, highDate.indexOf(":"))));
-        calendar.set(Calendar.MINUTE, Integer.valueOf(highDate.substring(highDate.indexOf(":") + 1, highDate.length())));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hourAndMinute.substring(0, hourAndMinute.indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(hourAndMinute.substring(hourAndMinute.indexOf(":") + 1, hourAndMinute.length())));
         return calendar;
     }
 
@@ -911,8 +1062,8 @@ public class DateUtil {
      * @return 日历对应的yyyy-MM-dd HH:mm(如果是01则只会返回1)
      */
     private static String getYearToMinutesString(Calendar calendar) {
-        return calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
-                + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        return calendar.get(Calendar.YEAR) + "-" + thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH))
+                + " " + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
     }
 
     /**
@@ -945,15 +1096,11 @@ public class DateUtil {
      * 十以下的数加零
      */
     public static String thanTen(int str) {
-
         String string;
-
         if (str < 10) {
             string = "0" + str;
         } else {
-
             string = "" + str;
-
         }
         return string;
     }

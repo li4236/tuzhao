@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.adapter.EverydayShareTimeAdapter;
+import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.adapter.PauseShareDateAdapter;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.EverydayShareTimeInfo;
@@ -52,7 +53,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
     private PauseShareDateAdapter mPauseShareDateAdapter;
 
-    private EverydayShareTimeAdapter mEverydayShareTimeAdapter;
+    private ShareTimeAdapter mEverydayShareTimeAdapter;
 
     private ArrayList<String> mYears;
 
@@ -93,12 +94,12 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         mStartShareDate = findViewById(R.id.modify_share_time_start_share_time);
         mEndShareDate = findViewById(R.id.modify_share_time_end_share_time);
         final CheckTextView mMondayShare = findViewById(R.id.modify_share_time_monday);
-        CheckTextView mTuesdayShare = findViewById(R.id.modify_share_time_tuesday);
-        CheckTextView mWednesdayShare = findViewById(R.id.modify_share_time_wednesday);
-        CheckTextView mThursdayShare = findViewById(R.id.modify_share_time_thursday);
-        CheckTextView mFridayShare = findViewById(R.id.modify_share_time_friday);
-        CheckTextView mSaturdayShare = findViewById(R.id.modify_share_time_saturday);
-        CheckTextView mSundayShare = findViewById(R.id.modify_share_time_sunday);
+        final CheckTextView mTuesdayShare = findViewById(R.id.modify_share_time_tuesday);
+        final CheckTextView mWednesdayShare = findViewById(R.id.modify_share_time_wednesday);
+        final CheckTextView mThursdayShare = findViewById(R.id.modify_share_time_thursday);
+        final CheckTextView mFridayShare = findViewById(R.id.modify_share_time_friday);
+        final CheckTextView mSaturdayShare = findViewById(R.id.modify_share_time_saturday);
+        final CheckTextView mSundayShare = findViewById(R.id.modify_share_time_sunday);
         TextView mAddPauseShareDate = findViewById(R.id.modify_share_time_add_pause_date);
         TextView mAddEverydayShareTime = findViewById(R.id.modify_share_time_add_everyday_share_time);
         RecyclerView pauseShareRecycerview = findViewById(R.id.modify_share_time_pause_date_rv);
@@ -118,7 +119,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         pauseShareRecycerview.setLayoutManager(new LinearLayoutManager(this));
         everydayShareRecycerview.setLayoutManager(new LinearLayoutManager(this));
         mPauseShareDateAdapter = new PauseShareDateAdapter();
-        mEverydayShareTimeAdapter = new EverydayShareTimeAdapter();
+        mEverydayShareTimeAdapter = new ShareTimeAdapter();
         pauseShareRecycerview.setAdapter(mPauseShareDateAdapter);
         everydayShareRecycerview.setAdapter(mEverydayShareTimeAdapter);
 
@@ -139,49 +140,105 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             mMondayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(1, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期一已被人预约了，不可以取消哦");
+                        } else {
+                            mMondayShare.setChecked(false);
+                        }
+                    } else {
+                        mMondayShare.setChecked(true);
+                    }
                 }
             });
 
             mTuesdayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(2, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期二已被人预约了，不可以取消哦");
+                        } else {
+                            mTuesdayShare.setChecked(false);
+                        }
+                    } else {
+                        mTuesdayShare.setChecked(true);
+                    }
                 }
             });
 
             mWednesdayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(3, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期三已被人预约了，不可以取消哦");
+                        } else {
+                            mWednesdayShare.setChecked(false);
+                        }
+                    } else {
+                        mWednesdayShare.setChecked(true);
+                    }
                 }
             });
 
             mThursdayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(4, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期四已被人预约了，不可以取消哦");
+                        } else {
+                            mThursdayShare.setChecked(false);
+                        }
+                    } else {
+                        mThursdayShare.setChecked(true);
+                    }
                 }
             });
 
             mFridayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(5, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期五已被人预约了，不可以取消哦");
+                        } else {
+                            mFridayShare.setChecked(false);
+                        }
+                    } else {
+                        mFridayShare.setChecked(true);
+                    }
                 }
             });
 
             mSaturdayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(6, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期六已被人预约了，不可以取消哦");
+                        } else {
+                            mSaturdayShare.setChecked(false);
+                        }
+                    } else {
+                        mSaturdayShare.setChecked(true);
+                    }
                 }
             });
 
             mSundayShare.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
                 @Override
                 public void onCheckChange(boolean isCheck) {
-
+                    if (!isCheck) {
+                        if (DateUtil.isInOrderDay(7, getText(mStartShareDate), getText(mEndShareDate), mParkInfo.getOrder_times())) {
+                            showFiveToast("星期日已被人预约了，不可以取消哦");
+                        } else {
+                            mSundayShare.setChecked(false);
+                        }
+                    } else {
+                        mSundayShare.setChecked(true);
+                    }
                 }
             });
         }
@@ -253,8 +310,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 if (DateUtil.getYearToMinuteCalendar(startTime).compareTo(DateUtil.getYearToMinuteCalendar(endTime)) >= 0) {
                     endTime = "2018-04-25 " + dayShareTime.substring(position + 3, dayShareTime.length());
                 }
-                everydayShareTimeInfo.setStartTime(startTime);
-                everydayShareTimeInfo.setEndTime(endTime);
+                everydayShareTimeInfo.setStartDate(startTime);
+                everydayShareTimeInfo.setEndDate(endTime);
                 mEverydayShareTimeAdapter.addData(everydayShareTimeInfo);
             }
         }
@@ -280,8 +337,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                             endCalendar.set(Integer.valueOf(endDate[0]), Integer.valueOf(endDate[1]), Integer.valueOf(endDate[2]));
                             if (mParkInfo != null) {
                                 Calendar originStartCalendar = DateUtil.getYearToDayCalendar(mStartShareDate.getText().toString(), false);
-                                Log.e(TAG, "onDateCheck: " + DateUtil.printCalendar(calendar));
-                                Log.e(TAG, "onDateCheck: " + DateUtil.printCalendar(originStartCalendar));
                                 if (originStartCalendar.compareTo(calendar) < 0) {
                                     //只有当想修改开始日期比原来的日期往后时才需要判断
                                     if (DateUtil.isInOrderDate(mStartShareDate.getText().toString() + " 00:00", startDate + " 00:00", mParkInfo.getOrder_times())) {
@@ -296,9 +351,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
                             //如果共享的开始日期比结束日期大，则自动修改结束日期
                             if (calendar.compareTo(endCalendar) == 1) {
-                                Calendar startCalend = getDateCalendar(startDate);
-                                startCalend.add(Calendar.MONTH, 1);
-                                mEndShareDate.setText(DateUtil.getYearToDayFormat().format(new Date(startCalend.getTimeInMillis())));
+                                Calendar startCalendar = getYearToDayCalendar(startDate);
+                                startCalendar.add(Calendar.MONTH, 1);
+                                mEndShareDate.setText(DateUtil.getYearToDayFormat().format(new Date(startCalendar.getTimeInMillis())));
                                 showFiveToast("已自动为你修改结束的共享时间");
                             }
                             checkPauseDate();
@@ -351,9 +406,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                                 if (mPauseShareDateAdapter.getData().contains(pausDate)) {
                                     showFiveToast("不能重复添加哦");
                                 } else {
-                                    Calendar startCalendar = getDateCalendar(mStartShareDate.getText().toString());
-                                    Calendar endCalendar = getDateCalendar(mEndShareDate.getText().toString());
-                                    Calendar pauseCalendar = getDateCalendar(pausDate);
+                                    Calendar startCalendar = getYearToDayCalendar(mStartShareDate.getText().toString());
+                                    Calendar endCalendar = getYearToDayCalendar(mEndShareDate.getText().toString());
+                                    Calendar pauseCalendar = getYearToDayCalendar(pausDate);
                                     if (pauseCalendar.compareTo(startCalendar) >= 0 && pauseCalendar.compareTo(endCalendar) <= 0) {
 
                                         if (mParkInfo != null) {
@@ -367,7 +422,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                                         Collections.sort(mPauseShareDateAdapter.getData(), new Comparator<String>() {
                                             @Override
                                             public int compare(String o1, String o2) {
-                                                return getDateCalendar(o1).compareTo(getDateCalendar(o2));
+                                                return getYearToDayCalendar(o1).compareTo(getYearToDayCalendar(o2));
                                             }
                                         });
                                         mPauseShareDateAdapter.notifyDataSetChanged();
@@ -392,24 +447,35 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                         @Override
                         public void onStartTime(String hourOfDay, String minute) {
                             String startTime = "2018-04-24 " + DateUtil.thanTen(Integer.valueOf(hourOfDay)) + ":" + DateUtil.thanTen(Integer.valueOf(minute));
-                            shareTimeInfo.setStartTime(startTime);
+                            shareTimeInfo.setStartDate(startTime);
                         }
 
                         @Override
                         public void onEndTime(String hourOfDay, String minute) {
                             String endTime = "2018-04-24 " + DateUtil.thanTen(Integer.valueOf(hourOfDay)) + ":" + DateUtil.thanTen(Integer.valueOf(minute));
-                            if (DateUtil.getYearToMinuteCalendar(shareTimeInfo.getStartTime()).compareTo(DateUtil.getYearToMinuteCalendar(endTime)) >= 0) {
+                            Calendar startTimeCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getStartDate());
+                            Calendar endTimeCalendar = DateUtil.getYearToMinuteCalendar(endTime);
+
+                            if (startTimeCalendar.compareTo(endTimeCalendar) >= 0) {
                                 endTime = "2018-04-25 " + DateUtil.thanTen(Integer.valueOf(hourOfDay)) + ":" + DateUtil.thanTen(Integer.valueOf(minute));
                             }
-                            shareTimeInfo.setEndTime(endTime);
+                            shareTimeInfo.setEndDate(endTime);
                             if (isRepeat(shareTimeInfo)) {
                                 showFiveToast("不能选择有重叠的时间哦");
                             } else {
+                                if (mParkInfo != null) {
+                                    String orderTime = isInNotShareTime(startTimeCalendar, endTimeCalendar);
+                                    if (orderTime != null) {
+                                        showFiveToast(orderTime + "已被人预约，不能中断哦");
+                                        return;
+                                    }
+                                }
+
                                 mEverydayShareTimeAdapter.justAddData(shareTimeInfo);
                                 Collections.sort(mEverydayShareTimeAdapter.getData(), new Comparator<EverydayShareTimeInfo>() {
                                     @Override
                                     public int compare(EverydayShareTimeInfo o1, EverydayShareTimeInfo o2) {
-                                        return DateUtil.getYearToMinuteCalendar(o1.getStartTime()).compareTo(DateUtil.getYearToMinuteCalendar(o2.getStartTime()));
+                                        return DateUtil.getYearToMinuteCalendar(o1.getStartDate()).compareTo(DateUtil.getYearToMinuteCalendar(o2.getStartDate()));
                                     }
                                 });
                                 mEverydayShareTimeAdapter.notifyDataSetChanged();
@@ -490,7 +556,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
      * @return true(有已预约的订单在pauseDate这天)
      */
     private boolean isOrderInPauseDate(String pauseDate) {
-        if (!mParkInfo.getOrder_times().equals("-1") || !mParkInfo.getOrder_times().equals("")) {
+        if (!mParkInfo.getOrder_times().equals("-1") && !mParkInfo.getOrder_times().equals("")) {
             String[] order;
             for (String orderTime : mParkInfo.getOrder_times().split(",")) {
                 order = orderTime.split("\\*");
@@ -507,18 +573,62 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
      */
     private void checkPauseDate() {
         if (!mPauseShareDateAdapter.getData().isEmpty()) {
-            Calendar startDate = getDateCalendar(mStartShareDate.getText().toString());
-            Calendar endDate = getDateCalendar(mEndShareDate.getText().toString());
+            Calendar startDate = getYearToDayCalendar(mStartShareDate.getText().toString());
+            Calendar endDate = getYearToDayCalendar(mEndShareDate.getText().toString());
             List<String> legalData = new ArrayList<>();
             Calendar calendar;
             for (String s : mPauseShareDateAdapter.getData()) {
-                calendar = getDateCalendar(s);
+                calendar = getYearToDayCalendar(s);
                 if (startDate.compareTo(calendar) <= 0 && calendar.compareTo(endDate) <= 0) {
                     legalData.add(s);
                 }
             }
             mPauseShareDateAdapter.setNewData(legalData);
         }
+    }
+
+    /**
+     * 如果之前是全天共享的，现在加了共享时段，则判断那些不在共享时段内的是否已被预约
+     *
+     * @return null()
+     */
+    private String isInNotShareTime(Calendar startCalendar, Calendar endCalendar) {
+        Log.e(TAG, "onEndTime   startCalendar: " + DateUtil.printCalendar(startCalendar));
+        Log.e(TAG, "onEndTime   endCalendar: " + DateUtil.printCalendar(endCalendar));
+        if (mEverydayShareTimeAdapter.getData().isEmpty()) {
+            String notShareTime;
+            if (startCalendar.compareTo(endCalendar) > 0) {
+                //08:00 - 03:00的则判断03:00到08:00这个时间段是否被预约
+                notShareTime = DateUtil.getHourWithMinutes(endCalendar) + " - " + DateUtil.getHourWithMinutes(startCalendar);
+                Log.e(TAG, "isInNotShareTime0: " + notShareTime);
+                return DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
+            } else {
+                if (startCalendar.compareTo(DateUtil.getSpecialTodayStartCalendar()) == 0) {
+                    //开始共享时间为凌晨的
+                    notShareTime = DateUtil.getHourWithMinutes(endCalendar) + " - 24:00";
+                    Log.e(TAG, "isInNotShareTime1 : " + notShareTime);
+                    return DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
+                } else /*if (endCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) == 0) {
+                    //结束时间为23:59的
+                    notShareTime = "00:00 - " + DateUtil.getHourWithMinutes(startCalendar);
+                    Log.e(TAG, "isInNotShareTime2: " + notShareTime);
+                    return DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
+                } else */ {
+                    String orderTime;
+                    notShareTime = "00:00 - " + DateUtil.getHourWithMinutes(startCalendar);
+                    Log.e(TAG, "isInNotShareTime3: " + notShareTime);
+                    orderTime = DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
+                    if (orderTime != null) {
+                        return orderTime;
+                    }
+
+                    notShareTime = DateUtil.getHourWithMinutes(endCalendar) + " - 24:00";
+                    Log.e(TAG, "isInNotShareTime3: " + notShareTime);
+                    return DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
+                }
+            }
+        }
+        return null;
     }
 
     private void modifyShareTime() {
@@ -550,9 +660,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         final StringBuilder everyDayShareTime = new StringBuilder();
         if (!mEverydayShareTimeAdapter.getData().isEmpty()) {
             for (EverydayShareTimeInfo everydayShareTimeInfo : mEverydayShareTimeAdapter.getData()) {
-                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getStartTime()));
+                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getStartDate()));
                 everyDayShareTime.append(" - ");
-                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getEndTime()));
+                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getEndDate()));
                 everyDayShareTime.append(",");
             }
             everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
@@ -560,6 +670,10 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             everyDayShareTime.append("-1");
         }
 
+        Log.e(TAG, "modifyShareTime shareDate: " + shareDate);
+        Log.e(TAG, "modifyShareTime shareDay: " + shareDay.toString());
+        Log.e(TAG, "modifyShareTime pauseShareDate: " + pauseShareDate.toString());
+        Log.e(TAG, "modifyShareTime everyDayShareTime: " + everyDayShareTime.toString());
         getOkGo(HttpConstants.editShareTime)
                 .params("cityCode", mParkInfo.getCitycode())
                 .params("parkId", mParkInfo.getId())
@@ -605,6 +719,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                                 case "106":
                                     showFiveToast("修改失败，请稍后再试");
                                     break;
+                                case "107":
+                                    showFiveToast("修改的时间段内已被预约");
+                                    break;
                             }
                         }
                     }
@@ -640,9 +757,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         StringBuilder everyDayShareTime = new StringBuilder();
         if (mNewParkSpaceInfo.isHourRent() && !mEverydayShareTimeAdapter.getData().isEmpty()) {
             for (EverydayShareTimeInfo everydayShareTimeInfo : mEverydayShareTimeAdapter.getData()) {
-                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getStartTime()));
+                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getStartDate()));
                 everyDayShareTime.append(" - ");
-                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getEndTime()));
+                everyDayShareTime.append(getHourWithMinutes(everydayShareTimeInfo.getEndDate()));
                 everyDayShareTime.append(",");
             }
             everyDayShareTime.deleteCharAt(everyDayShareTime.length() - 1);
@@ -755,10 +872,10 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
      * @param s 日期的字符串表示(2018-3-30)
      * @return 该日期对应的日历
      */
-    private Calendar getDateCalendar(String s) {
+    private Calendar getYearToDayCalendar(String s) {
         Calendar calendar = Calendar.getInstance();
         String[] date = s.split("-");
-        calendar.set(Integer.valueOf(date[0]), Integer.valueOf(date[1]), Integer.valueOf(date[2]));
+        calendar.set(Integer.valueOf(date[0]), Integer.valueOf(date[1]) - 1, Integer.valueOf(date[2]));
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -770,13 +887,13 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
      * @return ture:已经添加的时段中与需要比较的时间段有重叠
      */
     private boolean isRepeat(EverydayShareTimeInfo shareTimeInfo) {
-        Calendar otherStartCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getStartTime());
-        Calendar otherEndCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getEndTime());
+        Calendar otherStartCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getStartDate());
+        Calendar otherEndCalendar = DateUtil.getYearToMinuteCalendar(shareTimeInfo.getEndDate());
         Calendar startCalendar;
         Calendar endCalendar;
         for (EverydayShareTimeInfo timeInfo : mEverydayShareTimeAdapter.getData()) {
-            startCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getStartTime());
-            endCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getEndTime());
+            startCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getStartDate());
+            endCalendar = DateUtil.getYearToMinuteCalendar(timeInfo.getEndDate());
 
             if (isInExitTime(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {
                 return true;
@@ -828,6 +945,46 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         return date.substring(date.indexOf(" ") + 1, date.length());
     }
 
+    public class ShareTimeAdapter extends BaseAdapter<EverydayShareTimeInfo> {
+
+        ShareTimeAdapter() {
+            super();
+        }
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, final EverydayShareTimeInfo everydayShareTimeInfo, final int poisition) {
+            holder.setText(R.id.add_everyday_share_start_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getStartDate()))
+                    .setText(R.id.add_everyday_share_end_time, DateUtil.getHourWithMinutes(everydayShareTimeInfo.getEndDate()))
+                    .getView(R.id.delete_everyday_share_time).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mParkInfo != null && mEverydayShareTimeAdapter.getData().size() > 1) {
+                        String orderTime = DateUtil.isInShareTime(mParkInfo.getOrder_times(),
+                                everydayShareTimeInfo.getStartDate().substring(
+                                        everydayShareTimeInfo.getStartDate().indexOf(" ") + 1, everydayShareTimeInfo.getStartDate().length()) + " - "
+                                        + everydayShareTimeInfo.getEndDate().substring(
+                                        everydayShareTimeInfo.getEndDate().indexOf(" ") + 1, everydayShareTimeInfo.getEndDate().length()
+                                ));
+                        if (orderTime != null) {
+                            showFiveToast(orderTime + "已被人预约了，不可取消哦");
+                        } else {
+                            notifyRemoveData(poisition);
+                        }
+                    } else {
+                        notifyRemoveData(poisition);
+                    }
+                }
+            });
+
+        }
+
+        @Override
+        protected int itemViewId() {
+            return R.layout.item_add_everyday_share_time;
+        }
+
+    }
+
     /**
      * 将日期选择器的接口替换为自定义的日期选择器接口
      */
@@ -873,7 +1030,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
             //如果输入指定的日期则与指定的日期进行比较，否则与当天日期进行比较
             Calendar otherCanlendar = Calendar.getInstance();
-            otherCanlendar.add(Calendar.MONTH, 1);
             if (mYear != 0) {
                 otherCanlendar.set(Calendar.YEAR, mYear);
                 otherCanlendar.set(Calendar.MONTH, mMonth);

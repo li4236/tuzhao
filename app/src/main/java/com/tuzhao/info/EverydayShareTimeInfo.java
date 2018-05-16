@@ -6,7 +6,11 @@ package com.tuzhao.info;
 
 public class EverydayShareTimeInfo {
 
-    private String startTime;
+    private String startDate;
+
+    private String endDate;
+
+    private String statTime;
 
     private String endTime;
 
@@ -14,32 +18,49 @@ public class EverydayShareTimeInfo {
 
     }
 
-    public EverydayShareTimeInfo(String startTime, String endTime) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public EverydayShareTimeInfo(String startDate, String endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStatTime() {
+        if (statTime == null) {
+            statTime = startDate.substring(startDate.indexOf(" ") + 1, startDate.length());
+        }
+        return statTime;
     }
 
     public String getEndTime() {
+        if (endTime == null) {
+            endTime = endDate.substring(endDate.indexOf(" ") + 1, endDate.length());
+        }
         return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     @Override
     public String toString() {
         return "EverydayShareTimeInfo{" +
-                "startTime='" + startTime + '\'' +
+                "startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", statTime='" + statTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 '}';
     }
+
 }
