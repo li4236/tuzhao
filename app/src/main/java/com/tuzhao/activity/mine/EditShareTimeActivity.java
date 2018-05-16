@@ -590,7 +590,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
     /**
      * 如果之前是全天共享的，现在加了共享时段，则判断那些不在共享时段内的是否已被预约
      *
-     * @return null()
+     * @return null(不被共享的时间段内没有已预约订单)
      */
     private String isInNotShareTime(Calendar startCalendar, Calendar endCalendar) {
         Log.e(TAG, "onEndTime   startCalendar: " + DateUtil.printCalendar(startCalendar));
@@ -608,12 +608,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                     notShareTime = DateUtil.getHourWithMinutes(endCalendar) + " - 24:00";
                     Log.e(TAG, "isInNotShareTime1 : " + notShareTime);
                     return DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
-                } else /*if (endCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) == 0) {
-                    //结束时间为23:59的
-                    notShareTime = "00:00 - " + DateUtil.getHourWithMinutes(startCalendar);
-                    Log.e(TAG, "isInNotShareTime2: " + notShareTime);
-                    return DateUtil.isInShareTime(mParkInfo.getOrder_times(), notShareTime);
-                } else */ {
+                } else {
                     String orderTime;
                     notShareTime = "00:00 - " + DateUtil.getHourWithMinutes(startCalendar);
                     Log.e(TAG, "isInNotShareTime3: " + notShareTime);
@@ -670,10 +665,6 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
             everyDayShareTime.append("-1");
         }
 
-        Log.e(TAG, "modifyShareTime shareDate: " + shareDate);
-        Log.e(TAG, "modifyShareTime shareDay: " + shareDay.toString());
-        Log.e(TAG, "modifyShareTime pauseShareDate: " + pauseShareDate.toString());
-        Log.e(TAG, "modifyShareTime everyDayShareTime: " + everyDayShareTime.toString());
         getOkGo(HttpConstants.editShareTime)
                 .params("cityCode", mParkInfo.getCitycode())
                 .params("parkId", mParkInfo.getId())

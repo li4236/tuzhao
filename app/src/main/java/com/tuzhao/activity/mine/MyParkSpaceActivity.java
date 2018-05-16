@@ -97,8 +97,12 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     }
 
     private String getParkSpaceStatus(Park_Info park_info) {
+        if (!park_info.getParking_user_id().equals("-1")) {
+            return "出租中";
+        }
+
         String nowDate = DateUtil.getCurrentYearToMinutes();
-        String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60 * 2);
+        String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60 * 1);
 
         if (DateUtil.isInShareDate(nowDate, afterTwoMinutesDate, park_info.getOpen_date()) == 0) {
             return "停租";
@@ -117,7 +121,7 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         }
 
         if (DateUtil.isInOrderDate(nowDate, afterTwoMinutesDate, park_info.getOrder_times())) {
-            return "出租";
+            return "已预约";
         }
 
         return "空闲";
