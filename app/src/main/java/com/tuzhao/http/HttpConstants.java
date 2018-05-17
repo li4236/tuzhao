@@ -455,4 +455,13 @@ public class HttpConstants {
      */
     public static String getFriendShareParkspace = ROOT_URL + "getFriendShareParkspace";
 
+    /**
+     * 车主请求控制车位锁
+     */
+    public static String userControlParkLock = ROOT_URL + "userControlParkLock";
+
+    /**
+     * 获取车位状态
+     */
+    public static String getParkLockStatus = ROOT_URL + "getParkLockStatus";
 }

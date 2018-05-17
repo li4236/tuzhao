@@ -70,7 +70,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             finish();
         }
 
-        scrennOrderTime();
+        //scrennOrderTime();
         mParkspaceNumber = findViewById(R.id.parkspace_number);
         mParkspaceStatus = findViewById(R.id.park_space_status);
 

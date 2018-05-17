@@ -31,6 +31,9 @@ public class Voltage extends View {
 
     private int mVoltage;
 
+    //电量的总宽度
+    private float mVoltageWidth;
+
     private float mBorderWidth;
 
     private float mBorderRadius;
@@ -98,7 +101,12 @@ public class Voltage extends View {
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         mHeadRect.set(width - height / 4, height * 3 / 8, width, height * 5 / 8);
-        mBorderRect.set(mBorderPaint.getStrokeWidth(), mBorderPaint.getStrokeWidth(), mHeadRect.left, height - mBorderPaint.getStrokeWidth());
+        mBorderRect.set(mBorderPaint.getStrokeWidth()/2, mBorderPaint.getStrokeWidth()/2, mHeadRect.left, height - mBorderPaint.getStrokeWidth()/2);
+
+        mVoltageWidth = mBorderRect.right - mBorderRect.left - mBorderWidth * 2;
+        mVoltageRect.left = mBorderRect.left + mBorderWidth;
+        mVoltageRect.top = mBorderRect.top + mBorderWidth;
+        mVoltageRect.bottom = mBorderRect.bottom - mBorderWidth;
     }
 
     @Override
@@ -111,11 +119,10 @@ public class Voltage extends View {
         mBorderPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(mHeadRect, mBorderPaint);
 
+        mVoltageRect.right = mVoltageWidth * mVoltage / 100 + mBorderRect.left + mBorderWidth;
         if (mVoltage > 0) {
-            //电量的总宽度
-            float voltageWidth = mBorderRect.right - mBorderRect.left - mBorderWidth * 2;
             mVoltageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top + mBorderWidth,
-                    voltageWidth * mVoltage / 100 + mBorderRect.left + mBorderWidth, mBorderRect.bottom - mBorderWidth);
+                    mVoltageWidth * mVoltage / 100 + mBorderRect.left + mBorderWidth, mBorderRect.bottom - mBorderWidth);
             if (mVoltage <= 20) {
                 mVoltagePaint.setColor(mLowVoltageColor);
             } else if (mVoltage >= 70) {

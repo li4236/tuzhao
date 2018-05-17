@@ -196,17 +196,18 @@ public class TipeDialog extends Dialog {
             if (negativeButtonText != null) {
                 mNegativeView.setText(negativeButtonText);
 
-                if (negativeButtonClickListener != null) {
-                    (layout.findViewById(R.id.negativeButton))
-                            .setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
+                (layout.findViewById(R.id.negativeButton))
+                        .setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                if (negativeButtonClickListener != null) {
                                     negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
-                                    if (autoDissmiss) {
-                                        dialog.dismiss();
-                                    }
                                 }
-                            });
-                }
+                                if (autoDissmiss) {
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+
             } else {
                 mNegativeView.setText("取消");
             }

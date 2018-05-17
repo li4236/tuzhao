@@ -209,7 +209,6 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivity(intent);
     }
 
-
     protected void startActivity(Class<?> tClass, String key, Serializable data) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, data);

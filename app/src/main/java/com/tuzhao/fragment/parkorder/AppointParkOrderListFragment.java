@@ -65,7 +65,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = getActivity();
-        if (mContentView == null){
+        if (mContentView == null) {
             mContentView = inflater.inflate(R.layout.fragment_allorderlist_layout, container, false);
             initView();//初始化控件
             initData();//初始化数据
@@ -75,7 +75,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
     }
 
     private void initView() {
-        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
+        mRecycleview = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
         linearLayoutManager = new LinearLayoutManager(mContext);
         mRecycleview.init(linearLayoutManager, new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
@@ -106,7 +106,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
         });
         mRecycleview.setAdapter(mAdapter);
 
-        linearlayout_nodata = (LinearLayout) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
+        linearlayout_nodata = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
     }
 
     private void initData() {
@@ -139,7 +139,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
         OkGo.post(HttpConstants.getKindParkOrder)
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("startItem", startItem == null ? "0" : startItem)
                 .params("pageSize", pageSize == null ? "10" : pageSize)
                 .params("order_status", "1")
@@ -150,7 +150,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
                         if (isFirstIn) {
                             isFirstIn = false;
                             for (ParkOrderInfo info : datas.data) {
-                                if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(),UserManager.getInstance().getUserInfo().getRide_time()), true)) {
+                                if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(), UserManager.getInstance().getUserInfo().getRide_time()), true)) {
                                     mOrdersData.add(info);
                                 }
                             }
@@ -163,7 +163,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
                                 }
                             });
                             mRecycleview.setAdapter(mAdapter);
-                            if (mOrdersData.size()<=0){
+                            if (mOrdersData.size() <= 0) {
                                 linearlayout_nodata.setVisibility(View.VISIBLE);
                             }
                         }
@@ -173,13 +173,13 @@ public class AppointParkOrderListFragment extends BaseFragment {
                             mOrdersData.clear();
                             List<ParkOrderInfo> fsa = new ArrayList<>();
                             for (ParkOrderInfo info : datas.data) {
-                                if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(),UserManager.getInstance().getUserInfo().getRide_time()), true)) {
+                                if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(), UserManager.getInstance().getUserInfo().getRide_time()), true)) {
                                     fsa.add(info);
                                 }
                             }
                             mOrdersData.addAll(fsa);
                             mAdapter.notifyDataSetChanged();
-                            if (mOrdersData.size()<=0){
+                            if (mOrdersData.size() <= 0) {
                                 linearlayout_nodata.setVisibility(View.VISIBLE);
                             }
                         }
@@ -188,7 +188,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
                                 mRecycleview.setLoadingMore(false);
                                 List<ParkOrderInfo> fsa = new ArrayList<>();
                                 for (ParkOrderInfo info : datas.data) {
-                                    if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(),UserManager.getInstance().getUserInfo().getRide_time()), true)) {
+                                    if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(), UserManager.getInstance().getUserInfo().getRide_time()), true)) {
                                         fsa.add(info);
                                     }
                                 }
@@ -251,7 +251,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
         OkGo.post(HttpConstants.cancleAppointOrder)
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("order_id", mOrdersData.get(position).getId())
                 .params("citycode", mOrdersData.get(position).getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
@@ -309,7 +309,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
             requestGetAllOrdersAgain(0 + "", ((mLoadingtimes + 1) * 10) + "");
         } else if (!isVisibleToUser) {
             Log.e("我是已预约的页面", "我被隐藏啦setUserVisibleHint");
-        }else if ((isVisibleToUser && !isResumed())) {
+        } else if ((isVisibleToUser && !isResumed())) {
             Log.e("我是已预约的页面", "我被显示啦setUserVisibleHint");
             if (!isFirstIn) {
                 requestGetAllOrdersAgain(0 + "", ((mLoadingtimes + 1) * 10) + "");
@@ -333,7 +333,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
         OkGo.post(HttpConstants.getKindParkOrder)
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("startItem", startItem == null ? "0" : startItem)
                 .params("pageSize", pageSize == null ? "10" : pageSize)
                 .params("order_status", "1")
@@ -344,7 +344,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
                             mOrdersData.clear();
                             List<ParkOrderInfo> fsa = new ArrayList<>();
                             for (ParkOrderInfo info : datas.data) {
-                                if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(),UserManager.getInstance().getUserInfo().getRide_time()), true)) {
+                                if (dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(true, false), dateUtil.addTime(info.getOrder_starttime(), UserManager.getInstance().getUserInfo().getRide_time()), true)) {
                                     fsa.add(info);
                                 }
                             }

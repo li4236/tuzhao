@@ -41,6 +41,7 @@ public class Park_Info extends BaseInfo {
     private String citycode;//城市码
     private String create_time;//创建时间，主要是提交为了删除车位
     private String update_time;//更新时间，主要是为了核验是否新增订单号
+    private String parkLockId;
     private String voltage;//车位锁电量值
     private String indicator;//指标，代表该车位被停车的次数，用于预定车位排序
     private Calendar[] shareTimeCalendar;     //能共享的时间段的开始时间和结束时间，仅用于预定车位排序
@@ -350,6 +351,14 @@ public class Park_Info extends BaseInfo {
         this.reason = reason;
     }
 
+    public String getParkLockId() {
+        return parkLockId;
+    }
+
+    public void setParkLockId(String parkLockId) {
+        this.parkLockId = parkLockId;
+    }
+
     @Override
     public String toString() {
         return "Park_Info{" +
@@ -382,6 +391,7 @@ public class Park_Info extends BaseInfo {
                 ", citycode='" + citycode + '\'' +
                 ", create_time='" + create_time + '\'' +
                 ", update_time='" + update_time + '\'' +
+                ", parkLockId='" + parkLockId + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
                 ", shareTimeCalendar=" + Arrays.toString(shareTimeCalendar) +

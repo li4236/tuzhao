@@ -124,7 +124,6 @@ public class OpenParkLockActivity extends BaseActivity {
     }
 
     private void controlParkLock() {
-
         OkGo.post(controlParkLock)
                 .tag(OpenParkLockActivity.this)
                 .addInterceptor(new TokenInterceptor())
