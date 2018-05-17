@@ -162,7 +162,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
                         showFiveToast("获取数据异常，请稍后重试");
                         return true;
                     case "805":
-                        userNotExist();
+                        userError();
                         return true;
                     default:
                         return false;
@@ -176,9 +176,14 @@ public abstract class BaseStatusActivity extends BaseActivity {
         }
     }
 
-    protected void userNotExist() {
+    protected void userError() {
         showFiveToast("账号异常，请重新登录");
         startLogin();
+    }
+
+    protected void paramsError() {
+        showFiveToast("客户端异常，请稍后重试");
+        finish();
     }
 
     /**

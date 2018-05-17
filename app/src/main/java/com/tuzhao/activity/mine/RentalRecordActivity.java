@@ -116,7 +116,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
                             public void onLoadFail(Exception e) {
                                 switch (e.getMessage()) {
                                     case "101":
-                                        userNotExist();
+                                        userError();
                                         break;
                                     case "102":
                                         showFiveToast("");
@@ -126,7 +126,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
                                         finish();
                                         break;
                                     case "104":
-                                        userNotExist();
+                                        userError();
                                         break;
                                     case "105":
                                         if (mCommonAdapter.getData().size() > 0) {

@@ -361,6 +361,26 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                         showFiveToast("删除成功");
                         finish();
                     }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "104":
+                                    paramsError();
+                                    break;
+                                case "103":
+                                    userError();
+                                    break;
+                                case "105":
+                                    showFiveToast("服务器异常，删除失败");
+                                    break;
+                            }
+                        }
+                    }
                 });
     }
 
@@ -396,6 +416,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                                 case "102":
                                 case "103":
                                     showFiveToast("客户端异常，请退出重试");
+                                    finish();
                                     break;
                                 case "104":
                                     break;

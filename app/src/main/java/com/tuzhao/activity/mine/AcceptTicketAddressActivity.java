@@ -132,7 +132,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
-                                    userNotExist();
+                                    userError();
                                     break;
                                 case "102":
                                     showFiveToast("该地址已被删除，请检查后重试");
@@ -201,7 +201,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
-                                    userNotExist();
+                                    userError();
                                     break;
                                 case "102":
                                     notifyAddressDelete(ticketId);

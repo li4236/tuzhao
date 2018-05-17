@@ -693,7 +693,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
-                                    userNotExist();
+                                    userError();
                                     break;
                                 case "102":
                                     showFiveToast("城市码错误，请稍后再试");

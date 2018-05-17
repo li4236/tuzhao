@@ -292,7 +292,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                                     finish();
                                     break;
                                 case "103":
-                                    userNotExist();
+                                    userError();
                                     break;
                                 case "104":
                                     showFiveToast("该亲友已被删除");

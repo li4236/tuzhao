@@ -54,7 +54,7 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
                             public void onLoadFail(Exception e) {
                                 switch (e.getMessage()) {
                                     case "101":
-                                        userNotExist();
+                                        userError();
                                         break;
                                     case "102":
                                         break;

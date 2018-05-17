@@ -304,7 +304,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("cityCode", mParkInfo.getCitycode())
-                .params("parkLockId", mParkInfo.getParkLockId())
+                .params("parkspaceId", mParkInfo.getId())
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
@@ -336,7 +336,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("cityCode", mParkInfo.getCitycode())
-                .params("parkLockId", mParkInfo.getParkLockId())
+                .params("parkspaceId", mParkInfo.getId())
                 .params("controlType", isOpen ? "1" : "2")
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
