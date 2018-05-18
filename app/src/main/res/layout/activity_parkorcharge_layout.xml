@@ -48,11 +48,14 @@
 
             <ImageView
                 android:id="@+id/parkorcharge_search_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:layout_marginStart="16dp"
                 android:contentDescription="@string/picture_description"
-                android:src="@drawable/ic_search_black_24dp"
+                android:src="@drawable/ic_scarch2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
