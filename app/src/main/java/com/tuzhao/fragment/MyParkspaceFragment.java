@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
+import com.tuzhao.activity.jiguang_notification.MyReceiver;
+import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
 import com.tuzhao.activity.mine.AddParkActivity;
 import com.tuzhao.activity.mine.ParkSpaceSettingActivity;
 import com.tuzhao.http.HttpConstants;
@@ -31,6 +33,8 @@ import com.tuzhao.publicwidget.others.VoltageView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,6 +72,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private int mRecentOrderMinutes;
 
     private String mParkLockStatus;
+
+    private OnCtrlLockListener mCtrlLockListener;
 
     public static Fragment newInstance(Park_Info mParkInfo) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
@@ -120,6 +126,38 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         SpannableString spannableString = new SpannableString(getText(addNewParkspace));
         spannableString.setSpan(new UnderlineSpan(), 0, getText(addNewParkspace).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         addNewParkspace.setText(spannableString);
+
+        mCtrlLockListener = new OnCtrlLockListener() {
+            @Override
+            public void onCtrlLock(String ctrlMessage) {
+                try {
+                    JSONObject jsonObject = new JSONObject(ctrlMessage);
+                    if (jsonObject.optString("type").equals("ctrl")) {
+                        if (jsonObject.optString("msg").equals("open_successful")) {
+                            initCloseLock();
+                        } else if (jsonObject.optString("msg").equals("open_successful_car")) {
+                            initCloseLock();
+                            showFiveToast("车锁已开，因为车位上方有车辆滞留");
+                        } else if (jsonObject.optString("msg").equals("open_failed")) {
+                            initOpenLock();
+                            showFiveToast("开锁失败，请稍后重试");
+                        } else if (jsonObject.optString("msg").equals("close_successful")) {
+                            initOpenLock();
+                            showFiveToast("成功关锁！");
+                        } else if (jsonObject.optString("msg").equals("close_failed")) {
+                            initCloseLock();
+                            showFiveToast("关锁失败，请稍后重试");
+                        } else if (jsonObject.optString("msg").equals("close_failed_car")) {
+                            initCloseLock();
+                            showFiveToast("关锁失败，因为车位上方有车辆滞留");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        MyReceiver.setOnCtrlLockListener(mCtrlLockListener);
     }
 
     @Override
@@ -170,6 +208,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
             mAnimatorSet.cancel();
         }
+        mCtrlLockListener = null;
+        MyReceiver.setOnCtrlLockListener(null);
     }
 
     /**
@@ -211,7 +251,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             switch (status) {
                 case "租用中":
                     mCircleView.setPaintColor(Color.parseColor("#d01d2a"));
-                    cantOpenLock();
                     break;
                 case "停租中":
                     mCircleView.setPaintColor(Color.parseColor("#808080"));
@@ -341,13 +380,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
-                        if (isOpen) {
-                            mOpenLock.setText("关锁");
-                        } else {
-                            mOpenLock.setText("开锁");
-                        }
-                        cancleAnimation();
-                        mOpenLock.setClickable(true);
+                        showCantCancelLoadingDialog("开锁中");
                     }
 
                     @Override
@@ -355,9 +388,51 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                         super.onError(call, response, e);
                         cancleAnimation();
                         mOpenLock.setClickable(true);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("设备不在线");
+                                    break;
+                                case "102":
+                                    showFiveToast("你想干嘛?");
+                                    break;
+                                case "103":
+                                case "104":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    break;
+                                case "105":
+                                    showFiveToast("账号异常，请重新登录");
+                                    if (getActivity() != null) {
+                                        getActivity().finish();
+                                    }
+                                    break;
+                            }
+                        }
                     }
                 });
 
+    }
+
+    /**
+     * 初始化为未关锁状态
+     */
+    private void initCloseLock() {
+        mOpenLock.setText("关锁");
+        ImageUtil.showPic(mLock, R.drawable.ic_unlock);
+        cancleAnimation();
+        mOpenLock.setClickable(true);
+        dismmisLoadingDialog();
+    }
+
+    /**
+     * 初始化为未开锁状态
+     */
+    private void initOpenLock() {
+        mOpenLock.setText("开锁");
+        ImageUtil.showPic(mLock, R.drawable.lock);
+        cancleAnimation();
+        mOpenLock.setClickable(true);
+        dismmisLoadingDialog();
     }
 
     private void startAnimation() {

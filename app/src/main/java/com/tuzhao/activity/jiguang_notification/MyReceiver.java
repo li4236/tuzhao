@@ -123,4 +123,5 @@ public class MyReceiver extends BroadcastReceiver {
     public static void setOnCtrlLockListener(OnCtrlLockListener onCtrlLockListener) {
         mOnCtrlLockListener = onCtrlLockListener;
     }
+
 }

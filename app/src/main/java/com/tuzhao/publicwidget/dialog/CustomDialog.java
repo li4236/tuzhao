@@ -14,6 +14,15 @@ public class CustomDialog extends Dialog {
 
     private String content;
 
+    private boolean mCancelable = true;
+
+    public CustomDialog(Context context, String content, boolean cancelable) {
+        super(context, R.style.CustomDialog);
+        this.content = content != null ? content : "加载中...";
+        initView();
+        mCancelable = cancelable;
+    }
+
     public CustomDialog(Context context, String content) {
         super(context, R.style.CustomDialog);
         this.content = content != null ? content : "加载中...";
@@ -24,8 +33,9 @@ public class CustomDialog extends Dialog {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (CustomDialog.this.isShowing())
+                if (CustomDialog.this.isShowing() && mCancelable) {
                     CustomDialog.this.dismiss();
+                }
                 break;
         }
         return true;

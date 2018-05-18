@@ -89,6 +89,15 @@ public abstract class BaseStatusFragment extends Fragment {
     }
 
     /**
+     * 显示自定义加载提示的对话框
+     */
+    protected void showCantCancelLoadingDialog(String msg) {
+        dismmisLoadingDialog();
+        mCustomDialog = new CustomDialog(getContext(), msg,false);
+        mCustomDialog.show();
+    }
+
+    /**
      * 关闭加载对话框
      */
     protected void dismmisLoadingDialog() {
