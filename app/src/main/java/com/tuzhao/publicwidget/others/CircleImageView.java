@@ -15,6 +15,7 @@
  */
 package com.tuzhao.publicwidget.others;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -51,7 +52,7 @@ public class CircleImageView extends AppCompatImageView {
     private static final int COLORDRAWABLE_DIMENSION = 2;
 
     private static final int DEFAULT_BORDER_WIDTH = 2;
-    private static final int DEFAULT_BORDER_COLOR = Color.parseColor("#cc4d4d4d");
+    private static final int DEFAULT_BORDER_COLOR = Color.TRANSPARENT;
     private static final int DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.TRANSPARENT;
     private static final boolean DEFAULT_BORDER_OVERLAY = false;
 
@@ -463,6 +464,7 @@ public class CircleImageView extends AppCompatImageView {
         mBitmapShader.setLocalMatrix(mShaderMatrix);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private class OutlineProvider extends ViewOutlineProvider {
 
         @Override
