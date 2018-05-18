@@ -788,6 +788,11 @@ public class DateUtil {
         return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
+    public static String printYearToMinutesCalendar(Calendar calendar) {
+        return calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
+                + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+    }
+
     /**
      * @param startDate //开始停车时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   //结束停车时间，格式为yyyy-MM-dd HH:mm

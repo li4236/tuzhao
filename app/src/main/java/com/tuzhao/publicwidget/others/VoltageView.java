@@ -116,7 +116,7 @@ public class VoltageView extends View {
         canvas.drawRect(mHeadRect, mBorderPaint);
 
         mBorderPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(mBorderRect, mBorderPaint);
+        canvas.drawRoundRect(mBorderRect, 4, 4, mBorderPaint);
 
         mVoltageRect.top = mVoltageRect.bottom - mVoltageHeight * mVoltage / 100;
         if (mVoltage <= 20) {

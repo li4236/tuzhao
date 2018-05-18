@@ -262,7 +262,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
 
             for (int i = 0; i < 7; i++) {
-                mDays.add(nowCalendar.get(Calendar.MONTH) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
+                mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
                 nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
@@ -279,13 +279,23 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     //返回的分别是三个级别的选中位置
                     String tx = mDays.get(options1) + " " + mHours.get(options1).get(option2) + " 点 " + mMinutes.get(options1).get(option2).get(options3) + " 分";
                     Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + options1);//让日期加N
-                    start_time = calendar.get(Calendar.YEAR) + "-" + DateUtil.thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" +
-                            DateUtil.thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " " + DateUtil.thanTen(Integer.parseInt(mHours.get(options1).get(option2)))
-                            + ":" + DateUtil.thanTen(Integer.parseInt(mMinutes.get(options1).get(option2).get(options3)));
+                    calendar.add(Calendar.DAY_OF_MONTH, options1);
+                    calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
+                    calendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
+                    start_time = DateUtil.getCurrentYearToMinutes(calendar.getTimeInMillis());
 
-                    Log.e("哈哈哈，", "选中时间" + start_time);
-                    if (dateUtil.compareNowTime(start_time, true)) {
+                    //calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + options1);//让日期加N
+                   /* start_time = calendar.get(Calendar.YEAR) + "-" + DateUtil.thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" +
+                            DateUtil.thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " " + DateUtil.thanTen(Integer.parseInt(mHours.get(options1).get(option2)))
+                            + ":" + DateUtil.thanTen(Integer.parseInt(mMinutes.get(options1).get(option2).get(options3)));*/
+
+                    Calendar nowCalendar = Calendar.getInstance();
+                    nowCalendar.set(Calendar.SECOND, 0);
+                    nowCalendar.set(Calendar.MILLISECOND, 0);
+
+                    if (calendar.compareTo(nowCalendar) >= 0) {
                         textview_starttime.setText(tx);
                         end_time = dateUtil.addTime(start_time, park_time);
                         if (order_list.size() > 0) {
@@ -306,6 +316,29 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         textview_starttime.setText("");
                         MyToast.showToast(OrderParkActivity.this, "请选择有效时间哦", 5);
                     }
+
+                    Log.e("哈哈哈，", "选中时间" + start_time);
+                    /*if (dateUtil.compareNowTime(start_time, true)) {
+                        textview_starttime.setText(tx);
+                        end_time = dateUtil.addTime(start_time, park_time);
+                        if (order_list.size() > 0) {
+                            for (ParkOrderInfo parkOrderInfo : order_list) {
+                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                    //预约订单
+                                    MyToast.showToast(OrderParkActivity.this, "在该时间您已有过预约，请重新选择哦", 5);
+                                    textview_starttime.setText("");
+                                    return;
+                                }
+                            }
+                        }
+                        if (textview_parktime.getText().length() > 0 && park_time > 0) {
+                            scanPark();
+                        }
+                    } else {
+                        start_time = "";
+                        textview_starttime.setText("");
+                        MyToast.showToast(OrderParkActivity.this, "请选择有效时间哦", 5);
+                    }*/
                 }
             });
         }
@@ -351,7 +384,59 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     //返回的分别是三个级别的选中位置
-                    String tx;
+                    //String tx;
+                    if (options1 == 0 && option2 == 0 && options3 == 0) {
+                        MyToast.showToast(OrderParkActivity.this, "请选择有效时段哦", 5);
+                        textview_parktime.setText("");
+                        park_time = 0;
+                    } else {
+                        park_time = options1 * 60 * 24 + option2 * 60 + Integer.valueOf(options3Items.get(options1).get(option2).get(options3));
+                        Calendar startParkCalendar;
+                        if (start_time.equals("")) {
+                            startParkCalendar = Calendar.getInstance();
+                        } else {
+                            startParkCalendar = DateUtil.getYearToMinuteCalendar(start_time);
+                        }
+
+                        startParkCalendar.add(Calendar.MINUTE, park_time);
+                        end_time = DateUtil.printYearToMinutesCalendar(startParkCalendar);
+                        int parkMuintes = park_time;
+                        Log.e(TAG, "onOptionsSelect: " + parkMuintes);
+                        StringBuilder stringBuilder = new StringBuilder();
+                        if (parkMuintes / (60 * 24) != 0) {
+                            stringBuilder.append(parkMuintes / (60 * 24));
+                            stringBuilder.append("天");
+                        }
+                        parkMuintes -= 24 * 60 * options1;
+                        if (parkMuintes / 60 != 0) {
+                            stringBuilder.append(parkMuintes / 60);
+                            stringBuilder.append("小时");
+                        }
+                        parkMuintes -= 60 * option2;
+                        stringBuilder.append(parkMuintes);
+                        stringBuilder.append("分钟");
+                        textview_parktime.setText(stringBuilder.toString());
+
+                        park_time = Integer.parseInt(options1Items.get(options1)) * 60 * 24 + Integer.parseInt(options2Items.get(options1).get(option2)) * 60 + Integer.parseInt(options3Items.get(options1).get(option2).get(options3));
+                        end_time = dateUtil.addTime(start_time, park_time);
+                        if (order_list.size() > 0) {
+                            for (ParkOrderInfo parkOrderInfo : order_list) {
+                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                    //预约订单
+                                    MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
+                                    end_time = "";
+                                    textview_parktime.setText("");
+                                    park_time = 0;
+                                    return;
+                                }
+                            }
+                        }
+                        if (textview_starttime.getText().length() > 0 && !start_time.equals("")) {
+                            scanPark();
+                        }
+
+                    }
+                    /*// TODO: 2018/5/17
                     if (options1Items.get(options1).equals("0")) {
                         if (options2Items.get(options1).get(option2).equals("0")) {
                             if (options3Items.get(options1).get(option2).get(options3).equals("0")) {
@@ -420,7 +505,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         if (textview_starttime.getText().length() > 0 && !start_time.equals("")) {
                             scanPark();
                         }
-                    }
+                    }*/
                 }
             });
         }
