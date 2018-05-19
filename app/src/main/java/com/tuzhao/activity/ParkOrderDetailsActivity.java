@@ -130,10 +130,10 @@ public class ParkOrderDetailsActivity extends BaseActivity {
 
     private void initView() {
 
-        textview_warm1 = (TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_warm1);
-        textview_cancleorder = (TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_cancleorder);
-        textview_starparking = (TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_starparking);
-        textview_orderbumber = (TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_orderbumber);
+        textview_warm1 = findViewById(R.id.id_activity_parkorderdetail_layout_textview_warm1);
+        textview_cancleorder = findViewById(R.id.id_activity_parkorderdetail_layout_textview_cancleorder);
+        textview_starparking = findViewById(R.id.id_activity_parkorderdetail_layout_textview_starparking);
+        textview_orderbumber = findViewById(R.id.id_activity_parkorderdetail_layout_textview_orderbumber);
     }
 
     private void initData() {

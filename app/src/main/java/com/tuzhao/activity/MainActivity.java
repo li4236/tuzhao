@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -99,7 +98,6 @@ import com.tuzhao.publicwidget.map.ClusterOverlay;
 import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.others.ArcView;
 import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.publicwidget.others.CircleView;
 import com.tuzhao.utils.ConstansUtil;
@@ -868,17 +866,15 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             return;
         }
 
-        ArcView arcView = new ArcView(this);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 36), DensityUtil.dp2px(this, 36));
+        ImageView arcView = new ImageView(this);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 21.75f),
+                DensityUtil.dp2px(this, 28.25f));
         arcView.setLayoutParams(params);
-
-        CircleView backgroundCirclView = new CircleView(this);
-        backgroundCirclView.setPaintColor(Color.WHITE);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 18), DensityUtil.dp2px(this, 18));
-        backgroundCirclView.setLayoutParams(layoutParams);
+        arcView.setBackgroundResource(R.drawable.location_arrow);
 
         CircleView circleView = new CircleView(this);
-        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 14), DensityUtil.dp2px(this, 14));
+        final ViewGroup.LayoutParams circleLayoutParams = new ViewGroup.LayoutParams(DensityUtil.dp2px(this, 12),
+                DensityUtil.dp2px(this, 12));
         circleView.setLayoutParams(circleLayoutParams);
 
         MarkerOptions options = new MarkerOptions();
@@ -886,12 +882,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
         mLocationMarker = aMap.addMarker(options);
-
-        MarkerOptions backgroundOptions = new MarkerOptions();
-        backgroundOptions.icon(BitmapDescriptorFactory.fromView(backgroundCirclView));
-        backgroundOptions.anchor(0.5f, 0.5f);
-        backgroundOptions.position(latlng);
-        aMap.addMarker(backgroundOptions);
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromView(circleView));

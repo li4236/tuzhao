@@ -57,6 +57,7 @@ public class CircleView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mColor);
         mPaint.setAntiAlias(true);
+        //mPaint.setShadowLayer(30,5,2, Color.RED);
     }
 
     @Override

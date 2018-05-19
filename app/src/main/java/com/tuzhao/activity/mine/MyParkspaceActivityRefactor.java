@@ -89,7 +89,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mViewPager.getCurrentItem() != 0) {
-                    mViewPager.setCurrentItem((mViewPager.getCurrentItem() - 1), true);
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
                 }
             }
         });
@@ -98,7 +98,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mViewPager.getCurrentItem() != mFragments.size() - 1) {
-                    mViewPager.setCurrentItem((mViewPager.getCurrentItem() + 1), true);
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
                 }
             }
         });

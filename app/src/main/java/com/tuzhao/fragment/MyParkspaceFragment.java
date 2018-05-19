@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -132,6 +133,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             public void onCtrlLock(String ctrlMessage) {
                 try {
                     JSONObject jsonObject = new JSONObject(ctrlMessage);
+                    Log.e(TAG, "onCtrlLock: " + jsonObject);
                     if (jsonObject.optString("type").equals("ctrl")) {
                         if (jsonObject.optString("msg").equals("open_successful")) {
                             initCloseLock();
@@ -143,7 +145,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                             showFiveToast("开锁失败，请稍后重试");
                         } else if (jsonObject.optString("msg").equals("close_successful")) {
                             initOpenLock();
-                            showFiveToast("成功关锁！");
+                            //showFiveToast("成功关锁！");
                         } else if (jsonObject.optString("msg").equals("close_failed")) {
                             initCloseLock();
                             showFiveToast("关锁失败，请稍后重试");
@@ -348,7 +350,11 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         mParkLockStatus = stringBase_class_info.data;
-                        if (!mParkLockStatus.equals("2")) {
+                        if (mParkLockStatus.equals("1")) {
+                            initCloseLock();
+                        } else if (mParkLockStatus.equals("2")) {
+                            initOpenLock();
+                        } else if (mParkLockStatus.equals("3")) {
                             cantOpenLock();
                         }
                         dismmisLoadingDialog();
@@ -358,7 +364,18 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    break;
+                                case "103":
+                                    showFiveToast("账户异常，请重新登录");
+                                    if (getActivity() != null) {
+                                        getActivity().finish();
+                                    }
+                                    break;
+                            }
                         }
                     }
                 });
@@ -380,7 +397,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
-                        showCantCancelLoadingDialog("开锁中");
+
                     }
 
                     @Override
@@ -421,7 +438,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         ImageUtil.showPic(mLock, R.drawable.ic_unlock);
         cancleAnimation();
         mOpenLock.setClickable(true);
-        dismmisLoadingDialog();
     }
 
     /**
@@ -432,7 +448,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         ImageUtil.showPic(mLock, R.drawable.lock);
         cancleAnimation();
         mOpenLock.setClickable(true);
-        dismmisLoadingDialog();
     }
 
     private void startAnimation() {

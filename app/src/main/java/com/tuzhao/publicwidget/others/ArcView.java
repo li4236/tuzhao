@@ -11,6 +11,8 @@ import android.view.View;
 
 /**
  * Created by juncoder on 2018/5/10.
+ * <p>
+ * 三角形，用于地图当前定位
  */
 
 public class ArcView extends View {
@@ -37,6 +39,7 @@ public class ArcView extends View {
     private void init() {
         mPaint = new Paint();
         mPaint.setColor(Color.parseColor("#f4bb67"));
+        //mPaint.setShadowLayer(60,0,0,Color.RED);
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
 
