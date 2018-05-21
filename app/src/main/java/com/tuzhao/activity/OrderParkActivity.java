@@ -86,6 +86,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
     private DecimalFormat mDecimalFormat;
 
+    private int mExtensionTime;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,10 +255,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                 mHours.add(hours);
                 mMinutes.add(hourWithMinute);
+                nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
 
             mDays.add("明天");
             mDays.add("后天");
+            nowCalendar.add(Calendar.DAY_OF_MONTH, 2);
             for (int i = 0; i < 2; i++) {
                 addhourWithMinutes();
             }
@@ -976,9 +980,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Log.e("TAG", "showAlertDialog shareTime: " + DateUtil.getTwoYearToMinutesString(
                 mCanParkInfo.get(0).getShareTimeCalendar()[0], mCanParkInfo.get(0).getShareTimeCalendar()[1]));
         if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkInfo.get(0).getShareTimeCalendar()[1]) >= 0) {
-            builder.setMessage("最优车位顺延时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");
+            mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
+            builder.setMessage("最优车位顺延时长为" + mExtensionTime + "分钟，是否预定？");
         } else {
-            builder.setMessage("可分配车位顺延时长为" + DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar) + "分钟，是否预定？");
+            mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
+            builder.setMessage("可分配车位顺延时长为" + mExtensionTime + "分钟，是否预定？");
         }
 
         builder.setTitle("确认预定");
@@ -1026,6 +1032,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("readypark_id", readyParkId.toString())
                 .params("readypark_updatetime", readyParkUpdateTime.toString())
                 .params("citycode", parkspace_info.getCity_code())
+                .params("extensionTiem", mExtensionTime * 60)
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -1196,9 +1203,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Calendar canParkEndCalendar = DateUtil.getYearToMinuteCalendar(end_time);
         canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
         if (DateUtil.getCalendarDistance(canParkEndCalendar, park_info.getShareTimeCalendar()[1]) >= 0) {
+            mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
             builder.setMessage("最优车位顺延时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");
         } else {
-            builder.setMessage("可分配车位顺延时长为" + DateUtil.getCalendarDistance(park_info.getShareTimeCalendar()[1], canParkEndCalendar) + "分钟，是否预定？");
+            mExtensionTime = (int) DateUtil.getCalendarDistance(park_info.getShareTimeCalendar()[1], canParkEndCalendar);
+            builder.setMessage("可分配车位顺延时长为" + mExtensionTime + "分钟，是否预定？");
         }
         builder.setTitle("确认预定");
         builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
@@ -1227,6 +1236,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("park_id", park_info.getId())
                 .params("park_interval", start_time + "*" + end_time)
                 .params("citycode", parkspace_info.getCity_code())
+                .params("extensionTiem", mExtensionTime * 60)
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
