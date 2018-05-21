@@ -23,7 +23,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.navi.RouteNaviActivity;
 import com.tuzhao.application.MyApplication;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ChargeStationInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;

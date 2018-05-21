@@ -26,7 +26,7 @@ import com.tuzhao.activity.OrderParkActivity;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.navi.RouteNaviActivity;
 import com.tuzhao.application.MyApplication;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;

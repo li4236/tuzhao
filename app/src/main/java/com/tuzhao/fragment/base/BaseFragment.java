@@ -1,4 +1,4 @@
-package com.tuzhao.fragment;
+package com.tuzhao.fragment.base;
 
 import android.app.Activity;
 import android.os.Bundle;

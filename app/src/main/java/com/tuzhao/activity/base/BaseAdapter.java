@@ -171,6 +171,16 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         notifyDataSetChanged();
     }
 
+    public void setNewArrayData(ArrayList<T> newData) {
+        if (newData != null) {
+            if (!mData.isEmpty()) {
+                mData.clear();
+            }
+            mData = newData;
+            notifyDataSetChanged();
+        }
+    }
+
     public void justAddData(T t) {
         mData.add(t);
     }

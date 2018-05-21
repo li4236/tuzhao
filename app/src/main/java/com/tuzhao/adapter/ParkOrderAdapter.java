@@ -3,6 +3,7 @@ package com.tuzhao.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -110,7 +111,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //立即开锁的点击事件
                     Intent intent = new Intent(mContext, OpenParkLockActivity.class);
-                    intent.putExtra("orderInfo", mData.get(position));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("orderInfo", mData.get(position));
+                    intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
             });
@@ -119,7 +122,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //订单详情点击事件
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
-                    intent.putExtra("parkorderinfo", mData.get(position));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
             });
@@ -206,7 +211,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //跳转订单详情页面
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
-                    intent.putExtra("parkorderinfo", mData.get(position));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
             });
@@ -313,7 +320,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //跳转订单详情页面
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
-                    intent.putExtra("parkorderinfo", mData.get(position));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
             });
@@ -396,7 +405,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //跳转订单详情页面
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
-                    intent.putExtra("parkorderinfo", mData.get(position));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
             });

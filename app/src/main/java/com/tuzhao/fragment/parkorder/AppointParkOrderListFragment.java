@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.adapter.ParkOrderAdapter;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;

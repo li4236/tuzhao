@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.ChargestationDetailActivity;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.info.NearPointPCInfo;
 
 /**

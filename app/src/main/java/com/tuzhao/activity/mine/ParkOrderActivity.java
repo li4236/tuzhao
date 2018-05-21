@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,11 +13,7 @@ import android.widget.LinearLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.fragment.parkorder.AppointParkOrderListFragment;
-import com.tuzhao.fragment.parkorder.CancleParkOrderFragment;
-import com.tuzhao.fragment.parkorder.FinishParkOrderFragment;
-import com.tuzhao.fragment.parkorder.ParkReadPayOrderListFragment;
-import com.tuzhao.fragment.parkorder.RentingParkOrderFragment;
+import com.tuzhao.fragment.parkorder.ParkOrderFragment;
 import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
@@ -58,12 +54,12 @@ public class ParkOrderActivity extends BaseActivity {
 
         fragmentList = new ArrayList<>();
 
-        String[] mTitle = new String[]{"租用中", "已预约", "待付款", "已完成", "已取消"};
-        fragmentList.add(new RentingParkOrderFragment());
-        fragmentList.add(new AppointParkOrderListFragment());
-        fragmentList.add(new ParkReadPayOrderListFragment());
-        fragmentList.add(new FinishParkOrderFragment());
-        fragmentList.add(new CancleParkOrderFragment());
+        String[] mTitle = new String[]{"全部", "租用中", "已预约", "已完成", "已取消"};
+        fragmentList.add(ParkOrderFragment.newInstance(0));
+        fragmentList.add(ParkOrderFragment.newInstance(2));
+        fragmentList.add(ParkOrderFragment.newInstance(1));
+        fragmentList.add(ParkOrderFragment.newInstance(5));
+        fragmentList.add(ParkOrderFragment.newInstance(6));
         viewpager.setAdapter(new MyFrageStatePagerAdapter(getSupportFragmentManager(), mTitle));
         viewPagerTab.setViewPager(viewpager);
 
@@ -92,7 +88,7 @@ public class ParkOrderActivity extends BaseActivity {
      * 定义自己的ViewPager适配器。
      * 也可以使用FragmentPagerAdapter。关于这两者之间的区别，可以自己去搜一下。
      */
-    class MyFrageStatePagerAdapter extends FragmentStatePagerAdapter {
+    class MyFrageStatePagerAdapter extends FragmentPagerAdapter {
 
         private String[] TITLES;
 

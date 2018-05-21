@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.tuzhao.R;
 import com.tuzhao.adapter.CollectionAdapter;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;

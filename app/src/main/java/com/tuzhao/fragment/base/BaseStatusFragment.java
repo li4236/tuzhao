@@ -1,4 +1,4 @@
-package com.tuzhao.fragment;
+package com.tuzhao.fragment.base;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
+import com.tuzhao.R;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
@@ -31,10 +32,12 @@ public abstract class BaseStatusFragment extends Fragment {
 
     private CustomDialog mCustomDialog;
 
+    private String mDialogString = "";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(resourceId(), container, false);
+        View view = inflater.inflate(resourceId() == 0 ? R.layout.fragment_base_refresh_layout : resourceId(), container, false);
         initView(view, savedInstanceState);
         initData();
         return view;
@@ -75,7 +78,10 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected void showLoadingDialog() {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(getContext(), null);
+        if (mCustomDialog == null || !mDialogString.equals("")) {
+            mDialogString = "";
+            mCustomDialog = new CustomDialog(getContext(), null);
+        }
         mCustomDialog.show();
     }
 
@@ -84,7 +90,10 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected void showLoadingDialog(String msg) {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(getContext(), msg);
+        if (mCustomDialog == null || !mDialogString.equals(msg)) {
+            mDialogString = msg;
+            mCustomDialog = new CustomDialog(getContext(), msg);
+        }
         mCustomDialog.show();
     }
 
@@ -93,7 +102,7 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected void showCantCancelLoadingDialog(String msg) {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(getContext(), msg,false);
+        mCustomDialog = new CustomDialog(getContext(), msg, false);
         mCustomDialog.show();
     }
 

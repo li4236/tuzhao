@@ -77,7 +77,7 @@ public class CircleView extends View {
         canvas.restore();
     }
 
-    public void setPaintColor(int color) {
+    public void setColor(int color) {
         mColor = color;
         mPaint.setColor(mColor);
     }

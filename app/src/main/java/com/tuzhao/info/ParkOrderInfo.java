@@ -1,12 +1,15 @@
 package com.tuzhao.info;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.tuzhao.info.base_info.BaseInfo;
 
 /**
  * Created by TZL12 on 2017/9/13.
  */
 
-public class ParkOrderInfo extends BaseInfo {
+public class ParkOrderInfo extends BaseInfo implements Parcelable {
 
     private String id;//订单id
     private String parkspace_id;//停车场id
@@ -21,7 +24,7 @@ public class ParkOrderInfo extends BaseInfo {
     private String username;//用户名=用户手机号码
     private String park_username;//该停车位主人的手机号码
     private String order_number;//订单编号
-    private String order_status;//订单状态
+    private String order_status;//订单状态:1-已预约、2-停车中、3-待付款、5-已完成（待评论、已完成）、6-已取消（超时取消、正常手动取消）
     private String order_time;//下单时间
     private String pictures;//停车场和当前停车位的所有图片，逗号隔开
     private String order_fee;//订单总费用
@@ -296,4 +299,96 @@ public class ParkOrderInfo extends BaseInfo {
     public void setCitycode(String citycode) {
         this.citycode = citycode;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.parkspace_id);
+        dest.writeString(this.park_id);
+        dest.writeString(this.parkspace_name);
+        dest.writeString(this.ps_address);
+        dest.writeString(this.location_describe);
+        dest.writeString(this.open_time);
+        dest.writeString(this.order_starttime);
+        dest.writeString(this.order_endtime);
+        dest.writeString(this.car_numble);
+        dest.writeString(this.username);
+        dest.writeString(this.park_username);
+        dest.writeString(this.order_number);
+        dest.writeString(this.order_status);
+        dest.writeString(this.order_time);
+        dest.writeString(this.pictures);
+        dest.writeString(this.order_fee);
+        dest.writeString(this.actual_fee);
+        dest.writeString(this.fine_fee);
+        dest.writeSerializable(this.discount);
+        dest.writeString(this.park_starttime);
+        dest.writeString(this.park_endtime);
+        dest.writeString(this.high_time);
+        dest.writeString(this.low_time);
+        dest.writeString(this.high_fee);
+        dest.writeString(this.low_fee);
+        dest.writeString(this.high_max_fee);
+        dest.writeString(this.low_max_fee);
+        dest.writeString(this.fine);
+        dest.writeString(this.citycode);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+    }
+
+    public ParkOrderInfo() {
+    }
+
+    protected ParkOrderInfo(Parcel in) {
+        this.id = in.readString();
+        this.parkspace_id = in.readString();
+        this.park_id = in.readString();
+        this.parkspace_name = in.readString();
+        this.ps_address = in.readString();
+        this.location_describe = in.readString();
+        this.open_time = in.readString();
+        this.order_starttime = in.readString();
+        this.order_endtime = in.readString();
+        this.car_numble = in.readString();
+        this.username = in.readString();
+        this.park_username = in.readString();
+        this.order_number = in.readString();
+        this.order_status = in.readString();
+        this.order_time = in.readString();
+        this.pictures = in.readString();
+        this.order_fee = in.readString();
+        this.actual_fee = in.readString();
+        this.fine_fee = in.readString();
+        this.discount = (Discount_Info) in.readSerializable();
+        this.park_starttime = in.readString();
+        this.park_endtime = in.readString();
+        this.high_time = in.readString();
+        this.low_time = in.readString();
+        this.high_fee = in.readString();
+        this.low_fee = in.readString();
+        this.high_max_fee = in.readString();
+        this.low_max_fee = in.readString();
+        this.fine = in.readString();
+        this.citycode = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+    }
+
+    public static final Parcelable.Creator<ParkOrderInfo> CREATOR = new Parcelable.Creator<ParkOrderInfo>() {
+        @Override
+        public ParkOrderInfo createFromParcel(Parcel source) {
+            return new ParkOrderInfo(source);
+        }
+
+        @Override
+        public ParkOrderInfo[] newArray(int size) {
+            return new ParkOrderInfo[size];
+        }
+    };
 }

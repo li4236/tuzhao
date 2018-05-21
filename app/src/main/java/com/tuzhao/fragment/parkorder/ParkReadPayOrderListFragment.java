@@ -23,7 +23,7 @@ import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.adapter.ParkOrderAdapter;
 import com.tuzhao.application.MyApplication;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.User_Info;

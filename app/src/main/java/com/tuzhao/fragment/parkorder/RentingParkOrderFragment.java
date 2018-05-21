@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.ParkOrderDetailsActivity;
-import com.tuzhao.fragment.BaseFragment;
+import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -250,7 +250,9 @@ public class RentingParkOrderFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
-                intent.putExtra("parkorderinfo", parkOrderInfo);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("parkorderinfo", parkOrderInfo);
+                intent.putExtra("orderInfoBundle", bundle);
                 mContext.startActivity(intent);
             }
         });

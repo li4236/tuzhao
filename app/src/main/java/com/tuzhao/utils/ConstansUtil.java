@@ -52,4 +52,14 @@ public class ConstansUtil {
      */
     public static final String PHOTO_IMAGE = "PhotoImage";
 
+    /**
+     * 订单状态
+     */
+    public static final String ORDER_STATUS = "OrderStatus";
+
+    /**
+     * 订单列表
+     */
+    public static final String PARK_ORDER_LIST = "ParkOrderList";
+
 }

@@ -34,11 +34,11 @@ public class DateUtil {
 
     private static final String TAG = "DateUtil";
 
-    private static SimpleDateFormat sAllDateFormat;
+    private static SimpleDateFormat sYearToSecondFormat;
 
     private static SimpleDateFormat sYearToDayFormat;
 
-    private static SimpleDateFormat sDayDateFormat;
+    private static SimpleDateFormat sHourToSecond;
 
     private static SimpleDateFormat sExceptSecondsFormat;
 
@@ -50,11 +50,11 @@ public class DateUtil {
 
     private static Calendar sSpecialTodayEndCalendar;
 
-    private static SimpleDateFormat getAllDateFormat() {
-        if (sAllDateFormat == null) {
-            sAllDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private static SimpleDateFormat getYearToSecondFormat() {
+        if (sYearToSecondFormat == null) {
+            sYearToSecondFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         }
-        return sAllDateFormat;
+        return sYearToSecondFormat;
     }
 
     public static SimpleDateFormat getYearToDayFormat() {
@@ -64,11 +64,11 @@ public class DateUtil {
         return sYearToDayFormat;
     }
 
-    public static SimpleDateFormat getDayDateFormat() {
-        if (sDayDateFormat == null) {
-            sDayDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+    public static SimpleDateFormat getHourToSecondFormat() {
+        if (sHourToSecond == null) {
+            sHourToSecond = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         }
-        return sDayDateFormat;
+        return sHourToSecond;
     }
 
     private static SimpleDateFormat getYearToMinutesFormat() {
@@ -127,10 +127,18 @@ public class DateUtil {
         getDate().setTime(System.currentTimeMillis());
 
         if (isDetail) {
-            return getAllDateFormat().format(getDate());
+            return getYearToSecondFormat().format(getDate());
         } else {
-            return getDayDateFormat().format(getDate());
+            return getHourToSecondFormat().format(getDate());
         }
+    }
+
+    /**
+     * @return 当前的yyyy-MM-dd HH:mm
+     */
+    public static String getCurrentYearToSecond() {
+        getDate().setTime(System.currentTimeMillis());
+        return getYearToSecondFormat().format(getDate());
     }
 
     /**
@@ -397,6 +405,42 @@ public class DateUtil {
     }
 
     /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @return 返回两个时间段相差的分钟数
+     */
+    public static int getMinutesDistance(String startDate, String endDate) {
+        SimpleDateFormat dateFormat = getYearToSecondFormat();
+        Date start = new Date();
+        Date end = new Date();
+        try {
+            start = dateFormat.parse(startDate);
+            end = dateFormat.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return (int) ((end.getTime() / 1000 - start.getTime() / 1000) / 60);
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @return 返回两个时间段相差的分钟数(x小时x分)
+     */
+    public static String getDateDistanceForHourWithMinute(String startDate, String endDate) {
+        int minutesDistance = getMinutesDistance(startDate, endDate);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 >= 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("小时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+        stringBuilder.append(minutesDistance);
+        stringBuilder.append("分");
+        return stringBuilder.toString();
+    }
+
+    /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
      * @return 返回两个时间段相差的毫秒数
@@ -651,6 +695,23 @@ public class DateUtil {
     }
 
     /**
+     * @param date 格式为yyyy-MM-dd HH:mm:ss
+     * @return 格式为yyyy-MM-dd对应的Calendar
+     */
+    public static Calendar getYearToSecondCalendar(String date) {
+        Calendar calendar = Calendar.getInstance();
+        String[] yearToMinute = date.split("-");
+        calendar.set(Calendar.YEAR, Integer.valueOf(yearToMinute[0]));
+        calendar.set(Calendar.MONTH, Integer.valueOf(yearToMinute[1]) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToMinute[2].substring(0, yearToMinute[2].indexOf(" "))));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(" ") + 1, yearToMinute[2].indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(":") + 1, yearToMinute[2].lastIndexOf(":"))));
+        calendar.set(Calendar.SECOND, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].lastIndexOf(":")+1, yearToMinute[2].length())));
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
+    }
+
+    /**
      * @param date 格式为yyyy-MM-dd HH:mm
      * @return 格式为yyyy-MM-dd对应的Calendar
      */
@@ -761,6 +822,29 @@ public class DateUtil {
     }
 
     /**
+     * @param yearToSecond yyyy-MM-dd HH:mm:ss
+     * @return MM月dd日 HH:mm
+     */
+    public static String getMonthToMinute(String yearToSecond) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(yearToSecond.substring(yearToSecond.indexOf("-") + 1, yearToSecond.lastIndexOf(":")));
+        stringBuilder.replace(2, 3, "月");
+        stringBuilder.replace(5, 6, "日 ");
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param yearToSecond yyyy-MM-dd HH:mm:ss
+     * @return MM月dd日
+     */
+    public static String getMonthToDay(String yearToSecond) {
+        StringBuilder stringBuilder = new StringBuilder(yearToSecond.substring(yearToSecond.indexOf("-") + 1, yearToSecond.indexOf(" ")));
+        stringBuilder.replace(2, 3, "月");
+        stringBuilder.append("日");
+        return stringBuilder.toString();
+    }
+
+    /**
      * @return 日历对应的年月日，格式2018年05月07日
      */
     public static String getCalendarYearToDayWithText(Calendar calendar) {
@@ -789,7 +873,7 @@ public class DateUtil {
     }
 
     public static String printYearToMinutesCalendar(Calendar calendar) {
-        return calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
+        return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
                 + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 
@@ -1173,7 +1257,7 @@ public class DateUtil {
      */
     public int getTimeDifferenceMinuteMoreDetail(String starTime, String endTime) {
         int secend = 0;
-        SimpleDateFormat dateFormat = getAllDateFormat();
+        SimpleDateFormat dateFormat = getYearToSecondFormat();
         try {
             Date parse = dateFormat.parse(starTime);
             Date parse1 = dateFormat.parse(endTime);

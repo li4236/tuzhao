@@ -109,7 +109,7 @@
                     android:paddingBottom="15dp"
                     android:paddingStart="30dp"
                     android:paddingTop="15dp"
-                    android:text="@string/park_record"
+                    android:text="@string/my_park_order"
                     android:textColor="@color/b1"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"

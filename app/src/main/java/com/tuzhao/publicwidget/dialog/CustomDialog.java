@@ -12,6 +12,8 @@ import com.tuzhao.R;
  */
 public class CustomDialog extends Dialog {
 
+    private static final String TAG = "CustomDialog";
+
     private String content;
 
     private boolean mCancelable = true;

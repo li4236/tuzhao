@@ -21,6 +21,7 @@ import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
 import com.tuzhao.activity.mine.AddParkActivity;
 import com.tuzhao.activity.mine.ParkSpaceSettingActivity;
+import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -245,24 +246,24 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private void setParkspaceStatus() {
         if (mParkInfo.getPark_status().equals("1")) {
             mParkspaceStatus.setText("未开放");
-            mCircleView.setPaintColor(Color.parseColor("#808080"));
+            mCircleView.setColor(Color.parseColor("#808080"));
             cantOpenLock();
         } else if (mParkInfo.getPark_status().equals("2")) {
             String status = getParkSpaceStatus();
             mParkspaceStatus.setText(status);
             switch (status) {
                 case "租用中":
-                    mCircleView.setPaintColor(Color.parseColor("#d01d2a"));
+                    mCircleView.setColor(Color.parseColor("#d01d2a"));
                     break;
                 case "停租中":
-                    mCircleView.setPaintColor(Color.parseColor("#808080"));
+                    mCircleView.setColor(Color.parseColor("#808080"));
                     break;
                 case "空闲中":
                 case "使用中":
-                    mCircleView.setPaintColor(Color.parseColor("#1dd0a1"));
+                    mCircleView.setColor(Color.parseColor("#1dd0a1"));
                     break;
                 default:
-                    mCircleView.setPaintColor(Color.parseColor("#6a6bd9"));
+                    mCircleView.setColor(Color.parseColor("#6a6bd9"));
                     mParkspaceStatus.setText("已预约");
                     mRecentOrderMinutes = Integer.valueOf(status.substring(3, status.length()));
                     StringBuilder stringBuilder = new StringBuilder();
@@ -277,7 +278,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             }
         } else if (mParkInfo.getPark_status().equals("3")) {
             mParkspaceStatus.setText("停租中");
-            mCircleView.setPaintColor(Color.parseColor("#808080"));
+            mCircleView.setColor(Color.parseColor("#808080"));
         }
     }
 

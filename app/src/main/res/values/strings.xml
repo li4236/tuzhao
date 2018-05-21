@@ -18,7 +18,7 @@
     <string name="my_collect">我的收藏</string>
     <string name="my_park">我的车位</string>
     <string name="my_car">我的车辆</string>
-    <string name="park_record">停车记录</string>
+    <string name="my_park_order">我的订单</string>
     <string name="my_wallet">我的钱包</string>
     <string name="cancel">取消</string>
     <string name="where_do_you_want_to_go">你要去哪？</string>
