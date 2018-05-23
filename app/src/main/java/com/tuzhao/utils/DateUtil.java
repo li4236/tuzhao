@@ -706,7 +706,7 @@ public class DateUtil {
         calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToMinute[2].substring(0, yearToMinute[2].indexOf(" "))));
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(" ") + 1, yearToMinute[2].indexOf(":"))));
         calendar.set(Calendar.MINUTE, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(":") + 1, yearToMinute[2].lastIndexOf(":"))));
-        calendar.set(Calendar.SECOND, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].lastIndexOf(":")+1, yearToMinute[2].length())));
+        calendar.set(Calendar.SECOND, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].lastIndexOf(":") + 1, yearToMinute[2].length())));
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
     }
@@ -1189,6 +1189,16 @@ public class DateUtil {
             string = "" + str;
         }
         return string;
+    }
+
+    /**
+     * 十以下的数加零
+     */
+    public static String thanTen(String str) {
+        if (str.length() == 1) {
+            return "0" + str;
+        }
+        return str;
     }
 
     /**

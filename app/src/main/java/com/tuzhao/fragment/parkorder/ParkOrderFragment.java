@@ -59,6 +59,8 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
         }
         mStartItme = 0;
         mConstraintLayout = view.findViewById(R.id.park_order_dialog);
+
+        setTAG(TAG + " status:" + mOrderStatus);
     }
 
     @Override
@@ -158,7 +160,8 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
                 break;
             case "3":
                 //待付款
-                circleView.setColor(Color.parseColor("#1dd0a1"));
+                circleView.setColor(Color.parseColor("#ff6c6c"));
+                holder.setText(R.id.my_order_waiting_for_pay, "待支付");
                 if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
                         DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
                     //停车时长超过预约时长

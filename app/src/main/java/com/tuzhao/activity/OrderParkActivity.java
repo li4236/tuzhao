@@ -281,7 +281,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     //返回的分别是三个级别的选中位置
-                    String tx = mDays.get(options1) + " " + mHours.get(options1).get(option2) + " 点 " + mMinutes.get(options1).get(option2).get(options3) + " 分";
+                    String tx = mDays.get(options1) + " " + DateUtil.thanTen(mHours.get(options1).get(option2)) + " 点 " + DateUtil.thanTen(mMinutes.get(options1).get(option2).get(options3)) + " 分";
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DAY_OF_MONTH, options1);
                     calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
@@ -404,18 +404,20 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                         startParkCalendar.add(Calendar.MINUTE, park_time);
                         end_time = DateUtil.printYearToMinutesCalendar(startParkCalendar);
+
                         int parkMuintes = park_time;
-                        Log.e(TAG, "onOptionsSelect: " + parkMuintes);
                         StringBuilder stringBuilder = new StringBuilder();
                         if (parkMuintes / (60 * 24) != 0) {
                             stringBuilder.append(parkMuintes / (60 * 24));
                             stringBuilder.append("天");
                         }
+
                         parkMuintes -= 24 * 60 * options1;
                         if (parkMuintes / 60 != 0) {
                             stringBuilder.append(parkMuintes / 60);
                             stringBuilder.append("小时");
                         }
+
                         parkMuintes -= 60 * option2;
                         stringBuilder.append(parkMuintes);
                         stringBuilder.append("分钟");

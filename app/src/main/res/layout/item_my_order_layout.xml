@@ -28,6 +28,15 @@
         app:layout_constraintStart_toEndOf="@id/my_order_appoint_date_iv"
         app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date_iv" />
 
+    <TextView
+        style="@style/TwentyTextB1Style"
+        android:layout_marginEnd="16dp"
+        android:id="@+id/my_order_waiting_for_pay"
+        android:textColor="@color/r6"
+        app:layout_constraintBottom_toBottomOf="@+id/my_order_appoint_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date" />
+
     <com.tuzhao.publicwidget.others.CircleView
         android:id="@+id/my_order_status_iv"
         android:layout_width="7dp"

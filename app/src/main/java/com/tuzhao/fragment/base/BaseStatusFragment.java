@@ -70,7 +70,7 @@ public abstract class BaseStatusFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        OkGo.getInstance().cancelTag(this.getClass().getName());
+        OkGo.getInstance().cancelTag(TAG);
     }
 
     /**
@@ -117,9 +117,13 @@ public abstract class BaseStatusFragment extends Fragment {
 
     protected BaseRequest getOkGo(String url) {
         return OkGo.post(url)
-                .tag(this.getClass().getName())
+                .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken());
+    }
+
+    protected void setTAG(String TAG) {
+        this.TAG = TAG;
     }
 
     protected boolean handleException(Exception e) {
