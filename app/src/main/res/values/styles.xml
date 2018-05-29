@@ -126,6 +126,14 @@
         <item name="android:textColor">@color/y3</item>
     </style>
 
+    <style name="TenTextG7Style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/green7</item>
+    </style>
+
     <style name="ElevenTextW0Style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -180,6 +188,14 @@
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/b1</item>
+    </style>
+
+    <style name="FortyTextG7Style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/green7</item>
     </style>
 
     <style name="SixtyTextB1Styel">

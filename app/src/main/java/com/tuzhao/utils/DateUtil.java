@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.publicmanager.TimeManager;
 
 import java.text.DecimalFormat;
@@ -441,6 +442,29 @@ public class DateUtil {
     }
 
     /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 为endDate加上相应的秒数
+     * @return 返回两个时间段相差的分钟数(x小时x分)
+     */
+    public static String getDateDistanceForHourWithMinute(String startDate, String endDate, String addSecond) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+        endCalenar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 >= 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("小时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+        stringBuilder.append(minutesDistance);
+        stringBuilder.append("分");
+        return stringBuilder.toString();
+    }
+
+    /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm
      * @return 返回两个时间段相差的毫秒数
@@ -712,6 +736,26 @@ public class DateUtil {
     }
 
     /**
+     * @param date      格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 添加的秒数
+     * @return 格式为yyyy-MM-dd对应的Calendar
+     */
+    public static Calendar getYearToSecondCalendar(String date, String addSecond) {
+        Calendar calendar = Calendar.getInstance();
+        String[] yearToMinute = date.split("-");
+        calendar.set(Calendar.YEAR, Integer.valueOf(yearToMinute[0]));
+        calendar.set(Calendar.MONTH, Integer.valueOf(yearToMinute[1]) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToMinute[2].substring(0, yearToMinute[2].indexOf(" "))));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(" ") + 1, yearToMinute[2].indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(":") + 1, yearToMinute[2].lastIndexOf(":"))));
+        calendar.set(Calendar.SECOND, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].lastIndexOf(":") + 1, yearToMinute[2].length())));
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        calendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        return calendar;
+    }
+
+    /**
      * @param date 格式为yyyy-MM-dd HH:mm
      * @return 格式为yyyy-MM-dd对应的Calendar
      */
@@ -820,6 +864,18 @@ public class DateUtil {
         }
         return false;
     }
+
+    /**
+     * @param date yyyy-MM-dd - yyyy-MM-dd
+     * @return 当前是否在可用时间内
+     */
+    public static boolean isInUsefulDate(String date) {
+        Calendar startCalendar = getYearToDayCalendar(date.substring(0, date.indexOf(" - ")), false);
+        Calendar endCalendar = getYearToDayCalendar(date.substring(date.indexOf(" - ") + 3, date.length()), false);
+        Calendar nowCalendar = Calendar.getInstance();
+        return startCalendar.compareTo(nowCalendar) <= 0 && nowCalendar.compareTo(endCalendar) < 0;
+    }
+
 
     /**
      * @param yearToSecond yyyy-MM-dd HH:mm:ss
@@ -1153,6 +1209,19 @@ public class DateUtil {
     }
 
     /**
+     * @return 返回停车的时长xx小时xx分
+     */
+    public static String getParkTime(ParkOrderInfo parkOrderInfo) {
+        if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
+                DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
+            //停车时长超过预约时长
+            return DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time());
+        } else {
+            return DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
+        }
+    }
+
+    /**
      * 获取当前时间
      */
     public String getNowTime(boolean isdetail) {
@@ -1176,6 +1245,14 @@ public class DateUtil {
 
     public Date stringToDate(String dateString) {
         return getYearToMinutesFormat().parse(dateString, new ParsePosition(0));
+    }
+
+    public static String decreseOneZero(double number) {
+        String result = String.valueOf(number);
+        if (result.substring(result.indexOf("."), result.length()).length() == 2) {
+            result = result.substring(0, result.length() - 1);
+        }
+        return result;
     }
 
     /**

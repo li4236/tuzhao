@@ -2,6 +2,7 @@ package com.tuzhao.fragment.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by juncoder on 2018/5/17.
@@ -170,6 +172,12 @@ public abstract class BaseStatusFragment extends Fragment {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(key, value);
         startActivityForResult(intent, requestCode);
+    }
+
+    protected void startActivityWithList(Class<?> tClass, String key, ArrayList<? extends Parcelable> data) {
+        Intent intent = new Intent(getActivity(), tClass);
+        intent.putParcelableArrayListExtra(key, data);
+        startActivity(intent);
     }
 
     /**

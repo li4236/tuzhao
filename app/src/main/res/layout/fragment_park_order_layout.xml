@@ -6,8 +6,10 @@
 
     <com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView
         android:id="@+id/base_srrv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/park_order_dialog"

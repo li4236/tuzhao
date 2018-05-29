@@ -161,11 +161,13 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             }
         };
         MyReceiver.setOnCtrlLockListener(mCtrlLockListener);
+
     }
 
     @Override
     protected void initData() {
         super.initData();
+        setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
         getParkLockStatus();
         scrennOrderTime();
         setParkspaceStatus();

@@ -155,6 +155,8 @@
         <activity android:name=".activity.mine.AuditParkspaceActivity" />
         <activity android:name=".activity.mine.CommentOrderActivity" />
         <activity android:name=".activity.mine.MyParkspaceActivityRefactor" />
+        <activity android:name=".activity.mine.PayForOrderActivity" />
+        <activity android:name=".activity.mine.OrderActivity" />
 
         <!--QQ分享-->
         <activity

@@ -62,4 +62,19 @@ public class ConstansUtil {
      */
     public static final String PARK_ORDER_LIST = "ParkOrderList";
 
+    /**
+     * 订单
+     */
+    public static final String PARK_ORDER_INFO = "ParkOrderInfo";
+
+    /**
+     * 跳转页面时如果获取信息失败则显示"客户端异常，请稍后再试"
+     */
+    public static final String APP_ERROR_HINT = "客户端异常，请稍后再试";
+
+    /**
+     * 优惠券列表
+     */
+    public static final String DISCOUNT_LIST = "DiscountList";
+
 }

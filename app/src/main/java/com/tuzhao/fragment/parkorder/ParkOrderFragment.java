@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
+import com.tuzhao.activity.mine.OrderActivity;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
@@ -59,12 +60,11 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
         }
         mStartItme = 0;
         mConstraintLayout = view.findViewById(R.id.park_order_dialog);
-
-        setTAG(TAG + " status:" + mOrderStatus);
     }
 
     @Override
     protected void initData() {
+        setTAG(TAG + " status:" + mOrderStatus);
         showDialog();
         loadData();
     }
@@ -126,7 +126,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, ParkOrderInfo parkOrderInfo, int position) {
+    protected void bindData(BaseViewHolder holder, final ParkOrderInfo parkOrderInfo, int position) {
         CircleView circleView = holder.getView(R.id.my_order_status_iv);
         TextView orderTime = holder.getView(R.id.my_order_time);
         TextView orderTimeDescription = holder.getView(R.id.my_order_time_description);
@@ -162,15 +162,15 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
                 //待付款
                 circleView.setColor(Color.parseColor("#ff6c6c"));
                 holder.setText(R.id.my_order_waiting_for_pay, "待支付");
-                if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
-                        DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
-                    //停车时长超过预约时长
-                    orderTime.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time()));
-                } else {
-                    orderTime.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
-                }
+                orderTime.setText(DateUtil.getParkTime(parkOrderInfo));
                 String shouldPay = "￥" + parkOrderInfo.getOrder_fee();
                 orderTimeDescription.setText(shouldPay);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                    }
+                });
                 break;
             case "4":
             case "5":
@@ -185,6 +185,12 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
                 }
                 String actualPay = "￥" + parkOrderInfo.getActual_pay_fee();
                 orderTimeDescription.setText(actualPay);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                    }
+                });
                 break;
             case "6":
                 //已取消（超时取消、正常手动取消）

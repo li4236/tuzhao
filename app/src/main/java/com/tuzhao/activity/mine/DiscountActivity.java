@@ -77,9 +77,8 @@ public class DiscountActivity extends BaseActivity {
     }
 
     private void initView() {
-
-        viewpager = (ViewPager) findViewById(R.id.id_activity_discount_layout_viewpager);
-        viewPagerTab = (SmartTabLayout) findViewById(R.id.id_activity_discount_layout_pagetab);
+        viewpager = findViewById(R.id.id_activity_discount_layout_viewpager);
+        viewPagerTab = findViewById(R.id.id_activity_discount_layout_pagetab);
 
         haveFragment = new HaveFragment();
         usedFragment = new UsedFragment();
@@ -89,11 +88,9 @@ public class DiscountActivity extends BaseActivity {
         fragmentList.add(haveFragment);
         fragmentList.add(usedFragment);
         fragmentList.add(overFragment);
-
     }
 
     private void initData() {
-
         if (UserManager.getInstance().hasLogined()) {
             initLoading("加载中...");
             requestGetUserDiscount();
@@ -103,7 +100,6 @@ public class DiscountActivity extends BaseActivity {
     }
 
     private void initEvent() {
-
         findViewById(R.id.id_activity_discount_imageview_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,15 +204,15 @@ public class DiscountActivity extends BaseActivity {
         public Fragment getItem(int position) {
             Fragment fragment = fragmentList.get(position);
             Bundle bundle = new Bundle();
-            switch (position){
+            switch (position) {
                 case 0:
-                    bundle.putSerializable("discounts",mCanDiscount);
+                    bundle.putSerializable("discounts", mCanDiscount);
                     break;
                 case 1:
-                    bundle.putSerializable("discounts",mUsedDiscount);
+                    bundle.putSerializable("discounts", mUsedDiscount);
                     break;
                 case 2:
-                    bundle.putSerializable("discounts",mOldDiscount);
+                    bundle.putSerializable("discounts", mOldDiscount);
                     break;
             }
             fragment.setArguments(bundle);

@@ -1,13 +1,16 @@
 package com.tuzhao.info;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.tuzhao.info.base_info.BaseInfo;
 
 /**
  * Created by TZL12 on 2017/6/17.
  */
 
-public class Discount_Info extends BaseInfo {
+public class Discount_Info extends BaseInfo implements Parcelable {
 
     private String id;
     private String user_id;//所属用户
@@ -72,4 +75,46 @@ public class Discount_Info extends BaseInfo {
     public void setIs_usable(String is_usable) {
         this.is_usable = is_usable;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.user_id);
+        dest.writeString(this.discount);
+        dest.writeString(this.what_type);
+        dest.writeString(this.effective_time);
+        dest.writeString(this.min_fee);
+        dest.writeString(this.is_usable);
+    }
+
+    public Discount_Info() {
+    }
+
+    protected Discount_Info(Parcel in) {
+        this.id = in.readString();
+        this.user_id = in.readString();
+        this.discount = in.readString();
+        this.what_type = in.readString();
+        this.effective_time = in.readString();
+        this.min_fee = in.readString();
+        this.is_usable = in.readString();
+    }
+
+    public static final Parcelable.Creator<Discount_Info> CREATOR = new Parcelable.Creator<Discount_Info>() {
+        @Override
+        public Discount_Info createFromParcel(Parcel source) {
+            return new Discount_Info(source);
+        }
+
+        @Override
+        public Discount_Info[] newArray(int size) {
+            return new Discount_Info[size];
+        }
+    };
 }

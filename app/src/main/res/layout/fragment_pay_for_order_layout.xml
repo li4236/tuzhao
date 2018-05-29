@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/park_info_detail"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="12dp"
+        android:text="停车明细"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/pay_for_order_question"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginEnd="18dp"
+        android:drawableEnd="@drawable/ic_question"
+        android:drawablePadding="6dp"
+        android:text="计费有疑问"
+        app:layout_constraintBottom_toBottomOf="@+id/park_info_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/park_info_detail" />
+
+    <View
+        android:id="@+id/bottom_divider"
+        style="@style/dividerStyle"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/park_info_detail" />
+
+    <ImageView
+        android:id="@+id/pay_for_order_fee_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_order_money"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
+
+    <TextView
+        android:id="@+id/pay_for_order_fee"
+        style="@style/FortyTextB1Style"
+        android:layout_marginTop="10dp"
+        android:text="0.00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee_iv" />
+
+    <TextView
+        android:id="@+id/pay_for_order_discount"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginTop="5dp"
+        android:text="(无优惠劵)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee" />
+
+    <ImageView
+        android:id="@+id/pay_for_order_time_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_order_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pay_for_order_fee_iv" />
+
+    <TextView
+        android:id="@+id/pay_for_order_time"
+        style="@style/FortyTextB1Style"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@id/pay_for_order_time_iv"
+        app:layout_constraintStart_toStartOf="@id/pay_for_order_time_iv"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time_iv" />
+
+    <TextView
+        android:id="@+id/pay_for_order_time_description"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginTop="5dp"
+        android:text="无超时"
+        app:layout_constraintEnd_toEndOf="@id/pay_for_order_time"
+        app:layout_constraintStart_toStartOf="@id/pay_for_order_time"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time" />
+
+    <ImageView
+        android:id="@+id/pay_for_order_credit_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="56dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_credit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pay_for_order_fee_iv" />
+
+    <TextView
+        android:id="@+id/pay_for_order_credit"
+        style="@style/FortyTextG7Style"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit_iv"
+        app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit_iv"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee_iv" />
+
+    <TextView
+        android:id="@+id/pay_for_order_total_credit"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit"
+        app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />
+
+    <TextView
+        android:id="@+id/click_icon_hint"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginTop="20dp"
+        android:text="可点击上方图标了解详情"
+        android:textSize="9sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_discount" />
+
+    <TextView
+        style="@style/SixtyTextB1Styel"
+        android:layout_width="0dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/pay_for_order_should_pay"
+        android:background="@drawable/little_yuan_yellow_5dp"
+        android:paddingBottom="13dp"
+        android:paddingTop="13dp"
+        android:text="确定支付0.0元"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/click_icon_hint" />
+
+</android.support.constraint.ConstraintLayout>

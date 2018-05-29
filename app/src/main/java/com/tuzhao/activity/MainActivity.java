@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -641,10 +640,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         /*if (screenMarker == null) {
             screenMarker = aMap.addMarker(new MarkerOptions().zIndex(2).icon(BitmapDescriptorFactory.fromResource(R.mipmap.biaozhu2)));
         }
-        screenMarker.setAnchor(0.5f, 1.0f);*/
+        screenMarker.setAnchor(0.5f, 1.0f);
         LatLng latLng = aMap.getCameraPosition().target;
         Point screenPosition = aMap.getProjection().toScreenLocation(latLng);
-       /* screenMarker.setPositionByPixels(screenPosition.x, screenPosition.y);
+        screenMarker.setPositionByPixels(screenPosition.x, screenPosition.y);
         screenMarker.setClickable(false);*/
     }
 

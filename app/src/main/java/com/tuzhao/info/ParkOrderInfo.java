@@ -20,6 +20,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     private String open_time;//车位的开放时间
     private String order_starttime;//预计开始停车时间
     private String order_endtime;//预计结束停车时间
+    private String extensionTime;//顺延时长，单位:秒
     private String car_numble;//停放车辆车牌号
     private String username;//用户名=用户手机号码
     private String park_username;//该停车位主人的手机号码
@@ -300,6 +301,13 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.citycode = citycode;
     }
 
+    public String getExtensionTime() {
+        return extensionTime;
+    }
+
+    public void setExtensionTime(String extensionTime) {
+        this.extensionTime = extensionTime;
+    }
 
     @Override
     public int describeContents() {
@@ -317,6 +325,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.open_time);
         dest.writeString(this.order_starttime);
         dest.writeString(this.order_endtime);
+        dest.writeString(this.extensionTime);
         dest.writeString(this.car_numble);
         dest.writeString(this.username);
         dest.writeString(this.park_username);
@@ -355,6 +364,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.open_time = in.readString();
         this.order_starttime = in.readString();
         this.order_endtime = in.readString();
+        this.extensionTime = in.readString();
         this.car_numble = in.readString();
         this.username = in.readString();
         this.park_username = in.readString();
@@ -380,7 +390,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.longitude = in.readDouble();
     }
 
-    public static final Parcelable.Creator<ParkOrderInfo> CREATOR = new Parcelable.Creator<ParkOrderInfo>() {
+    public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {
         @Override
         public ParkOrderInfo createFromParcel(Parcel source) {
             return new ParkOrderInfo(source);
