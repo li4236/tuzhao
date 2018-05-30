@@ -41,6 +41,7 @@ public abstract class BaseStatusFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(resourceId() == 0 ? R.layout.fragment_base_refresh_layout : resourceId(), container, false);
         initView(view, savedInstanceState);
+        initView(view, container, savedInstanceState);
         initData();
         return view;
     }
@@ -55,6 +56,10 @@ public abstract class BaseStatusFragment extends Fragment {
      * 在此方法初始化控件
      */
     protected abstract void initView(View view, Bundle savedInstanceState);
+
+    protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
+
+    }
 
     /**
      * 在此方法初始化数据，初始化完记得调用dismmisCustomDialog()

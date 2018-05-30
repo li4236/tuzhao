@@ -14,9 +14,10 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
+import com.tuzhao.fragment.parkorder.CommentOrderFragment;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.IntentObserable;
 
 /**
  * Created by juncoder on 2018/5/29.
@@ -74,7 +75,7 @@ public class OrderActivity extends BaseStatusActivity {
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
                 break;
         }*/
-        transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
+        transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
         transaction.commit();
     }
 
@@ -103,6 +104,13 @@ public class OrderActivity extends BaseStatusActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
+                case ConstansUtil.PICTURE_REQUEST_CODE:
+                    data.setAction(ConstansUtil.PHOTO_IMAGE);
+                    IntentObserable.dispatch(data);
+                    break;
+            }
+        }
     }
 }

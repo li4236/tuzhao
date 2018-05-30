@@ -33,6 +33,11 @@ public class ConstansUtil {
     public static final int REQUSET_CODE = 0x111;
 
     /**
+     * 调用相册获取图片的请求码
+     */
+    public static final int PICTURE_REQUEST_CODE = 0x666;
+
+    /**
      * activity返回给上个activity的结果的key
      */
     public static final String FOR_REQUEST_RESULT = "ForRequestResult";
