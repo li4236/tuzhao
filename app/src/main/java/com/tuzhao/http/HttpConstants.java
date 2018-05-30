@@ -464,4 +464,7 @@ public class HttpConstants {
      * 获取车位状态
      */
     public static String getParkLockStatus = ROOT_URL + "getParkLockStatus";
+
+    public static String zTest = ROOT_URL + "ztest";
+
 }

@@ -436,6 +436,19 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 intent = new Intent(MainActivity.this, TextActivity.class);
                 startActivity(intent);
                 MyToast.showToast(MainActivity.this, "功能开发中", 5);
+               /*OkGo.post(HttpConstants.zTest)
+                       .execute(new JsonCallback<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid, Call call, Response response) {
+                               MyToast.showToast(MainActivity.this,"success",5);
+                           }
+
+                           @Override
+                           public void onError(Call call, Response response, Exception e) {
+                               super.onError(call, response, e);
+                               MyToast.showToast(MainActivity.this,e.getMessage(),5);
+                           }
+                       });*/
                 break;
             case R.id.id_content_main_layout_imageview_spark:
                 if (show) {
@@ -1136,7 +1149,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", -960, 0);
         } else {
             textview_citynodata.setVisibility(View.GONE);
-            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", 0, -960);
+            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", 0, -1920);
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();

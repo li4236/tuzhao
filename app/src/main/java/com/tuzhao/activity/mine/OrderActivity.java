@@ -14,7 +14,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.fragment.parkorder.PayForOrderFragment;
+import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
 
@@ -66,7 +66,15 @@ public class OrderActivity extends BaseStatusActivity {
         }
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
+        /*switch (mParkOrderInfo.getOrder_status()) {
+            case "1":
+                transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
+                break;
+            case "3":
+                transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
+                break;
+        }*/
+        transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
         transaction.commit();
     }
 
@@ -79,17 +87,14 @@ public class OrderActivity extends BaseStatusActivity {
     protected String title() {
         switch (mParkOrderInfo.getOrder_status()) {
             case "1":
-                return "";
             case "2":
-                return "";
+                return "订单详情";
             case "3":
                 return "订单支付";
             case "4":
             case "5":
-
-                return "";
+                return "订单完成";
             case "6":
-                return "";
             default:
                 return "";
         }

@@ -166,7 +166,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        super.initData();
         setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
         getParkLockStatus();
         scrennOrderTime();
@@ -390,7 +389,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private void controlParkLock(final boolean isOpen) {
         mOpenLock.setClickable(false);
         startAnimation();
-        OkGo.post(HttpConstants.userControlParkLock)
+        OkGo.post(HttpConstants.controlParkLock)
                 .tag(this.getClass().getName())
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())

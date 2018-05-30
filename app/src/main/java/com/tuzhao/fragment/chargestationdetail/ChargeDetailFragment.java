@@ -163,7 +163,9 @@ public class ChargeDetailFragment extends BaseFragment {
                 public void OnBannerClick(int position) {
                     ArrayList<String> imgList = new ArrayList<>();
                     for (String aa : img_Url) {
-                        imgList.add(HttpConstants.ROOT_IMG_URL_CS + aa);
+                        if (!aa.equals("-1")) {
+                            imgList.add(HttpConstants.ROOT_IMG_URL_CS + aa);
+                        }
                     }
                     if (imgList.size() == 0) {
                         MyToast.showToast(mContext, "暂无图片哦", 3);

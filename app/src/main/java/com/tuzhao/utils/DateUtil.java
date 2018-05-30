@@ -891,6 +891,15 @@ public class DateUtil {
 
     /**
      * @param yearToSecond yyyy-MM-dd HH:mm:ss
+     * @return HH点mm分
+     */
+    public static String getHourToMinute(String yearToSecond) {
+        return yearToSecond.substring(yearToSecond.indexOf(" " + 1), yearToSecond.indexOf(":")) + "点"
+                + yearToSecond.substring(yearToSecond.indexOf(":") + 1, yearToSecond.lastIndexOf(":"))+"分";
+    }
+
+    /**
+     * @param yearToSecond yyyy-MM-dd HH:mm:ss
      * @return MM月dd日
      */
     public static String getMonthToDay(String yearToSecond) {
@@ -931,6 +940,14 @@ public class DateUtil {
     public static String printYearToMinutesCalendar(Calendar calendar) {
         return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
                 + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+    }
+
+    /**
+     * @param yearToSecond yyyy-MM-dd HH:mm:ss
+     * @return yyyy-MM-dd HH:mm
+     */
+    public static String deleteSecond(String yearToSecond) {
+        return yearToSecond.substring(0, yearToSecond.lastIndexOf(":"));
     }
 
     /**

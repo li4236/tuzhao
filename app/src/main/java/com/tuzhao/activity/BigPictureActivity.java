@@ -59,7 +59,7 @@ public class BigPictureActivity extends BaseActivity {
     private void initData() {
         if (getIntent().hasExtra("picture_list")) {
             imgList = getIntent().getStringArrayListExtra("picture_list");
-            position = getIntent().getIntExtra("position", 1);
+            position = getIntent().getIntExtra("position", 0);
         }
         textview_selectcount.setText((position + 1) + "/" + imgList.size());
         mAdapter = new PicturePagerAdapter(this, imgList, this);

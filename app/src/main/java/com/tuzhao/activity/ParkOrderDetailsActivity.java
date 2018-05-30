@@ -404,7 +404,9 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                 String[] a = parkOrderinfo.getPictures().split(",");
                 ArrayList<String> imgList = new ArrayList<>();
                 for (String aa : a) {
-                    imgList.add(HttpConstants.ROOT_IMG_URL_PS + aa);
+                    if (!aa.equals("-1")) {
+                        imgList.add(HttpConstants.ROOT_IMG_URL_PS + aa);
+                    }
                 }
                 if (imgList.size() == 0) {
                     MyToast.showToast(ParkOrderDetailsActivity.this, "暂无图片哦", 3);

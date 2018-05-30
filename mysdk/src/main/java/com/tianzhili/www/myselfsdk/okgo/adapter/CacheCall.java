@@ -153,7 +153,7 @@ public class CacheCall<T> implements Call<T> {
                 }
                 //响应失败，一般为服务器内部错误，或者找不到页面等
                 if (responseCode == 404 || responseCode >= 500) {
-                    Log.e(this.getClass().getName(), "onResponse: "+responseCode );
+                    Log.e(this.getClass().getName(), "onResponse: " + responseCode);
                     sendFailResultCallback(false, call, response, OkGoException.INSTANCE("901"));
                     return;
                 }
@@ -168,13 +168,13 @@ public class CacheCall<T> implements Call<T> {
                 } catch (Exception e) {
                     //一般为服务器响应成功，但是数据解析错误，返回码为901
                     try {
-                        int a =  Integer.parseInt(e.getMessage());
-                        if (a == 806){
+                        int a = Integer.parseInt(e.getMessage());
+                        if (a == 806) {
                             sendFailResultCallback(false, call, response, new TokenInvalideException(e.getMessage()));
-                        }else {
+                        } else {
                             sendFailResultCallback(false, call, response, e);
                         }
-                    }catch (NumberFormatException e11){
+                    } catch (NumberFormatException e11) {
                         sendFailResultCallback(false, call, response, OkGoException.INSTANCE("901"));
                     }
 
@@ -204,7 +204,9 @@ public class CacheCall<T> implements Call<T> {
         }
     }
 
-    /** 失败回调，发送到主线程 */
+    /**
+     * 失败回调，发送到主线程
+     */
     @SuppressWarnings("unchecked")
     private void sendFailResultCallback(final boolean isFromCache, final okhttp3.Call call, final okhttp3.Response response, final Exception e) {
         final CacheMode cacheMode = baseRequest.getCacheMode();
@@ -243,7 +245,9 @@ public class CacheCall<T> implements Call<T> {
         }
     }
 
-    /** 成功回调，发送到主线程 */
+    /**
+     * 成功回调，发送到主线程
+     */
     private void sendSuccessResultCallback(final boolean isFromCache, final T t, final okhttp3.Call call, final okhttp3.Response response) {
         final CacheMode cacheMode = baseRequest.getCacheMode();
 

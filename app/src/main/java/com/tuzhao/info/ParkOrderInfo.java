@@ -17,8 +17,9 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     private String parkspace_name;//停车场名字
     private String ps_address;//停车场地址
     private String location_describe;//停车位的位置描述
+    private String parkNumber;//车位编号
     private String open_time;//车位的开放时间
-    private String order_starttime;//预计开始停车时间
+    private String order_starttime;//预计开始停车时间(yyyy-MM-dd HH:mm:ss)
     private String order_endtime;//预计结束停车时间
     private String extensionTime;//顺延时长，单位:秒
     private String car_numble;//停放车辆车牌号
@@ -309,6 +310,14 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.extensionTime = extensionTime;
     }
 
+    public String getParkNumber() {
+        return parkNumber;
+    }
+
+    public void setParkNumber(String parkNumber) {
+        this.parkNumber = parkNumber;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -349,6 +358,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.citycode);
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
+        dest.writeString(this.parkNumber);
     }
 
     public ParkOrderInfo() {
@@ -388,6 +398,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.citycode = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
+        this.parkNumber = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

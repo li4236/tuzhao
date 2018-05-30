@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="20dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/w0"
+    android:paddingBottom="20dp">
 
     <TextView
         android:id="@+id/park_info_detail"
@@ -17,9 +18,12 @@
     <TextView
         android:id="@+id/pay_for_order_question"
         style="@style/TenTextG6Stytle"
-        android:layout_marginEnd="18dp"
         android:drawableEnd="@drawable/ic_question"
         android:drawablePadding="6dp"
+        android:paddingBottom="10dp"
+        android:paddingEnd="18dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
         android:text="计费有疑问"
         app:layout_constraintBottom_toBottomOf="@+id/park_info_detail"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,12 +132,12 @@
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_discount" />
 
     <TextView
+        android:id="@+id/pay_for_order_should_pay"
         style="@style/SixtyTextB1Styel"
         android:layout_width="0dp"
         android:layout_marginEnd="31dp"
         android:layout_marginStart="31dp"
         android:layout_marginTop="8dp"
-        android:id="@+id/pay_for_order_should_pay"
         android:background="@drawable/little_yuan_yellow_5dp"
         android:paddingBottom="13dp"
         android:paddingTop="13dp"
