@@ -169,6 +169,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private ClusterOverlay mClusterOverlay;//标点的聚拢
     private FragmentManager mFragmentManager;
     private View mFragment_content;
+    private float mTranslationY;
     private boolean show = false, show1 = false, isSPark = true, isSCharge = true, isFirstMove = true, isLcData = true;
     private int mapwidth, mapheight;//地图控件的宽高，用来地图中心点
     private int moveDistance = 2000;//移动再次请求的距离
@@ -1104,12 +1105,15 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void controlAnimfragment(final View ll_view) {
+        if (mTranslationY == 0) {
+            mTranslationY = ll_view.getY() + ll_view.getHeight();
+        }
         show = !show;
         ObjectAnimator objectAnimator;
         if (show) {
-            objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", -960, 0);
+            objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", -mTranslationY, 0);
         } else {
-            objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", 0, -960);
+            objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", 0, -mTranslationY);
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();
