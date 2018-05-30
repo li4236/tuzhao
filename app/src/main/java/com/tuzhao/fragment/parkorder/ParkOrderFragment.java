@@ -165,12 +165,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
                 orderTime.setText(DateUtil.getParkTime(parkOrderInfo));
                 String shouldPay = "￥" + parkOrderInfo.getOrder_fee();
                 orderTimeDescription.setText(shouldPay);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
-                    }
-                });
                 break;
             case "4":
             case "5":
@@ -185,12 +179,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
                 }
                 String actualPay = "￥" + parkOrderInfo.getActual_pay_fee();
                 orderTimeDescription.setText(actualPay);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
-                    }
-                });
                 break;
             case "6":
                 //已取消（超时取消、正常手动取消）
@@ -202,7 +190,14 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
         }
         holder.setText(R.id.my_order_appoint_date, parkOrderInfo.getOrder_time().substring(0, parkOrderInfo.getOrder_time().indexOf(" ")))
                 .setText(R.id.my_order_park_lot, parkOrderInfo.getPark_space_name())
-                .setText(R.id.my_order_park_car_number, parkOrderInfo.getCar_numble());
+                .setText(R.id.my_order_park_car_number, parkOrderInfo.getCar_numble())
+                .itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+            }
+        });
+
     }
 
 }

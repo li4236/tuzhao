@@ -14,7 +14,9 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
 import com.tuzhao.fragment.parkorder.CommentOrderFragment;
+import com.tuzhao.fragment.parkorder.PayForOrderFragment;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
@@ -30,7 +32,6 @@ public class OrderActivity extends BaseStatusActivity {
     private MapView mMapView;
 
     private AMap mAMap;
-
 
     @Override
     protected int resourceId() {
@@ -58,7 +59,6 @@ public class OrderActivity extends BaseStatusActivity {
 
             MarkerOptions markerOptions = new MarkerOptions().position(latLng);
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
-
             Marker marker = mAMap.addMarker(markerOptions);
             ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);
             animation.setDuration(500);
@@ -67,15 +67,17 @@ public class OrderActivity extends BaseStatusActivity {
         }
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        /*switch (mParkOrderInfo.getOrder_status()) {
+        switch (mParkOrderInfo.getOrder_status()) {
             case "1":
                 transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
                 break;
             case "3":
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
                 break;
-        }*/
-        transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
+            case "4":
+                transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
+                break;
+        }
         transaction.commit();
     }
 
@@ -102,12 +104,34 @@ public class OrderActivity extends BaseStatusActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case ConstansUtil.PICTURE_REQUEST_CODE:
                     data.setAction(ConstansUtil.PHOTO_IMAGE);
+                    IntentObserable.dispatch(data);
+                    break;
+                case ConstansUtil.DISOUNT_REQUEST_CODE:
+                    data.setAction(ConstansUtil.CHOOSE_DISCOUNT);
                     IntentObserable.dispatch(data);
                     break;
             }

@@ -14,7 +14,7 @@ public class IntentObserable {
     private static List<IntentObserver> mIntentObservers;
 
     static {
-        mIntentObservers = new ArrayList<>();
+        mIntentObservers = new ArrayList<>(2);
     }
 
     public static void dispatch(Intent intent) {

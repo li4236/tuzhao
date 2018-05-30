@@ -62,8 +62,11 @@
     <TextView
         android:id="@+id/pay_for_order_discount"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="5dp"
-        android:text="(无优惠劵)"
+        android:paddingBottom="6dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
+        android:paddingTop="5dp"
+        android:text="（无优惠劵）"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee" />
@@ -90,7 +93,7 @@
         android:id="@+id/pay_for_order_time_description"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="5dp"
-        android:text="无超时"
+        android:text="（无超时）"
         app:layout_constraintEnd_toEndOf="@id/pay_for_order_time"
         app:layout_constraintStart_toStartOf="@id/pay_for_order_time"
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time" />
@@ -124,7 +127,7 @@
     <TextView
         android:id="@+id/click_icon_hint"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:text="可点击上方图标了解详情"
         android:textSize="9sp"
         app:layout_constraintEnd_toEndOf="parent"

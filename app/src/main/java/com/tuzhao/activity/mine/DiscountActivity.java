@@ -20,12 +20,12 @@ import com.tuzhao.fragment.discount.UsedFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Discount_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
-import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
@@ -52,8 +52,6 @@ public class DiscountActivity extends BaseActivity {
     private ArrayList<Discount_Info> mCanDiscount = new ArrayList<>();
     private ArrayList<Discount_Info> mUsedDiscount = new ArrayList<>();
     private ArrayList<Discount_Info> mOldDiscount = new ArrayList<>();
-    private DateUtil dateUtil = new DateUtil();
-
 
     private ViewPager viewpager;
     private SmartTabLayout viewPagerTab;
@@ -64,6 +62,8 @@ public class DiscountActivity extends BaseActivity {
     private UsedFragment usedFragment;
     private OverFragment overFragment;
     private String[] mTitle;
+
+    private boolean mChooseDisount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,8 +92,14 @@ public class DiscountActivity extends BaseActivity {
 
     private void initData() {
         if (UserManager.getInstance().hasLogined()) {
-            initLoading("加载中...");
-            requestGetUserDiscount();
+            if (getIntent().hasExtra(ConstansUtil.DISCOUNT_LIST)) {
+                mChooseDisount = true;
+                ArrayList<Discount_Info> list = getIntent().getParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST);
+                handleDiscount(list);
+            } else {
+                initLoading("加载中...");
+                requestGetUserDiscount();
+            }
         } else {
             finish();
         }
@@ -119,33 +125,7 @@ public class DiscountActivity extends BaseActivity {
                         if (mCustomDialog.isShowing()) {
                             mCustomDialog.dismiss();
                         }
-
-                        String endtime;
-                        for (Discount_Info info : datas.data) {
-                            if (info.getIs_usable().equals("1")) {
-                                endtime = info.getEffective_time().substring(info.getEffective_time().indexOf(" - ") + 3, info.getEffective_time().length());
-                                final boolean isnotlater = dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(false, false), endtime, false);
-                                if (isnotlater) {
-                                    //未过期
-                                    mCanDiscount.add(info);
-                                } else {
-                                    //已过期
-                                    mOldDiscount.add(info);
-                                }
-                            } else if (info.getIs_usable().equals("2")) {
-                                mUsedDiscount.add(info);
-                            }
-                        }
-
-                        adapter = new MyFrageStatePagerAdapter(getSupportFragmentManager(), mTitle);
-                        viewpager.setAdapter(adapter);
-                        viewPagerTab.setViewPager(viewpager);
-                        for (int i = 0; i < fragmentList.size(); i++) {
-                            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewPagerTab.getTabAt(i).getLayoutParams();
-                            lp.leftMargin = DensityUtil.dp2px(DiscountActivity.this, 28);
-                            lp.rightMargin = DensityUtil.dp2px(DiscountActivity.this, 28);
-                            viewPagerTab.getTabAt(i).setLayoutParams(lp);
-                        }
+                        handleDiscount(datas.data);
                     }
 
                     @Override
@@ -182,6 +162,48 @@ public class DiscountActivity extends BaseActivity {
 
     }
 
+    private void handleDiscount(List<Discount_Info> list) {
+        for (Discount_Info info : list) {
+            if (info.getIs_usable().equals("1")) {
+                //可用
+                if (info.getWhat_type().equals("1")) {
+                    if (DateUtil.isInUsefulDate(info.getEffective_time())) {
+                        //在可用范围内
+                        mCanDiscount.add(info);
+                    } else {
+                        mOldDiscount.add(info);
+                    }
+                }
+            } else if (info.getIs_usable().equals("2")) {
+                mUsedDiscount.add(info);
+            }
+
+            /*if (info.getIs_usable().equals("1")) {
+                endtime = info.getEffective_time().substring(info.getEffective_time().indexOf(" - ") + 3, info.getEffective_time().length());
+                final boolean isnotlater = dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(false, false), endtime, false);
+                if (isnotlater) {
+                    //未过期
+                    mCanDiscount.add(info);
+                } else {
+                    //已过期
+                    mOldDiscount.add(info);
+                }
+            } else if (info.getIs_usable().equals("2")) {
+                mUsedDiscount.add(info);
+            }*/
+        }
+
+        adapter = new MyFrageStatePagerAdapter(getSupportFragmentManager(), mTitle);
+        viewpager.setAdapter(adapter);
+        viewPagerTab.setViewPager(viewpager);
+        for (int i = 0; i < fragmentList.size(); i++) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) viewPagerTab.getTabAt(i).getLayoutParams();
+            lp.leftMargin = DensityUtil.dp2px(DiscountActivity.this, 28);
+            lp.rightMargin = DensityUtil.dp2px(DiscountActivity.this, 28);
+            viewPagerTab.getTabAt(i).setLayoutParams(lp);
+        }
+    }
+
     /**
      * 定义自己的ViewPager适配器。
      * 也可以使用FragmentPagerAdapter。关于这两者之间的区别，可以自己去搜一下。
@@ -207,6 +229,9 @@ public class DiscountActivity extends BaseActivity {
             switch (position) {
                 case 0:
                     bundle.putSerializable("discounts", mCanDiscount);
+                    if (mChooseDisount) {
+                        bundle.putBoolean(ConstansUtil.CHOOSE_DISCOUNT, true);
+                    }
                     break;
                 case 1:
                     bundle.putSerializable("discounts", mUsedDiscount);

@@ -78,6 +78,11 @@ public class ConstansUtil {
     public static final String CANCEL_ORDER = "CancelOrder";
 
     /**
+     * 订单支付完成
+     */
+    public static final String PAY_ORDER_FINISH = "PayOrderFinish";
+
+    /**
      * 跳转页面时如果获取信息失败则显示"客户端异常，请稍后再试"
      */
     public static final String APP_ERROR_HINT = "客户端异常，请稍后再试";
@@ -87,4 +92,13 @@ public class ConstansUtil {
      */
     public static final String DISCOUNT_LIST = "DiscountList";
 
+    /**
+     * 选择优惠券的请求码
+     */
+    public static final int DISOUNT_REQUEST_CODE = 0x347;
+
+    /**
+     * 是否选择优惠券/选择的优惠券
+     */
+    public static final String CHOOSE_DISCOUNT = "ChooseDisount";
 }

@@ -431,13 +431,15 @@ public class DateUtil {
     public static String getDateDistanceForHourWithMinute(String startDate, String endDate) {
         int minutesDistance = getMinutesDistance(startDate, endDate);
         StringBuilder stringBuilder = new StringBuilder();
-        if (minutesDistance / 60 >= 0) {
+        if (minutesDistance / 60 > 0) {
             stringBuilder.append(minutesDistance / 60);
             stringBuilder.append("小时");
             minutesDistance -= minutesDistance / 60 * 60;
         }
-        stringBuilder.append(minutesDistance);
-        stringBuilder.append("分");
+        if (minutesDistance > 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分");
+        }
         return stringBuilder.toString();
     }
 
@@ -895,7 +897,7 @@ public class DateUtil {
      */
     public static String getHourToMinute(String yearToSecond) {
         return yearToSecond.substring(yearToSecond.indexOf(" " + 1), yearToSecond.indexOf(":")) + "点"
-                + yearToSecond.substring(yearToSecond.indexOf(":") + 1, yearToSecond.lastIndexOf(":"))+"分";
+                + yearToSecond.substring(yearToSecond.indexOf(":") + 1, yearToSecond.lastIndexOf(":")) + "分";
     }
 
     /**
@@ -1266,7 +1268,7 @@ public class DateUtil {
 
     public static String decreseOneZero(double number) {
         String result = String.valueOf(number);
-        if (result.substring(result.indexOf("."), result.length()).length() == 2) {
+        if (result.substring(result.indexOf(".") + 1, result.length()).length() == 2) {
             result = result.substring(0, result.length() - 1);
         }
         return result;

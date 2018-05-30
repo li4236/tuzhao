@@ -148,6 +148,11 @@ public class HttpConstants {
     public static String endParking = ROOT_URL + "endParking";
 
     /**
+     * 生成支付宝订单
+     */
+    public static String alipayApplyOrder = ROOT_URL + "alipayApplyOrder";
+
+    /**
      * 完成停车订单支付
      */
     public static String finishParkOrder = ROOT_URL + "finishParkOrder";

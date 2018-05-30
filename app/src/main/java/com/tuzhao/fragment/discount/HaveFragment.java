@@ -1,5 +1,7 @@
 package com.tuzhao.fragment.discount;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +28,7 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
@@ -75,7 +78,7 @@ public class HaveFragment extends BaseFragment {
     }
 
     private void initView() {
-        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
+        mRecycleview = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
         linearLayoutManager = new LinearLayoutManager(mContext);
         mRecycleview.init(linearLayoutManager, new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
@@ -84,17 +87,33 @@ public class HaveFragment extends BaseFragment {
         slidingViewClickListener = new DiscountAdapter.IonSlidingViewClickListener() {
             @Override
             public void onDeleteBtnCilck(String discount_id, int pos) {
-                Log.e("点击了删除","哈哈哈");
+                Log.e("点击了删除", "哈哈哈");
                 initLoading("删除中...");
-                requestDeleteDiscount(discount_id,pos);
+                requestDeleteDiscount(discount_id, pos);
             }
         };
 
-        mAdapter = new DiscountAdapter(mContext, mDatas,slidingViewClickListener);
+        mAdapter = new DiscountAdapter(mContext, mDatas, slidingViewClickListener);
         mRecycleview.setAdapter(mAdapter);
-        linearlayout_nodata = (LinearLayout) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
-        if (mDatas.size()<=0){
+        linearlayout_nodata = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
+        if (mDatas.size() <= 0) {
             linearlayout_nodata.setVisibility(View.VISIBLE);
+        }
+
+        if (getArguments() != null && getArguments().getBoolean(ConstansUtil.CHOOSE_DISCOUNT)) {
+            mAdapter.setOnItemClickListener(new DiscountAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(Discount_Info discountInfo) {
+                    if (getActivity() != null) {
+                        Intent intent = new Intent();
+                        Bundle data = new Bundle();
+                        data.putParcelable(ConstansUtil.CHOOSE_DISCOUNT, discountInfo);
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, data);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
+                        getActivity().finish();
+                    }
+                }
+            });
         }
     }
 
@@ -148,9 +167,9 @@ public class HaveFragment extends BaseFragment {
                             }
                         }
                         mAdapter.notifyDataSetChanged();
-                        if (mDatas.size()>0){
+                        if (mDatas.size() > 0) {
                             linearlayout_nodata.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             linearlayout_nodata.setVisibility(View.VISIBLE);
                         }
                         mRecycleview.setRefreshing(false);
@@ -188,7 +207,7 @@ public class HaveFragment extends BaseFragment {
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("discount_id",discount_id)
+                .params("discount_id", discount_id)
                 .execute(new JsonCallback<Base_Class_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Discount_Info> datas, Call call, Response response) {

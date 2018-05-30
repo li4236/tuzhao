@@ -2,7 +2,9 @@ package com.tuzhao.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +31,9 @@ public class DiscountAdapter extends RecyclerView.Adapter<DiscountAdapter.ViewHo
     private ArrayList<Discount_Info> mDiscountList;
     private DateUtil dateUtil = new DateUtil();
     private IonSlidingViewClickListener mIDeleteBtnClickListener;
+    private OnItemClickListener mOnItemClickListener;
 
-    public DiscountAdapter(Context context, ArrayList<Discount_Info> discountList , IonSlidingViewClickListener listener) {
+    public DiscountAdapter(Context context, ArrayList<Discount_Info> discountList, IonSlidingViewClickListener listener) {
         mContext = context;
         mDiscountList = discountList;
 
@@ -48,7 +51,7 @@ public class DiscountAdapter extends RecyclerView.Adapter<DiscountAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         try {
             String endtime;
@@ -57,40 +60,48 @@ public class DiscountAdapter extends RecyclerView.Adapter<DiscountAdapter.ViewHo
                 final boolean isnotlater = dateUtil.compareTwoTime(TimeManager.getInstance().getNowTime(false, false), endtime, false);
                 if (isnotlater) {
                     //未过期
-                    if (mDiscountList.get(position).getWhat_type().equals("1")){
-                        holder.textview_topcolor.setTextColor(ContextCompat.getColor(mContext,R.color.y3));
-                        holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext,R.color.y3));
-                        holder.textview_discount.setTextColor(ContextCompat.getColor(mContext,R.color.y3));
-                        holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext,R.color.y3));
+                    if (mDiscountList.get(position).getWhat_type().equals("1")) {
+                        holder.textview_topcolor.setTextColor(ContextCompat.getColor(mContext, R.color.y3));
+                        holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext, R.color.y3));
+                        holder.textview_discount.setTextColor(ContextCompat.getColor(mContext, R.color.y3));
+                        holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext, R.color.y3));
                         holder.textview_ispark.setText("停车券");
-                        holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext,R.color.b1));
-                    }else {
-                        holder.textview_topcolor.setBackgroundColor(ContextCompat.getColor(mContext,R.color.green5));
-                        holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext,R.color.green5));
-                        holder.textview_discount.setTextColor(ContextCompat.getColor(mContext,R.color.green5));
-                        holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext,R.color.green5));
+                        holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext, R.color.b1));
+                        if (mOnItemClickListener != null) {
+                            holder.mCardView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mOnItemClickListener.onItemClick(mDiscountList.get(position));
+                                }
+                            });
+                        }
+                    } else {
+                        holder.textview_topcolor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green5));
+                        holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext, R.color.green5));
+                        holder.textview_discount.setTextColor(ContextCompat.getColor(mContext, R.color.green5));
+                        holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext, R.color.green5));
                         holder.textview_ispark.setText("充电券");
-                        holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext,R.color.b1));
+                        holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext, R.color.b1));
                     }
                     holder.imageview_isold.setVisibility(View.GONE);
                 } else {
                     //已过期
-                    holder.textview_topcolor.setBackgroundColor(ContextCompat.getColor(mContext,R.color.g6));
-                    holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                    holder.textview_discount.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                    holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                    holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                    holder.imageview_isold.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_guoqi));
+                    holder.textview_topcolor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.g6));
+                    holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                    holder.textview_discount.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                    holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                    holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                    holder.imageview_isold.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_guoqi));
                     holder.imageview_isold.setVisibility(View.VISIBLE);
                 }
             } else if (mDiscountList.get(position).getIs_usable().equals("2")) {
                 //已使用
-                holder.textview_topcolor.setBackgroundColor(ContextCompat.getColor(mContext,R.color.g6));
-                holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                holder.textview_discount.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext,R.color.g6));
-                holder.imageview_isold.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_used));
+                holder.textview_topcolor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.g6));
+                holder.textview_yuan.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                holder.textview_discount.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                holder.textview_minfee.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                holder.textview_ispark.setTextColor(ContextCompat.getColor(mContext, R.color.g6));
+                holder.imageview_isold.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_used));
                 holder.imageview_isold.setVisibility(View.VISIBLE);
             }
             holder.textview_discount.setText(DensityUtil.subZeroAndDot(mDiscountList.get(position).getDiscount()));
@@ -109,7 +120,7 @@ public class DiscountAdapter extends RecyclerView.Adapter<DiscountAdapter.ViewHo
                     builder.setTitle("提示");
                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            mIDeleteBtnClickListener.onDeleteBtnCilck(mDiscountList.get(position).getId(),position);
+                            mIDeleteBtnClickListener.onDeleteBtnCilck(mDiscountList.get(position).getId(), position);
                         }
                     });
 
@@ -129,34 +140,43 @@ public class DiscountAdapter extends RecyclerView.Adapter<DiscountAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-         TextView textview_discount, textview_minfee, textview_ispark, textview_effective_time,textview_yuan,textview_topcolor,textview_delete;
-         ImageView imageview_isold;
+        private CardView mCardView;
+        TextView textview_discount, textview_minfee, textview_ispark, textview_effective_time, textview_yuan, textview_topcolor, textview_delete;
+        ImageView imageview_isold;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textview_discount = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_discount);
-            imageview_isold = (ImageView) itemView.findViewById(R.id.id_item_discount_layout_imageview_isold);
-            textview_minfee = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_minfee);
-            textview_ispark = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_ispark);
-            textview_yuan = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_yuan);
-            textview_topcolor = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_topcolor);
-            textview_effective_time = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_effective_time);
-            textview_delete = (TextView) itemView.findViewById(R.id.id_item_discount_layout_textview_delete);
-//            layout_content = (ViewGroup) itemView.findViewById(R.id.id_item_discount_layout_content);
+            mCardView = itemView.findViewById(R.id.discount_cv);
+            textview_discount = itemView.findViewById(R.id.id_item_discount_layout_textview_discount);
+            imageview_isold = itemView.findViewById(R.id.id_item_discount_layout_imageview_isold);
+            textview_minfee = itemView.findViewById(R.id.id_item_discount_layout_textview_minfee);
+            textview_ispark = itemView.findViewById(R.id.id_item_discount_layout_textview_ispark);
+            textview_yuan = itemView.findViewById(R.id.id_item_discount_layout_textview_yuan);
+            textview_topcolor = itemView.findViewById(R.id.id_item_discount_layout_textview_topcolor);
+            textview_effective_time = itemView.findViewById(R.id.id_item_discount_layout_textview_effective_time);
+            textview_delete = itemView.findViewById(R.id.id_item_discount_layout_textview_delete);
         }
     }
 
     public interface IonSlidingViewClickListener {
-        void onDeleteBtnCilck(String discount_id,int pos);
+        void onDeleteBtnCilck(String discount_id, int pos);
     }
 
-    public void removeItem(int position){
+    public interface OnItemClickListener {
+        void onItemClick(Discount_Info discountInfo);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    public void removeItem(int position) {
 
         mDiscountList.remove(position);
 
         notifyItemRemoved(position);
 
-        if(position != mDiscountList.size()-1){      // 这个判断的意义就是如果移除的是最后一个，就不用管它了
+        if (position != mDiscountList.size() - 1) {      // 这个判断的意义就是如果移除的是最后一个，就不用管它了
             notifyItemRangeChanged(position, mDiscountList.size() - position);
         }
     }
