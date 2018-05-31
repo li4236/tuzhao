@@ -1,11 +1,13 @@
 package com.tuzhao.fragment.parkorder;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.constraint.ConstraintLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import com.alipay.sdk.app.PayTask;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
+import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseStatusFragment;
@@ -32,6 +35,7 @@ import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -39,9 +43,6 @@ import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -68,9 +69,29 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mUserTotalCredit;
 
+    private TextView mParkDiscount;
+
+    private ConstraintLayout mConstraintLayout;
+
+    private TextView mParkSpaceNumber;
+
+    private TextView mAppointmentParkTime;
+
+    private TextView mActualParkTime;
+
+    private TextView mAppointParkDuration;
+
+    private TextView mActualParkDuration;
+
+    private TextView mOvertimeDuration;
+
     private TextView mShouldPayFee;
 
     private ArrayList<Discount_Info> mDiscountInfos;
+
+    private ArrayList<Discount_Info> mCanUseDiscounts;
+
+    private ArrayList<String> mParkSpacePictures;
 
     private Discount_Info mChooseDiscount;
 
@@ -103,48 +124,127 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mParkOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
         mParkOrderCredit = view.findViewById(R.id.pay_for_order_credit);
         mUserTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
+        mParkDiscount = view.findViewById(R.id.park_discount);
+        mConstraintLayout = view.findViewById(R.id.park_detail_cl);
+        mParkSpaceNumber = view.findViewById(R.id.park_space_number);
+        mAppointmentParkTime = view.findViewById(R.id.appointment_start_park_time);
+        mActualParkTime = view.findViewById(R.id.actual_start_park_time);
+        mAppointParkDuration = view.findViewById(R.id.appointment_park_duration);
+        mActualParkDuration = view.findViewById(R.id.actual_park_duration);
+        mOvertimeDuration = view.findViewById(R.id.overtime_duration);
         mShouldPayFee = view.findViewById(R.id.pay_for_order_should_pay);
 
         view.findViewById(R.id.pay_for_order_question).setOnClickListener(this);
-        view.findViewById(R.id.pay_for_order_time_iv).setOnClickListener(this);
-        view.findViewById(R.id.pay_for_order_fee_iv).setOnClickListener(this);
-        view.findViewById(R.id.pay_for_order_credit_iv).setOnClickListener(this);
-        mParkOrderDiscount.setOnClickListener(this);
+        view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
+        view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
+        view.findViewById(R.id.delete_order_cl).setOnClickListener(this);
+        view.findViewById(R.id.park_discount_cl).setOnClickListener(this);
+        view.findViewById(R.id.view_park_detail_cl).setOnClickListener(this);
         mShouldPayFee.setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
         mDiscountInfos = new ArrayList<>();
+        mCanUseDiscounts = new ArrayList<>();
         getDiscount();
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
-            String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time());
-            if (timeout.charAt(timeout.length() - 1) == '分') {
-                timeout += "钟";
-            }
+            //mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
+            String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
             mParkTimeDescription.setText(timeout);
+            mOvertimeDuration.setText(timeout.substring(2, timeout.length()));
 
             mParkOrderCredit.setText("-5");
         } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时间在顺延时长内
-            mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
+            //mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
             mParkOrderCredit.setText("+3");
         } else {
             //停车时间不到预约的结束时间
             mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
             mParkOrderCredit.setText("+3");
         }
+        mParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getPark_start_time()));
         mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
         String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
         mUserTotalCredit.setText(totalCredit);
 
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
+        mAppointmentParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()));
+        mActualParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
+        mAppointParkDuration.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
+        mActualParkDuration.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
+
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
 
+        initHandler();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        IntentObserable.unregisterObserver(this);
+        if (mPayThread != null) {
+            mPayThread.interrupt();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.pay_for_order_question:
+
+                break;
+            case R.id.car_pic_cl:
+                if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
+                    showFiveToast("暂无车位图片");
+                } else {
+                    showParkSpacePic();
+                }
+                break;
+            case R.id.contact_service_cl:
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4006505058"));
+                startActivity(intent);
+                break;
+            case R.id.delete_order_cl:
+                TipeDialog dialog = new TipeDialog.Builder(getContext())
+                        .setTitle("提示")
+                        .setMessage("确定删除该订单吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deletelOrder();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create();
+                dialog.show();
+                break;
+            case R.id.view_park_detail_cl:
+                if (mConstraintLayout.getVisibility() == View.VISIBLE) {
+                    mConstraintLayout.setVisibility(View.GONE);
+                } else {
+                    mConstraintLayout.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.park_discount_cl:
+                if (mCanUseDiscounts.isEmpty()) {
+                    showFiveToast("暂无可用优惠券哦");
+                } else {
+                    startActivityForResult(DiscountActivity.class, ConstansUtil.DISOUNT_REQUEST_CODE, ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
+                }
+                break;
+            case R.id.pay_for_order_should_pay:
+                payV2();
+                break;
+        }
+    }
+
+    private void initHandler() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -196,43 +296,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        IntentObserable.unregisterObserver(this);
-        if (mPayThread != null) {
-            mPayThread.interrupt();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.pay_for_order_question:
-
-                break;
-            case R.id.pay_for_order_time_iv:
-
-                break;
-            case R.id.pay_for_order_fee_iv:
-
-                break;
-            case R.id.pay_for_order_credit_iv:
-
-                break;
-            case R.id.pay_for_order_discount:
-                if (mDiscountInfos.isEmpty()) {
-                    showFiveToast("暂无可用优惠券哦");
-                } else {
-                    startActivityForResult(DiscountActivity.class, ConstansUtil.DISOUNT_REQUEST_CODE, ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
-                }
-                break;
-            case R.id.pay_for_order_should_pay:
-                payV2();
-                break;
-        }
-    }
-
     /**
      * 获取优惠券
      */
@@ -242,7 +305,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> o, Call call, Response response) {
                         mDiscountInfos = o.data;
-                        List<Discount_Info> mCanUseDiscount = new ArrayList<>();
                         for (Discount_Info discount_info : mDiscountInfos) {
                             if (discount_info.getIs_usable().equals("1")) {
                                 //可用
@@ -252,28 +314,28 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                                         //大于最低消费
                                         if (DateUtil.isInUsefulDate(discount_info.getEffective_time())) {
                                             //在可用范围内
-                                            mCanUseDiscount.add(discount_info);
+                                            mCanUseDiscounts.add(discount_info);
                                         }
                                     }
                                 }
                             }
                         }
 
-                        //按照优惠金额从大到小排序
-                        Collections.sort(mCanUseDiscount, new Comparator<Discount_Info>() {
+                        /*//按照优惠金额从大到小排序
+                        Collections.sort(mCanUseDiscounts, new Comparator<Discount_Info>() {
                             @Override
                             public int compare(Discount_Info o1, Discount_Info o2) {
                                 return (int) (Double.valueOf(o2.getDiscount()) - Double.valueOf(o1.getDiscount()));
                             }
                         });
 
-                        for (Discount_Info discount_info : mCanUseDiscount) {
+                        for (Discount_Info discount_info : mCanUseDiscounts) {
                             //找到低于消费金额的最大优惠券
                             if (Double.valueOf(mParkOrderInfo.getOrder_fee()) >= Double.valueOf(discount_info.getDiscount())) {
                                 mChooseDiscount = discount_info;
                                 break;
                             }
-                        }
+                        }*/
                         calculateShouldPayFee();
                         dismmisLoadingDialog();
                     }
@@ -288,20 +350,75 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 });
     }
 
+    private void showParkSpacePic() {
+        if (mParkSpacePictures == null) {
+            mParkSpacePictures = new ArrayList<>();
+            String[] pictures = mParkOrderInfo.getPictures().split(",");
+            for (String picture : pictures) {
+                if (!picture.equals("-1")) {
+                    mParkSpacePictures.add(HttpConstants.ROOT_IMG_URL_PS + picture);
+                }
+            }
+        }
+        Intent intent = new Intent(getActivity(), BigPictureActivity.class);
+        intent.putStringArrayListExtra("picture_list", mParkSpacePictures);
+        startActivity(intent);
+    }
+
+    private void deletelOrder() {
+        showLoadingDialog("正在删除");
+        getOkGo(HttpConstants.deletelParkOrder)
+                .params("order_id", mParkOrderInfo.getId())
+                .params("citycode", mParkOrderInfo.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        // TODO: 2018/5/31
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "102":
+                                case "103":
+                                case "104":
+                                    showFiveToast("删除失败，请稍后重试");
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
     /**
      * 根据优惠券金额计算显示相应的优惠金额以及支付金额
      */
     private void calculateShouldPayFee() {
         String shouldPay = "确认支付" + DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrder_fee())) + "元";
         if (mChooseDiscount != null) {
+            double discountFee = Double.valueOf(mChooseDiscount.getDiscount());
             if (Double.valueOf(mChooseDiscount.getDiscount()) != 0) {
-                String discount = "（优惠券-" + Double.valueOf(mChooseDiscount.getDiscount()) + "）";
+                String discount = "（优惠券—" + discountFee + "）";
                 SpannableString spannableString = new SpannableString(discount);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")),
-                        discount.indexOf("-"), discount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        discount.indexOf("—"), discount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mParkOrderDiscount.setText(spannableString);
-                shouldPay = "确认支付" + DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrder_fee()) - Double.valueOf(mChooseDiscount.getDiscount())) + "元";
+
+                String parkDiscount = "—￥" + discountFee;
+                mParkDiscount.setText(parkDiscount);
+
+                double shouldPayFee = Double.valueOf(mParkOrderInfo.getOrder_fee()) - discountFee;
+                if (shouldPayFee >= 0) {
+                    shouldPay = "确认支付" + DateUtil.decreseOneZero(shouldPayFee) + "元";
+                } else {
+                    shouldPay = "确认支付0.0元";
+                }
             }
+        } else {
+            mParkDiscount.setText("（未用优惠券）");
+            String discountCount = mCanUseDiscounts.size() + "张优惠券";
+            mParkDiscount.setText(discountCount);
         }
         mShouldPayFee.setText(shouldPay);
     }
@@ -352,10 +469,11 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     public void onSuccess(Base_Class_Info<User_Info> info, Call call, Response response) {
                         if (getActivity() != null) {
                             Intent intent = new Intent();
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable(ConstansUtil.PAY_ORDER_FINISH, mParkOrderInfo);
-                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
-                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            intent.setAction(ConstansUtil.PAY_ORDER_FINISH);
+                            /*Bundle bundle = new Bundle();
+                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);*/
+                            IntentObserable.dispatch(intent);
                             getActivity().finish();
                         }
                     }

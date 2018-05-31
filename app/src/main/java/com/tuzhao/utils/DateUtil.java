@@ -438,7 +438,7 @@ public class DateUtil {
         }
         if (minutesDistance > 0) {
             stringBuilder.append(minutesDistance);
-            stringBuilder.append("分");
+            stringBuilder.append("分钟");
         }
         return stringBuilder.toString();
     }
@@ -452,17 +452,20 @@ public class DateUtil {
     public static String getDateDistanceForHourWithMinute(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
-        endCalenar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         StringBuilder stringBuilder = new StringBuilder();
-        if (minutesDistance / 60 >= 0) {
+        if (minutesDistance / 60 > 0) {
             stringBuilder.append(minutesDistance / 60);
             stringBuilder.append("小时");
             minutesDistance -= minutesDistance / 60 * 60;
         }
-        stringBuilder.append(minutesDistance);
-        stringBuilder.append("分");
+
+        if (minutesDistance > 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分钟");
+        }
         return stringBuilder.toString();
     }
 
@@ -896,7 +899,7 @@ public class DateUtil {
      * @return HH点mm分
      */
     public static String getHourToMinute(String yearToSecond) {
-        return yearToSecond.substring(yearToSecond.indexOf(" " + 1), yearToSecond.indexOf(":")) + "点"
+        return yearToSecond.substring(yearToSecond.indexOf(" ") + 1, yearToSecond.indexOf(":")) + "点"
                 + yearToSecond.substring(yearToSecond.indexOf(":") + 1, yearToSecond.lastIndexOf(":")) + "分";
     }
 

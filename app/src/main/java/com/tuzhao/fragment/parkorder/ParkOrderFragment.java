@@ -1,11 +1,11 @@
 package com.tuzhao.fragment.parkorder;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +21,8 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.CircleView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 
@@ -31,7 +33,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/21.
  */
 
-public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
+public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implements IntentObserver {
 
     private ConstraintLayout mConstraintLayout;
 
@@ -67,18 +69,20 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
         setTAG(TAG + " status:" + mOrderStatus);
         showDialog();
         loadData();
+        IntentObserable.registerObserver(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        dissmissDialog();
         if (!mCommonAdapter.getData().isEmpty()) {
             Bundle bundle = getArguments();
             if (bundle != null) {
                 bundle.putParcelableArrayList(ConstansUtil.PARK_ORDER_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
             }
         }
+        IntentObserable.unregisterObserver(this);
+        dissmissDialog();
     }
 
     @Override
@@ -95,7 +99,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        Log.e(TAG, "onError: " + mOrderStatus);
                         dissmissDialog();
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
@@ -200,4 +203,16 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> {
 
     }
 
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case ConstansUtil.PAY_ORDER_FINISH:
+                    if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
+                        onRefresh();
+                    }
+                    break;
+            }
+        }
+    }
 }

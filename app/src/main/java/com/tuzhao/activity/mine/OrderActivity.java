@@ -77,6 +77,9 @@ public class OrderActivity extends BaseStatusActivity {
             case "4":
                 transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
                 break;
+            default:
+                transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
+                break;
         }
         transaction.commit();
     }
@@ -137,4 +140,5 @@ public class OrderActivity extends BaseStatusActivity {
             }
         }
     }
+
 }

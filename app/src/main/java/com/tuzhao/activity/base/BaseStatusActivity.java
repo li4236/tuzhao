@@ -57,6 +57,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         TextView textView = toolbar.findViewById(R.id.toolbar_title);
 
         initView(savedInstanceState);
+        customToolBar(toolbar);
         textView.setText(title());
         initData();
     }
@@ -274,6 +275,10 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected String getText(TextView textView) {
         return textView.getText().toString();
+    }
+
+    protected void customToolBar(Toolbar toolbar) {
+
     }
 
 }
