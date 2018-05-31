@@ -27,7 +27,7 @@ import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.popupwindow.CustomPopWindow;
@@ -50,7 +50,7 @@ public class RentingParkOrderFragment extends BaseFragment {
      * UI
      */
     private View mContentView;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private LinearLayout linearlayout_nodata, linearlayout12;
     private RelativeLayout relativelayout_orderdetail, relativelayout_detailmoney;
     private TextView textview_fee, textview_warm1, textview_warm2, textview_finish, textview_order_1, textview_order_2, textview_zheceng1, textview_zheceng2;
@@ -110,8 +110,8 @@ public class RentingParkOrderFragment extends BaseFragment {
                     @Override
                     public void onSuccess(final Base_Class_List_Info<ParkOrderInfo> appointParkOrderInfo, Call call, Response response) {
 
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (isFirstIn) {
                             isFirstIn = false;
@@ -125,8 +125,8 @@ public class RentingParkOrderFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
@@ -305,8 +305,8 @@ public class RentingParkOrderFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> appointParkOrderInfoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         requestGetRentintParkOrder();
                         MyToast.showToast(mContext, "已结束停车", 5);
@@ -316,8 +316,8 @@ public class RentingParkOrderFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
@@ -359,16 +359,16 @@ public class RentingParkOrderFragment extends BaseFragment {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(mContext, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(mContext, what);
+        mLoadingDialog.show();
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 

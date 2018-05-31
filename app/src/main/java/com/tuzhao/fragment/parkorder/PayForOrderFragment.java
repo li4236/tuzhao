@@ -139,7 +139,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.delete_order_cl).setOnClickListener(this);
         view.findViewById(R.id.park_discount_cl).setOnClickListener(this);
-        view.findViewById(R.id.view_park_detail_cl).setOnClickListener(this);
+        view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
         mShouldPayFee.setOnClickListener(this);
     }
 
@@ -224,7 +224,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                         .create();
                 dialog.show();
                 break;
-            case R.id.view_park_detail_cl:
+            case R.id.view_appointment_detail:
                 if (mConstraintLayout.getVisibility() == View.VISIBLE) {
                     mConstraintLayout.setVisibility(View.GONE);
                 } else {

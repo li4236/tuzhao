@@ -29,7 +29,7 @@ public class ParkFragment extends BaseFragment {
 //    private ImageView imageview_show, imageview_ad, imageview_collection;
 //    private TextView textview_parksapce, textview_ispublic, textview_psaddress, textview_distance, textview_distance_dw, textview_hightime, textview_highfee, textview_highmaxtime, textview_lowtime, textview_lowfee, textview_lowmaxfee,textview_parkcount;
 //    private CBRatingBar cbratingbar;
-//    private CustomDialog mCustomDialog;
+//    private LoadingDialog mCustomDialog;
 //    private LoginDialogFragment loginDialogFragment;
 
     /**
@@ -463,7 +463,7 @@ public class ParkFragment extends BaseFragment {
 //    }
 //
 //    private void initLoading(String what) {
-//        mCustomDialog = new CustomDialog(mContext, what);
+//        mCustomDialog = new LoadingDialog(mContext, what);
 //        mCustomDialog.show();
 //    }
 //

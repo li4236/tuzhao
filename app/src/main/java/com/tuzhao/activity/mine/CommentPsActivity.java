@@ -26,7 +26,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -50,7 +50,7 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
     private final int REQUEST_CODE_PICKER = 108;
     private final int RESULT_CODE_PICKER = 109;
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private CBRatingBar cbratingbar;
     private ImageView imageview_psimg, imageview_add, imageview_img1, imageview_img2, imageview_img3, imageview_del1, imageview_del2, imageview_del3;
     private EditText edittext_comment;
@@ -214,8 +214,8 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<NearPointPCInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<NearPointPCInfo> homePCInfoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(CommentPsActivity.this, "评价成功", 5);
                         if (file_list != null) {
@@ -231,8 +231,8 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(CommentPsActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为changeUserImage：" + e.getMessage());
@@ -334,15 +334,15 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

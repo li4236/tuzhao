@@ -18,7 +18,7 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
@@ -40,7 +40,7 @@ public class BillActivity extends BaseActivity {
     private LinearLayout linearlayout_norecord;
     private SuperRefreshRecyclerView mRecycleview;
     private ConsumRecordAdapter mAdapter;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private List<ConsumRecordInfo> mDataList = new ArrayList<>();
     private boolean isFirstIn = true, isNoData = false, isNoInternet = false;
@@ -83,8 +83,8 @@ public class BillActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_List_Info<ConsumRecordInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<ConsumRecordInfo> consumRecordInfoBase_class_list_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.hide();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.hide();
                         }
                         linearlayout_norecord.setVisibility(View.GONE);
                         if (isFirstIn) {
@@ -119,8 +119,8 @@ public class BillActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(BillActivity.this,e)){
                             Log.d("TAG", "请求失败， 信息为：" + "getUserBill" + e.getMessage());
@@ -199,15 +199,15 @@ public class BillActivity extends BaseActivity {
     }
 
     private void initLoading() {
-        mCustomDialog = new CustomDialog(BillActivity.this, null);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(BillActivity.this, null);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

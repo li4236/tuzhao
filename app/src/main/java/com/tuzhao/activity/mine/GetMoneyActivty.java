@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.publicmanager.UserManager;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 
@@ -24,7 +24,7 @@ public class GetMoneyActivty extends BaseActivity implements View.OnClickListene
     private LinearLayout linearlayout_getmoney, linearlayout_edit_alinumble;
     private EditText edittext_alinumble, edittext_money;
     private TextView textview_allbalance;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,8 +81,8 @@ public class GetMoneyActivty extends BaseActivity implements View.OnClickListene
                     initDataView();
                     linearlayout_getmoney.setVisibility(View.VISIBLE);
                     linearlayout_edit_alinumble.setVisibility(View.GONE);
-                    if (mCustomDialog.isShowing()) {
-                        mCustomDialog.dismiss();
+                    if (mLoadingDialog.isShowing()) {
+                        mLoadingDialog.dismiss();
                     }
                 } else {
                     MyToast.showToast(GetMoneyActivty.this, "要先填写支付宝账号哦", 5);
@@ -138,15 +138,15 @@ public class GetMoneyActivty extends BaseActivity implements View.OnClickListene
 
     //初始化加载框控件
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(GetMoneyActivty.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(GetMoneyActivty.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 

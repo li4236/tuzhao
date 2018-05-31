@@ -16,7 +16,7 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 
 import java.net.ConnectException;
@@ -36,7 +36,7 @@ public class ApplyParkSpace extends BaseActivity {
     private TextView textview_savebotton;
     private EditText parkspace_name,parkspace_address;
     private String mCityCode = "010";
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,8 +100,8 @@ public class ApplyParkSpace extends BaseActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<Park_Info> park_infoJsonCallback, Call call, Response response) {
 
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.hide();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.hide();
                         }
                         MyToast.showToast(ApplyParkSpace.this,"已成功申请"+parkspace_name.getText().toString(),5);
                         finish();
@@ -110,8 +110,8 @@ public class ApplyParkSpace extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.hide();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.hide();
                         }
                         if (e instanceof ConnectException) {
                             Log.d("TAG", "请求失败，" + " 信息为：连接异常" + e.toString());
@@ -148,15 +148,15 @@ public class ApplyParkSpace extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!=null){
-            mCustomDialog.cancel();
+        if (mLoadingDialog !=null){
+            mLoadingDialog.cancel();
         }
     }
 }

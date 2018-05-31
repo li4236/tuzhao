@@ -17,7 +17,7 @@ import com.tuzhao.R;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.OnLoginListener;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
@@ -36,7 +36,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     protected String TAG = this.getClass().getName();
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private LoginDialogFragment mLoginDialogFragment;
 
@@ -116,8 +116,8 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected void showLoadingDialog() {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(this, null);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, null);
+        mLoadingDialog.show();
     }
 
     /**
@@ -125,16 +125,16 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected void showLoadingDialog(String msg) {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(this, msg);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, msg);
+        mLoadingDialog.show();
     }
 
     /**
      * 关闭加载对话框
      */
     protected void dismmisLoadingDialog() {
-        if (mCustomDialog != null && mCustomDialog.isShowing()) {
-            mCustomDialog.dismiss();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 

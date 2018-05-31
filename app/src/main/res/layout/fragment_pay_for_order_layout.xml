@@ -284,52 +284,32 @@
                 app:layout_constraintStart_toStartOf="@+id/appointment_detail_divider"
                 app:layout_constraintTop_toBottomOf="@+id/park_discount_cl" />
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/view_park_detail_cl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/view_appointment_detail"
+                style="@style/TwentyTextG6Style"
                 android:paddingBottom="15dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="46dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/park_discount_divider"
                 android:paddingTop="15dp"
-                app:layout_constraintEnd_toEndOf="@id/appointment_detail_divider"
-                app:layout_constraintTop_toBottomOf="@+id/park_discount_divider">
-
-                <TextView
-                    android:id="@+id/view_appointment_detail"
-                    style="@style/TwentyTextG6Style"
-                    android:layout_marginEnd="6dp"
-                    android:text="查看停车详情"
-                    app:layout_constraintEnd_toStartOf="@+id/appointment_detail_iv" />
-
-                <ImageView
-                    android:id="@+id/appointment_detail_iv"
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:contentDescription="@string/picture_description"
-                    android:src="@drawable/ic_fold"
-                    app:layout_constraintBottom_toBottomOf="@+id/view_appointment_detail"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />
-
-            </android.support.constraint.ConstraintLayout>
+                android:text="查看停车详情" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/park_detail_cl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="15dp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/appointment_detail_divider"
                 app:layout_constraintStart_toStartOf="@+id/appointment_detail_divider"
-                app:layout_constraintTop_toBottomOf="@+id/view_park_detail_cl">
+                app:layout_constraintTop_toBottomOf="@+id/view_appointment_detail">
 
                 <View
                     android:id="@+id/detail_top_divider"
                     style="@style/dividerStyle"
                     android:layout_width="0dp"
                     app:layout_constraintEnd_toEndOf="@+id/park_discount_divider"
-                    app:layout_constraintStart_toStartOf="@+id/park_discount_divider"
-                    app:layout_constraintTop_toBottomOf="@+id/view_park_detail_cl" />
+                    app:layout_constraintStart_toStartOf="@+id/park_discount_divider"/>
 
                 <!--<TextView
                     android:id="@+id/park_lot_name_tv"

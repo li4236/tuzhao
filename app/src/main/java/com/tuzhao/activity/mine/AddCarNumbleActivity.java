@@ -24,7 +24,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
@@ -48,7 +48,7 @@ public class AddCarNumbleActivity extends BaseActivity implements View.OnClickLi
     private EditText mEt_carnumber;
     private ImageView mIv_back;
     private TextView mTv_prefix;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     //选择器UI
     OptionsPickerView pvOptions;
@@ -186,8 +186,8 @@ public class AddCarNumbleActivity extends BaseActivity implements View.OnClickLi
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(AddCarNumbleActivity.this, "添加成功", 2);
                         if (isNull){
@@ -202,8 +202,8 @@ public class AddCarNumbleActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(AddCarNumbleActivity.this,e)){
                             Log.d("TAG", "请求失败， 信息为：" + "addUserCarNumber" + e.getMessage());
@@ -249,15 +249,15 @@ public class AddCarNumbleActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

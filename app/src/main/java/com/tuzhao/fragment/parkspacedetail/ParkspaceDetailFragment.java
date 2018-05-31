@@ -37,7 +37,7 @@ import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.mytoast.MyToast;
@@ -59,7 +59,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
      * UI
      */
     private View mContentView;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private Banner banner_image;
     private ImageView mNoPictureIv;
     private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance, textview_distance_dw, textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime;
@@ -108,9 +108,9 @@ public class ParkspaceDetailFragment extends BaseFragment {
         if (mData == null) {
             parkspace_id = getArguments().getString("parkspace_id");
             city_code = getArguments().getString("city_code");
-            if (mCustomDialog == null) {
+            if (mLoadingDialog == null) {
                 initLoading("加载中...");
-            } else if (!mCustomDialog.isShowing()) {
+            } else if (!mLoadingDialog.isShowing()) {
                 initLoading("加载中...");
             }
             requestGetParkListData();
@@ -216,8 +216,8 @@ public class ParkspaceDetailFragment extends BaseFragment {
                     public void onSuccess(Base_Class_Info<Park_Space_Info> park_space_infoBase_class_info, Call call, Response response) {
                         parkspace_issuccess = true;
                         if (park_issuccess) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         }
                         parkspace_info = park_space_infoBase_class_info.data;
@@ -239,8 +239,8 @@ public class ParkspaceDetailFragment extends BaseFragment {
                         Log.e("TAG", "onSuccess: " + responseData.data);
                         park_issuccess = true;
                         if (parkspace_issuccess) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         }
                         textview_parkcount.setText(responseData.data.size() + "车位");
@@ -250,8 +250,8 @@ public class ParkspaceDetailFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         textview_parkcount.setText("暂无车位");
                         if (!DensityUtil.isException(mContext, e)) {
@@ -269,9 +269,9 @@ public class ParkspaceDetailFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(final Base_Class_List_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog != null) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                        if (mLoadingDialog != null) {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         }
                         if (mOrderList != null) {
@@ -283,9 +283,9 @@ public class ParkspaceDetailFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog != null) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                        if (mLoadingDialog != null) {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         }
                         if (!DensityUtil.isException(mContext, e)) {
@@ -390,15 +390,15 @@ public class ParkspaceDetailFragment extends BaseFragment {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(mContext, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(mContext, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

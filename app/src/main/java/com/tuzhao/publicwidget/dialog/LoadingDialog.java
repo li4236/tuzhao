@@ -10,22 +10,22 @@ import com.tuzhao.R;
 /**
  * 自定义透明的dialog
  */
-public class CustomDialog extends Dialog {
+public class LoadingDialog extends Dialog {
 
-    private static final String TAG = "CustomDialog";
+    private static final String TAG = "LoadingDialog";
 
     private String content;
 
     private boolean mCancelable = true;
 
-    public CustomDialog(Context context, String content, boolean cancelable) {
+    public LoadingDialog(Context context, String content, boolean cancelable) {
         super(context, R.style.CustomDialog);
         this.content = content != null ? content : "加载中...";
         initView();
         mCancelable = cancelable;
     }
 
-    public CustomDialog(Context context, String content) {
+    public LoadingDialog(Context context, String content) {
         super(context, R.style.CustomDialog);
         this.content = content != null ? content : "加载中...";
         initView();
@@ -35,8 +35,8 @@ public class CustomDialog extends Dialog {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (CustomDialog.this.isShowing() && mCancelable) {
-                    CustomDialog.this.dismiss();
+                if (LoadingDialog.this.isShowing() && mCancelable) {
+                    LoadingDialog.this.dismiss();
                 }
                 break;
         }

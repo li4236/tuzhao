@@ -36,7 +36,7 @@ import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
@@ -58,7 +58,7 @@ import static com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0.SDK_PAY_FLAG;
 public class ParkOrderDetailsActivity extends BaseActivity {
 
     private TextView textview_warm1, textview_cancleorder, textview_starparking, textview_orderbumber;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private ParkOrderInfo parkOrderInfo = null;
     private String parkorder_number = null, citycode = null;
@@ -163,8 +163,8 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         initViewData(parkOrderInfoBase_class_info.data);
                     }
@@ -172,8 +172,8 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(ParkOrderDetailsActivity.this, e)) {
 
@@ -451,8 +451,8 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(ParkOrderDetailsActivity.this, "取消成功", 5);
                         finish();
@@ -460,8 +460,8 @@ public class ParkOrderDetailsActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(ParkOrderDetailsActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
@@ -558,15 +558,15 @@ public class ParkOrderDetailsActivity extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(ParkOrderDetailsActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(ParkOrderDetailsActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

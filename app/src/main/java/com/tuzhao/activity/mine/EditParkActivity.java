@@ -23,7 +23,7 @@ import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
@@ -46,7 +46,7 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
     private TextView textview_img_count, textview_park_statue, textview_delete;
     private LinearLayout linearlayout_parkpicture;
     private SwitchButton switchview_button;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private Park_Info mData;
     private String[] pic_list;
@@ -170,8 +170,8 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
@@ -237,8 +237,8 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
                         .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                             @Override
                             public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
-                                if (mCustomDialog.isShowing()) {
-                                    mCustomDialog.dismiss();
+                                if (mLoadingDialog.isShowing()) {
+                                    mLoadingDialog.dismiss();
                                 }
                                 MyToast.showToast(EditParkActivity.this, "提交成功", 5);
                                 finish();
@@ -247,8 +247,8 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
                             @Override
                             public void onError(Call call, Response response, Exception e) {
                                 super.onError(call, response, e);
-                                if (mCustomDialog.isShowing()) {
-                                    mCustomDialog.dismiss();
+                                if (mLoadingDialog.isShowing()) {
+                                    mLoadingDialog.dismiss();
                                 }
                                 if (!DensityUtil.isException(EditParkActivity.this, e)) {
                                     Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -365,8 +365,8 @@ public class EditParkActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

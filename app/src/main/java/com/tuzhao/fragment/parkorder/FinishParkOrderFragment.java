@@ -22,7 +22,7 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.ChangeScrollStateCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
@@ -48,7 +48,7 @@ public class FinishParkOrderFragment extends BaseFragment {
     private View mContentView;
     private SuperRefreshRecyclerView mRecycleview;
     private ParkOrderAdapter mAdapter;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private LinearLayoutManager linearLayoutManager;
     private LinearLayout linearlayout_nodata;
 
@@ -231,8 +231,8 @@ public class FinishParkOrderFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(mContext, "删除成功", 5);
                         mOrdersData.remove(position);
@@ -241,8 +241,8 @@ public class FinishParkOrderFragment extends BaseFragment {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
@@ -266,15 +266,15 @@ public class FinishParkOrderFragment extends BaseFragment {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(mContext, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(mContext, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 

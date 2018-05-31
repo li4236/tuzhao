@@ -28,7 +28,7 @@ import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
@@ -48,7 +48,7 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
 public class SetAccountAndSafeActivity extends BaseActivity {
 
     private LinearLayout linearlayout_changepass, linearlayout_tellnumber, linearlayout_alipay;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private TextView mUserName;
     private TextView mUserBindingStatus;
 
@@ -153,8 +153,8 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                         if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
                             if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
                                 MyToast.showToast(SetAccountAndSafeActivity.this, "账号和之前一样，未作修改", 5);
-                                if (mCustomDialog != null) {
-                                    mCustomDialog.dismiss();
+                                if (mLoadingDialog != null) {
+                                    mLoadingDialog.dismiss();
                                 }
                             } else {
                                 initLoading("提交中...");
@@ -217,8 +217,8 @@ public class SetAccountAndSafeActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(SetAccountAndSafeActivity.this, "绑定成功", 5);
                         UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
@@ -230,8 +230,8 @@ public class SetAccountAndSafeActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(SetAccountAndSafeActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为uploadUserAliNumber：" + e.getMessage());
@@ -305,19 +305,19 @@ public class SetAccountAndSafeActivity extends BaseActivity {
 
     //初始化加载框控件
     private void initLoading(String what) {
-        if (mCustomDialog != null && mCustomDialog.isShowing()) {
-            mCustomDialog.dismiss();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
-        mCustomDialog = new CustomDialog(SetAccountAndSafeActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(SetAccountAndSafeActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterLogin();//注销登录广播接收器
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
         if (mThread != null) {
             mThread.interrupt();

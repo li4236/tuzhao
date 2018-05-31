@@ -23,7 +23,7 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
@@ -44,7 +44,7 @@ public class DiscountActivity extends BaseActivity {
     /**
      * UI
      */
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     /**
      * 页面相关
@@ -122,8 +122,8 @@ public class DiscountActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_List_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> datas, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         handleDiscount(datas.data);
                     }
@@ -131,8 +131,8 @@ public class DiscountActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
 
                         adapter = new MyFrageStatePagerAdapter(getSupportFragmentManager(), mTitle);
@@ -251,15 +251,15 @@ public class DiscountActivity extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

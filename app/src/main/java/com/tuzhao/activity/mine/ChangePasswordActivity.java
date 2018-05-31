@@ -26,7 +26,7 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.db.DatabaseImp;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.editviewwatch.LimitInputTextWatcher;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
@@ -47,7 +47,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     private TextView textview_oldgetconfirm;
     private LinearLayout linearlayout_tell, linearlayout_oldpassword, linearlayout_newpassword;
     private ImageView imageview_oldpassclean, imageview_newclean;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private static final int CODE_ING = 1;   //已发送，倒计时
     private static final int CODE_REPEAT = 2;  //重新发送
@@ -251,8 +251,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                 .execute(new JsonCallback<Base_Class_Info<SMSInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<SMSInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         linearlayout_tell.setVisibility(View.GONE);
                         linearlayout_newpassword.setVisibility(View.VISIBLE);
@@ -261,8 +261,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(getContext(),e)){
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -294,8 +294,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
 
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         User_Info userInfo = UserManager.getInstance().getUserInfo();
                         userInfo.setPassword(DensityUtil.MD5code(password));
@@ -311,8 +311,8 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(ChangePasswordActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为changePassword：" + e.getMessage());
@@ -393,15 +393,15 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
     //初始化加载框控件
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(ChangePasswordActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(ChangePasswordActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

@@ -26,7 +26,7 @@ import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
@@ -52,7 +52,7 @@ public class CollectionActivity extends BaseActivity {
     private SmartTabLayout viewPagerTab;
     private MyFrageStatePagerAdapter adapter;
     private TextView textview_edit,textview_delete;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private List<Fragment> fragmentList;
     private PSCListFragment pscListFragment;
@@ -96,8 +96,8 @@ public class CollectionActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<CollectionInfo> list_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         collection_count = list_info.data.size();
                         CollectionManager.getInstance().setCollection_datas(list_info.data);
@@ -107,8 +107,8 @@ public class CollectionActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         CollectionManager.getInstance().setCollection_datas(null);
                         adapter = new MyFrageStatePagerAdapter(getSupportFragmentManager(), mTitle);
@@ -294,8 +294,8 @@ public class CollectionActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<CollectionInfo> collectionInfoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         if (mIsEdit){
                             textview_edit.setText("编辑");
@@ -366,8 +366,8 @@ public class CollectionActivity extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
@@ -399,8 +399,8 @@ public class CollectionActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

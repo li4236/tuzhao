@@ -23,7 +23,7 @@ import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
@@ -41,7 +41,7 @@ import static com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0.SDK_AUTH_FLAG;
 
 public class MyBalanceActivity extends BaseActivity {
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     Handler mHandler = new Handler(){
         @Override
@@ -152,8 +152,8 @@ public class MyBalanceActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(MyBalanceActivity.this,"绑定成功",5);
                         UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id+",1");
@@ -163,8 +163,8 @@ public class MyBalanceActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(MyBalanceActivity.this,e)){
                             Log.d("TAG", "请求失败， 信息为uploadUserAliNumber：" + e.getMessage());
@@ -184,15 +184,15 @@ public class MyBalanceActivity extends BaseActivity {
 
     //初始化加载框控件
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(MyBalanceActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(MyBalanceActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

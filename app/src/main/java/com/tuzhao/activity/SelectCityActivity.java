@@ -36,7 +36,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
@@ -79,7 +79,7 @@ public class SelectCityActivity extends BaseActivity {
     private TextView mTvSideBarHint;
     private String mCity;
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     /**
      * 定位相关
@@ -277,8 +277,8 @@ public class SelectCityActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_List_Info<CityBean>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<CityBean> cityBeanBase_class_list_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         initDatas(cityBeanBase_class_list_info.data);
                     }
@@ -286,8 +286,8 @@ public class SelectCityActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(SelectCityActivity.this,e)){
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
@@ -306,8 +306,8 @@ public class SelectCityActivity extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     /**
@@ -409,8 +409,8 @@ public class SelectCityActivity extends BaseActivity {
     AMapLocationListener locationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation location) {
-            if (mCustomDialog.isShowing()) {
-                mCustomDialog.dismiss();
+            if (mLoadingDialog.isShowing()) {
+                mLoadingDialog.dismiss();
             }
             if (null != location) {
 
@@ -439,8 +439,8 @@ public class SelectCityActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
         if (locationClient!=null){
             locationClient.onDestroy();

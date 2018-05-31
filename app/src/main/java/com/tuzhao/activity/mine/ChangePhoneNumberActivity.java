@@ -28,7 +28,7 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.db.DatabaseImp;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -49,7 +49,7 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
     private TextView textview_oldgetconfirm, textview_newgetconfirm;
     private LinearLayout linearlayout_oldnumble, linearlayout_oldpassword, linearlayout_newnumble;
     private ImageView imageview_oldclean,imageview_oldpassclean,imageview_newclean;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private static final int CODE_ING = 1;   //已发送，倒计时
     private static final int CODE_REPEAT = 2;  //重新发送
@@ -340,8 +340,8 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
 
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         User_Info userInfo = UserManager.getInstance().getUserInfo();
                         userInfo.setUsername(phone_numble);
@@ -358,8 +358,8 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(ChangePhoneNumberActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为changeUserImage：" + e.getMessage());
@@ -452,8 +452,8 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
                 .execute(new JsonCallback<Base_Class_Info<SMSInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<SMSInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (isFisrstPage) {
                             //跳转
@@ -468,8 +468,8 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(getContext(),e)){
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -507,8 +507,8 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
 
     //初始化加载框控件
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(ChangePhoneNumberActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(ChangePhoneNumberActivity.this, what);
+        mLoadingDialog.show();
     }
 
     /**
@@ -522,8 +522,8 @@ public class ChangePhoneNumberActivity extends BaseActivity implements View.OnCl
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

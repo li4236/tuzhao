@@ -29,7 +29,7 @@ import com.tuzhao.info.ChargeStationInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
@@ -53,7 +53,7 @@ public class ChargeDetailFragment extends BaseFragment {
      * UI
      */
     private View mContentView;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private Banner banner_image;
     private TextView textview_chargestationname,textview_address,textview_distance,textview_distance_dw,textview_chargefee,textview_serverfee,textview_parkfee,textview_grade,textview_opentime;
     private CBRatingBar cbratingbar;
@@ -114,8 +114,8 @@ public class ChargeDetailFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_Info<ChargeStationInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ChargeStationInfo> park_space_infoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         chargestation_info = park_space_infoBase_class_info.data;
                         chargestation_info.setCity_code(city_code);
@@ -125,8 +125,8 @@ public class ChargeDetailFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (e instanceof ConnectException) {
                             Log.d("TAG", "请求失败，" + " 信息为：连接异常" + e.toString());
@@ -213,15 +213,15 @@ public class ChargeDetailFragment extends BaseFragment {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(mContext, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(mContext, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog!= null){
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null){
+            mLoadingDialog.cancel();
         }
     }
 }

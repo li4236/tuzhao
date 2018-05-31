@@ -26,7 +26,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.square.SpaceItemDecoration;
@@ -54,7 +54,7 @@ public class EditParkPicturesActivity extends BaseActivity {
     private TextView textview_edit_or_cancle;
     private RecyclerView recycleview;
     private LinearLayout linearlayout_deletepic, linearlayout_uploadpic;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private ParkPicturesAdapter mAdapter;
@@ -247,8 +247,8 @@ public class EditParkPicturesActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Park_Info> park_infoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(EditParkPicturesActivity.this, "删除成功", 5);
 
@@ -272,8 +272,8 @@ public class EditParkPicturesActivity extends BaseActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
 
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(EditParkPicturesActivity.this,e)){
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -295,8 +295,8 @@ public class EditParkPicturesActivity extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
@@ -350,8 +350,8 @@ public class EditParkPicturesActivity extends BaseActivity {
                 .execute(new JsonCallback<Base_Class_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Park_Info> change_userImage_infoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         Log.e("dsa", "返回的数据：" + change_userImage_infoBase_class_info.data.getPark_img());
                         ArrayList<PicBean> datalist = new ArrayList<>();
@@ -372,8 +372,8 @@ public class EditParkPicturesActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(EditParkPicturesActivity.this,e)){
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -447,8 +447,8 @@ public class EditParkPicturesActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

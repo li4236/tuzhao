@@ -18,7 +18,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
@@ -33,7 +33,7 @@ public class SuggestActivity extends BaseActivity {
 
     private EditText edittext_suggest;
     private TextView textview_count, textview_go;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,8 +90,8 @@ public class SuggestActivity extends BaseActivity {
                             .execute(new JsonCallback<Base_Class_Info<ParkspaceCommentInfo>>() {
                                 @Override
                                 public void onSuccess(Base_Class_Info<ParkspaceCommentInfo> parkspaceCommentInfoBase_class_info, Call call, Response response) {
-                                    if (mCustomDialog.isShowing()) {
-                                        mCustomDialog.dismiss();
+                                    if (mLoadingDialog.isShowing()) {
+                                        mLoadingDialog.dismiss();
                                     }
                                     MyToast.showToast(SuggestActivity.this, "提交成功，谢谢您的意见", 5);
                                     finish();
@@ -99,8 +99,8 @@ public class SuggestActivity extends BaseActivity {
 
                                 @Override
                                 public void onError(Call call, Response response, Exception e) {
-                                    if (mCustomDialog.isShowing()) {
-                                        mCustomDialog.dismiss();
+                                    if (mLoadingDialog.isShowing()) {
+                                        mLoadingDialog.dismiss();
                                     }
                                     if (!DensityUtil.isException(SuggestActivity.this, e)) {
                                         Log.d("TAG", "请求失败， 信息为uploadUserAliNumber：" + e.getMessage());
@@ -133,15 +133,15 @@ public class SuggestActivity extends BaseActivity {
 
     //初始化加载框控件
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(SuggestActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(SuggestActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

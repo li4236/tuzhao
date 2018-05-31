@@ -17,7 +17,7 @@ import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
@@ -32,7 +32,7 @@ public abstract class BaseStatusFragment extends Fragment {
 
     protected String TAG = this.getClass().getName();
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private String mDialogString = "";
 
@@ -85,11 +85,11 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected void showLoadingDialog() {
         dismmisLoadingDialog();
-        if (mCustomDialog == null || !mDialogString.equals("")) {
+        if (mLoadingDialog == null || !mDialogString.equals("")) {
             mDialogString = "";
-            mCustomDialog = new CustomDialog(getContext(), null);
+            mLoadingDialog = new LoadingDialog(getContext(), null);
         }
-        mCustomDialog.show();
+        mLoadingDialog.show();
     }
 
     /**
@@ -97,11 +97,11 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected void showLoadingDialog(String msg) {
         dismmisLoadingDialog();
-        if (mCustomDialog == null || !mDialogString.equals(msg)) {
+        if (mLoadingDialog == null || !mDialogString.equals(msg)) {
             mDialogString = msg;
-            mCustomDialog = new CustomDialog(getContext(), msg);
+            mLoadingDialog = new LoadingDialog(getContext(), msg);
         }
-        mCustomDialog.show();
+        mLoadingDialog.show();
     }
 
     /**
@@ -109,16 +109,16 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected void showCantCancelLoadingDialog(String msg) {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(getContext(), msg, false);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(getContext(), msg, false);
+        mLoadingDialog.show();
     }
 
     /**
      * 关闭加载对话框
      */
     protected void dismmisLoadingDialog() {
-        if (mCustomDialog != null && mCustomDialog.isShowing()) {
-            mCustomDialog.dismiss();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 

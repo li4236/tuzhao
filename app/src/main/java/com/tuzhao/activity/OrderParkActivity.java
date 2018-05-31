@@ -29,7 +29,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
@@ -55,7 +55,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
     private static final String TAG = "OrderParkActivity";
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private ImageView imageView_back;
     private LinearLayout linearlayout_carnumble, linearlayout_starttime, linearlayout_parktime;
     private TextView textview_carnumble, textview_starttime, textview_parktime, textview_fee, textview_ordernow;
@@ -1038,8 +1038,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
@@ -1051,8 +1051,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(OrderParkActivity.this, e)) {
                             int code = Integer.parseInt(e.getMessage());
@@ -1115,8 +1115,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
@@ -1128,8 +1128,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(OrderParkActivity.this, e)) {
                             int code = Integer.parseInt(e.getMessage());
@@ -1242,8 +1242,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
@@ -1254,8 +1254,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(OrderParkActivity.this, e)) {
                             int code = Integer.parseInt(e.getMessage());
@@ -1286,8 +1286,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
@@ -1298,8 +1298,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(OrderParkActivity.this, e)) {
                             int code = Integer.parseInt(e.getMessage());
@@ -1317,15 +1317,15 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }*/
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
         mHandler.removeCallbacksAndMessages(null);
     }

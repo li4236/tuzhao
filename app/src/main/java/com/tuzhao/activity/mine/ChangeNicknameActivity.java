@@ -20,7 +20,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.editviewwatch.LimitInputTextWatcher;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
@@ -36,7 +36,7 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
 
 public class ChangeNicknameActivity extends BaseActivity {
     private EditText edittext_newnickname;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private ImageView imageview_clean;
 
     @Override
@@ -86,8 +86,8 @@ public class ChangeNicknameActivity extends BaseActivity {
                             .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                                 @Override
                                 public void onSuccess(Base_Class_Info<User_Info> user_infoBase_class_info, Call call, Response response) {
-                                    if (mCustomDialog.isShowing()) {
-                                        mCustomDialog.dismiss();
+                                    if (mLoadingDialog.isShowing()) {
+                                        mLoadingDialog.dismiss();
                                     }
                                     User_Info userInfo = UserManager.getInstance().getUserInfo();
                                     userInfo.setNickname(edittext_newnickname.getText().toString().trim());
@@ -100,8 +100,8 @@ public class ChangeNicknameActivity extends BaseActivity {
                                 @Override
                                 public void onError(Call call, Response response, Exception e) {
                                     super.onError(call, response, e);
-                                    if (mCustomDialog.isShowing()) {
-                                        mCustomDialog.dismiss();
+                                    if (mLoadingDialog.isShowing()) {
+                                        mLoadingDialog.dismiss();
                                     }
                                     if (!DensityUtil.isException(ChangeNicknameActivity.this, e)){
                                         Log.d("TAG", "请求失败， 信息为changeUserImage：" + e.getMessage());
@@ -162,16 +162,16 @@ public class ChangeNicknameActivity extends BaseActivity {
     }
 
     private void initLoading() {
-        mCustomDialog = new CustomDialog(this, "正在更换昵称...");
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, "正在更换昵称...");
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         OkGo.getInstance().cancelTag(this);
-        if (mCustomDialog!=null){
-            mCustomDialog.cancel();
+        if (mLoadingDialog !=null){
+            mLoadingDialog.cancel();
         }
     }
 }

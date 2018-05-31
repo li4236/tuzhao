@@ -88,7 +88,7 @@ import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.map.ClusterClickListener;
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private TextView mParkNow;
     private ConstraintLayout constraintLayout_openuser, constraintLayout_user;
     private LoginDialogFragment loginDialogFragment;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     /**
      * 定位相关
      */
@@ -613,8 +613,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<CollectionInfo> collectionInfoBase_class_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         List<CollectionInfo> collection_datas = CollectionManager.getInstance().getCollection_datas();
                         if (collection_datas == null) {
@@ -628,8 +628,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(MainActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getUserParkOrderForAppoint" + e.getMessage());
@@ -675,9 +675,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (show1) {
                             controlAnim(false);
                         }
-                        if (mCustomDialog != null) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                        if (mLoadingDialog != null) {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         }
                         if (isLc) {
@@ -745,9 +745,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog != null) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                        if (mLoadingDialog != null) {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         }
                         if (!DensityUtil.isException(MainActivity.this, e)) {
@@ -992,8 +992,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         unregisterLogin();
         unregisterLogout();
         NetStateReceiver.removeRegisterObserver(mNetChangeObserver);
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 
@@ -1242,11 +1242,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void initLoading(String what) {
-        if (mCustomDialog == null) {
-            mCustomDialog = new CustomDialog(MainActivity.this, what);
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(MainActivity.this, what);
         }
-        if (!mCustomDialog.isShowing()) {
-            mCustomDialog.show();
+        if (!mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
         }
     }
 
@@ -1427,13 +1427,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 if (rCode == 1000) {
                     if (!isCamreaMove) {
                         if (result.getRegeocodeAddress().getFormatAddress().equals("")) {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                             MyToast.showToast(MainActivity.this, "选择的标记点无效，请重选", 5);
                         } else {
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                             TipeDialog.Builder builder = new TipeDialog.Builder(MainActivity.this);
                             builder.setMessage("选中地址为\n" + result.getRegeocodeAddress().getFormatAddress() + "\n确定添加收藏吗？");
@@ -1460,8 +1460,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             if (!show1) {
                                 controlAnim(true);
                             }
-                            if (mCustomDialog.isShowing()) {
-                                mCustomDialog.dismiss();
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
                             }
                         } else {
                             isLcData = false;
@@ -1471,8 +1471,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     }
 
                 } else {
-                    if (mCustomDialog.isShowing()) {
-                        mCustomDialog.dismiss();
+                    if (mLoadingDialog.isShowing()) {
+                        mLoadingDialog.dismiss();
                     }
                     MyToast.showToast(MainActivity.this, "选择的标记点异常，请重试", 5);
                 }

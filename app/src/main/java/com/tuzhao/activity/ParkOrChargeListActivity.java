@@ -29,7 +29,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.ChangeScrollStateCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
@@ -56,7 +56,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     private LinearLayoutManager linearLayoutManager;
     private LinearLayout linearlayout_nodata;
     private TextView textview_address, textview_nodata;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private ConstraintLayout linearlayout_address;
 
     //筛选菜单
@@ -333,8 +333,8 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                 .execute(new JsonCallback<Base_Class_List_Info<NearPointPCInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<NearPointPCInfo> homePC_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (isFirstIn) {
                             isFirstIn = false;
@@ -362,8 +362,8 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(ParkOrChargeListActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getNearPointLocData" + e.getMessage());
@@ -478,15 +478,15 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(ParkOrChargeListActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(ParkOrChargeListActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

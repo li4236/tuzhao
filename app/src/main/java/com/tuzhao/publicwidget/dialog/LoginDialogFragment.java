@@ -75,7 +75,7 @@ public class LoginDialogFragment extends DialogFragment {
     private int isWhatPage = 1;
     private boolean isForgetPassword = false, isrealForget = false;
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private DateUtil dateUtil = new DateUtil();
 
@@ -340,8 +340,8 @@ public class LoginDialogFragment extends DialogFragment {
 
     //初始化加载框控件
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(getContext(), what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(getContext(), what);
+        mLoadingDialog.show();
     }
 
     private void requestConfirmCodeLogin() {
@@ -353,8 +353,8 @@ public class LoginDialogFragment extends DialogFragment {
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
@@ -384,8 +384,8 @@ public class LoginDialogFragment extends DialogFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(getContext(), e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -441,8 +441,8 @@ public class LoginDialogFragment extends DialogFragment {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
                         //请求成功,储存用户登录信息
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
@@ -472,8 +472,8 @@ public class LoginDialogFragment extends DialogFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(getContext(), e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -528,8 +528,8 @@ public class LoginDialogFragment extends DialogFragment {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
                         //请求成功,储存用户登录信息
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
@@ -558,8 +558,8 @@ public class LoginDialogFragment extends DialogFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(getContext(), e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -729,8 +729,8 @@ public class LoginDialogFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

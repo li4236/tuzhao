@@ -23,7 +23,7 @@ import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
@@ -50,7 +50,7 @@ public class HaveFragment extends BaseFragment {
     private SuperRefreshRecyclerView mRecycleview;
     private LinearLayoutManager linearLayoutManager;
     private DiscountAdapter mAdapter;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private DateUtil dateUtil = new DateUtil();
 
     private LinearLayout linearlayout_nodata;
@@ -150,8 +150,8 @@ public class HaveFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_List_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> datas, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
 
                         mDatas.clear();
@@ -178,8 +178,8 @@ public class HaveFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         mRecycleview.setRefreshing(false);
                         if (!DensityUtil.isException(mContext, e)) {
@@ -211,8 +211,8 @@ public class HaveFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Discount_Info> datas, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         mAdapter.removeItem(pos);
                     }
@@ -220,8 +220,8 @@ public class HaveFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
 
                         if (!DensityUtil.isException(mContext, e)) {
@@ -244,15 +244,15 @@ public class HaveFragment extends BaseFragment {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(mContext, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(mContext, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

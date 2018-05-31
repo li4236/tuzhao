@@ -27,7 +27,7 @@ public class ChargeFragment extends BaseFragment {
 //    private ImageView imageview_show,imageview_ad,imageview_collection;
 //    private TextView textview_chargename,textview_ispublic,textview_charaddress,textview_distance,textview_danwei;
 //    private CBRatingBar cbratingbar;
-//    private CustomDialog mCustomDialog;
+//    private LoadingDialog mCustomDialog;
 //    private LoginDialogFragment loginDialogFragment;
     /**
      * 数据相关
@@ -287,7 +287,7 @@ public class ChargeFragment extends BaseFragment {
 //    }
 //
 //    private void initLoading(String what) {
-//        mCustomDialog = new CustomDialog(mContext, what);
+//        mCustomDialog = new LoadingDialog(mContext, what);
 //        mCustomDialog.show();
 //    }
 //

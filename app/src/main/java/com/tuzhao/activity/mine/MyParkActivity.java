@@ -18,7 +18,7 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
@@ -39,7 +39,7 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     private SuperRefreshRecyclerView mRecyclerView;
     private ArrayList<Park_Info> mData = new ArrayList<>();
     private MyParkAdpater mMyParkAdpater;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private LinearLayout linearlayout_nodata;
 
     private boolean isFirst = true;
@@ -76,11 +76,11 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initLoading(String what) {
-        if (mCustomDialog == null) {
-            mCustomDialog = new CustomDialog(MyParkActivity.this, what);
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(MyParkActivity.this, what);
         }
-        if (!mCustomDialog.isShowing()) {
-            mCustomDialog.show();
+        if (!mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
         }
     }
 
@@ -126,8 +126,8 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
                         //请求成功
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.hide();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.hide();
                         }
                         linearlayout_nodata.setVisibility(View.GONE);
                         if (mData.isEmpty()) {
@@ -147,8 +147,8 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.hide();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.hide();
                         }
                         if (!DensityUtil.isException(MyParkActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
@@ -192,8 +192,8 @@ public class MyParkActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

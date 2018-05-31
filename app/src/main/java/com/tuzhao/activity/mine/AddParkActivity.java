@@ -27,7 +27,7 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
@@ -58,7 +58,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
     private TextView textview_profit_ratio;
     private ParkBean mPark = new ParkBean();
     private LinearLayout linearlayout_chooseparkspace, linearlayout_profit_ratio, linearlayout_sd, linearlayout_sh;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private boolean isSelectHour = true;
     private ImageView imageview_sh, imageview_sd;
 
@@ -274,8 +274,8 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(AddParkActivity.this, "提交成功", 2);
                         finish();
@@ -283,8 +283,8 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()){
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()){
+                            mLoadingDialog.dismiss();
                         }
                         if (e instanceof ConnectException) {
                             Log.d("TAG", "请求失败，" + " 信息为：连接异常" + e.toString());
@@ -317,8 +317,8 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                 .execute(new JsonCallback<Base_Class_List_Info<InstallWorkerInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InstallWorkerInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(AddParkActivity.this, "提交成功", 2);
                         finish();
@@ -326,8 +326,8 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (e instanceof ConnectException) {
                             Log.d("TAG", "请求失败，" + " 信息为：连接异常" + e.toString());
@@ -462,16 +462,16 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

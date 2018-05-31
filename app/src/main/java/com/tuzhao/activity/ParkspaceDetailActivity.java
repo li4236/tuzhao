@@ -26,7 +26,7 @@ import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
@@ -63,7 +63,7 @@ public class ParkspaceDetailActivity extends BaseActivity {
      * 收藏
      */
     private CollectionManager.MessageHolder holder;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private LoginDialogFragment loginDialogFragment;
 
     @Override
@@ -146,8 +146,8 @@ public class ParkspaceDetailActivity extends BaseActivity {
                                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_Info<CollectionInfo> collection_infoBase_class_info, Call call, Response response) {
-                                        if (mCustomDialog.isShowing()) {
-                                            mCustomDialog.dismiss();
+                                        if (mLoadingDialog.isShowing()) {
+                                            mLoadingDialog.dismiss();
                                         }
                                         MyToast.showToast(ParkspaceDetailActivity.this, "已取消收藏", 5);
                                         imageview_collection.setImageDrawable(ContextCompat.getDrawable(ParkspaceDetailActivity.this, R.mipmap.ic_shoucang2));
@@ -157,8 +157,8 @@ public class ParkspaceDetailActivity extends BaseActivity {
                                     @Override
                                     public void onError(Call call, Response response, Exception e) {
                                         super.onError(call, response, e);
-                                        if (mCustomDialog.isShowing()) {
-                                            mCustomDialog.dismiss();
+                                        if (mLoadingDialog.isShowing()) {
+                                            mLoadingDialog.dismiss();
                                         }
                                         MyToast.showToast(ParkspaceDetailActivity.this, "取消失败", 5);
                                     }
@@ -175,8 +175,8 @@ public class ParkspaceDetailActivity extends BaseActivity {
                                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
-                                        if (mCustomDialog.isShowing()) {
-                                            mCustomDialog.dismiss();
+                                        if (mLoadingDialog.isShowing()) {
+                                            mLoadingDialog.dismiss();
                                         }
                                         List<CollectionInfo> collection_datas = CollectionManager.getInstance().getCollection_datas();
                                         if (collection_datas == null) {
@@ -192,8 +192,8 @@ public class ParkspaceDetailActivity extends BaseActivity {
                                     @Override
                                     public void onError(Call call, Response response, Exception e) {
                                         super.onError(call, response, e);
-                                        if (mCustomDialog.isShowing()) {
-                                            mCustomDialog.dismiss();
+                                        if (mLoadingDialog.isShowing()) {
+                                            mLoadingDialog.dismiss();
                                         }
                                         MyToast.showToast(ParkspaceDetailActivity.this, "收藏失败", 5);
                                     }
@@ -261,15 +261,15 @@ public class ParkspaceDetailActivity extends BaseActivity {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(ParkspaceDetailActivity.this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(ParkspaceDetailActivity.this, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }

@@ -22,7 +22,7 @@ import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.ChangeScrollStateCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
@@ -51,7 +51,7 @@ public class AppointParkOrderListFragment extends BaseFragment {
     private LinearLayoutManager linearLayoutManager;
     private ParkOrderAdapter mAdapter;
     private DateUtil dateUtil = new DateUtil();
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
     private LinearLayout linearlayout_nodata;
 
     /**
@@ -257,8 +257,8 @@ public class AppointParkOrderListFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(mContext, "取消成功", 5);
                         mOrdersData.remove(position);
@@ -267,8 +267,8 @@ public class AppointParkOrderListFragment extends BaseFragment {
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(mContext, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
@@ -289,15 +289,15 @@ public class AppointParkOrderListFragment extends BaseFragment {
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(mContext, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(mContext, what);
+        mLoadingDialog.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 

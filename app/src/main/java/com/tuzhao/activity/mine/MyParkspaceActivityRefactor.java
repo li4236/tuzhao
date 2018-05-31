@@ -20,7 +20,7 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -37,7 +37,7 @@ import okhttp3.Response;
 
 public class MyParkspaceActivityRefactor extends BaseActivity {
 
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     private List<Fragment> mFragments;
 
@@ -159,16 +159,16 @@ public class MyParkspaceActivityRefactor extends BaseActivity {
 
     private void showLoadingDialog() {
         dismmisLoadingDialog();
-        mCustomDialog = new CustomDialog(this, null);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, null);
+        mLoadingDialog.show();
     }
 
     /**
      * 关闭加载对话框
      */
     private void dismmisLoadingDialog() {
-        if (mCustomDialog != null && mCustomDialog.isShowing()) {
-            mCustomDialog.dismiss();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 

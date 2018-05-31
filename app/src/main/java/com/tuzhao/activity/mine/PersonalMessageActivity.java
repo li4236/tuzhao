@@ -25,7 +25,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.utils.DensityUtil;
@@ -49,7 +49,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
 
     private CircleImageView imageview_user;
     private TextView textview_nickname, textview_realname, textview_credit;
-    private CustomDialog mCustomDialog;
+    private LoadingDialog mLoadingDialog;
 
     //调用相册-选择图片
     private final int REQUEST_CODE_PICKER = 100;
@@ -133,8 +133,8 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
     }
 
     private void initLoading(String what) {
-        mCustomDialog = new CustomDialog(this, what);
-        mCustomDialog.show();
+        mLoadingDialog = new LoadingDialog(this, what);
+        mLoadingDialog.show();
     }
 
     @Override
@@ -182,8 +182,8 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                 .execute(new JsonCallback<Base_Class_Info<ChangeUserImageInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ChangeUserImageInfo> data_info, Call call, Response response) {
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         MyToast.showToast(PersonalMessageActivity.this, "更换成功", 2);
                         if (file.exists()) {
@@ -200,8 +200,8 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCustomDialog.isShowing()) {
-                            mCustomDialog.dismiss();
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
                         }
                         if (!DensityUtil.isException(PersonalMessageActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为changeUserImage：" + e.getMessage());
@@ -268,8 +268,8 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         unregisterLogin();//注销登录广播接收器
-        if (mCustomDialog != null) {
-            mCustomDialog.cancel();
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
         }
     }
 }
