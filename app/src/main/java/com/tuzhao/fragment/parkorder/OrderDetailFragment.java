@@ -105,14 +105,14 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         }
 
         mParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getPark_start_time()));
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getExtensionTime()).compareTo(
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
             mParkTimeDescription.setText(timeout);
-            mChangeCredit.setText("+3");
-        } else {
             mChangeCredit.setTextColor(Color.parseColor("#ff6c6c"));
             mChangeCredit.setText("-5");
+        } else {
+            mChangeCredit.setText("+3");
         }
 
         String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";

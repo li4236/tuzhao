@@ -20,7 +20,7 @@
         android:id="@+id/dialog_dismiss"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="12dp"
         android:contentDescription="@string/picture_description"
         android:padding="12dp"
         android:src="@mipmap/ic_close1"
