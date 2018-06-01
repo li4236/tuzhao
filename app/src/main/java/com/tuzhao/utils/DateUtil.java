@@ -135,7 +135,7 @@ public class DateUtil {
     }
 
     /**
-     * @return 当前的yyyy-MM-dd HH:mm
+     * @return 当前的yyyy-MM-dd HH:mm:ss
      */
     public static String getCurrentYearToSecond() {
         getDate().setTime(System.currentTimeMillis());

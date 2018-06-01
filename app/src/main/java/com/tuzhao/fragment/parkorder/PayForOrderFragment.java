@@ -408,7 +408,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     public void onSuccess(Base_Class_Info<User_Info> info, Call call, Response response) {
                         if (getActivity() != null) {
                             Intent intent = new Intent();
-                            intent.setAction(ConstansUtil.PAY_ORDER_FINISH);
+                            intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
                             /*Bundle bundle = new Bundle();
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                             intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);*/
@@ -433,9 +433,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             if (intent.hasExtra(ConstansUtil.FOR_REQUEST_RESULT)) {
                 Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
                 mChooseDiscount = bundle.getParcelable(ConstansUtil.CHOOSE_DISCOUNT);
-                if (mChooseDiscount != null) {
-                    calculateShouldPayFee();
-                }
+                calculateShouldPayFee();
             }
         }
     }

@@ -114,6 +114,18 @@ public class HaveFragment extends BaseFragment {
                     }
                 }
             });
+            mContentView.findViewById(R.id.not_use_discount).setVisibility(View.VISIBLE);
+            mContentView.findViewById(R.id.not_use_discount).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    Bundle data = new Bundle();
+                    data.putParcelable(ConstansUtil.CHOOSE_DISCOUNT, null);
+                    intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, data);
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                    getActivity().finish();
+                }
+            });
         }
     }
 

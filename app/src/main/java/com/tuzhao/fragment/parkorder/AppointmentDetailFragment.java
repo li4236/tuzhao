@@ -28,11 +28,13 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
 
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -66,6 +68,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     private TextView mOpenLock;
 
     private ArrayList<String> mParkSpacePictures;
+
+    private boolean mIsTimeOut;
 
     public static AppointmentDetailFragment newInstance(ParkOrderInfo parkOrderInfo) {
         AppointmentDetailFragment fragment = new AppointmentDetailFragment();
@@ -141,6 +145,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mEstimatedCost.setText(spannableString);
 
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime()).compareTo(Calendar.getInstance()) > 0) {
+            //未到预约开始停车时间
+            mOpenLock.setBackgroundResource(R.drawable.all_g1_5dp);
+        } else {
+            mIsTimeOut = true;
+        }
+
         OnCtrlLockListener lockListener = new OnCtrlLockListener() {
             @Override
             public void onCtrlLock(String ctrlMessage) {
@@ -149,20 +160,28 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                     if (jsonObject.optString("type").equals("ctrl")) {
                         if (jsonObject.optString("msg").equals("open_successful")) {
                             showFiveToast("成功开锁");
+                            mOpenLock.setText("已开锁");
+                            Intent intent = new Intent();
+                            intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                            IntentObserable.dispatch(intent);
                         } else if (jsonObject.optString("msg").equals("open_successful_car")) {
                             showFiveToast("车锁已开，因为车位上方有车辆滞留");
-                        } else if (jsonObject.optString("msg").equals("open_failed")) {
-                            showFiveToast("开锁失败，请稍后重试");
-                        } else if (jsonObject.optString("msg").equals("close_successful")) {
-                            showFiveToast("成功关锁");
-                        } else if (jsonObject.optString("msg").equals("close_failed")) {
-                            //textview_state.setText("关锁失败！");
-                        } else if (jsonObject.optString("msg").equals("close_failed_car")) {
-                            //textview_state.setText("关锁失败，因为车位上方有车辆滞留");
+                            mOpenLock.setText("已开锁");
+                            Intent intent = new Intent();
+                            intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                            IntentObserable.dispatch(intent);
                         }
                         mOpenLock.setClickable(true);
+                        dismmisLoadingDialog();
                     }
                 } catch (Exception e) {
+                    dismmisLoadingDialog();
                     mOpenLock.setClickable(true);
                     showFiveToast("开锁失败，请稍后重试");
                 }
@@ -193,7 +212,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             case R.id.cancel_appoint_cl:
                 TipeDialog dialog = new TipeDialog.Builder(getContext())
                         .setTitle("提示")
-                        .setMessage("确定取消该订单吗？")
+                        .setMessage("确定取消预约吗？")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -216,7 +235,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 }
                 break;
             case R.id.open_lock:
-                openParkLock();
+                if (getText(mOpenLock).equals("已开锁")) {
+                    showFiveToast("锁已经开啦");
+                } else if (!mIsTimeOut) {
+                    showFiveToast("还没到开始停车时间哦");
+                } else {
+                    openParkLock();
+                }
                 break;
         }
     }

@@ -185,6 +185,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         mData.add(t);
     }
 
+    public void addFirstData(T t) {
+        mData.add(0, t);
+        notifyItemInserted(getHeadViewCount());
+    }
+
     public void addData(T t) {
         mData.add(t);
         notifyItemInserted(getHeadViewCount() + mData.size() - 1);
@@ -207,6 +212,17 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void notifyRemoveData(@IntRange(from = 0) int position) {
         mData.remove(position);
         notifyDataSetChanged();
+    }
+
+    /**
+     * if you use clickListener you should call this method
+     */
+    public void notifyRemoveData(T t) {
+        int position = mData.indexOf(t);
+        if (position != -1) {
+            mData.remove(position);
+            notifyDataSetChanged();
+        }
     }
 
     /**

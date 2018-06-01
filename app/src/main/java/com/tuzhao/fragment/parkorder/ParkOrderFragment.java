@@ -151,7 +151,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     parkTimeDistance = "剩余" + DateUtil.getDateDistanceForHourWithMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
                     orderTimeDescription.setText(parkTimeDistance);
                 } else {
-                    if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
+                    if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
                             DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
                         //停车时长超过预约时长
                         parkTimeDistance = "已超时" + DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond());
@@ -218,16 +218,34 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
-                case ConstansUtil.PAY_ORDER_FINISH:
+                case ConstansUtil.FINISH_APPOINTMENT:
+                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                    if (parkOrderInfo != null) {
+                        if (mOrderStatus == 0) {
+                            //全部订单则把预约的改为停车中
+                            int position = mCommonAdapter.getData().indexOf(parkOrderInfo);
+                            if (position != -1) {
+                                parkOrderInfo.setOrder_status("2");
+                                mCommonAdapter.notifyDataChange(position, parkOrderInfo);
+                            }
+                        } else if (mOrderStatus == 1) {
+                            //预约订单则把它删掉
+                            mCommonAdapter.notifyRemoveData(parkOrderInfo);
+                        } else if (mOrderStatus == 2) {
+                            mCommonAdapter.addFirstData(parkOrderInfo);
+                        }
+                    }
+                case ConstansUtil.FINISH_PAY_ORDER:
                     if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
                         onRefresh();
                     }
                     break;
                 case ConstansUtil.DELETE_PARK_ORDER:
                     if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5 || mOrderStatus == 6) {
-                        Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
-                        ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                        mCommonAdapter.removeData(parkOrderInfo);
+                        Bundle orderBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        ParkOrderInfo orderInfo = orderBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        mCommonAdapter.removeData(orderInfo);
                     }
                     break;
             }

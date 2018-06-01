@@ -73,14 +73,24 @@ public class ConstansUtil {
     public static final String PARK_ORDER_INFO = "ParkOrderInfo";
 
     /**
+     * 订单id
+     */
+    public static final String PARK_ORDER_ID = "ParkOrderId";
+
+    /**
      * 取消订单
      */
     public static final String CANCEL_ORDER = "CancelOrder";
 
     /**
+     * 完成预约，既是已经开始变成停车中
+     */
+    public static final String FINISH_APPOINTMENT = "FinishAppointment";
+
+    /**
      * 订单支付完成
      */
-    public static final String PAY_ORDER_FINISH = "PayOrderFinish";
+    public static final String FINISH_PAY_ORDER = "FinishPayOrder";
 
     /**
      * 跳转页面时如果获取信息失败则显示"客户端异常，请稍后再试"
