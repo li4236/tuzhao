@@ -111,8 +111,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
         mDeleteTwoIv = view.findViewById(R.id.comment_order_pic_two_delete);
         mApplyComment = view.findViewById(R.id.comment_order_apply);
 
-        view.findViewById(R.id.close_comment);
-
+        view.findViewById(R.id.close_comment).setOnClickListener(this);
     }
 
     @Override

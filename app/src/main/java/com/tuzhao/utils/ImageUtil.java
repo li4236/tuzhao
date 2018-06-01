@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.DataSource;
@@ -234,9 +235,21 @@ public class ImageUtil {
 
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-            mImageView.setImageBitmap(createRoundBitmapByXfermode(BitmapFactory.decodeResource(mImageView.getResources(), mDrawablId == 0 ?
-                            R.mipmap.ic_usericon : mDrawablId)
-                    , mImageView.getWidth(), mImageView.getHeight(), DensityUtil.dp2px(mImageView.getContext(), 4)));
+            if (mImageView.getWidth() == 0 || mImageView.getHeight() == 0) {
+                mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mImageView.setImageBitmap(createRoundBitmapByXfermode(BitmapFactory.decodeResource(mImageView.getResources(), mDrawablId == 0 ?
+                                        R.mipmap.ic_usericon : mDrawablId)
+                                , mImageView.getWidth(), mImageView.getHeight(), DensityUtil.dp2px(mImageView.getContext(), 4)));
+                        mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            } else {
+                mImageView.setImageBitmap(createRoundBitmapByXfermode(BitmapFactory.decodeResource(mImageView.getResources(), mDrawablId == 0 ?
+                                R.mipmap.ic_usericon : mDrawablId)
+                        , mImageView.getWidth(), mImageView.getHeight(), DensityUtil.dp2px(mImageView.getContext(), 4)));
+            }
             return true;
         }
 
@@ -255,9 +268,20 @@ public class ImageUtil {
         }
 
         @Override
-        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-            mImageView.setImageBitmap(createRoundBitmapByXfermode(((BitmapDrawable) resource).getBitmap(), mImageView.getWidth(), mImageView.getHeight(),
-                    DensityUtil.dp2px(mImageView.getContext(), 4)));
+        public void onResourceReady(final Drawable resource, Transition<? super Drawable> transition) {
+            if (mImageView.getWidth() == 0 || mImageView.getHeight() == 0) {
+                mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mImageView.setImageBitmap(createRoundBitmapByXfermode(((BitmapDrawable) resource).getBitmap(), mImageView.getWidth(), mImageView.getHeight(),
+                                DensityUtil.dp2px(mImageView.getContext(), 4)));
+                        mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            } else {
+                mImageView.setImageBitmap(createRoundBitmapByXfermode(((BitmapDrawable) resource).getBitmap(), mImageView.getWidth(), mImageView.getHeight(),
+                        DensityUtil.dp2px(mImageView.getContext(), 4)));
+            }
         }
 
     }

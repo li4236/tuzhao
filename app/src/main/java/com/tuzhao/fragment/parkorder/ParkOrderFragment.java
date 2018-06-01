@@ -66,6 +66,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
     @Override
     protected void initData() {
+        //防止滑动到其他界面时把网络请求关闭了
         setTAG(TAG + "status:" + mOrderStatus);
         showDialog();
         loadData();
@@ -223,7 +224,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.DELETE_PARK_ORDER:
-                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5||mOrderStatus==6) {
+                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5 || mOrderStatus == 6) {
                         Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
                         ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         mCommonAdapter.removeData(parkOrderInfo);
