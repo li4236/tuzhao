@@ -580,10 +580,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
      */
     private boolean isOrderInPauseDate(String pauseDate) {
         if (!mParkInfo.getOrder_times().equals("-1") && !mParkInfo.getOrder_times().equals("")) {
-            String[] order;
             for (String orderTime : mParkInfo.getOrder_times().split(",")) {
-                order = orderTime.split("\\*");
-                if (DateUtil.isInPauseDate(order[0], order[1], pauseDate) == 0) {
+                if (DateUtil.isInPauseDate(orderTime.substring(0, orderTime.indexOf("*")),
+                        orderTime.substring(orderTime.indexOf("*") + 1, orderTime.length()), pauseDate) == 0) {
                     return true;
                 }
             }
