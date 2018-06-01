@@ -1277,6 +1277,13 @@ public class DateUtil {
         return result;
     }
 
+    public static String decreseOneZero(String number) {
+        if (number.substring(number.indexOf(".") + 1, number.length()).equals("00")) {
+            number = number.substring(0, number.length() - 1);
+        }
+        return number;
+    }
+
     /**
      * 十以下的数加零
      */

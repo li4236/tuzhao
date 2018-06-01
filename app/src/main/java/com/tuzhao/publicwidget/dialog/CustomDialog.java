@@ -63,7 +63,9 @@ public class CustomDialog extends Dialog {
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 0, spannableString.length() - 1,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             parkFee.setText(spannableString);
-            parkFee.setVisibility(View.VISIBLE);
+
+            TextView fee = findViewById(R.id.park_fee_tv);
+            fee.setVisibility(View.VISIBLE);
             ConstraintLayout constraintLayout = findViewById(R.id.dialog_park_detail_cl);
             constraintLayout.setPadding(0, 0, 0, DensityUtil.dp2px(context, 15));
         }

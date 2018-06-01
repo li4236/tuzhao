@@ -101,4 +101,20 @@ public class ConstansUtil {
      * 是否选择优惠券/选择的优惠券
      */
     public static final String CHOOSE_DISCOUNT = "ChooseDisount";
+
+    /**
+     * 打开停车评价
+     */
+    public static final String OPEN_PARK_COMMENT = "OpenParkComment";
+
+    /**
+     * 关闭停车评价，显示停车详情
+     */
+    public static final String CLOSE_PARK_COMMENT = "CloseParkComment";
+
+    /**
+     * 删除停车订单
+     */
+    public static final String DELETE_PARK_ORDER = "DeleteParkOrder";
+
 }

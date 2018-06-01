@@ -66,6 +66,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
     @Override
     protected void initData() {
+        setTAG(TAG + "status:" + mOrderStatus);
         showDialog();
         loadData();
         IntentObserable.registerObserver(this);
@@ -219,6 +220,13 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 case ConstansUtil.PAY_ORDER_FINISH:
                     if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
                         onRefresh();
+                    }
+                    break;
+                case ConstansUtil.DELETE_PARK_ORDER:
+                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5||mOrderStatus==6) {
+                        Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        mCommonAdapter.removeData(parkOrderInfo);
                     }
                     break;
             }

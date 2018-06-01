@@ -16,16 +16,18 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
 import com.tuzhao.fragment.parkorder.CommentOrderFragment;
+import com.tuzhao.fragment.parkorder.OrderDetailFragment;
 import com.tuzhao.fragment.parkorder.PayForOrderFragment;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 /**
  * Created by juncoder on 2018/5/29.
  */
 
-public class OrderActivity extends BaseStatusActivity {
+public class OrderActivity extends BaseStatusActivity implements IntentObserver {
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -75,7 +77,8 @@ public class OrderActivity extends BaseStatusActivity {
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
                 break;
             case "4":
-                transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
+            case "5":
+                transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
                 break;
             default:
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
@@ -86,6 +89,7 @@ public class OrderActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -122,6 +126,7 @@ public class OrderActivity extends BaseStatusActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     @Override
@@ -141,4 +146,20 @@ public class OrderActivity extends BaseStatusActivity {
         }
     }
 
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case ConstansUtil.OPEN_PARK_COMMENT:
+                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                    break;
+                case ConstansUtil.CLOSE_PARK_COMMENT:
+                    getSupportFragmentManager().popBackStack();
+                    break;
+            }
+        }
+    }
 }

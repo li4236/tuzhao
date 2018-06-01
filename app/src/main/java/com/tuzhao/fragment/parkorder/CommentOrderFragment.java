@@ -110,6 +110,9 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
         mTwoIv = view.findViewById(R.id.comment_order_pic_two);
         mDeleteTwoIv = view.findViewById(R.id.comment_order_pic_two_delete);
         mApplyComment = view.findViewById(R.id.comment_order_apply);
+
+        view.findViewById(R.id.close_comment);
+
     }
 
     @Override
@@ -178,6 +181,11 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.close_comment:
+                Intent intent = new Intent();
+                intent.setAction(ConstansUtil.CLOSE_PARK_COMMENT);
+                IntentObserable.dispatch(intent);
+                break;
             case R.id.comment_order_pic_add:
                 if (mCommentPicFiles.size() < 3) {
                     if (getActivity() != null) {

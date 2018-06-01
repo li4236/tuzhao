@@ -255,6 +255,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/appointment_detail_divider"
         app:layout_constraintStart_toStartOf="@+id/appointment_detail_divider"
         app:layout_constraintTop_toBottomOf="@+id/view_appointment_detail_cl">

@@ -222,8 +222,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void removeData(T t) {
         if (mData.contains(t)) {
             int position = mData.indexOf(t);
-            mData.remove(t);
-            notifyItemRemoved(position + getHeadViewCount());
+            if (position != -1) {
+                mData.remove(t);
+                notifyItemRemoved(position + getHeadViewCount());
+            }
         }
     }
 

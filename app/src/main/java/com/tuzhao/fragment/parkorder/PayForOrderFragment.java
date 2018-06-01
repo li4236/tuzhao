@@ -184,20 +184,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4006505058"));
                 startActivity(intent);
                 break;
-         /*   case R.id.delete_order_cl:
-                TipeDialog dialog = new TipeDialog.Builder(getContext())
-                        .setTitle("提示")
-                        .setMessage("确定删除该订单吗？")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deletelOrder();
-                            }
-                        })
-                        .setNegativeButton("取消", null)
-                        .create();
-                dialog.show();
-                break;*/
             case R.id.view_appointment_detail:
                 showParkDetail();
                 break;
@@ -333,33 +319,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         Intent intent = new Intent(getActivity(), BigPictureActivity.class);
         intent.putStringArrayListExtra("picture_list", mParkSpacePictures);
         startActivity(intent);
-    }
-
-    private void deletelOrder() {
-        showLoadingDialog("正在删除");
-        getOkGo(HttpConstants.deletelParkOrder)
-                .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
-                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        // TODO: 2018/5/31
-
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "102":
-                                case "103":
-                                case "104":
-                                    showFiveToast("删除失败，请稍后重试");
-                                    break;
-                            }
-                        }
-                    }
-                });
     }
 
     private void showParkDetail() {
