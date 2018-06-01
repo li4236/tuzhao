@@ -426,7 +426,7 @@ public class DateUtil {
     /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
-     * @return 返回两个时间段相差的分钟数(x小时x分)
+     * @return 返回两个时间段相差的分钟数(x小时x分钟)
      */
     public static String getDateDistanceForHourWithMinute(String startDate, String endDate) {
         int minutesDistance = getMinutesDistance(startDate, endDate);
@@ -1231,7 +1231,7 @@ public class DateUtil {
     }
 
     /**
-     * @return 返回停车的时长xx小时xx分
+     * @return 返回停车的时长xx小时xx分钟
      */
     public static String getParkTime(ParkOrderInfo parkOrderInfo) {
         if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(

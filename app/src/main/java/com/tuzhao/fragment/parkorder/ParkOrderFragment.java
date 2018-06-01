@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -134,13 +133,16 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
         CircleView circleView = holder.getView(R.id.my_order_status_iv);
         TextView orderTime = holder.getView(R.id.my_order_time);
         TextView orderTimeDescription = holder.getView(R.id.my_order_time_description);
+        TextView orderStatus = holder.getView(R.id.my_order_waiting_for_pay);
         switch (parkOrderInfo.getOrder_status()) {
             case "1":
                 //已预约
                 circleView.setColor(Color.parseColor("#6a6bd9"));
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getOrder_starttime()));
                 String appointParkDistance = "预停" + DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
-                orderTime.setText(appointParkDistance);
+                orderTimeDescription.setText(appointParkDistance);
+                orderStatus.setTextColor(Color.parseColor("#6a6bd9"));
+                orderStatus.setText("已预约");
                 break;
             case "2":
                 //停车中
@@ -161,6 +163,8 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         orderTimeDescription.setText(parkTimeDistance);
                     }
                 }
+                orderStatus.setTextColor(Color.parseColor("#ffa830"));
+                orderStatus.setText("租用中");
                 break;
             case "3":
                 //待付款
@@ -168,6 +172,8 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 orderTime.setText(DateUtil.getParkTime(parkOrderInfo));
                 String shouldPay = "￥" + parkOrderInfo.getOrder_fee();
                 orderTimeDescription.setText(shouldPay);
+                orderStatus.setTextColor(Color.parseColor("#ff6c6c"));
+                orderStatus.setText("待支付");
                 break;
             case "4":
             case "5":
@@ -186,22 +192,21 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 }
                 String actualPay = "￥" + parkOrderInfo.getActual_pay_fee();
                 orderTimeDescription.setText(actualPay);
+
+                orderStatus.setTextColor(Color.parseColor("#1dd0a1"));
+                orderStatus.setText("已完成");
                 break;
             case "6":
                 //已取消（超时取消、正常手动取消）
                 circleView.setColor(Color.parseColor("#808080"));
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getOrder_starttime()));
-                orderTimeDescription.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.g6));
-                orderTimeDescription.setText("已取消");
+                String appointDistance = "预停" + DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
+                orderTimeDescription.setText(appointDistance);
+                orderStatus.setTextColor(Color.parseColor("#808080"));
+                orderStatus.setText("已取消");
                 break;
         }
 
-        //复用会导致其他的item也显示待支付
-        if (parkOrderInfo.getOrder_status().equals("3")) {
-            holder.setText(R.id.my_order_waiting_for_pay, "待支付");
-        } else {
-            holder.setText(R.id.my_order_waiting_for_pay, "");
-        }
         holder.setText(R.id.my_order_appoint_date, parkOrderInfo.getOrder_time().substring(0, parkOrderInfo.getOrder_time().indexOf(" ")))
                 .setText(R.id.my_order_park_lot, parkOrderInfo.getPark_space_name())
                 .setText(R.id.my_order_park_car_number, parkOrderInfo.getCar_numble())
