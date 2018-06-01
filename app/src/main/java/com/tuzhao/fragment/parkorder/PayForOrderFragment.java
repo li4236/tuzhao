@@ -1,13 +1,11 @@
 package com.tuzhao.fragment.parkorder;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.constraint.ConstraintLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -35,7 +33,7 @@ import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
+import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -71,20 +69,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mParkDiscount;
 
-    private ConstraintLayout mConstraintLayout;
-
-    private TextView mParkSpaceNumber;
-
-    private TextView mAppointmentParkTime;
-
-    private TextView mActualParkTime;
-
-    private TextView mAppointParkDuration;
-
-    private TextView mActualParkDuration;
-
-    private TextView mOvertimeDuration;
-
     private TextView mShouldPayFee;
 
     private ArrayList<Discount_Info> mDiscountInfos;
@@ -98,6 +82,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private Handler mHandler;
 
     private Thread mPayThread;
+
+    private CustomDialog mCustomDialog;
 
     public static PayForOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         PayForOrderFragment fragment = new PayForOrderFragment();
@@ -125,19 +111,11 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mParkOrderCredit = view.findViewById(R.id.pay_for_order_credit);
         mUserTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
         mParkDiscount = view.findViewById(R.id.park_discount);
-        mConstraintLayout = view.findViewById(R.id.park_detail_cl);
-        mParkSpaceNumber = view.findViewById(R.id.park_space_number);
-        mAppointmentParkTime = view.findViewById(R.id.appointment_start_park_time);
-        mActualParkTime = view.findViewById(R.id.actual_start_park_time);
-        mAppointParkDuration = view.findViewById(R.id.appointment_park_duration);
-        mActualParkDuration = view.findViewById(R.id.actual_park_duration);
-        mOvertimeDuration = view.findViewById(R.id.overtime_duration);
         mShouldPayFee = view.findViewById(R.id.pay_for_order_should_pay);
 
         view.findViewById(R.id.pay_for_order_question).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
-        view.findViewById(R.id.delete_order_cl).setOnClickListener(this);
         view.findViewById(R.id.park_discount_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
         mShouldPayFee.setOnClickListener(this);
@@ -151,16 +129,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            //mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
             String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
             mParkTimeDescription.setText(timeout);
-            mOvertimeDuration.setText(timeout.substring(2, timeout.length()));
 
             mParkOrderCredit.setText("-5");
         } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时间在顺延时长内
-            //mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
             mParkOrderCredit.setText("+3");
         } else {
             //停车时间不到预约的结束时间
@@ -171,12 +146,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
         String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
         mUserTotalCredit.setText(totalCredit);
-
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mAppointmentParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()));
-        mActualParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
-        mAppointParkDuration.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
-        mActualParkDuration.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
 
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
@@ -191,6 +160,11 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         if (mPayThread != null) {
             mPayThread.interrupt();
         }
+
+        if (mCustomDialog != null && mCustomDialog.isShowing()) {
+            mCustomDialog.dismiss();
+        }
+
     }
 
     @Override
@@ -210,7 +184,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4006505058"));
                 startActivity(intent);
                 break;
-            case R.id.delete_order_cl:
+         /*   case R.id.delete_order_cl:
                 TipeDialog dialog = new TipeDialog.Builder(getContext())
                         .setTitle("提示")
                         .setMessage("确定删除该订单吗？")
@@ -223,13 +197,9 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                         .setNegativeButton("取消", null)
                         .create();
                 dialog.show();
-                break;
+                break;*/
             case R.id.view_appointment_detail:
-                if (mConstraintLayout.getVisibility() == View.VISIBLE) {
-                    mConstraintLayout.setVisibility(View.GONE);
-                } else {
-                    mConstraintLayout.setVisibility(View.VISIBLE);
-                }
+                showParkDetail();
                 break;
             case R.id.park_discount_cl:
                 if (mCanUseDiscounts.isEmpty()) {
@@ -374,6 +344,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
                         // TODO: 2018/5/31
+
                     }
 
                     @Override
@@ -389,6 +360,15 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                         }
                     }
                 });
+    }
+
+    private void showParkDetail() {
+        if (mCustomDialog == null) {
+            if (getContext() != null) {
+                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo, false);
+            }
+        }
+        mCustomDialog.show();
     }
 
     /**

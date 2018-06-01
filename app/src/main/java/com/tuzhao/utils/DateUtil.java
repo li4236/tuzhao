@@ -447,7 +447,7 @@ public class DateUtil {
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
      * @param addSecond 为endDate加上相应的秒数
-     * @return 返回两个时间段相差的分钟数(x小时x分)
+     * @return 返回两个时间段相差的分钟数(x小时x分钟)
      */
     public static String getDateDistanceForHourWithMinute(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
@@ -1271,7 +1271,7 @@ public class DateUtil {
 
     public static String decreseOneZero(double number) {
         String result = String.valueOf(number);
-        if (result.substring(result.indexOf(".") + 1, result.length()).length() == 2) {
+        if (result.substring(result.indexOf(".") + 1, result.length()).equals("00")) {
             result = result.substring(0, result.length() - 1);
         }
         return result;
