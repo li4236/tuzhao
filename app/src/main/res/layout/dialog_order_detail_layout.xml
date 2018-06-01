@@ -58,7 +58,7 @@
     <TextView
         android:id="@+id/appointment_start_park_time_tv"
         style="@style/TwentyTextB1Style"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="15dp"
         android:text="预约进场"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
     <TextView
         android:id="@+id/appointment_start_park_time"
         style="@style/TwentyTextB1Style"
-        android:layout_marginEnd="25dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_start_park_time_tv" />
 

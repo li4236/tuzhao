@@ -1034,7 +1034,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("readypark_id", readyParkId.toString())
                 .params("readypark_updatetime", readyParkUpdateTime.toString())
                 .params("citycode", parkspace_info.getCity_code())
-                .params("extensionTiem", mExtensionTime * 60)
+                .params("extensionTime", mExtensionTime * 60)
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -1238,7 +1238,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("park_id", park_info.getId())
                 .params("park_interval", start_time + "*" + end_time)
                 .params("citycode", parkspace_info.getCity_code())
-                .params("extensionTiem", mExtensionTime * 60)
+                .params("extensionTime", mExtensionTime * 60)
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {

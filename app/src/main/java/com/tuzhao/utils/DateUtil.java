@@ -210,7 +210,7 @@ public class DateUtil {
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
-     * @param pauseDate 暂停时间，格式为yyyy-MM-dd,yyyy-MM-dd
+     * @param pauseDate 暂停时间，格式为yyyy-MM-dd
      * @return 0:(暂停时间在开始时间和结束时间之间) 1:(结束时间为暂停时间的00:00)
      * 2:(暂停时间不在开始时间和结束时间之间)
      */

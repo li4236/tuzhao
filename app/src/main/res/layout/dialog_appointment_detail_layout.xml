@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/w0"
+    android:paddingBottom="15dp"
+    android:minWidth="260dp">
+
+    <TextView
+        android:id="@+id/dialog_appointment_detail"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="12dp"
+        android:text="预约详情"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/dialog_dismiss"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="12dp"
+        android:contentDescription="@string/picture_description"
+        android:padding="12dp"
+        android:src="@mipmap/ic_close1"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_appointment_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dialog_appointment_detail" />
+
+    <View
+        android:id="@+id/detail_top_divider"
+        style="@style/dividerStyle"
+        android:layout_width="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_appointment_detail" />
+
+    <TextView
+        android:id="@+id/park_lot_name_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="15dp"
+        android:text="车场名称"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_top_divider" />
+
+    <TextView
+        android:id="@+id/park_lot_name"
+        style="@style/TwentyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/park_lot_name_tv"
+        app:layout_constraintTop_toTopOf="@+id/park_lot_name_tv" />
+
+    <TextView
+        android:id="@+id/park_space_number_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="15dp"
+        android:text="车位编号"
+        app:layout_constraintStart_toStartOf="@+id/park_lot_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/park_lot_name_tv" />
+
+    <TextView
+        android:id="@+id/park_space_number"
+        style="@style/TwentyTextB1Style"
+        app:layout_constraintEnd_toEndOf="@id/park_lot_name"
+        app:layout_constraintTop_toTopOf="@+id/park_space_number_tv" />
+
+    <TextView
+        android:id="@+id/appointment_start_park_time_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="15dp"
+        android:text="预约进场"
+        app:layout_constraintStart_toStartOf="@id/park_lot_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/park_space_number" />
+
+    <TextView
+        android:id="@+id/appointment_start_park_time"
+        style="@style/TwentyTextB1Style"
+        app:layout_constraintEnd_toEndOf="@id/park_lot_name"
+        app:layout_constraintTop_toTopOf="@+id/appointment_start_park_time_tv" />
+
+    <TextView
+        android:id="@+id/appointment_park_duration_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="15dp"
+        android:text="预停时长"
+        app:layout_constraintStart_toStartOf="@id/park_lot_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_start_park_time_tv" />
+
+    <TextView
+        android:id="@+id/appointment_park_duration"
+        style="@style/TwentyTextB1Style"
+        app:layout_constraintEnd_toEndOf="@id/park_lot_name"
+        app:layout_constraintTop_toTopOf="@+id/appointment_park_duration_tv" />
+
+    <TextView
+        android:id="@+id/estimated_cost_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="15dp"
+        android:text="预计费用"
+        app:layout_constraintStart_toStartOf="@id/park_lot_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_duration_tv" />
+
+    <TextView
+        android:id="@+id/estimated_cost"
+        style="@style/TwentyTextB1Style"
+        app:layout_constraintEnd_toEndOf="@id/park_lot_name"
+        app:layout_constraintTop_toTopOf="@+id/estimated_cost_tv" />
+
+</android.support.constraint.ConstraintLayout>

@@ -3,13 +3,8 @@ package com.tuzhao.fragment.parkorder;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,6 +20,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
@@ -32,7 +28,6 @@ import com.tuzhao.utils.IntentObserable;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -53,23 +48,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private TextView mParkDuration;
 
-    private ConstraintLayout mConstraintLayout;
-
-    private TextView mParkLotName;
-
-    private TextView mParkSpaceNumber;
-
-    private TextView mAppointStartParkTime;
-
-    private TextView mAppointParkDuration;
-
-    private TextView mEstimatedCost;
-
     private TextView mOpenLock;
 
     private ArrayList<String> mParkSpacePictures;
 
     private boolean mIsTimeOut;
+
+    private CustomDialog mCustomDialog;
 
     public static AppointmentDetailFragment newInstance(ParkOrderInfo parkOrderInfo) {
         AppointmentDetailFragment fragment = new AppointmentDetailFragment();
@@ -93,19 +78,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mStartParkTime = view.findViewById(R.id.start_park_time);
         mParkSpaceLocation = view.findViewById(R.id.park_space_location);
         mParkDuration = view.findViewById(R.id.park_duration);
-        mParkLotName = view.findViewById(R.id.park_lot_name);
-        mParkSpaceNumber = view.findViewById(R.id.park_space_number);
-        mAppointStartParkTime = view.findViewById(R.id.appointment_start_park_time);
-        mAppointParkDuration = view.findViewById(R.id.appointment_park_duration);
-        mEstimatedCost = view.findViewById(R.id.estimated_cost);
-        mConstraintLayout = view.findViewById(R.id.appointment_detail_cl);
         mOpenLock = view.findViewById(R.id.open_lock);
 
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
         view.findViewById(R.id.cancel_appoint_cl).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
-        view.findViewById(R.id.view_appointment_detail_cl).setOnClickListener(this);
+        view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
         mOpenLock.setOnClickListener(this);
     }
 
@@ -131,19 +110,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             duration.append("分");
         }
         mParkDuration.setText(duration.toString());
-
-        mParkLotName.setText(mParkOrderInfo.getPark_space_name());
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mAppointStartParkTime.setText(mParkOrderInfo.getOrder_starttime().substring(0, mParkOrderInfo.getOrder_starttime().lastIndexOf(":")));
-        mAppointParkDuration.setText(duration.toString());
-
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-        SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()),
-                DateUtil.deleteSecond(mParkOrderInfo.getOrder_endtime()), mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()),
-                Double.valueOf(mParkOrderInfo.getLow_fee()))) + "元");
-        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mEstimatedCost.setText(spannableString);
 
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime()).compareTo(Calendar.getInstance()) > 0) {
             //未到预约开始停车时间
@@ -227,12 +193,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4006505058"));
                 startActivity(intent);
                 break;
-            case R.id.view_appointment_detail_cl:
-                if (mConstraintLayout.getVisibility() == View.VISIBLE) {
-                    mConstraintLayout.setVisibility(View.GONE);
-                } else {
-                    mConstraintLayout.setVisibility(View.VISIBLE);
-                }
+            case R.id.view_appointment_detail:
+                showAppointmentDetail();
                 break;
             case R.id.open_lock:
                 if (getText(mOpenLock).equals("已开锁")) {
@@ -288,6 +250,15 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         Intent intent = new Intent(getActivity(), BigPictureActivity.class);
         intent.putStringArrayListExtra("picture_list", mParkSpacePictures);
         startActivity(intent);
+    }
+
+    private void showAppointmentDetail() {
+        if (mCustomDialog == null) {
+            if (getContext() != null) {
+                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo);
+            }
+        }
+        mCustomDialog.show();
     }
 
     private void openParkLock() {
