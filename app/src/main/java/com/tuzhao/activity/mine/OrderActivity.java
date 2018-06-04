@@ -1,8 +1,13 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -20,6 +25,7 @@ import com.tuzhao.fragment.parkorder.OrderDetailFragment;
 import com.tuzhao.fragment.parkorder.PayForOrderFragment;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
@@ -35,6 +41,8 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
 
     private AMap mAMap;
 
+    private Point mPoint;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_order_layout;
@@ -46,6 +54,9 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
             showFiveToast("获取订单信息失败，请稍后重试");
             finish();
         }
+
+        mPoint = new Point(1080, 1920);
+        getWindowManager().getDefaultDisplay().getRealSize(mPoint);
 
         mMapView = findViewById(R.id.order_mv);
         mMapView.onCreate(savedInstanceState);
@@ -65,9 +76,35 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                 }
             });
 
-            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude()));
+            mAMap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    TextView textView = new TextView(OrderActivity.this);
+                    textView.setBackgroundColor(Color.WHITE);
+                    textView.setTextColor(Color.parseColor("#323232"));
+                    textView.setText(marker.getTitle());
+                    textView.setMaxWidth((int) (mPoint.x*0.6));
+                    textView.setPadding(DensityUtil.dp2px(OrderActivity.this,8),DensityUtil.dp2px(OrderActivity.this,8),
+                            DensityUtil.dp2px(OrderActivity.this,8),DensityUtil.dp2px(OrderActivity.this,8));
+                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    textView.setLayoutParams(layoutParams);
+                    return textView;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    View textView = new TextView(OrderActivity.this);
+                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(0, 0);
+                    textView.setLayoutParams(layoutParams);
+                    return textView;
+                }
+            });
+
+            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude()))
+                    .title(mParkOrderInfo.getPark_space_name());
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
             Marker marker = mAMap.addMarker(markerOptions);
+            marker.showInfoWindow();
             ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);
             animation.setDuration(500);
             marker.setAnimation(animation);
@@ -112,7 +149,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                 return "订单完成";
             case "6":
             default:
-                return "";
+                return "订单详情";
         }
     }
 

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/parking_lot_name_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/parking_lot_name_tv"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="车场名称："
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/park_lot_name"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:gravity="start"
+                app:layout_constraintBottom_toBottomOf="@+id/parking_lot_name_tv"
+                app:layout_constraintEnd_toStartOf="@+id/park_lot_name_iv"
+                app:layout_constraintStart_toEndOf="@+id/parking_lot_name_tv"
+                app:layout_constraintTop_toTopOf="@+id/parking_lot_name_tv" />
+
+            <ImageView
+                android:id="@+id/park_lot_name_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@mipmap/ic_right"
+                app:layout_constraintBottom_toBottomOf="@+id/parking_lot_name_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/parking_lot_name_tv" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/revenue_ratio_tv"
+            style="@style/TwentyTextB1Style"
+            android:background="@color/w0"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:text="收益比："
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/parking_lot_name_cl" />
+
+        <TextView
+            android:id="@+id/revenue_ratio"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/w0"
+            android:gravity="start"
+            android:paddingBottom="16dp"
+            android:paddingStart="26dp"
+            app:layout_constraintBottom_toBottomOf="@+id/revenue_ratio_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/revenue_ratio_tv"
+            app:layout_constraintTop_toTopOf="@+id/revenue_ratio_tv" />
+
+        <View
+            android:id="@+id/park_lot_name_divider"
+            style="@style/dividerStyle"
+            app:layout_constraintTop_toBottomOf="@+id/revenue_ratio_tv" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/park_space_number_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0"
+            app:layout_constraintTop_toBottomOf="@+id/park_lot_name_divider">
+
+            <TextView
+                android:id="@+id/park_space_number_tv"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="车位号码："
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/park_space_number"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                android:gravity="start|center_vertical"
+                android:inputType="text"
+                android:labelFor="@+id/park_space_number"
+                android:maxLength="18"
+                android:textColorHint="@color/g6"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/park_space_number_tv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/park_space_number_divider"
+            style="@style/dividerStyle"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_number_cl" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/park_space_description_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_number_divider">
+
+            <TextView
+                android:id="@+id/park_space_description_tv"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="车位描述："
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/park_space_description"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                android:gravity="start|center_vertical"
+                android:hint="如:负一层B区01"
+                android:inputType="text"
+                android:labelFor="@+id/park_space_description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/park_space_description_tv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/park_space_description_divider"
+            style="@style/dividerStyle"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_description_cl" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/idCard_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_description_divider">
+
+            <TextView
+                android:id="@+id/id_card_tv"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="身份证照："
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/id_card"
+                style="@style/TwentyTextG6Style"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:gravity="start"
+                android:text="点击上传身份证"
+                app:layout_constraintBottom_toBottomOf="@+id/id_card_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/id_card_tv"
+                app:layout_constraintTop_toTopOf="@+id/id_card_tv" />
+
+            <ImageView
+                android:id="@+id/id_card_positive_photo_iv"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/picture_description"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="8:5"
+                app:layout_constraintStart_toEndOf="@+id/id_card_tv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/id_card_positive_photo_tv"
+                style="@style/TenTextG6Stytle"
+                android:paddingBottom="8dp"
+                android:paddingTop="4dp"
+                android:text="正面"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/id_card_positive_photo_iv"
+                app:layout_constraintStart_toStartOf="@id/id_card_positive_photo_iv"
+                app:layout_constraintTop_toBottomOf="@+id/id_card_positive_photo_iv" />
+
+            <ImageView
+                android:id="@+id/id_card_negative_photo_iv"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:contentDescription="@string/picture_description"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="8:5"
+                app:layout_constraintStart_toEndOf="@id/id_card_positive_photo_iv"
+                app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
+
+            <TextView
+                android:id="@+id/id_card_negative_photo_tv"
+                style="@style/TenTextG6Stytle"
+                android:paddingTop="4dp"
+                android:text="反面"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/id_card_negative_photo_iv"
+                app:layout_constraintStart_toStartOf="@+id/id_card_negative_photo_iv"
+                app:layout_constraintTop_toBottomOf="@+id/id_card_negative_photo_iv" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/IdCard_divider"
+            style="@style/dividerStyle"
+            app:layout_constraintTop_toBottomOf="@+id/idCard_cl" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/property_photo_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0"
+            app:layout_constraintTop_toBottomOf="@+id/IdCard_divider">
+
+            <TextView
+                android:id="@+id/property_photo_tv"
+                style="@style/ThirtyTextB1Style"
+                android:paddingBottom="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:text="产权照片："
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/property_photo"
+                style="@style/TwentyTextG6Style"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:gravity="start"
+                android:text="点击上传车位产权照"
+                app:layout_constraintBottom_toBottomOf="@+id/property_photo_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/property_photo_tv"
+                app:layout_constraintTop_toTopOf="@+id/property_photo_tv" />
+
+            <ImageView
+                android:id="@+id/property_positive_photo_iv"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/picture_description"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="8:5"
+                app:layout_constraintStart_toEndOf="@id/property_photo_tv"
+                app:layout_constraintTop_toTopOf="@+id/property_photo_tv" />
+
+            <TextView
+                android:id="@+id/property_positive_photo_tv"
+                style="@style/TenTextG6Stytle"
+                android:layout_marginTop="4dp"
+                android:paddingBottom="8dp"
+                android:text="正面"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/property_positive_photo_iv"
+                app:layout_constraintStart_toStartOf="@id/property_positive_photo_iv"
+                app:layout_constraintTop_toBottomOf="@+id/property_positive_photo_iv" />
+
+            <ImageView
+                android:id="@+id/property_negative_photo_iv"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:contentDescription="@string/picture_description"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="8:5"
+                app:layout_constraintStart_toEndOf="@+id/property_positive_photo_iv"
+                app:layout_constraintTop_toTopOf="@+id/property_positive_photo_iv" />
+
+            <TextView
+                android:id="@+id/property_negative_photo_tv"
+                style="@style/TenTextG6Stytle"
+                android:layout_marginTop="4dp"
+                android:paddingBottom="8dp"
+                android:text="反面"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/property_negative_photo_iv"
+                app:layout_constraintStart_toStartOf="@+id/property_negative_photo_iv"
+                app:layout_constraintTop_toBottomOf="@+id/property_negative_photo_iv" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/park_space_hint"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="start"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/property_photo_cl" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

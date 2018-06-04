@@ -19,7 +19,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
-import com.tuzhao.activity.mine.AddParkActivity;
+import com.tuzhao.activity.mine.AddParkSpaceActivity;
 import com.tuzhao.activity.mine.ParkSpaceSettingActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
@@ -198,7 +198,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 }
                 break;
             case R.id.add_new_parkspace:
-                startActivity(AddParkActivity.class);
+                startActivity(AddParkSpaceActivity.class);
                 break;
             case R.id.my_parkspace_setting:
                 startActivityForResult(ParkSpaceSettingActivity.class, ConstansUtil.REQUSET_CODE, ConstansUtil.PARK_SPACE_INFO, mParkInfo);
@@ -389,7 +389,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private void controlParkLock(final boolean isOpen) {
         mOpenLock.setClickable(false);
         startAnimation();
-        OkGo.post(HttpConstants.controlParkLock)
+        OkGo.post(HttpConstants.userControlParkLock)
                 .tag(this.getClass().getName())
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())

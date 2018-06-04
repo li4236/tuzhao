@@ -127,4 +127,64 @@ public class ConstansUtil {
      */
     public static final String DELETE_PARK_ORDER = "DeleteParkOrder";
 
+    /**
+     * 添加车位点击下一步
+     */
+    public static final String NEXT_STEP = "NextStep";
+
+    /**
+     * 添加车位时代表是第几个页面点击下一步的
+     */
+    public static final String POSITION = "Position";
+
+    /**
+     * 跳转到时间设置fragment
+     */
+    public static final String JUMP_TO_TIME_SETTING = "JumpToTimeSetting";
+
+    /**
+     * 跳转到押金支付fragment
+     */
+    public static final String JUMP_TO_DEPOSIT_PAYMENT = "JumpToDepositPayment";
+
+    /**
+     * 车场名称
+     */
+    public static final String PARK_LOT_NAME = "ParkLotName";
+
+    /**
+     * 收益比
+     */
+    public static final String REVENUE_RATIO = "RevenueRatio";
+
+    /**
+     * 车位号码
+     */
+    public static final String PARK_SPACE_NUMBER = "ParkSpaceNumber";
+
+    /**
+     * 车位描述
+     */
+    public static final String PARK_SPACE_DESCRIPTION = "ParkSpaceDescription";
+
+    /**
+     * 身份证正面照
+     */
+    public static final String ID_CARD_POSITIVE_PHOTO = "IdCardPositivePhoto";
+
+    /**
+     * 身份证反面照
+     */
+    public static final String ID_CARD_NEGATIVE_PHOTO = "IdCardNegativePhoto";
+
+    /**
+     * 车位产权正面照
+     */
+    public static final String PROPERTY_POSITIVE_PHOTO = "PropertyPositivePhoto";
+
+    /**
+     * 车位产权反面照
+     */
+    public static final String PROPERTY_NEGATIVE_PHOTO = "PropertyNegativePhoto";
+
 }
