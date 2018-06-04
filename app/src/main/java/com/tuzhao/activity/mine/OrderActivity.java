@@ -52,14 +52,20 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
         if (mAMap == null) {
             mAMap = mMapView.getMap();
 
-            LatLng latLng = new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude());
+            final LatLng latLng = new LatLng(mParkOrderInfo.getLatitude() - 0.003, mParkOrderInfo.getLongitude());
 
             mAMap.getUiSettings().setRotateGesturesEnabled(false);
             mAMap.getUiSettings().setZoomControlsEnabled(false);
-            mAMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-            mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+            mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+            mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+                    return true;
+                }
+            });
 
-            MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude()));
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
             Marker marker = mAMap.addMarker(markerOptions);
             ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);
@@ -81,7 +87,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                 transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
                 break;
             default:
-                transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
+                transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
                 break;
         }
         transaction.commit();
