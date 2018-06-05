@@ -39,22 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_park_detail" />
 
-    <!--    <TextView
-            android:id="@+id/park_space_number_tv"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:text="车位编号"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/park_space_number"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/park_space_number_tv" />-->
-
     <TextView
         android:id="@+id/appointment_start_park_time_tv"
         style="@style/TwentyTextB1Style"
@@ -114,32 +98,63 @@
         app:layout_constraintTop_toTopOf="@+id/actual_park_duration_tv" />
 
     <TextView
-        android:id="@+id/overtime_duration_tv"
+        android:id="@+id/grace_period_tv"
         style="@style/TwentyTextB1Style"
         android:layout_marginTop="15dp"
-        android:text="超时时长"
+        android:text="宽限时长"
         app:layout_constraintStart_toStartOf="@id/appointment_start_park_time_tv"
         app:layout_constraintTop_toBottomOf="@+id/actual_park_duration_tv" />
 
     <TextView
+        android:id="@+id/grace_period"
+        style="@style/TwentyTextB1Style"
+        app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time"
+        app:layout_constraintTop_toTopOf="@+id/grace_period_tv" />
+
+    <TextView
+        android:id="@+id/overtime_duration_tv"
+        style="@style/TwentyTextB1Style"
+        android:paddingTop="15dp"
+        android:text="超时时长"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/appointment_start_park_time_tv"
+        app:layout_constraintTop_toBottomOf="@+id/grace_period_tv" />
+
+    <TextView
         android:id="@+id/overtime_duration"
         style="@style/TwentyTextB1Style"
-        android:text="无超时"
-        app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time"
-        app:layout_constraintTop_toTopOf="@+id/overtime_duration_tv" />
+        app:layout_constraintBottom_toBottomOf="@+id/overtime_duration_tv"
+        app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time" />
+
+    <TextView
+        android:id="@+id/overtime_fee_tv"
+        style="@style/TwentyTextB1Style"
+        android:paddingTop="15dp"
+        android:text="超时费用"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/appointment_start_park_time_tv"
+        app:layout_constraintTop_toBottomOf="@+id/overtime_duration_tv" />
+
+    <TextView
+        android:id="@+id/overtime_fee"
+        style="@style/TwentyTextB1Style"
+        app:layout_constraintBottom_toBottomOf="@+id/overtime_fee_tv"
+        app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time" />
 
     <TextView
         android:id="@+id/park_fee_tv"
         style="@style/TwentyTextB1Style"
-        android:layout_marginTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
         android:text="停车费用"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/appointment_start_park_time_tv"
-        app:layout_constraintTop_toBottomOf="@+id/overtime_duration" />
+        app:layout_constraintTop_toBottomOf="@+id/overtime_fee_tv" />
 
     <TextView
         android:id="@+id/park_fee"
         style="@style/TwentyTextB1Style"
+        app:layout_constraintBottom_toBottomOf="@+id/park_fee_tv"
         app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time"
         app:layout_constraintTop_toTopOf="@+id/park_fee_tv" />
 

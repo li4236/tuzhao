@@ -139,7 +139,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 //已预约
                 circleView.setColor(Color.parseColor("#6a6bd9"));
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getOrder_starttime()));
-                String appointParkDistance = "预停" + DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
+                String appointParkDistance = "预停" + DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
                 orderTimeDescription.setText(appointParkDistance);
                 orderStatus.setTextColor(Color.parseColor("#6a6bd9"));
                 orderStatus.setText("已预约");
@@ -150,16 +150,16 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getPark_start_time()));
                 String parkTimeDistance;
                 if (parkOrderInfo.getPark_end_time().equals("0000-00-00 00:00:00")) {
-                    parkTimeDistance = "剩余" + DateUtil.getDateDistanceForHourWithMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
+                    parkTimeDistance = "剩余" + DateUtil.getDateDistanceForDayToMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
                     orderTimeDescription.setText(parkTimeDistance);
                 } else {
                     if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
                             DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
                         //停车时长超过预约时长
-                        parkTimeDistance = "已超时" + DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond());
+                        parkTimeDistance = "已超时" + DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond());
                         orderTimeDescription.setText(parkTimeDistance);
                     } else {
-                        parkTimeDistance = "剩余" + DateUtil.getDateDistanceForHourWithMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
+                        parkTimeDistance = "剩余" + DateUtil.getDateDistanceForDayToMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
                         orderTimeDescription.setText(parkTimeDistance);
                     }
                 }
@@ -182,13 +182,13 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
                         DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
                     //停车时长超过预约时长
-                    orderTime.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time()));
+                    orderTime.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time()));
                 } else if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
                         DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
                     //停车时间在顺延时长内
-                    orderTime.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time()));
+                    orderTime.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time()));
                 } else {
-                    orderTime.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+                    orderTime.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
                 }
                 String actualPay = "￥" + parkOrderInfo.getActual_pay_fee();
                 orderTimeDescription.setText(actualPay);
@@ -200,7 +200,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 //已取消（超时取消、正常手动取消）
                 circleView.setColor(Color.parseColor("#808080"));
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getOrder_starttime()));
-                String appointDistance = "预停" + DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
+                String appointDistance = "预停" + DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
                 orderTimeDescription.setText(appointDistance);
                 orderStatus.setTextColor(Color.parseColor("#808080"));
                 orderStatus.setText("已取消");

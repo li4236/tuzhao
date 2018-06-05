@@ -353,7 +353,7 @@ public class DateUtil {
 
     /**
      * @param date 比较的时间，格式为yyyy-MM-dd HH:mm
-     * @return true(HH:mm 为00:00)
+     * @return true(HH : mm 为00 : 00)
      */
 
     private static boolean isInStartDay(String date) {
@@ -363,7 +363,7 @@ public class DateUtil {
 
     /**
      * @param calendar 比较的时间，格式为yyyy-MM-dd HH:mm
-     * @return true(HH:mm 为00:00或者0都行)
+     * @return true(HH : mm 为00 : 00或者0都行)
      */
     private static boolean isInStartDay(Calendar calendar) {
         return calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.MINUTE) == 0;
@@ -446,7 +446,7 @@ public class DateUtil {
     /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
-     * @param addSecond 为endDate加上相应的秒数
+     * @param addSecond 为startDate加上相应的秒数
      * @return 返回两个时间段相差的分钟数(x小时x分钟)
      */
     public static String getDateDistanceForHourWithMinute(String startDate, String endDate, String addSecond) {
@@ -456,6 +456,70 @@ public class DateUtil {
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("小时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分钟");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @return 返回两个时间段相差的分钟数(x天x小时x分钟)
+     */
+    public static String getDateDistanceForDayToMinute(String startDate, String endDate) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("小时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分钟");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 为startDate加上相应的秒数
+     * @return 返回两个时间段相差的分钟数(x天x小时x分钟)
+     */
+    public static String getDateDistanceForDayToMinute(String startDate, String endDate, String addSecond) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
         if (minutesDistance / 60 > 0) {
             stringBuilder.append(minutesDistance / 60);
             stringBuilder.append("小时");

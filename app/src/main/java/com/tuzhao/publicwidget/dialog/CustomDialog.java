@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.DateUtil;
-import com.tuzhao.utils.DensityUtil;
 
 import java.text.DecimalFormat;
 
@@ -35,31 +33,80 @@ public class CustomDialog extends Dialog {
     public CustomDialog(@NonNull Context context, ParkOrderInfo parkOrderInfo, boolean showParkFee) {
         super(context, R.style.ParkDialog);
         setContentView(R.layout.dialog_order_detail_layout);
-        TextView mAppointmentParkTime = findViewById(R.id.appointment_start_park_time);
-        TextView mActualParkTime = findViewById(R.id.actual_start_park_time);
-        TextView mAppointParkDuration = findViewById(R.id.appointment_park_duration);
-        TextView mActualParkDuration = findViewById(R.id.actual_park_duration);
-        TextView mOvertimeDuration = findViewById(R.id.overtime_duration);
-        mAppointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()));
-        mActualParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
-        mAppointParkDuration.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
-        mActualParkDuration.setText(DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
+        TextView appointmentParkTime = findViewById(R.id.appointment_start_park_time);
+        TextView actualParkTime = findViewById(R.id.actual_start_park_time);
+        TextView appointParkDuration = findViewById(R.id.appointment_park_duration);
+        TextView actualParkDuration = findViewById(R.id.actual_park_duration);
+        TextView gracePeriodDuration = findViewById(R.id.grace_period);
+        appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()));
+        actualParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
+        appointParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        actualParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
+
+        String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
+        gracePeriodDuration.setText(gracePeriod);
 
         if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            String string = DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
+            TextView overtimeDuration = findViewById(R.id.overtime_duration);
+            TextView overtimeFee = findViewById(R.id.overtime_fee);
+
+            int overtimeMinutes = 0;    //超时的分钟数
+            String string = DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
             SpannableString timeout = new SpannableString(string);
+            int dayPosition = -1;
+            int hourPosition = -1;
+            if (string.contains("天")) {
+                dayPosition = string.indexOf("天");
+                overtimeMinutes = Integer.valueOf(string.substring(0, dayPosition)) * 60 * 24;
+                timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, dayPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             if (string.contains("小时")) {
-                timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, string.indexOf("小时"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                hourPosition = string.indexOf("小时");
+                if (dayPosition != -1) {
+                    overtimeMinutes = Integer.valueOf(string.substring(dayPosition + 1, hourPosition)) * 60;
+                } else {
+                    overtimeMinutes = Integer.valueOf(string.substring(0, hourPosition)) * 60;
+                }
+                timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), dayPosition + 1, hourPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+
             if (string.contains("分钟")) {
-                timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), string.indexOf("小时") + 2, string.indexOf("分钟"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (hourPosition != -1) {
+                    overtimeMinutes += Integer.valueOf(string.substring(hourPosition + 2, string.indexOf("分钟")));
+                    timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), hourPosition + 2, string.indexOf("分钟"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    overtimeMinutes += Integer.valueOf(string.substring(dayPosition + 1, string.indexOf("分钟")));
+                    timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, string.indexOf("分钟"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
-            mOvertimeDuration.setText(timeout);
+            overtimeDuration.setText(timeout);
+
+            if (showParkFee) {
+                //订单详情界面直接显示超时费用
+                String fineFee = DateUtil.decreseOneZero(parkOrderInfo.getFine_fee()) + "元";
+                SpannableString spannableString = new SpannableString(fineFee);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, fineFee.length() - 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                overtimeFee.setText(spannableString);
+            } else {
+                //计算出超时费用
+                String fineFee = DateUtil.decreseOneZero(new DecimalFormat("0.00").format(
+                        Double.valueOf(parkOrderInfo.getFine()) * overtimeMinutes / 60)) + "元";
+                SpannableString spannableString = new SpannableString(fineFee);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, fineFee.length() - 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                overtimeFee.setText(spannableString);
+            }
+
+            findViewById(R.id.overtime_duration_tv).setVisibility(View.VISIBLE);
+            findViewById(R.id.overtime_fee_tv).setVisibility(View.VISIBLE);
         }
 
         if (showParkFee) {
+            //已完成的订单则显示停车费用
             TextView parkFee = findViewById(R.id.park_fee);
             SpannableString spannableString = new SpannableString(DateUtil.decreseOneZero(Double.parseDouble(parkOrderInfo.getActual_pay_fee())) + "元");
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 0, spannableString.length() - 1,
@@ -68,8 +115,8 @@ public class CustomDialog extends Dialog {
 
             TextView fee = findViewById(R.id.park_fee_tv);
             fee.setVisibility(View.VISIBLE);
-            ConstraintLayout constraintLayout = findViewById(R.id.dialog_park_detail_cl);
-            constraintLayout.setPadding(0, 0, 0, DensityUtil.dp2px(context, 15));
+            /*ConstraintLayout constraintLayout = findViewById(R.id.dialog_park_detail_cl);
+            constraintLayout.setPadding(0, 0, 0, DensityUtil.dp2px(context, 15));*/
         }
 
         ImageView imageView = findViewById(R.id.dialog_dismiss);
