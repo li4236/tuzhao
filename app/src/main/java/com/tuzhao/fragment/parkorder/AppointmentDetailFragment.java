@@ -42,6 +42,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private ParkOrderInfo mParkOrderInfo;
 
+    private TextView mParkDate;
+
     private TextView mStartParkTime;
 
     private TextView mParkSpaceLocation;
@@ -75,8 +77,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
         }
 
-        mStartParkTime = view.findViewById(R.id.start_park_time);
-        mParkSpaceLocation = view.findViewById(R.id.park_space_location);
+        mParkDate = view.findViewById(R.id.appointment_park_date);
+        mStartParkTime = view.findViewById(R.id.appointment_income_time);
+        mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         mParkDuration = view.findViewById(R.id.park_duration);
         mOpenLock = view.findViewById(R.id.open_lock);
 
@@ -90,26 +93,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     @Override
     protected void initData() {
+        mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
         mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrder_starttime()));
         mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
-
-        int parkDuration = DateUtil.getMinutesDistance(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime());
-        StringBuilder duration = new StringBuilder();
-        if (parkDuration / 24 / 60 >= 1) {
-            duration.append(parkDuration / 24 / 60);
-            duration.append("天");
-            parkDuration -= (parkDuration / 24 / 60) * 24 * 60;
-        }
-        if (parkDuration / 60 >= 1) {
-            duration.append(parkDuration / 60);
-            duration.append("小时");
-            parkDuration -= (parkDuration / 60) * 60;
-        }
-        if (parkDuration != 0) {
-            duration.append(parkDuration);
-            duration.append("分");
-        }
-        mParkDuration.setText(duration.toString());
+        mParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
 
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime()).compareTo(Calendar.getInstance()) > 0) {
             //未到预约开始停车时间

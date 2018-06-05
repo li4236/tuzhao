@@ -115,8 +115,6 @@ public class CustomDialog extends Dialog {
 
             TextView fee = findViewById(R.id.park_fee_tv);
             fee.setVisibility(View.VISIBLE);
-            /*ConstraintLayout constraintLayout = findViewById(R.id.dialog_park_detail_cl);
-            constraintLayout.setPadding(0, 0, 0, DensityUtil.dp2px(context, 15));*/
         }
 
         ImageView imageView = findViewById(R.id.dialog_dismiss);
@@ -131,41 +129,26 @@ public class CustomDialog extends Dialog {
     public CustomDialog(@NonNull Context context, ParkOrderInfo parkOrderInfo) {
         super(context, R.style.ParkDialog);
         setContentView(R.layout.dialog_appointment_detail_layout);
-        TextView mParkLotName = findViewById(R.id.park_lot_name);
-        TextView mParkSpaceNumber = findViewById(R.id.park_space_number);
-        TextView mAppointStartParkTime = findViewById(R.id.appointment_start_park_time);
-        TextView mAppointParkDuration = findViewById(R.id.appointment_park_duration);
-        TextView mEstimatedCost = findViewById(R.id.estimated_cost);
+        TextView parkSpaceNumber = findViewById(R.id.park_space_number);
+        TextView carNumber = findViewById(R.id.car_number);
+        TextView appointStartParkTime = findViewById(R.id.appointment_start_park_time);
+        TextView appointParkDuration = findViewById(R.id.appointment_park_duration);
+        TextView gracePeriodDuration = findViewById(R.id.grace_period);
+        TextView estimatedCost = findViewById(R.id.estimated_cost);
 
-        int parkDuration = DateUtil.getMinutesDistance(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
-        StringBuilder duration = new StringBuilder();
-        if (parkDuration / 24 / 60 >= 1) {
-            duration.append(parkDuration / 24 / 60);
-            duration.append("天");
-            parkDuration -= (parkDuration / 24 / 60) * 24 * 60;
-        }
-        if (parkDuration / 60 >= 1) {
-            duration.append(parkDuration / 60);
-            duration.append("小时");
-            parkDuration -= (parkDuration / 60) * 60;
-        }
-        if (parkDuration != 0) {
-            duration.append(parkDuration);
-            duration.append("分");
-        }
-
-        mParkLotName.setText(parkOrderInfo.getPark_space_name());
-        mParkSpaceNumber.setText(parkOrderInfo.getParkNumber());
-        mAppointStartParkTime.setText(parkOrderInfo.getOrder_starttime().substring(0, parkOrderInfo.getOrder_starttime().lastIndexOf(":")));
-        mAppointParkDuration.setText(duration.toString());
+        parkSpaceNumber.setText(parkOrderInfo.getParkNumber());
+        carNumber.setText(parkOrderInfo.getCar_numble());
+        appointStartParkTime.setText(parkOrderInfo.getOrder_starttime().substring(0, parkOrderInfo.getOrder_starttime().lastIndexOf(":")));
+        appointParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
+        gracePeriodDuration.setText(gracePeriod);
 
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
         SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
                 DateUtil.deleteSecond(parkOrderInfo.getOrder_endtime()), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                 Double.valueOf(parkOrderInfo.getLow_fee()))) + "元");
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mEstimatedCost.setText(spannableString);
+        estimatedCost.setText(spannableString);
 
         ImageView imageView = findViewById(R.id.dialog_dismiss);
         imageView.setOnClickListener(new View.OnClickListener() {

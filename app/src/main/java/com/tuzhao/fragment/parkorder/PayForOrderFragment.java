@@ -105,7 +105,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         }
 
         mParkTime = view.findViewById(R.id.pay_for_order_time);
-        mParkTimeDescription = view.findViewById(R.id.pay_for_order_time_description);
+        mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
         mParkOrderFee = view.findViewById(R.id.pay_for_order_fee);
         mParkOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
         mParkOrderCredit = view.findViewById(R.id.pay_for_order_credit);

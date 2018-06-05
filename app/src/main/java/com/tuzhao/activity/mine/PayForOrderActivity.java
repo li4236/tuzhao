@@ -67,7 +67,7 @@ public class PayForOrderActivity extends BaseStatusActivity implements View.OnCl
         }
 
         mParkTime = findViewById(R.id.pay_for_order_time);
-        mParkTimeDescription = findViewById(R.id.pay_for_order_time_description);
+        mParkTimeDescription = findViewById(R.id.appointment_park_date_tv);
         mParkOrderFee = findViewById(R.id.pay_for_order_fee);
         mParkOrderDiscount = findViewById(R.id.pay_for_order_discount);
         mParkOrderCredit = findViewById(R.id.pay_for_order_credit);
@@ -76,7 +76,7 @@ public class PayForOrderActivity extends BaseStatusActivity implements View.OnCl
 
         findViewById(R.id.pay_for_order_question).setOnClickListener(this);
         findViewById(R.id.pay_for_order_time_iv).setOnClickListener(this);
-        findViewById(R.id.pay_for_order_fee_iv).setOnClickListener(this);
+        findViewById(R.id.appointment_income_time_iv).setOnClickListener(this);
         findViewById(R.id.pay_for_order_credit_iv).setOnClickListener(this);
         mParkOrderDiscount.setOnClickListener(this);
         mShouldPayFee.setOnClickListener(this);
@@ -126,7 +126,7 @@ public class PayForOrderActivity extends BaseStatusActivity implements View.OnCl
             case R.id.pay_for_order_time_iv:
 
                 break;
-            case R.id.pay_for_order_fee_iv:
+            case R.id.appointment_income_time_iv:
 
                 break;
             case R.id.pay_for_order_credit_iv:

@@ -40,60 +40,59 @@
         app:layout_constraintTop_toBottomOf="@+id/appointment_detail" />
 
     <ImageView
-        android:id="@+id/pay_for_order_fee_iv"
+        android:id="@+id/appointment_income_time_iv"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_where2"
+        android:src="@drawable/ic_into"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
     <TextView
-        android:id="@+id/park_space_location"
-        style="@style/FortyTextB1Style"
+        android:id="@+id/appointment_income_time"
+        style="@style/TwentyTextB1Style"
         android:layout_marginTop="10dp"
-        android:text="地下一层"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
     <TextView
-        android:id="@+id/pay_for_order_discount"
+        android:id="@+id/appointment_income_time_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="5dp"
-        android:text="(停车地点)"
+        android:text="(进场时间)"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_space_location" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time" />
 
     <ImageView
-        android:id="@+id/start_park_time_iv"
+        android:id="@+id/appointment_park_date_iv"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_into"
+        android:src="@drawable/ic_date"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
     <TextView
-        android:id="@+id/start_park_time"
-        style="@style/FortyTextB1Style"
+        android:id="@+id/appointment_park_date"
+        style="@style/TwentyTextB1Style"
         android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="@id/start_park_time_iv"
-        app:layout_constraintStart_toStartOf="@id/start_park_time_iv"
-        app:layout_constraintTop_toBottomOf="@+id/start_park_time_iv" />
+        app:layout_constraintEnd_toEndOf="@id/appointment_park_date_iv"
+        app:layout_constraintStart_toStartOf="@id/appointment_park_date_iv"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_date_iv" />
 
     <TextView
-        android:id="@+id/pay_for_order_time_description"
+        android:id="@+id/appointment_park_date_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="5dp"
-        android:text="(进场时间)"
-        app:layout_constraintEnd_toEndOf="@id/start_park_time"
-        app:layout_constraintStart_toStartOf="@id/start_park_time"
-        app:layout_constraintTop_toBottomOf="@+id/start_park_time" />
+        android:text="（停车日期）"
+        app:layout_constraintEnd_toEndOf="@id/appointment_park_date"
+        app:layout_constraintStart_toStartOf="@id/appointment_park_date"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_date" />
 
     <ImageView
         android:id="@+id/park_duration_iv"
@@ -103,7 +102,7 @@
         android:contentDescription="@string/picture_description"
         android:src="@drawable/ic_order_time"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
     <TextView
         android:id="@+id/park_duration"
@@ -111,13 +110,13 @@
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/park_duration_iv"
         app:layout_constraintStart_toStartOf="@+id/park_duration_iv"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
     <TextView
         android:id="@+id/park_hint"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="5dp"
-        android:text="(注意停车时长)"
+        android:text="（停车时长）"
         app:layout_constraintEnd_toEndOf="@+id/park_duration"
         app:layout_constraintStart_toStartOf="@+id/park_duration"
         app:layout_constraintTop_toBottomOf="@+id/park_duration" />
@@ -132,6 +131,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/park_hint" />
 
+    <ImageView
+        android:id="@+id/appointment_park_location_iv"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="9dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_position"
+        app:layout_constraintTop_toTopOf="@+id/appointment_park_location"
+        app:layout_constraintBottom_toBottomOf="@+id/appointment_park_location"
+        app:layout_constraintStart_toStartOf="@+id/park_hint_divider"/>
+
+    <TextView
+        android:id="@+id/appointment_park_location"
+        style="@style/TwentyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="14dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:gravity="start"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="@id/park_hint_divider"
+        app:layout_constraintStart_toEndOf="@+id/appointment_park_location_iv"
+        app:layout_constraintTop_toBottomOf="@+id/park_hint_divider" />
+
+    <View
+        android:id="@+id/appointment_park_location_divider"
+        style="@style/dividerStyle"
+        android:layout_width="0dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="@id/park_hint_divider"
+        app:layout_constraintStart_toStartOf="@id/park_hint_divider"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_location" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/contact_service_cl"
         android:layout_width="wrap_content"
@@ -139,7 +172,7 @@
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_hint_divider">
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_location_divider">
 
         <ImageView
             android:layout_width="10dp"
@@ -164,8 +197,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/start_park_time_iv"
-        app:layout_constraintStart_toStartOf="@+id/start_park_time_iv"
+        app:layout_constraintEnd_toEndOf="@+id/appointment_park_date_iv"
+        app:layout_constraintStart_toStartOf="@+id/appointment_park_date_iv"
         app:layout_constraintTop_toTopOf="@+id/contact_service_cl">
 
         <ImageView

@@ -69,7 +69,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        mParkLotName = view.findViewById(R.id.park_lot_name);
+        mParkLotName = view.findViewById(R.id.car_number);
         mRevenueRatioTv = view.findViewById(R.id.revenue_ratio_tv);
         mRevenueRatio = view.findViewById(R.id.revenue_ratio);
         mParkSpaceNumber = view.findViewById(R.id.park_space_number);

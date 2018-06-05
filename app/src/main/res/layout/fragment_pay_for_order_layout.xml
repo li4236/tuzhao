@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/park_info_detail" />
 
     <ImageView
-        android:id="@+id/pay_for_order_fee_iv"
+        android:id="@+id/appointment_income_time_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -58,7 +58,7 @@
         android:text="0.00"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
     <TextView
         android:id="@+id/pay_for_order_discount"
@@ -80,7 +80,7 @@
         android:contentDescription="@string/picture_description"
         android:src="@drawable/ic_order_time"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
     <TextView
         android:id="@+id/pay_for_order_time"
@@ -91,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time_iv" />
 
     <TextView
-        android:id="@+id/pay_for_order_time_description"
+        android:id="@+id/appointment_park_date_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="5dp"
         android:text="（无超时）"
@@ -107,7 +107,7 @@
         android:contentDescription="@string/picture_description"
         android:src="@drawable/ic_credit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
     <TextView
         android:id="@+id/pay_for_order_credit"
@@ -115,7 +115,7 @@
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit_iv"
         app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit_iv"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
     <TextView
         android:id="@+id/pay_for_order_total_credit"
