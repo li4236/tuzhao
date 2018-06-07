@@ -10,12 +10,12 @@
         android:id="@+id/close_comment"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
         android:contentDescription="@string/picture_description"
         android:padding="12dp"
         android:src="@mipmap/ic_close1"
         app:layout_constraintBottom_toBottomOf="@+id/park_comment"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/park_comment" />
 
     <TextView
@@ -100,12 +100,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
-        android:maxHeight="98dp"
         android:layout_marginTop="8dp"
         android:background="@null"
         android:gravity="start"
         android:hint="说说您这次停车的感受?"
         android:inputType="textMultiLine"
+        android:maxHeight="98dp"
         android:maxLength="150"
         android:minHeight="80dp"
         android:textColor="@color/b1"

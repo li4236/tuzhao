@@ -42,6 +42,11 @@
         <item name="android:backgroundDimAmount">0.2</item>
     </style>
 
+    <style name="ParkAnimationStyle">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
     <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item> <!--默认白色带阴影背景-->

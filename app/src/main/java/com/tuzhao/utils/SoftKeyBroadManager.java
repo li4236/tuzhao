@@ -75,7 +75,9 @@ public class SoftKeyBroadManager implements ViewTreeObserver.OnGlobalLayoutListe
     }
 
     public void removeSoftKeyboardStateListener(SoftKeyboardStateListener listener) {
-        listeners.remove(listener);
+        if (listeners.contains(listener)) {
+            listeners.remove(listener);
+        }
     }
 
     private void notifyOnSoftKeyboardOpened(int keyboardHeightInPx) {

@@ -192,4 +192,14 @@ public class ConstansUtil {
      */
     public static final String PROPERTY_NEGATIVE_PHOTO = "PropertyNegativePhoto";
 
+    /**
+     * 评论的对话框弹出
+     */
+    public static final String DIALOG_SHOW = "DialogShow";
+
+    /**
+     * 评论的对话框消失
+     */
+    public static final String DIALOG_DISMISS = "DialogDismiss";
+
 }

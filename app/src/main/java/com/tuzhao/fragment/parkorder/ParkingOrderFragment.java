@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
@@ -52,7 +53,11 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private CustomDialog mCustomDialog;
 
+    private OptionsPickerView<String> mPickerView;
 
+    private ArrayList<ArrayList<String>> mHours;
+
+    private ArrayList<String> mMinutes;
 
     public static ParkingOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         ParkingOrderFragment fragment = new ParkingOrderFragment();
@@ -175,6 +180,19 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             }
         }
         mCustomDialog.show();
+    }
+
+    private void initOptionPicker() {
+        if (mHours == null) {
+            mHours = new ArrayList<>();
+            mMinutes = new ArrayList<>();
+
+
+        }
+    }
+
+    private void showOptionPicker() {
+
     }
 
     private void finishPark() {

@@ -2,18 +2,24 @@ package com.tuzhao.publicwidget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.info.ParkOrderInfo;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
 
 import java.text.DecimalFormat;
 
@@ -23,11 +29,25 @@ import java.text.DecimalFormat;
 
 public class CustomDialog extends Dialog {
 
+    private boolean mIsShowAnimation;
+
     public CustomDialog(@NonNull Context context, View view) {
         super(context, R.style.ParkDialog);
         setContentView(view);
         setCancelable(false);
         setCanceledOnTouchOutside(false);
+    }
+
+    public CustomDialog(@NonNull Context context, View view, boolean isShowAnimation) {
+        super(context, R.style.ParkDialog);
+        setContentView(view);
+        mIsShowAnimation = isShowAnimation;
+        Window window = getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.BOTTOM);
+            window.setWindowAnimations(R.style.ParkAnimationStyle);
+        }
     }
 
     public CustomDialog(@NonNull Context context, ParkOrderInfo parkOrderInfo, boolean showParkFee) {
@@ -159,4 +179,23 @@ public class CustomDialog extends Dialog {
         });
     }
 
+    @Override
+    public void show() {
+        super.show();
+        if (mIsShowAnimation) {
+            Intent intent = new Intent();
+            intent.setAction(ConstansUtil.DIALOG_SHOW);
+            IntentObserable.dispatch(intent);
+        }
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        if (mIsShowAnimation) {
+            Intent intent = new Intent();
+            intent.setAction(ConstansUtil.DIALOG_DISMISS);
+            IntentObserable.dispatch(intent);
+        }
+    }
 }
