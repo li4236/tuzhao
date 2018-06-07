@@ -413,7 +413,7 @@
 
     <TextView
         android:id="@+id/save_accept_ticket_address"
-        style="@style/SixtyTextB1Styel"
+        style="@style/SixtyTextB1Style"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginBottom="32dp"

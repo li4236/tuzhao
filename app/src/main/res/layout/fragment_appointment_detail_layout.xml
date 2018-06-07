@@ -4,36 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/w0"
-    android:paddingBottom="20dp">
+    android:paddingBottom="14dp">
 
     <TextView
         android:id="@+id/appointment_detail"
         style="@style/TwentyTextB1Style"
         android:layout_marginTop="12dp"
-        android:text="预约详情"
+        android:text="已预约"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/appointment_calculate_rule"
-        style="@style/TenTextG6Stytle"
-        android:drawableEnd="@drawable/ic_question"
-        android:drawablePadding="6dp"
-        android:paddingBottom="10dp"
-        android:paddingEnd="18dp"
-        android:paddingStart="10dp"
-        android:paddingTop="10dp"
-        android:text="计费规则"
-        app:layout_constraintBottom_toBottomOf="@+id/appointment_detail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/appointment_detail" />
-
     <View
         android:id="@+id/bottom_divider"
         style="@style/dividerStyle"
-        android:layout_marginEnd="15dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +29,7 @@
         android:id="@+id/appointment_income_time_iv"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:contentDescription="@string/picture_description"
         android:src="@drawable/ic_into"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +47,7 @@
     <TextView
         android:id="@+id/appointment_income_time_tv"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:text="(进场时间)"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +74,7 @@
     <TextView
         android:id="@+id/appointment_park_date_tv"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:text="（停车日期）"
         app:layout_constraintEnd_toEndOf="@id/appointment_park_date"
         app:layout_constraintStart_toStartOf="@id/appointment_park_date"
@@ -115,7 +101,7 @@
     <TextView
         android:id="@+id/park_hint"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:text="（停车时长）"
         app:layout_constraintEnd_toEndOf="@+id/park_duration"
         app:layout_constraintStart_toStartOf="@+id/park_duration"
@@ -126,7 +112,7 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/park_hint" />
@@ -138,20 +124,20 @@
         android:layout_marginStart="9dp"
         android:contentDescription="@string/picture_description"
         android:src="@drawable/ic_position"
-        app:layout_constraintTop_toTopOf="@+id/appointment_park_location"
         app:layout_constraintBottom_toBottomOf="@+id/appointment_park_location"
-        app:layout_constraintStart_toStartOf="@+id/park_hint_divider"/>
+        app:layout_constraintStart_toStartOf="@+id/park_hint_divider"
+        app:layout_constraintTop_toTopOf="@+id/appointment_park_location" />
 
     <TextView
         android:id="@+id/appointment_park_location"
-        style="@style/TwentyTextB1Style"
+        style="@style/TwentyTextG6Style"
         android:layout_width="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="14dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:gravity="start"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="@id/park_hint_divider"
         app:layout_constraintStart_toEndOf="@+id/appointment_park_location_iv"
         app:layout_constraintTop_toBottomOf="@+id/park_hint_divider" />
@@ -160,7 +146,7 @@
         android:id="@+id/appointment_park_location_divider"
         style="@style/dividerStyle"
         android:layout_width="0dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="@id/park_hint_divider"
         app:layout_constraintStart_toStartOf="@id/park_hint_divider"
         app:layout_constraintTop_toBottomOf="@+id/appointment_park_location" />
@@ -169,7 +155,7 @@
         android:id="@+id/contact_service_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointment_park_location_divider">
@@ -186,7 +172,7 @@
 
         <TextView
             android:id="@+id/contact_service"
-            style="@style/TenTextG6Stytle"
+            style="@style/TenTextB1Style"
             android:text="联系客服"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -196,7 +182,7 @@
         android:id="@+id/car_pic_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="@+id/appointment_park_date_iv"
         app:layout_constraintStart_toStartOf="@+id/appointment_park_date_iv"
         app:layout_constraintTop_toTopOf="@+id/contact_service_cl">
@@ -213,7 +199,7 @@
 
         <TextView
             android:id="@+id/car_pic"
-            style="@style/TenTextG6Stytle"
+            style="@style/TenTextB1Style"
             android:text="车位图片"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -223,7 +209,7 @@
         android:id="@+id/cancel_appoint_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="@+id/park_duration_iv"
         app:layout_constraintStart_toStartOf="@+id/park_duration_iv"
         app:layout_constraintTop_toTopOf="@+id/contact_service_cl">
@@ -240,7 +226,7 @@
 
         <TextView
             android:id="@+id/cancel_appoint"
-            style="@style/TenTextG6Stytle"
+            style="@style/TenTextB1Style"
             android:text="取消预约"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -255,25 +241,56 @@
         app:layout_constraintTop_toBottomOf="@+id/contact_service_cl" />
 
     <TextView
-        android:id="@+id/view_appointment_detail"
-        style="@style/TwentyTextG6Style"
-        android:layout_marginEnd="6dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        android:text="查看预约详情"
-        app:layout_constraintEnd_toEndOf="@id/appointment_detail_divider"
+        android:id="@+id/appointment_calculate_rule"
+        style="@style/TenTextG6Stytle"
+        android:paddingBottom="14dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="11dp"
+        android:paddingTop="14dp"
+        android:text="计费规则"
+        app:layout_constraintStart_toStartOf="@id/appointment_detail_divider"
         app:layout_constraintTop_toBottomOf="@+id/appointment_detail_divider" />
+
+    <ImageView
+        android:id="@+id/appointment_calculate_rule_iv"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_question"
+        app:layout_constraintBottom_toBottomOf="@+id/appointment_calculate_rule"
+        app:layout_constraintStart_toEndOf="@+id/appointment_calculate_rule"
+        app:layout_constraintTop_toTopOf="@+id/appointment_calculate_rule" />
+
+    <TextView
+        android:id="@+id/view_appointment_detail"
+        style="@style/TenTextG6Stytle"
+        android:paddingBottom="14dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
+        android:paddingTop="14dp"
+        android:text="预约详情"
+        app:layout_constraintEnd_toStartOf="@+id/view_appointment_detail_iv"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_detail_divider" />
+
+    <ImageView
+        android:id="@+id/view_appointment_detail_iv"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginEnd="11dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_explicit"
+        app:layout_constraintBottom_toBottomOf="@+id/view_appointment_detail"
+        app:layout_constraintEnd_toEndOf="@id/appointment_detail_divider"
+        app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />
 
     <TextView
         android:id="@+id/open_lock"
-        style="@style/SixtyTextB1Styel"
+        style="@style/SixtyTextB1Style"
         android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="31dp"
         android:layout_marginStart="31dp"
-        android:layout_marginTop="5dp"
         android:background="@drawable/little_yuan_yellow_5dp"
-        android:paddingBottom="13dp"
-        android:paddingTop="13dp"
         android:text="立即开锁"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

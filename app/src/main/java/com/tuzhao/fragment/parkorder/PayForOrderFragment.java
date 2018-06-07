@@ -10,7 +10,9 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +25,13 @@ import com.tuzhao.activity.mine.DiscountActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.Discount_Info;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
@@ -37,9 +41,11 @@ import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +73,10 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mUserTotalCredit;
 
+    private ImageView mCollectIv;
+
+    private TextView mCollectTv;
+
     private TextView mParkDiscount;
 
     private TextView mShouldPayFee;
@@ -84,6 +94,10 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private Thread mPayThread;
 
     private CustomDialog mCustomDialog;
+
+    private DecimalFormat mDecimalFormat;
+
+    private double mShouldPay;
 
     public static PayForOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         PayForOrderFragment fragment = new PayForOrderFragment();
@@ -106,6 +120,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
         mParkTime = view.findViewById(R.id.pay_for_order_time);
         mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
+        mCollectIv = view.findViewById(R.id.collect_park_lot_iv);
+        mCollectTv = view.findViewById(R.id.collect_park_lot_tv);
         mParkOrderFee = view.findViewById(R.id.pay_for_order_fee);
         mParkOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
         mParkOrderCredit = view.findViewById(R.id.pay_for_order_credit);
@@ -113,11 +129,14 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mParkDiscount = view.findViewById(R.id.park_discount);
         mShouldPayFee = view.findViewById(R.id.pay_for_order_should_pay);
 
-        view.findViewById(R.id.pay_for_order_question).setOnClickListener(this);
+        view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
+        view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
+        view.findViewById(R.id.collect_park_lot_cl).setOnClickListener(this);
         view.findViewById(R.id.park_discount_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
+        view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
         mShouldPayFee.setOnClickListener(this);
     }
 
@@ -144,9 +163,19 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         }
         mParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getPark_start_time()));
         mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
+        String startDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time());
+        String endDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time());
+        if (DateUtil.compareYearToSecond(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time()) > 0) {
+            endDate = DateUtil.deleteSecond(mParkOrderInfo.getOrder_endtime());
+        }
+
+        Log.e(TAG, "initData: " + new DecimalFormat("0.00").format(DateUtil.caculateParkFee(startDate, endDate, mParkOrderInfo.getHigh_time(),
+                Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()))));
+
         String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
         mUserTotalCredit.setText(totalCredit);
 
+        setCollection(CollectionManager.getInstance().isContainParkLot(mParkOrderInfo.getBelong_park_space()));
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
 
@@ -170,8 +199,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.pay_for_order_question:
-
+            case R.id.pay_for_order_question_tv:
+            case R.id.appointment_calculate_rule_iv:
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
@@ -181,10 +210,18 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 }
                 break;
             case R.id.contact_service_cl:
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4006505058"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
                 startActivity(intent);
                 break;
+            case R.id.collect_park_lot_cl:
+                if (getText(mCollectTv).equals("已收藏")) {
+                    deleteCollectParkLot(CollectionManager.getInstance().getCollection(mParkOrderInfo.getBelong_park_space()));
+                } else {
+                    collectParkLot();
+                }
+                break;
             case R.id.view_appointment_detail:
+            case R.id.view_appointment_detail_iv:
                 showParkDetail();
                 break;
             case R.id.park_discount_cl:
@@ -195,7 +232,11 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 }
                 break;
             case R.id.pay_for_order_should_pay:
-                payV2();
+                if (mShouldPay >= 0.01) {
+                    payV2();
+                } else {
+                    requetFinishOrder();
+                }
                 break;
         }
     }
@@ -220,9 +261,15 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                             requetFinishOrder();
                             Toast.makeText(MyApplication.getInstance(), "支付成功", Toast.LENGTH_SHORT).show();
-                        } else {
+                        } else if (TextUtils.equals(resultStatus, "6001")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            Toast.makeText(MyApplication.getInstance(), "支付失败" + payResult.getResult() + resultInfo, Toast.LENGTH_SHORT).show();
+                            showFiveToast("取消支付");
+                        } else if (TextUtils.equals(resultStatus, "6002")) {
+                            showFiveToast("网络异常，请稍后再试");
+                        } else if (TextUtils.equals(resultStatus, "4000")) {
+                            showFiveToast("系统异常，请稍后再试");
+                        } else {
+                            showFiveToast("支付失败");
                         }
                         break;
                     }
@@ -250,6 +297,64 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 return true;
             }
         });
+    }
+
+    private void setCollection(boolean isCollection) {
+        if (isCollection) {
+            ImageUtil.showPic(mCollectIv, R.drawable.ic_collecting);
+            mCollectTv.setText("已收藏");
+            mCollectTv.setTextColor(Color.parseColor("#ffa830"));
+        } else {
+            ImageUtil.showPic(mCollectIv, R.drawable.ic_not_collection);
+            mCollectTv.setText("收藏车场");
+            mCollectTv.setTextColor(Color.parseColor("#808080"));
+        }
+    }
+
+    private void collectParkLot() {
+        showLoadingDialog("正在添加收藏...");
+        getOkGo(HttpConstants.addCollection)
+                .params("belong_id", mParkOrderInfo.getBelong_park_space())
+                .params("type", 1)
+                .params("citycode", mParkOrderInfo.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<CollectionInfo> o, Call call, Response response) {
+                        CollectionManager.getInstance().addCollectionData(o.data);
+                        setCollection(true);
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast("收藏失败");
+                        }
+                    }
+                });
+    }
+
+    private void deleteCollectParkLot(final CollectionInfo collectionInfo) {
+        showLoadingDialog("正在取消收藏...");
+        getOkGo(HttpConstants.deleteCollection)
+                .params("id", collectionInfo.getId())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> info, Call call, Response response) {
+                        CollectionManager.getInstance().removeCollection(collectionInfo);
+                        setCollection(false);
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast("取消收藏失败");
+                        }
+                    }
+                });
     }
 
     /**
@@ -334,10 +439,11 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      * 根据优惠券金额计算显示相应的优惠金额以及支付金额
      */
     private void calculateShouldPayFee() {
-        String shouldPay = "确认支付" + DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrder_fee())) + "元";
+        mShouldPay = Double.parseDouble(DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrder_fee())));
+        String shouldPay = "确认支付" + mShouldPay + "元";
         if (mChooseDiscount != null) {
             double discountFee = Double.valueOf(mChooseDiscount.getDiscount());
-            if (Double.valueOf(mChooseDiscount.getDiscount()) != 0) {
+            if (Double.valueOf(mChooseDiscount.getDiscount()) >= 0) {
                 String discount = "（优惠券—" + discountFee + "）";
                 SpannableString spannableString = new SpannableString(discount);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")),
@@ -347,9 +453,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 String parkDiscount = "—￥" + discountFee;
                 mParkDiscount.setText(parkDiscount);
 
-                double shouldPayFee = Double.valueOf(mParkOrderInfo.getOrder_fee()) - discountFee;
-                if (shouldPayFee >= 0) {
-                    shouldPay = "确认支付" + DateUtil.decreseOneZero(shouldPayFee) + "元";
+                if (mDecimalFormat == null) {
+                    mDecimalFormat = new DecimalFormat("0.00");
+                }
+
+                mShouldPay = Double.parseDouble(mDecimalFormat.format(Double.valueOf(mParkOrderInfo.getOrder_fee()) - discountFee));
+                if (mShouldPay >= 0) {
+                    shouldPay = "确认支付" + DateUtil.decreseOneZero(mShouldPay) + "元";
                 } else {
                     shouldPay = "确认支付0.0元";
                 }

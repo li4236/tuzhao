@@ -166,4 +166,5 @@ public class DensityUtil {
             return bluetoothMAC;
         }
     }
-}  
+
+}

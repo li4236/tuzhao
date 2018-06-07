@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/no_address_empty_tv"
-        style="@style/SixtyTextG11Styel"
+        style="@style/SixtyTextG11Style"
         android:layout_marginTop="32dp"
         android:text="您还没有收票地址喔..."
         app:layout_constraintEnd_toEndOf="parent"

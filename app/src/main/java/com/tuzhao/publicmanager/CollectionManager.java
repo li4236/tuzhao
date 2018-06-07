@@ -1,5 +1,7 @@
 package com.tuzhao.publicmanager;
 
+import android.util.Log;
+
 import com.tuzhao.info.CollectionInfo;
 
 import java.util.List;
@@ -53,6 +55,38 @@ public class CollectionManager {
      */
     public void setCollection_datas(List<CollectionInfo> collection_datas) {
         this.collection_datas = collection_datas;
+    }
+
+    public void addCollectionData(CollectionInfo collectionInfo) {
+        collection_datas.add(collectionInfo);
+        Log.e("TAG", "addCollectionData: "+collectionInfo );
+    }
+
+    public CollectionInfo getCollection(String parkLotId) {
+        for (CollectionInfo collectionInfo : collection_datas) {
+            if (collectionInfo.getParkspace_id().equals(parkLotId) && collectionInfo.getType().equals("1")) {
+                return collectionInfo;
+            }
+        }
+        return null;
+    }
+
+    public void removeCollection(CollectionInfo collection) {
+        if (collection_datas.contains(collection)) {
+            collection_datas.remove(collection);
+        }
+    }
+
+    /**
+     * 是否收藏了该停车位所在的车场
+     */
+    public boolean isContainParkLot(String parkLotId) {
+        for (CollectionInfo collectionInfo : collection_datas) {
+            if (collectionInfo.getParkspace_id().equals(parkLotId) && collectionInfo.getType().equals("1")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

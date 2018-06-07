@@ -26,7 +26,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     private String username;//用户名=用户手机号码
     private String park_username;//该停车位主人的手机号码
     private String order_number;//订单编号
-    private String order_status;//订单状态:1-已预约、2-停车中、3-待付款、5-已完成（待评论、已完成）、6-已取消（超时取消、正常手动取消）
+    private String order_status;//订单状态:1-已预约、2-停车中、3-待付款、4，5-已完成（待评论、已完成）、6-已取消（超时取消、正常手动取消）
     private String order_time;//下单时间
     private String pictures;//停车场和当前停车位的所有图片，逗号隔开
     private String order_fee;//订单总费用
@@ -45,6 +45,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     private String citycode;//订单的城市码
     private double latitude;//停车场的纬度
     private double longitude;//停车场的经度
+    private String parkingUserId;//正在停车的用户id
 
     public String getId() {
         return id;
@@ -318,6 +319,14 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.parkNumber = parkNumber;
     }
 
+    public String getParkingUserId() {
+        return parkingUserId;
+    }
+
+    public void setParkingUserId(String parkingUserId) {
+        this.parkingUserId = parkingUserId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -374,6 +383,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeString(this.parkNumber);
+        dest.writeString(this.parkingUserId);
     }
 
     public ParkOrderInfo() {
@@ -414,6 +424,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.parkNumber = in.readString();
+        this.parkingUserId = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

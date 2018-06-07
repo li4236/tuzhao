@@ -9,30 +9,16 @@
         android:id="@+id/park_info_detail"
         style="@style/TwentyTextB1Style"
         android:layout_marginTop="12dp"
-        android:text="停车明细"
+        android:text="已完成"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/pay_for_order_question"
-        style="@style/TenTextG6Stytle"
-        android:drawableEnd="@drawable/ic_question"
-        android:drawablePadding="6dp"
-        android:paddingBottom="10dp"
-        android:paddingEnd="18dp"
-        android:paddingStart="10dp"
-        android:paddingTop="10dp"
-        android:text="计费有疑问"
-        app:layout_constraintBottom_toBottomOf="@+id/park_info_detail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/park_info_detail" />
-
     <View
         android:id="@+id/bottom_divider"
         style="@style/dividerStyle"
-        android:layout_marginEnd="15dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,9 +28,9 @@
         android:id="@+id/appointment_income_time_iv"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_where2"
+        android:src="@drawable/ic_order_money"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
@@ -64,7 +50,7 @@
         android:paddingBottom="6dp"
         android:paddingEnd="6dp"
         android:paddingStart="6dp"
-        android:paddingTop="5dp"
+        android:paddingTop="4dp"
         android:text="（未用优惠劵）"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +62,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_into"
+        android:src="@drawable/ic_order_time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -91,7 +77,7 @@
     <TextView
         android:id="@+id/appointment_park_date_tv"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:text="（无超时）"
         app:layout_constraintEnd_toEndOf="@id/pay_for_order_time"
         app:layout_constraintStart_toStartOf="@id/pay_for_order_time"
@@ -103,7 +89,7 @@
         android:layout_height="30dp"
         android:layout_marginEnd="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_order_time"
+        android:src="@drawable/ic_credit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -118,7 +104,7 @@
     <TextView
         android:id="@+id/pay_for_order_total_credit"
         style="@style/TenTextG6Stytle"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit"
         app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit"
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />
@@ -128,7 +114,7 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_total_credit" />
@@ -137,7 +123,7 @@
         android:id="@+id/contact_service_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/park_hint_divider">
@@ -154,7 +140,7 @@
 
         <TextView
             android:id="@+id/contact_service"
-            style="@style/TenTextG6Stytle"
+            style="@style/TenTextB1Style"
             android:text="联系客服"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -164,7 +150,7 @@
         android:id="@+id/car_pic_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="@+id/pay_for_order_time_iv"
         app:layout_constraintStart_toStartOf="@+id/pay_for_order_time_iv"
         app:layout_constraintTop_toTopOf="@+id/contact_service_cl">
@@ -181,7 +167,7 @@
 
         <TextView
             android:id="@+id/car_pic"
-            style="@style/TenTextG6Stytle"
+            style="@style/TenTextB1Style"
             android:text="车位图片"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -191,7 +177,7 @@
         android:id="@+id/delete_order_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit_iv"
         app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit_iv"
         app:layout_constraintTop_toTopOf="@+id/contact_service_cl">
@@ -208,7 +194,7 @@
 
         <TextView
             android:id="@+id/delete_order"
-            style="@style/TenTextG6Stytle"
+            style="@style/TenTextB1Style"
             android:text="删除订单"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -223,21 +209,54 @@
         app:layout_constraintTop_toBottomOf="@+id/contact_service_cl" />
 
     <TextView
-        android:id="@+id/view_park_order_detail"
-        style="@style/TwentyTextG6Style"
-        android:layout_marginEnd="6dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        android:text="查看停车详情"
-        app:layout_constraintEnd_toEndOf="@+id/actual_detail_divider"
+        android:id="@+id/pay_for_order_question_tv"
+        style="@style/TenTextG6Stytle"
+        android:paddingBottom="14dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="11dp"
+        android:paddingTop="14dp"
+        android:text="计费有疑问"
+        app:layout_constraintStart_toStartOf="@id/actual_detail_divider"
         app:layout_constraintTop_toBottomOf="@+id/actual_detail_divider" />
+
+    <ImageView
+        android:id="@+id/appointment_calculate_rule_iv"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_question"
+        app:layout_constraintBottom_toBottomOf="@+id/pay_for_order_question_tv"
+        app:layout_constraintStart_toEndOf="@+id/pay_for_order_question_tv"
+        app:layout_constraintTop_toTopOf="@+id/pay_for_order_question_tv" />
+
+    <TextView
+        android:id="@+id/view_appointment_detail"
+        style="@style/TenTextG6Stytle"
+        android:paddingBottom="14dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
+        android:paddingTop="14dp"
+        android:text="停车详情"
+        app:layout_constraintEnd_toStartOf="@+id/view_appointment_detail_iv"
+        app:layout_constraintTop_toBottomOf="@+id/actual_detail_divider" />
+
+    <ImageView
+        android:id="@+id/view_appointment_detail_iv"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginEnd="11dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_explicit"
+        app:layout_constraintBottom_toBottomOf="@+id/view_appointment_detail"
+        app:layout_constraintEnd_toEndOf="@id/actual_detail_divider"
+        app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/park_comment_cl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/view_park_order_detail">
+        app:layout_constraintTop_toBottomOf="@+id/view_appointment_detail">
 
         <View
             android:id="@+id/park_comment_divider"
@@ -250,8 +269,8 @@
 
         <TextView
             style="@style/TwentyTextB1Style"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="14dp"
             android:drawableEnd="@mipmap/ic_right"
             android:drawablePadding="8dp"
             android:text="停车评价"

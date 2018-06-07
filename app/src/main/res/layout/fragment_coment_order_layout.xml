@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/w0"
-    android:paddingBottom="20dp">
+    android:paddingBottom="14dp">
 
     <ImageView
         android:id="@+id/close_comment"
@@ -89,7 +89,7 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/comment_order_crb" />
@@ -98,18 +98,20 @@
         android:id="@+id/comment_order_et"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:maxHeight="98dp"
+        android:layout_marginTop="8dp"
         android:background="@null"
         android:gravity="start"
         android:hint="说说您这次停车的感受?"
+        android:inputType="textMultiLine"
         android:maxLength="150"
         android:minHeight="80dp"
         android:textColor="@color/b1"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/center_divider"
+        app:layout_constraintStart_toStartOf="@+id/center_divider"
         app:layout_constraintTop_toBottomOf="@+id/center_divider" />
 
     <TextView
@@ -117,6 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
+        android:layout_marginTop="2dp"
         android:text="0/150"
         android:textColor="@color/g6"
         android:textSize="10sp"
@@ -128,7 +131,7 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/comment_order_comment_count" />
@@ -146,7 +149,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_addimg"
@@ -155,8 +158,8 @@
 
     <ImageView
         android:id="@+id/comment_order_pic_add_delete"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:contentDescription="@string/picture_description"
         android:src="@mipmap/ic_delimg"
         android:visibility="invisible"
@@ -178,8 +181,8 @@
 
     <ImageView
         android:id="@+id/comment_order_pic_one_delete"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:contentDescription="@string/picture_description"
         android:src="@mipmap/ic_delimg"
         android:visibility="gone"
@@ -202,8 +205,8 @@
 
     <ImageView
         android:id="@+id/comment_order_pic_two_delete"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:contentDescription="@string/picture_description"
         android:src="@mipmap/ic_delimg"
         android:visibility="invisible"
@@ -215,14 +218,12 @@
     <TextView
         android:id="@+id/comment_order_apply"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:background="@drawable/little_yuan_yellow_8dp"
         android:gravity="center"
-        android:paddingBottom="11dp"
-        android:paddingTop="11dp"
         android:text="提交评论"
         android:textColor="@color/b1"
         android:textSize="14sp"

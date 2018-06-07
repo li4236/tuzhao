@@ -1,6 +1,5 @@
 package com.tuzhao.fragment.parkorder;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +16,7 @@ import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
@@ -84,10 +84,12 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mOpenLock = view.findViewById(R.id.open_lock);
 
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
+        view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
         view.findViewById(R.id.cancel_appoint_cl).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
+        view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
         mOpenLock.setOnClickListener(this);
     }
 
@@ -96,7 +98,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
         mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrder_starttime()));
         mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
-        mParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
+        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
 
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime()).compareTo(Calendar.getInstance()) > 0) {
             //未到预约开始停车时间
@@ -114,21 +116,11 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                         if (jsonObject.optString("msg").equals("open_successful")) {
                             showFiveToast("成功开锁");
                             mOpenLock.setText("已开锁");
-                            Intent intent = new Intent();
-                            intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
-                            IntentObserable.dispatch(intent);
+                            finishAppointment(mParkOrderInfo);
                         } else if (jsonObject.optString("msg").equals("open_successful_car")) {
                             showFiveToast("车锁已开，因为车位上方有车辆滞留");
                             mOpenLock.setText("已开锁");
-                            Intent intent = new Intent();
-                            intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
-                            IntentObserable.dispatch(intent);
+                            handleOpenLock();
                         }
                         mOpenLock.setClickable(true);
                         dismmisLoadingDialog();
@@ -153,6 +145,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.appointment_calculate_rule:
+            case R.id.appointment_calculate_rule_iv:
 
                 break;
             case R.id.car_pic_cl:
@@ -177,13 +170,15 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 dialog.show();
                 break;
             case R.id.contact_service_cl:
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:4006505058"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
                 startActivity(intent);
                 break;
             case R.id.view_appointment_detail:
+            case R.id.view_appointment_detail_iv:
                 showAppointmentDetail();
                 break;
             case R.id.open_lock:
+
                 if (getText(mOpenLock).equals("已开锁")) {
                     showFiveToast("锁已经开啦");
                 } else if (!mIsTimeOut) {
@@ -200,16 +195,17 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         getOkGo(HttpConstants.cancleAppointOrder)
                 .params("order_id", mParkOrderInfo.getId())
                 .params("citycode", mParkOrderInfo.getCitycode())
-                .execute(new JsonCallback<Void>() {
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
-                    public void onSuccess(Void o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         Intent intent = new Intent();
+                        intent.setAction(ConstansUtil.CANCEL_ORDER);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConstansUtil.CANCEL_ORDER, mParkOrderInfo);
+                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        IntentObserable.dispatch(intent);
                         dismmisLoadingDialog();
                         if (getActivity() != null) {
-                            getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
                         }
                     }
@@ -280,6 +276,57 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                         }
                     }
                 });
+    }
+
+    /**
+     * 处理开锁时已有人停车的情况
+     */
+    private void handleOpenLock() {
+        if (mParkOrderInfo.getParkingUserId().equals("-1")) {
+            //正在停车用户id为-1，可能是后台帮忙开的，但是这里还没更新
+            getParkInfo();
+        } else if (mParkOrderInfo.getParkingUserId().equals(UserManager.getInstance().getUserInfo().getId())) {
+            finishAppointment(mParkOrderInfo);
+        } else {
+            //有人延迟停车还没走
+            // TODO: 2018/6/6
+        }
+    }
+
+    private void getParkInfo() {
+        getOkGo(HttpConstants.getKindParkOrder)
+                .params("order_status", "2")
+                .params("pageSize", 3)
+                .params("startItme", 0)
+                .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<ParkOrderInfo> o, Call call, Response response) {
+                        //如果停车中有订单id和当前预约的一样，则把界面更换到停车中
+                        for (ParkOrderInfo parkOrderInfo : o.data) {
+                            if (parkOrderInfo.getId().equals(mParkOrderInfo.getId())) {
+                                finishAppointment(parkOrderInfo);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void finishAppointment(ParkOrderInfo parkOrderInfo) {
+        Intent intent = new Intent();
+        intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+        IntentObserable.dispatch(intent);
     }
 
 }

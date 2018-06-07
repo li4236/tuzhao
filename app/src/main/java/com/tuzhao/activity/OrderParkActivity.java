@@ -587,7 +587,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
-        //停车时间加上顺延时长
+        //停车时间加上宽限时长
         final Calendar canParkCanlendar = DateUtil.getYearToMinuteCalendar(end_time);
         canParkCanlendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
         Collections.sort(mCanParkInfo, new Comparator<Park_Info>() {
@@ -597,17 +597,17 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                 if ((o1.getShareTimeCalendar()[1].getTimeInMillis() - canParkCanlendar.getTimeInMillis()) >= 0
                         && (o2.getShareTimeCalendar()[1].getTimeInMillis() - canParkCanlendar.getTimeInMillis()) >= 0) {
-                    //如果两个车位的共享结束时段都比预约停车时间加上顺延时间长，则按照车位的可共享时段的大小从小到大排序
+                    //如果两个车位的共享结束时段都比预约停车时间加上宽限时间长，则按照车位的可共享时段的大小从小到大排序
                     result = DateUtil.getCalendarDistance(o1.getShareTimeCalendar()[0], o1.getShareTimeCalendar()[1]) -
                             DateUtil.getCalendarDistance(o2.getShareTimeCalendar()[0], o2.getShareTimeCalendar()[1]);
                 } else if ((o1.getShareTimeCalendar()[1].getTimeInMillis() - canParkCanlendar.getTimeInMillis()) > 0) {
-                    //如果第一个车位的共享结束时段都比预约停车时间加上顺延时间长，第二个不是，则第一个排前面
+                    //如果第一个车位的共享结束时段都比预约停车时间加上宽限时间长，第二个不是，则第一个排前面
                     result = -1;
                 } else if ((o2.getShareTimeCalendar()[1].getTimeInMillis() - canParkCanlendar.getTimeInMillis()) > 0) {
-                    //如果第二个车位的共享结束时段都比预约停车时间加上顺延时间长，第二个不是，则第二个排前面
+                    //如果第二个车位的共享结束时段都比预约停车时间加上宽限时间长，第二个不是，则第二个排前面
                     result = -1;
                 } else {
-                    //如果两个车位的共享结束时段都不比预约停车时间加上顺延时间长，则停车的顺延时长大的排前面
+                    //如果两个车位的共享结束时段都不比预约停车时间加上宽限时间长，则停车的宽限时长大的排前面
                     result = (o2.getShareTimeCalendar()[1].getTimeInMillis() - canParkCanlendar.getTimeInMillis())
                             - (o1.getShareTimeCalendar()[1].getTimeInMillis() - canParkCanlendar.getTimeInMillis());
                 }
@@ -865,17 +865,17 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     /**
      * 把共享时长大于canParkTime的前三个预选车位按照指标排序
      *
-     * @param canParkTime 用户预约的停车时长加上顺延时长
+     * @param canParkTime 用户预约的停车时长加上宽限时长
      */
     private void sortCanParkByIndicator(Calendar canParkTime) {
         if (mCanParkInfo.get(1).getShareTimeCalendar()[1].getTimeInMillis() - canParkTime.getTimeInMillis() <= 0) {
-            //如果第二个的共享时间没有比停车时间加上顺延时间更长则不用比较了
+            //如果第二个的共享时间没有比停车时间加上宽限时间更长则不用比较了
             return;
         }
 
         if (mCanParkInfo.size() == 2 ||
                 (mCanParkInfo.size() >= 3 && mCanParkInfo.get(2).getShareTimeCalendar()[1].getTimeInMillis() - canParkTime.getTimeInMillis() <= 0)) {
-            //如果只有两个预选车位或者预选车位大于三个，但是第三个的共享时间没有比停车时间加上顺延时间更长
+            //如果只有两个预选车位或者预选车位大于三个，但是第三个的共享时间没有比停车时间加上宽限时间更长
             Park_Info parkInfoOne = mCanParkInfo.get(0);
             Park_Info parkInfoTwo = mCanParkInfo.get(1);
             if (Integer.valueOf(parkInfoOne.getIndicator()) > Integer.valueOf(parkInfoTwo.getIndicator())) {
@@ -956,9 +956,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 readypark.add(mChooseData.get(mChooseData.size() - 1));
             }
             if (readypark.get(0).rest_time <= 20) {
-                builder.setMessage("可分配车位的顺延时长较短\n" + "顺延时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
+                builder.setMessage("可分配车位的宽限时长较短\n" + "宽限时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
             } else {
-                builder.setMessage("最优车位顺延时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
+                builder.setMessage("最优车位宽限时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
             }
         } else {
             builder.setMessage("将为您预定最优车位，确认预定？");
@@ -983,10 +983,10 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 mCanParkInfo.get(0).getShareTimeCalendar()[0], mCanParkInfo.get(0).getShareTimeCalendar()[1]));
         if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkInfo.get(0).getShareTimeCalendar()[1]) >= 0) {
             mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
-            builder.setMessage("最优车位顺延时长为" + mExtensionTime + "分钟，是否预定？");
+            builder.setMessage("最优车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
         } else {
             mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
-            builder.setMessage("可分配车位顺延时长为" + mExtensionTime + "分钟，是否预定？");
+            builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
         }
 
         builder.setTitle("确认预定");
@@ -1138,7 +1138,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 case 101:
                                     //
                                     builder = new TipeDialog.Builder(OrderParkActivity.this);
-                                    builder.setMessage("最优车位顺延时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
+                                    builder.setMessage("最优车位宽限时长为" + readypark.get(0).rest_time + "分钟，是否预定？");
                                     builder.setTitle("确认预定");
                                     builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
@@ -1158,7 +1158,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 case 106:
                                     //
                                     builder = new TipeDialog.Builder(OrderParkActivity.this);
-                                    builder.setMessage("最优车位顺延时长为" + readypark.get(1).rest_time + "分钟，是否预定？");
+                                    builder.setMessage("最优车位宽限时长为" + readypark.get(1).rest_time + "分钟，是否预定？");
                                     builder.setTitle("确认预定");
                                     builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
@@ -1206,10 +1206,10 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
         if (DateUtil.getCalendarDistance(canParkEndCalendar, park_info.getShareTimeCalendar()[1]) >= 0) {
             mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
-            builder.setMessage("最优车位顺延时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");
+            builder.setMessage("最优车位宽限时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");
         } else {
             mExtensionTime = (int) DateUtil.getCalendarDistance(park_info.getShareTimeCalendar()[1], canParkEndCalendar);
-            builder.setMessage("可分配车位顺延时长为" + mExtensionTime + "分钟，是否预定？");
+            builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
         }
         builder.setTitle("确认预定");
         builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {

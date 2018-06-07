@@ -40,8 +40,8 @@ public class CustomDialog extends Dialog {
         TextView gracePeriodDuration = findViewById(R.id.grace_period);
         appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()));
         actualParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
-        appointParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
-        actualParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
+        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        actualParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
 
         String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
         gracePeriodDuration.setText(gracePeriod);
@@ -53,7 +53,7 @@ public class CustomDialog extends Dialog {
             TextView overtimeFee = findViewById(R.id.overtime_fee);
 
             int overtimeMinutes = 0;    //超时的分钟数
-            String string = DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
+            String string = DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
             SpannableString timeout = new SpannableString(string);
             int dayPosition = -1;
             int hourPosition = -1;
@@ -139,7 +139,7 @@ public class CustomDialog extends Dialog {
         parkSpaceNumber.setText(parkOrderInfo.getParkNumber());
         carNumber.setText(parkOrderInfo.getCar_numble());
         appointStartParkTime.setText(parkOrderInfo.getOrder_starttime().substring(0, parkOrderInfo.getOrder_starttime().lastIndexOf(":")));
-        appointParkDuration.setText(DateUtil.getDateDistanceForDayToMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
         String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
         gracePeriodDuration.setText(gracePeriod);
 

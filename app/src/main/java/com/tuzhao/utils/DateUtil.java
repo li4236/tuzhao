@@ -420,7 +420,13 @@ public class DateUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return (int) ((end.getTime() / 1000 - start.getTime() / 1000) / 60);
+        int minutes = (int) ((end.getTime() / 1000 - start.getTime() / 1000) / 60);
+        if (minutes == 0) {
+            if (end.getTime() / 1000 > start.getTime() / 1000) {
+                minutes = 1;
+            }
+        }
+        return minutes;
     }
 
     /**
@@ -436,7 +442,7 @@ public class DateUtil {
             stringBuilder.append("小时");
             minutesDistance -= minutesDistance / 60 * 60;
         }
-        if (minutesDistance > 0) {
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
             stringBuilder.append(minutesDistance);
             stringBuilder.append("分钟");
         }
@@ -455,6 +461,12 @@ public class DateUtil {
         startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         if (minutesDistance / 60 > 0) {
             stringBuilder.append(minutesDistance / 60);
@@ -462,7 +474,7 @@ public class DateUtil {
             minutesDistance -= minutesDistance / 60 * 60;
         }
 
-        if (minutesDistance > 0) {
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
             stringBuilder.append(minutesDistance);
             stringBuilder.append("分钟");
         }
@@ -474,13 +486,18 @@ public class DateUtil {
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
      * @return 返回两个时间段相差的分钟数(x天x小时x分钟)
      */
-    public static String getDateDistanceForDayToMinute(String startDate, String endDate) {
+    public static String getDistanceForDayHourMinute(String startDate, String endDate) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
-        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
 
+        StringBuilder stringBuilder = new StringBuilder();
         if (minutesDistance / 60 / 24 > 0) {
             stringBuilder.append(minutesDistance / 60 / 24);
             stringBuilder.append("天");
@@ -493,7 +510,7 @@ public class DateUtil {
             minutesDistance -= minutesDistance / 60 * 60;
         }
 
-        if (minutesDistance > 0) {
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
             stringBuilder.append(minutesDistance);
             stringBuilder.append("分钟");
         }
@@ -506,14 +523,19 @@ public class DateUtil {
      * @param addSecond 为startDate加上相应的秒数
      * @return 返回两个时间段相差的分钟数(x天x小时x分钟)
      */
-    public static String getDateDistanceForDayToMinute(String startDate, String endDate, String addSecond) {
+    public static String getDistanceForDayHourMinuteAddStart(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
         startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
-        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
 
+        StringBuilder stringBuilder = new StringBuilder();
         if (minutesDistance / 60 / 24 > 0) {
             stringBuilder.append(minutesDistance / 60 / 24);
             stringBuilder.append("天");
@@ -526,11 +548,172 @@ public class DateUtil {
             minutesDistance -= minutesDistance / 60 * 60;
         }
 
-        if (minutesDistance > 0) {
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
             stringBuilder.append(minutesDistance);
             stringBuilder.append("分钟");
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 为startDate加上相应的秒数
+     * @return 返回两个时间段相差的分钟数(x天x小时x分钟)
+     */
+    public static String getDistanceForDayHourMinuteAddEnd(String startDate, String endDate, String addSecond) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+        endCalenar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("小时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分钟");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @return 返回两个时间段相差的分钟数(x天x时x分)
+     */
+    public static String getDistanceForDayTimeMinute(String startDate, String endDate) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 为endDate加上相应的秒数
+     * @return 返回两个时间段相差的分钟数(x天x时x分)
+     */
+    public static String getDistanceForDayTimeMinuteAddEnd(String startDate, String endDate, String addSecond) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+        endCalenar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 为startDate加上相应的秒数
+     * @return 返回两个时间段相差的分钟数(x天x时x分)
+     */
+    public static String getDistanceForDayTimeMinuteAddStart(String startDate, String endDate, String addSecond) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalenar = getYearToSecondCalendar(endDate);
+        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+
+        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        if (minutesDistance == 0) {
+            if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
+                minutesDistance = 1;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * @param date      格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 添加的秒数
+     * @return
+     */
+    public static String getYearToMinute(String date, String addSecond) {
+        Calendar calendar = getYearToSecondCalendar(date);
+        calendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        return printYearToMinutesCalendar(calendar);
     }
 
     /**
@@ -864,6 +1047,30 @@ public class DateUtil {
     }
 
     /**
+     * @param startDate 格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 为startDate添加的秒数
+     * @return -1(开始时间加上添加的秒数比结束时间早)   0(开始时间加上添加的秒数后和结束时间一样)      1(开始时间加上添加的秒数后比结束时间长)
+     */
+    public static int compareYearToSecondAddStart(String startDate, String endDate, String addSecond) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalendar = getYearToSecondCalendar(endDate);
+        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        return startCalendar.compareTo(endCalendar);
+    }
+
+    /**
+     * @param startDate 格式为yyyy-MM-dd HH:mm:ss
+     * @param endDate   格式为yyyy-MM-dd HH:mm:ss
+     * @return -1(开始时间加上添加的秒数比结束时间早)   0(开始时间加上添加的秒数后和结束时间一样)      1(开始时间加上添加的秒数后比结束时间长)
+     */
+    public static int compareYearToSecond(String startDate, String endDate) {
+        Calendar startCalendar = getYearToSecondCalendar(startDate);
+        Calendar endCalendar = getYearToSecondCalendar(endDate);
+        return startCalendar.compareTo(endCalendar);
+    }
+
+    /**
      * @param day       周一至七
      * @param startDate yyyy-MM-dd
      * @param endDate   yyyy-MM-dd
@@ -960,9 +1167,18 @@ public class DateUtil {
 
     /**
      * @param yearToSecond yyyy-MM-dd HH:mm:ss
-     * @return HH点mm分
+     * @return HH时mm分
      */
     public static String getHourToMinute(String yearToSecond) {
+        return yearToSecond.substring(yearToSecond.indexOf(" ") + 1, yearToSecond.indexOf(":")) + "时"
+                + yearToSecond.substring(yearToSecond.indexOf(":") + 1, yearToSecond.lastIndexOf(":")) + "分";
+    }
+
+    /**
+     * @param yearToSecond yyyy-MM-dd HH:mm:ss
+     * @return HH点mm分
+     */
+    public static String getPointToMinute(String yearToSecond) {
         return yearToSecond.substring(yearToSecond.indexOf(" ") + 1, yearToSecond.indexOf(":")) + "点"
                 + yearToSecond.substring(yearToSecond.indexOf(":") + 1, yearToSecond.lastIndexOf(":")) + "分";
     }
@@ -1295,15 +1511,15 @@ public class DateUtil {
     }
 
     /**
-     * @return 返回停车的时长xx小时xx分钟
+     * @return 返回停车的时长xx天xx小时xx分钟
      */
     public static String getParkTime(ParkOrderInfo parkOrderInfo) {
         if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
                 DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            return DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time());
+            return DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time());
         } else {
-            return DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
+            return DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
         }
     }
 

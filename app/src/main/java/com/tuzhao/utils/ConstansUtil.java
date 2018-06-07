@@ -83,9 +83,14 @@ public class ConstansUtil {
     public static final String CANCEL_ORDER = "CancelOrder";
 
     /**
-     * 完成预约，既是已经开始变成停车中
+     * 完成预约，即是已经开始变成停车中
      */
     public static final String FINISH_APPOINTMENT = "FinishAppointment";
+
+    /**
+     * 关锁成功并完成订单
+     */
+    public static final String FINISH_PARK = "FinishPark";
 
     /**
      * 订单支付完成

@@ -2,6 +2,8 @@ package com.tuzhao.info;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Objects;
+
 /**
  * Created by TZL13 on 2017/6/9.
  */
@@ -143,4 +145,19 @@ public class CollectionInfo extends BaseInfo {
     public void setCitycode(String citycode) {
         this.citycode = citycode;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CollectionInfo that = (CollectionInfo) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
+    }
+
 }

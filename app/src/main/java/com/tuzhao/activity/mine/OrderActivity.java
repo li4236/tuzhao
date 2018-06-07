@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,11 +21,14 @@ import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
+import com.tuzhao.fragment.parkorder.CancelOrderFragment;
 import com.tuzhao.fragment.parkorder.CommentOrderFragment;
 import com.tuzhao.fragment.parkorder.OrderDetailFragment;
+import com.tuzhao.fragment.parkorder.ParkingOrderFragment;
 import com.tuzhao.fragment.parkorder.PayForOrderFragment;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -83,9 +87,9 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     textView.setBackgroundColor(Color.WHITE);
                     textView.setTextColor(Color.parseColor("#323232"));
                     textView.setText(marker.getTitle());
-                    textView.setMaxWidth((int) (mPoint.x*0.6));
-                    textView.setPadding(DensityUtil.dp2px(OrderActivity.this,8),DensityUtil.dp2px(OrderActivity.this,8),
-                            DensityUtil.dp2px(OrderActivity.this,8),DensityUtil.dp2px(OrderActivity.this,8));
+                    textView.setMaxWidth((int) (mPoint.x * 0.6));
+                    textView.setPadding(DensityUtil.dp2px(OrderActivity.this, 8), DensityUtil.dp2px(OrderActivity.this, 8),
+                            DensityUtil.dp2px(OrderActivity.this, 8), DensityUtil.dp2px(OrderActivity.this, 8));
                     ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     textView.setLayoutParams(layoutParams);
                     return textView;
@@ -93,10 +97,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
 
                 @Override
                 public View getInfoContents(Marker marker) {
-                    View textView = new TextView(OrderActivity.this);
-                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(0, 0);
-                    textView.setLayoutParams(layoutParams);
-                    return textView;
+                    return null;
                 }
             });
 
@@ -116,12 +117,18 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
             case "1":
                 transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
                 break;
+            case "2":
+                transaction.replace(R.id.order_container, ParkingOrderFragment.newInstance(mParkOrderInfo));
+                break;
             case "3":
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
                 break;
             case "4":
             case "5":
                 transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
+                break;
+            case "6":
+                transaction.replace(R.id.order_container, CancelOrderFragment.newInstance(mParkOrderInfo));
                 break;
             default:
                 transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
@@ -147,7 +154,6 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
             case "4":
             case "5":
                 return "订单完成";
-            case "6":
             default:
                 return "订单详情";
         }
@@ -193,6 +199,19 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
+                case ConstansUtil.FINISH_APPOINTMENT:
+                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                    if (parkOrderInfo != null) {
+                        parkOrderInfo.setOrder_status("2");
+                        if (parkOrderInfo.getPark_start_time().startsWith("0000")) {
+                            parkOrderInfo.setPark_start_time(DateUtil.getCurrentYearToSecond());
+                        }
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.order_container, ParkingOrderFragment.newInstance(mParkOrderInfo));
+                        fragmentTransaction.commit();
+                    }
+                    break;
                 case ConstansUtil.OPEN_PARK_COMMENT:
                     android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));

@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/parkspace_description"
-            style="@style/SixtyTextB1Styel"
+            style="@style/SixtyTextB1Style"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

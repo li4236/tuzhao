@@ -203,7 +203,14 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void notifyDataChange(int changeDataPosition, T newData) {
         mData.set(changeDataPosition, newData);
-        notifyItemChanged(changeDataPosition);
+        notifyItemChanged(changeDataPosition+getHeadViewCount());
+    }
+
+    public void notifyDataChange(T newData) {
+        int position = mData.indexOf(newData);
+        if (position != -1) {
+            notifyDataChange(position,newData);
+        }
     }
 
     /**

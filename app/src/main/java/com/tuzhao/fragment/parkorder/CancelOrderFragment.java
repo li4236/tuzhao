@@ -2,12 +2,8 @@ package com.tuzhao.fragment.parkorder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,106 +26,72 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 /**
- * Created by juncoder on 2018/6/1.
+ * Created by juncoder on 2018/6/5.
  */
+public class CancelOrderFragment extends BaseStatusFragment implements View.OnClickListener {
 
-public class OrderDetailFragment extends BaseStatusFragment implements View.OnClickListener {
-
-    private TextView mOrderFee;
-
-    private TextView mOrderDiscount;
-
-    private TextView mParkTime;
-
-    private TextView mParkTimeDescription;
-
-    private TextView mChangeCredit;
-
-    private TextView mTotalCredit;
 
     private ParkOrderInfo mParkOrderInfo;
+
+    private TextView mParkDate;
+
+    private TextView mStartParkTime;
+
+    private TextView mParkSpaceLocation;
+
+    private TextView mParkDuration;
 
     private ArrayList<String> mParkSpacePictures;
 
     private CustomDialog mCustomDialog;
 
-    public static OrderDetailFragment newInstance(ParkOrderInfo parkOrderInfo) {
-        OrderDetailFragment fragment = new OrderDetailFragment();
+    public static CancelOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
+        CancelOrderFragment fragment = new CancelOrderFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     protected int resourceId() {
-        return R.layout.fragment_order_detail_layout;
+        return R.layout.fragment_cancel_order_layout;
     }
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-
         if (getArguments() != null) {
-            mParkOrderInfo = getArguments().getParcelable(ConstansUtil.PARK_ORDER_INFO);
-        } else {
-            return;
+            mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
         }
 
-        mOrderFee = view.findViewById(R.id.pay_for_order_fee);
-        mOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
-        mParkTime = view.findViewById(R.id.pay_for_order_time);
-        mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
-        mChangeCredit = view.findViewById(R.id.pay_for_order_credit);
-        mTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
+        mParkDate = view.findViewById(R.id.appointment_park_date);
+        mStartParkTime = view.findViewById(R.id.appointment_income_time);
+        mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
+        mParkDuration = view.findViewById(R.id.park_duration);
 
-        view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
+        view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
-        view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
-        view.findViewById(R.id.delete_order_cl).setOnClickListener(this);
+        view.findViewById(R.id.cancel_appoint_cl).setOnClickListener(this);
+        view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
-
-        if (mParkOrderInfo.getOrder_status().equals("4")) {
-            view.findViewById(R.id.park_comment_cl).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.park_comment_cl).setOnClickListener(this);
-        }
     }
 
     @Override
     protected void initData() {
-        mOrderFee.setText(DateUtil.decreseOneZero(mParkOrderInfo.getActual_pay_fee()));
-        if (mParkOrderInfo.getDiscount() != null && !mParkOrderInfo.getDiscount().getId().equals("-1")) {
-            String disount = "（优惠券—" + DateUtil.decreseOneZero(mParkOrderInfo.getDiscount().getDiscount()) + "）";
-            SpannableString spannableString = new SpannableString(disount);
-            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 4, disount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mOrderDiscount.setText(spannableString);
-        }
-
-        mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
-                DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
-            String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
-            mParkTimeDescription.setText(timeout);
-            mChangeCredit.setTextColor(Color.parseColor("#ff6c6c"));
-            mChangeCredit.setText("-5");
-        } else {
-            mChangeCredit.setText("+3");
-        }
-
-        String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
-        mTotalCredit.setText(totalCredit);
+        mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
+        mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrder_starttime()));
+        mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
+        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.pay_for_order_question_tv:
+            case R.id.appointment_calculate_rule:
+            case R.id.appointment_calculate_rule_iv:
 
-                break;
-            case R.id.contact_service_cl:
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
-                startActivity(intent);
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
@@ -138,7 +100,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     showParkSpacePic();
                 }
                 break;
-            case R.id.delete_order_cl:
+            case R.id.cancel_appoint_cl:
                 TipeDialog dialog = new TipeDialog.Builder(getContext())
                         .setTitle("提示")
                         .setMessage("确定删除该订单吗？")
@@ -152,16 +114,16 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         .create();
                 dialog.show();
                 break;
+            case R.id.contact_service_cl:
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
+                startActivity(intent);
+                break;
             case R.id.view_appointment_detail:
             case R.id.view_appointment_detail_iv:
-                showParkDetail();
-                break;
-            case R.id.park_comment_cl:
-                Intent commentIntent = new Intent();
-                commentIntent.setAction(ConstansUtil.OPEN_PARK_COMMENT);
-                IntentObserable.dispatch(commentIntent);
+                showAppointmentDetail();
                 break;
         }
+
     }
 
     private void showParkSpacePic() {
@@ -213,10 +175,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 });
     }
 
-    private void showParkDetail() {
+    private void showAppointmentDetail() {
         if (mCustomDialog == null) {
             if (getContext() != null) {
-                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo, true);
+                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo);
             }
         }
         mCustomDialog.show();
