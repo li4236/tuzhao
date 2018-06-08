@@ -46,6 +46,8 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
 
     private BackPressedCallback mBackPressedCallback;
 
+    private LatLng mLatLng;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_order_layout;
@@ -65,72 +67,77 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
         mMapView.onCreate(savedInstanceState);
         if (mAMap == null) {
             mAMap = mMapView.getMap();
-
-            final LatLng latLng = new LatLng(mParkOrderInfo.getLatitude() - 0.003, mParkOrderInfo.getLongitude());
-
-            mAMap.getUiSettings().setRotateGesturesEnabled(false);
-            mAMap.getUiSettings().setZoomControlsEnabled(false);
-            mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-            mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-                    return true;
-                }
-            });
-
-            mAMap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    View view = getLayoutInflater().inflate(R.layout.info_window_layout, null);
-                    TextView textView = view.findViewById(R.id.info_window_title);
-                    textView.setText(marker.getTitle());
-                    textView.setMaxWidth((int) (mPoint.x * 0.6));
-                    return view;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-                    return null;
-                }
-            });
-
-            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude()))
-                    .title(mParkOrderInfo.getPark_space_name());
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
-            Marker marker = mAMap.addMarker(markerOptions);
-            marker.showInfoWindow();
-            ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);
-            animation.setDuration(500);
-            marker.setAnimation(animation);
-            marker.startAnimation();
         }
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (mParkOrderInfo.getOrder_status()) {
             case "1":
                 transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
+                mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.004, mParkOrderInfo.getLongitude());
                 break;
             case "2":
                 ParkingOrderFragment orderFragment = ParkingOrderFragment.newInstance(mParkOrderInfo);
                 mBackPressedCallback = orderFragment;
                 transaction.replace(R.id.order_container, orderFragment);
+                mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.005, mParkOrderInfo.getLongitude());
                 break;
             case "3":
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
+                mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.004, mParkOrderInfo.getLongitude());
                 break;
             case "4":
             case "5":
                 transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
+                mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.003, mParkOrderInfo.getLongitude());
                 break;
             case "6":
                 transaction.replace(R.id.order_container, CancelOrderFragment.newInstance(mParkOrderInfo));
+                mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.004, mParkOrderInfo.getLongitude());
                 break;
             default:
                 transaction.replace(R.id.order_container, OrderDetailFragment.newInstance(mParkOrderInfo));
+                mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.003, mParkOrderInfo.getLongitude());
                 break;
         }
         transaction.commit();
+
+        mAMap.getUiSettings().setRotateGesturesEnabled(false);
+        mAMap.getUiSettings().setZoomControlsEnabled(false);
+        mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 16));
+        mAMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                mAMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 16));
+                return true;
+            }
+        });
+
+        mAMap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                View view = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+                TextView textView = view.findViewById(R.id.info_window_title);
+                textView.setText(marker.getTitle());
+                textView.setMaxWidth((int) (mPoint.x * 0.6));
+                return view;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
+
+        MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude()))
+                .title(mParkOrderInfo.getPark_space_name());
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
+        Marker marker = mAMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+        ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);
+        animation.setDuration(500);
+        marker.setAnimation(animation);
+        marker.startAnimation();
+
     }
 
     @Override
