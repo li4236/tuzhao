@@ -168,7 +168,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     protected void initData() {
         setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
         getParkLockStatus();
-        scrennOrderTime();
+        scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
     }
@@ -219,7 +219,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     /**
      * 排除掉那些已过期的订单
      */
-    private void scrennOrderTime() {
+    private void scanOrderTime() {
         if (!mParkInfo.getOrder_times().equals("-1") && !mParkInfo.getOrder_times().equals("")) {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.MILLISECOND, 0);

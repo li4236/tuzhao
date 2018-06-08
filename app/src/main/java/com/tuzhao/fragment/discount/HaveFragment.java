@@ -104,6 +104,7 @@ public class HaveFragment extends BaseFragment {
             mAdapter.setOnItemClickListener(new DiscountAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(Discount_Info discountInfo) {
+                    Log.e("TAG", "onItemClick: " );
                     if (getActivity() != null) {
                         Intent intent = new Intent();
                         Bundle data = new Bundle();

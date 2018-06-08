@@ -40,7 +40,7 @@ public class BasePickerView {
 
     private boolean autoDismiss = true;
 
-    public BasePickerView(Context context){
+    public BasePickerView(Context context) {
         this.context = context;
 
         initViews();
@@ -48,9 +48,9 @@ public class BasePickerView {
         initEvents();
     }
 
-    protected void initViews(){
+    protected void initViews() {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        decorView = (ViewGroup) ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
+        decorView = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
         rootView = (ViewGroup) layoutInflater.inflate(R.layout.layout_basepickerview, decorView, false);
         rootView.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
@@ -63,8 +63,10 @@ public class BasePickerView {
         inAnim = getInAnimation();
         outAnim = getOutAnimation();
     }
+
     protected void initEvents() {
     }
+
     /**
      * show的时候调用
      *
@@ -74,6 +76,7 @@ public class BasePickerView {
         decorView.addView(view);
         contentContainer.startAnimation(inAnim);
     }
+
     /**
      * 添加这个View到Activity的根视图
      */
@@ -83,6 +86,7 @@ public class BasePickerView {
         }
         onAttached(rootView);
     }
+
     /**
      * 检测该View是不是已经添加到根视图
      *
@@ -99,10 +103,11 @@ public class BasePickerView {
         }
 
         if (isDismissing) {
+            Log.e("TAG", "dismiss: isDismissing");
             return;
         }
 
-        Log.e("TAG", "dismiss: " );
+        Log.e("TAG", "dismiss: ");
         //消失动画
         outAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -133,6 +138,7 @@ public class BasePickerView {
         contentContainer.startAnimation(outAnim);
         isDismissing = true;
     }
+
     public Animation getInAnimation() {
         int res = PickerViewAnimateUtil.getAnimationResource(this.gravity, true);
         return AnimationUtils.loadAnimation(context, res);
@@ -153,12 +159,12 @@ public class BasePickerView {
 
         if (isCancelable) {
             view.setOnTouchListener(onCancelableTouchListener);
-        }
-        else{
+        } else {
             view.setOnTouchListener(null);
         }
         return this;
     }
+
     /**
      * Called when the user touch on black overlay in order to dismiss the dialog
      */
@@ -172,7 +178,7 @@ public class BasePickerView {
         }
     };
 
-    public View findViewById(int id){
+    public View findViewById(int id) {
         return contentContainer.findViewById(id);
     }
 

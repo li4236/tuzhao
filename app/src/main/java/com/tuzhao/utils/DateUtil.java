@@ -18,6 +18,8 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -349,6 +351,87 @@ public class DateUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * @param extendSecond 顺延时长
+     * @param endDate      预约结束时间
+     * @param orderDate    逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
+     * @return 距离最近一个预约订单可延长停车的分钟数
+     */
+    public static int getDistanceOfRecentOrder(String extendSecond, String endDate, String orderDate) {
+        //保存在现在时刻以后的预约时间（既是排除掉在现在以前那些被预约的时间）
+        String[] orderDates = orderDate.split(",");
+        List<String> usefulDates = new ArrayList<>(orderDates.length);
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.set(Calendar.SECOND, 0);
+        nowCalendar.set(Calendar.MILLISECOND, 0);
+
+        for (String date : orderDates) {
+            if (nowCalendar.compareTo(getYearToMinuteCalendar(date.substring(0, date.indexOf("*")))) < 0) {
+                usefulDates.add(date);
+            }
+        }
+
+        if (usefulDates.isEmpty()) {
+            //如果没人预约则可延长一天的时间
+            return 24 * 60;
+        }
+
+        //将已被预约的时间用Calendar保存
+        List<Calendar> calendarList = new ArrayList<>();
+        for (int i = 0; i < usefulDates.size(); i++) {
+            calendarList.add(getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*"))));
+        }
+
+        Collections.sort(calendarList, new Comparator<Calendar>() {
+            @Override
+            public int compare(Calendar o1, Calendar o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
+        Calendar compareCalendar = getYearToSecondCalendar(endDate);
+        compareCalendar.add(Calendar.SECOND, Integer.valueOf(extendSecond));
+        compareCalendar.set(Calendar.SECOND, 0);
+        if (compareCalendar.compareTo(nowCalendar) < 0) {
+            //如果是还在顺延时间之前延长时间的则按现在的时间来算可以延长多长时间
+            compareCalendar = (Calendar) nowCalendar.clone();
+        }
+
+        return getDateMinutes(compareCalendar, calendarList.get(0));
+    }
+
+    private static class CalendarHolder {
+
+        private Calendar startCalendar;
+
+        private Calendar endCalendar;
+
+        CalendarHolder() {
+
+        }
+
+        CalendarHolder(Calendar startCalendar, Calendar endCalendar) {
+            this.startCalendar = startCalendar;
+            this.endCalendar = endCalendar;
+        }
+
+        public Calendar getStartCalendar() {
+            return startCalendar;
+        }
+
+        void setStartCalendar(Calendar startCalendar) {
+            this.startCalendar = startCalendar;
+        }
+
+        public Calendar getEndCalendar() {
+            return endCalendar;
+        }
+
+        void setEndCalendar(Calendar endCalendar) {
+            this.endCalendar = endCalendar;
+        }
     }
 
     /**
@@ -713,7 +796,7 @@ public class DateUtil {
     public static String getYearToMinute(String date, String addSecond) {
         Calendar calendar = getYearToSecondCalendar(date);
         calendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
-        return printYearToMinutesCalendar(calendar);
+        return getCalenarYearToMinutes(calendar);
     }
 
     /**
@@ -750,6 +833,18 @@ public class DateUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (day == 0) {
+            day = 7;
+        }
+        return day;
+    }
+
+    /**
+     * @return 获取当天是星期几(星期一到星期七)
+     */
+    public static int getDayOfWeek(Calendar calendar) {
+        int day;
         day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if (day == 0) {
             day = 7;
@@ -854,6 +949,46 @@ public class DateUtil {
     }
 
     /**
+     * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00) 注：最多3个，用“,”隔开
+     * @return 在当前停车的共享时间内能延长的分钟数
+     */
+    public static int getDistanceForRecentShareTime(Calendar calendar, String shareTime) {
+        if (shareTime.equals("-1")) {
+            //如果是全天共享的那直接就可以了
+            return 24 * 60;
+        } else {
+            //获取停车位共享的各个时间段
+            String[] times = shareTime.split(",");
+            List<CalendarHolder> calendarHolders = new ArrayList<>();
+            Calendar startCalendar;
+            Calendar endCalendar;
+            for (String time : times) {
+                startCalendar = getSameYearToDayCalendar(calendar, time.substring(0, time.indexOf(" - ")));
+                endCalendar = getSameYearToDayCalendar(calendar, time.substring(time.indexOf(" - ") + 3, time.length()));
+                if (startCalendar.compareTo(endCalendar) > 0) {
+                    //跨天06-08 22:00 - 06-09 05:00
+                    //先添加06-08 00:00 - 06-08 05:00
+                    calendarHolders.add(new CalendarHolder(getTodayStartCalendar(endCalendar), endCalendar));
+
+                    //再添加06-08 22:00 - 06-09 05:00
+                    endCalendar = (Calendar) endCalendar.clone();
+                    endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    calendarHolders.add(new CalendarHolder(startCalendar, endCalendar));
+                } else {
+                    calendarHolders.add(new CalendarHolder(startCalendar, endCalendar));
+                }
+            }
+
+            for (CalendarHolder calendarHolder : calendarHolders) {
+                if (isIntersection(calendar, calendarHolder.getStartCalendar(), calendarHolder.getEndCalendar())) {
+                    return getDateMinutes(calendar, calendarHolder.getEndCalendar());
+                }
+            }
+            return 24 * 60;
+        }
+    }
+
+    /**
      * @param orderDate 逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
      * @param shareTime 共享时间段(08:00 - 12:00)只有一个
      * @return null(在共享时间段内没有预约订单)     yyyy-MM-dd HH:mm至yyyy-MM-dd HH:mm(在共享时间内有预约订单,并返回该订单的时间)
@@ -881,8 +1016,8 @@ public class DateUtil {
                 shareStartCalendar = getSameYearToDayCalendar(orderStartCalendar, shareStartTime);
                 shareEndCalendar = getSameYearToDayCalendar(orderStartCalendar, shareEndTime);
 
-                Log.e(TAG, "isInShareTime   shareStartCalendar0: " + printCalendar(shareStartCalendar));
-                Log.e(TAG, "isInShareTime   shareEndCalendar0: " + printCalendar(shareEndCalendar));
+                Log.e(TAG, "isInShareTime   shareStartCalendar0: " + getCalendarMonthToMinute(shareStartCalendar));
+                Log.e(TAG, "isInShareTime   shareEndCalendar0: " + getCalendarMonthToMinute(shareEndCalendar));
                 if (shareStartCalendar.compareTo(shareEndCalendar) > 0) {
                     //共享日期跨天的   2018-05-16 09:00 - 2018-05-17 05:00
                     shareEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -909,10 +1044,10 @@ public class DateUtil {
     }
 
     private static String isInShareTime(Calendar startCalendar, Calendar endCalendar, Calendar shareStartCalendar, Calendar shareEndCalendar) {
-        Log.e(TAG, "isInShareTime   startCalendar: " + printCalendar(startCalendar));
-        Log.e(TAG, "isInShareTime   endCalendar: " + printCalendar(endCalendar));
-        Log.e(TAG, "isInShareTime   shareStartCalendar: " + printCalendar(shareStartCalendar));
-        Log.e(TAG, "isInShareTime   shareEndCalendar: " + printCalendar(shareEndCalendar));
+        Log.e(TAG, "isInShareTime   startCalendar: " + getCalendarMonthToMinute(startCalendar));
+        Log.e(TAG, "isInShareTime   endCalendar: " + getCalendarMonthToMinute(endCalendar));
+        Log.e(TAG, "isInShareTime   shareStartCalendar: " + getCalendarMonthToMinute(shareStartCalendar));
+        Log.e(TAG, "isInShareTime   shareEndCalendar: " + getCalendarMonthToMinute(shareEndCalendar));
         if (isIntersection(startCalendar, endCalendar, shareStartCalendar, shareEndCalendar)) {
             return getYearToMinutesString(startCalendar) + "至" + getYearToMinutesString(endCalendar);
         }
@@ -926,6 +1061,10 @@ public class DateUtil {
      */
     private static boolean isInSameDay(String startDate, String endDate) {
         return startDate.split(" ")[0].endsWith(endDate.split(" ")[0]);
+    }
+
+    public static boolean isInSameDay(Calendar startCalendar, Calendar endCalendar) {
+        return getCalendarYearToDay(startCalendar).equals(getCalendarYearToDay(endCalendar));
     }
 
     /**
@@ -1142,6 +1281,13 @@ public class DateUtil {
     }
 
     /**
+     * @return true(calendar在startCalendar和endCalendar之间)
+     */
+    public static boolean isIntersection(Calendar calendar, Calendar startCalendar, Calendar endCalendar) {
+        return startCalendar.compareTo(calendar) <= 0 && calendar.compareTo(endCalendar) <= 0;
+    }
+
+    /**
      * @param date yyyy-MM-dd - yyyy-MM-dd
      * @return 当前是否在可用时间内
      */
@@ -1215,16 +1361,23 @@ public class DateUtil {
         return calendar.get(Calendar.YEAR) + "-" + thanTen(calendar.get(Calendar.MONTH) + 1) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-    public static String printCalendar(Calendar calendar) {
+    /**
+     * @return MM-dd HH:mm
+     */
+    public static String getCalendarMonthToMinute(Calendar calendar) {
         if (calendar == null) {
             return "";
         }
-        return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        return thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " "
+                + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
     }
 
-    public static String printYearToMinutesCalendar(Calendar calendar) {
-        return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH)
-                + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+    /**
+     * @return yyyy-MM-dd HH:ss
+     */
+    public static String getCalenarYearToMinutes(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "-" + thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH))
+                + " " + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
     }
 
     /**
@@ -1403,15 +1556,15 @@ public class DateUtil {
     }
 
     /**
-     * @param date     参照的那一天，格式为yyyy-MM-dd HH:mm
-     * @param highDate 高峰期的时分，格式为HH:mm
-     * @param nextDays 比参照的那一天往后推迟几天
+     * @param date          参照的那一天，格式为yyyy-MM-dd HH:mm
+     * @param hourAndMinute 格式为HH:mm
+     * @param nextDays      比参照的那一天往后推迟几天
      */
-    private static Calendar getSameYearToDayCalendar(Calendar date, String highDate, int nextDays) {
+    private static Calendar getSameYearToDayCalendar(Calendar date, String hourAndMinute, int nextDays) {
         Calendar calendar = (Calendar) date.clone();
         calendar.add(Calendar.DAY_OF_MONTH, nextDays);
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(highDate.substring(0, highDate.indexOf(":"))));
-        calendar.set(Calendar.MINUTE, Integer.valueOf(highDate.substring(highDate.indexOf(":") + 1, highDate.length())));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hourAndMinute.substring(0, hourAndMinute.indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(hourAndMinute.substring(hourAndMinute.indexOf(":") + 1, hourAndMinute.length())));
         return calendar;
     }
 

@@ -90,7 +90,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
 
     @Override
     protected int resourceId() {
-        return R.layout.fragment_coment_order_layout;
+        return R.layout.dialog_coment_order_layout;
     }
 
     @Override

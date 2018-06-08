@@ -161,7 +161,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
             mParkOrderCredit.setText("+3");
         }
-        mParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getPark_start_time()));
+        mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
         mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
         String startDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time());
         String endDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time());
@@ -228,7 +228,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 if (mCanUseDiscounts.isEmpty()) {
                     showFiveToast("暂无可用优惠券哦");
                 } else {
-                    startActivityForResult(DiscountActivity.class, ConstansUtil.DISOUNT_REQUEST_CODE, ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
+                    startActivityForResult(DiscountActivity.class, ConstansUtil.DISOUNT_REQUEST_CODE,
+                            ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrder_fee(), ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
                 }
                 break;
             case R.id.pay_for_order_should_pay:
@@ -254,7 +255,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                         /**
                          对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                          */
-                        String resultInfo = payResult.getResult();// 同步返回需要验证的信息，从支付结果中取到resultinfo
+                        // 同步返回需要验证的信息，从支付结果中取到resultinfo
                         String resultStatus = payResult.getResultStatus();
                         // 判断resultStatus 为9000则代表支付成功
                         if (TextUtils.equals(resultStatus, "9000")) {

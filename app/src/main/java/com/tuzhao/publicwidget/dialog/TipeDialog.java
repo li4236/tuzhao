@@ -18,6 +18,8 @@ import com.tuzhao.R;
 
 public class TipeDialog extends Dialog {
 
+    private TextView mTextView;
+
     public TipeDialog(Context context) {
         super(context);
     }
@@ -29,7 +31,7 @@ public class TipeDialog extends Dialog {
     public static class Builder {
         private Context context;
         private String title;
-        private String message;
+        private CharSequence message;
         private String positiveButtonText;
         private String negativeButtonText;
         private View contentView;
@@ -45,7 +47,7 @@ public class TipeDialog extends Dialog {
             this.context = context;
         }
 
-        public Builder setMessage(String message) {
+        public Builder setMessage(CharSequence message) {
             this.message = message;
             return this;
         }
@@ -178,7 +180,6 @@ public class TipeDialog extends Dialog {
             // set the confirm button
             if (positiveButtonText != null) {
                 mPositiveView.setText(positiveButtonText);
-
                 if (positiveButtonClickListener != null) {
                     mPositiveView.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
@@ -195,22 +196,20 @@ public class TipeDialog extends Dialog {
 
             if (negativeButtonText != null) {
                 mNegativeView.setText(negativeButtonText);
-
-                (layout.findViewById(R.id.negativeButton))
-                        .setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                if (negativeButtonClickListener != null) {
-                                    negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
-                                }
-                                if (autoDissmiss) {
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
-
             } else {
                 mNegativeView.setText("取消");
             }
+            (layout.findViewById(R.id.negativeButton))
+                    .setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            if (negativeButtonClickListener != null) {
+                                negativeButtonClickListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+                            }
+                            if (autoDissmiss) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
 
             // set the content message
             if (message != null) {

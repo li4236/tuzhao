@@ -23,6 +23,9 @@ public class ShareTimeInfo extends BaseInfo {
     //每日共享时段（10:00 - 11:00,19:00 - 23:00）  注：表示从10点到11点为共享时间，最多有三个时间段，如果没传则默认全天共享
     private String everyDayShareTime;
 
+    //用户预约的时间(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
+    private String orderTime;
+
     public String getParkSpaceId() {
         return parkSpaceId;
     }
@@ -61,5 +64,25 @@ public class ShareTimeInfo extends BaseInfo {
 
     public void setEveryDayShareTime(String everyDayShareTime) {
         this.everyDayShareTime = everyDayShareTime;
+    }
+
+    public String getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(String orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ShareTimeInfo{" +
+                "parkSpaceId='" + parkSpaceId + '\'' +
+                ", shareDate='" + shareDate + '\'' +
+                ", shareDay='" + shareDay + '\'' +
+                ", pauseShareDate='" + pauseShareDate + '\'' +
+                ", everyDayShareTime='" + everyDayShareTime + '\'' +
+                ", orderTime='" + orderTime + '\'' +
+                '}';
     }
 }

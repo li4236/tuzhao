@@ -164,7 +164,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
             case "3":
                 //待付款
                 circleView.setColor(Color.parseColor("#ff6c6c"));
-                orderTime.setText(DateUtil.getParkTime(parkOrderInfo));
+                orderTime.setText(DateUtil.getDistanceForDayTimeMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
                 String shouldPay = "￥" + parkOrderInfo.getOrder_fee();
                 orderTimeDescription.setText(shouldPay);
                 orderStatus.setTextColor(Color.parseColor("#ff6c6c"));
@@ -269,6 +269,13 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 case ConstansUtil.FINISH_PAY_ORDER:
                     if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
                         onRefresh();
+                    }
+                    break;
+                case ConstansUtil.COMMENT_SUCCESS:
+                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5) {
+                        Bundle commentBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        ParkOrderInfo commentOrder = commentBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        mCommonAdapter.notifyDataChange(commentOrder);
                     }
                     break;
                 case ConstansUtil.DELETE_PARK_ORDER:

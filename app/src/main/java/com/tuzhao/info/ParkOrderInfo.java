@@ -79,12 +79,12 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.parkspace_id = belong_park_space;
     }
 
-    public String getBelong_park() {
+    public String getPark_id() {
         return park_id;
     }
 
-    public void setBelong_park(String belong_park) {
-        this.park_id = belong_park;
+    public void setPark_id(String park_id) {
+        this.park_id = park_id;
     }
 
     public String getPark_space_name() {

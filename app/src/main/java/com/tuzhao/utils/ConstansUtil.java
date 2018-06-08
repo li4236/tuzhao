@@ -38,9 +38,15 @@ public class ConstansUtil {
     public static final int PICTURE_REQUEST_CODE = 0x666;
 
     /**
+     * 跳转到另一个activity的key
+     */
+    public static final String REQUEST_FOR_RESULT = "RequestForResult";
+
+    /**
      * activity返回给上个activity的结果的key
      */
     public static final String FOR_REQUEST_RESULT = "ForRequestResult";
+
 
     /**
      * 报销的发票的详情
@@ -108,6 +114,11 @@ public class ConstansUtil {
     public static final String DISCOUNT_LIST = "DiscountList";
 
     /**
+     * 订单的金额
+     */
+    public static final String ORDER_FEE = "OrderFee";
+
+    /**
      * 选择优惠券的请求码
      */
     public static final int DISOUNT_REQUEST_CODE = 0x347;
@@ -126,6 +137,11 @@ public class ConstansUtil {
      * 关闭停车评价，显示停车详情
      */
     public static final String CLOSE_PARK_COMMENT = "CloseParkComment";
+
+    /**
+     * 评价成功
+     */
+    public static final String COMMENT_SUCCESS = "CommentSuccess";
 
     /**
      * 删除停车订单

@@ -470,6 +470,9 @@ public class HttpConstants {
      */
     public static String getParkLockStatus = ROOT_URL + "getParkLockStatus";
 
-    public static String zTest = ROOT_URL + "ztest";
+    /**
+     * 获取停车位的共享时间以及预约时间
+     */
+    public static String getParkSpaceTime = ROOT_URL + "getParkSpaceTime";
 
 }

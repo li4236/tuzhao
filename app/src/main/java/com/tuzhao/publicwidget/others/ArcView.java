@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,14 +12,14 @@ import android.view.View;
 /**
  * Created by juncoder on 2018/5/10.
  * <p>
- * 三角形，用于地图当前定位
+ * 三角形，用于订单地图marker显示停车场
  */
 
 public class ArcView extends View {
 
     private Paint mPaint;
 
-    private RectF mRectF;
+    private Path mPath;
 
     public ArcView(Context context) {
         super(context);
@@ -38,12 +38,11 @@ public class ArcView extends View {
 
     private void init() {
         mPaint = new Paint();
-        mPaint.setColor(Color.parseColor("#f4bb67"));
-        //mPaint.setShadowLayer(60,0,0,Color.RED);
+        mPaint.setColor(Color.WHITE);
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
 
-        mRectF = new RectF();
+        mPath = new Path();
     }
 
     @Override
@@ -51,19 +50,16 @@ public class ArcView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        mRectF.top = -height / 2;
-        mRectF.left = -width / 2;
-        mRectF.right = width / 2;
-        mRectF.bottom = height / 2;
+        mPath.moveTo(0, 0);
+        mPath.lineTo(width, 0);
+        mPath.lineTo(width / 2, height);
+        mPath.close();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.save();
-        canvas.translate((mRectF.right - mRectF.left) / 2, 0);
-        canvas.drawArc(mRectF, 65, 50, true, mPaint);
-        canvas.restore();
+        canvas.drawPath(mPath, mPaint);
     }
 
 }

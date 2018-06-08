@@ -13,7 +13,7 @@
         android:layout_marginEnd="6dp"
         android:contentDescription="@string/picture_description"
         android:padding="12dp"
-        android:src="@mipmap/ic_close1"
+        android:src="@drawable/ic_bigclose"
         app:layout_constraintBottom_toBottomOf="@+id/park_comment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/park_comment" />
@@ -21,8 +21,8 @@
     <TextView
         android:id="@+id/park_comment"
         style="@style/TwentyTextB1Style"
-        android:layout_marginTop="12dp"
         android:text="停车评价"
+        app:layout_constraintBottom_toTopOf="@+id/park_comment_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,22 +32,22 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_comment" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/comment_order_parkspace_iv"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="12dp"
-        android:contentDescription="@string/picture_description"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_img"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_comment_divider" />
+    <!--    <ImageView
+            android:id="@+id/comment_order_parkspace_iv"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
+            android:contentDescription="@string/picture_description"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/park_comment_divider" />-->
 
     <TextView
         android:id="@+id/comment_order_user_tv"
@@ -56,7 +56,7 @@
         android:text="你的评分"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/comment_order_parkspace_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/park_comment_divider" />
 
     <com.cb.ratingbar.CBRatingBar
         android:id="@+id/comment_order_crb"
@@ -75,7 +75,7 @@
         app:starPathData="@string/round_star"
         app:starPathDataId="@string/round_star"
         app:starPointCount="5"
-        app:starProgress="20"
+        app:starProgress="100"
         app:starShowStroke="true"
         app:starSize="20dp"
         app:starSpace="8dp"
@@ -89,7 +89,7 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/comment_order_crb" />
@@ -100,14 +100,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:background="@null"
         android:gravity="start"
         android:hint="说说您这次停车的感受?"
         android:inputType="textMultiLine"
-        android:maxHeight="98dp"
+        android:maxHeight="80dp"
         android:maxLength="150"
-        android:minHeight="80dp"
+        android:minHeight="72dp"
         android:textColor="@color/b1"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/center_divider"
@@ -131,7 +131,7 @@
         style="@style/dividerStyle"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/comment_order_comment_count" />
@@ -148,7 +148,7 @@
         android:id="@+id/comment_order_pic_add"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="35dp"
+        android:layout_marginStart="42dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
@@ -172,7 +172,7 @@
         android:id="@+id/comment_order_pic_one"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="20dp"
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
         android:visibility="gone"
@@ -195,7 +195,7 @@
         android:id="@+id/comment_order_pic_two"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
         android:visibility="gone"
@@ -226,7 +226,7 @@
         android:gravity="center"
         android:text="提交评论"
         android:textColor="@color/b1"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@+id/comment_order_pic_add" />
 
 </android.support.constraint.ConstraintLayout>

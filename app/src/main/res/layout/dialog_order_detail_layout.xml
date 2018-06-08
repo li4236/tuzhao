@@ -4,6 +4,7 @@
     android:id="@+id/dialog_park_detail_cl"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingBottom="15dp"
     android:background="@color/w0"
     android:minWidth="260dp">
 
@@ -144,7 +145,6 @@
     <TextView
         android:id="@+id/park_fee_tv"
         style="@style/TwentyTextB1Style"
-        android:paddingBottom="15dp"
         android:paddingTop="15dp"
         android:text="停车费用"
         android:visibility="gone"
@@ -155,7 +155,6 @@
         android:id="@+id/park_fee"
         style="@style/TwentyTextB1Style"
         app:layout_constraintBottom_toBottomOf="@+id/park_fee_tv"
-        app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time"
-        app:layout_constraintTop_toTopOf="@+id/park_fee_tv" />
+        app:layout_constraintEnd_toEndOf="@id/appointment_start_park_time" />
 
 </android.support.constraint.ConstraintLayout>

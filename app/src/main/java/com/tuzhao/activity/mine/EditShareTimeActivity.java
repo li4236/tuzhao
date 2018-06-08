@@ -269,6 +269,15 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         dismmisLoadingDialog();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mDateOption.isShowing()) {
+            mDateOption.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void setOriginTime() {
         ShareTimeInfo shareTimeInfo = new ShareTimeInfo();
         shareTimeInfo.setShareDate(mParkInfo.getOpen_date());
@@ -615,8 +624,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
      * @return null(不被共享的时间段内没有已预约订单)
      */
     private String isInNotShareTime(Calendar startCalendar, Calendar endCalendar) {
-        Log.e(TAG, "onEndTime   startCalendar: " + DateUtil.printCalendar(startCalendar));
-        Log.e(TAG, "onEndTime   endCalendar: " + DateUtil.printCalendar(endCalendar));
+        Log.e(TAG, "onEndTime   startCalendar: " + DateUtil.getCalendarMonthToMinute(startCalendar));
+        Log.e(TAG, "onEndTime   endCalendar: " + DateUtil.getCalendarMonthToMinute(endCalendar));
         if (mEverydayShareTimeAdapter.getData().isEmpty()) {
             String notShareTime;
             if (startCalendar.compareTo(endCalendar) > 0) {

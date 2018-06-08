@@ -63,7 +63,7 @@ public class DiscountActivity extends BaseActivity {
     private OverFragment overFragment;
     private String[] mTitle;
 
-    private boolean mChooseDisount;
+    private double mOrderFee = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +93,7 @@ public class DiscountActivity extends BaseActivity {
     private void initData() {
         if (UserManager.getInstance().hasLogined()) {
             if (getIntent().hasExtra(ConstansUtil.DISCOUNT_LIST)) {
-                mChooseDisount = true;
+                mOrderFee = Double.parseDouble(getIntent().getStringExtra(ConstansUtil.ORDER_FEE));
                 ArrayList<Discount_Info> list = getIntent().getParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST);
                 handleDiscount(list);
             } else {
@@ -167,11 +167,14 @@ public class DiscountActivity extends BaseActivity {
             if (info.getIs_usable().equals("1")) {
                 //可用
                 if (info.getWhat_type().equals("1")) {
-                    if (DateUtil.isInUsefulDate(info.getEffective_time())) {
-                        //在可用范围内
-                        mCanDiscount.add(info);
-                    } else {
-                        mOldDiscount.add(info);
+                    if (mOrderFee >= Double.valueOf(info.getMin_fee())) {
+                        //大于等于最低消费
+                        if (DateUtil.isInUsefulDate(info.getEffective_time())) {
+                            //在可用范围内
+                            mCanDiscount.add(info);
+                        } else {
+                            mOldDiscount.add(info);
+                        }
                     }
                 }
             } else if (info.getIs_usable().equals("2")) {
@@ -229,7 +232,7 @@ public class DiscountActivity extends BaseActivity {
             switch (position) {
                 case 0:
                     bundle.putSerializable("discounts", mCanDiscount);
-                    if (mChooseDisount) {
+                    if (mOrderFee != -1) {
                         bundle.putBoolean(ConstansUtil.CHOOSE_DISCOUNT, true);
                     }
                     break;

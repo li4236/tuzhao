@@ -320,7 +320,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private void hideOrderDetail() {
         if (mHideAnimator == null) {
-            mHideAnimator = ObjectAnimator.ofFloat(mContainerView, "translationY", 0,mContainerHeight);
+            mHideAnimator = ObjectAnimator.ofFloat(mContainerView, "translationY", 0, mContainerHeight);
             mHideAnimator.setDuration(300);
         }
         mHideAnimator.start();
@@ -328,10 +328,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private void showComentDialog() {
         if (mCommentDialog == null) {
-            mCommentView = getLayoutInflater().inflate(R.layout.fragment_coment_order_layout, null);
+            mCommentView = getLayoutInflater().inflate(R.layout.dialog_coment_order_layout, null);
             mCommentDialog = new CustomDialog(requireContext(), mCommentView, true);
 
-            mParkspaceIv = mCommentView.findViewById(R.id.comment_order_parkspace_iv);
+            // mParkspaceIv = mCommentView.findViewById(R.id.comment_order_parkspace_iv);
             mCBRatingBar = mCommentView.findViewById(R.id.comment_order_crb);
             mCommentEt = mCommentView.findViewById(R.id.comment_order_et);
             mCommentCount = mCommentView.findViewById(R.id.comment_order_comment_count);
@@ -350,11 +350,11 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void initCommentView() {
-        if (!mParkOrderInfo.getPictures().equals("-1")) {
+       /* if (!mParkOrderInfo.getPictures().equals("-1")) {
             mParkspacePic = mParkOrderInfo.getPictures().split(",")[0];
-        }
+        }*/
         mCommentPicFiles = new ArrayList<>(3);
-        ImageUtil.showRoundPic(mParkspaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkspacePic, R.mipmap.ic_img);
+        //ImageUtil.showRoundPic(mParkspaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkspacePic, R.mipmap.ic_img);
 
         mAddIv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -407,11 +407,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         mApplyComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCommentEt.getText().toString().trim().length() > 0) {
-                    requestAddPsComment();
-                } else {
-                    showFiveToast("客官说点什么吧");
-                }
+                requestAddPsComment();
             }
         });
 
@@ -479,6 +475,14 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                                 file.delete();
                             }
                         }
+
+                        Intent intent = new Intent();
+                        intent.setAction(ConstansUtil.COMMENT_SUCCESS);
+                        Bundle bundle = new Bundle();
+                        mParkOrderInfo.setOrder_status("5");
+                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        IntentObserable.dispatch(intent);
 
                         showFiveToast("评价成功");
                         dismmisLoadingDialog();
@@ -601,10 +605,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     break;
                 case ConstansUtil.DIALOG_SHOW:
                     hideOrderDetail();
-                    Log.e(TAG, "onReceive: " );
+                    Log.e(TAG, "onReceive: ");
                     break;
                 case ConstansUtil.DIALOG_DISMISS:
-                    Log.e(TAG, "onReceive: " );
+                    Log.e(TAG, "onReceive: ");
                     showOrderDetail();
                     break;
             }

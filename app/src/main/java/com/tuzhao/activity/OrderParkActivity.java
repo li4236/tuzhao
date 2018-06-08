@@ -403,7 +403,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         }
 
                         startParkCalendar.add(Calendar.MINUTE, park_time);
-                        end_time = DateUtil.printYearToMinutesCalendar(startParkCalendar);
+                        end_time = DateUtil.getCalenarYearToMinutes(startParkCalendar);
 
                         int parkMuintes = park_time;
                         StringBuilder stringBuilder = new StringBuilder();
@@ -578,7 +578,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             //排除不在共享时间段内的(根据共享的时间段)
             if ((shareTimeCalendar = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time(), status == 1)) != null) {
                 //获取车位可共享的时间差
-                Log.e("TAG", "shareTimeDistance: " + DateUtil.printCalendar(shareTimeCalendar[0]) + "  end:" + DateUtil.printCalendar(shareTimeCalendar[1]));
+                Log.e("TAG", "shareTimeDistance: " + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[0]) + "  end:" + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[1]));
                 int position = mCanParkInfo.indexOf(parkInfo);
                 parkInfo.setShareTimeCalendar(shareTimeCalendar);
                 mCanParkInfo.set(position, parkInfo);

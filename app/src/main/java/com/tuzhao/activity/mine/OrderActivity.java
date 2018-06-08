@@ -1,13 +1,11 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMap;
@@ -22,14 +20,13 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
 import com.tuzhao.fragment.parkorder.CancelOrderFragment;
-import com.tuzhao.fragment.parkorder.CommentOrderFragment;
 import com.tuzhao.fragment.parkorder.OrderDetailFragment;
 import com.tuzhao.fragment.parkorder.ParkingOrderFragment;
 import com.tuzhao.fragment.parkorder.PayForOrderFragment;
 import com.tuzhao.info.ParkOrderInfo;
+import com.tuzhao.publicwidget.callback.BackPressedCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
-import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
@@ -46,6 +43,8 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
     private AMap mAMap;
 
     private Point mPoint;
+
+    private BackPressedCallback mBackPressedCallback;
 
     @Override
     protected int resourceId() {
@@ -83,16 +82,11 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
             mAMap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
                 @Override
                 public View getInfoWindow(Marker marker) {
-                    TextView textView = new TextView(OrderActivity.this);
-                    textView.setBackgroundColor(Color.WHITE);
-                    textView.setTextColor(Color.parseColor("#323232"));
+                    View view = getLayoutInflater().inflate(R.layout.info_window_layout, null);
+                    TextView textView = view.findViewById(R.id.info_window_title);
                     textView.setText(marker.getTitle());
                     textView.setMaxWidth((int) (mPoint.x * 0.6));
-                    textView.setPadding(DensityUtil.dp2px(OrderActivity.this, 8), DensityUtil.dp2px(OrderActivity.this, 8),
-                            DensityUtil.dp2px(OrderActivity.this, 8), DensityUtil.dp2px(OrderActivity.this, 8));
-                    ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    textView.setLayoutParams(layoutParams);
-                    return textView;
+                    return view;
                 }
 
                 @Override
@@ -118,7 +112,9 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                 transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
                 break;
             case "2":
-                transaction.replace(R.id.order_container, ParkingOrderFragment.newInstance(mParkOrderInfo));
+                ParkingOrderFragment orderFragment = ParkingOrderFragment.newInstance(mParkOrderInfo);
+                mBackPressedCallback = orderFragment;
+                transaction.replace(R.id.order_container, orderFragment);
                 break;
             case "3":
                 transaction.replace(R.id.order_container, PayForOrderFragment.newInstance(mParkOrderInfo));
@@ -196,6 +192,13 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
     }
 
     @Override
+    public void onBackPressed() {
+        if (mBackPressedCallback == null || !mBackPressedCallback.hanleBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
@@ -212,7 +215,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                         fragmentTransaction.commit();
                     }
                     break;
-                case ConstansUtil.OPEN_PARK_COMMENT:
+                /*case ConstansUtil.OPEN_PARK_COMMENT:
                     android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
                     transaction.addToBackStack(null);
@@ -220,7 +223,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     break;
                 case ConstansUtil.CLOSE_PARK_COMMENT:
                     getSupportFragmentManager().popBackStack();
-                    break;
+                    break;*/
             }
         }
     }

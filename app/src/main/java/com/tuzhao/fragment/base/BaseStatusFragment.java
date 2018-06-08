@@ -187,6 +187,15 @@ public abstract class BaseStatusFragment extends Fragment {
         }
     }
 
+    protected void startActivityForResult(Class<?> tClass, int requestCode, String stringKey,String vaule,String key, ArrayList<? extends Parcelable> data) {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), tClass);
+            intent.putExtra(stringKey, vaule);
+            intent.putParcelableArrayListExtra(key, data);
+            getActivity().startActivityForResult(intent, requestCode);
+        }
+    }
+
     protected void startActivityWithList(Class<?> tClass, String key, ArrayList<? extends Parcelable> data) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putParcelableArrayListExtra(key, data);

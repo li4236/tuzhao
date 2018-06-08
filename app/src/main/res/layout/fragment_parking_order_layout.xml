@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/appointment_income_time"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
 
     <TextView
         android:id="@+id/appointment_park_date"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@id/appointment_park_date_iv"
         app:layout_constraintStart_toStartOf="@id/appointment_park_date_iv"
@@ -92,7 +92,7 @@
 
     <TextView
         android:id="@+id/park_duration"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/park_duration_iv"
         app:layout_constraintStart_toStartOf="@+id/park_duration_iv"
@@ -237,7 +237,7 @@
             android:layout_height="10dp"
             android:layout_marginEnd="6dp"
             android:contentDescription="@string/picture_description"
-            android:src="@drawable/ic_cancel"
+            android:src="@drawable/ic_addtime"
             app:layout_constraintBottom_toBottomOf="@+id/cancel_appoint"
             app:layout_constraintEnd_toStartOf="@+id/cancel_appoint"
             app:layout_constraintTop_toTopOf="@+id/cancel_appoint" />
