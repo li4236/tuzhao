@@ -229,14 +229,19 @@ public class ConstansUtil {
     public static final String ID_CARD_NEGATIVE_PHOTO = "IdCardNegativePhoto";
 
     /**
-     * 车位产权正面照
+     * 车位产权第一张照片
      */
-    public static final String PROPERTY_POSITIVE_PHOTO = "PropertyPositivePhoto";
+    public static final String PROPERTY_FIRST_PHOTO = "PropertyFirstPhoto";
 
     /**
-     * 车位产权反面照
+     * 车位产权第二张照片
      */
-    public static final String PROPERTY_NEGATIVE_PHOTO = "PropertyNegativePhoto";
+    public static final String PROPERTY_SECOND_PHOTO = "PropertySecondPhoto";
+
+    /**
+     * 车位产权第三张照片
+     */
+    public static final String PROPERTY_THIRD_PHOTO = "PropertyThirdPhoto";
 
     /**
      * 评论的对话框弹出

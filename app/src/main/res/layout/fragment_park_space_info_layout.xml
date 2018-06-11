@@ -75,17 +75,13 @@
             app:layout_constraintStart_toEndOf="@+id/revenue_ratio_tv"
             app:layout_constraintTop_toTopOf="@+id/revenue_ratio_tv" />
 
-        <View
-            android:id="@+id/park_lot_name_divider"
-            style="@style/dividerStyle"
-            app:layout_constraintTop_toBottomOf="@+id/revenue_ratio_tv" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/park_space_number_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:background="@color/w0"
-            app:layout_constraintTop_toBottomOf="@+id/park_lot_name_divider">
+            app:layout_constraintTop_toBottomOf="@+id/parking_lot_name_cl">
 
             <TextView
                 android:id="@+id/park_space_number_tv"
@@ -117,17 +113,13 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:id="@+id/park_space_number_divider"
-            style="@style/dividerStyle"
-            app:layout_constraintTop_toBottomOf="@+id/park_space_number_cl" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/park_space_description_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:background="@color/w0"
-            app:layout_constraintTop_toBottomOf="@+id/park_space_number_divider">
+            app:layout_constraintTop_toBottomOf="@+id/park_space_number_cl">
 
             <TextView
                 android:id="@+id/park_space_description_tv"
@@ -158,165 +150,163 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:id="@+id/park_space_description_divider"
-            style="@style/dividerStyle"
-            app:layout_constraintTop_toBottomOf="@+id/park_space_description_cl" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/idCard_cl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginTop="1dp"
             android:background="@color/w0"
-            app:layout_constraintTop_toBottomOf="@+id/park_space_description_divider">
+            app:layout_constraintTop_toBottomOf="@+id/park_space_description_cl">
 
             <TextView
                 android:id="@+id/id_card_tv"
                 style="@style/ThirtyTextB1Style"
                 android:layout_marginStart="16dp"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
+                android:layout_marginTop="16dp"
                 android:text="身份证照："
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/id_card"
-                style="@style/TwentyTextG6Style"
-                android:layout_width="0dp"
-                android:layout_marginStart="16dp"
-                android:gravity="start"
-                android:text="点击上传身份证"
-                app:layout_constraintBottom_toBottomOf="@+id/id_card_tv"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/id_card_tv"
-                app:layout_constraintTop_toTopOf="@+id/id_card_tv" />
+                app:layout_constraintStart_toEndOf="@+id/id_card_tv">
 
-            <ImageView
-                android:id="@+id/id_card_positive_photo_iv"
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/picture_description"
-                android:visibility="gone"
-                app:layout_constraintDimensionRatio="8:5"
-                app:layout_constraintStart_toEndOf="@+id/id_card_tv"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/id_card_positive_photo_iv"
+                    android:layout_width="90dp"
+                    android:layout_height="56dp"
+                    android:contentDescription="@string/picture_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/id_card_positive_photo_tv"
-                style="@style/TenTextG6Stytle"
-                android:paddingBottom="8dp"
-                android:paddingTop="4dp"
-                android:text="正面"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@id/id_card_positive_photo_iv"
-                app:layout_constraintStart_toStartOf="@id/id_card_positive_photo_iv"
-                app:layout_constraintTop_toBottomOf="@+id/id_card_positive_photo_iv" />
+                <TextView
+                    android:id="@+id/id_card_positive_photo_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#59000000"
+                    android:text="人像面"
+                    android:textColor="@color/w0"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
 
-            <ImageView
-                android:id="@+id/id_card_negative_photo_iv"
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="32dp"
-                android:contentDescription="@string/picture_description"
-                android:visibility="gone"
-                app:layout_constraintDimensionRatio="8:5"
-                app:layout_constraintStart_toEndOf="@id/id_card_positive_photo_iv"
-                app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
+                <ImageView
+                    android:id="@+id/id_card_negative_photo_iv"
+                    android:layout_width="90dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="24dp"
+                    android:contentDescription="@string/picture_description"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintStart_toEndOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
 
-            <TextView
-                android:id="@+id/id_card_negative_photo_tv"
-                style="@style/TenTextG6Stytle"
-                android:paddingTop="4dp"
-                android:text="反面"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/id_card_negative_photo_iv"
-                app:layout_constraintStart_toStartOf="@+id/id_card_negative_photo_iv"
-                app:layout_constraintTop_toBottomOf="@+id/id_card_negative_photo_iv" />
+                <TextView
+                    android:id="@+id/id_card_negative_photo_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#59000000"
+                    android:text="国徽面"
+                    android:textColor="@color/w0"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_negative_photo_iv" />
+
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
-
-        <View
-            android:id="@+id/IdCard_divider"
-            style="@style/dividerStyle"
-            app:layout_constraintTop_toBottomOf="@+id/idCard_cl" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/property_photo_cl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginTop="1dp"
             android:background="@color/w0"
-            app:layout_constraintTop_toBottomOf="@+id/IdCard_divider">
+            app:layout_constraintTop_toBottomOf="@+id/idCard_cl">
 
             <TextView
                 android:id="@+id/property_photo_tv"
                 style="@style/ThirtyTextB1Style"
-                android:paddingBottom="16dp"
-                android:paddingStart="16dp"
-                android:paddingTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:text="产权照片："
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/property_photo"
-                style="@style/TwentyTextG6Style"
-                android:layout_width="0dp"
-                android:layout_marginStart="16dp"
-                android:gravity="start"
-                android:text="点击上传车位产权照"
-                app:layout_constraintBottom_toBottomOf="@+id/property_photo_tv"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/property_photos_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/property_photo_tv">
+
+                <ImageView
+                    android:id="@+id/property_first_photo_iv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:contentDescription="@string/picture_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/property_second_photo_iv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@string/picture_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/property_first_photo_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/property_third_photo_iv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@string/picture_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/property_second_photo_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/take_property_photo_cl"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:background="@drawable/y3_all_1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/property_photo_tv"
-                app:layout_constraintTop_toTopOf="@+id/property_photo_tv" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/property_positive_photo_iv"
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/picture_description"
-                android:visibility="gone"
-                app:layout_constraintDimensionRatio="8:5"
-                app:layout_constraintStart_toEndOf="@id/property_photo_tv"
-                app:layout_constraintTop_toTopOf="@+id/property_photo_tv" />
+                <ImageView
+                    android:layout_width="33dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_photo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/property_positive_photo_tv"
-                style="@style/TenTextG6Stytle"
-                android:layout_marginTop="4dp"
-                android:paddingBottom="8dp"
-                android:text="正面"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@id/property_positive_photo_iv"
-                app:layout_constraintStart_toStartOf="@id/property_positive_photo_iv"
-                app:layout_constraintTop_toBottomOf="@+id/property_positive_photo_iv" />
+                <TextView
+                    style="@style/TenTextB1Style"
+                    android:layout_marginBottom="8dp"
+                    android:text="拍摄产权照片"
+                    android:textColor="@color/y3"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/property_negative_photo_iv"
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="32dp"
-                android:contentDescription="@string/picture_description"
-                android:visibility="gone"
-                app:layout_constraintDimensionRatio="8:5"
-                app:layout_constraintStart_toEndOf="@+id/property_positive_photo_iv"
-                app:layout_constraintTop_toTopOf="@+id/property_positive_photo_iv" />
-
-            <TextView
-                android:id="@+id/property_negative_photo_tv"
-                style="@style/TenTextG6Stytle"
-                android:layout_marginTop="4dp"
-                android:paddingBottom="8dp"
-                android:text="反面"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/property_negative_photo_iv"
-                app:layout_constraintStart_toStartOf="@+id/property_negative_photo_iv"
-                app:layout_constraintTop_toBottomOf="@+id/property_negative_photo_iv" />
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 

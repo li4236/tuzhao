@@ -1,5 +1,6 @@
 package com.tuzhao.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,7 +25,13 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.tuzhao.R;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
+
+import java.io.File;
+
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -284,6 +291,32 @@ public class ImageUtil {
             }
         }
 
+    }
+
+    public static void compressPhoto(Context context, String path, final SuccessCallback<File> callback) {
+        //进行图片逐个压缩
+        Luban.with(context)
+                .load(path)
+                .ignoreBy(1)
+                .setTargetDir(context.getApplicationContext().getFilesDir().getAbsolutePath())
+                .setCompressListener(new OnCompressListener() {
+                    @Override
+                    public void onStart() {
+                        // 压缩开始前调用，可以在方法内启动 loading UI
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        // 压缩成功后调用，返回压缩后的图片文件
+                        callback.onSuccess(file);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // 当压缩过程出现问题时调用
+
+                    }
+                }).launch();
     }
 
 }
