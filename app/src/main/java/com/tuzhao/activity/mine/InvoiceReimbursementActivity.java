@@ -101,7 +101,6 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        mCommonAdapter.clearAll();
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
@@ -112,7 +111,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                                         break;
                                     /*case "102":
 
-                                       *//* showFiveToast("查询不到订单信息，请稍后再试");
+                                     *//* showFiveToast("查询不到订单信息，请稍后再试");
                                         finish();*//*
                                         break;*/
                                 }
