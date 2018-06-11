@@ -108,7 +108,6 @@ public class DensityUtil {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-
             return "";
         }
     }

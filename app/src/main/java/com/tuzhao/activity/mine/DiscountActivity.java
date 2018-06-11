@@ -167,15 +167,15 @@ public class DiscountActivity extends BaseActivity {
             if (info.getIs_usable().equals("1")) {
                 //可用
                 if (info.getWhat_type().equals("1")) {
-                    if (mOrderFee >= Double.valueOf(info.getMin_fee())) {
-                        //大于等于最低消费
+                    /*if (mOrderFee >= Double.valueOf(info.getMin_fee())) {
+                        //大于等于最低消费*/
                         if (DateUtil.isInUsefulDate(info.getEffective_time())) {
                             //在可用范围内
                             mCanDiscount.add(info);
                         } else {
                             mOldDiscount.add(info);
                         }
-                    }
+                    //}
                 }
             } else if (info.getIs_usable().equals("2")) {
                 mUsedDiscount.add(info);
@@ -215,7 +215,7 @@ public class DiscountActivity extends BaseActivity {
 
         private String[] TITLES;
 
-        public MyFrageStatePagerAdapter(FragmentManager fm, String[] title) {
+         MyFrageStatePagerAdapter(FragmentManager fm, String[] title) {
             super(fm);
             TITLES = title;
         }
@@ -233,7 +233,7 @@ public class DiscountActivity extends BaseActivity {
                 case 0:
                     bundle.putSerializable("discounts", mCanDiscount);
                     if (mOrderFee != -1) {
-                        bundle.putBoolean(ConstansUtil.CHOOSE_DISCOUNT, true);
+                        bundle.putDouble(ConstansUtil.ORDER_FEE, mOrderFee);
                     }
                     break;
                 case 1:

@@ -1717,6 +1717,23 @@ public class DateUtil {
         return number;
     }
 
+    public static String deleteZero(String number) {
+        if (number.charAt(number.length() - 1) != '0') {
+            return number;
+        }
+
+        int count = 0;
+        for(int i=number.length()-1;i>=0;i--) {
+            if (number.charAt(i) == '0') {
+                count++;
+            } else {
+                break;
+            }
+        }
+        number = number.substring(0, number.length() - count);
+        return number;
+    }
+
     /**
      * 十以下的数加零
      */

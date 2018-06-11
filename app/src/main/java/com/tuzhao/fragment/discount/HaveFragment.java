@@ -59,6 +59,8 @@ public class HaveFragment extends BaseFragment {
 
     private DiscountAdapter.IonSlidingViewClickListener slidingViewClickListener;
 
+    private double mOrderFee;
+
     /**
      * 页面相关
      */
@@ -100,12 +102,13 @@ public class HaveFragment extends BaseFragment {
             linearlayout_nodata.setVisibility(View.VISIBLE);
         }
 
-        if (getArguments() != null && getArguments().getBoolean(ConstansUtil.CHOOSE_DISCOUNT)) {
+        if (getArguments() != null && getArguments().getDouble(ConstansUtil.ORDER_FEE, -1) != -1) {
             mAdapter.setOnItemClickListener(new DiscountAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(Discount_Info discountInfo) {
-                    Log.e("TAG", "onItemClick: " );
-                    if (getActivity() != null) {
+                    if (mOrderFee < Double.valueOf(discountInfo.getMin_fee())) {
+                        MyToast.showToast(requireContext(), "该优惠券的最低消费金额为" + DateUtil.deleteZero(discountInfo.getMin_fee()) + "元哦", 5);
+                    } else if (getActivity() != null) {
                         Intent intent = new Intent();
                         Bundle data = new Bundle();
                         data.putParcelable(ConstansUtil.CHOOSE_DISCOUNT, discountInfo);
@@ -115,6 +118,7 @@ public class HaveFragment extends BaseFragment {
                     }
                 }
             });
+
             mContentView.findViewById(R.id.not_use_discount).setVisibility(View.VISIBLE);
             mContentView.findViewById(R.id.not_use_discount).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -137,7 +141,6 @@ public class HaveFragment extends BaseFragment {
 
     private void initEvent() {
     }
-
 
     private class onMyRefresh implements OnRefreshListener {
         @Override

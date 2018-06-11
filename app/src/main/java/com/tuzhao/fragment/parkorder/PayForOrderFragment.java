@@ -17,6 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
@@ -372,13 +375,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                                 //可用
                                 if (discount_info.getWhat_type().equals("1")) {
                                     //是停车券
-                                    if (Double.valueOf(mParkOrderInfo.getOrder_fee()) >= Double.valueOf(discount_info.getMin_fee())) {
-                                        //大于最低消费
+                                   /* if (Double.valueOf(mParkOrderInfo.getOrder_fee()) >= Double.valueOf(discount_info.getMin_fee())) {
+                                        //大于最低消费*/
                                         if (DateUtil.isInUsefulDate(discount_info.getEffective_time())) {
                                             //在可用范围内
                                             mCanUseDiscounts.add(discount_info);
                                         }
-                                    }
+                                    //}
                                 }
                             }
                         }
@@ -471,6 +474,19 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             mParkDiscount.setText(discountCount);
         }
         mShouldPayFee.setText(shouldPay);
+    }
+
+    private void wechatPay() {
+        IWXAPI iwxapi = WXAPIFactory.createWXAPI(getContext(), null);
+        iwxapi.registerApp("");
+
+        PayReq payReq = new PayReq();
+        payReq.appId = "";
+        payReq.partnerId = "";
+        payReq.packageValue = "Sign=WXPay";
+        payReq.nonceStr = "";
+        payReq.sign = "";
+        iwxapi.sendReq(payReq);
     }
 
     /**
