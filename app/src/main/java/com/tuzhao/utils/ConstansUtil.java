@@ -6,9 +6,39 @@ package com.tuzhao.utils;
 
 public class ConstansUtil {
 
+    public static final String PACKAGE_NAME = "com.tuzhao";
+
+    /**
+     * 微信的AppId
+     */
+    public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";
+
+    public static final String PAY_SUCCESS = "PaySuccess";
+
+    /**
+     * 支付错误
+     */
+    public static final String PAY_ERROR = "PayError";
+
+
+    /**
+     * 用户取消支付
+     */
+    public static final String PAY_CANCEL = "PayCancel";
+
+    /**
+     * Intent里面的消息
+     */
+    public static final String INTENT_MESSAGE = "IntentMessage";
+
     public static final String PARK_SPACE_ID = "ParkSpaceId";
 
     public static final String PARK_SPACE_INFO = "ParkSpaceInfo";
+
+    /**
+     * 城市码
+     */
+    public static final String CITY_CODE = "CityCode";
 
     /**
      * 传递选中的发票给确认订单

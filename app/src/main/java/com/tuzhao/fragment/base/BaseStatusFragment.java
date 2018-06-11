@@ -167,6 +167,12 @@ public abstract class BaseStatusFragment extends Fragment {
         startActivity(intent);
     }
 
+    protected void startActivity(Class<?> tClass, Bundle value) {
+        Intent intent = new Intent(getActivity(), tClass);
+        intent.putExtras(value);
+        startActivity(intent);
+    }
+
     protected void startActivity(Class<?> tClass, String key, Serializable data) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(key, data);
@@ -187,7 +193,7 @@ public abstract class BaseStatusFragment extends Fragment {
         }
     }
 
-    protected void startActivityForResult(Class<?> tClass, int requestCode, String stringKey,String vaule,String key, ArrayList<? extends Parcelable> data) {
+    protected void startActivityForResult(Class<?> tClass, int requestCode, String stringKey, String vaule, String key, ArrayList<? extends Parcelable> data) {
         if (getActivity() != null) {
             Intent intent = new Intent(getActivity(), tClass);
             intent.putExtra(stringKey, vaule);

@@ -24,6 +24,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
+import com.tuzhao.activity.PayActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseStatusFragment;
@@ -32,6 +33,7 @@ import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.Discount_Info;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.User_Info;
+import com.tuzhao.info.WechatPayParam;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.CollectionManager;
@@ -51,7 +53,6 @@ import com.tuzhao.utils.IntentObserver;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -237,7 +238,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 break;
             case R.id.pay_for_order_should_pay:
                 if (mShouldPay >= 0.01) {
-                    payV2();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ConstansUtil.ORDER_FEE, mShouldPay+"元");
+                    bundle.putString(ConstansUtil.PARK_ORDER_ID, mParkOrderInfo.getId());
+                    bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                    bundle.putString(ConstansUtil.CHOOSE_DISCOUNT, mChooseDiscount == null ? "-1" : mChooseDiscount.getId());
+                    startActivity(PayActivity.class, bundle);
+                    //payV2();
                 } else {
                     requetFinishOrder();
                 }
@@ -267,7 +274,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             Toast.makeText(MyApplication.getInstance(), "支付成功", Toast.LENGTH_SHORT).show();
                         } else if (TextUtils.equals(resultStatus, "6001")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showFiveToast("取消支付");
+                            showFiveToast("支付取消");
                         } else if (TextUtils.equals(resultStatus, "6002")) {
                             showFiveToast("网络异常，请稍后再试");
                         } else if (TextUtils.equals(resultStatus, "4000")) {
@@ -377,10 +384,10 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                                     //是停车券
                                    /* if (Double.valueOf(mParkOrderInfo.getOrder_fee()) >= Double.valueOf(discount_info.getMin_fee())) {
                                         //大于最低消费*/
-                                        if (DateUtil.isInUsefulDate(discount_info.getEffective_time())) {
-                                            //在可用范围内
-                                            mCanUseDiscounts.add(discount_info);
-                                        }
+                                    if (DateUtil.isInUsefulDate(discount_info.getEffective_time())) {
+                                        //在可用范围内
+                                        mCanUseDiscounts.add(discount_info);
+                                    }
                                     //}
                                 }
                             }
@@ -477,16 +484,36 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void wechatPay() {
-        IWXAPI iwxapi = WXAPIFactory.createWXAPI(getContext(), null);
-        iwxapi.registerApp("");
+        getOkGo(HttpConstants.getWechatPayOrder)
+                .params("orderId", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("discountId", mChooseDiscount == null ? "-1" : mChooseDiscount.getId())
+                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
+                        IWXAPI iwxapi = WXAPIFactory.createWXAPI(getContext(), null);
+                        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
 
-        PayReq payReq = new PayReq();
-        payReq.appId = "";
-        payReq.partnerId = "";
-        payReq.packageValue = "Sign=WXPay";
-        payReq.nonceStr = "";
-        payReq.sign = "";
-        iwxapi.sendReq(payReq);
+                        PayReq payReq = new PayReq();
+                        payReq.appId = ConstansUtil.WECHAT_APP_ID;
+                        payReq.partnerId = "1499403182";
+                        payReq.packageValue = "Sign=WXPay";
+                        payReq.prepayId = o.data.getPrePayId();
+                        payReq.nonceStr = o.data.getNonceStr();
+                        payReq.timeStamp = o.data.getTimeStamp();
+                        payReq.sign = o.data.getSign();
+                        iwxapi.sendReq(payReq);
+
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
     }
 
     /**
@@ -556,11 +583,22 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     public void onReceive(Intent intent) {
-        if (Objects.equals(intent.getAction(), ConstansUtil.CHOOSE_DISCOUNT)) {
-            if (intent.hasExtra(ConstansUtil.FOR_REQUEST_RESULT)) {
-                Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
-                mChooseDiscount = bundle.getParcelable(ConstansUtil.CHOOSE_DISCOUNT);
-                calculateShouldPayFee();
+        if (intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case ConstansUtil.CHOOSE_DISCOUNT:
+                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    mChooseDiscount = bundle.getParcelable(ConstansUtil.CHOOSE_DISCOUNT);
+                    calculateShouldPayFee();
+                    break;
+                case ConstansUtil.PAY_SUCCESS:
+                    requetFinishOrder();
+                    break;
+                case ConstansUtil.PAY_ERROR:
+                    showFiveToast(intent.getStringExtra(ConstansUtil.INTENT_MESSAGE));
+                    break;
+                case ConstansUtil.PAY_CANCEL:
+                    showFiveToast("支付取消");
+                    break;
             }
         }
     }

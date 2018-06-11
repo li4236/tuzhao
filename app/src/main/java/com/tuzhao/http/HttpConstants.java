@@ -153,6 +153,11 @@ public class HttpConstants {
     public static String alipayApplyOrder = ROOT_URL + "alipayApplyOrder";
 
     /**
+     * 获取微信支付订单参数
+     */
+    public static String getWechatPayOrder = ROOT_URL + "getWechatPayOrder";
+
+    /**
      * 完成停车订单支付
      */
     public static String finishParkOrder = ROOT_URL + "finishParkOrder";
