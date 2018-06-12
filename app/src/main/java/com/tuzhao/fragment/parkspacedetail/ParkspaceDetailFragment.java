@@ -168,7 +168,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
                             int aingcount = 0;
                             for (ParkOrderInfo parkOrderInfo : mOrderList) {
                                 if (parkOrderInfo.getOrder_status().equals("3")) {
-                                    MyToast.showToast(mContext, "您当前还有为付款订单", 5);
+                                    MyToast.showToast(mContext, "您当前还有未付款的订单", 5);
                                     return;
                                 } else {
                                     if (parkOrderInfo.getOrder_status().equals("1") || parkOrderInfo.getOrder_status().equals("2")) {

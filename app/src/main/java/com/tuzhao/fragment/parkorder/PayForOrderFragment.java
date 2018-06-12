@@ -25,6 +25,7 @@ import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.PayActivity;
+import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseStatusFragment;
@@ -205,6 +206,10 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         switch (v.getId()) {
             case R.id.pay_for_order_question_tv:
             case R.id.appointment_calculate_rule_iv:
+                Bundle parkLotBundle = new Bundle();
+                parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                startActivity(BillingRuleActivity.class,parkLotBundle);
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {

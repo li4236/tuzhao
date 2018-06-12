@@ -198,6 +198,8 @@ public class ConstansUtil {
      */
     public static final String JUMP_TO_DEPOSIT_PAYMENT = "JumpToDepositPayment";
 
+    public static final String PARK_LOT_ID = "ParkLotId";
+
     /**
      * 车场名称
      */

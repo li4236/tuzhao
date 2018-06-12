@@ -27,6 +27,7 @@ import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
+import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
@@ -215,7 +216,11 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pay_for_order_question_tv:
-
+            case R.id.appointment_calculate_rule_iv:
+                Bundle parkLotBundle = new Bundle();
+                parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                startActivity(BillingRuleActivity.class,parkLotBundle);
                 break;
             case R.id.contact_service_cl:
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));

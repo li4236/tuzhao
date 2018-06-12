@@ -236,8 +236,10 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             mParkLotName.setText(mPark.getparkStation());
             String[] ccc = mPark.getProfit_ratio().split(":");
             mRevenueRatio.setText(ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）");
-            mRevenueRatioTv.setVisibility(View.VISIBLE);
-            mRevenueRatio.setVisibility(View.VISIBLE);
+            if (mRevenueRatioTv.getVisibility() != View.VISIBLE) {
+                mRevenueRatioTv.setVisibility(View.VISIBLE);
+                mRevenueRatio.setVisibility(View.VISIBLE);
+            }
         } else if (requestCode == ConstansUtil.PICTURE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             final List<ImageBean> imageBeans = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {

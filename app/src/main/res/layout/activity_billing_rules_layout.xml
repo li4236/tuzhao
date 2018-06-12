@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/w0">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="48dp">
+
+            <TextView
+                android:id="@+id/park_lot_name"
+                style="@style/CenterHorizonTwentyTextB1"
+                android:layout_width="0dp"
+                android:layout_marginTop="28dp"
+                android:text="停车场"
+                app:layout_constraintEnd_toEndOf="@+id/park_fee_cl"
+                app:layout_constraintStart_toStartOf="@+id/park_fee_cl"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/park_fee_cl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/park_lot_name">
+
+                <View
+                    android:id="@+id/park_fee_top_divider"
+                    style="@style/dividerStyle"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/park_fee_start_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_forth_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/park_fee_end_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_forth_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/park_fee_center_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_forth_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/park_fee_first_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_top_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="起停费用"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_first_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_top_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="0元"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_first_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_top_divider" />
+
+                <View
+                    android:id="@+id/park_fee_second_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_first_divider" />
+
+                <TextView
+                    android:id="@+id/high_time"
+                    style="@style/TwentyTextB1Style"
+                    android:text="8:00 — 11:00"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_second_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_first_divider" />
+
+                <TextView
+                    android:id="@+id/high_fee"
+                    style="@style/TwentyTextB1Style"
+                    android:text="8元/小时"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_second_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_first_divider" />
+
+                <View
+                    android:id="@+id/park_fee_thrid_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_second_divider" />
+
+                <TextView
+                    android:id="@+id/low_time"
+                    style="@style/TwentyTextB1Style"
+                    android:text="11:00 — 次日8:00"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_thrid_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_second_divider" />
+
+                <TextView
+                    android:id="@+id/low_fee"
+                    style="@style/TwentyTextB1Style"
+                    android:text="5元/小时"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_thrid_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_second_divider" />
+
+                <View
+                    android:id="@+id/park_fee_forth_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_thrid_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="超时费用"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_forth_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_thrid_divider" />
+
+                <TextView
+                    android:id="@+id/overtime_fee"
+                    style="@style/TwentyTextB1Style"
+                    android:text="16元/小时"
+                    app:layout_constraintBottom_toTopOf="@+id/park_fee_forth_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/park_fee_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/park_fee_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/park_fee_thrid_divider" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/irregularities"
+                style="@style/CenterHorizonTwentyTextB1"
+                android:layout_marginTop="28dp"
+                android:text="违规行为说明"
+                app:layout_constraintTop_toBottomOf="@+id/park_fee_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/irregularities_cl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/irregularities">
+
+                <View
+                    android:id="@+id/irregularities_top_divider"
+                    style="@style/dividerStyle"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/irregularities_start_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/irregularities_end_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/irregularities_center_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/irregularities_second_center_divider"
+                    style="@style/VerticalDividerStyle"
+                    android:layout_height="0dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_center_divider"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/irregularities_first_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_top_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="违规行为"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_first_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_top_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="信用扣除"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_first_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_top_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="费用"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_first_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_top_divider" />
+
+                <View
+                    android:id="@+id/irregularities_second_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_first_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="预约未停"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_second_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_first_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="—5分"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_second_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_first_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="扣保证金"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_second_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_first_divider" />
+
+                <View
+                    android:id="@+id/irregularities_thrid_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_second_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="停车超时"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_thrid_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_second_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="—5分"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_thrid_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_second_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="超时计费"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_thrid_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_second_divider" />
+
+                <View
+                    android:id="@+id/irregularities_forth_divider"
+                    style="@style/dividerStyle"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/g10"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_thrid_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="过早离开"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_start_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_thrid_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="—5分"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_thrid_divider" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:text="剩余时间半价"
+                    app:layout_constraintBottom_toTopOf="@+id/irregularities_forth_divider"
+                    app:layout_constraintEnd_toStartOf="@+id/irregularities_end_divider"
+                    app:layout_constraintStart_toEndOf="@+id/irregularities_second_center_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/irregularities_thrid_divider" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/indicate"
+                style="@style/TwentyTextB1Style"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="28dp"
+                android:text="注："
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/irregularities_cl" />
+
+            <TextView
+                android:id="@+id/first_indicate"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:lineSpacingExtra="5dp"
+                android:text="1、每次超时、违约均会扣除信用分，信用分不足500的用户，将收取更高的担保金才能停车。"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/indicate"
+                app:layout_constraintTop_toBottomOf="@+id/indicate" />
+
+            <TextView
+                android:id="@+id/second_indicate"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="28dp"
+                android:gravity="start"
+                android:lineSpacingExtra="5dp"
+                android:text="2、预约前请合理计划停车时间，结束停车时剩余时长≥停车总时长的1/5，则判定为过早离开，将扣除相应的信用分值，剩余时长将按对应时段进行半价计费。"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/first_indicate"
+                app:layout_constraintTop_toBottomOf="@+id/first_indicate" />
+
+            <TextView
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="28dp"
+                android:gravity="start"
+                android:lineSpacingExtra="5dp"
+                android:text="3、预约后请及时到场。若临时有事，请提前取消订单，预约后没到场停车（迟到不算），将扣除相应的保证金，并扣除相应的信用分值。"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/second_indicate"
+                app:layout_constraintTop_toBottomOf="@+id/second_indicate" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

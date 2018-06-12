@@ -102,12 +102,9 @@ public class DateUtil {
         return sSpecialToadyStartCalendar;
     }
 
-    /**
-     * 因为选择的时间没24:00的，所以当天的结束时间为23:59
-     */
     public static Calendar getSpecialTodayEndCalendar() {
         if (sSpecialTodayEndCalendar == null) {
-            sSpecialTodayEndCalendar = getYearToMinuteCalendar("2018-04-24 23:59");
+            sSpecialTodayEndCalendar = getYearToMinuteCalendar("2018-04-24 24:00");
         }
         return sSpecialTodayEndCalendar;
     }
@@ -116,7 +113,7 @@ public class DateUtil {
      * @param hourWithMinute HH:mm
      */
     public static Calendar getSpecialCalendar(String hourWithMinute) {
-        Calendar calendar = getSpecialTodayStartCalendar();
+        Calendar calendar = getYearToMinuteCalendar("2018-04-24 00:00");
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hourWithMinute.substring(0, hourWithMinute.indexOf(":"))));
         calendar.set(Calendar.MINUTE, Integer.valueOf(hourWithMinute.substring(hourWithMinute.indexOf(":") + 1, hourWithMinute.length())));
         calendar.set(Calendar.MILLISECOND, 0);
@@ -1717,19 +1714,27 @@ public class DateUtil {
         return number;
     }
 
+    /**
+     * 删掉.00
+     */
     public static String deleteZero(String number) {
         if (number.charAt(number.length() - 1) != '0') {
             return number;
         }
 
         int count = 0;
-        for(int i=number.length()-1;i>=0;i--) {
+        for (int i = number.length() - 1; i >= 0; i--) {
             if (number.charAt(i) == '0') {
                 count++;
             } else {
                 break;
             }
         }
+
+        if (number.charAt(number.length() - count-1) == '.') {
+            count++;
+        }
+
         number = number.substring(0, number.length() - count);
         return number;
     }

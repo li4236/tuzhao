@@ -1055,7 +1055,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 return true;
             }
 
-            if (endCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) > 0) {
+            if (endCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) >= 0) {
                 //如果是跨天的则再比较第二天的时段是否有重复
                 startCalendar = DateUtil.getSpecialTodayStartCalendar();
                 endCalendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -1064,7 +1064,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 }
             }
 
-            if (otherEndCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) > 0) {
+            if (otherEndCalendar.compareTo(DateUtil.getSpecialTodayEndCalendar()) >= 0) {
                 otherStartCalendar = DateUtil.getSpecialTodayStartCalendar();
                 otherEndCalendar.add(Calendar.DAY_OF_MONTH, -1);
                 if (DateUtil.isIntersection(otherStartCalendar, otherEndCalendar, startCalendar, endCalendar)) {

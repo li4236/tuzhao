@@ -162,6 +162,7 @@
             android:name=".activity.mine.AddParkSpaceActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.PayActivity" />
+        <activity android:name=".activity.mine.BillingRuleActivity" />
 
         <!--QQ分享-->
         <activity

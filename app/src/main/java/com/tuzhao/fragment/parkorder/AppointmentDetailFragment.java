@@ -12,6 +12,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
+import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
@@ -146,7 +147,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         switch (v.getId()) {
             case R.id.appointment_calculate_rule:
             case R.id.appointment_calculate_rule_iv:
-
+                Bundle bundle = new Bundle();
+                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                startActivity(BillingRuleActivity.class,bundle);
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
