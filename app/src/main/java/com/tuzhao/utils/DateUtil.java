@@ -1731,7 +1731,7 @@ public class DateUtil {
             }
         }
 
-        if (number.charAt(number.length() - count-1) == '.') {
+        if (number.charAt(number.length() - count - 1) == '.') {
             count++;
         }
 
