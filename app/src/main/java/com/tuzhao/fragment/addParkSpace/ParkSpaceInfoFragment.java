@@ -320,6 +320,9 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         ImageUtil.showPic(mPropertyFirstPhoto, mPropertyFirstPath);
 
         if (mPropertySecondPath.equals("-1")) {
+            if (mPropertySecondPhoto.getVisibility() != View.VISIBLE) {
+                mPropertySecondPhoto.setVisibility(View.VISIBLE);
+            }
             mPropertySecondPhoto.setPadding(mSixtyDp, mEightyDp, mSixtyDp, mEightyDp);
             mPropertySecondPhoto.setBackgroundResource(R.drawable.y3_all_1dp);
             ImageUtil.showPic(mPropertySecondPhoto, R.drawable.ic_photo);
@@ -331,6 +334,9 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         mPropertySecondPhoto.setBackgroundResource(0);
         ImageUtil.showPic(mPropertySecondPhoto, mPropertySecondPath);
         if (mPropertyThirdPath.equals("-1")) {
+            if (mPropertyThirdPhoto.getVisibility() != View.VISIBLE) {
+                mPropertyThirdPhoto.setVisibility(View.VISIBLE);
+            }
             setPropertyPhotoNormal(mPropertyThirdPhoto);
         }
     }
@@ -401,18 +407,19 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                     mPropertyThirdPath = "-1";
                     showPropertyFirstPhoto();
                     showPropertySecondPhoto();
-                    setPropertyPhotoNormal(mPropertyThirdPhoto);
                 } else if (!mPropertySecondPath.equals("-1")) {
                     mPropertyFirstPath = mPropertySecondPath;
                     mPropertySecondPath = "-1";
                     showPropertyFirstPhoto();
                     setPropertyPhotoNormal(mPropertySecondPhoto);
+                    mPropertyThirdPhoto.setVisibility(View.INVISIBLE);
                 }
                 break;
             case 3:
                 if (mPropertyThirdPath.equals("-1")) {
                     mPropertySecondPath = "-1";
                     setPropertyPhotoNormal(mPropertySecondPhoto);
+                    mPropertyThirdPhoto.setVisibility(View.INVISIBLE);
                 } else {
                     mPropertySecondPath = mPropertyThirdPath;
                     mPropertyThirdPath = "-1";
