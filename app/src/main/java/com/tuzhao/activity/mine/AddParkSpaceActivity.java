@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.fragment.addParkSpace.DepositPaymentFragment;
 import com.tuzhao.fragment.addParkSpace.ParkSpaceInfoFragment;
 import com.tuzhao.fragment.addParkSpace.TimeSettingFragment;
 import com.tuzhao.utils.ConstansUtil;
@@ -47,6 +49,8 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     private ParkSpaceInfoFragment mParkSpaceInfoFragment;
 
     private TimeSettingFragment mTimeSettingFragment;
+
+    private DepositPaymentFragment mDepositPaymentFragment;
 
     private int mCurrentPosition;
 
@@ -120,11 +124,30 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 } else {
                     if (mCurrentPosition == 0) {
                         nextStep();
+                    } else if (mCurrentPosition == 2) {
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.add_park_space_container, mTimeSettingFragment);
+                        transaction.commit();
+                        mCurrentPosition = 1;
+                        setTimeSettingChoose(true);
+                        setDepositPaymentChoose(false);
                     }
                 }
                 break;
             case R.id.deposit_payment_cl:
+                if (mDepositPaymentFragment == null) {
+                    if (mTimeSettingFragment == null) {
+                        showFiveToast("请先完成车位信息哦");
+                    } else {
+                        showFiveToast("请先完成时间设置哦");
+                    }
+                } else {
+                    if (mCurrentPosition == 0) {
 
+                    } else if (mCurrentPosition == 1) {
+                        nextStep();
+                    }
+                }
                 break;
             case R.id.next_step_tv:
                 nextStep();
@@ -199,6 +222,16 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     fragmentTransaction.commit();
                     mCurrentPosition = 1;
                     setTimeSettingChoose(true);
+                    break;
+                case ConstansUtil.JUMP_TO_DEPOSIT_PAYMENT:
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    if (mDepositPaymentFragment == null) {
+                        mDepositPaymentFragment = new DepositPaymentFragment();
+                    }
+                    transaction.replace(R.id.add_park_space_container, mDepositPaymentFragment);
+                    transaction.commit();
+                    mCurrentPosition = 2;
+                    setDepositPaymentChoose(true);
                     break;
             }
         }

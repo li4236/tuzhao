@@ -203,46 +203,6 @@ public class ConstansUtil {
     public static final String PARK_LOT_NAME = "ParkLotName";
 
     /**
-     * 收益比
-     */
-    public static final String REVENUE_RATIO = "RevenueRatio";
-
-    /**
-     * 真实姓名
-     */
-    public static final String REAL_NAME = "RealName";
-
-    /**
-     * 车位描述
-     */
-    public static final String PARK_SPACE_DESCRIPTION = "ParkSpaceDescription";
-
-    /**
-     * 身份证正面照
-     */
-    public static final String ID_CARD_POSITIVE_PHOTO = "IdCardPositivePhoto";
-
-    /**
-     * 身份证反面照
-     */
-    public static final String ID_CARD_NEGATIVE_PHOTO = "IdCardNegativePhoto";
-
-    /**
-     * 车位产权第一张照片
-     */
-    public static final String PROPERTY_FIRST_PHOTO = "PropertyFirstPhoto";
-
-    /**
-     * 车位产权第二张照片
-     */
-    public static final String PROPERTY_SECOND_PHOTO = "PropertySecondPhoto";
-
-    /**
-     * 车位产权第三张照片
-     */
-    public static final String PROPERTY_THIRD_PHOTO = "PropertyThirdPhoto";
-
-    /**
      * 评论的对话框弹出
      */
     public static final String DIALOG_SHOW = "DialogShow";
@@ -251,5 +211,7 @@ public class ConstansUtil {
      * 评论的对话框消失
      */
     public static final String DIALOG_DISMISS = "DialogDismiss";
+
+    public static final String SHARE_TIME_INFO = "ShareTimeInfo";
 
 }

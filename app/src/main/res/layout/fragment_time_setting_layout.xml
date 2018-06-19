@@ -297,17 +297,13 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:id="@+id/modify_share_time_share_time_second"
-            style="@style/dividerStyle"
-            app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyweek_share_cl" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/modify_share_time_pause_time_cl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:background="@color/w0"
-            app:layout_constraintTop_toBottomOf="@id/modify_share_time_share_time_second">
+            app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyweek_share_cl">
 
             <TextView
                 android:id="@+id/modify_share_time_pause_time"
@@ -322,6 +318,7 @@
                 android:id="@+id/modify_share_time_add_pause_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="28dp"
                 android:drawablePadding="8dp"
                 android:drawableStart="@mipmap/ic_add3"
                 android:paddingEnd="16dp"
@@ -331,7 +328,7 @@
                 android:textColor="@color/y3"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/modify_share_time_pause_time"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v7.widget.RecyclerView
@@ -346,17 +343,13 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:id="@+id/modify_share_time_share_time_third"
-            style="@style/dividerStyle"
-            app:layout_constraintTop_toBottomOf="@+id/modify_share_time_pause_time_cl" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/modify_share_time_everyday_share_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:background="@color/w0"
-            app:layout_constraintTop_toBottomOf="@id/modify_share_time_share_time_third">
+            app:layout_constraintTop_toBottomOf="@+id/modify_share_time_pause_time_cl">
 
             <TextView
                 android:id="@+id/modify_share_time_everyday_share_time"
@@ -380,7 +373,7 @@
                 android:textColor="@color/y3"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/modify_share_time_everyday_share_time"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v7.widget.RecyclerView

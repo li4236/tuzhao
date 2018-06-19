@@ -1,10 +1,14 @@
 package com.tuzhao.fragment.addParkSpace;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -16,8 +20,12 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.info.EverydayShareTimeInfo;
+import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.publicwidget.others.CheckTextView;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,7 +37,7 @@ import java.util.List;
 /**
  * Created by juncoder on 2018/6/13.
  */
-public class TimeSettingFragment extends BaseStatusFragment implements View.OnClickListener {
+public class TimeSettingFragment extends BaseStatusFragment implements View.OnClickListener, IntentObserver {
 
     private TextView mStartShareDate;
 
@@ -40,6 +48,8 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
     private ImageView mDailyShareIv;
 
     private CheckTextView[] mCheckTextViews;
+
+    private ConstraintLayout mShareTimeConstraintLayout;
 
     private PauseShareDateAdapter mPauseShareDateAdapter;
 
@@ -67,6 +77,8 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mChooseAppointmentTime;
 
+    private ShareTimeInfo mShareTimeInfo;
+
     @Override
     protected int resourceId() {
         return R.layout.fragment_time_setting_layout;
@@ -79,6 +91,7 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         mEndShareDate = view.findViewById(R.id.modify_share_time_end_share_time);
         mHourShareIv = view.findViewById(R.id.hour_share_iv);
         mDailyShareIv = view.findViewById(R.id.daily_share_iv);
+        mShareTimeConstraintLayout = view.findViewById(R.id.modify_share_time_everyday_share_date);
         final CheckTextView mMondayShare = view.findViewById(R.id.modify_share_time_monday);
         final CheckTextView mTuesdayShare = view.findViewById(R.id.modify_share_time_tuesday);
         final CheckTextView mWednesdayShare = view.findViewById(R.id.modify_share_time_wednesday);
@@ -121,24 +134,39 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        //共享日期显示为当天-之后一个月
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        date.setTime(calendar.getTimeInMillis());
+        if (getArguments() == null) {
+            setArguments(new Bundle());
+            mShareTimeInfo = new ShareTimeInfo();
+            mShareTimeInfo.setHourRent(true);
+            //共享日期显示为当天-之后一个月
+            Date date = new Date();
+            Calendar calendar = Calendar.getInstance();
+            date.setTime(calendar.getTimeInMillis());
 
-        mStartShareDate.setText(DateUtil.getYearToDayFormat().format(date));
+            mStartShareDate.setText(DateUtil.getYearToDayFormat().format(date));
 
-        calendar.add(Calendar.MONTH, 3);
-        date.setTime(calendar.getTimeInMillis());
-        mEndShareDate.setText(DateUtil.getYearToDayFormat().format(date));
+            calendar.add(Calendar.MONTH, 3);
+            date.setTime(calendar.getTimeInMillis());
+            mEndShareDate.setText(DateUtil.getYearToDayFormat().format(date));
 
-        for (CheckTextView checkTextView : mCheckTextViews) {
-            checkTextView.setChecked(true);
+            for (CheckTextView checkTextView : mCheckTextViews) {
+                checkTextView.setChecked(true);
+            }
+
+        } else {
+            mShareTimeInfo = getArguments().getParcelable(ConstansUtil.SHARE_TIME_INFO);
+            if (mShareTimeInfo == null) {
+                Log.e(TAG, "initData: null" );
+                mShareTimeInfo = new ShareTimeInfo();
+            }
+            Log.e(TAG, "initData: " );
+            initShareTime();
         }
 
         initDateOption();
         initTimeOption();
         initAppointmentOption();
+        IntentObserable.registerObserver(this);
     }
 
     @Override
@@ -186,10 +214,18 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
             case R.id.hour_share_cl:
                 mHourShareIv.setImageResource(R.mipmap.ic_xuanzhong5);
                 mDailyShareIv.setImageResource(R.mipmap.ic_weixuanzhong5);
+                if (!isVisible(mShareTimeConstraintLayout)) {
+                    mShareTimeConstraintLayout.setVisibility(View.VISIBLE);
+                }
+                mShareTimeInfo.setHourRent(true);
                 break;
             case R.id.daily_share_cl:
                 mHourShareIv.setImageResource(R.mipmap.ic_weixuanzhong5);
                 mDailyShareIv.setImageResource(R.mipmap.ic_xuanzhong5);
+                if (isVisible(mShareTimeConstraintLayout)) {
+                    mShareTimeConstraintLayout.setVisibility(View.GONE);
+                }
+                mShareTimeInfo.setHourRent(false);
                 break;
             case R.id.modify_share_time_add_pause_date:
                 if (mPauseShareDateAdapter.getData().size() >= 5) {
@@ -271,6 +307,61 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            saveShareTimeInfo();
+            bundle.putParcelable(ConstansUtil.SHARE_TIME_INFO, mShareTimeInfo);
+            Log.e(TAG, "onDestroyView: " );
+        }
+        IntentObserable.unregisterObserver(this);
+    }
+
+    private void saveShareTimeInfo() {
+        mShareTimeInfo.setShareDate(getText(mStartShareDate) + " - " + getText(mEndShareDate));
+        StringBuilder stringBuilder = new StringBuilder();
+        for (CheckTextView checkTextView : mCheckTextViews) {
+            if (checkTextView.isChecked()) {
+                stringBuilder.append("1");
+            } else {
+                stringBuilder.append("0");
+            }
+            stringBuilder.append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        mShareTimeInfo.setShareDay(stringBuilder.toString());
+
+        if (mPauseShareDateAdapter.getDataSize() == 0) {
+            mShareTimeInfo.setPauseShareDate("-1");
+        } else {
+            StringBuilder pauseShareDate = new StringBuilder();
+            for (String s : mPauseShareDateAdapter.getData()) {
+                pauseShareDate.append(s);
+                pauseShareDate.append(",");
+            }
+            pauseShareDate.deleteCharAt(pauseShareDate.length() - 1);
+            mShareTimeInfo.setPauseShareDate(pauseShareDate.toString());
+        }
+
+        if (mShareTimeInfo.isHourRent() && mEverydayShareTimeAdapter.getDataSize() > 0) {
+            StringBuilder everydayShareTime = new StringBuilder();
+            for (EverydayShareTimeInfo shareTimeInfo : mEverydayShareTimeAdapter.getData()) {
+                everydayShareTime.append(shareTimeInfo.getStartDate());
+                everydayShareTime.append(" - ");
+                everydayShareTime.append(shareTimeInfo.getEndDate());
+                everydayShareTime.append(",");
+            }
+            everydayShareTime.deleteCharAt(everydayShareTime.length() - 1);
+            mShareTimeInfo.setEveryDayShareTime(everydayShareTime.toString());
+        } else {
+            mShareTimeInfo.setEveryDayShareTime("-1");
+        }
+
+        mShareTimeInfo.setAppointmentDate(getText(mChooseAppointmentTime));
+    }
+
     private void initDateOption() {
         mYears = new ArrayList<>();
         mMonths = new ArrayList<>();
@@ -321,10 +412,48 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         mAppointmentOption.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
+                mChooseAppointmentTime.setTextColor(Color.parseColor("#323232"));
                 String chooseTime = mAppointmentDays.get(options1) + " " + mAppointmentTimeFramne.get(options1).get(option2);
                 mChooseAppointmentTime.setText(chooseTime);
             }
         });
+    }
+
+    private void initShareTime() {
+        mStartShareDate.setText(mShareTimeInfo.getShareDate().substring(0, mShareTimeInfo.getShareDate().indexOf(" - ")));
+        mEndShareDate.setText(mShareTimeInfo.getShareDate().substring(mShareTimeInfo.getShareDate().indexOf(" - ") + 3, mShareTimeInfo.getShareDate().length()));
+        if (!mShareTimeInfo.isHourRent()) {
+            mHourShareIv.setImageResource(R.mipmap.ic_weixuanzhong5);
+            mDailyShareIv.setImageResource(R.mipmap.ic_xuanzhong5);
+            mShareTimeConstraintLayout.setVisibility(View.GONE);
+        } else {
+            if (!mShareTimeInfo.getEveryDayShareTime().equals("-1")) {
+                String[] shareTime = mShareTimeInfo.getEveryDayShareTime().split(",");
+                for (String s : shareTime) {
+                    mEverydayShareTimeAdapter.addData(new EverydayShareTimeInfo(s.substring(0, s.indexOf(" - ")),
+                            s.substring(s.indexOf(" - ") + 3, s.length())));
+                }
+            }
+        }
+
+        String[] shareDays = mShareTimeInfo.getShareDay().split(",");
+        for (int i = 0; i < 7; i++) {
+            if (shareDays[i].equals("1")) {
+                mCheckTextViews[i].setChecked(true);
+            } else {
+                mCheckTextViews[i].setChecked(false);
+            }
+        }
+
+        if (!mShareTimeInfo.getPauseShareDate().equals("-1")) {
+            String[] pauseDate = mShareTimeInfo.getPauseShareDate().split(",");
+            for (String date : pauseDate) {
+                mPauseShareDateAdapter.addData(date);
+            }
+        }
+
+        mChooseAppointmentTime.setTextColor(Color.parseColor("#323232"));
+        mChooseAppointmentTime.setText(mShareTimeInfo.getAppointmentDate());
     }
 
     /**
@@ -577,8 +706,27 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         return false;
     }
 
-    private String getHourWithMinutes(String date) {
-        return date.substring(date.indexOf(" ") + 1, date.length());
+    public void verifyTime() {
+        if (getText(mChooseAppointmentTime).startsWith("选择")) {
+            showFiveToast("请选择安装师傅上门安装时间");
+        } else {
+            Intent intent = new Intent();
+            intent.setAction(ConstansUtil.JUMP_TO_DEPOSIT_PAYMENT);
+            IntentObserable.dispatch(intent);
+        }
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case ConstansUtil.NEXT_STEP:
+                    if (intent.getIntExtra(ConstansUtil.POSITION, -1) == 1) {
+                        verifyTime();
+                    }
+                    break;
+            }
+        }
     }
 
     private class PauseShareDateAdapter extends BaseAdapter<String> {
