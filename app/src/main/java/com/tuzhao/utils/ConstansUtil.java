@@ -6,8 +6,6 @@ package com.tuzhao.utils;
 
 public class ConstansUtil {
 
-    public static final String PACKAGE_NAME = "com.tuzhao";
-
     /**
      * 微信的AppId
      */
@@ -19,7 +17,6 @@ public class ConstansUtil {
      * 支付错误
      */
     public static final String PAY_ERROR = "PayError";
-
 
     /**
      * 用户取消支付
@@ -211,9 +208,9 @@ public class ConstansUtil {
     public static final String REVENUE_RATIO = "RevenueRatio";
 
     /**
-     * 车位号码
+     * 真实姓名
      */
-    public static final String PARK_SPACE_NUMBER = "ParkSpaceNumber";
+    public static final String REAL_NAME = "RealName";
 
     /**
      * 车位描述

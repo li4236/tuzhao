@@ -224,4 +224,8 @@ public abstract class BaseStatusFragment extends Fragment {
         return textView.getText().toString();
     }
 
+    protected boolean isVisible(View view) {
+        return view.getVisibility() == View.VISIBLE;
+    }
+
 }

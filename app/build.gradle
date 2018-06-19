@@ -24,7 +24,13 @@ android {
 
     signingConfigs {
 
-        debug {}
+        debug {
+            storeFile file("tuzhaoqianmin.jks")
+            storePassword "tianzhili123456"
+            keyAlias "qandroid"
+            keyPassword "tianzhili123456"
+        }
+
         //签名打包
         release {
             storeFile file("tuzhaoqianmin.jks")
@@ -35,6 +41,11 @@ android {
     }
 
     buildTypes {
+
+        debug {
+            signingConfig signingConfigs.release
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

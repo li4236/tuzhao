@@ -191,7 +191,16 @@
             android:launchMode="singleTop" />
 
         <!--微信支付回调页面-->
-        <activity android:name=".wxapi.WXPayEntryActivity" />
+        <activity android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="wxb68fabefc83d5c48"/>
+            </intent-filter>
+
+        </activity>
 
         <!--支付宝未安装软件的话打开网页支付-->
         <activity

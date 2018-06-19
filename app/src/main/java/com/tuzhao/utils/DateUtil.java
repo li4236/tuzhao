@@ -2792,6 +2792,71 @@ public class DateUtil {
         }
     }
 
+    public static void initRecentTwoYear(ArrayList<String> mYears, ArrayList<ArrayList<String>> mMonths, ArrayList<ArrayList<ArrayList<String>>> mDays) {
+        Calendar calendar = Calendar.getInstance();
+        for (int i = 0; i < 2; i++) {
+            mYears.add(String.valueOf(calendar.get(Calendar.YEAR) + i));
+        }
+
+        ArrayList<String> month;
+        ArrayList<String> day;
+        ArrayList<ArrayList<String>> monthWithDay;
+
+        month = new ArrayList<>();
+        monthWithDay = new ArrayList<>();
+
+        //添加今年的月日
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        for (int i = currentMonth; i <= 12; i++) {
+            month.add(String.valueOf(i));
+            day = new ArrayList<>();
+            if (i == currentMonth) {
+                for (int k = calendar.get(Calendar.DAY_OF_MONTH); k <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); k++) {
+                    //添加当月剩余的日期
+                    day.add(String.valueOf(k));
+                }
+            } else {
+                for (int k = 1; k <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); k++) {
+                    day.add(String.valueOf(k));
+                }
+            }
+            monthWithDay.add(day);
+            calendar.add(Calendar.MONTH, 1);    //会加到变成下一年
+        }
+        mMonths.add(month);
+        mDays.add(monthWithDay);
+
+        //添加下年的月日
+        month = new ArrayList<>();
+        monthWithDay = new ArrayList<>();
+        calendar.set(Calendar.MONTH, 0);
+        for (int j = 1; j <= 12; j++) {
+            month.add(String.valueOf(j));
+            // TODO: 2018/5/31 for循环里面 calendar.set(Calendar.MONTH, j-1);不生效
+            day = new ArrayList<>();
+            for (int k = 1; k <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); k++) {
+                day.add(String.valueOf(k));
+            }
+            monthWithDay.add(day);
+            calendar.add(Calendar.MONTH, 1);
+        }
+        mMonths.add(month);
+        mDays.add(monthWithDay);
+    }
+
+    public static void initHourWithMinute(ArrayList<String> mHours, ArrayList<ArrayList<String>> mMinutes) {
+        ArrayList<String> minutes;
+        for (int i = 0; i < 24; i++) {
+            mHours.add(String.valueOf(i));
+
+            minutes = new ArrayList<>(60);
+            for (int j = 0; j < 60; j++) {
+                minutes.add(String.valueOf(j));
+            }
+            mMinutes.add(minutes);
+        }
+    }
+
     public String getVersion(Context context) {
         try {
             PackageManager manager = context.getPackageManager();

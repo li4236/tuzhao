@@ -2,8 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/w0">
+    android:layout_height="wrap_content">
 
     <include
         android:id="@+id/base_tb"
@@ -22,7 +21,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/w0">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/rental_record_edit"
@@ -108,10 +108,9 @@
                 <TextView
                     android:id="@+id/share_detail"
                     style="@style/TwentyTextB1Style"
+                    android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
                     android:text="共享详情"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -391,15 +390,11 @@
             <TextView
                 android:id="@+id/delete_park_space"
                 style="@style/TwentyTextB1Style"
-                android:layout_width="0dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
+                android:layout_width="match_parent"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:text="删除车位"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/share_record_divider" />
 
         </android.support.constraint.ConstraintLayout>

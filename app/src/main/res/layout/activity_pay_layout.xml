@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/pay_money"
         style="@style/TenTextB1Style"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="18dp"
         android:text="10.00元"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"

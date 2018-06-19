@@ -163,6 +163,14 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         return mData;
     }
 
+    public T get(int position) {
+        return mData.get(position);
+    }
+
+    public int getDataSize() {
+        return mData.size();
+    }
+
     public void setNewData(List<T> newData) {
         if (!mData.isEmpty()) {
             mData.clear();
@@ -201,15 +209,35 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         notifyItemInserted(size + getHeadViewCount());
     }
 
+    public void addData(int position, T t) {
+        mData.add(position, t);
+        notifyItemInserted(getHeadViewCount() + position);
+    }
+
+    public void notifyAddData(T t) {
+        mData.add(t);
+        notifyDataSetChanged();
+    }
+
+    public void notifyAddData(int position, T t) {
+        mData.add(position, t);
+        notifyDataSetChanged();
+    }
+
     public void notifyDataChange(int changeDataPosition, T newData) {
         mData.set(changeDataPosition, newData);
-        notifyItemChanged(changeDataPosition+getHeadViewCount());
+        notifyItemChanged(changeDataPosition + getHeadViewCount());
+    }
+
+    public void notifyDataChange(int changeDataPosition, T newData, Object payload) {
+        mData.set(changeDataPosition, newData);
+        notifyItemChanged(changeDataPosition, payload);
     }
 
     public void notifyDataChange(T newData) {
         int position = mData.indexOf(newData);
         if (position != -1) {
-            notifyDataChange(position,newData);
+            notifyDataChange(position, newData);
         }
     }
 

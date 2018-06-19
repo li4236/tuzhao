@@ -26,7 +26,6 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.SuccessCallback;
-import com.tuzhao.http.HttpConstants;
 
 import java.io.File;
 
@@ -65,6 +64,19 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    public static void showPicWithNoAnimate(final ImageView imageView, String url) {
+        GlideApp.with(imageView.getContext())
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .dontAnimate()
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        imageView.setImageDrawable(resource);
+                    }
+                });
+    }
+
     public static void showNoCenterPic(ImageView imageView, int resourceId) {
         GlideApp.with(imageView.getContext())
                 .load(resourceId)
@@ -82,7 +94,7 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void showImpPic(ImageView imageView, int url) {
+    public static void showImgPic(ImageView imageView, int url) {
         GlideApp.with(imageView.getContext())
                 .load(url)
                 .centerCrop()
@@ -161,23 +173,6 @@ public class ImageUtil {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new GlideLoadListener(imageView, drawableId))
                 .into(new GlideTarget(imageView));
-    }
-
-    public static void showUserRouindPic(final ImageView imageView, String url) {
-        GlideApp.with(imageView.getContext())
-                .load(HttpConstants.ROOT_IMG_URL_USER + url)
-                .centerCrop()
-                .placeholder(R.mipmap.ic_usericon)
-                .error(R.mipmap.ic_usericon)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                        imageView.setImageBitmap(createRoundBitmapByXfermode(((BitmapDrawable) resource).getBitmap(), imageView.getWidth(),
-                                imageView.getHeight(), DensityUtil.dp2px(imageView.getContext(), 4)));
-                        //ViewCompat.setElevation(imageView, 4);
-                    }
-                });
     }
 
     /**

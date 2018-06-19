@@ -17,7 +17,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/park_space_info_cl"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         app:layout_constraintEnd_toStartOf="@+id/time_setting_cl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
@@ -55,8 +55,6 @@
         <TextView
             android:id="@+id/park_space_info_tv"
             style="@style/TenTextB1Style"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:text="车位信息"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +66,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/time_setting_cl"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         app:layout_constraintEnd_toStartOf="@+id/deposit_payment_cl"
         app:layout_constraintStart_toEndOf="@+id/park_space_info_cl"
         app:layout_constraintTop_toTopOf="@+id/park_space_info_cl">
@@ -106,8 +104,6 @@
         <TextView
             android:id="@+id/time_setting_tv"
             style="@style/TenTextB1Style"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:text="时间设置"
             android:textColor="@color/g10"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -120,7 +116,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/deposit_payment_cl"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/time_setting_cl"
         app:layout_constraintTop_toTopOf="@+id/park_space_info_cl">
@@ -158,8 +154,6 @@
         <TextView
             android:id="@+id/deposit_payment_tv"
             style="@style/TenTextB1Style"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:text="押金支付"
             android:textColor="@color/g10"
             app:layout_constraintBottom_toBottomOf="parent"

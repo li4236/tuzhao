@@ -6,10 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -19,7 +19,6 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.application.MyApplication;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.WechatPayParam;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -28,6 +27,7 @@ import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.Map;
 
@@ -38,7 +38,7 @@ import okhttp3.Response;
  * Created by TZL12 on 2018/2/28.
  */
 
-public class PayActivity extends BaseStatusActivity implements View.OnClickListener {
+public class PayActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private TextView mPayMoney;
 
@@ -101,6 +101,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         mDiscountId = intent.getStringExtra(ConstansUtil.CHOOSE_DISCOUNT);
 
         initHandler();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -119,12 +120,13 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 setAlipayCheck(false);
                 break;
             case R.id.pay_immediately:
-                mPayImmediately.setClickable(false);
+                Log.e(TAG, "onClick: ");
                 if (mAlipayCb.isChecked()) {
                     alipayPay();
                 } else {
                     wechatPay();
                 }
+                mPayImmediately.setClickable(false);
                 break;
         }
     }
@@ -135,6 +137,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         if (mPayThread != null) {
             mPayThread.interrupt();
         }
+        IntentObserable.unregisterObserver(this);
     }
 
     private void setAlipayCheck(boolean isCheck) {
@@ -205,7 +208,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         payReq.appId = ConstansUtil.WECHAT_APP_ID;
                         payReq.partnerId = "1499403182";
                         payReq.packageValue = "Sign=WXPay";
-                        payReq.prepayId = o.data.getPrePayId();
+                        payReq.prepayId = o.data.getPrepayId();
                         payReq.nonceStr = o.data.getNonceStr();
                         payReq.timeStamp = o.data.getTimeStamp();
                         payReq.sign = o.data.getSign();
@@ -244,8 +247,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         if (TextUtils.equals(resultStatus, "9000")) {
                             IntentObserable.dispatch(new Intent(ConstansUtil.PAY_SUCCESS));
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                            Toast.makeText(MyApplication.getInstance(), "支付成功", Toast.LENGTH_SHORT).show();
-                            finish();
                         } else if (TextUtils.equals(resultStatus, "6001")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                             showFiveToast("支付取消");
@@ -256,6 +257,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         } else {
                             showFiveToast("支付失败");
                         }
+                        mPayImmediately.setClickable(true);
                         break;
                     }
                     default:
@@ -266,4 +268,27 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         });
     }
 
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            Log.e(TAG, "onReceive: " + intent.getAction());
+            switch (intent.getAction()) {
+                case ConstansUtil.PAY_SUCCESS:
+                    finish();
+                    break;
+                case ConstansUtil.PAY_CANCEL:
+                    showFiveToast("支付取消");
+                    mPayImmediately.setClickable(true);
+                    break;
+                case ConstansUtil.PAY_ERROR:
+                    if (intent.getStringExtra(ConstansUtil.INTENT_MESSAGE) != null) {
+                        showFiveToast(intent.getStringExtra(ConstansUtil.INTENT_MESSAGE));
+                    } else {
+                        showFiveToast("支付失败");
+                    }
+                    mPayImmediately.setClickable(true);
+                    break;
+            }
+        }
+    }
 }

@@ -155,7 +155,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     parkTimeDistance = "已超时" + DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), parkOrderInfo.getExtensionTime());
                     orderTimeDescription.setText(parkTimeDistance);
                 } else {
-                    parkTimeDistance = "剩余" + DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime());
+                    parkTimeDistance = "剩余" + DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
                     orderTimeDescription.setText(parkTimeDistance);
                 }
                 orderStatus.setTextColor(Color.parseColor("#ffa830"));

@@ -5,7 +5,7 @@ package com.tuzhao.info;
  */
 public class WechatPayParam {
 
-    private String prePayId;
+    private String prepayId;
 
     private String nonceStr;
 
@@ -13,12 +13,12 @@ public class WechatPayParam {
 
     private String timeStamp;
 
-    public String getPrePayId() {
-        return prePayId;
+    public String getPrepayId() {
+        return prepayId;
     }
 
-    public void setPrePayId(String prePayId) {
-        this.prePayId = prePayId;
+    public void setPrepayId(String prepayId) {
+        this.prepayId = prepayId;
     }
 
     public String getNonceStr() {

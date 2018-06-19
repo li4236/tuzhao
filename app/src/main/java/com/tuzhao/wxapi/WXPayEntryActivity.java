@@ -11,6 +11,7 @@ import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
@@ -27,7 +28,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_wxentry_layout);
         mIWXAPI = WXAPIFactory.createWXAPI(this, ConstansUtil.WECHAT_APP_ID);
         mIWXAPI.handleIntent(getIntent(), this);
     }
@@ -50,7 +51,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
             Log.e(TAG, "onResp: " + baseResp.errCode);
             Intent intent = new Intent();
             switch (baseResp.errCode) {
-                case 1:
+                case 0:
                     intent.setAction(ConstansUtil.PAY_SUCCESS);
                     break;
                 case -1:
@@ -62,6 +63,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
                     break;
             }
             IntentObserable.dispatch(intent);
+            finish();
         }
     }
 

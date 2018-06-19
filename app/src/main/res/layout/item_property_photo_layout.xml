@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="15dp"
+    android:theme="@style/TranslucentTheme">
+
+    <ImageView
+        android:id="@+id/property_photo_iv"
+        android:layout_width="60dp"
+        android:scaleType="centerCrop"
+        android:layout_height="60dp"
+        android:contentDescription="@string/picture_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/property_upload_tv"
+        style="@style/FortyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#47000000"
+        android:text="0%"
+        android:textColor="@color/w0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/property_photo_iv"
+        app:layout_constraintEnd_toEndOf="@+id/property_photo_iv"
+        app:layout_constraintStart_toStartOf="@+id/property_photo_iv"
+        app:layout_constraintTop_toTopOf="@+id/property_photo_iv" />
+
+</android.support.constraint.ConstraintLayout>

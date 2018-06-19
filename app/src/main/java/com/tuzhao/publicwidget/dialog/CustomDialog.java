@@ -238,7 +238,7 @@ public class CustomDialog extends Dialog {
     public CustomDialog(@NonNull Context context, ParkOrderInfo parkOrderInfo) {
         super(context, R.style.ParkDialog);
         setContentView(R.layout.dialog_appointment_detail_layout);
-        TextView parkSpaceNumber = findViewById(R.id.park_space_number);
+        TextView parkSpaceNumber = findViewById(R.id.real_name_et);
         TextView carNumber = findViewById(R.id.car_number);
         TextView appointStartParkTime = findViewById(R.id.appointment_start_park_time);
         TextView appointParkDuration = findViewById(R.id.appointment_park_duration);

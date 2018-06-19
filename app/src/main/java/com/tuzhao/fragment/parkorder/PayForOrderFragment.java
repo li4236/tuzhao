@@ -4,44 +4,29 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alipay.sdk.app.PayTask;
-import com.tencent.mm.opensdk.modelpay.PayReq;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.tianzhili.www.myselfsdk.okgo.OkGo;
-import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.PayActivity;
 import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
-import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.Discount_Info;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.User_Info;
-import com.tuzhao.info.WechatPayParam;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicmanager.UserManager;
-import com.tuzhao.publicwidget.alipay.AuthResult;
-import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
-import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.utils.ConstansUtil;
@@ -53,7 +38,6 @@ import com.tuzhao.utils.IntentObserver;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -93,10 +77,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private ArrayList<String> mParkSpacePictures;
 
     private Discount_Info mChooseDiscount;
-
-    private Handler mHandler;
-
-    private Thread mPayThread;
 
     private CustomDialog mCustomDialog;
 
@@ -184,16 +164,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
 
-        initHandler();
+        //initHandler();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         IntentObserable.unregisterObserver(this);
-        if (mPayThread != null) {
-            mPayThread.interrupt();
-        }
 
         if (mCustomDialog != null && mCustomDialog.isShowing()) {
             mCustomDialog.dismiss();
@@ -249,70 +226,11 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                     bundle.putString(ConstansUtil.CHOOSE_DISCOUNT, mChooseDiscount == null ? "-1" : mChooseDiscount.getId());
                     startActivity(PayActivity.class, bundle);
-                    //payV2();
                 } else {
                     requetFinishOrder();
                 }
                 break;
         }
-    }
-
-    private void initHandler() {
-        mHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-
-                switch (msg.what) {
-                    case OrderInfoUtil2_0.SDK_PAY_FLAG: {
-                        @SuppressWarnings("unchecked")
-                        //如果消息是支付成功 则SDK正常运行，将随该消息附带的msg.obj强转回map中，建立新的payresult支付结果
-                                PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                        /**
-                         对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                         */
-                        // 同步返回需要验证的信息，从支付结果中取到resultinfo
-                        String resultStatus = payResult.getResultStatus();
-                        // 判断resultStatus 为9000则代表支付成功
-                        if (TextUtils.equals(resultStatus, "9000")) {
-                            // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                            requetFinishOrder();
-                            Toast.makeText(MyApplication.getInstance(), "支付成功", Toast.LENGTH_SHORT).show();
-                        } else if (TextUtils.equals(resultStatus, "6001")) {
-                            // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showFiveToast("支付取消");
-                        } else if (TextUtils.equals(resultStatus, "6002")) {
-                            showFiveToast("网络异常，请稍后再试");
-                        } else if (TextUtils.equals(resultStatus, "4000")) {
-                            showFiveToast("系统异常，请稍后再试");
-                        } else {
-                            showFiveToast("支付失败");
-                        }
-                        break;
-                    }
-                    case OrderInfoUtil2_0.SDK_AUTH_FLAG: {
-                        @SuppressWarnings("unchecked")
-                        //如果消息是授权成功 则SDK已经确认
-                                AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
-                        String resultStatus = authResult.getResultStatus();
-
-                        // 判断resultStatus 为“9000”且result_code
-                        // 为“200”则代表授权成功，具体状态码代表含义可参考授权接口文档
-                        if (TextUtils.equals(resultStatus, "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
-                            // 获取alipay_open_id，调支付时作为参数extern_token 的value
-                            // 传入，则支付账户为该授权账户
-                            Toast.makeText(MyApplication.getInstance(), "授权成功\n" + String.format("authCode:%s", authResult.getAuthCode()), Toast.LENGTH_SHORT).show();
-                        } else {
-                            // 其他状态值则为授权失败
-                            Toast.makeText(MyApplication.getInstance(), "授权失败" + String.format("authCode:%s", authResult.getAuthCode()), Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    }
-                    default:
-                        break;
-                }
-                return true;
-            }
-        });
     }
 
     private void setCollection(boolean isCollection) {
@@ -488,76 +406,9 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mShouldPayFee.setText(shouldPay);
     }
 
-    private void wechatPay() {
-        getOkGo(HttpConstants.getWechatPayOrder)
-                .params("orderId", mParkOrderInfo.getId())
-                .params("cityCode", mParkOrderInfo.getCitycode())
-                .params("discountId", mChooseDiscount == null ? "-1" : mChooseDiscount.getId())
-                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
-                        IWXAPI iwxapi = WXAPIFactory.createWXAPI(getContext(), null);
-                        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
-
-                        PayReq payReq = new PayReq();
-                        payReq.appId = ConstansUtil.WECHAT_APP_ID;
-                        payReq.partnerId = "1499403182";
-                        payReq.packageValue = "Sign=WXPay";
-                        payReq.prepayId = o.data.getPrePayId();
-                        payReq.nonceStr = o.data.getNonceStr();
-                        payReq.timeStamp = o.data.getTimeStamp();
-                        payReq.sign = o.data.getSign();
-                        iwxapi.sendReq(payReq);
-
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 支付宝支付业务
-     */
-    public void payV2() {
-        OkGo.post(HttpConstants.alipayApplyOrder)
-                .tag(TAG)
-                .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
-                .params("discount_id", mChooseDiscount == null ? "-1" : mChooseDiscount.getId())
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(final String s, Call call, Response response) {
-                        Runnable payRunnable = new Runnable() {
-
-                            @Override
-                            public void run() {
-                                PayTask alipay = new PayTask(getActivity());
-                                Map<String, String> result = alipay.payV2(s, true);
-
-                                Message msg = new Message();
-                                msg.what = OrderInfoUtil2_0.SDK_PAY_FLAG;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
-                            }
-                        };
-
-                        if (mPayThread != null) {
-                            mPayThread.interrupt();
-                        }
-                        mPayThread = new Thread(payRunnable);
-                        mPayThread.start();
-                    }
-                });
-    }
-
     private void requetFinishOrder() {
         //请求改变订单状态，完成订单
+        showLoadingDialog("正在完成订单...");
         getOkGo(HttpConstants.finishParkOrder)
                 .params("order_id", mParkOrderInfo.getId())
                 .params("citycode", mParkOrderInfo.getCitycode())
@@ -572,6 +423,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                             intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);*/
                             IntentObserable.dispatch(intent);
+                            dismmisLoadingDialog();
                             getActivity().finish();
                         }
                     }
@@ -598,12 +450,12 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 case ConstansUtil.PAY_SUCCESS:
                     requetFinishOrder();
                     break;
-                case ConstansUtil.PAY_ERROR:
+                /*case ConstansUtil.PAY_ERROR:
                     showFiveToast(intent.getStringExtra(ConstansUtil.INTENT_MESSAGE));
                     break;
                 case ConstansUtil.PAY_CANCEL:
                     showFiveToast("支付取消");
-                    break;
+                    break;*/
             }
         }
     }

@@ -120,6 +120,10 @@
         <TextView
             android:id="@+id/add_new_parkspace"
             style="@style/TwentyTextB1Style"
+            android:paddingBottom="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
             android:text="添加新车位"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

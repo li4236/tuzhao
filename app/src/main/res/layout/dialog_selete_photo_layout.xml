@@ -8,10 +8,10 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/w5_all_10dp">
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/w0_all_10dp">
 
         <TextView
             android:id="@+id/exchang_tv"
@@ -26,7 +26,6 @@
         <View
             android:id="@+id/exchang_divider"
             style="@style/dividerStyle"
-            android:background="@color/g9"
             app:layout_constraintTop_toBottomOf="@+id/exchang_tv" />
 
         <TextView
@@ -47,10 +46,10 @@
         android:id="@+id/cancel_tv"
         style="@style/TwentyTextB1Style"
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/white_all_10dp"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"

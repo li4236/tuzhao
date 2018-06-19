@@ -17,6 +17,8 @@ public class HttpConstants {
     public static final String ROOT_IMG_URL_PS = ROOT_BASE_IMG_URL + "parkspaces/";//车场图片
     public static final String ROOT_IMG_URL_PSCOM = ROOT_BASE_IMG_URL + "comments/";//车场评论
     public static final String ROOT_IMG_URL_CS = ROOT_BASE_IMG_URL + "chargestations/";//电场
+    public static final String ROOT_IMG_URL_ID_CARD = ROOT_BASE_IMG_URL + "idcard/";//身份证照
+    public static final String ROOT_IMG_URL_PROPERTY = ROOT_BASE_IMG_URL + "property/";//产权照
 
     /**
      * 请求主页地图页面停车位和充电桩的具体位置的经纬度
@@ -479,5 +481,10 @@ public class HttpConstants {
      * 获取停车位的共享时间以及预约时间
      */
     public static String getParkSpaceTime = ROOT_URL + "getParkSpaceTime";
+
+    /**
+     * 上传图片
+     */
+    public static String uploadPicture = ROOT_URL + "uploadPicture";
 
 }

@@ -146,7 +146,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                             showFiveToast("开锁失败，请稍后重试");
                         } else if (jsonObject.optString("msg").equals("close_successful")) {
                             initOpenLock();
-                            //showFiveToast("成功关锁！");
+                            showFiveToast("成功关锁！");
                         } else if (jsonObject.optString("msg").equals("close_failed")) {
                             initCloseLock();
                             showFiveToast("关锁失败，请稍后重试");

@@ -77,6 +77,12 @@ public abstract class BaseRequest<R extends BaseRequest> {
     }
 
     @SuppressWarnings("unchecked")
+    public R retryCount(int retryCount) {
+        this.retryCount = retryCount;
+        return (R) this;
+    }
+
+    @SuppressWarnings("unchecked")
     public R url(String url) {
         this.url = url;
         return (R) this;
