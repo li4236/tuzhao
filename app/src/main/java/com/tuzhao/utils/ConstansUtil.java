@@ -214,4 +214,9 @@ public class ConstansUtil {
 
     public static final String SHARE_TIME_INFO = "ShareTimeInfo";
 
+    /**
+     * 押金金额
+     */
+    public static final String DEPOSIT_SUM = "DepositSum";
+
 }

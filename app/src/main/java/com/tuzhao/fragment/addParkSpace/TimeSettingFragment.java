@@ -155,11 +155,6 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
 
         } else {
             mShareTimeInfo = getArguments().getParcelable(ConstansUtil.SHARE_TIME_INFO);
-            if (mShareTimeInfo == null) {
-                Log.e(TAG, "initData: null" );
-                mShareTimeInfo = new ShareTimeInfo();
-            }
-            Log.e(TAG, "initData: " );
             initShareTime();
         }
 
@@ -314,7 +309,7 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         if (bundle != null) {
             saveShareTimeInfo();
             bundle.putParcelable(ConstansUtil.SHARE_TIME_INFO, mShareTimeInfo);
-            Log.e(TAG, "onDestroyView: " );
+            Log.e(TAG, "onDestroyView: ");
         }
         IntentObserable.unregisterObserver(this);
     }

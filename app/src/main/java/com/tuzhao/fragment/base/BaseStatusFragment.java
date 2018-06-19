@@ -228,4 +228,10 @@ public abstract class BaseStatusFragment extends Fragment {
         return view.getVisibility() == View.VISIBLE;
     }
 
+    protected void finish() {
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+    }
+
 }

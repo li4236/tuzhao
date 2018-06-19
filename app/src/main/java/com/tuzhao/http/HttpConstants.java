@@ -487,4 +487,9 @@ public class HttpConstants {
      */
     public static String uploadPicture = ROOT_URL + "uploadPicture";
 
+    /**
+     * 获取押金金额
+     */
+    public static String getDepositSum = ROOT_URL + "getDepositSum";
+
 }
