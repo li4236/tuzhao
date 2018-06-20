@@ -35,6 +35,7 @@ import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.PollingUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,6 +84,10 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private DecimalFormat mDecimalFormat;
 
     private double mShouldPay;
+
+    private PollingUtil mPollingUtil;
+
+    private int mRequestCount;
 
     public static PayForOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         PayForOrderFragment fragment = new PayForOrderFragment();
@@ -407,7 +412,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void getParkOrder() {
+        if (mRequestCount >= 3) {
+            dismmisLoadingDialog();
+            showFiveToast("查询订单状态失败，请刷新后再查看");
+            finish();
+        }
         showLoadingDialog("正在查询订单状态");
+        mRequestCount++;
         getOkGo(HttpConstants.getParkOrder)
                 .params("cityCode", mParkOrderInfo.getCitycode())
                 .params("orderId", mParkOrderInfo.getId())
@@ -427,6 +438,25 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                             IntentObserable.dispatch(intent);
                             dismmisLoadingDialog();
+                        } else if (o.data.getOrder_status().equals("3")) {
+                            mPollingUtil = new PollingUtil(1000, new PollingUtil.OnTimeCallback() {
+                                @Override
+                                public void onTime() {
+                                    getParkOrder();
+                                    mPollingUtil.cancel();
+                                    mPollingUtil = null;
+                                }
+                            });
+                            mPollingUtil.start();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast("查询订单状态失败，请刷新后再查看");
+                            finish();
                         }
                     }
                 });
