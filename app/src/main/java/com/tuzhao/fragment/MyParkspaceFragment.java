@@ -123,7 +123,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         SpannableString spannableString = new SpannableString(getText(addNewParkspace));
         spannableString.setSpan(new UnderlineSpan(), 0, getText(addNewParkspace).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         addNewParkspace.setText(spannableString);
-
     }
 
     @Override
@@ -363,6 +362,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                             initOpenLock();
                         } else if (mParkLockStatus.equals("3")) {
                             cantOpenLock();
+                            mCircleView.setColor(Color.parseColor("#808080"));
+                            mParkspaceStatus.setText("离线中");
                         }
                         dismmisLoadingDialog();
                     }

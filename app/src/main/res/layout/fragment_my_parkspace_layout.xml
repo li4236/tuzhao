@@ -190,11 +190,9 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/my_parkspace_setting"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="12dp"
-            android:paddingEnd="48dp"
-            android:paddingStart="48dp"
             android:paddingTop="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
