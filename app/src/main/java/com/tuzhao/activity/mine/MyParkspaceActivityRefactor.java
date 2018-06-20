@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,9 +36,11 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/17.
  */
 
-public class MyParkspaceActivityRefactor extends BaseActivity {
+public class MyParkspaceActivityRefactor extends BaseActivity implements View.OnClickListener {
 
     private LoadingDialog mLoadingDialog;
+
+    private ViewPager mViewPager;
 
     private List<Fragment> mFragments;
 
@@ -53,7 +56,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity {
         ImageView left = findViewById(R.id.left_iv);
         ImageView right = findViewById(R.id.right_iv);
 
-        final ViewPager mViewPager = findViewById(R.id.my_parkspace_vp);
+        mViewPager = findViewById(R.id.my_parkspace_vp);
         mCurrentParkspace = findViewById(R.id.my_parkspace_current);
         mFragmentAdater = new FragmentAdater(getSupportFragmentManager());
         mViewPager.setAdapter(mFragmentAdater);
@@ -78,30 +81,10 @@ public class MyParkspaceActivityRefactor extends BaseActivity {
         ImageUtil.showPic(left, R.drawable.ic_left1);
         ImageUtil.showPic(right, R.drawable.ic_left2);
 
-        findViewById(R.id.toolbar_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mViewPager.getCurrentItem() != 0) {
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-                }
-            }
-        });
-
-        right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mViewPager.getCurrentItem() != mFragments.size() - 1) {
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                }
-            }
-        });
+        findViewById(R.id.toolbar_back).setOnClickListener(this);
+        findViewById(R.id.audit_tv).setOnClickListener(this);
+        left.setOnClickListener(this);
+        right.setOnClickListener(this);
         loadData();
     }
 
@@ -179,6 +162,29 @@ public class MyParkspaceActivityRefactor extends BaseActivity {
      */
     protected void showFiveToast(String msg) {
         MyToast.showToast(this, msg, 5);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.toolbar_back:
+                finish();
+                break;
+            case R.id.left_iv:
+                if (mViewPager.getCurrentItem() != 0) {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+                }
+                break;
+            case R.id.right_iv:
+                if (mViewPager.getCurrentItem() != mFragments.size() - 1) {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                }
+                break;
+            case R.id.audit_tv:
+                Intent intent = new Intent(this, AuditParkspaceActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     class FragmentAdater extends FragmentPagerAdapter {

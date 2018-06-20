@@ -175,6 +175,11 @@
         <item name="layout_constraintEnd_toEndOf">parent</item>
     </style>
 
+    <style name="CenterVerticalTwentyTextB1" parent="TwentyTextB1Style">
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
     <style name="TwentyTextG6Style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
