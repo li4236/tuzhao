@@ -222,6 +222,15 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                         fragmentTransaction.commit();
                     }
                     break;
+                case ConstansUtil.FINISH_PARK:
+                    Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    ParkOrderInfo parkingOrderInfo = parkingBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                    if (parkingOrderInfo != null) {
+                        FragmentTransaction parkingTransaction = getSupportFragmentManager().beginTransaction();
+                        parkingTransaction.replace(R.id.order_container, PayForOrderFragment.newInstance(parkingOrderInfo));
+                        parkingTransaction.commit();
+                    }
+                    break;
                 case ConstansUtil.FINISH_PAY_ORDER:
                     Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
                     ParkOrderInfo finishParkOrder = finishBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);

@@ -121,7 +121,7 @@ public class ConstansUtil {
     public static final String FINISH_APPOINTMENT = "FinishAppointment";
 
     /**
-     * 关锁成功并完成订单
+     * 完成订单
      */
     public static final String FINISH_PARK = "FinishPark";
 

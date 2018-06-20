@@ -372,12 +372,16 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .params("order_id", mParkOrderInfo.getId())
                 .params("citycode", mParkOrderInfo.getCitycode())
                 .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Void> info, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> info, Call call, Response response) {
                         Intent intent = new Intent();
                         intent.setAction(ConstansUtil.FINISH_PARK);
                         Bundle bundle = new Bundle();
+                        mParkOrderInfo.setOrder_status("3");
+                        mParkOrderInfo.setOrder_fee(info.data.getOrder_fee());
+                        mParkOrderInfo.setFine_fee(info.data.getFine_fee());
+                        mParkOrderInfo.setPark_end_time(info.data.getPark_end_time());
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                         IntentObserable.dispatch(intent);

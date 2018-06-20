@@ -254,16 +254,12 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
                         ParkOrderInfo parkingOrderInfo = parkingBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         if (parkingOrderInfo != null) {
-                            parkingOrderInfo.setOrder_status("3");
-                            parkingOrderInfo.setPark_end_time(DateUtil.getCurrentYearToSecond());
                             if (mOrderStatus == 0) {
                                 mCommonAdapter.notifyDataChange(parkingOrderInfo);
                             } else if (mOrderStatus == 2) {
                                 mCommonAdapter.removeData(parkingOrderInfo);
                             }
                         }
-
-                        onRefresh();
                     }
                     break;
                 case ConstansUtil.FINISH_PAY_ORDER:
