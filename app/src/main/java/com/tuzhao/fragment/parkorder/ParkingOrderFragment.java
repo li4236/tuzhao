@@ -30,6 +30,7 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.PollingUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,6 +75,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private Calendar mStartExtendCalendar;
 
+    private PollingUtil mPollingUtil;
+
     public static ParkingOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         ParkingOrderFragment fragment = new ParkingOrderFragment();
         Bundle bundle = new Bundle();
@@ -114,22 +117,28 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     @Override
     protected void initData() {
         mParkDate.setText(DateUtil.getPointToMinute(mParkOrderInfo.getPark_start_time()));
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
-                DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
-            //超时了
-            mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
-            mRemainTime.setText("（已超时）");
-        } else {
-            mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddEnd(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()));
-        }
         mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
-        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), DateUtil.getCurrentYearToSecond()));
         String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
         mLeaveTime.setText(leaveTime);
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";
         mOvertimeFee.setText(overtimeFee);
 
+        calculateDuration();
         getParkSpaceTime();
+
+        mPollingUtil = new PollingUtil(1000 * 60, new PollingUtil.OnTimeCallback() {
+            @Override
+            public void onTime() {
+                calculateDuration();
+            }
+        });
+        mPollingUtil.start();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPollingUtil.cancel();
     }
 
     @Override
@@ -186,12 +195,23 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     }
 
     private void showAppointmentDetail() {
-        if (mCustomDialog == null) {
-            if (getContext() != null) {
-                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo, 0);
-            }
+        if (mCustomDialog != null) {
+            mCustomDialog = null;
         }
+        mCustomDialog = new CustomDialog(requireContext(), mParkOrderInfo, 0);
         mCustomDialog.show();
+    }
+
+    private void calculateDuration() {
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
+            //超时了
+            mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
+            mRemainTime.setText("（已超时）");
+        } else {
+            mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddEnd(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()));
+        }
+        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), DateUtil.getCurrentYearToSecond()));
     }
 
     private void calculateMaxMinutes() {
