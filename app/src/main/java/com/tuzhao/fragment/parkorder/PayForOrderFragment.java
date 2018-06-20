@@ -186,7 +186,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
                 parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
-                startActivity(BillingRuleActivity.class,parkLotBundle);
+                startActivity(BillingRuleActivity.class, parkLotBundle);
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
@@ -221,7 +221,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             case R.id.pay_for_order_should_pay:
                 if (mShouldPay >= 0.01) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(ConstansUtil.ORDER_FEE, mShouldPay+"元");
+                    bundle.putString(ConstansUtil.ORDER_FEE, mShouldPay + "元");
                     bundle.putString(ConstansUtil.PARK_ORDER_ID, mParkOrderInfo.getId());
                     bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                     bundle.putString(ConstansUtil.CHOOSE_DISCOUNT, mChooseDiscount == null ? "-1" : mChooseDiscount.getId());
@@ -406,6 +406,32 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mShouldPayFee.setText(shouldPay);
     }
 
+    private void getParkOrder() {
+        showLoadingDialog("正在查询订单状态");
+        getOkGo(HttpConstants.getParkOrder)
+                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("orderId", mParkOrderInfo.getId())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        if (o.data.getOrder_status().equals("4") || o.data.getOrder_status().equals("5")) {
+                            Intent intent = new Intent();
+                            intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
+                            Bundle bundle = new Bundle();
+                            mParkOrderInfo.setOrder_status(o.data.getOrder_status());
+                            mParkOrderInfo.setOrder_fee(o.data.getOrder_fee());
+                            mParkOrderInfo.setActual_pay_fee(o.data.getActual_pay_fee());
+                            mParkOrderInfo.setFine_fee(o.data.getFine_fee());
+                            mParkOrderInfo.setPark_end_time(o.data.getPark_end_time());
+                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                            IntentObserable.dispatch(intent);
+                            dismmisLoadingDialog();
+                        }
+                    }
+                });
+    }
+
     private void requetFinishOrder() {
         //请求改变订单状态，完成订单
         showLoadingDialog("正在完成订单...");
@@ -419,9 +445,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                         if (getActivity() != null) {
                             Intent intent = new Intent();
                             intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
-                            /*Bundle bundle = new Bundle();
-                            bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);*/
                             IntentObserable.dispatch(intent);
                             dismmisLoadingDialog();
                             getActivity().finish();
@@ -448,14 +471,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     calculateShouldPayFee();
                     break;
                 case ConstansUtil.PAY_SUCCESS:
-                    requetFinishOrder();
+                    getParkOrder();
                     break;
-                /*case ConstansUtil.PAY_ERROR:
-                    showFiveToast(intent.getStringExtra(ConstansUtil.INTENT_MESSAGE));
-                    break;
-                case ConstansUtil.PAY_CANCEL:
-                    showFiveToast("支付取消");
-                    break;*/
             }
         }
     }

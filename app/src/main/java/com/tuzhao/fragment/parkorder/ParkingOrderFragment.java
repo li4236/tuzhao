@@ -140,7 +140,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 Bundle bundle = new Bundle();
                 bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
                 bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
-                startActivity(BillingRuleActivity.class,bundle);
+                startActivity(BillingRuleActivity.class, bundle);
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {

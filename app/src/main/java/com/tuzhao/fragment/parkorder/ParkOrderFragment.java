@@ -268,7 +268,8 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     break;
                 case ConstansUtil.FINISH_PAY_ORDER:
                     if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
-                        onRefresh();
+                        Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        mCommonAdapter.notifyDataChange((ParkOrderInfo) finishBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO));
                     }
                     break;
                 case ConstansUtil.COMMENT_SUCCESS:

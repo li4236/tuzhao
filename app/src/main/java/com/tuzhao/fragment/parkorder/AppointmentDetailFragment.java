@@ -125,8 +125,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         OnLockListener lockListener = new OnLockListener() {
             @Override
             public void openSuccess() {
+                dismmisLoadingDialog();
                 showFiveToast("成功开锁");
                 mOpenLock.setText("已开锁");
+                finishAppointment(mParkOrderInfo);
             }
 
             @Override
@@ -136,6 +138,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
             @Override
             public void openSuccessHaveCar() {
+                dismmisLoadingDialog();
                 showFiveToast("车锁已开，因为车位上方有车辆滞留");
                 mOpenLock.setText("已开锁");
                 handleOpenLock();
