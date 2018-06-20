@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
-import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
+import com.tuzhao.activity.jiguang_notification.OnLockListener;
 import com.tuzhao.activity.mine.AddParkSpaceActivity;
 import com.tuzhao.activity.mine.ParkSpaceSettingActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
@@ -35,8 +34,6 @@ import com.tuzhao.publicwidget.others.VoltageView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,8 +71,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private int mRecentOrderMinutes;
 
     private String mParkLockStatus;
-
-    private OnCtrlLockListener mCtrlLockListener;
 
     public static Fragment newInstance(Park_Info mParkInfo) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
@@ -129,39 +124,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         spannableString.setSpan(new UnderlineSpan(), 0, getText(addNewParkspace).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         addNewParkspace.setText(spannableString);
 
-        mCtrlLockListener = new OnCtrlLockListener() {
-            @Override
-            public void onCtrlLock(String ctrlMessage) {
-                try {
-                    JSONObject jsonObject = new JSONObject(ctrlMessage);
-                    Log.e(TAG, "onCtrlLock: " + jsonObject);
-                    if (jsonObject.optString("type").equals("ctrl")) {
-                        if (jsonObject.optString("msg").equals("open_successful")) {
-                            initCloseLock();
-                        } else if (jsonObject.optString("msg").equals("open_successful_car")) {
-                            initCloseLock();
-                            showFiveToast("车锁已开，因为车位上方有车辆滞留");
-                        } else if (jsonObject.optString("msg").equals("open_failed")) {
-                            initOpenLock();
-                            showFiveToast("开锁失败，请稍后重试");
-                        } else if (jsonObject.optString("msg").equals("close_successful")) {
-                            initOpenLock();
-                            showFiveToast("成功关锁！");
-                        } else if (jsonObject.optString("msg").equals("close_failed")) {
-                            initCloseLock();
-                            showFiveToast("关锁失败，请稍后重试");
-                        } else if (jsonObject.optString("msg").equals("close_failed_car")) {
-                            initCloseLock();
-                            showFiveToast("关锁失败，因为车位上方有车辆滞留");
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        MyReceiver.setOnCtrlLockListener(mCtrlLockListener);
-
     }
 
     @Override
@@ -171,6 +133,50 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
+
+        OnLockListener lockListener = new OnLockListener() {
+            @Override
+            public void openSuccess() {
+                initCloseLock();
+            }
+
+            @Override
+            public void openFailed() {
+                initOpenLock();
+                showFiveToast("开锁失败，请稍后重试");
+            }
+
+            @Override
+            public void openSuccessHaveCar() {
+                initCloseLock();
+                showFiveToast("车锁已开，因为车位上方有车辆滞留");
+            }
+
+            @Override
+            public void closeSuccess() {
+                initOpenLock();
+                showFiveToast("成功关锁！");
+            }
+
+            @Override
+            public void closeFailed() {
+                initCloseLock();
+                showFiveToast("关锁失败，请稍后重试");
+            }
+
+            @Override
+            public void closeFailedHaveCar() {
+                initCloseLock();
+                showFiveToast("关锁失败，因为车位上方有车辆滞留");
+            }
+
+            @Override
+            public void onError() {
+                showFiveToast("开锁失败，请稍后重试");
+            }
+        };
+
+        MyReceiver.addLockListener(mParkInfo.getParkLockId(), lockListener);
     }
 
     @Override
@@ -212,8 +218,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
             mAnimatorSet.cancel();
         }
-        mCtrlLockListener = null;
-        MyReceiver.setOnCtrlLockListener(null);
+        MyReceiver.removeLockListener(mParkInfo.getParkLockId());
     }
 
     /**

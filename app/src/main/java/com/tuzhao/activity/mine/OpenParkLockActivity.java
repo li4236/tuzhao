@@ -16,7 +16,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
-import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
+import com.tuzhao.activity.jiguang_notification.OnLockListener;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
@@ -24,8 +24,6 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
-
-import org.json.JSONObject;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -38,7 +36,6 @@ import static com.tuzhao.http.HttpConstants.controlParkLock;
 
 public class OpenParkLockActivity extends BaseActivity {
 
-    private OnCtrlLockListener onCtrlLockListener;
     private CircleProgress circleProgress;
     private TextView textview_tryagain, textview_state;
 
@@ -62,36 +59,49 @@ public class OpenParkLockActivity extends BaseActivity {
     }
 
     private void initView() {
-        onCtrlLockListener = new OnCtrlLockListener() {
+        OnLockListener lockListener = new OnLockListener() {
             @Override
-            public void onCtrlLock(String ctrlMessage) {
-                try {
-                    JSONObject jsonObject = new JSONObject(ctrlMessage);
-                    if (jsonObject.optString("type").equals("ctrl")) {
-                        if (jsonObject.optString("msg").equals("open_successful")) {
-                            circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
-                            textview_state.setText("成功开锁！");
-                            startfinish();
-                        } else if (jsonObject.optString("msg").equals("open_successful_car")) {
-                            circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
-                            startfinish();
-                            textview_state.setText("车锁已开，因为车位上方有车辆滞留");
-                        } else if (jsonObject.optString("msg").equals("open_failed")) {
-                            textview_state.setText("开锁失败！");
-                        } else if (jsonObject.optString("msg").equals("close_successful")) {
-                            circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
-                            textview_state.setText("成功关锁！");
-                        } else if (jsonObject.optString("msg").equals("close_failed")) {
-                            textview_state.setText("关锁失败！");
-                        } else if (jsonObject.optString("msg").equals("close_failed_car")) {
-                            textview_state.setText("关锁失败，因为车位上方有车辆滞留");
-                        }
-                    }
-                } catch (Exception e) {
-                }
+            public void openSuccess() {
+                circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
+                textview_state.setText("成功开锁！");
+                startfinish();
+            }
+
+            @Override
+            public void openFailed() {
+                textview_state.setText("开锁失败！");
+            }
+
+            @Override
+            public void openSuccessHaveCar() {
+                circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
+                startfinish();
+                textview_state.setText("车锁已开，因为车位上方有车辆滞留");
+            }
+
+            @Override
+            public void closeSuccess() {
+                circleProgress.setValue(100, Constant.DEFAULT_ANIM_TIME);
+                textview_state.setText("成功关锁！");
+            }
+
+            @Override
+            public void closeFailed() {
+                textview_state.setText("关锁失败！");
+            }
+
+            @Override
+            public void closeFailedHaveCar() {
+                textview_state.setText("关锁失败，因为车位上方有车辆滞留");
+            }
+
+            @Override
+            public void onError() {
+                textview_state.setText("请求失败，请稍后重试");
             }
         };
-        MyReceiver.setOnCtrlLockListener(onCtrlLockListener);
+
+        MyReceiver.addLockListener(parkOrderInfo.getLockId(), lockListener);
 
         circleProgress = findViewById(R.id.id_activity_openparklock_layout_circleprogress);
         circleProgress.setValue(30, Constant.DEFAULT_ANIM_TIME);
@@ -99,6 +109,12 @@ public class OpenParkLockActivity extends BaseActivity {
         textview_tryagain = findViewById(R.id.id_activity_openparklock_layout_textview_tryagain);
         textview_tryagain.setEnabled(false);
         textview_state = findViewById(R.id.id_activity_openparklock_layout_textview_state);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyReceiver.removeLockListener(parkOrderInfo.getLockId());
     }
 
     private void startfinish() {

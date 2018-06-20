@@ -46,6 +46,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     private double latitude;//停车场的纬度
     private double longitude;//停车场的经度
     private String parkingUserId;//正在停车的用户id
+    private String lockId;//车位锁的id
 
     public String getId() {
         return id;
@@ -327,6 +328,14 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.parkingUserId = parkingUserId;
     }
 
+    public String getLockId() {
+        return lockId;
+    }
+
+    public void setLockId(String lockId) {
+        this.lockId = lockId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -384,6 +393,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeDouble(this.longitude);
         dest.writeString(this.parkNumber);
         dest.writeString(this.parkingUserId);
+        dest.writeString(this.lockId);
     }
 
     public ParkOrderInfo() {
@@ -425,6 +435,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.longitude = in.readDouble();
         this.parkNumber = in.readString();
         this.parkingUserId = in.readString();
+        this.lockId = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

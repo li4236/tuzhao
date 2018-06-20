@@ -13,7 +13,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
-import com.tuzhao.activity.jiguang_notification.OnCtrlLockListener;
+import com.tuzhao.activity.jiguang_notification.OnLockListener;
 import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
@@ -29,8 +29,6 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.TimeUtil;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -124,38 +122,55 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         initHandler();
         startPollingTime();
 
-        OnCtrlLockListener lockListener = new OnCtrlLockListener() {
+        OnLockListener lockListener = new OnLockListener() {
             @Override
-            public void onCtrlLock(String ctrlMessage) {
-                try {
-                    JSONObject jsonObject = new JSONObject(ctrlMessage);
-                    if (jsonObject.optString("type").equals("ctrl")) {
-                        if (jsonObject.optString("msg").equals("open_successful")) {
-                            showFiveToast("成功开锁");
-                            mOpenLock.setText("已开锁");
-                            finishAppointment(mParkOrderInfo);
-                        } else if (jsonObject.optString("msg").equals("open_successful_car")) {
-                            showFiveToast("车锁已开，因为车位上方有车辆滞留");
-                            mOpenLock.setText("已开锁");
-                            handleOpenLock();
-                        }
-                        mOpenLock.setClickable(true);
-                        dismmisLoadingDialog();
-                    }
-                } catch (Exception e) {
-                    dismmisLoadingDialog();
-                    mOpenLock.setClickable(true);
-                    showFiveToast("开锁失败，请稍后重试");
-                }
+            public void openSuccess() {
+                showFiveToast("成功开锁");
+                mOpenLock.setText("已开锁");
+            }
+
+            @Override
+            public void openFailed() {
+
+            }
+
+            @Override
+            public void openSuccessHaveCar() {
+                showFiveToast("车锁已开，因为车位上方有车辆滞留");
+                mOpenLock.setText("已开锁");
+                handleOpenLock();
+            }
+
+            @Override
+            public void closeSuccess() {
+
+            }
+
+            @Override
+            public void closeFailed() {
+
+            }
+
+            @Override
+            public void closeFailedHaveCar() {
+
+            }
+
+            @Override
+            public void onError() {
+                dismmisLoadingDialog();
+                mOpenLock.setClickable(true);
+                showFiveToast("开锁失败，请稍后重试");
             }
         };
-        MyReceiver.setOnCtrlLockListener(lockListener);
+
+        MyReceiver.addLockListener(mParkOrderInfo.getLockId(), lockListener);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        MyReceiver.setOnCtrlLockListener(null);
+        MyReceiver.removeLockListener(mParkOrderInfo.getLockId());
         if (mTimeUtil != null) {
             mTimeUtil.cancel();
         }

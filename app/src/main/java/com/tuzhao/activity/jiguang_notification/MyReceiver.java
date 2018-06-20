@@ -12,6 +12,8 @@ import com.tuzhao.activity.mine.ShareActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.data.JPushLocalNotification;
 
@@ -22,11 +24,16 @@ import static cn.jpush.android.api.JPushInterface.EXTRA_EXTRA;
  */
 
 public class MyReceiver extends BroadcastReceiver {
+
     private static final String TAG = "MyReceiver";
 
     private NotificationManager nm;
 
-    private static OnCtrlLockListener mOnCtrlLockListener ;
+    private static HashMap<String, OnLockListener> sListenerHashMap;
+
+    static {
+        sListenerHashMap = new HashMap<>();
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -40,12 +47,10 @@ public class MyReceiver extends BroadcastReceiver {
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-        }else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
+        } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             // 自定义消息不会展示在通知栏
-            Log.e("收到的自定义消息",bundle.getString(JPushInterface.EXTRA_EXTRA)+bundle.toString());
-            if (mOnCtrlLockListener!=null){
-                mOnCtrlLockListener.onCtrlLock(bundle.getString(JPushInterface.EXTRA_EXTRA)+bundle.toString());
-            }
+            Log.e("收到的自定义消息", bundle.getString(JPushInterface.EXTRA_EXTRA) + bundle.toString());
+            notifyListeners(bundle.getString(JPushInterface.EXTRA_EXTRA) + bundle.toString());
 //            processCustomMessage(context, bundle);
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "收到了通知。消息内容是：" + bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -62,7 +67,7 @@ public class MyReceiver extends BroadcastReceiver {
         }
     }
 
-    private void receivingNotification(Context context, Bundle bundle){
+    private void receivingNotification(Context context, Bundle bundle) {
         String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
         Log.d(TAG, " title : " + title);
         String message = bundle.getString(JPushInterface.EXTRA_ALERT);
@@ -71,7 +76,7 @@ public class MyReceiver extends BroadcastReceiver {
         Log.d(TAG, "extras : " + extras);
     }
 
-    private void openNotification(Context context, Bundle bundle){
+    private void openNotification(Context context, Bundle bundle) {
         String extras = bundle.getString(EXTRA_EXTRA);
         String myValue = "";
         try {
@@ -97,31 +102,75 @@ public class MyReceiver extends BroadcastReceiver {
     //send msg to MainActivity
     private void processCustomMessage(Context context, Bundle bundle) {
 
-            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-            String extras = bundle.getString(EXTRA_EXTRA);
-            Intent msgIntent = new Intent("com.yitingchong.www.yitingchong.MESSAGE_RECEIVED_ACTION");
-            msgIntent.putExtra("message", message);
-            if (extras != null) {
-                try {
-                    JSONObject extraJson = new JSONObject(extras);
-                    if (extraJson.length() > 0) {
-                        msgIntent.putExtra("extras", extras);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
+        String extras = bundle.getString(EXTRA_EXTRA);
+        Intent msgIntent = new Intent("com.yitingchong.www.yitingchong.MESSAGE_RECEIVED_ACTION");
+        msgIntent.putExtra("message", message);
+        if (extras != null) {
+            try {
+                JSONObject extraJson = new JSONObject(extras);
+                if (extraJson.length() > 0) {
+                    msgIntent.putExtra("extras", extras);
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+        }
         JPushLocalNotification ln = new JPushLocalNotification();
         ln.setBuilderId(0);
         ln.setContent(message);
         ln.setTitle(message);
-        ln.setNotificationId(11111111) ;
+        ln.setNotificationId(11111111);
         ln.setBroadcastTime(System.currentTimeMillis() + 1000);
         JPushInterface.addLocalNotification(context, ln);
-        }
+    }
 
-    public static void setOnCtrlLockListener(OnCtrlLockListener onCtrlLockListener) {
-        mOnCtrlLockListener = onCtrlLockListener;
+    public static void addLockListener(String lockId, OnLockListener onLockListener) {
+        sListenerHashMap.put(lockId, onLockListener);
+    }
+
+    public static void removeLockListener(String lockId) {
+        if (sListenerHashMap.containsKey(lockId)) {
+            sListenerHashMap.remove(lockId);
+        }
+    }
+
+    private void notifyListeners(String message) {
+        if (!sListenerHashMap.isEmpty()) {
+            try {
+                JSONObject jsonObject = new JSONObject(message);
+                if (jsonObject.optString("type").equals("ctrl")) {
+                    for (String key : sListenerHashMap.keySet()) {
+                        if (jsonObject.optString("lock_id").equals(key)) {
+                            OnLockListener onLockListener = sListenerHashMap.get(key);
+                            switch (jsonObject.optString("msg")) {
+                                case "open_successful":
+                                    onLockListener.openSuccess();
+                                    break;
+                                case "open_successful_car":
+                                    onLockListener.openSuccessHaveCar();
+                                    break;
+                                case "open_failed":
+                                    onLockListener.openFailed();
+                                    break;
+                                case "close_successful":
+                                    onLockListener.closeSuccess();
+                                    break;
+                                case "close_failed":
+                                    onLockListener.closeFailed();
+                                    break;
+                                case "close_failed_car":
+                                    onLockListener.closeFailedHaveCar();
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
