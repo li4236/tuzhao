@@ -430,10 +430,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
                             Bundle bundle = new Bundle();
                             mParkOrderInfo.setOrder_status(o.data.getOrder_status());
-                            mParkOrderInfo.setOrder_fee(o.data.getOrder_fee());
                             mParkOrderInfo.setActual_pay_fee(o.data.getActual_pay_fee());
-                            mParkOrderInfo.setFine_fee(o.data.getFine_fee());
-                            mParkOrderInfo.setPark_end_time(o.data.getPark_end_time());
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                             intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                             IntentObserable.dispatch(intent);
