@@ -148,9 +148,16 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             mParkOrderCredit.setText("+3");
         } else {
             //停车时间不到预约的结束时间
+            int totalAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime());
+            int parkToAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getOrder_endtime());
+            if (parkToAppointmentMinute >= totalAppointmentMinute / 5) {
+                //剩余时长大于总时长的1/5则减5分
+                mParkOrderCredit.setText("-5");
+            }
             mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
             mParkOrderCredit.setText("+3");
         }
+
         mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
         mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
         String startDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time());
@@ -368,7 +375,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private void showParkDetail() {
         if (mCustomDialog == null) {
             if (getContext() != null) {
-                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo, false);
+                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo, true);
             }
         }
         mCustomDialog.show();
