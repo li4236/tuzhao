@@ -788,11 +788,20 @@ public class DateUtil {
     /**
      * @param date      格式为yyyy-MM-dd HH:mm:ss
      * @param addSecond 添加的秒数
-     * @return
      */
     public static String getYearToMinute(String date, String addSecond) {
         Calendar calendar = getYearToSecondCalendar(date);
         calendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        return getCalenarYearToMinutes(calendar);
+    }
+
+    /**
+     * @param date      格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 添加的秒数
+     */
+    public static String getYearToMinute(String date, int addSecond) {
+        Calendar calendar = getYearToSecondCalendar(date);
+        calendar.add(Calendar.SECOND, addSecond);
         return getCalenarYearToMinutes(calendar);
     }
 

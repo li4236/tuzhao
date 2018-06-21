@@ -123,7 +123,6 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";
         mOvertimeFee.setText(overtimeFee);
 
-        calculateDuration();
         getParkSpaceTime();
 
         mPollingUtil = new PollingUtil(1000 * 60, new PollingUtil.OnTimeCallback() {
