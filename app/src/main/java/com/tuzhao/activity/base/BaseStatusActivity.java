@@ -209,6 +209,12 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    protected void startActivity(Class<?> tClass, Bundle bundle) {
+        Intent intent = new Intent(this, tClass);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     protected void startActivity(Class<?> tClass, String key, String value) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, value);

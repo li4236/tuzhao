@@ -7,6 +7,8 @@ public class WechatPayParam {
 
     private String prepayId;
 
+    private String partnerId;
+
     private String nonceStr;
 
     private String sign;
@@ -43,5 +45,13 @@ public class WechatPayParam {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
     }
 }

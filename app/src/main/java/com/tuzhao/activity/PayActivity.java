@@ -60,6 +60,10 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
 
     private Thread mPayThread;
 
+    private String mPayType;
+
+    private String mParkSpaceId;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_pay_layout;
@@ -95,10 +99,17 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     @Override
     protected void initData() {
         Intent intent = getIntent();
-        mPayMoney.setText(intent.getStringExtra(ConstansUtil.ORDER_FEE));
-        mOrderId = intent.getStringExtra(ConstansUtil.PARK_ORDER_ID);
+        mPayMoney.setText(intent.getStringExtra(ConstansUtil.PAY_MONEY));
+        mPayType = intent.getStringExtra(ConstansUtil.PAY_TYPE);
         mCityCode = intent.getStringExtra(ConstansUtil.CITY_CODE);
-        mDiscountId = intent.getStringExtra(ConstansUtil.CHOOSE_DISCOUNT);
+        if (mPayType.equals("0")) {
+            mOrderId = intent.getStringExtra(ConstansUtil.PARK_ORDER_ID);
+            mDiscountId = intent.getStringExtra(ConstansUtil.CHOOSE_DISCOUNT);
+            mPayDescription.setText("停车费用");
+        } else {
+            mPayDescription.setText("车锁押金");
+            mParkSpaceId = intent.getStringExtra(ConstansUtil.PARK_SPACE_ID);
+        }
 
         initHandler();
         IntentObserable.registerObserver(this);
@@ -120,11 +131,18 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 setAlipayCheck(false);
                 break;
             case R.id.pay_immediately:
-                Log.e(TAG, "onClick: ");
                 if (mAlipayCb.isChecked()) {
-                    alipayPay();
+                    if (mPayType.equals("0")) {
+                        alipayParkOrder();
+                    } else if (mPayType.equals("1")) {
+                        alipayLockDeposit();
+                    }
                 } else {
-                    wechatPay();
+                    if (mPayType.equals("0")) {
+                        wechatPayParkOrder();
+                    } else if (mPayType.equals("1")) {
+                        wechatPayLockDeposit();
+                    }
                 }
                 mPayImmediately.setClickable(false);
                 break;
@@ -150,7 +168,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         }
     }
 
-    private void alipayPay() {
+    private void alipayParkOrder() {
         OkGo.post(HttpConstants.alipayApplyOrder)
                 .tag(TAG)
                 .params("order_id", mOrderId)
@@ -159,27 +177,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(final String s, Call call, Response response) {
-                        Runnable payRunnable = new Runnable() {
-
-                            @Override
-                            public void run() {
-                                PayTask alipay = new PayTask(PayActivity.this);
-                                Map<String, String> result = alipay.payV2(s, true);
-
-                                Message msg = new Message();
-                                msg.what = OrderInfoUtil2_0.SDK_PAY_FLAG;
-                                msg.obj = result;
-                                mHandler.sendMessage(msg);
-                            }
-                        };
-
-                        if (mPayThread != null) {
-                            mPayThread.interrupt();
-                        }
-                        mPayThread = new Thread(payRunnable);
-                        mPayThread.start();
-
-                        mPayImmediately.setClickable(true);
+                        startAlipay(s);
                     }
 
                     @Override
@@ -193,28 +191,15 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 });
     }
 
-    private void wechatPay() {
-        getOkGo(HttpConstants.getWechatPayOrder)
-                .params("orderId", mOrderId)
-                .params("cityCode", mCityCode)
-                .params("discountId", mDiscountId)
-                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
+    private void alipayLockDeposit() {
+        OkGo.post(HttpConstants.getAlipayLockDepositInfo)
+                .tag(TAG)
+                .params("parkSpaceId", mParkSpaceId)
+                .params("citycode", mCityCode)
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
-                        IWXAPI iwxapi = WXAPIFactory.createWXAPI(PayActivity.this, null);
-                        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
-
-                        PayReq payReq = new PayReq();
-                        payReq.appId = ConstansUtil.WECHAT_APP_ID;
-                        payReq.partnerId = "1499403182";
-                        payReq.packageValue = "Sign=WXPay";
-                        payReq.prepayId = o.data.getPrepayId();
-                        payReq.nonceStr = o.data.getNonceStr();
-                        payReq.timeStamp = o.data.getTimeStamp();
-                        payReq.sign = o.data.getSign();
-                        iwxapi.sendReq(payReq);
-
-                        mPayImmediately.setClickable(true);
+                    public void onSuccess(final String s, Call call, Response response) {
+                        startAlipay(s);
                     }
 
                     @Override
@@ -226,6 +211,91 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         }
                     }
                 });
+    }
+
+    private void startAlipay(final String orderInfo) {
+        Runnable payRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(PayActivity.this);
+                Map<String, String> result = alipay.payV2(orderInfo, true);
+
+                Message msg = new Message();
+                msg.what = OrderInfoUtil2_0.SDK_PAY_FLAG;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        };
+
+        if (mPayThread != null) {
+            mPayThread.interrupt();
+            mPayThread = null;
+        }
+        mPayThread = new Thread(payRunnable);
+        mPayThread.start();
+
+        mPayImmediately.setClickable(true);
+    }
+
+    private void wechatPayParkOrder() {
+        getOkGo(HttpConstants.getWechatPayOrder)
+                .params("orderId", mOrderId)
+                .params("cityCode", mCityCode)
+                .params("discountId", mDiscountId)
+                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
+                        startWechatPay(o.data);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mPayImmediately.setClickable(true);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void wechatPayLockDeposit() {
+        getOkGo(HttpConstants.getWechatLockDepositInfo)
+                .params("parkSpaceId", mParkSpaceId)
+                .params("cityCode", mCityCode)
+                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
+                        startWechatPay(o.data);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mPayImmediately.setClickable(true);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void startWechatPay(WechatPayParam wechatPayParam) {
+        IWXAPI iwxapi = WXAPIFactory.createWXAPI(PayActivity.this, null);
+        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
+
+        PayReq payReq = new PayReq();
+        payReq.appId = ConstansUtil.WECHAT_APP_ID;
+        payReq.partnerId = wechatPayParam.getPartnerId();
+        payReq.packageValue = "Sign=WXPay";
+        payReq.prepayId = wechatPayParam.getPrepayId();
+        payReq.nonceStr = wechatPayParam.getNonceStr();
+        payReq.timeStamp = wechatPayParam.getTimeStamp();
+        payReq.sign = wechatPayParam.getSign();
+        iwxapi.sendReq(payReq);
+
+        mPayImmediately.setClickable(true);
     }
 
     private void initHandler() {

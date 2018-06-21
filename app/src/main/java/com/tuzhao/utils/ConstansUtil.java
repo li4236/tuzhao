@@ -11,6 +11,16 @@ public class ConstansUtil {
      */
     public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";
 
+    /**
+     * 支付类型，0是停车订单支付，1是添加车位缴纳押金支付
+     */
+    public static final String PAY_TYPE = "PayType";
+
+    /**
+     * 支付的金额
+     */
+    public static final String PAY_MONEY = "PayMoney";
+
     public static final String PAY_SUCCESS = "PaySuccess";
 
     /**

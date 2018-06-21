@@ -80,23 +80,19 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private PropertyAdapter mPropertyAdapter;
 
-    private String mIdCardPositivePath = "-1";
-
-    private String mIdCardNegativePath = "-1";
-
     private ImagePicker mImagePicker;
 
     private ImagePicker mPropertyImagePicker;
 
-    private int mChoosePosition;
-
     private CustomDialog mCustomDialog;
+
+    private ParkSpaceInfo mParkSpaceInfo;
+
+    private int mChoosePosition;
 
     private int mSixtyDp;
 
     private int mEightyDp;
-
-    private ParkSpaceInfo mParkSpaceInfo;
 
     @Override
     protected int resourceId() {
@@ -220,7 +216,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             case R.id.id_card_positive_photo_tv:
             case R.id.id_card_positive_photo_iv:
                 mChoosePosition = 0;
-                if (mIdCardPositivePath.equals("-1")) {
+                if (mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
                     startTakePhoto();
                 } else {
                     showDialog();
@@ -229,7 +225,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             case R.id.id_card_negative_photo_tv:
             case R.id.id_card_negative_photo_iv:
                 mChoosePosition = 1;
-                if (mIdCardNegativePath.equals("-1")) {
+                if (mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
                     startTakePhoto();
                 } else {
                     showDialog();
@@ -246,6 +242,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == 1 && data.hasExtra("park")) {
+            //选择的停车场
             ParkBean mPark = (ParkBean) data.getSerializableExtra("park");
             mParkLotName.setText(mPark.getparkStation());
             String[] ccc = mPark.getProfit_ratio().split(":");
@@ -256,9 +253,11 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 mRevenueRatio.setVisibility(View.VISIBLE);
             }
 
+            mParkSpaceInfo.setParkLotId(mPark.getParkID());
             mParkSpaceInfo.setParkLotName(mPark.getParkStation());
             mParkSpaceInfo.setRevenueRatio(revenueRatio);
         } else if (requestCode == ConstansUtil.PICTURE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            //选择的图片
             final List<ImageBean> imageBeans = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             if (imageBeans.size() == 1) {
                 ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
@@ -353,13 +352,13 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     private void handleCompressPhoto(File file, int position) {
         switch (position) {
             case 0:
-                mIdCardPositivePath = file.getAbsolutePath();
-                showIdCardPositivePhoto(mIdCardPositivePath, true);
+                mParkSpaceInfo.setIdCardPositiveUrl(file.getAbsolutePath());
+                showIdCardPositivePhoto(mParkSpaceInfo.getIdCardPositiveUrl(), true);
                 uploadPhoto(file, 0, position);
                 break;
             case 1:
-                mIdCardNegativePath = file.getAbsolutePath();
-                showIdCardNegativePhoto(mIdCardNegativePath, true);
+                mParkSpaceInfo.setIdCardNegativeUrl(file.getAbsolutePath());
+                showIdCardNegativePhoto(mParkSpaceInfo.getIdCardNegativeUrl(), true);
                 uploadPhoto(file, 0, position);
                 break;
             case 2:
@@ -727,17 +726,19 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             showFiveToast("请输入车位描述");
         } else if (TextUtils.isEmpty(getText(mRealName).trim())) {
             showFiveToast("请您的真实姓名");
-        } else if (mIdCardPositivePath.equals("-1")) {
+        } else if (mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
             showFiveToast("请上传身份证正面照");
-        } else if (mIdCardNegativePath.equals("-1")) {
+        } else if (mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
             showFiveToast("请上传身份证反面照");
         } else if (mPropertyAdapter.get(0).getPath().equals("-1")) {
             showFiveToast("请上传车位产权照");
+        } else if (isVisible(mIdCardPositiveUploadTv) || isVisible(mIdCardNegativeUploadTv)) {
+            showFiveToast("请等待身份证照上传完成");
         } else {
             if (mPropertyAdapter.getDataSize() == 2) {
                 if (!mPropertyAdapter.get(0).isUploadSuccess() ||
                         !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()) {
-                    showFiveToast("请等待图片上传完成");
+                    showFiveToast("请等待产权照上传完成");
                 } else {
                     Intent intent = new Intent();
                     intent.setAction(ConstansUtil.JUMP_TO_TIME_SETTING);
@@ -747,7 +748,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 if (!mPropertyAdapter.get(0).isUploadSuccess() ||
                         !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()
                         || !mPropertyAdapter.get(2).getPath().equals("-1") && !mPropertyAdapter.get(2).isUploadSuccess()) {
-                    showFiveToast("请等待图片上传成功完成");
+                    showFiveToast("请等待产权照上传完成");
                 } else {
                     Intent intent = new Intent();
                     intent.setAction(ConstansUtil.JUMP_TO_TIME_SETTING);
@@ -755,6 +756,10 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 }
             }
         }
+    }
+
+    public ParkSpaceInfo getParkSpaceInfo() {
+        return mParkSpaceInfo;
     }
 
     class PropertyAdapter extends BaseAdapter<PropertyPhoto> {

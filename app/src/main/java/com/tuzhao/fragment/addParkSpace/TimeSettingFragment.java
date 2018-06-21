@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -25,7 +24,6 @@ import com.tuzhao.publicwidget.others.CheckTextView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
-import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +35,7 @@ import java.util.List;
 /**
  * Created by juncoder on 2018/6/13.
  */
-public class TimeSettingFragment extends BaseStatusFragment implements View.OnClickListener, IntentObserver {
+public class TimeSettingFragment extends BaseStatusFragment implements View.OnClickListener {
 
     private TextView mStartShareDate;
 
@@ -161,7 +159,6 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         initDateOption();
         initTimeOption();
         initAppointmentOption();
-        IntentObserable.registerObserver(this);
     }
 
     @Override
@@ -309,9 +306,7 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         if (bundle != null) {
             saveShareTimeInfo();
             bundle.putParcelable(ConstansUtil.SHARE_TIME_INFO, mShareTimeInfo);
-            Log.e(TAG, "onDestroyView: ");
         }
-        IntentObserable.unregisterObserver(this);
     }
 
     private void saveShareTimeInfo() {
@@ -711,17 +706,9 @@ public class TimeSettingFragment extends BaseStatusFragment implements View.OnCl
         }
     }
 
-    @Override
-    public void onReceive(Intent intent) {
-        if (intent.getAction() != null) {
-            switch (intent.getAction()) {
-                case ConstansUtil.NEXT_STEP:
-                    if (intent.getIntExtra(ConstansUtil.POSITION, -1) == 1) {
-                        verifyTime();
-                    }
-                    break;
-            }
-        }
+    public ShareTimeInfo getShareTimeInfo() {
+        saveShareTimeInfo();
+        return mShareTimeInfo;
     }
 
     private class PauseShareDateAdapter extends BaseAdapter<String> {

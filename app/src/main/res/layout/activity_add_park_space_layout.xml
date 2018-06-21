@@ -14,161 +14,438 @@
         style="@style/dividerStyle"
         app:layout_constraintTop_toBottomOf="@+id/base_tb" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/park_space_info_cl"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        app:layout_constraintEnd_toStartOf="@+id/time_setting_cl"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_divider">
-
-        <ImageView
-            android:id="@+id/park_space_info_iv"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="15dp"
-            android:contentDescription="@string/picture_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/park_space_info_start_line"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/y2"
-            app:layout_constraintBottom_toBottomOf="@+id/park_space_info_iv"
-            app:layout_constraintEnd_toStartOf="@+id/park_space_info_iv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/park_space_info_iv" />
-
-        <View
-            android:id="@+id/park_space_info_end_line"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/y2"
-            app:layout_constraintBottom_toBottomOf="@+id/park_space_info_iv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/park_space_info_iv"
-            app:layout_constraintTop_toTopOf="@+id/park_space_info_iv" />
-
-        <TextView
-            android:id="@+id/park_space_info_tv"
-            style="@style/TenTextB1Style"
-            android:text="车位信息"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/park_space_info_iv" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/time_setting_cl"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        app:layout_constraintEnd_toStartOf="@+id/deposit_payment_cl"
-        app:layout_constraintStart_toEndOf="@+id/park_space_info_cl"
-        app:layout_constraintTop_toTopOf="@+id/park_space_info_cl">
-
-        <ImageView
-            android:id="@+id/time_setting_iv"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="15dp"
-            android:contentDescription="@string/picture_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/time_setting_start_line"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/g10"
-            app:layout_constraintBottom_toBottomOf="@+id/time_setting_iv"
-            app:layout_constraintEnd_toStartOf="@+id/time_setting_iv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/time_setting_iv" />
-
-        <View
-            android:id="@+id/time_setting_end_line"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/g10"
-            app:layout_constraintBottom_toBottomOf="@+id/time_setting_iv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/time_setting_iv"
-            app:layout_constraintTop_toTopOf="@+id/time_setting_iv" />
-
-        <TextView
-            android:id="@+id/time_setting_tv"
-            style="@style/TenTextB1Style"
-            android:text="时间设置"
-            android:textColor="@color/g10"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time_setting_iv" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/deposit_payment_cl"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/time_setting_cl"
-        app:layout_constraintTop_toTopOf="@+id/park_space_info_cl">
-
-        <ImageView
-            android:id="@+id/deposit_payment_iv"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="15dp"
-            android:contentDescription="@string/picture_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/deposit_payment_start_line"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/g10"
-            app:layout_constraintBottom_toBottomOf="@+id/deposit_payment_iv"
-            app:layout_constraintEnd_toStartOf="@+id/deposit_payment_iv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/deposit_payment_iv" />
-
-        <View
-            android:id="@+id/deposit_payment_end_line"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/g10"
-            app:layout_constraintBottom_toBottomOf="@+id/deposit_payment_iv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/deposit_payment_iv"
-            app:layout_constraintTop_toTopOf="@+id/deposit_payment_iv" />
-
-        <TextView
-            android:id="@+id/deposit_payment_tv"
-            style="@style/TenTextB1Style"
-            android:text="押金支付"
-            android:textColor="@color/g10"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deposit_payment_iv" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/add_park_space_container"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/next_step_tv"
-        app:layout_constraintTop_toBottomOf="@+id/park_space_info_cl" />
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/parking_lot_name_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/w0"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/parking_lot_name_tv"
+                    style="@style/ThirtyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:paddingBottom="14dp"
+                    android:paddingTop="14dp"
+                    android:text="车场名称："
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/car_number"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:gravity="start"
+                    app:layout_constraintBottom_toBottomOf="@+id/parking_lot_name_tv"
+                    app:layout_constraintEnd_toStartOf="@+id/park_lot_name_iv"
+                    app:layout_constraintStart_toEndOf="@+id/parking_lot_name_tv"
+                    app:layout_constraintTop_toTopOf="@+id/parking_lot_name_tv" />
+
+                <ImageView
+                    android:id="@+id/park_lot_name_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="@+id/parking_lot_name_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/parking_lot_name_tv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/revenue_ratio_tv"
+                style="@style/ThirtyTextB1Style"
+                android:background="@color/w0"
+                android:paddingBottom="14dp"
+                android:paddingEnd="22dp"
+                android:paddingStart="16dp"
+                android:text="收益比："
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/parking_lot_name_cl" />
+
+            <TextView
+                android:id="@+id/revenue_ratio"
+                style="@style/TwentyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/w0"
+                android:gravity="start"
+                android:paddingBottom="14dp"
+                android:paddingStart="6dp"
+                android:text="@string/picture_description"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/revenue_ratio_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/revenue_ratio_tv"
+                app:layout_constraintTop_toTopOf="@+id/revenue_ratio_tv" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/park_space_description_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/revenue_ratio_tv">
+
+                <TextView
+                    android:id="@+id/park_space_description_tv"
+                    style="@style/ThirtyTextB1Style"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="16dp"
+                    android:text="车位描述："
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/park_space_description"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@null"
+                    android:gravity="start|center_vertical"
+                    android:hint="如:负一层B区01"
+                    android:inputType="text"
+                    android:labelFor="@+id/park_space_description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/park_space_description_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/real_name_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/park_space_description_cl">
+
+                <TextView
+                    android:id="@+id/real_name_tv"
+                    style="@style/ThirtyTextB1Style"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="真实姓名："
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/real_name_et"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@null"
+                    android:gravity="start|center_vertical"
+                    android:inputType="text"
+                    android:labelFor="@+id/real_name_et"
+                    android:maxLength="18"
+                    android:textColorHint="@color/g6"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/real_name_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/idCard_cl"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/real_name_cl">
+
+                <TextView
+                    android:id="@+id/id_card_tv"
+                    style="@style/ThirtyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="身份证照："
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/id_card_positive_photo_iv"
+                    android:layout_width="90dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/id_card_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/id_card_positive_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
+
+                <TextView
+                    android:id="@+id/id_card_positive_photo_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#59000000"
+                    android:text="人像面"
+                    android:textColor="@color/w0"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
+
+                <ImageView
+                    android:id="@+id/id_card_negative_photo_iv"
+                    android:layout_width="90dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="24dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintStart_toEndOf="@+id/id_card_positive_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_photo_iv" />
+
+                <TextView
+                    android:id="@+id/id_card_negative_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_negative_photo_iv" />
+
+                <TextView
+                    android:id="@+id/id_card_negative_photo_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#59000000"
+                    android:text="国徽面"
+                    android:textColor="@color/w0"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_negative_photo_iv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_negative_photo_iv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/property_photo_cl"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/idCard_cl">
+
+                <TextView
+                    android:id="@+id/property_photo_tv"
+                    style="@style/ThirtyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="产权照片："
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/property_photos_cl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@id/property_photo_tv">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/property_rv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!--<ImageView
+                        android:id="@+id/property_first_photo_iv"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:contentDescription="@string/picture_description"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/property_first_upload_tv"
+                        style="@style/FortyTextB1Style"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="#47000000"
+                        android:text="0%"
+                        android:textColor="@color/w0"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/property_first_photo_iv"
+                        app:layout_constraintEnd_toEndOf="@+id/property_first_photo_iv"
+                        app:layout_constraintStart_toStartOf="@+id/property_first_photo_iv"
+                        app:layout_constraintTop_toTopOf="@+id/property_first_photo_iv" />
+
+                    <ImageView
+                        android:id="@+id/property_second_photo_iv"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="15dp"
+                        android:contentDescription="@string/picture_description"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/property_first_photo_iv"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/property_second_upload_tv"
+                        style="@style/FortyTextB1Style"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="#47000000"
+                        android:text="0%"
+                        android:textColor="@color/w0"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/property_second_photo_iv"
+                        app:layout_constraintEnd_toEndOf="@+id/property_second_photo_iv"
+                        app:layout_constraintStart_toStartOf="@+id/property_second_photo_iv"
+                        app:layout_constraintTop_toTopOf="@+id/property_second_photo_iv" />
+
+                    <ImageView
+                        android:id="@+id/property_third_photo_iv"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="15dp"
+                        android:contentDescription="@string/picture_description"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/property_second_photo_iv"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/property_third_upload_tv"
+                        style="@style/FortyTextB1Style"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="#47000000"
+                        android:text="0%"
+                        android:textColor="@color/w0"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/property_third_photo_iv"
+                        app:layout_constraintEnd_toEndOf="@+id/property_third_photo_iv"
+                        app:layout_constraintStart_toStartOf="@+id/property_third_photo_iv"
+                        app:layout_constraintTop_toTopOf="@+id/property_third_photo_iv" />-->
+
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/take_property_photo_cl"
+                    android:layout_width="200dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/y3_all_1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/property_photo_tv"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="33dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/picture_description"
+                        android:src="@drawable/ic_photo"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        style="@style/TenTextB1Style"
+                        android:layout_marginBottom="8dp"
+                        android:text="拍摄产权照片"
+                        android:textColor="@color/y3"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/appointment_time"
+                style="@style/ThirtyTextB1Style"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                android:paddingBottom="15dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="15dp"
+                android:text="预约时间："
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/property_photo_cl" />
+
+            <TextView
+                android:id="@+id/choose_appointment_time"
+                style="@style/TwentyTextG6Style"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/w0"
+                android:gravity="start|center_vertical"
+                android:text="选择安装师傅上门安装时间"
+                app:layout_constraintBottom_toBottomOf="@+id/appointment_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/appointment_time"
+                app:layout_constraintTop_toTopOf="@+id/appointment_time" />
+
+            <TextView
+                android:id="@+id/park_space_hint"
+                style="@style/TwentyTextG6Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="start"
+                android:lineSpacingExtra="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appointment_time" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
     <TextView
         android:id="@+id/next_step_tv"
@@ -177,17 +454,15 @@
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="45dp"
         android:layout_marginStart="45dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/little_yuan_yellow_8dp"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="下一步"
+        android:text="缴纳押金"
         android:textColor="@color/b1"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_park_space_container" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

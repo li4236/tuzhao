@@ -233,7 +233,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             case R.id.pay_for_order_should_pay:
                 if (mShouldPay >= 0.01) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(ConstansUtil.ORDER_FEE, mShouldPay + "元");
+                    bundle.putString(ConstansUtil.PAY_TYPE, "0");
+                    bundle.putString(ConstansUtil.PAY_MONEY, mShouldPay + "元");
                     bundle.putString(ConstansUtil.PARK_ORDER_ID, mParkOrderInfo.getId());
                     bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                     bundle.putString(ConstansUtil.CHOOSE_DISCOUNT, mChooseDiscount == null ? "-1" : mChooseDiscount.getId());

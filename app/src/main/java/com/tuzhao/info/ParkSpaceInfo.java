@@ -8,6 +8,8 @@ import android.os.Parcelable;
  */
 public class ParkSpaceInfo implements Parcelable {
 
+    private String parkLotId;
+
     private String parkLotName;
 
     private String revenueRatio;
@@ -98,6 +100,13 @@ public class ParkSpaceInfo implements Parcelable {
         this.propertyThirdUrl = propertyThirdUrl;
     }
 
+    public String getParkLotId() {
+        return parkLotId;
+    }
+
+    public void setParkLotId(String parkLotId) {
+        this.parkLotId = parkLotId;
+    }
 
     @Override
     public int describeContents() {
@@ -115,6 +124,7 @@ public class ParkSpaceInfo implements Parcelable {
         dest.writeString(this.propertyFirstUrl);
         dest.writeString(this.propertySecondUrl);
         dest.writeString(this.propertyThirdUrl);
+        dest.writeString(this.parkLotId);
     }
 
     public ParkSpaceInfo() {
@@ -130,6 +140,7 @@ public class ParkSpaceInfo implements Parcelable {
         this.propertyFirstUrl = in.readString();
         this.propertySecondUrl = in.readString();
         this.propertyThirdUrl = in.readString();
+        this.parkLotId = in.readString();
     }
 
     public static final Parcelable.Creator<ParkSpaceInfo> CREATOR = new Parcelable.Creator<ParkSpaceInfo>() {

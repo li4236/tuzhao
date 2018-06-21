@@ -10,14 +10,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.PayActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.addParkSpace.DepositPaymentFragment;
 import com.tuzhao.fragment.addParkSpace.ParkSpaceInfoFragment;
 import com.tuzhao.fragment.addParkSpace.TimeSettingFragment;
+import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.AppointmentInstallInfo;
+import com.tuzhao.info.ParkSpaceInfo;
+import com.tuzhao.info.ShareTimeInfo;
+import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+
+import java.util.Calendar;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/6/4.
@@ -53,6 +66,8 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     private DepositPaymentFragment mDepositPaymentFragment;
 
     private int mCurrentPosition;
+
+    private String mCityCode;
 
     @Override
     protected int resourceId() {
@@ -90,6 +105,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
 
     @Override
     protected void initData() {
+        mCityCode = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
         IntentObserable.registerObserver(this);
     }
 
@@ -115,7 +131,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     fragmentTransaction.commit();
                     mCurrentPosition = 0;
                     setTimeSettingChoose(false);
-                    setDepositPaymentChoose(false);
+                    //setDepositPaymentChoose(false);
                 }
                 break;
             case R.id.time_setting_cl:
@@ -130,7 +146,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         transaction.commit();
                         mCurrentPosition = 1;
                         setTimeSettingChoose(true);
-                        setDepositPaymentChoose(false);
+                        //setDepositPaymentChoose(false);
                     }
                 }
                 break;
@@ -140,12 +156,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         showFiveToast("请先完成车位信息哦");
                     } else {
                         showFiveToast("请先完成时间设置哦");
-                    }
-                } else {
-                    if (mCurrentPosition == 0) {
-
-                    } else if (mCurrentPosition == 1) {
-                        nextStep();
                     }
                 }
                 break;
@@ -168,7 +178,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             transaction.commit();
             mCurrentPosition = 1;
             setTimeSettingChoose(true);
-            setDepositPaymentChoose(false);
+            //setDepositPaymentChoose(false);
         } else {
             super.onBackPressed();
         }
@@ -195,7 +205,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         }
     }
 
-    private void setDepositPaymentChoose(boolean isChoose) {
+    /*private void setDepositPaymentChoose(boolean isChoose) {
         if (isChoose) {
             mDepositPaymentStartLine.setBackgroundColor(Color.parseColor("#ffcc30"));
             mDepositPaymentEndLine.setBackgroundColor(Color.parseColor("#ffcc30"));
@@ -207,7 +217,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             mDepositPaymentTv.setTextColor(Color.parseColor("#cccccc"));
             ImageUtil.showPic(mDepositPaymentIv, R.drawable.ic_graymoney);
         }
-    }
+    }*/
 
     @Override
     public void onReceive(Intent intent) {
@@ -224,16 +234,84 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     setTimeSettingChoose(true);
                     break;
                 case ConstansUtil.JUMP_TO_DEPOSIT_PAYMENT:
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                   /* FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     if (mDepositPaymentFragment == null) {
                         mDepositPaymentFragment = new DepositPaymentFragment();
                     }
                     transaction.replace(R.id.add_park_space_container, mDepositPaymentFragment);
                     transaction.commit();
                     mCurrentPosition = 2;
-                    setDepositPaymentChoose(true);
+                    setDepositPaymentChoose(true);*/
+
                     break;
             }
         }
     }
+
+    private void addUserPark() {
+        showLoadingDialog("正在提交");
+        ParkSpaceInfo parkSpaceInfo = mParkSpaceInfoFragment.getParkSpaceInfo();
+        StringBuilder propertyPhoto = new StringBuilder(parkSpaceInfo.getPropertyFirstUrl());
+        propertyPhoto.append(",");
+        if (!parkSpaceInfo.getPropertySecondUrl().equals("-1")) {
+            propertyPhoto.append(parkSpaceInfo.getPropertySecondUrl());
+            propertyPhoto.append(",");
+        }
+        if (!parkSpaceInfo.getPropertyThirdUrl().equals("-1")) {
+            propertyPhoto.append(parkSpaceInfo.getPropertyThirdUrl());
+            propertyPhoto.append(",");
+        }
+
+        ShareTimeInfo shareTimeInfo = mTimeSettingFragment.getShareTimeInfo();
+        Calendar calendar = Calendar.getInstance();
+        String appointmentDate = shareTimeInfo.getAppointmentDate();
+        if (appointmentDate.startsWith("明天")) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        } else if (appointmentDate.startsWith("后天")) {
+            calendar.add(Calendar.DAY_OF_MONTH, 2);
+        } else {
+            calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))));
+            calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(appointmentDate.substring(appointmentDate.indexOf("月") + 1,
+                    appointmentDate.indexOf("日"))));
+        }
+        appointmentDate = DateUtil.getCalendarYearToDay(calendar) + " " +
+                appointmentDate.substring(appointmentDate.length() - 2, appointmentDate.length());
+
+        getOkGo(HttpConstants.addUserPark)
+                .params("parkspace_id", parkSpaceInfo.getParkLotId())
+                .params("citycode", mCityCode)
+                .params("address_memo", parkSpaceInfo.getParkSpaceDescription())
+                .params("applicant_name", parkSpaceInfo.getRealName())
+                .params("idCardPhoto", parkSpaceInfo.getIdCardPositiveUrl() + "," + parkSpaceInfo.getIdCardNegativeUrl())
+                .params("propertyPhoto", propertyPhoto.toString())
+                .params("available_date", shareTimeInfo.getShareDate())
+                .params("dayRent", shareTimeInfo.isHourRent() ? 0 : 1)
+                .params("shareDay", shareTimeInfo.getShareDay())
+                .params("available_time", shareTimeInfo.getEveryDayShareTime())
+                .params("pauseShareDate", shareTimeInfo.getPauseShareDate())
+                .params("install_time", appointmentDate)
+                .execute(new JsonCallback<Base_Class_Info<AppointmentInstallInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<AppointmentInstallInfo> o, Call call, Response response) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ConstansUtil.PAY_TYPE, "1");
+                        bundle.putString(ConstansUtil.PAY_MONEY, o.data.getSum() + "元");
+                        bundle.putString(ConstansUtil.PARK_SPACE_ID, o.data.getParkSpaceId());
+                        bundle.putString(ConstansUtil.CITY_CODE, mCityCode);
+                        startActivity(PayActivity.class, bundle);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+
+    }
+
 }
