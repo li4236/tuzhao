@@ -288,7 +288,7 @@ public class ImageUtil {
 
     }
 
-    public static void compressPhoto(Context context, String path, final SuccessCallback<File> callback) {
+    public static void compressPhoto(final Context context, String path, final SuccessCallback<File> callback) {
         //进行图片逐个压缩
         Luban.with(context)
                 .load(path)
@@ -303,7 +303,11 @@ public class ImageUtil {
                     @Override
                     public void onSuccess(File file) {
                         // 压缩成功后调用，返回压缩后的图片文件
-                        callback.onSuccess(file);
+                        if (file.length() > 1024 * 250) {
+                            compressPhoto(context, file.getAbsolutePath(), callback);
+                        } else {
+                            callback.onSuccess(file);
+                        }
                     }
 
                     @Override
