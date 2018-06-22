@@ -1,16 +1,15 @@
 package com.tuzhao.info;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by juncoder on 2018/6/14.
  */
-public class ParkSpaceInfo implements Parcelable {
+public class ParkSpaceInfo {
 
     private String parkLotId;
 
     private String parkLotName;
+
+    private String mCityCode;
 
     private String revenueRatio;
 
@@ -108,50 +107,28 @@ public class ParkSpaceInfo implements Parcelable {
         this.parkLotId = parkLotId;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getCityCode() {
+        return mCityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        mCityCode = cityCode;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.parkLotName);
-        dest.writeString(this.revenueRatio);
-        dest.writeString(this.parkSpaceDescription);
-        dest.writeString(this.realName);
-        dest.writeString(this.idCardPositiveUrl);
-        dest.writeString(this.idCardNegativeUrl);
-        dest.writeString(this.propertyFirstUrl);
-        dest.writeString(this.propertySecondUrl);
-        dest.writeString(this.propertyThirdUrl);
-        dest.writeString(this.parkLotId);
+    public String toString() {
+        return "ParkSpaceInfo{" +
+                "parkLotId='" + parkLotId + '\'' +
+                ", parkLotName='" + parkLotName + '\'' +
+                ", mCityCode='" + mCityCode + '\'' +
+                ", revenueRatio='" + revenueRatio + '\'' +
+                ", parkSpaceDescription='" + parkSpaceDescription + '\'' +
+                ", realName='" + realName + '\'' +
+                ", idCardPositiveUrl='" + idCardPositiveUrl + '\'' +
+                ", idCardNegativeUrl='" + idCardNegativeUrl + '\'' +
+                ", propertyFirstUrl='" + propertyFirstUrl + '\'' +
+                ", propertySecondUrl='" + propertySecondUrl + '\'' +
+                ", propertyThirdUrl='" + propertyThirdUrl + '\'' +
+                '}';
     }
-
-    public ParkSpaceInfo() {
-    }
-
-    protected ParkSpaceInfo(Parcel in) {
-        this.parkLotName = in.readString();
-        this.revenueRatio = in.readString();
-        this.parkSpaceDescription = in.readString();
-        this.realName = in.readString();
-        this.idCardPositiveUrl = in.readString();
-        this.idCardNegativeUrl = in.readString();
-        this.propertyFirstUrl = in.readString();
-        this.propertySecondUrl = in.readString();
-        this.propertyThirdUrl = in.readString();
-        this.parkLotId = in.readString();
-    }
-
-    public static final Parcelable.Creator<ParkSpaceInfo> CREATOR = new Parcelable.Creator<ParkSpaceInfo>() {
-        @Override
-        public ParkSpaceInfo createFromParcel(Parcel source) {
-            return new ParkSpaceInfo(source);
-        }
-
-        @Override
-        public ParkSpaceInfo[] newArray(int size) {
-            return new ParkSpaceInfo[size];
-        }
-    };
 }

@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.application.MyApplication;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,7 +33,7 @@ public class SplashActivity extends Activity {
         boolean isFirstOpen = setPreferences.getBoolean("first_open", false);
         // 如果是第一次启动，则先进入功能引导页
         if (!isFirstOpen) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, WelcomeGuideActivity.class);
             startActivity(intent);
             finish();
             return;
@@ -46,6 +48,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash_layout);
         //两秒后转到正式主页
         textview_skip = findViewById(R.id.id_activity_splash_layout_textview_skip);
+        ImageUtil.showPic((ImageView) findViewById(R.id.iv_splash), R.drawable.ic_splash);
 
         final Timer timer=new Timer();
 

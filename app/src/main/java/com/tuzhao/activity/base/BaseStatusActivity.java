@@ -36,7 +36,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     protected String TAG = this.getClass().getName();
 
-    private LoadingDialog mLoadingDialog;
+    protected LoadingDialog mLoadingDialog;
 
     private LoginDialogFragment mLoginDialogFragment;
 
@@ -126,6 +126,24 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void showLoadingDialog(String msg) {
         dismmisLoadingDialog();
         mLoadingDialog = new LoadingDialog(this, msg);
+        mLoadingDialog.show();
+    }
+
+    /**
+     * 显示自定义加载提示的对话框
+     */
+    protected void showCantCancelLoadingDialog() {
+        dismmisLoadingDialog();
+        mLoadingDialog = new LoadingDialog(this, null, false);
+        mLoadingDialog.show();
+    }
+
+    /**
+     * 显示自定义加载提示的对话框
+     */
+    protected void showCantCancelLoadingDialog(String msg) {
+        dismmisLoadingDialog();
+        mLoadingDialog = new LoadingDialog(this, msg, false);
         mLoadingDialog.show();
     }
 
@@ -285,6 +303,10 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     protected void customToolBar(Toolbar toolbar) {
 
+    }
+
+    protected boolean isVisible(View view) {
+        return view.getVisibility() == View.VISIBLE;
     }
 
 }

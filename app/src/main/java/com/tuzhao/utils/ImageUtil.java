@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -37,6 +38,8 @@ import top.zibin.luban.OnCompressListener;
  */
 
 public class ImageUtil {
+
+    private static final String TAG = "ImageUtil";
 
     public static void showPic(ImageView imageView, String url) {
         GlideApp.with(imageView.getContext())
@@ -64,10 +67,24 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void showPicWithNoAnimate(final ImageView imageView, String url) {
+    public static void showPicWithNoAnimate(final ImageView imageView, final String url) {
         GlideApp.with(imageView.getContext())
                 .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .dontAnimate()
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        Log.e(TAG, "onResourceReady: " + url);
+                        imageView.setImageDrawable(resource);
+                    }
+                });
+    }
+
+    public static void showPicWithNoAnimate(final ImageView imageView, int drawableRes) {
+        GlideApp.with(imageView.getContext())
+                .load(drawableRes)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .dontAnimate()
                 .into(new SimpleTarget<Drawable>() {
                     @Override

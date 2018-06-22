@@ -2,6 +2,8 @@ package com.tuzhao.publicwidget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
@@ -32,11 +34,13 @@ public class LoadingDialog extends Dialog {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 if (LoadingDialog.this.isShowing() && mCancelable) {
                     LoadingDialog.this.dismiss();
+                    Log.e(TAG, "onKeyDown: " );
+                    return false;
                 }
                 break;
         }

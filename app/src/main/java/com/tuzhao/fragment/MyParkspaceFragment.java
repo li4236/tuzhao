@@ -128,7 +128,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
-        getParkLockStatus();
+        //getParkLockStatus();
         scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
@@ -137,6 +137,9 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             @Override
             public void openSuccess() {
                 initCloseLock();
+                mParkInfo.setParkLockStatus("1");
+                mCircleView.setColor(Color.parseColor("#1dd0a1"));
+                mParkspaceStatus.setText("使用中");
             }
 
             @Override
@@ -155,6 +158,9 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             public void closeSuccess() {
                 initOpenLock();
                 showFiveToast("成功关锁！");
+                mParkInfo.setParkLockStatus("2");
+                mCircleView.setColor(Color.parseColor("#1dd0a1"));
+                mParkspaceStatus.setText("空闲中");
             }
 
             @Override
@@ -284,6 +290,16 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         } else if (mParkInfo.getPark_status().equals("3")) {
             mParkspaceStatus.setText("停租中");
             mCircleView.setColor(Color.parseColor("#808080"));
+        }
+
+        if (mParkInfo.getParkLockStatus().equals("1")) {
+            initCloseLock();
+        } else if (mParkInfo.getParkLockStatus().equals("2")) {
+            initOpenLock();
+        } else if (mParkInfo.getParkLockStatus().equals("3")) {
+            cantOpenLock();
+            mCircleView.setColor(Color.parseColor("#808080"));
+            mParkspaceStatus.setText("离线中");
         }
     }
 

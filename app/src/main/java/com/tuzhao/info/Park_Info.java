@@ -42,6 +42,7 @@ public class Park_Info extends BaseInfo {
     private String create_time;//创建时间，主要是提交为了删除车位
     private String update_time;//更新时间，主要是为了核验是否新增订单号
     private String parkLockId;
+    private String parkLockStatus;//车位锁状态，1(打开状态)  2(关闭状态) 3（离线状态）
     private String voltage;//车位锁电量值
     private String indicator;//指标，代表该车位被停车的次数，用于预定车位排序
     private Calendar[] shareTimeCalendar;     //能共享的时间段的开始时间和结束时间，仅用于预定车位排序
@@ -357,6 +358,14 @@ public class Park_Info extends BaseInfo {
 
     public void setParkLockId(String parkLockId) {
         this.parkLockId = parkLockId;
+    }
+
+    public String getParkLockStatus() {
+        return parkLockStatus;
+    }
+
+    public void setParkLockStatus(String parkLockStatus) {
+        this.parkLockStatus = parkLockStatus;
     }
 
     @Override

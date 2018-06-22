@@ -31,8 +31,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     private OnItemClickListener mOnItemClickListener;
 
-    private OnChildClickListener mChildClickListener;
-
     private static final int HEADER_VIEW = 0x111;
 
     private static final int FOOTER_VIEW = 0x222;
@@ -142,14 +140,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
-    }
-
-    OnChildClickListener getChildClickListener() {
-        return mChildClickListener;
-    }
-
-    public void setChildClickListener(OnChildClickListener childClickListener) {
-        mChildClickListener = childClickListener;
     }
 
     public BaseViewHolder getBaseViewHolder() {
@@ -298,10 +288,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
-    }
-
-    public interface OnChildClickListener {
-        void onChildClick(View view, int position);
     }
 
 }

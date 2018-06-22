@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/next_step_tv"
+        app:layout_constraintBottom_toTopOf="@+id/pay_deposit_tv"
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
         <android.support.constraint.ConstraintLayout
@@ -448,7 +448,7 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/next_step_tv"
+        android:id="@+id/pay_deposit_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

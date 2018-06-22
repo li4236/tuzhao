@@ -191,7 +191,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Bundle bundle = getArguments();
+        /*Bundle bundle = getArguments();
         if (bundle != null) {
             mParkSpaceInfo.setPropertyFirstUrl(mPropertyAdapter.get(0).getPath());
             if (mPropertyAdapter.getDataSize() == 2) {
@@ -201,7 +201,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 mParkSpaceInfo.setPropertyThirdUrl(mPropertyAdapter.get(2).getPath());
             }
             bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, mParkSpaceInfo);
-        }
+        }*/
 
         IntentObserable.unregisterObserver(this);
     }

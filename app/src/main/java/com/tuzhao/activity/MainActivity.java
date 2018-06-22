@@ -1017,6 +1017,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onPause() {
         super.onPause();
         mapView.onPause();
+        if (show) {
+            controlAnimfragment(mFragment_content);
+        }
     }
 
     @Override
