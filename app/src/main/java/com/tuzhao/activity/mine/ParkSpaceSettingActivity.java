@@ -70,7 +70,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             finish();
         }
 
-        //scrennOrderTime();
         mParkspaceNumber = findViewById(R.id.parkspace_number);
         mParkspaceStatus = findViewById(R.id.park_space_status);
 
@@ -104,8 +103,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 }
             }
         });
-
-        setParkspaceStatus();
 
         findViewById(R.id.edit_share_time).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,9 +163,18 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
-        super.initData();
-        getShareTime();
+        //getShareTime();
+        setParkspaceStatus();
+        setParkSpaceInfo();
         mParkspaceNumber.setText(mPark_info.getPark_number());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent();
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
+        setResult(RESULT_OK, intent);
     }
 
     /**
@@ -436,10 +442,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             if (data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT) != null) {
                 mPark_info = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
                 setParkSpaceInfo();
-
-                Intent intent = new Intent();
-                intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
-                setResult(RESULT_OK, intent);
             }
         }
     }

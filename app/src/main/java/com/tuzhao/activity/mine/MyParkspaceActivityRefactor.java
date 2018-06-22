@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 
@@ -42,7 +44,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
 
     private ViewPager mViewPager;
 
-    private List<Fragment> mFragments;
+    private List<MyParkspaceFragment> mFragments;
 
     private TextView mCurrentParkspace;
 
@@ -86,6 +88,34 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
         left.setOnClickListener(this);
         right.setOnClickListener(this);
         loadData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
+            if (data.hasExtra(ConstansUtil.PARK_SPACE_ID)) {
+                String parkSpaceId = data.getStringExtra(ConstansUtil.PARK_SPACE_ID);
+                for (int i = 0; i < mFragments.size(); i++) {
+                    if (mFragments.get(i).getParkInfo().getId().equals(parkSpaceId)) {
+                        mFragments.remove(i);
+                        mFragmentAdater.notifyDataSetChanged();
+                        String text = "(" + 1 + "/" + mFragments.size() + ")";
+                        mCurrentParkspace.setText(text);
+                        Log.e("TAG", "onActivityResult: ");
+                        break;
+                    }
+                }
+            } else if (data.hasExtra(ConstansUtil.FOR_REQUEST_RESULT)) {
+                Park_Info parkInfo = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                for (int i = 0; i < mFragments.size(); i++) {
+                    if (mFragments.get(i).getParkInfo().getId().equals(parkInfo.getId())) {
+                        mFragments.get(i).setParkInfo(parkInfo);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private void loadData() {

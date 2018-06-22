@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
@@ -72,12 +71,21 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private String mParkLockStatus;
 
-    public static Fragment newInstance(Park_Info mParkInfo) {
+    public static MyParkspaceFragment newInstance(Park_Info mParkInfo) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(ConstansUtil.PARK_SPACE_INFO, mParkInfo);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public Park_Info getParkInfo() {
+        return mParkInfo;
+    }
+
+    public void setParkInfo(Park_Info parkInfo) {
+        mParkInfo = parkInfo;
+        setParkspaceStatus();
     }
 
     @Override
@@ -128,7 +136,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
-        //getParkLockStatus();
         scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
