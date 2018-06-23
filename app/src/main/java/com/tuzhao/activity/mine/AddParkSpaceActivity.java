@@ -820,20 +820,20 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
 
         showLoadingDialog("正在提交");
         Log.e(TAG, "addUserPark: " + mParkSpaceInfo);
-        StringBuilder propertyPhoto = new StringBuilder(mPropertyAdapter.get(0).getPath().replace(HttpConstants.ROOT_BASE_IMG_URL, ""));
+        StringBuilder propertyPhoto = new StringBuilder(mPropertyAdapter.get(0).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
         propertyPhoto.append(",");
         if (mPropertyAdapter.getDataSize() == 2 && !mPropertyAdapter.get(1).getPath().equals("-1")) {
-            propertyPhoto.append(mPropertyAdapter.get(1).getPath().replace(HttpConstants.ROOT_BASE_IMG_URL, ""));
+            propertyPhoto.append(mPropertyAdapter.get(1).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
             propertyPhoto.append(",");
         }
         if (mPropertyAdapter.getDataSize() == 3 && !mPropertyAdapter.get(2).getPath().equals("-1")) {
-            propertyPhoto.append(mPropertyAdapter.get(2).getPath().replace(HttpConstants.ROOT_BASE_IMG_URL, ""));
+            propertyPhoto.append(mPropertyAdapter.get(2).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
             propertyPhoto.append(",");
         }
         propertyPhoto.deleteCharAt(propertyPhoto.length() - 1);
         Log.e(TAG, "addUserPark: " + propertyPhoto);
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         String appointmentDate = getText(mChooseAppointmentTime);
         if (appointmentDate.startsWith("明天")) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -852,8 +852,8 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 .params("citycode", mParkSpaceInfo.getCityCode())
                 .params("address_memo", getText(mParkSpaceDescription))
                 .params("applicant_name", getText(mRealName).trim())
-                .params("idCardPhoto", mParkSpaceInfo.getIdCardPositiveUrl().replace(HttpConstants.ROOT_BASE_IMG_URL, "")
-                        + "," + mParkSpaceInfo.getIdCardNegativeUrl().replace(HttpConstants.ROOT_BASE_IMG_URL, ""))
+                .params("idCardPhoto", mParkSpaceInfo.getIdCardPositiveUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, "")
+                        + "," + mParkSpaceInfo.getIdCardNegativeUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, ""))
                 .params("propertyPhoto", propertyPhoto.toString())
                 .params("install_time", appointmentDate)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
@@ -875,7 +875,33 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    showFiveToast("请选择车场");
+                                    break;
+                                case "103":
+                                    showFiveToast("请输入车位描述");
+                                    break;
+                                case "104":
+                                    showFiveToast("请您的真实姓名");
+                                    break;
+                                case "105":
+                                    showFiveToast("请上传身份证");
+                                    break;
+                                case "106":
+                                    showFiveToast("请上传车位产权照");
+                                    break;
+                                case "107":
+                                    showFiveToast("请选择安装时间");
+                                    break;
+                                case "108":
+                                    showFiveToast("图片上传失败，请重新选择");
+                                    break;
+                                case "109":
+                                    showFiveToast("添加审核失败，请稍后重试");
+                                    break;
+                            }
                         }
                     }
                 });
