@@ -1,9 +1,18 @@
 package com.tuzhao.info;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.tuzhao.http.HttpConstants;
+
 /**
  * Created by juncoder on 2018/6/14.
  */
-public class ParkSpaceInfo {
+public class ParkSpaceInfo implements Parcelable {
+
+    private String id;
+
+    private String status;
 
     private String parkLotId;
 
@@ -17,15 +26,40 @@ public class ParkSpaceInfo {
 
     private String realName;
 
+    //正面照，反面照（逗号隔开）
+    private String idCardPhoto;
+
     private String idCardPositiveUrl = "-1";
 
     private String idCardNegativeUrl = "-1";
+
+    //产权照，第一张，第二张，第三张（逗号隔开，最少一张，最多三张）
+    private String propertyPhoto;
 
     private String propertyFirstUrl = "-1";
 
     private String propertySecondUrl = "-1";
 
     private String propertyThirdUrl = "-1";
+
+    //预约安装时间(2018-06-21 上午)
+    private String installTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getParkLotName() {
         return parkLotName;
@@ -60,6 +94,9 @@ public class ParkSpaceInfo {
     }
 
     public String getIdCardPositiveUrl() {
+        if (!idCardPositiveUrl.equals("-1") && !idCardPositiveUrl.startsWith(HttpConstants.ROOT_IMG_URL_ID_CARD)) {
+            idCardPositiveUrl = HttpConstants.ROOT_IMG_URL_ID_CARD + idCardPositiveUrl;
+        }
         return idCardPositiveUrl;
     }
 
@@ -68,6 +105,9 @@ public class ParkSpaceInfo {
     }
 
     public String getIdCardNegativeUrl() {
+        if (!idCardNegativeUrl.equals("-1") && !idCardNegativeUrl.startsWith(HttpConstants.ROOT_IMG_URL_ID_CARD)) {
+            idCardNegativeUrl = HttpConstants.ROOT_IMG_URL_ID_CARD + idCardNegativeUrl;
+        }
         return idCardNegativeUrl;
     }
 
@@ -76,6 +116,9 @@ public class ParkSpaceInfo {
     }
 
     public String getPropertyFirstUrl() {
+        if (!propertyFirstUrl.equals("-1") && !propertyFirstUrl.startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
+            propertyFirstUrl = HttpConstants.ROOT_IMG_URL_PROPERTY + propertyFirstUrl;
+        }
         return propertyFirstUrl;
     }
 
@@ -84,6 +127,9 @@ public class ParkSpaceInfo {
     }
 
     public String getPropertySecondUrl() {
+        if (!propertySecondUrl.equals("-1") && !propertySecondUrl.startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
+            propertySecondUrl = HttpConstants.ROOT_IMG_URL_PROPERTY + propertySecondUrl;
+        }
         return propertySecondUrl;
     }
 
@@ -92,6 +138,9 @@ public class ParkSpaceInfo {
     }
 
     public String getPropertyThirdUrl() {
+        if (!propertyThirdUrl.equals("-1") && !propertyThirdUrl.startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
+            propertyThirdUrl = HttpConstants.ROOT_IMG_URL_PROPERTY + propertyThirdUrl;
+        }
         return propertyThirdUrl;
     }
 
@@ -115,20 +164,108 @@ public class ParkSpaceInfo {
         mCityCode = cityCode;
     }
 
+    public String getIdCardPhoto() {
+        return idCardPhoto;
+    }
+
+    public void setIdCardPhoto(String idCardPhoto) {
+        this.idCardPhoto = idCardPhoto;
+    }
+
+    public String getPropertyPhoto() {
+        return propertyPhoto;
+    }
+
+    public void setPropertyPhoto(String propertyPhoto) {
+        this.propertyPhoto = propertyPhoto;
+    }
+
+    public String getInstallTime() {
+        return installTime;
+    }
+
+    public void setInstallTime(String installTime) {
+        this.installTime = installTime;
+    }
+
     @Override
     public String toString() {
         return "ParkSpaceInfo{" +
-                "parkLotId='" + parkLotId + '\'' +
+                "id='" + id + '\'' +
+                ", parkLotId='" + parkLotId + '\'' +
                 ", parkLotName='" + parkLotName + '\'' +
                 ", mCityCode='" + mCityCode + '\'' +
                 ", revenueRatio='" + revenueRatio + '\'' +
                 ", parkSpaceDescription='" + parkSpaceDescription + '\'' +
                 ", realName='" + realName + '\'' +
+                ", idCardPhoto='" + idCardPhoto + '\'' +
                 ", idCardPositiveUrl='" + idCardPositiveUrl + '\'' +
                 ", idCardNegativeUrl='" + idCardNegativeUrl + '\'' +
+                ", propertyPhoto='" + propertyPhoto + '\'' +
                 ", propertyFirstUrl='" + propertyFirstUrl + '\'' +
                 ", propertySecondUrl='" + propertySecondUrl + '\'' +
                 ", propertyThirdUrl='" + propertyThirdUrl + '\'' +
+                ", installTime='" + installTime + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.parkLotId);
+        dest.writeString(this.parkLotName);
+        dest.writeString(this.mCityCode);
+        dest.writeString(this.revenueRatio);
+        dest.writeString(this.parkSpaceDescription);
+        dest.writeString(this.realName);
+        dest.writeString(this.idCardPhoto);
+        dest.writeString(this.idCardPositiveUrl);
+        dest.writeString(this.idCardNegativeUrl);
+        dest.writeString(this.propertyPhoto);
+        dest.writeString(this.propertyFirstUrl);
+        dest.writeString(this.propertySecondUrl);
+        dest.writeString(this.propertyThirdUrl);
+        dest.writeString(this.installTime);
+        dest.writeString(this.status);
+    }
+
+    public ParkSpaceInfo() {
+    }
+
+    protected ParkSpaceInfo(Parcel in) {
+        this.id = in.readString();
+        this.parkLotId = in.readString();
+        this.parkLotName = in.readString();
+        this.mCityCode = in.readString();
+        this.revenueRatio = in.readString();
+        this.parkSpaceDescription = in.readString();
+        this.realName = in.readString();
+        this.idCardPhoto = in.readString();
+        this.idCardPositiveUrl = in.readString();
+        this.idCardNegativeUrl = in.readString();
+        this.propertyPhoto = in.readString();
+        this.propertyFirstUrl = in.readString();
+        this.propertySecondUrl = in.readString();
+        this.propertyThirdUrl = in.readString();
+        this.installTime = in.readString();
+        this.status = in.readString();
+    }
+
+    public static final Creator<ParkSpaceInfo> CREATOR = new Creator<ParkSpaceInfo>() {
+        @Override
+        public ParkSpaceInfo createFromParcel(Parcel source) {
+            return new ParkSpaceInfo(source);
+        }
+
+        @Override
+        public ParkSpaceInfo[] newArray(int size) {
+            return new ParkSpaceInfo[size];
+        }
+    };
+
 }

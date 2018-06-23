@@ -138,6 +138,14 @@
         <item name="android:textColor">@color/g6</item>
     </style>
 
+    <style name="TenTextG10Stytle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/g10</item>
+    </style>
+
     <style name="TenTextY3Style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

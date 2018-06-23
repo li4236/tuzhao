@@ -7,9 +7,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
@@ -224,6 +226,15 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected String getText(TextView textView) {
         return textView.getText().toString();
+    }
+
+    /**
+     * @param enable true(可编辑)   false(不可编辑)
+     */
+    protected void setEditTextEnable(EditText editText, boolean enable) {
+        editText.setFocusable(enable);
+        editText.setFocusableInTouchMode(enable);
+        editText.setInputType(enable ? InputType.TYPE_CLASS_TEXT : InputType.TYPE_NULL);
     }
 
     protected boolean isVisible(View view) {

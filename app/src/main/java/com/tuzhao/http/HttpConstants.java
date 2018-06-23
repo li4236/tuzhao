@@ -502,4 +502,14 @@ public class HttpConstants {
      */
     public static String getDepositSum = ROOT_URL + "getDepositSum";
 
+    /**
+     * 取消申请添加停车位
+     */
+    public static String cancelApplyParkSpace = ROOT_URL + "cancelApplyParkSpace";
+
+    /**
+     * 修改审核前的停车位资料
+     */
+    public static String modifyAuditParkSpaceInfo = ROOT_URL + "modifyAuditParkSpaceInfo";
+
 }

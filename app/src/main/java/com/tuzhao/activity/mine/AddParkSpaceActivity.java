@@ -444,9 +444,9 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         if (type == 0) {
-                            setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_ID_CARD + stringBase_class_info.data, position);
+                            setServerUrl(file.getAbsolutePath(), stringBase_class_info.data, position);
                         } else {
-                            setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_PROPERTY + stringBase_class_info.data, position);
+                            setServerUrl(file.getAbsolutePath(), stringBase_class_info.data, position);
                         }
                         setUploadProgress(file.getAbsolutePath(), position, 1);
                     }
@@ -587,7 +587,11 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             view.findViewById(R.id.delete_tv).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deletePhoto(mPropertyAdapter.get(mChoosePosition - 2).getPath(), mChoosePosition);
+                    if (mChoosePosition > 1) {
+                        deletePhoto(mPropertyAdapter.get(mChoosePosition - 2).getPath(), mChoosePosition);
+                    } else {
+                        deletePhoto("-1", mChoosePosition);
+                    }
                     mCustomDialog.dismiss();
                 }
             });
@@ -905,7 +909,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         }
                     }
                 });
-
     }
 
     @Override

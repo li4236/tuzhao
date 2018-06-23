@@ -179,7 +179,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/real_name_cl">
 
                 <TextView
-                    android:id="@+id/id_card_tv"
+                    android:id="@+id/id_card_photo_tv"
                     style="@style/ThirtyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
@@ -195,7 +195,7 @@
                     android:contentDescription="@string/picture_description"
                     android:scaleType="centerCrop"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/id_card_tv"
+                    app:layout_constraintStart_toEndOf="@+id/id_card_photo_tv"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -297,77 +297,6 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <!--<ImageView
-                        android:id="@+id/property_first_photo_iv"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:contentDescription="@string/picture_description"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/property_first_upload_tv"
-                        style="@style/FortyTextB1Style"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="#47000000"
-                        android:text="0%"
-                        android:textColor="@color/w0"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/property_first_photo_iv"
-                        app:layout_constraintEnd_toEndOf="@+id/property_first_photo_iv"
-                        app:layout_constraintStart_toStartOf="@+id/property_first_photo_iv"
-                        app:layout_constraintTop_toTopOf="@+id/property_first_photo_iv" />
-
-                    <ImageView
-                        android:id="@+id/property_second_photo_iv"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="15dp"
-                        android:contentDescription="@string/picture_description"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/property_first_photo_iv"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/property_second_upload_tv"
-                        style="@style/FortyTextB1Style"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="#47000000"
-                        android:text="0%"
-                        android:textColor="@color/w0"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/property_second_photo_iv"
-                        app:layout_constraintEnd_toEndOf="@+id/property_second_photo_iv"
-                        app:layout_constraintStart_toStartOf="@+id/property_second_photo_iv"
-                        app:layout_constraintTop_toTopOf="@+id/property_second_photo_iv" />
-
-                    <ImageView
-                        android:id="@+id/property_third_photo_iv"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="15dp"
-                        android:contentDescription="@string/picture_description"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/property_second_photo_iv"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/property_third_upload_tv"
-                        style="@style/FortyTextB1Style"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="#47000000"
-                        android:text="0%"
-                        android:textColor="@color/w0"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/property_third_photo_iv"
-                        app:layout_constraintEnd_toEndOf="@+id/property_third_photo_iv"
-                        app:layout_constraintStart_toStartOf="@+id/property_third_photo_iv"
-                        app:layout_constraintTop_toTopOf="@+id/property_third_photo_iv" />-->
 
                 </android.support.constraint.ConstraintLayout>
 

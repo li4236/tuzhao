@@ -1,5 +1,7 @@
 package com.tuzhao.utils;
 
+import android.graphics.Color;
+
 /**
  * Created by juncoder on 2018/4/11.
  */
@@ -228,5 +230,19 @@ public class ConstansUtil {
      * 押金金额
      */
     public static final String DEPOSIT_SUM = "DepositSum";
+
+    /**
+     * 取消申请添加停车位
+     */
+    public static final String CANCEL_APPLY_PARK_SPACE = "CancelApplyParkSpace";
+
+    /**
+     * 修改审核前的停车位的资料
+     */
+    public static final String MODIFY_AUDIT_PARK_SPACE_INFO = "ModifyAuditParkSpaceInfo";
+
+    public static final int B1_COLOR = Color.parseColor("#323232");
+
+    public static final int Y2_COLOR = Color.parseColor("#ffcc30");
 
 }
