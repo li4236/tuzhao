@@ -1,21 +1,24 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.ParkSpaceInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.utils.ConstansUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -24,7 +27,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/5.
  */
 
-public class AuditParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
+public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -51,9 +54,9 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     @Override
     protected void loadData() {
         getOkgo(HttpConstants.getPassingParkFromUser)
-                .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
+                .execute(new JsonCallback<Base_Class_List_Info<ParkSpaceInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_List_Info<ParkSpaceInfo> o, Call call, Response response) {
                         loadDataSuccess(o);
                     }
 
@@ -76,23 +79,34 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, Park_Info park_info, int position) {
+    protected void bindData(BaseViewHolder holder, final ParkSpaceInfo parkSpaceInfo, int position) {
         String auditStatus;
-        switch (park_info.getPark_status()) {
+        switch (parkSpaceInfo.getStatus()) {
+            case "0":
+                auditStatus = "已提交";
+                break;
             case "1":
-                auditStatus = "安装审核中";
+                auditStatus = "审核中";
                 break;
             case "2":
-                auditStatus = "待安装";
+                auditStatus = "已审核";
                 break;
             case "3":
-                auditStatus = "安装成功";
+                if (parkSpaceInfo.getType().equals("1")) {
+                    auditStatus = "上门安装";
+                } else {
+                    auditStatus = "上门拆卸";
+                }
                 break;
             case "4":
-                auditStatus = "安装车位未通过审核";
+                if (parkSpaceInfo.getType().equals("1")) {
+                    auditStatus = "安装完毕";
+                } else {
+                    auditStatus = "拆卸完毕";
+                }
                 break;
             case "5":
-                auditStatus = "拆卸审核中";
+                auditStatus = "审核失败";
                 break;
             case "6":
                 auditStatus = "待拆卸";
@@ -100,26 +114,28 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
             case "7":
                 auditStatus = "押金退还中";
                 break;
-            case "8":
-                auditStatus = "已删除";
-                break;
-            case "9":
-                auditStatus = "车位拆卸未通过审核";
-                break;
             default:
                 auditStatus = "未知状态";
                 break;
         }
-        holder.setText(R.id.my_parkspace_description, park_info.getLocation_describe())
-                .setText(R.id.my_parkspace_park_location, park_info.getParkspace_name())
-                .setText(R.id.audit_parkspace_status, auditStatus);
+        holder.setText(R.id.my_parkspace_description, parkSpaceInfo.getParkSpaceDescription())
+                .setText(R.id.my_parkspace_park_location, parkSpaceInfo.getParkLotName())
+                .setText(R.id.audit_parkspace_status, auditStatus)
+                .itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AuditParkSpaceActivity.this, ApplyParkSpaceProgressActivity.class);
+                intent.putExtra(ConstansUtil.PARK_SPACE_INFO, parkSpaceInfo);
+                startActivity(intent);
+            }
+        });
 
-        if (auditStatus.equals("待安装")) {
-            holder.setText(R.id.audit_parkspace_install_time, "预计安装时间:" + park_info.getInstallTime());
-        } else if (auditStatus.equals("待拆卸")) {
-            holder.setText(R.id.audit_parkspace_install_time, "预计拆卸时间:" + park_info.getInstallTime());
-        } else if (auditStatus.equals("车位拆卸未通过审核") || auditStatus.equals("安装车位未通过审核")) {
-            holder.setText(R.id.audit_parkspace_install_time, "原因:" + park_info.getReason());
+        if (auditStatus.equals("上门安装")) {
+            holder.setText(R.id.audit_parkspace_install_time, "预计安装时间:" + parkSpaceInfo.getInstallTime());
+        } else if (auditStatus.equals("上门拆卸")) {
+            holder.setText(R.id.audit_parkspace_install_time, "预计拆卸时间:" + parkSpaceInfo.getInstallTime());
+        } else if (auditStatus.equals("审核失败") || auditStatus.equals("审核失败")) {
+            holder.setText(R.id.audit_parkspace_install_time, "原因:" + parkSpaceInfo.getReason());
         } else {
             ConstraintLayout constraintLayout = (ConstraintLayout) holder.itemView;
             ConstraintSet constraintSet = new ConstraintSet();

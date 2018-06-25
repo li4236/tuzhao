@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.applyParkSpaceProgress.ParkSpaceInfoFragment;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkSpaceInfo;
 import com.tuzhao.publicwidget.others.CircleView;
 import com.tuzhao.utils.ConstansUtil;
@@ -48,8 +49,6 @@ public class ApplyParkSpaceProgressActivity extends BaseStatusActivity {
 
     private TextView mInstallFinishTv;
 
-    private ParkSpaceInfo mParkSpaceInfo;
-
     @Override
     protected int resourceId() {
         return R.layout.activity_apply_park_space_progress_layout;
@@ -76,39 +75,57 @@ public class ApplyParkSpaceProgressActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
-        if ((mParkSpaceInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            switch (mParkSpaceInfo.getStatus()) {
+        ParkSpaceInfo parkSpaceInfo;
+        if ((parkSpaceInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) != null) {
+            switch (parkSpaceInfo.getStatus()) {
                 case "0":
-                    String idCardPhotos[] = mParkSpaceInfo.getIdCardPhoto().split(",");
-                    mParkSpaceInfo.setIdCardPositiveUrl(idCardPhotos[0]);
-                    mParkSpaceInfo.setIdCardNegativeUrl(idCardPhotos[1]);
 
-                    String propertyPhotos[] = mParkSpaceInfo.getPropertyPhoto().split(",");
-                    mParkSpaceInfo.setPropertyFirstUrl(propertyPhotos[0]);
-                    if (propertyPhotos.length > 1) {
-                        mParkSpaceInfo.setPropertySecondUrl(propertyPhotos[1]);
-                    }
-                    if (propertyPhotos.length > 2) {
-                        mParkSpaceInfo.setPropertyThirdUrl(propertyPhotos[2]);
-                    }
-
-                    transaction.replace(R.id.apply_park_space_progress_container, ParkSpaceInfoFragment.newInstance(mParkSpaceInfo));
-                    transaction.commit();
                     break;
                 case "1":
-
+                    setReviewChoose();
                     break;
                 case "2":
-
+                    setReviewChoose();
+                    setAuditedChoose();
                     break;
                 case "3":
-
+                    setReviewChoose();
+                    setAuditedChoose();
+                    setReadyInstallChoose();
+                    if (parkSpaceInfo.getType().equals("2")) {
+                        mReadyInstallTv.setText("上门拆卸");
+                    }
                     break;
                 case "4":
+                    setReviewChoose();
+                    setAuditedChoose();
+                    setReadyInstallChoose();
+                    if (parkSpaceInfo.getType().equals("2")) {
+                        mReadyInstallTv.setText("上门拆卸");
+                    }
 
+                    setInstallFinishChoose();
+                    if (parkSpaceInfo.getType().equals("2")) {
+                        mInstallFinishTv.setText("拆卸完毕");
+                    }
                     break;
             }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            String idCardPhotos[] = parkSpaceInfo.getIdCardPhoto().split(",");
+            parkSpaceInfo.setIdCardPositiveUrl(HttpConstants.ROOT_IMG_URL_ID_CARD + idCardPhotos[0]);
+            parkSpaceInfo.setIdCardNegativeUrl(HttpConstants.ROOT_IMG_URL_ID_CARD + idCardPhotos[1]);
+
+            String propertyPhotos[] = parkSpaceInfo.getPropertyPhoto().split(",");
+            parkSpaceInfo.setPropertyFirstUrl(HttpConstants.ROOT_IMG_URL_PROPERTY + propertyPhotos[0]);
+            if (propertyPhotos.length > 1) {
+                parkSpaceInfo.setPropertySecondUrl(HttpConstants.ROOT_IMG_URL_PROPERTY + propertyPhotos[1]);
+            }
+            if (propertyPhotos.length > 2) {
+                parkSpaceInfo.setPropertyThirdUrl(HttpConstants.ROOT_IMG_URL_PROPERTY + propertyPhotos[2]);
+            }
+
+            transaction.replace(R.id.apply_park_space_progress_container, ParkSpaceInfoFragment.newInstance(parkSpaceInfo));
+            transaction.commit();
         } else {
             showFiveToast("获取申请进度失败，请稍后重试");
         }

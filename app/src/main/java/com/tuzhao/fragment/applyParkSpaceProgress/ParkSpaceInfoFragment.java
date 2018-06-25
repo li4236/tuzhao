@@ -172,6 +172,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
         view.findViewById(R.id.parking_lot_name_cl).setOnClickListener(this);
         view.findViewById(R.id.cancel_apply_tv).setOnClickListener(this);
+        mRevenueRatio.setOnClickListener(this);
         mIdCardPositivePhotoTv.setOnClickListener(this);
         mIdCardPositiveUploadTv.setOnClickListener(this);
         mIdCardPositivePhoto.setOnClickListener(this);
@@ -179,6 +180,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         mIdCardNegativeUploadTv.setOnClickListener(this);
         mIdCardNegativePhoto.setOnClickListener(this);
         mTakePropertyPhotoCl.setOnClickListener(this);
+        mChooseAppointmentTime.setOnClickListener(this);
         mModifyInfoTv.setOnClickListener(this);
     }
 
@@ -198,7 +200,8 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
             assert mParkSpaceInfo != null;
             mParkLotName.setText(mParkSpaceInfo.getParkLotName());
-            mRevenueRatio.setText(mParkSpaceInfo.getRevenueRatio());
+            String revenueRatio = mParkSpaceInfo.getRevenueRatio() + " （车位主 : 物业 : 平台）";
+            mRevenueRatio.setText(revenueRatio);
             mParkSpaceDescription.setText(mParkSpaceInfo.getParkSpaceDescription());
             mRealName.setText(mParkSpaceInfo.getRealName());
 
@@ -248,6 +251,12 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             mChooseAppointmentTime.setText(installTime.toString());
 
             initAppointmentOption();
+
+            if (mParkSpaceInfo.getType().equals("1")) {
+                if (mParkSpaceInfo.getStatus().equals("0") || mParkSpaceInfo.getStatus().equals("1")) {
+                    mModifyInfoTv.setVisibility(View.VISIBLE);
+                }
+            }
         } else {
             showFiveToast("获取申请进度失败，请稍后重试");
             finish();
@@ -259,6 +268,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.parking_lot_name_cl:
+            case R.id.revenue_ratio:
                 if (mIsModifyInfo) {
                     Intent intent = new Intent(getActivity(), SelectParkSpaceActivity.class);
                     startActivityForResult(intent, 1);
@@ -302,7 +312,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 break;
             case R.id.modify_info_tv:
                 if (mIsModifyInfo) {
-
+                    verifyInfo();
                 } else {
                     setCanModify();
                 }
@@ -379,6 +389,8 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
         mParkLotNameTv.setTextColor(mB1Color);
         mParkLotName.setTextColor(mB1Color);
+        mRevenueRatioTv.setTextColor(mB1Color);
+        mRevenueRatio.setTextColor(mB1Color);
         mParkSpaceDescriptionTv.setTextColor(mB1Color);
         mParkSpaceDescription.setTextColor(mB1Color);
         mRealNameTv.setTextColor(mB1Color);
@@ -585,9 +597,9 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         if (type == 0) {
-                            setServerUrl(file.getAbsolutePath(), stringBase_class_info.data, position);
+                            setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_ID_CARD + stringBase_class_info.data, position);
                         } else {
-                            setServerUrl(file.getAbsolutePath(), stringBase_class_info.data, position);
+                            setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_PROPERTY + stringBase_class_info.data, position);
                         }
                         setUploadProgress(file.getAbsolutePath(), position, 1);
                     }
@@ -810,7 +822,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private void cancelApplyParkSpace() {
         getOkGo(HttpConstants.cancelApplyParkSpace)
-                .params("parkSpaceId", mParkSpaceInfo.getId())
+                .params("parkAuditId", mParkSpaceInfo.getId())
                 .params("cityCode", mParkSpaceInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
@@ -855,9 +867,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                         !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()) {
                     showFiveToast("请等待产权照上传完成");
                 } else {
-                    Intent intent = new Intent();
-                    intent.setAction(ConstansUtil.JUMP_TO_TIME_SETTING);
-                    IntentObserable.dispatch(intent);
+                    modifyAuditInfo();
                 }
             } else if (mPropertyAdapter.getDataSize() == 3) {
                 if (!mPropertyAdapter.get(0).isUploadSuccess() ||
@@ -865,9 +875,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                         || !mPropertyAdapter.get(2).getPath().equals("-1") && !mPropertyAdapter.get(2).isUploadSuccess()) {
                     showFiveToast("请等待产权照上传完成");
                 } else {
-                    Intent intent = new Intent();
-                    intent.setAction(ConstansUtil.JUMP_TO_TIME_SETTING);
-                    IntentObserable.dispatch(intent);
+                    modifyAuditInfo();
                 }
             }
         }
@@ -898,7 +906,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         } else if (appointmentDate.startsWith("后天")) {
             calendar.add(Calendar.DAY_OF_MONTH, 2);
         } else {
-            calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))));
+            calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))) - 1);
             calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(appointmentDate.substring(appointmentDate.indexOf("月") + 1,
                     appointmentDate.indexOf("日"))));
         }
@@ -914,7 +922,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         Log.e(TAG, "addUserPark: " + propertyPhoto);
 
         getOkGo(HttpConstants.modifyAuditParkSpaceInfo)
-                .params("parkSpaceId", mParkSpaceInfo.getId())
+                .params("parkAuditId", mParkSpaceInfo.getId())
                 .params("parkLotId", mParkSpaceInfo.getParkLotId())
                 .params("citycode", mParkSpaceInfo.getCityCode())
                 .params("address_memo", mParkSpaceInfo.getParkSpaceDescription())
@@ -992,25 +1000,23 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mChoosePosition = position + 2;
-                    if (propertyPhoto.getPath().equals("-1")) {
-                        startTakePhoto();
-                    } else {
-                        showDialog();
+                    if (mIsModifyInfo) {
+                        mChoosePosition = position + 2;
+                        if (propertyPhoto.getPath().equals("-1")) {
+                            startTakePhoto();
+                        } else {
+                            showDialog();
+                        }
                     }
                 }
             });
 
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-            if (payloads.isEmpty()) {
-                onBindViewHolder(holder, position);
-            } else {
-                showProgressStatus((TextView) holder.getView(R.id.property_upload_tv), get(position).isShowProgress());
-                holder.setText(R.id.property_upload_tv, get(position).getProgress());
-            }
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //为了上传时不可点击
+                }
+            });
         }
 
         @Override

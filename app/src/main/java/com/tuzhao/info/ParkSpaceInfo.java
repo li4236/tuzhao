@@ -4,13 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.tuzhao.http.HttpConstants;
 
 /**
  * Created by juncoder on 2018/6/14.
  */
 public class ParkSpaceInfo implements Parcelable {
 
+    @SerializedName(value = "id",alternate = {"parkAuditId"})
     private String id;
 
     private String status;
@@ -21,7 +21,7 @@ public class ParkSpaceInfo implements Parcelable {
 
     private String cityCode;
 
-    @SerializedName(value = "revenueRatio", alternate = {"parofitRatio"})
+    @SerializedName(value = "revenueRatio", alternate = {"profitRatio"})
     private String revenueRatio;
 
     private String parkSpaceDescription;
@@ -105,9 +105,6 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getIdCardPositiveUrl() {
-        if (!idCardPositiveUrl.equals("-1") && !idCardPositiveUrl.startsWith(HttpConstants.ROOT_IMG_URL_ID_CARD)) {
-            idCardPositiveUrl = HttpConstants.ROOT_IMG_URL_ID_CARD + idCardPositiveUrl;
-        }
         return idCardPositiveUrl;
     }
 
@@ -116,9 +113,6 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getIdCardNegativeUrl() {
-        if (!idCardNegativeUrl.equals("-1") && !idCardNegativeUrl.startsWith(HttpConstants.ROOT_IMG_URL_ID_CARD)) {
-            idCardNegativeUrl = HttpConstants.ROOT_IMG_URL_ID_CARD + idCardNegativeUrl;
-        }
         return idCardNegativeUrl;
     }
 
@@ -127,9 +121,6 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getPropertyFirstUrl() {
-        if (!propertyFirstUrl.equals("-1") && !propertyFirstUrl.startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
-            propertyFirstUrl = HttpConstants.ROOT_IMG_URL_PROPERTY + propertyFirstUrl;
-        }
         return propertyFirstUrl;
     }
 
@@ -138,9 +129,6 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getPropertySecondUrl() {
-        if (!propertySecondUrl.equals("-1") && !propertySecondUrl.startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
-            propertySecondUrl = HttpConstants.ROOT_IMG_URL_PROPERTY + propertySecondUrl;
-        }
         return propertySecondUrl;
     }
 
@@ -149,9 +137,6 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getPropertyThirdUrl() {
-        if (!propertyThirdUrl.equals("-1") && !propertyThirdUrl.startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
-            propertyThirdUrl = HttpConstants.ROOT_IMG_URL_PROPERTY + propertyThirdUrl;
-        }
         return propertyThirdUrl;
     }
 
@@ -197,6 +182,30 @@ public class ParkSpaceInfo implements Parcelable {
 
     public void setInstallTime(String installTime) {
         this.installTime = installTime;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDepositStatus() {
+        return DepositStatus;
+    }
+
+    public void setDepositStatus(String depositStatus) {
+        DepositStatus = depositStatus;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     @Override
