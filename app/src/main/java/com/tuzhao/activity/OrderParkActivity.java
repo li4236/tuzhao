@@ -982,8 +982,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Log.e("TAG", "showAlertDialog shareTime: " + DateUtil.getTwoYearToMinutesString(
                 mCanParkInfo.get(0).getShareTimeCalendar()[0], mCanParkInfo.get(0).getShareTimeCalendar()[1]));
         if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkInfo.get(0).getShareTimeCalendar()[1]) >= 0) {
-            mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
-            builder.setMessage("最优车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
+            /*mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
+            builder.setMessage("最优车位宽限时长为" + mExtensionTime + "分钟，是否预定？");*/
+            builder.setMessage("以为你匹配到最优车位，是否预订？");
         } else {
             mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
             builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
@@ -1205,8 +1206,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Calendar canParkEndCalendar = DateUtil.getYearToMinuteCalendar(end_time);
         canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
         if (DateUtil.getCalendarDistance(canParkEndCalendar, park_info.getShareTimeCalendar()[1]) >= 0) {
-            mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
-            builder.setMessage("最优车位宽限时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");
+            /*mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
+            builder.setMessage("最优车位宽限时长为" + UserManager.getInstance().getUserInfo().getLeave_time() + "分钟，是否预定？");*/
+            builder.setMessage("车位已被预订，是否预订另一车位？");
         } else {
             mExtensionTime = (int) DateUtil.getCalendarDistance(park_info.getShareTimeCalendar()[1], canParkEndCalendar);
             builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
