@@ -211,7 +211,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void notifyAddData(int position, T t) {
         mData.add(position, t);
-        notifyDataSetChanged();
+        notifyItemInserted(getHeadViewCount() + position);
+        notifyItemRangeChanged(getHeadViewCount() + position, mData.size() - position);
     }
 
     public void notifyDataChange(int changeDataPosition, T newData) {
@@ -236,7 +237,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
      */
     public void notifyRemoveData(@IntRange(from = 0) int position) {
         mData.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(getHeadViewCount() + position);
+        notifyItemRangeChanged(getHeadViewCount() + position, mData.size() - position);
     }
 
     /**

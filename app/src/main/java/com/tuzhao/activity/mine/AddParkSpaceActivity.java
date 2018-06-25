@@ -36,7 +36,6 @@ import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
-import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -444,9 +443,9 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         if (type == 0) {
-                            setServerUrl(file.getAbsolutePath(), stringBase_class_info.data, position);
+                            setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_ID_CARD + stringBase_class_info.data, position);
                         } else {
-                            setServerUrl(file.getAbsolutePath(), stringBase_class_info.data, position);
+                            setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_PROPERTY + stringBase_class_info.data, position);
                         }
                         setUploadProgress(file.getAbsolutePath(), position, 1);
                     }
@@ -648,8 +647,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     private void setTakePhotoPic(ImageView imageView) {
         imageView.setPadding(mSixtyDp, mEightyDp, mSixtyDp, mEightyDp);
         imageView.setBackgroundResource(R.drawable.y3_all_1dp);
-        GlideApp.with(imageView.getContext())
-                .clear(imageView);
         ImageUtil.showPicWithNoAnimate(imageView, R.drawable.ic_photo);
     }
 
@@ -674,11 +671,12 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         break;
                     }
                 }
+
                 if (mPropertyAdapter.getDataSize() == 0 || !mPropertyAdapter.get(mPropertyAdapter.getDataSize() - 1).getPath().equals("-1")) {
                     //如果最后那张不是拍摄图，则添加拍摄图
                     mPropertyAdapter.addData(new PropertyPhoto());
-                    Log.e(TAG, "deletePhoto: ");
                 }
+
                 if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
                     //如果没有图片则显示大的拍摄图
                     mTakePropertyPhotoCl.setVisibility(View.VISIBLE);
@@ -844,7 +842,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         } else if (appointmentDate.startsWith("后天")) {
             calendar.add(Calendar.DAY_OF_MONTH, 2);
         } else {
-            calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))));
+            calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))) - 1);
             calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(appointmentDate.substring(appointmentDate.indexOf("月") + 1,
                     appointmentDate.indexOf("日"))));
         }
@@ -926,9 +924,8 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         protected void conver(@NonNull BaseViewHolder holder, final PropertyPhoto propertyPhoto, final int position) {
             ImageView imageView = holder.getView(R.id.property_photo_iv);
             TextView textView = holder.getView(R.id.property_upload_tv);
-            Log.e(TAG, "conver: " + propertyPhoto.getPath());
+            Log.e(TAG, "conver: " + propertyPhoto.getPath() + "  position:" + position);
             if (propertyPhoto.getPath().equals("-1")) {
-                Log.e(TAG, "conver: ");
                 setTakePhotoPic(imageView);
                 if (isVisible(textView)) {
                     textView.setVisibility(View.GONE);

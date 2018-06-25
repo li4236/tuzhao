@@ -14,7 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -42,7 +41,7 @@ public class ImageUtil {
     private static final String TAG = "ImageUtil";
 
     public static void showPic(ImageView imageView, String url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -50,7 +49,7 @@ public class ImageUtil {
     }
 
     public static void showPic(ImageView imageView, @DrawableRes int drawableRes) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(drawableRes)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -58,7 +57,7 @@ public class ImageUtil {
     }
 
     public static void showPic(ImageView imageView, String url, int placeholder) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .centerCrop()
                 .placeholder(placeholder)
@@ -68,21 +67,22 @@ public class ImageUtil {
     }
 
     public static void showPicWithNoAnimate(final ImageView imageView, final String url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .dontAnimate()
+                .placeholder(R.mipmap.ic_img)
+                .error(R.mipmap.ic_img)
                 .into(new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                        Log.e(TAG, "onResourceReady: " + url);
                         imageView.setImageDrawable(resource);
                     }
                 });
     }
 
     public static void showPicWithNoAnimate(final ImageView imageView, int drawableRes) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(drawableRes)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .dontAnimate()
@@ -95,14 +95,14 @@ public class ImageUtil {
     }
 
     public static void showNoCenterPic(ImageView imageView, int resourceId) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(resourceId)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void showImpPic(ImageView imageView, String url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .centerCrop()
                 .placeholder(R.mipmap.ic_img)
@@ -112,7 +112,7 @@ public class ImageUtil {
     }
 
     public static void showImgPic(ImageView imageView, int url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .centerCrop()
                 .placeholder(R.mipmap.ic_img)
@@ -122,7 +122,7 @@ public class ImageUtil {
     }
 
     public static void showCirclePic(ImageView imageView, int drawableId) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(drawableId)
                 .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -130,7 +130,7 @@ public class ImageUtil {
     }
 
     public static void showCirclePic(ImageView imageView, String url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -138,7 +138,7 @@ public class ImageUtil {
     }
 
     public static void showCircleImgPic(ImageView imageView, String url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .circleCrop()
                 .centerCrop()
@@ -149,7 +149,7 @@ public class ImageUtil {
     }
 
     public static void showCirclePic(ImageView imageView, String url, int placeholder) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .circleCrop()
                 .placeholder(placeholder)
@@ -162,7 +162,7 @@ public class ImageUtil {
      * 显示带圆角的图片
      */
     public static void showRoundPic(final ImageView imageView, int drawableId) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(drawableId)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -174,7 +174,7 @@ public class ImageUtil {
      * 显示带圆角的图片
      */
     public static void showRoundPic(final ImageView imageView, String url) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new GlideLoadListener(imageView))
@@ -185,7 +185,7 @@ public class ImageUtil {
      * 显示带圆角的图片
      */
     public static void showRoundPic(final ImageView imageView, String url, int drawableId) {
-        GlideApp.with(imageView.getContext())
+        GlideApp.with(imageView)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(new GlideLoadListener(imageView, drawableId))
