@@ -211,7 +211,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                 }
                 break;
             case R.id.audit_tv:
-                Intent intent = new Intent(this, AuditParkspaceActivity.class);
+                Intent intent = new Intent(this, AuditParkSpaceActivity.class);
                 startActivity(intent);
                 break;
         }

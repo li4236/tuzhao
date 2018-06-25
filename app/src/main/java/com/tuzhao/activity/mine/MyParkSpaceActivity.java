@@ -41,7 +41,7 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         findViewById(R.id.my_parkspace_audit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AuditParkspaceActivity.class);
+                startActivity(AuditParkSpaceActivity.class);
             }
         });
 

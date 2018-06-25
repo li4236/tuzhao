@@ -3,6 +3,7 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.tuzhao.http.HttpConstants;
 
 /**
@@ -18,8 +19,9 @@ public class ParkSpaceInfo implements Parcelable {
 
     private String parkLotName;
 
-    private String mCityCode;
+    private String cityCode;
 
+    @SerializedName(value = "revenueRatio", alternate = {"parofitRatio"})
     private String revenueRatio;
 
     private String parkSpaceDescription;
@@ -42,8 +44,17 @@ public class ParkSpaceInfo implements Parcelable {
 
     private String propertyThirdUrl = "-1";
 
+    //审核类型（1：安装，2：拆卸）
+    private String type;
+
     //预约安装时间(2018-06-21 上午)
     private String installTime;
+
+    //押金状态（0：未交押金，1：已交押金，2：已退押金）
+    private String DepositStatus;
+
+    //审核失败的理由
+    private String reason;
 
     public String getId() {
         return id;
@@ -157,11 +168,11 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getCityCode() {
-        return mCityCode;
+        return cityCode;
     }
 
     public void setCityCode(String cityCode) {
-        mCityCode = cityCode;
+        this.cityCode = cityCode;
     }
 
     public String getIdCardPhoto() {
@@ -192,9 +203,10 @@ public class ParkSpaceInfo implements Parcelable {
     public String toString() {
         return "ParkSpaceInfo{" +
                 "id='" + id + '\'' +
+                ", status='" + status + '\'' +
                 ", parkLotId='" + parkLotId + '\'' +
                 ", parkLotName='" + parkLotName + '\'' +
-                ", mCityCode='" + mCityCode + '\'' +
+                ", cityCode='" + cityCode + '\'' +
                 ", revenueRatio='" + revenueRatio + '\'' +
                 ", parkSpaceDescription='" + parkSpaceDescription + '\'' +
                 ", realName='" + realName + '\'' +
@@ -205,7 +217,10 @@ public class ParkSpaceInfo implements Parcelable {
                 ", propertyFirstUrl='" + propertyFirstUrl + '\'' +
                 ", propertySecondUrl='" + propertySecondUrl + '\'' +
                 ", propertyThirdUrl='" + propertyThirdUrl + '\'' +
+                ", type='" + type + '\'' +
                 ", installTime='" + installTime + '\'' +
+                ", DepositStatus='" + DepositStatus + '\'' +
+                ", reason='" + reason + '\'' +
                 '}';
     }
 
@@ -217,9 +232,10 @@ public class ParkSpaceInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
+        dest.writeString(this.status);
         dest.writeString(this.parkLotId);
         dest.writeString(this.parkLotName);
-        dest.writeString(this.mCityCode);
+        dest.writeString(this.cityCode);
         dest.writeString(this.revenueRatio);
         dest.writeString(this.parkSpaceDescription);
         dest.writeString(this.realName);
@@ -230,8 +246,10 @@ public class ParkSpaceInfo implements Parcelable {
         dest.writeString(this.propertyFirstUrl);
         dest.writeString(this.propertySecondUrl);
         dest.writeString(this.propertyThirdUrl);
+        dest.writeString(this.type);
         dest.writeString(this.installTime);
-        dest.writeString(this.status);
+        dest.writeString(this.DepositStatus);
+        dest.writeString(this.reason);
     }
 
     public ParkSpaceInfo() {
@@ -239,9 +257,10 @@ public class ParkSpaceInfo implements Parcelable {
 
     protected ParkSpaceInfo(Parcel in) {
         this.id = in.readString();
+        this.status = in.readString();
         this.parkLotId = in.readString();
         this.parkLotName = in.readString();
-        this.mCityCode = in.readString();
+        this.cityCode = in.readString();
         this.revenueRatio = in.readString();
         this.parkSpaceDescription = in.readString();
         this.realName = in.readString();
@@ -252,8 +271,10 @@ public class ParkSpaceInfo implements Parcelable {
         this.propertyFirstUrl = in.readString();
         this.propertySecondUrl = in.readString();
         this.propertyThirdUrl = in.readString();
+        this.type = in.readString();
         this.installTime = in.readString();
-        this.status = in.readString();
+        this.DepositStatus = in.readString();
+        this.reason = in.readString();
     }
 
     public static final Creator<ParkSpaceInfo> CREATOR = new Creator<ParkSpaceInfo>() {
@@ -267,5 +288,4 @@ public class ParkSpaceInfo implements Parcelable {
             return new ParkSpaceInfo[size];
         }
     };
-
 }

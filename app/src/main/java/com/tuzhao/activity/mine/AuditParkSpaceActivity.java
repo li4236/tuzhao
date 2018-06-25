@@ -24,7 +24,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/5.
  */
 
-public class AuditParkspaceActivity extends BaseRefreshActivity<Park_Info> {
+public class AuditParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
