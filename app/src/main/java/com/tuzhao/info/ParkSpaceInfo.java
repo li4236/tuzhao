@@ -13,6 +13,7 @@ public class ParkSpaceInfo implements Parcelable {
     @SerializedName(value = "id",alternate = {"parkAuditId"})
     private String id;
 
+    //车位状态(0:已提交，1:审核中，2:审核通过，3:上门安装（拆卸），4:审核失败，5:安装/拆卸完毕，6:已取消)
     private String status;
 
     private String parkLotId;

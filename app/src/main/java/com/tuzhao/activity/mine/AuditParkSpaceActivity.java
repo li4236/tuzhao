@@ -19,6 +19,9 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.IntentObserver;
+
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -27,7 +30,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/5.
  */
 
-public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> {
+public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> implements IntentObserver {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -89,7 +92,7 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> {
                 auditStatus = "审核中";
                 break;
             case "2":
-                auditStatus = "已审核";
+                auditStatus = "审核通过";
                 break;
             case "3":
                 if (parkSpaceInfo.getType().equals("1")) {
@@ -99,17 +102,17 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> {
                 }
                 break;
             case "4":
+                auditStatus = "审核失败";
+                break;
+            case "5":
                 if (parkSpaceInfo.getType().equals("1")) {
                     auditStatus = "安装完毕";
                 } else {
                     auditStatus = "拆卸完毕";
                 }
                 break;
-            case "5":
-                auditStatus = "审核失败";
-                break;
             case "6":
-                auditStatus = "待拆卸";
+                auditStatus = "已取消";
                 break;
             case "7":
                 auditStatus = "押金退还中";
@@ -146,6 +149,27 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> {
             constraintSet.applyTo(constraintLayout);
         }
 
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (Objects.equals(intent.getAction(), ConstansUtil.CANCEL_APPLY_PARK_SPACE)) {
+            String parkSpaceId = intent.getStringExtra(ConstansUtil.PARK_SPACE_ID);
+            for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                if (mCommonAdapter.get(i).getId().equals(parkSpaceId)) {
+                    mCommonAdapter.notifyRemoveData(i);
+                    break;
+                }
+            }
+        } else if (Objects.equals(intent.getAction(), ConstansUtil.MODIFY_AUDIT_PARK_SPACE_INFO)) {
+            ParkSpaceInfo parkSpaceInfo = intent.getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
+            for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                if (mCommonAdapter.get(i).getId().equals(parkSpaceInfo.getId())) {
+                    mCommonAdapter.notifyDataChange(i, parkSpaceInfo);
+                    break;
+                }
+            }
+        }
     }
 
 }

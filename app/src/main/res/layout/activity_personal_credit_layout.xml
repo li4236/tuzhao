@@ -29,7 +29,7 @@
             <View
                 android:id="@+id/top_rectf"
                 android:layout_width="match_parent"
-                android:layout_height="155dp"
+                android:layout_height="126dp"
                 android:background="@color/y10" />
 
             <com.tuzhao.publicwidget.others.OvalView
@@ -188,7 +188,7 @@
                         <TextView
                             android:id="@+id/no_deposit_tv"
                             style="@style/TenTextG6Stytle"
-                            android:text="免押金"
+                            android:text="免保证金"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/no_deposit_iv"
                             app:layout_constraintStart_toStartOf="@id/no_deposit_iv"

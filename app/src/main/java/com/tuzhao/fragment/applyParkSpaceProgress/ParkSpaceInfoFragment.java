@@ -112,6 +112,8 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private TextView mChooseAppointmentTime;
 
+    private TextView mCancelApply;
+
     private ParkSpaceInfo mParkSpaceInfo;
 
     private TipeDialog mCancelDialog;
@@ -162,6 +164,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         mAppointmentTimeTv = view.findViewById(R.id.appointment_time);
         mChooseAppointmentTime = view.findViewById(R.id.choose_appointment_time);
         mParkSpaceHint = view.findViewById(R.id.park_space_hint);
+        mCancelApply = view.findViewById(R.id.cancel_apply_tv);
         mModifyInfoTv = view.findViewById(R.id.modify_info_tv);
 
         RecyclerView recyclerView = view.findViewById(R.id.property_rv);
@@ -171,7 +174,6 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         mPropertyAdapter.addData(new PropertyPhoto());
 
         view.findViewById(R.id.parking_lot_name_cl).setOnClickListener(this);
-        view.findViewById(R.id.cancel_apply_tv).setOnClickListener(this);
         mRevenueRatio.setOnClickListener(this);
         mIdCardPositivePhotoTv.setOnClickListener(this);
         mIdCardPositiveUploadTv.setOnClickListener(this);
@@ -181,6 +183,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         mIdCardNegativePhoto.setOnClickListener(this);
         mTakePropertyPhotoCl.setOnClickListener(this);
         mChooseAppointmentTime.setOnClickListener(this);
+        mCancelApply.setOnClickListener(this);
         mModifyInfoTv.setOnClickListener(this);
     }
 
@@ -255,7 +258,14 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             if (mParkSpaceInfo.getType().equals("1")) {
                 if (mParkSpaceInfo.getStatus().equals("0") || mParkSpaceInfo.getStatus().equals("1")) {
                     mModifyInfoTv.setVisibility(View.VISIBLE);
+                } else {
+                    mCancelApply.setVisibility(View.GONE);
                 }
+            } else if (mParkSpaceInfo.getType().equals("2")) {
+                if (!mParkSpaceInfo.getStatus().equals("0") || !mParkSpaceInfo.getStatus().equals("1")) {
+                    mCancelApply.setVisibility(View.GONE);
+                }
+                mModifyInfoTv.setVisibility(View.GONE);
             }
         } else {
             showFiveToast("获取申请进度失败，请稍后重试");
@@ -839,7 +849,20 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "104":
+                                    showFiveToast("取消申请失败，请稍后重试");
+                                    finish();
+                                    break;
+                                case "103":
+                                    showFiveToast("已安排师傅，不可取消");
+                                    break;
+                                case "105":
+                                    showFiveToast("押金退还失败，请稍后重试");
+                                    break;
+                            }
                         }
                     }
                 });

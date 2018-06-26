@@ -98,6 +98,10 @@ public class ApplyParkSpaceProgressActivity extends BaseStatusActivity {
                     break;
                 case "4":
                     setReviewChoose();
+                    mReadyInstallTv.setText("审核失败");
+                    break;
+                case "5":
+                    setReviewChoose();
                     setAuditedChoose();
                     setReadyInstallChoose();
                     if (parkSpaceInfo.getType().equals("2")) {
