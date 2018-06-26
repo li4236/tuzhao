@@ -58,6 +58,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <com.tuzhao.publicwidget.others.FlagView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
                     <ImageView
                         android:id="@+id/logo_iv"
                         android:layout_width="13dp"
