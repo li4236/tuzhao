@@ -52,7 +52,7 @@ public class ParkSpaceInfo implements Parcelable {
     private String installTime;
 
     //押金状态（0：未交押金，1：已交押金，2：已退押金）
-    private String DepositStatus;
+    private String depositStatus;
 
     //审核失败的理由
     private String reason;
@@ -194,11 +194,11 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getDepositStatus() {
-        return DepositStatus;
+        return depositStatus;
     }
 
     public void setDepositStatus(String depositStatus) {
-        DepositStatus = depositStatus;
+        this.depositStatus = depositStatus;
     }
 
     public String getReason() {
@@ -229,7 +229,7 @@ public class ParkSpaceInfo implements Parcelable {
                 ", propertyThirdUrl='" + propertyThirdUrl + '\'' +
                 ", type='" + type + '\'' +
                 ", installTime='" + installTime + '\'' +
-                ", DepositStatus='" + DepositStatus + '\'' +
+                ", depositStatus='" + depositStatus + '\'' +
                 ", reason='" + reason + '\'' +
                 '}';
     }
@@ -258,7 +258,7 @@ public class ParkSpaceInfo implements Parcelable {
         dest.writeString(this.propertyThirdUrl);
         dest.writeString(this.type);
         dest.writeString(this.installTime);
-        dest.writeString(this.DepositStatus);
+        dest.writeString(this.depositStatus);
         dest.writeString(this.reason);
     }
 
@@ -283,7 +283,7 @@ public class ParkSpaceInfo implements Parcelable {
         this.propertyThirdUrl = in.readString();
         this.type = in.readString();
         this.installTime = in.readString();
-        this.DepositStatus = in.readString();
+        this.depositStatus = in.readString();
         this.reason = in.readString();
     }
 

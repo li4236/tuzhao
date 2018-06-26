@@ -30,6 +30,7 @@ import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -344,6 +345,11 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
             Log.e(TAG, "onReceive: " + intent.getAction());
             switch (intent.getAction()) {
                 case ConstansUtil.PAY_SUCCESS:
+                    if (Objects.equals(mPayType, "1")) {
+                        Intent payIntent = new Intent(ConstansUtil.PAY_DEPOSIT_SUM_SUCCESS);
+                        payIntent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
+                        IntentObserable.dispatch(payIntent);
+                    }
                     finish();
                     break;
                 case ConstansUtil.PAY_CANCEL:

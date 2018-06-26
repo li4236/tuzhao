@@ -8,6 +8,11 @@ import android.graphics.Color;
 
 public class ConstansUtil {
 
+    public static final int B1_COLOR = Color.parseColor("#323232");
+
+    public static final int Y2_COLOR = Color.parseColor("#ffcc30");
+
+
     /**
      * 微信的AppId
      */
@@ -232,6 +237,11 @@ public class ConstansUtil {
     public static final String DEPOSIT_SUM = "DepositSum";
 
     /**
+     * 支付押金成功
+     */
+    public static final String PAY_DEPOSIT_SUM_SUCCESS = "PayDepositSumSuccess";
+
+    /**
      * 取消申请添加停车位
      */
     public static final String CANCEL_APPLY_PARK_SPACE = "CancelApplyParkSpace";
@@ -240,9 +250,5 @@ public class ConstansUtil {
      * 修改审核前的停车位的资料
      */
     public static final String MODIFY_AUDIT_PARK_SPACE_INFO = "ModifyAuditParkSpaceInfo";
-
-    public static final int B1_COLOR = Color.parseColor("#323232");
-
-    public static final int Y2_COLOR = Color.parseColor("#ffcc30");
 
 }
