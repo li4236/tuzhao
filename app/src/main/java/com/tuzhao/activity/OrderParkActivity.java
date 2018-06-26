@@ -984,7 +984,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkInfo.get(0).getShareTimeCalendar()[1]) >= 0) {
             /*mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
             builder.setMessage("最优车位宽限时长为" + mExtensionTime + "分钟，是否预定？");*/
-            builder.setMessage("以为你匹配到最优车位，是否预订？");
+            builder.setMessage("已为你匹配到最优车位，是否预订？");
         } else {
             mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
             builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");

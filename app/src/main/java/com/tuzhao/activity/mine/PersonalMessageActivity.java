@@ -126,7 +126,7 @@ public class PersonalMessageActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.id_activity_personalmessage_layout_linearlayout_credit:
-                intent = new Intent(PersonalMessageActivity.this, PersonalCreditActivity.class);
+                intent = new Intent(PersonalMessageActivity.this, CreditActivity.class);
                 startActivity(intent);
                 break;
         }
