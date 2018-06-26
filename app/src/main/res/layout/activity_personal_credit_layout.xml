@@ -26,19 +26,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
-                android:id="@+id/top_rectf"
-                android:layout_width="match_parent"
-                android:layout_height="126dp"
-                android:background="@color/y10" />
-
             <com.tuzhao.publicwidget.others.OvalView
                 android:id="@+id/oval_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/top_rectf"
-                app:layout_constraintTop_toBottomOf="@+id/top_rectf"
-                app:oval_color="@color/y10" />
+                app:layout_constraintTop_toBottomOf="@+id/top_rectf" />
+
+            <View
+                android:id="@+id/top_rectf"
+                android:layout_width="match_parent"
+                android:layout_height="126dp"
+                android:background="@drawable/y10_to_y11_bg" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/credit_cv"

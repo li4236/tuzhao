@@ -1,19 +1,21 @@
 package com.tuzhao.publicwidget.others;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.tuzhao.R;
-
 /**
  * Created by juncoder on 2018/6/26.
+ * <p>
+ * 信用分上面的椭圆
+ * </p>
  */
 public class OvalView extends View {
 
@@ -21,36 +23,26 @@ public class OvalView extends View {
 
     private RectF mRectF;
 
-    private int mColor;
+    private LinearGradient mLinearGradient;
 
     public OvalView(Context context) {
         super(context);
-        mColor = Color.parseColor("#feee39");
         init();
     }
 
     public OvalView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initAttribute(context, attrs, 0);
         init();
     }
 
     public OvalView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttribute(context, attrs, defStyleAttr);
         init();
-    }
-
-    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.OvalView, defStyleAttr, 0);
-        mColor = typedArray.getColor(R.styleable.OvalView_oval_color, Color.parseColor("#feee39"));
-        typedArray.recycle();
     }
 
     private void init() {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(mColor);
         mPaint.setAntiAlias(true);
 
         mRectF = new RectF();
@@ -63,6 +55,12 @@ public class OvalView extends View {
         mRectF.right = width;
         mRectF.bottom = width / 3;
         setMeasuredDimension(width, width / 3);
+
+        if (mLinearGradient == null) {
+            mLinearGradient = new LinearGradient(0, 0, 0, mRectF.bottom, new int[]{Color.parseColor("#fed641"),
+                    Color.parseColor("#ffd641")}, null, Shader.TileMode.CLAMP);
+            mPaint.setShader(mLinearGradient);
+        }
     }
 
     @Override
@@ -70,4 +68,5 @@ public class OvalView extends View {
         super.onDraw(canvas);
         canvas.drawOval(mRectF, mPaint);
     }
+
 }
