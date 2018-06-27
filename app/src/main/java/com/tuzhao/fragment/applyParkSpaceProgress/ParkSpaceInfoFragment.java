@@ -831,6 +831,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     }
 
     private void cancelApplyParkSpace() {
+        showLoadingDialog("正在取消");
         getOkGo(HttpConstants.cancelApplyParkSpace)
                 .params("parkAuditId", mParkSpaceInfo.getId())
                 .params("cityCode", mParkSpaceInfo.getCityCode())

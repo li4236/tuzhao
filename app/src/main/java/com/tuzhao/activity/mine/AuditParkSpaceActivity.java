@@ -221,7 +221,9 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
                     String parkSpaceId = intent.getStringExtra(ConstansUtil.PARK_SPACE_ID);
                     for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
                         if (mCommonAdapter.get(i).getId().equals(parkSpaceId)) {
-                            mCommonAdapter.notifyRemoveData(i);
+                            ParkSpaceInfo cancelSpaceInfo = mCommonAdapter.get(i);
+                            cancelSpaceInfo.setStatus("6");
+                            mCommonAdapter.notifyDataChange(i, cancelSpaceInfo);
                             break;
                         }
                     }
