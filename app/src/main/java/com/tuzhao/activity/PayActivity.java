@@ -22,6 +22,7 @@ import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.WechatPayParam;
 import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -172,6 +173,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     private void alipayParkOrder() {
         OkGo.post(HttpConstants.alipayApplyOrder)
                 .tag(TAG)
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("order_id", mOrderId)
                 .params("citycode", mCityCode)
                 .params("discount_id", mDiscountId)
@@ -195,8 +197,9 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     private void alipayLockDeposit() {
         OkGo.post(HttpConstants.getAlipayLockDepositInfo)
                 .tag(TAG)
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("parkSpaceId", mParkSpaceId)
-                .params("citycode", mCityCode)
+                .params("cityCode", mCityCode)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(final String s, Call call, Response response) {

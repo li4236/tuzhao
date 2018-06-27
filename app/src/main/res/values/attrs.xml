@@ -157,4 +157,14 @@
         <attr name="oval_color" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="CreditView" >
+        <attr name="flag_color" format="color" />
+        <attr name="very_poor_color" format="color" />
+        <attr name="poor_color" format="color" />
+        <attr name="fine_color" format="color" />
+        <attr name="good_color" format="color" />
+        <attr name="very_good_color" format="color" />
+        <attr name="text_color" format="color" />
+        <attr name="text_size" format="dimension" />
+    </declare-styleable>
 </resources>
