@@ -259,7 +259,7 @@ public class CreditView extends View {
 
         mFlagPath.reset();
         mFlagPath.moveTo(mFlagRectF.right, 0);
-        mFlagPath.lineTo(mFlagRectF.right + dpToPx(4), mFourDp / 2);
+        mFlagPath.lineTo(mFlagRectF.right + mFourDp, mFourDp / 2);
         mFlagPath.lineTo(mFlagRectF.right, mFourDp);
         mFlagPath.close();
     }

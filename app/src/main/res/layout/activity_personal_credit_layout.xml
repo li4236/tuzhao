@@ -36,8 +36,8 @@
         android:layout_marginEnd="38dp"
         android:layout_marginStart="38dp"
         android:background="@color/w0"
-        android:elevation="10dp"
         app:cardCornerRadius="15dp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/oval_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,22 +134,23 @@
             <TextView
                 android:id="@+id/park_grace_period_tv"
                 style="@style/TwentyTextG6Style"
-                android:layout_marginTop="32dp"
+                android:layout_marginBottom="6dp"
                 android:text="停车宽限时长"
-                app:layout_constraintEnd_toEndOf="@+id/credit_record_cl"
-                app:layout_constraintTop_toBottomOf="@+id/credit_record_cl" />
+                app:layout_constraintBottom_toTopOf="@+id/park_grace_period"
+                app:layout_constraintEnd_toEndOf="@+id/credit_record_cl" />
 
             <TextView
                 android:id="@+id/park_grace_period"
                 style="@style/TwentyTextG6Style"
-                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:gravity="bottom"
                 android:text="10分钟"
-                app:layout_constraintEnd_toEndOf="@id/park_grace_period_tv"
-                app:layout_constraintTop_toBottomOf="@id/park_grace_period_tv" />
+                app:layout_constraintBottom_toBottomOf="@+id/current_credit"
+                app:layout_constraintEnd_toEndOf="@id/park_grace_period_tv" />
 
             <TextView
                 android:id="@+id/credit_situation"
-                style="@style/TwentyTextB1Style"
+                style="@style/TenTextB1Style"
                 android:layout_marginTop="8dp"
                 android:text="本期信用超越了80%的人，继续加油！"
                 app:layout_constraintStart_toStartOf="@id/credit"
@@ -291,8 +292,10 @@
     </android.support.v7.widget.CardView>
 
     <View
+        android:id="@+id/rule_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="45dp"
@@ -304,7 +307,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rule_background"
         app:layout_constraintTop_toBottomOf="@+id/credit_privilege_cv">
 
         <android.support.constraint.ConstraintLayout
@@ -368,7 +372,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="start"
                 android:lineSpacingExtra="4dp"
-                android:paddingBottom="20dp"
+                android:paddingBottom="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/rule_interpretation_tv"
                 app:layout_constraintTop_toBottomOf="@+id/third_rule_tv" />

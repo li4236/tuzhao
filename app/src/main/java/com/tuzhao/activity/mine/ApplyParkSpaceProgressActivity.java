@@ -113,6 +113,13 @@ public class ApplyParkSpaceProgressActivity extends BaseStatusActivity {
                         mInstallFinishTv.setText("拆卸完毕");
                     }
                     break;
+                /*case "6":
+                    findViewById(R.id.submitted_cl).setVisibility(View.GONE);
+                    findViewById(R.id.review_cl).setVisibility(View.GONE);
+                    findViewById(R.id.audited_cl).setVisibility(View.GONE);
+                    findViewById(R.id.ready_install_cl).setVisibility(View.GONE);
+                    findViewById(R.id.install_finish_cl).setVisibility(View.GONE);
+                    break;*/
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             String idCardPhotos[] = parkSpaceInfo.getIdCardPhoto().split(",");

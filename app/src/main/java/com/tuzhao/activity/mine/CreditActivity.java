@@ -112,7 +112,8 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         parkGracePeriod = parkGracePeriod + "分钟";
         mParkGracePeriod.setText(parkGracePeriod);
 
-        SpannableString firstRule = new SpannableString("规则途找信用分是根据用户的每一次停车，每一次履约情况来进行评定的。");
+        SpannableString firstRule = new SpannableString("规则途找信用分是根据用户的每一次停车，每一次履约情况来进行评定的，" +
+                "每个月均有波动。分值视历史履约情况而改变。");
         hideTwoWord(firstRule);
         mFirstRule.setText(firstRule);
 
