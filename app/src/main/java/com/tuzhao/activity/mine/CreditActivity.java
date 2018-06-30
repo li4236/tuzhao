@@ -99,10 +99,10 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
             ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
         } else if (mCredit <= 750) {
             mCreditStage.setText("优秀");
-            mCreditStage.setBackgroundResource(R.drawable.green8_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.blue5_all_3dp);
         } else {
             mCreditStage.setText("极好");
-            mCreditStage.setBackgroundResource(R.drawable.green9_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.green10_all_3dp);
         }
 
         String parkGracePeriod = String.valueOf(UserManager.getInstance().getUserInfo().getLeave_time());
