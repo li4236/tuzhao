@@ -21,7 +21,7 @@ public class CreditView extends View {
 
     private Paint mFlagPaint;
 
-    private RectF mFlagRectF;
+    //private RectF mFlagRectF;
 
     private Path mFlagPath;
 
@@ -77,6 +77,8 @@ public class CreditView extends View {
 
     private int mHeight;
 
+    private float mTriangleCoodinate;
+
     public CreditView(Context context) {
         super(context);
         mFlagColor = Color.parseColor("#ffa830");
@@ -108,7 +110,7 @@ public class CreditView extends View {
         mFlagPaint.setStyle(Paint.Style.FILL);
         mFlagPaint.setColor(mFlagColor);
 
-        mFlagRectF = new RectF();
+        //mFlagRectF = new RectF();
         mFlagPath = new Path();
 
         mCreditPaint = new Paint();
@@ -153,7 +155,7 @@ public class CreditView extends View {
         width = width - mSixDp * 4;
 
         mVeryPoorRectF.left = mTextSize / 2;
-        mVeryPoorRectF.top = dpToPx(8);
+        mVeryPoorRectF.top = mSixDp;
         mVeryPoorRectF.right = (float) (150 / 750.0 * width + mVeryPoorRectF.left);
         mVeryPoorRectF.bottom = mVeryPoorRectF.top + mFourDp;
 
@@ -184,7 +186,7 @@ public class CreditView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         caculateFlag();
-        canvas.drawRect(mFlagRectF, mFlagPaint);
+        //canvas.drawRect(mFlagRectF, mFlagPaint);
         canvas.drawPath(mFlagPath, mFlagPaint);
 
         mCreditPaint.setStyle(Paint.Style.FILL);
@@ -224,43 +226,46 @@ public class CreditView extends View {
     }
 
     private void caculateFlag() {
+        mFlagPath.reset();
         if (mCurrentCredit <= 350) {
             if (mCurrentCredit < 200) {
                 mCurrentCredit = 200;
             }
-
-            mFlagRectF.left = (mCurrentCredit - 200) / 150 * (mVeryPoorRectF.right - mVeryPoorRectF.left) + mVeryPoorRectF.left;
+            mTriangleCoodinate = (mCurrentCredit - 200) / 150 * (mVeryPoorRectF.right - mVeryPoorRectF.left) + mVeryPoorRectF.left;
+            //mFlagRectF.left = (mCurrentCredit - 200) / 150 * (mVeryPoorRectF.right - mVeryPoorRectF.left) + mVeryPoorRectF.left;
             if (mFlagPaint.getColor() != mVeryPoorColor) {
                 mFlagPaint.setColor(mVeryPoorColor);
             }
         } else if (mCurrentCredit <= 550) {
-            mFlagRectF.left = (mCurrentCredit - 350) / 200 * (mPoorRectF.right - mPoorRectF.left) + mPoorRectF.left;
+            mTriangleCoodinate = (mCurrentCredit - 350) / 200 * (mPoorRectF.right - mPoorRectF.left) + mPoorRectF.left;
+            //mFlagRectF.left = (mCurrentCredit - 350) / 200 * (mPoorRectF.right - mPoorRectF.left) + mPoorRectF.left;
             if (mFlagPaint.getColor() != mPoorColor) {
                 mFlagPaint.setColor(mPoorColor);
             }
         } else if (mCurrentCredit <= 650) {
-            mFlagRectF.left = (mCurrentCredit - 550) / 100 * (mFineRectF.right - mFineRectF.left) + mFineRectF.left;
+            mTriangleCoodinate = (mCurrentCredit - 550) / 100 * (mFineRectF.right - mFineRectF.left) + mFineRectF.left;
+            //mFlagRectF.left = (mCurrentCredit - 550) / 100 * (mFineRectF.right - mFineRectF.left) + mFineRectF.left;
             if (mFlagPaint.getColor() != mFineColor) {
                 mFlagPaint.setColor(mFineColor);
             }
         } else if (mCurrentCredit <= 750) {
-            mFlagRectF.left = (mCurrentCredit - 650) / 100 * (mGoodRect.right - mGoodRect.left) + mGoodRect.left;
+            mTriangleCoodinate = (mCurrentCredit - 650) / 100 * (mGoodRect.right - mGoodRect.left) + mGoodRect.left;
             if (mFlagPaint.getColor() != mGoodColor) {
                 mFlagPaint.setColor(mGoodColor);
             }
         } else if (mCurrentCredit <= 950) {
-            mFlagRectF.left = (mCurrentCredit - 750) / 200 * (mVeryGoodRect.right - mVeryGoodRect.left) + mVeryGoodRect.left;
+            mTriangleCoodinate = (mCurrentCredit - 750) / 200 * (mVeryGoodRect.right - mVeryGoodRect.left) + mVeryGoodRect.left;
             if (mFlagPaint.getColor() != mVeryGoodColor) {
                 mFlagPaint.setColor(mVeryGoodColor);
             }
         }
-        mFlagRectF.right = mFlagRectF.left + dpToPx(1);
-        mFlagRectF.bottom = dpToPx(8);
+       /* mFlagRectF.right = mFlagRectF.left + dpToPx(1);
+        mFlagRectF.bottom = dpToPx(8);*/
 
         mFlagPath.reset();
-        mFlagPath.moveTo(mFlagRectF.right, 0);
-        mFlagPath.lineTo(mFlagRectF.right + mFourDp, mFourDp / 2);
-        mFlagPath.lineTo(mFlagRectF.right, mFourDp);
+        mFlagPath.moveTo(mTriangleCoodinate - mSixDp / 2, 0);
+        mFlagPath.lineTo(mTriangleCoodinate, mSixDp);
+        mFlagPath.lineTo(mTriangleCoodinate + mSixDp / 2, 0);
         mFlagPath.close();
     }
 
