@@ -248,7 +248,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         int position = mData.indexOf(t);
         if (position != -1) {
             mData.remove(position);
-            notifyDataSetChanged();
+            notifyItemRemoved(getHeadViewCount() + position);
+            notifyItemRangeChanged(getHeadViewCount() + position, mData.size() - position);
         }
     }
 
