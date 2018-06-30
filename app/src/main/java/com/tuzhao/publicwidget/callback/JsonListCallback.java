@@ -13,9 +13,12 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/4/13.
+ * <p>
+ * 不对code进行处理
+ * </p>
  */
 
-public abstract class JsonListCallback<T,D> extends AbsCallback<T> {
+public abstract class JsonListCallback<T> extends AbsCallback<T> {
 
     @Override
     public T convertSuccess(Response response) throws Exception {
@@ -40,45 +43,19 @@ public abstract class JsonListCallback<T,D> extends AbsCallback<T> {
         //以下代码是根据泛型解析数据，返回对象，返回的对象自动以参数的形式传递到 onSuccess 中，可以直接使用
         JsonReader jsonReader = new JsonReader(response.body().charStream());
         if (rawType == Base_Class_List_Info.class) {
-
             //有数据类型，表示有data
-            Base_Class_List_Info<D> base_class_List_info = Convert.fromJson(jsonReader, type);
+            Base_Class_List_Info base_class_List_info = Convert.fromJson(jsonReader, type);
             response.close();
             String serverTime = base_class_List_info.time;
             TimeManager.getInstance().initTime(serverTime);
-            try {
-                int code = Integer.parseInt(base_class_List_info.code);
-                //返回数据正确
-                if (code == 0) {
-                    return (T) base_class_List_info;
-                }else{
-                    //抛出异常错误码
-                    throw new IllegalStateException(String.valueOf(code));
-                }
-            }catch (NumberFormatException e){
-                //抛出code转换异常错误码
-                throw new NumberFormatException("900");
-            }
-
-        }else if (rawType == Base_Class_Info.class){
+            return (T) base_class_List_info;
+        } else if (rawType == Base_Class_Info.class) {
             //有数据类型，表示有data
             Base_Class_Info base_info = Convert.fromJson(jsonReader, type);
             response.close();
             String serverTime = base_info.time;
             TimeManager.getInstance().initTime(serverTime);
-            try {
-                int code = Integer.parseInt(base_info.code);
-                //返回数据正确
-                if (code == 0) {
-                    return (T) base_info;
-                }else{
-                    //抛出异常错误码
-                    throw new IllegalStateException(""+code);
-                }
-            }catch (NumberFormatException e){
-                //抛出异常错误码
-                throw new NumberFormatException("900");
-            }
+            return (T) base_info;
         } else {
             //未设置实例的基类
             response.close();

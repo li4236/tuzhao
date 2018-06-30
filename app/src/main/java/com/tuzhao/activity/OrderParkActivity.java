@@ -28,6 +28,7 @@ import com.tuzhao.info.Park_Space_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.callback.JsonListCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
@@ -523,8 +524,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Log.e("TAG", "startDate: " + start_time + "  endDate:" + end_time);
         if (mCanParkInfo == null) {
             mCanParkInfo = new LinkedList<>();
+        } else {
+            mCanParkInfo.clear();
         }
-        mCanParkInfo.clear();
         mCanParkInfo.addAll(park_list);
 
         Calendar[] shareTimeCalendar;
@@ -1036,18 +1038,54 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("readypark_updatetime", readyParkUpdateTime.toString())
                 .params("citycode", parkspace_info.getCity_code())
                 .params("extensionTime", mExtensionTime * 60)
-                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                .execute(new JsonListCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        switch (responseData.code) {
+                            case "0":
+                                MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
+                                Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
+                                intent.putExtra("parkorder_number", responseData.data.getOrder_number());
+                                intent.putExtra("citycode", parkspace_info.getCity_code());
+                                startActivity(intent);
+                                finish();
+                                break;
+                            case "101":
+                                showRequestAppointOrderDialog(mCanParkInfo.get(1));
+                                break;
+                            case "106":
+                                showRequestAppointOrderDialog(mCanParkInfo.get(2));
+                                break;
+                            case "102":
+                                //
+                                MyToast.showToast(OrderParkActivity.this, "未匹配到合适您时间的车位，请尝试更换时间", 5);
+                                break;
+                            case "103":
+                                MyToast.showToast(OrderParkActivity.this, "内部错误，请重新选择", 5);
+                                finish();
+                                break;
+                            case "104":
+                                MyToast.showToast(OrderParkActivity.this, "您有效订单已达上限，暂不可预约车位哦", 5);
+                                break;
+                            case "105":
+                                MyToast.showToast(OrderParkActivity.this, "您当前车位在该时段内已有过预约，请尝试更换时间", 5);
+                                break;
+                            case "107":
+                                //
+                                MyToast.showToast(OrderParkActivity.this, "您有订单需要前去付款，要先处理哦", 5);
+                                break;
+                            case "109":
+                            case "110":
+                            case "111":
+                                MyToast.showToast(OrderParkActivity.this, "该日期暂无车位可预约，请尝试更换时间", 5);
+                                break;
+                            default:
+                                MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
+                                break;
+                        }
                         if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.dismiss();
                         }
-                        MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
-                        Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
-                        intent.putExtra("parkorder_number", responseData.data.getOrder_number());
-                        intent.putExtra("citycode", parkspace_info.getCity_code());
-                        startActivity(intent);
-                        finish();
                     }
 
                     @Override
@@ -1055,46 +1093,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(OrderParkActivity.this, e)) {
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 101:
-                                    //
-                                    showRequestAppointOrderDialog(mCanParkInfo.get(1));
-                                    break;
-                                case 106:
-                                    showRequestAppointOrderDialog(mCanParkInfo.get(2));
-                                    break;
-                                case 102:
-                                    //
-                                    MyToast.showToast(OrderParkActivity.this, "未匹配到合适您时间的车位，请尝试更换时间", 5);
-                                    break;
-                                case 103:
-                                    MyToast.showToast(OrderParkActivity.this, "内部错误，请重新选择", 5);
-                                    finish();
-                                    break;
-                                case 104:
-                                    //
-                                    MyToast.showToast(OrderParkActivity.this, "您有效订单已达上限，暂不可预约车位哦", 5);
-                                    break;
-                                case 105:
-                                    //
-                                    MyToast.showToast(OrderParkActivity.this, "您当前车位在该时段内已有过预约，请尝试更换时间", 5);
-                                    break;
-                                case 107:
-                                    //
-                                    MyToast.showToast(OrderParkActivity.this, "您有订单需要前去付款，要先处理哦", 5);
-                                    break;
-                                case 109:
-                                case 110:
-                                case 111:
-                                    MyToast.showToast(OrderParkActivity.this, "该日期暂无车位可预约，请尝试更换时间", 5);
-                                    break;
-                                case 901:
-                                    MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
-                                    break;
-                            }
-                        }
+                        MyToast.showToast(OrderParkActivity.this, e.getMessage(), 5);
                     }
                 });
     }

@@ -712,7 +712,11 @@ public class LoginDialogFragment extends DialogFragment {
                         textview_getconfirm_code.setText("发送失败");
                         textview_getconfirm_code.setClickable(true);
                         if (!DensityUtil.isException(getContext(), e)) {
-                            MyToast.showToast(getContext(), "发送失败，请重试", 5);
+                            if (e.getMessage().equals("105")) {
+                                MyToast.showToast(requireContext(), "超出发送限制，请明天重试", 5);
+                            } else {
+                                MyToast.showToast(requireContext(), "发送失败，请重试", 5);
+                            }
                         }
                     }
                 });
