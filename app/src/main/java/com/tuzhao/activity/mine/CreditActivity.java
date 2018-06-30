@@ -117,17 +117,18 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         hideTwoWord(firstRule);
         mFirstRule.setText(firstRule);
 
-        SpannableString secondRule = new SpannableString("规则“免担保金”指的是途找信用免押，要求途找信用700及以上，若未达此条件则需交押金");
+        SpannableString secondRule = new SpannableString("规则“免担保金”：途找信用等级为良好及以上，用户下单预约车位免担保金，" +
+                "保证金会在每次订单结算后退还到个人途找余额账户，余额可随时提现。");
         hideTwoWord(secondRule);
         mSecondRule.setText(secondRule);
 
-        SpannableString thirdRule = new SpannableString("规则“离开宽限”指的是当您有急事未能及时离开停车车位时，根据您的履约情况给您的一个离开宽限时间，" +
-                "宽限时间内离开按原时价计费不收取滞留金，宽限时长随信用增加而增加。");
+        SpannableString thirdRule = new SpannableString("规则”宽限时长”：当实际停车时间超出预订结束停车时间，系统会根据该车位的实际情况和用户的信用等级自动分配一个结束停车的顺延时长，" +
+                "在宽限时长内离开仍按原价计费不收取超时费，信用等级为极好、优秀、良好、一般、较差的顺延时长最大值分别为60、45、30、15、10分钟。");
         hideTwoWord(thirdRule);
         mThirdRule.setText(thirdRule);
 
-        SpannableString fourthRule = new SpannableString("规则“提前结单”指的是未达到预约时长提早离开，预约过长时间而停留过短会影响平台结算以及车主利益。" +
-                "为保障共享用户的权益，请合理预约停车时间，若临时有事，可延长停车时间。");
+        SpannableString fourthRule = new SpannableString("规则“提前结单”：当用户停车出现过早离开的违规行为，提前结单的特权可以免除用户该次停车的违规行为。" +
+                "信用分等级分别为良好、优秀、极好的用户每个自然月对应可以有一、三、五次的提前结单的特权。");
         hideTwoWord(fourthRule);
         mFourthRule.setText(fourthRule);
 
