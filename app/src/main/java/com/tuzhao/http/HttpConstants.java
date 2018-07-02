@@ -512,4 +512,9 @@ public class HttpConstants {
      */
     public static String modifyAuditParkSpaceInfo = ROOT_URL + "modifyAuditParkSpaceInfo";
 
+    /**
+     * 获取用户信用记录
+     */
+    public static String getCreditRecord = ROOT_URL + "getCreditRecord";
+
 }

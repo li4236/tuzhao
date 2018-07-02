@@ -86,20 +86,20 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         mCurrentCredit.setText(com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit());
         mCredit = Integer.valueOf(UserManager.getInstance().getUserInfo().getCredit());
         if (mCredit <= 350) {
-            mCreditStage.setText("极差");
+            mCreditStage.setText("较差");
             mCreditStage.setBackgroundResource(R.drawable.r7_all_3dp);
             ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
         } else if (mCredit <= 550) {
-            mCreditStage.setText("差");
+            mCreditStage.setText("一般");
             mCreditStage.setBackgroundResource(R.drawable.y2_all_3dp);
             ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
         } else if (mCredit <= 650) {
             mCreditStage.setText("良好");
             mCreditStage.setBackgroundResource(R.drawable.y3_all_3dp);
-            ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
         } else if (mCredit <= 750) {
             mCreditStage.setText("优秀");
             mCreditStage.setBackgroundResource(R.drawable.blue5_all_3dp);
+            ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
         } else {
             mCreditStage.setText("极好");
             mCreditStage.setBackgroundResource(R.drawable.green10_all_3dp);
@@ -131,7 +131,6 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
                 "信用分等级分别为良好、优秀、极好的用户每个自然月对应可以有一、三、五次的提前结单的特权。");
         hideTwoWord(fourthRule);
         mFourthRule.setText(fourthRule);
-
     }
 
     @Override
@@ -174,7 +173,7 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.credit_record_cl:
-
+                startActivity(CreditRecordActivity.class);
                 break;
             case R.id.no_deposit_cl:
 
