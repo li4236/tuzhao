@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/credit_update_date"
         style="@style/TwentyTextB1Style"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@id/credit_diversification"
         app:layout_constraintTop_toBottomOf="@+id/credit_diversification" />
 

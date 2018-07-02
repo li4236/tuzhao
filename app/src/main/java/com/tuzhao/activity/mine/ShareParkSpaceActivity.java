@@ -65,7 +65,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getFriendShareParkspace)
+        getOkgos(HttpConstants.getFriendShareParkspace)
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {

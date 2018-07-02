@@ -97,7 +97,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
     /**
      * 获取包括startItem和pageSize的Okgo
      */
-    protected BaseRequest getOkgo(String url) {
+    protected BaseRequest getOkgos(String url) {
         return getOkGo(url)
                 .params("startItem", mStartItme)
                 .params("pageSize", 15);
@@ -108,8 +108,8 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      *
      * @param params 如果还需要其他参数则按键值对输入
      */
-    protected BaseRequest getOkgo(String url, String... params) {
-        BaseRequest baseRequest = getOkgo(url);
+    protected BaseRequest getOkgos(String url, String... params) {
+        BaseRequest baseRequest = getOkgos(url);
         for (int i = 0; i < params.length; i += 2) {
             baseRequest.params(params[i], params[i + 1]);
         }

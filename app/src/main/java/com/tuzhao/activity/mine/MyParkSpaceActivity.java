@@ -71,7 +71,7 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getParkFromUser)
+        getOkgos(HttpConstants.getParkFromUser)
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {

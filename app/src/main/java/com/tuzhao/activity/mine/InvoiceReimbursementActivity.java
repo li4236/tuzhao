@@ -91,7 +91,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getInvoice)
+        getOkgos(HttpConstants.getInvoice)
                 .execute(new JsonCallback<Base_Class_List_Info<InvoiceInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InvoiceInfo> datas, Call call, Response response) {

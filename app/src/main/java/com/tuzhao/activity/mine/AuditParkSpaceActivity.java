@@ -73,7 +73,7 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getPassingParkFromUser)
+        getOkgos(HttpConstants.getPassingParkFromUser)
                 .execute(new JsonCallback<Base_Class_List_Info<ParkSpaceInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<ParkSpaceInfo> o, Call call, Response response) {

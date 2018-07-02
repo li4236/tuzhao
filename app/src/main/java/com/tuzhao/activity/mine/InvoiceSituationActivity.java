@@ -39,7 +39,7 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getInvoiceSituation)
+        getOkgos(HttpConstants.getInvoiceSituation)
                 .execute(new JsonCallback<Base_Class_List_Info<InvoiceSituation>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<InvoiceSituation> o, Call call, Response response) {

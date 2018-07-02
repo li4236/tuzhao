@@ -73,7 +73,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getAcceptTicketAddress)
+        getOkgos(HttpConstants.getAcceptTicketAddress)
                 .execute(new JsonCallback<Base_Class_List_Info<AcceptTicketAddressInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
@@ -111,7 +111,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
      */
     private void setDefaultAddress(final String ticketId, final String isDefault) {
         showLoadingDialog();
-        getOkgo(HttpConstants.setDefaultAcceptTicketAddress)
+        getOkgos(HttpConstants.setDefaultAcceptTicketAddress)
                 .params("ticketId", ticketId)
                 .params("isDefault", isDefault)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -187,7 +187,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
      * @param ticketId 需要删除的收票地址的id
      */
     private void deleteAddress(final String ticketId) {
-        getOkgo(HttpConstants.deleteAcceptTicketAddress)
+        getOkgos(HttpConstants.deleteAcceptTicketAddress)
                 .params("ticketId", ticketId)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override

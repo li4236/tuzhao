@@ -11,8 +11,6 @@ public class CreditRecordInfo {
 
     private String updateDate;
 
-    private String encourageWord;
-
     public String getCredit() {
         return credit;
     }
@@ -37,11 +35,4 @@ public class CreditRecordInfo {
         this.updateDate = updateDate;
     }
 
-    public String getEncourageWord() {
-        return encourageWord;
-    }
-
-    public void setEncourageWord(String encourageWord) {
-        this.encourageWord = encourageWord;
-    }
 }
