@@ -34,6 +34,9 @@ import com.tuzhao.utils.PollingUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -65,11 +68,13 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private OptionsPickerView<String> mPickerView;
 
-    private ArrayList<String> mHours;
+    private ArrayList<String> mDays;
 
-    private ArrayList<ArrayList<String>> mMinutes;
+    private ArrayList<ArrayList<String>> mHours;
 
-    private int mMaxExtendMinutes = 24 * 60 - 1;
+    private ArrayList<ArrayList<ArrayList<String>>> mMinutes;
+
+    private int mMaxExtendMinutes = 24 * 60 * 7 - 1;
 
     private ShareTimeInfo mShareTimeInfo;
 
@@ -219,6 +224,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 //根据该车位被预约的时间计算能延长的最大时间
                 mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceOfRecentOrder(mParkOrderInfo.getExtensionTime(), mParkOrderInfo.getOrder_endtime(),
                         mShareTimeInfo.getOrderTime()));
+                Log.e(TAG, "calculateMaxMinutes orderTime" + mMaxExtendMinutes);
             }
 
             Calendar nowCalendar = Calendar.getInstance();
@@ -227,9 +233,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
             mStartExtendCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
             mStartExtendCalendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
-            mStartExtendCalendar.set(Calendar.SECOND, 0);
+            mStartExtendCalendar.set(Calendar.MILLISECOND, 0);
             if (mStartExtendCalendar.compareTo(nowCalendar) < 0) {
-                //如果是还在顺延时间之前延长时间的则按现在的时间来算可以延长多长时间
+                //如果已经超时的则按现在的时间来算可以延长多长时间
                 mStartExtendCalendar = (Calendar) nowCalendar.clone();
             }
 
@@ -240,75 +246,111 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             calendar.set(Calendar.HOUR_OF_DAY, 24);
             calendar.set(Calendar.MINUTE, 0);
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, (int) DateUtil.getCalendarDistance(mStartExtendCalendar, calendar));
+            Log.e(TAG, "calculateMaxMinutes shareDate" + mMaxExtendMinutes);
 
             //按每周共享时间来计算延长时间
-            //现在能停车则今天肯定是共享的，因为最多能选的延长时间只有24小时，所以只需要判断明天是否能共享
+            nowCalendar = (Calendar) mStartExtendCalendar.clone();
             nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
             String[] days = mShareTimeInfo.getShareDay().split(",");
-            if (!days[DateUtil.getDayOfWeek(nowCalendar) - 1].equals("1")) {
-                //明天不共享则最长的延长时间为到今晚
-                nowCalendar.add(Calendar.DAY_OF_MONTH, -1);
-                nowCalendar.set(Calendar.HOUR_OF_DAY, 24);
-                nowCalendar.set(Calendar.MINUTE, 0);
+            for (int i = 0; i < 6; i++) {
+                if (!days[DateUtil.getDayOfWeek(nowCalendar) - 1].equals("1")) {
+                    //明天不共享则最长的延长时间为到今晚
+                    nowCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                    nowCalendar.set(Calendar.HOUR_OF_DAY, 24);
+                    nowCalendar.set(Calendar.MINUTE, 0);
+                    break;
+                } else {
+                    nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                }
             }
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, (int) DateUtil.getCalendarDistance(mStartExtendCalendar, nowCalendar));
+            Log.e(TAG, "calculateMaxMinutes shareDay" + mMaxExtendMinutes);
 
-            nowCalendar = Calendar.getInstance();
-            nowCalendar.set(Calendar.SECOND, 0);
-            nowCalendar.set(Calendar.MILLISECOND, 0);
-            nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
-            if (mShareTimeInfo.getPauseShareDate().contains(DateUtil.getCalendarYearToDay(nowCalendar))) {
-                //如果明天暂停共享
-                nowCalendar.add(Calendar.DAY_OF_MONTH, -1);
-                nowCalendar.set(Calendar.HOUR_OF_DAY, 24);
-                nowCalendar.set(Calendar.MINUTE, 0);
+            nowCalendar = (Calendar) mStartExtendCalendar.clone();
+
+            if (!mShareTimeInfo.getPauseShareDate().equals("-1")) {
+                List<Calendar> pauseDateCalendars = new ArrayList<>();
+                Calendar pauseCalendar;
+                for (String pauseDate : mShareTimeInfo.getPauseShareDate().split(",")) {
+                    pauseCalendar = DateUtil.getYearToDayCalendar(pauseDate, false);
+                    if (pauseCalendar.compareTo(nowCalendar) >= 0) {
+                        //保存在开始延长时间之后的暂停共享日期
+                        pauseDateCalendars.add(DateUtil.getYearToDayCalendar(pauseDate, false));
+                    }
+                }
+
+                if (!pauseDateCalendars.isEmpty()) {
+                    //从小到大排序
+                    Collections.sort(pauseDateCalendars, new Comparator<Calendar>() {
+                        @Override
+                        public int compare(Calendar o1, Calendar o2) {
+                            return o1.compareTo(o2);
+                        }
+                    });
+
+                    //算出到最近那天暂停共享的那天的时间距离
+                    mMaxExtendMinutes = (int) Math.min(mMaxExtendMinutes, DateUtil.getCalendarDistance(nowCalendar, pauseDateCalendars.get(0)));
+                    Log.e(TAG, "calculateMaxMinutes pauseDate" + mMaxExtendMinutes);
+                }
             }
-            mMaxExtendMinutes = Math.min(mMaxExtendMinutes, (int) DateUtil.getCalendarDistance(mStartExtendCalendar, nowCalendar));
 
             //获取在共享时间段内的最大可延长时间
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceForRecentShareTime(mStartExtendCalendar, mShareTimeInfo.getEveryDayShareTime()));
+            Log.e(TAG, "calculateMaxMinutes shareTime" + mMaxExtendMinutes);
         }
     }
 
     private void initOptionPicker() {
-        if (mHours == null) {
+        if (mDays == null) {
+            mDays = new ArrayList<>();
             mHours = new ArrayList<>();
             mMinutes = new ArrayList<>();
 
             calculateMaxMinutes();
-            ArrayList<String> hourWithMinute;
-            int hour = mMaxExtendMinutes / 60;
-            for (int i = 0; i <= hour; i++) {
-                mHours.add(String.valueOf(i));
-                hourWithMinute = new ArrayList<>();
-                if (i == hour) {
-                    if (i != 0) {
-                        //大于1小时，最后那个小时的分钟的
-                        for (int j = 0, k = mMaxExtendMinutes - hour * 60; j <= k; j++) {
-                            hourWithMinute.add(String.valueOf(j));
+            int day = mMaxExtendMinutes / 60 / 24;
+            int hour;
+            ArrayList<String> hours;
+            ArrayList<String> minutes;
+            ArrayList<ArrayList<String>> hourWithMinutes;
+            for (int l = 0; l <= day; l++) {
+                mDays.add(String.valueOf(l));
+
+                hours = new ArrayList<>();
+                hourWithMinutes = new ArrayList<>();
+                if (l == day) {
+                    hour = (mMaxExtendMinutes - 60 * 24 * l) / 60;
+                } else {
+                    hour = 23;
+                }
+
+                for (int i = 0; i <= hour; i++) {
+                    hours.add(String.valueOf(i));
+                    minutes = new ArrayList<>();
+                    if (l == day && i == hour) {
+                        for (int j = 1, k = (mMaxExtendMinutes - 60 * 24 * l) - 60 * hour; j < k; j++) {
+                            minutes.add(String.valueOf(j));
                         }
                     } else {
-                        //少于60分钟的
-                        for (int j = 1, k = mMaxExtendMinutes; j <= k; j++) {
-                            hourWithMinute.add(String.valueOf(j));
+                        for (int j = i == 0 ? 1 : 0; j < 60; j++) {
+                            minutes.add(String.valueOf(j));
                         }
                     }
-                } else {
-                    for (int j = i == 0 ? 1 : 0; j < 60; j++) {
-                        hourWithMinute.add(String.valueOf(j));
-                    }
+                    hourWithMinutes.add(minutes);
                 }
-                mMinutes.add(hourWithMinute);
+                mHours.add(hours);
+                mMinutes.add(hourWithMinutes);
             }
+
         }
+
     }
 
     private void showOptionPicker() {
         initOptionPicker();
         if (mPickerView == null) {
             mPickerView = new OptionsPickerView<>(getContext());
-            mPickerView.setPicker(mHours, mMinutes, true);
-            mPickerView.setLabels("小时", "分钟");
+            mPickerView.setPicker(mDays, mHours, mMinutes, true);
+            mPickerView.setLabels("天", "小时", "分钟");
             mPickerView.setTitle("延长时间");
             mPickerView.setTextSize(16);
             mPickerView.setCyclic(false);
@@ -316,13 +358,14 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     Calendar calendar = (Calendar) mStartExtendCalendar.clone();
-                    calendar.add(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1)));
-                    calendar.add(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2)));
+                    calendar.add(Calendar.DAY_OF_MONTH, Integer.valueOf(mDays.get(options1)));
+                    calendar.add(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
+                    calendar.add(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
                     String message;
                     if (DateUtil.isInSameDay(mStartExtendCalendar, calendar)) {
                         message = "停车时间将延长至 今天" + DateUtil.getHourWithMinutes(calendar);
                     } else {
-                        message = "停车时间将延长至 明天" + DateUtil.getHourWithMinutes(calendar);
+                        message = "停车时间将延长至 " + DateUtil.getCalendarMonthToMinute(calendar);
                     }
                     SpannableString spannableString = new SpannableString(message);
                     spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#808080")), 0, message.indexOf(" "), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -372,7 +372,7 @@ public class DateUtil {
 
         if (usefulDates.isEmpty()) {
             //如果没人预约则可延长一天的时间
-            return 24 * 60;
+            return 24 * 60 * 7;
         }
 
         //将已被预约的时间用Calendar保存
@@ -392,7 +392,7 @@ public class DateUtil {
         compareCalendar.add(Calendar.SECOND, Integer.valueOf(extendSecond));
         compareCalendar.set(Calendar.SECOND, 0);
         if (compareCalendar.compareTo(nowCalendar) < 0) {
-            //如果是还在顺延时间之前延长时间的则按现在的时间来算可以延长多长时间
+            //如果是已经超时的则按现在的时间来算可以延长多长时间
             compareCalendar = (Calendar) nowCalendar.clone();
         }
 
@@ -961,7 +961,7 @@ public class DateUtil {
     public static int getDistanceForRecentShareTime(Calendar calendar, String shareTime) {
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
-            return 24 * 60;
+            return 24 * 60 * 7;
         } else {
             //获取停车位共享的各个时间段
             String[] times = shareTime.split(",");
@@ -990,7 +990,7 @@ public class DateUtil {
                     return getDateMinutes(calendar, calendarHolder.getEndCalendar());
                 }
             }
-            return 24 * 60;
+            return 24 * 60 * 7;
         }
     }
 
