@@ -138,6 +138,11 @@ public class ConstansUtil {
     public static final String FINISH_APPOINTMENT = "FinishAppointment";
 
     /**
+     * 修改停车信息，正在停车中的延长停车时长
+     */
+    public static final String CHANGE_PARK_ORDER_INRO = "ChangeParkOrderInfo";
+
+    /**
      * 完成订单
      */
     public static final String FINISH_PARK = "FinishPark";

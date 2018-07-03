@@ -163,11 +163,18 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             @Override
             public void openSuccessHaveCar() {
                 dismmisLoadingDialog();
+                showFiveToast("成功开锁");
+                mOpenLock.setText("已开锁");
+                finishAppointment(mParkOrderInfo);
+                cancelOpenLockAnimator();
+                mLockDialog.dismiss();
+
+                /*dismmisLoadingDialog();
                 showFiveToast("车锁已开，因为车位上方有车辆滞留");
                 mOpenLock.setText("已开锁");
                 handleOpenLock();
                 cancelOpenLockAnimator();
-                mLockDialog.dismiss();
+                mLockDialog.dismiss();*/
             }
 
             @Override

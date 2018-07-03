@@ -69,7 +69,6 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
             mAMap = mMapView.getMap();
         }
 
-        mParkOrderInfo.setOrder_status("2");
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (mParkOrderInfo.getOrder_status()) {
             case "1":

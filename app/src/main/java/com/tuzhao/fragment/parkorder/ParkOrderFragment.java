@@ -248,6 +248,13 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         }
                     }
                     break;
+                case ConstansUtil.CHANGE_PARK_ORDER_INRO:
+                    Bundle changeBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    ParkOrderInfo changeParkOrderInfo = changeBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                    if (changeParkOrderInfo != null) {
+                        mCommonAdapter.notifyDataChange(changeParkOrderInfo);
+                    }
+                    break;
                 case ConstansUtil.FINISH_PARK:
                     if (mOrderStatus == 0 || mOrderStatus == 2) {
                         //结束租用中

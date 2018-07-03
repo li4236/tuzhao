@@ -361,7 +361,6 @@ public class HttpConstants {
      */
     public static String applyParkSpace = ROOT_URL + "applyParkSpace";
 
-
     /**
      * 获取正在停车中的订单信息
      */
@@ -516,5 +515,10 @@ public class HttpConstants {
      * 获取用户信用记录
      */
     public static String getCreditRecord = ROOT_URL + "getCreditRecord";
+
+    /**
+     * 正在停车的用户请求延长停车时间
+     */
+    public static String extendParkingTime = ROOT_URL + "extendParkingTime";
 
 }

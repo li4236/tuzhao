@@ -200,6 +200,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private void showAppointmentDetail() {
         if (mCustomDialog != null) {
+            mCustomDialog.dismiss();
             mCustomDialog = null;
         }
         mCustomDialog = new CustomDialog(requireContext(), mParkOrderInfo, 0);
@@ -224,7 +225,6 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 //根据该车位被预约的时间计算能延长的最大时间
                 mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceOfRecentOrder(mParkOrderInfo.getExtensionTime(), mParkOrderInfo.getOrder_endtime(),
                         mShareTimeInfo.getOrderTime()));
-                Log.e(TAG, "calculateMaxMinutes orderTime" + mMaxExtendMinutes);
             }
 
             Calendar nowCalendar = Calendar.getInstance();
@@ -246,7 +246,6 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             calendar.set(Calendar.HOUR_OF_DAY, 24);
             calendar.set(Calendar.MINUTE, 0);
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, (int) DateUtil.getCalendarDistance(mStartExtendCalendar, calendar));
-            Log.e(TAG, "calculateMaxMinutes shareDate" + mMaxExtendMinutes);
 
             //按每周共享时间来计算延长时间
             nowCalendar = (Calendar) mStartExtendCalendar.clone();
@@ -264,7 +263,6 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 }
             }
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, (int) DateUtil.getCalendarDistance(mStartExtendCalendar, nowCalendar));
-            Log.e(TAG, "calculateMaxMinutes shareDay" + mMaxExtendMinutes);
 
             nowCalendar = (Calendar) mStartExtendCalendar.clone();
 
@@ -290,98 +288,99 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
                     //算出到最近那天暂停共享的那天的时间距离
                     mMaxExtendMinutes = (int) Math.min(mMaxExtendMinutes, DateUtil.getCalendarDistance(nowCalendar, pauseDateCalendars.get(0)));
-                    Log.e(TAG, "calculateMaxMinutes pauseDate" + mMaxExtendMinutes);
                 }
             }
 
             //获取在共享时间段内的最大可延长时间
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceForRecentShareTime(mStartExtendCalendar, mShareTimeInfo.getEveryDayShareTime()));
-            Log.e(TAG, "calculateMaxMinutes shareTime" + mMaxExtendMinutes);
         }
+    }
+
+    private void initOptionPickerData() {
+        mDays = new ArrayList<>();
+        mHours = new ArrayList<>();
+        mMinutes = new ArrayList<>();
+
+        calculateMaxMinutes();
+        int day = mMaxExtendMinutes / 60 / 24;
+        int hour;
+        ArrayList<String> hours;
+        ArrayList<String> minutes;
+        ArrayList<ArrayList<String>> hourWithMinutes;
+        for (int l = 0; l <= day; l++) {
+            mDays.add(String.valueOf(l));
+
+            hours = new ArrayList<>();
+            hourWithMinutes = new ArrayList<>();
+            if (l == day) {
+                hour = (mMaxExtendMinutes - 60 * 24 * l) / 60;
+            } else {
+                hour = 23;
+            }
+
+            for (int i = 0; i <= hour; i++) {
+                hours.add(String.valueOf(i));
+                minutes = new ArrayList<>();
+                if (l == day && i == hour) {
+                    for (int j = 1, k = (mMaxExtendMinutes - 60 * 24 * l) - 60 * hour; j < k; j++) {
+                        minutes.add(String.valueOf(j));
+                    }
+                } else {
+                    for (int j = i == 0 ? 1 : 0; j < 60; j++) {
+                        minutes.add(String.valueOf(j));
+                    }
+                }
+                hourWithMinutes.add(minutes);
+            }
+            mHours.add(hours);
+            mMinutes.add(hourWithMinutes);
+        }
+
     }
 
     private void initOptionPicker() {
-        if (mDays == null) {
-            mDays = new ArrayList<>();
-            mHours = new ArrayList<>();
-            mMinutes = new ArrayList<>();
-
-            calculateMaxMinutes();
-            int day = mMaxExtendMinutes / 60 / 24;
-            int hour;
-            ArrayList<String> hours;
-            ArrayList<String> minutes;
-            ArrayList<ArrayList<String>> hourWithMinutes;
-            for (int l = 0; l <= day; l++) {
-                mDays.add(String.valueOf(l));
-
-                hours = new ArrayList<>();
-                hourWithMinutes = new ArrayList<>();
-                if (l == day) {
-                    hour = (mMaxExtendMinutes - 60 * 24 * l) / 60;
+        mPickerView = new OptionsPickerView<>(getContext());
+        mPickerView.setPicker(mDays, mHours, mMinutes, true);
+        mPickerView.setLabels("天", "小时", "分钟");
+        mPickerView.setTitle("延长时间");
+        mPickerView.setTextSize(16);
+        mPickerView.setCyclic(false);
+        mPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                final Calendar calendar = (Calendar) mStartExtendCalendar.clone();
+                calendar.add(Calendar.DAY_OF_MONTH, Integer.valueOf(mDays.get(options1)));
+                calendar.add(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
+                calendar.add(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
+                String message;
+                if (DateUtil.isInSameDay(mStartExtendCalendar, calendar)) {
+                    message = "停车时间将延长至 今天" + DateUtil.getHourWithMinutes(calendar);
                 } else {
-                    hour = 23;
+                    message = "停车时间将延长至 " + DateUtil.getCalendarMonthToMinute(calendar);
                 }
-
-                for (int i = 0; i <= hour; i++) {
-                    hours.add(String.valueOf(i));
-                    minutes = new ArrayList<>();
-                    if (l == day && i == hour) {
-                        for (int j = 1, k = (mMaxExtendMinutes - 60 * 24 * l) - 60 * hour; j < k; j++) {
-                            minutes.add(String.valueOf(j));
-                        }
-                    } else {
-                        for (int j = i == 0 ? 1 : 0; j < 60; j++) {
-                            minutes.add(String.valueOf(j));
-                        }
-                    }
-                    hourWithMinutes.add(minutes);
-                }
-                mHours.add(hours);
-                mMinutes.add(hourWithMinutes);
+                SpannableString spannableString = new SpannableString(message);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#808080")), 0, message.indexOf(" "), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                TipeDialog tipeDialog = new TipeDialog.Builder(getContext())
+                        .setTitle("延长确认")
+                        .setMessage(spannableString)
+                        .setPositiveButton("确认延长", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                extendParkingTime(calendar);
+                            }
+                        })
+                        .create();
+                tipeDialog.show();
             }
-
-        }
-
+        });
     }
 
     private void showOptionPicker() {
-        initOptionPicker();
+        if (mDays == null) {
+            initOptionPickerData();
+        }
         if (mPickerView == null) {
-            mPickerView = new OptionsPickerView<>(getContext());
-            mPickerView.setPicker(mDays, mHours, mMinutes, true);
-            mPickerView.setLabels("天", "小时", "分钟");
-            mPickerView.setTitle("延长时间");
-            mPickerView.setTextSize(16);
-            mPickerView.setCyclic(false);
-            mPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-                @Override
-                public void onOptionsSelect(int options1, int option2, int options3) {
-                    Calendar calendar = (Calendar) mStartExtendCalendar.clone();
-                    calendar.add(Calendar.DAY_OF_MONTH, Integer.valueOf(mDays.get(options1)));
-                    calendar.add(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
-                    calendar.add(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
-                    String message;
-                    if (DateUtil.isInSameDay(mStartExtendCalendar, calendar)) {
-                        message = "停车时间将延长至 今天" + DateUtil.getHourWithMinutes(calendar);
-                    } else {
-                        message = "停车时间将延长至 " + DateUtil.getCalendarMonthToMinute(calendar);
-                    }
-                    SpannableString spannableString = new SpannableString(message);
-                    spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#808080")), 0, message.indexOf(" "), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    TipeDialog tipeDialog = new TipeDialog.Builder(getContext())
-                            .setTitle("延长确认")
-                            .setMessage(spannableString)
-                            .setPositiveButton("确认延长", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .create();
-                    tipeDialog.show();
-                }
-            });
+            initOptionPicker();
         }
         mPickerView.show();
     }
@@ -394,7 +393,37 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                     @Override
                     public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
                         mShareTimeInfo = o.data;
-                        Log.e(TAG, "onSuccess: " + mShareTimeInfo);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void extendParkingTime(final Calendar parkEndCalendar) {
+        getOkGo(HttpConstants.extendParkingTime)
+                .params("orderId", mParkOrderInfo.getId())
+                .params("extendTime", DateUtil.getCalendarDistance(mStartExtendCalendar, parkEndCalendar))
+                .params("cityCode", mParkOrderInfo.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        mParkOrderInfo.setOrder_endtime(DateUtil.getCalenarYearToMinutes(parkEndCalendar));
+                        String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
+                        mLeaveTime.setText(leaveTime);
+                        initOptionPickerData();
+                        initOptionPicker();
+
+                        Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        IntentObserable.dispatch(intent);
                     }
 
                     @Override
