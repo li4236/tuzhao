@@ -149,7 +149,9 @@
 
     <declare-styleable name="CircularArcView">
         <attr name="stroke_width" format="dimension"/>
-        <attr name="stroke_color" format="color"/>
+        <attr name="CircularArcView_arc_color" format="color"/>
+        <attr name="CircularArcView_circle_color" format="color" />
+        <attr name="CircularArcView_circle_radius" format="dimension" />
         <attr name="sweep_angle" format="integer"/>
     </declare-styleable>
 

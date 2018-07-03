@@ -1,12 +1,17 @@
 package com.tuzhao.fragment.parkorder;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
@@ -25,9 +30,12 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
+import com.tuzhao.publicwidget.others.CircularArcView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.MainTimeUtil;
 import com.tuzhao.utils.TimeUtil;
 
 import java.io.IOException;
@@ -60,6 +68,20 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     private ArrayList<String> mParkSpacePictures;
 
     private boolean mIsTimeOut;
+
+    private CustomDialog mLockDialog;
+
+    private AnimatorSet mAnimatorSet;
+
+    private MainTimeUtil mMainTimeUtil;
+
+    private CircularArcView mCircularArcView;
+
+    private ImageView mLockIv;
+
+    private TextView mOpenLockTv;
+
+    private TextView mRetryTv;
 
     private CustomDialog mCustomDialog;
 
@@ -129,6 +151,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 showFiveToast("成功开锁");
                 mOpenLock.setText("已开锁");
                 finishAppointment(mParkOrderInfo);
+                cancelOpenLockAnimator();
+                mLockDialog.dismiss();
             }
 
             @Override
@@ -142,6 +166,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 showFiveToast("车锁已开，因为车位上方有车辆滞留");
                 mOpenLock.setText("已开锁");
                 handleOpenLock();
+                cancelOpenLockAnimator();
+                mLockDialog.dismiss();
             }
 
             @Override
@@ -164,6 +190,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 dismmisLoadingDialog();
                 mOpenLock.setClickable(true);
                 showFiveToast("开锁失败，请稍后重试");
+                cancelOpenLockAnimator();
+                mOpenLockTv.setVisibility(View.INVISIBLE);
+                mRetryTv.setVisibility(View.VISIBLE);
             }
         };
 
@@ -178,6 +207,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mTimeUtil.cancel();
         }
         mHandler.removeCallbacksAndMessages(null);
+        cancelOpenLockAnimator();
     }
 
     @Override
@@ -337,6 +367,77 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         startActivity(intent);
     }
 
+    private void showOpenLockDialog() {
+        if (mLockDialog == null) {
+            ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.dialog_open_lock_layout, null);
+            mLockDialog = new CustomDialog(requireContext(), constraintLayout);
+            mCircularArcView = constraintLayout.findViewById(R.id.circle_arc);
+            mLockIv = constraintLayout.findViewById(R.id.lock_iv);
+            mOpenLockTv = constraintLayout.findViewById(R.id.open_lock_tv);
+            mRetryTv = constraintLayout.findViewById(R.id.retry_tv);
+            ImageUtil.showPic(mLockIv, R.drawable.lock);
+
+            mRetryTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openParkLock();
+                    mRetryTv.setVisibility(View.INVISIBLE);
+                    mOpenLockTv.setVisibility(View.VISIBLE);
+                    mOpenLockTv.setText("正在开锁中.");
+                    startOpenLockAnimator();
+                }
+            });
+        }
+
+        mLockDialog.show();
+        startOpenLockAnimator();
+    }
+
+    private void startOpenLockAnimator() {
+        if (mAnimatorSet == null) {
+            mAnimatorSet = new AnimatorSet();
+            ObjectAnimator ratation = ObjectAnimator.ofFloat(mCircularArcView, "rotation", 0, 360);
+            ratation.setRepeatCount(ValueAnimator.INFINITE);
+            ratation.setRepeatMode(ValueAnimator.RESTART);
+
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1, 1.4f);
+            scaleX.setRepeatMode(ValueAnimator.REVERSE);
+            scaleX.setRepeatCount(ValueAnimator.INFINITE);
+
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1, 1.4f);
+            scaleY.setRepeatCount(ValueAnimator.INFINITE);
+            scaleY.setRepeatMode(ValueAnimator.REVERSE);
+
+            mAnimatorSet.playTogether(ratation, scaleX, scaleY);
+            mAnimatorSet.setDuration(1000);
+
+            mMainTimeUtil = new MainTimeUtil(1000, new TimeUtil.TimeCallback() {
+                @Override
+                public void onTimeIn() {
+                    if (getText(mOpenLockTv).equals("正在开锁中...")) {
+                        mOpenLockTv.setText("正在开锁中.");
+                    } else if (getText(mOpenLockTv).equals("正在开锁中..")) {
+                        mOpenLockTv.setText("正在开锁中...");
+                    } else {
+                        mOpenLockTv.setText("正在开锁中..");
+                    }
+                }
+            });
+        }
+
+        mAnimatorSet.start();
+        mMainTimeUtil.start();
+    }
+
+    private void cancelOpenLockAnimator() {
+        if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
+            mAnimatorSet.cancel();
+        }
+        if (mMainTimeUtil != null) {
+            mMainTimeUtil.cancel();
+        }
+    }
+
     private void showAppointmentDetail() {
         if (mCustomDialog == null) {
             if (getContext() != null) {
@@ -348,7 +449,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private void openParkLock() {
         mOpenLock.setClickable(false);
-        showLoadingDialog("正在开锁");
+        showOpenLockDialog();
         OkGo.post(HttpConstants.controlParkLock)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
@@ -366,6 +467,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         mOpenLock.setClickable(true);
+                        mLockDialog.dismiss();
+                        cancelOpenLockAnimator();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":

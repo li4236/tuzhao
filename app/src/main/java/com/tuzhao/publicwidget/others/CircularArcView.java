@@ -25,7 +25,9 @@ public class CircularArcView extends View {
 
     private float mStrokeWidth;
 
-    private int mColor;
+    private int mArcColor;
+
+    private int mCicleColor;
 
     private int mSweepAngle;
 
@@ -41,7 +43,8 @@ public class CircularArcView extends View {
 
     public CircularArcView(Context context) {
         super(context);
-        mColor = Color.WHITE;
+        mArcColor = Color.WHITE;
+        mCicleColor = Color.parseColor("#4df2f2f2");
         mSweepAngle = 68;
         mStrokeWidth = 8;
     }
@@ -63,12 +66,12 @@ public class CircularArcView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setAntiAlias(true);
-        mPaint.setColor(mColor);
+        mPaint.setColor(mArcColor);
 
         mCirclePaint = new Paint();
         mCirclePaint.setStyle(Paint.Style.FILL);
         mCirclePaint.setAntiAlias(true);
-        mCirclePaint.setColor(Color.parseColor("#4df2f2f2"));
+        mCirclePaint.setColor(mCicleColor);
 
         mPath = new Path();
         mRectF = new RectF();
@@ -77,7 +80,9 @@ public class CircularArcView extends View {
     private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CircularArcView, defStyleAttr, 0);
         mStrokeWidth = typedArray.getDimension(R.styleable.CircularArcView_stroke_width, 8);
-        mColor = typedArray.getColor(R.styleable.CircularArcView_stroke_color, Color.WHITE);
+        mArcColor = typedArray.getColor(R.styleable.CircularArcView_CircularArcView_arc_color, Color.WHITE);
+        mCicleColor = typedArray.getColor(R.styleable.CircularArcView_CircularArcView_circle_color, Color.parseColor("#4df2f2f2"));
+        mRadius = typedArray.getDimension(R.styleable.CircularArcView_CircularArcView_circle_radius, 0);
         mSweepAngle = typedArray.getInt(R.styleable.CircularArcView_sweep_angle, 68);
         typedArray.recycle();
     }
@@ -85,24 +90,24 @@ public class CircularArcView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mWidth == 0) {
-            mWidth = getMeasuredWidth();
-            mHeight = getMeasuredHeight();
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
+        if (mRadius ==0) {
             mRadius = mWidth * 147 / 167 / 2;
+        }
 
-            int angle = (360 - 4 * mSweepAngle) / 8;
-            int totalAngle = 0;
-            mRectF.set(mPaint.getStrokeWidth() / 2, mPaint.getStrokeWidth() / 2, mWidth - mPaint.getStrokeWidth() / 2, mHeight - mPaint.getStrokeWidth() / 2);
+        int angle = (360 - 4 * mSweepAngle) / 8;
+        int totalAngle = 0;
+        mRectF.set(mPaint.getStrokeWidth() / 2, mPaint.getStrokeWidth() / 2, mWidth - mPaint.getStrokeWidth() / 2, mHeight - mPaint.getStrokeWidth() / 2);
 
-            for (int i = 0; i < 4; i++) {
-                if (i == 0) {
-                    totalAngle += angle;
-                    mPath.addArc(mRectF, totalAngle, mSweepAngle);
-                } else {
-                    mPath.addArc(mRectF, totalAngle, mSweepAngle);
-                }
-                totalAngle += mSweepAngle + angle * 2;
+        for (int i = 0; i < 4; i++) {
+            if (i == 0) {
+                totalAngle += angle;
+                mPath.addArc(mRectF, totalAngle, mSweepAngle);
+            } else {
+                mPath.addArc(mRectF, totalAngle, mSweepAngle);
             }
+            totalAngle += mSweepAngle + angle * 2;
         }
     }
 
@@ -110,7 +115,7 @@ public class CircularArcView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawPath(mPath, mPaint);
-        canvas.drawCircle(mWidth / 2, mHeight/ 2, mRadius, mCirclePaint);
+        canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mCirclePaint);
     }
 
 }

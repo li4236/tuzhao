@@ -982,7 +982,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Log.e("哈哈哈", "时间范围是" + pos + "   " + mChooseData.size() + "   " + readypark.size() + "   " + (readypark.size() > 0 ? (readypark.get(0).park_id + (readypark.size() > 1 ? "," + readypark.get(1).park_id : "")) : ""));
         final Holder perfectpark = ctpark;*/
         if (showDialog) {
-            final TipeDialog.Builder builder = new TipeDialog.Builder(OrderParkActivity.this);
             Calendar canParkEndCalendar = DateUtil.getYearToMinuteCalendar(end_time);
             canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
             Log.e("TAG", "showAlertDialog shareTime: " + DateUtil.getTwoYearToMinutesString(
@@ -990,28 +989,30 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkInfo.get(0).getShareTimeCalendar()[1]) >= 0) {
             /*mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
             builder.setMessage("最优车位宽限时长为" + mExtensionTime + "分钟，是否预定？");*/
-                builder.setMessage("已为你匹配到最优车位，是否预订？");
+                //builder.setMessage("已为你匹配到最优车位，是否预订？");
+                addNewParkOrder();
             } else {
+                final TipeDialog.Builder builder = new TipeDialog.Builder(OrderParkActivity.this);
                 mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
                 builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
+                builder.setTitle("确认预定");
+                builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        initLoading("匹配中...");
+                        addNewParkOrder();
+                        //sendOrder(perfectpark, readypark);
+                    }
+                });
+
+                builder.setNegativeButton("取消",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                builder.create().show();
             }
 
-            builder.setTitle("确认预定");
-            builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    initLoading("匹配中...");
-                    addNewParkOrder();
-                    //sendOrder(perfectpark, readypark);
-                }
-            });
-
-            builder.setNegativeButton("取消",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-
-            builder.create().show();
         } else {
             addNewParkOrder();
         }
