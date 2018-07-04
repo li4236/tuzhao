@@ -129,7 +129,11 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";
         mOvertimeFee.setText(overtimeFee);
 
-        getParkSpaceTime();
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) > 0) {
+            //未超时，获取车位共享时间
+            getParkSpaceTime();
+        }
 
         mPollingUtil = new PollingUtil(1000 * 60, new PollingUtil.OnTimeCallback() {
             @Override
@@ -164,7 +168,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 }
                 break;
             case R.id.cancel_appoint_cl:
-                if (mMaxExtendMinutes <= 1) {
+                if (!mCanExtendsionTime) {
                     showFiveToast("暂无可延长时间");
                 } else {
                     showOptionPicker();
@@ -213,9 +217,25 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
             //超时了
             mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
-            mRemainTime.setText("（已超时）");
+            if (getText(mRemainTime).equals("（已超时）")) {
+                mRemainTime.setText("（已超时）");
+            }
+            if (mCanExtendsionTime) {
+                mCanExtendsionTime = false;
+            }
+        } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
+                DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0
+                && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) > 0) {
+            //在顺延时间内
+            mStartParkTime.setText(DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(),
+                    mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()));
+            if (!getText(mRemainTime).equals("（剩余宽限时长）")) {
+                mRemainTime.setText("（剩余宽限时长）");
+            }
         } else {
-            mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddEnd(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()));
+            //未到顺延时间
+            mStartParkTime.setText(DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrder_endtime()));
         }
         mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), DateUtil.getCurrentYearToSecond()));
     }
@@ -224,7 +244,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         if (mShareTimeInfo != null) {
             if (!mShareTimeInfo.getOrderTime().equals("-1")) {
                 //根据该车位被预约的时间计算能延长的最大时间
-                mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceOfRecentOrder(mParkOrderInfo.getExtensionTime(), mParkOrderInfo.getOrder_endtime(),
+                mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceOfRecentOrder("0", mParkOrderInfo.getOrder_endtime(),
                         mShareTimeInfo.getOrderTime()));
             }
 
@@ -233,8 +253,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             nowCalendar.set(Calendar.MILLISECOND, 0);
 
             mStartExtendCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
-            mStartExtendCalendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
-            mStartExtendCalendar.set(Calendar.MILLISECOND, 0);
+            //mStartExtendCalendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
             if (mStartExtendCalendar.compareTo(nowCalendar) < 0) {
                 //如果已经超时的则按现在的时间来算可以延长多长时间
                 mStartExtendCalendar = (Calendar) nowCalendar.clone();
@@ -295,17 +314,17 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             //获取在共享时间段内的最大可延长时间
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceForRecentShareTime(mStartExtendCalendar, mShareTimeInfo.getEveryDayShareTime()));
         }
-        mCanExtendsionTime = mMaxExtendMinutes > Integer.valueOf(mParkOrderInfo.getExtensionTime()) / 1000;
+        mCanExtendsionTime = mMaxExtendMinutes > Integer.valueOf(mParkOrderInfo.getExtensionTime()) / 60;
     }
 
     private void initOptionPickerData() {
-        calculateMaxMinutes();
-
         mDays = new ArrayList<>();
         mHours = new ArrayList<>();
         mMinutes = new ArrayList<>();
         int day = mMaxExtendMinutes / 60 / 24;
+        int extendsionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime()) / 60;
         int hour;
+
         ArrayList<String> hours;
         ArrayList<String> minutes;
         ArrayList<ArrayList<String>> hourWithMinutes;
@@ -315,21 +334,31 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             hours = new ArrayList<>();
             hourWithMinutes = new ArrayList<>();
             if (l == day) {
+                //最后那天的小时为总分钟数减去之前天数的小时除以60
                 hour = (mMaxExtendMinutes - 60 * 24 * l) / 60;
             } else {
                 hour = 23;
             }
 
             for (int i = 0; i <= hour; i++) {
+                if (extendsionTime / 60 > i) {
+                    continue;
+                }
                 hours.add(String.valueOf(i));
                 minutes = new ArrayList<>();
+
+                int startExtendsionTime = extendsionTime - (l * 24 * 60 + i * 60);
                 if (l == day && i == hour) {
-                    for (int j = 1, k = (mMaxExtendMinutes - 60 * 24 * l) - 60 * hour; j < k; j++) {
-                        minutes.add(String.valueOf(j));
+                    for (int j = 0, k = (mMaxExtendMinutes - 60 * 24 * l) - 60 * hour; j <= k; j++) {
+                        if (j > startExtendsionTime) {
+                            minutes.add(String.valueOf(j));
+                        }
                     }
                 } else {
-                    for (int j = i == 0 ? 1 : 0; j < 60; j++) {
-                        minutes.add(String.valueOf(j));
+                    for (int j = i == 0 && l == 0 ? 1 : 0; j < 60; j++) {
+                        if (j > startExtendsionTime) {
+                            minutes.add(String.valueOf(j));
+                        }
                     }
                 }
                 hourWithMinutes.add(minutes);
@@ -417,10 +446,10 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mParkOrderInfo.setOrder_endtime(DateUtil.getCalenarYearToMinutes(parkEndCalendar));
+                        mParkOrderInfo.setExtensionTime("0");
                         String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
                         mLeaveTime.setText(leaveTime);
-                        initOptionPickerData();
-                        initOptionPicker();
+                        mCanExtendsionTime = false;
 
                         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
                         Bundle bundle = new Bundle();
