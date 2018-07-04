@@ -1278,7 +1278,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void requestOrderData(String orderNumber) {
-        OkGo.get(HttpConstants.getDetailOfParkOrder)
+        OkGo.post(HttpConstants.getDetailOfParkOrder)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getToken())
                 .params("citycode", parkspace_info.getCity_code())

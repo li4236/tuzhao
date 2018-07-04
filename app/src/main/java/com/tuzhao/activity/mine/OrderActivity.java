@@ -55,7 +55,12 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        if ((mParkOrderInfo = (ParkOrderInfo) getIntent().getSerializableExtra(ConstansUtil.PARK_ORDER_INFO)) == null) {
+        mParkOrderInfo = (ParkOrderInfo) getIntent().getSerializableExtra(ConstansUtil.PARK_ORDER_INFO);
+        if (mParkOrderInfo == null) {
+            Bundle bundle = getIntent().getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+            mParkOrderInfo = (ParkOrderInfo) bundle.getSerializable(ConstansUtil.PARK_ORDER_INFO);
+        }
+        if (mParkOrderInfo == null) {
             showFiveToast("获取订单信息失败，请稍后重试");
             finish();
         }

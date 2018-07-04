@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Objects;
+
 /**
  * Created by TZL12 on 2017/9/13.
  */
@@ -340,15 +342,14 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ParkOrderInfo that = (ParkOrderInfo) o;
-
-        return id != null ? id.equals(that.id) : that.id == null;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+
+        return Objects.hash(id);
     }
 
     @Override
@@ -364,6 +365,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.parkspace_name);
         dest.writeString(this.ps_address);
         dest.writeString(this.location_describe);
+        dest.writeString(this.parkNumber);
         dest.writeString(this.open_time);
         dest.writeString(this.order_starttime);
         dest.writeString(this.order_endtime);
@@ -378,7 +380,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.order_fee);
         dest.writeString(this.actual_fee);
         dest.writeString(this.fine_fee);
-        dest.writeSerializable(this.discount);
+        dest.writeParcelable(this.discount, flags);
         dest.writeString(this.park_starttime);
         dest.writeString(this.park_endtime);
         dest.writeString(this.high_time);
@@ -391,7 +393,6 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.citycode);
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
-        dest.writeString(this.parkNumber);
         dest.writeString(this.parkingUserId);
         dest.writeString(this.lockId);
     }
@@ -406,6 +407,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.parkspace_name = in.readString();
         this.ps_address = in.readString();
         this.location_describe = in.readString();
+        this.parkNumber = in.readString();
         this.open_time = in.readString();
         this.order_starttime = in.readString();
         this.order_endtime = in.readString();
@@ -420,7 +422,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.order_fee = in.readString();
         this.actual_fee = in.readString();
         this.fine_fee = in.readString();
-        this.discount = (Discount_Info) in.readSerializable();
+        this.discount = in.readParcelable(Discount_Info.class.getClassLoader());
         this.park_starttime = in.readString();
         this.park_endtime = in.readString();
         this.high_time = in.readString();
@@ -433,7 +435,6 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.citycode = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
-        this.parkNumber = in.readString();
         this.parkingUserId = in.readString();
         this.lockId = in.readString();
     }
@@ -449,4 +450,46 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
             return new ParkOrderInfo[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "ParkOrderInfo{" +
+                "id='" + id + '\'' +
+                ", parkspace_id='" + parkspace_id + '\'' +
+                ", park_id='" + park_id + '\'' +
+                ", parkspace_name='" + parkspace_name + '\'' +
+                ", ps_address='" + ps_address + '\'' +
+                ", location_describe='" + location_describe + '\'' +
+                ", parkNumber='" + parkNumber + '\'' +
+                ", open_time='" + open_time + '\'' +
+                ", order_starttime='" + order_starttime + '\'' +
+                ", order_endtime='" + order_endtime + '\'' +
+                ", extensionTime='" + extensionTime + '\'' +
+                ", car_numble='" + car_numble + '\'' +
+                ", username='" + username + '\'' +
+                ", park_username='" + park_username + '\'' +
+                ", order_number='" + order_number + '\'' +
+                ", order_status='" + order_status + '\'' +
+                ", order_time='" + order_time + '\'' +
+                ", pictures='" + pictures + '\'' +
+                ", order_fee='" + order_fee + '\'' +
+                ", actual_fee='" + actual_fee + '\'' +
+                ", fine_fee='" + fine_fee + '\'' +
+                ", discount=" + discount +
+                ", park_starttime='" + park_starttime + '\'' +
+                ", park_endtime='" + park_endtime + '\'' +
+                ", high_time='" + high_time + '\'' +
+                ", low_time='" + low_time + '\'' +
+                ", high_fee='" + high_fee + '\'' +
+                ", low_fee='" + low_fee + '\'' +
+                ", high_max_fee='" + high_max_fee + '\'' +
+                ", low_max_fee='" + low_max_fee + '\'' +
+                ", fine='" + fine + '\'' +
+                ", citycode='" + citycode + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", parkingUserId='" + parkingUserId + '\'' +
+                ", lockId='" + lockId + '\'' +
+                '}';
+    }
 }

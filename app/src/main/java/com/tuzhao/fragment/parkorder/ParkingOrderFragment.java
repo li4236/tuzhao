@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -81,6 +80,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     private Calendar mStartExtendCalendar;
 
     private PollingUtil mPollingUtil;
+
+    private boolean mCanExtendsionTime;
 
     public static ParkingOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         ParkingOrderFragment fragment = new ParkingOrderFragment();
@@ -294,14 +295,15 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             //获取在共享时间段内的最大可延长时间
             mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceForRecentShareTime(mStartExtendCalendar, mShareTimeInfo.getEveryDayShareTime()));
         }
+        mCanExtendsionTime = mMaxExtendMinutes > Integer.valueOf(mParkOrderInfo.getExtensionTime()) / 1000;
     }
 
     private void initOptionPickerData() {
+        calculateMaxMinutes();
+
         mDays = new ArrayList<>();
         mHours = new ArrayList<>();
         mMinutes = new ArrayList<>();
-
-        calculateMaxMinutes();
         int day = mMaxExtendMinutes / 60 / 24;
         int hour;
         ArrayList<String> hours;
@@ -393,6 +395,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                     @Override
                     public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
                         mShareTimeInfo = o.data;
+                        calculateMaxMinutes();
                     }
 
                     @Override
