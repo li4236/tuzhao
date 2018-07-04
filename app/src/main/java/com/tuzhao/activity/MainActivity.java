@@ -322,7 +322,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             public boolean onPreDraw() {
                 mapheight = mapView.getMeasuredHeight();
                 mapwidth = mapView.getMeasuredWidth();
-                addMarkerInScreenCenter();//初始化地图中心图标
+                //addMarkerInScreenCenter();//初始化地图中心图标
                 return true;
             }
         });
@@ -578,7 +578,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_content_main_layout_textview_parknow:
-                // TODO: 2018/5/9 取消加载框，删除中心点，修改定位点，修改动画，修改marker显示和动画
                 intent = new Intent(MainActivity.this, ParkOrChargeListActivity.class);
                 intent.putExtra("citycode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
                 if (mLastlocationLatlng != null) {
@@ -1064,7 +1063,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 builder.include(clusterItem.getPosition());
             }
             LatLngBounds latLngBounds = builder.build();
+            //aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
             aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 1000 / clusterItems.size()));
+            Log.e(TAG, "onClick: than one" );
         } else {
             //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
@@ -1212,7 +1213,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!UserManager.getInstance().hasLogined()) {
-                Log.e(TAG, "onReceive: logout");
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
                 ImageUtil.showPic(imageview_huser, R.mipmap.ic_usericon);

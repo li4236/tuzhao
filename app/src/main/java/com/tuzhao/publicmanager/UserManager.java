@@ -98,4 +98,9 @@ public class UserManager {
 
         this.userInfo = null;
     }
+
+    public String getToken() {
+        return userInfo == null ? "" : userInfo.getToken();
+    }
+
 }

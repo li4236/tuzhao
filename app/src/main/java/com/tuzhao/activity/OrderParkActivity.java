@@ -1019,7 +1019,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void addNewParkOrder() {
-        StringBuilder readyParkId = new StringBuilder();
+        final StringBuilder readyParkId = new StringBuilder();
         StringBuilder readyParkUpdateTime = new StringBuilder();
         for (int i = 1, size = mCanParkInfo.size() > 3 ? 3 : mCanParkInfo.size(); i < size; i++) {
             readyParkId.append(mCanParkInfo.get(i).getId());
@@ -1033,6 +1033,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             readyParkUpdateTime.deleteCharAt(readyParkUpdateTime.length() - 1);
         }
 
+        initLoading("正在下单...");
         OkGo.post(HttpConstants.addNewParkOrder)
                 .tag(OrderParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
@@ -1050,58 +1051,58 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
                         switch (responseData.code) {
                             case "0":
-                                MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
-                                Intent intent = new Intent(OrderParkActivity.this, OrderActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, responseData.data);
-                                intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
-                                startActivity(intent);
-                                finish();
+                                requestOrderData(responseData.data.getOrder_number());
                                 break;
                             case "101":
                                 mCanParkInfo.remove(0);
-                                showRequestAppointOrderDialog(mCanParkInfo.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
-                                break;
-                            case "106":
-                                mCanParkInfo.remove(0);
-                                showRequestAppointOrderDialog(mCanParkInfo.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
-                                break;
-                            case "102":
-                                mCanParkInfo.remove(0);
+                                String[] readyPark = readyParkId.toString().split(",");
+                                for (int i = 0; i < readyPark.length; i++) {
+                                    mCanParkInfo.remove(0);
+                                }
+
                                 if (mCanParkInfo.size() > 0) {
                                     if (mCanParkInfo.size() != 1) {
                                         sortCanParkByIndicator();
                                     }
                                     addNewParkOrder();
                                 } else {
+                                    dissmissLoading();
                                     MyToast.showToast(OrderParkActivity.this, "未匹配到合适您时间的车位，请尝试更换时间", 5);
                                 }
                                 break;
+                            case "106":
+                                mCanParkInfo.remove(0);
+                                showRequestAppointOrderDialog(mCanParkInfo.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
+                                break;
+                            case "102":
+                                String parkSpaceId = responseData.data.getExtensionTime().substring(0, responseData.data.getExtensionTime().indexOf(","));
+                                for (int i = 0; i < mCanParkInfo.size(); i++) {
+                                    if (mCanParkInfo.get(i).getId().equals(parkSpaceId)) {
+                                        showRequestAppointOrderDialog(mCanParkInfo.get(i), Integer.valueOf(responseData.data.getExtensionTime().split(",")[1]));
+                                        break;
+                                    }
+                                }
+                                break;
                             case "103":
+                                dissmissLoading();
                                 MyToast.showToast(OrderParkActivity.this, "内部错误，请重新选择", 5);
                                 finish();
                                 break;
                             case "104":
+                                dissmissLoading();
                                 MyToast.showToast(OrderParkActivity.this, "您有效订单已达上限，暂不可预约车位哦", 5);
                                 break;
                             case "105":
+                                dissmissLoading();
                                 MyToast.showToast(OrderParkActivity.this, "您当前车位在该时段内已有过预约，请尝试更换时间", 5);
                                 break;
                             case "107":
-                                //
+                                dissmissLoading();
                                 MyToast.showToast(OrderParkActivity.this, "您有订单需要前去付款，要先处理哦", 5);
-                                break;
-                            case "109":
-                            case "110":
-                            case "111":
-                                MyToast.showToast(OrderParkActivity.this, "该日期暂无车位可预约，请尝试更换时间", 5);
-                                break;
                             default:
+                                dissmissLoading();
                                 MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
                                 break;
-                        }
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
                         }
                     }
 
@@ -1255,23 +1256,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
-                        Intent intent = new Intent(OrderParkActivity.this, OrderActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, responseData.data);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
-                        startActivity(intent);
-                        finish();
+                        requestOrderData(responseData.data.getOrder_number());
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
+                        dissmissLoading();
                         if (!DensityUtil.isException(OrderParkActivity.this, e)) {
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
@@ -1282,6 +1272,36 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                     MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
+                        }
+                    }
+                });
+    }
+
+    private void requestOrderData(String orderNumber) {
+        OkGo.get(HttpConstants.getDetailOfParkOrder)
+                .tag(TAG)
+                .headers("token", UserManager.getInstance().getToken())
+                .params("citycode", parkspace_info.getCity_code())
+                .params("order_number", orderNumber)
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
+                        dissmissLoading();
+                        MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
+                        Intent intent = new Intent(OrderParkActivity.this, OrderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dissmissLoading();
+                        if (!DensityUtil.isException(OrderParkActivity.this, e)) {
+                            MyToast.showToast(OrderParkActivity.this, e.getMessage(), 5);
                         }
                     }
                 });
@@ -1334,6 +1354,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private void initLoading(String what) {
         mLoadingDialog = new LoadingDialog(this, what);
         mLoadingDialog.show();
+    }
+
+    private void dissmissLoading() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
     }
 
     @Override
