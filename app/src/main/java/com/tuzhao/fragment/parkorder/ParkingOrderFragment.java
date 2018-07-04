@@ -129,7 +129,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";
         mOvertimeFee.setText(overtimeFee);
 
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+        if (!mParkOrderInfo.getExtensionTime().equals("-1") && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) > 0) {
             //未超时，获取车位共享时间
             getParkSpaceTime();
@@ -168,7 +168,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 }
                 break;
             case R.id.cancel_appoint_cl:
-                if (!mCanExtendsionTime) {
+                if (mParkOrderInfo.getExtensionTime().equals("-1")) {
+                    showFiveToast("只能延长一次时间哦");
+                } else if (!mCanExtendsionTime) {
                     showFiveToast("暂无可延长时间");
                 } else {
                     showOptionPicker();
@@ -253,11 +255,6 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             nowCalendar.set(Calendar.MILLISECOND, 0);
 
             mStartExtendCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
-            //mStartExtendCalendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
-            if (mStartExtendCalendar.compareTo(nowCalendar) < 0) {
-                //如果已经超时的则按现在的时间来算可以延长多长时间
-                mStartExtendCalendar = (Calendar) nowCalendar.clone();
-            }
 
             //按共享日期的最后一天的最后时刻来计算延长的时间
             //现在是06-08 08:58，共享日期为2018-05-08 - 2018-06-08,则最大延长时间为现在到今天的最后一刻
@@ -387,7 +384,13 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 if (DateUtil.isInSameDay(mStartExtendCalendar, calendar)) {
                     message = "停车时间将延长至 今天" + DateUtil.getHourWithMinutes(calendar);
                 } else {
-                    message = "停车时间将延长至 " + DateUtil.getCalendarMonthToMinute(calendar);
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                    if (DateUtil.isInSameDay(mStartExtendCalendar, calendar)) {
+                        message = "停车时间将延长至 明天" + DateUtil.getHourWithMinutes(calendar);
+                    } else {
+                        calendar.add(Calendar.DAY_OF_MONTH, -1);
+                        message = "停车时间将延长至 " + DateUtil.getCalendarMonthToMinute(calendar);
+                    }
                 }
                 SpannableString spannableString = new SpannableString(message);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#808080")), 0, message.indexOf(" "), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -445,24 +448,55 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        mParkOrderInfo.setOrder_endtime(DateUtil.getCalenarYearToMinutes(parkEndCalendar));
-                        mParkOrderInfo.setExtensionTime("0");
+                        mParkOrderInfo.setOrder_endtime(DateUtil.getCalenarYearToSecond(parkEndCalendar));
+                        mParkOrderInfo.setExtensionTime("-1");
                         String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
                         mLeaveTime.setText(leaveTime);
                         mCanExtendsionTime = false;
+                        calculateDuration();
 
                         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
+                        showFiveToast("延长时间成功");
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    showFiveToast("数据异常，请稍后重试");
+                                    finish();
+                                    break;
+                                case "103":
+                                    showFiveToast("您选择的时间段与其他人冲突");
+                                    break;
+                                case "104":
+                                    showFiveToast("只能延长一次哦");
+                                    break;
+                                case "105":
+                                    showFiveToast("只有停车中的订单才可以延长时间");
+                                    break;
+                                case "106":
+                                    showFiveToast("选择的时间太短");
+                                    break;
+                                case "107":
+                                    showFiveToast("已经超时的订单不可以延长时间");
+                                    break;
+                                case "109":
+                                case "110":
+                                case "111":
+                                    showFiveToast("所延长的时间车位暂不开放");
+                                    break;
+                                default:
+                                    showFiveToast("服务器异常，请稍后再试");
+                                    break;
+                            }
                         }
                     }
                 });

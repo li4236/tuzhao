@@ -220,7 +220,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
                 parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
-                startActivity(BillingRuleActivity.class,parkLotBundle);
+                startActivity(BillingRuleActivity.class, parkLotBundle);
                 break;
             case R.id.contact_service_cl:
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));

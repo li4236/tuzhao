@@ -16,7 +16,6 @@ import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
-import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
@@ -171,16 +170,18 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     }
 
     private void alipayParkOrder() {
+        showLoadingDialog();
         OkGo.post(HttpConstants.alipayApplyOrder)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("order_id", mOrderId)
                 .params("citycode", mCityCode)
                 .params("discount_id", mDiscountId)
-                .execute(new StringCallback() {
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(final String s, Call call, Response response) {
-                        startAlipay(s);
+                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        startAlipay(stringBase_class_info.data);
+                        dismmisLoadingDialog();
                     }
 
                     @Override
@@ -188,22 +189,33 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         super.onError(call, response, e);
                         mPayImmediately.setClickable(true);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "102":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    finish();
+                                    break;
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
     }
 
     private void alipayLockDeposit() {
+        showLoadingDialog();
         OkGo.post(HttpConstants.getAlipayLockDepositInfo)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("parkSpaceId", mParkSpaceId)
                 .params("cityCode", mCityCode)
-                .execute(new StringCallback() {
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
+
                     @Override
-                    public void onSuccess(final String s, Call call, Response response) {
-                        startAlipay(s);
+                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        startAlipay(stringBase_class_info.data);
+                        dismmisLoadingDialog();
                     }
 
                     @Override
@@ -211,7 +223,15 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         super.onError(call, response, e);
                         mPayImmediately.setClickable(true);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "102":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    finish();
+                                    break;
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
@@ -243,6 +263,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     }
 
     private void wechatPayParkOrder() {
+        showLoadingDialog();
         getOkGo(HttpConstants.getWechatPayOrder)
                 .params("orderId", mOrderId)
                 .params("cityCode", mCityCode)
@@ -251,6 +272,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                     @Override
                     public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
                         startWechatPay(o.data);
+                        dismmisLoadingDialog();
                     }
 
                     @Override
@@ -258,7 +280,15 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         super.onError(call, response, e);
                         mPayImmediately.setClickable(true);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "102":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    finish();
+                                    break;
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
@@ -279,7 +309,15 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         super.onError(call, response, e);
                         mPayImmediately.setClickable(true);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "102":
+                                    showFiveToast("客户端异常，请稍后重试");
+                                    finish();
+                                    break;
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
@@ -299,6 +337,9 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         payReq.sign = wechatPayParam.getSign();
         iwxapi.sendReq(payReq);
 
+        if (!payReq.checkArgs()) {
+            System.out.println("微信支付暂不可用，请使用支付宝支付");
+        }
         mPayImmediately.setClickable(true);
     }
 

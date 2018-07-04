@@ -538,7 +538,7 @@ public class DateUtil {
     public static String getDateDistanceForHourWithMinute(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
-        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        startCalendar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         if (minutesDistance == 0) {
@@ -606,7 +606,7 @@ public class DateUtil {
     public static String getDistanceForDayHourMinuteAddStart(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
-        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        startCalendar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         if (minutesDistance == 0) {
@@ -644,7 +644,7 @@ public class DateUtil {
     public static String getDistanceForDayHourMinuteAddEnd(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
-        endCalenar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        endCalenar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         if (minutesDistance == 0) {
@@ -718,7 +718,7 @@ public class DateUtil {
     public static String getDistanceForDayTimeMinuteAddEnd(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
-        endCalenar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        endCalenar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         if (minutesDistance == 0) {
@@ -756,7 +756,7 @@ public class DateUtil {
     public static String getDistanceForDayTimeMinuteAddStart(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
-        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        startCalendar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
 
         int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
         if (minutesDistance == 0) {
@@ -791,7 +791,7 @@ public class DateUtil {
      */
     public static String getYearToMinute(String date, String addSecond) {
         Calendar calendar = getYearToSecondCalendar(date);
-        calendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        calendar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
         return getCalenarYearToMinutes(calendar);
     }
 
@@ -801,7 +801,7 @@ public class DateUtil {
      */
     public static String getYearToMinute(String date, int addSecond) {
         Calendar calendar = getYearToSecondCalendar(date);
-        calendar.add(Calendar.SECOND, addSecond);
+        calendar.add(Calendar.SECOND, addSecond==-1?0:addSecond);
         return getCalenarYearToMinutes(calendar);
     }
 
@@ -1148,7 +1148,7 @@ public class DateUtil {
         calendar.set(Calendar.SECOND, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].lastIndexOf(":") + 1, yearToMinute[2].length())));
         calendar.set(Calendar.MILLISECOND, 0);
 
-        calendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        calendar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
         return calendar;
     }
 
@@ -1200,7 +1200,7 @@ public class DateUtil {
     public static int compareYearToSecondAddStart(String startDate, String endDate, String addSecond) {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalendar = getYearToSecondCalendar(endDate);
-        startCalendar.add(Calendar.SECOND, Integer.valueOf(addSecond));
+        startCalendar.add(Calendar.SECOND, addSecond.equals("-1")?0:Integer.valueOf(addSecond));
         return startCalendar.compareTo(endCalendar);
     }
 
@@ -1384,6 +1384,14 @@ public class DateUtil {
     public static String getCalenarYearToMinutes(Calendar calendar) {
         return calendar.get(Calendar.YEAR) + "-" + thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH))
                 + " " + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
+    }
+
+    /**
+     * @return yyyy-MM-dd HH:ss
+     */
+    public static String getCalenarYearToSecond(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "-" + thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH))
+                + " " + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE)) + ":" + thanTen(calendar.get(Calendar.SECOND));
     }
 
     /**
