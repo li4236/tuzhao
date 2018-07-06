@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <LinearLayout
+        android:id="@+id/monthly_card_ll"
+        android:layout_width="120dp"
+        android:layout_height="0dp"
+        android:background="@color/w0"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <TextView
+            android:id="@+id/all_card"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:text="全部（0）"
+            android:textColor="@color/y3" />
+
+        <TextView
+            android:id="@+id/area_monthly_card"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:text="地区月卡（0）" />
+
+        <TextView
+            android:id="@+id/national_monthly_card"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:text="全国月卡（0）" />
+
+        <TextView
+            android:id="@+id/expired_monthly_card"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:paddingBottom="10dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:text="过期月卡（0）" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/monthly_card_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/monthly_card_ll"
+        app:layout_constraintTop_toTopOf="@+id/monthly_card_ll" />
+
+</android.support.constraint.ConstraintLayout>

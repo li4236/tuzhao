@@ -61,7 +61,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         } else if (viewType == FOOTER_VIEW) {
             return new BaseViewHolder(mFooterView);
         }
-        mBaseViewHolder = new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId(), parent, false));
+        mBaseViewHolder = new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId() == 0 ? itemViewId(viewType) : itemViewId(), parent, false));
         mBaseViewHolder.setBaseAdapter(this);
         return mBaseViewHolder;
     }
@@ -148,6 +148,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     @LayoutRes
     protected abstract int itemViewId();
+
+    @LayoutRes
+    protected int itemViewId(int viewType) {
+        return 0;
+    }
 
     public List<T> getData() {
         return mData;
