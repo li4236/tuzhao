@@ -70,8 +70,7 @@ public class BigPictureActivity extends BaseActivity {
     }
 
     private void initEvent() {
-
-        viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

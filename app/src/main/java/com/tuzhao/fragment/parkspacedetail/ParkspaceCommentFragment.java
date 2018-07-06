@@ -1,9 +1,12 @@
 package com.tuzhao.fragment.parkspacedetail;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.cb.ratingbar.CBRatingBar;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
-import com.tuzhao.adapter.ParkspaceCommentAdapter;
+import com.tuzhao.activity.BigPictureActivity;
+import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Space_Info;
@@ -24,13 +29,14 @@ import com.tuzhao.info.ParkspaceCommentInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.swipetoloadlayout.ChangeScrollStateCallback;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -46,7 +52,7 @@ public class ParkspaceCommentFragment extends BaseFragment {
      */
     private View mContentView;
     private SuperRefreshRecyclerView mRecycleview;
-    private ParkspaceCommentAdapter mAdapter;
+    private ParkSpaceCommentAdapter mAdapter;
     private TextView textview_all, textview_good, textview_bad;
     private LinearLayout linearlayout_nodata, linearlayout_seeimg;
     private ImageView imageview_seeic;
@@ -57,13 +63,12 @@ public class ParkspaceCommentFragment extends BaseFragment {
     private String parkspace_id, city_code;
     private Park_Space_Info parkspace_info = null;
     private ArrayList<ParkspaceCommentInfo> mCommentData = new ArrayList<>();
-    private ArrayList<ParkspaceCommentInfo> mChooseData = new ArrayList<>();
     private boolean isFirstIn = true, isNoData = false, isNoInternet = false, needSeeImg = false;
     private int mLoadingtimes = 0, type = 1;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getActivity();
         mContentView = inflater.inflate(R.layout.fragment_parkspacecomment_layout, container, false);
 
@@ -79,7 +84,7 @@ public class ParkspaceCommentFragment extends BaseFragment {
         mRecycleview.init(new LinearLayoutManager(mContext), new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
         mRecycleview.setLoadingMoreEnable(true);
-        mRecycleview.setChangeScrollStateCallback(new ChangeScrollStateCallback() {
+        /*mRecycleview.setChangeScrollStateCallback(new ChangeScrollStateCallback() {
             @Override
             public void change(int c) {
                 switch (c) {
@@ -94,8 +99,8 @@ public class ParkspaceCommentFragment extends BaseFragment {
                         break;
                 }
             }
-        });
-        mAdapter = new ParkspaceCommentAdapter(mContext, mChooseData);
+        });*/
+        mAdapter = new ParkSpaceCommentAdapter(mRecycleview.getRecyclerView());
         mRecycleview.setAdapter(mAdapter);
 
         textview_all = mContentView.findViewById(R.id.id_fragment_parkspacecomment_layout_textview_all);
@@ -109,12 +114,16 @@ public class ParkspaceCommentFragment extends BaseFragment {
     }
 
     private void initData() {
-        parkspace_info = (Park_Space_Info) getArguments().getSerializable("parkspace_info");
+        if (getArguments() != null) {
+            parkspace_info = (Park_Space_Info) getArguments().getSerializable("parkspace_info");
+        }
 
         if (parkspace_info == null) {
-            parkspace_id = getArguments().getString("parkspace_id");
-            city_code = getArguments().getString("city_code");
-            requestGetParkspceComment(parkspace_id, city_code, null, null);
+            if (getArguments() != null) {
+                parkspace_id = getArguments().getString("parkspace_id");
+                city_code = getArguments().getString("city_code");
+                requestGetParkspceComment(parkspace_id, city_code, null, null);
+            }
         } else {
             requestGetParkspceComment(parkspace_info.getId(), parkspace_info.getCity_code(), null, null);
         }
@@ -187,14 +196,13 @@ public class ParkspaceCommentFragment extends BaseFragment {
                 .execute(new JsonCallback<Base_Class_List_Info<ParkspaceCommentInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<ParkspaceCommentInfo> datas, Call call, Response response) {
-
                         if (isFirstIn) {
                             isFirstIn = false;
                             mCommentData.addAll(datas.data);
-                            mChooseData.addAll(datas.data);
+                            mAdapter.notifyAddData(datas.data);
                             datas.data.clear();
-                            mAdapter = new ParkspaceCommentAdapter(mContext, mChooseData);
-                            mRecycleview.setAdapter(mAdapter);
+                           /* mAdapter = new ParkSpaceCommentAdapter(mRecycleview.getRecyclerView());
+                            mRecycleview.setAdapter(mAdapter);*/
                             linearlayout_nodata.setVisibility(View.GONE);
                         }
 
@@ -218,19 +226,21 @@ public class ParkspaceCommentFragment extends BaseFragment {
                                             if (info.getImg_url() != null) {
                                                 try {
                                                     if (!(info.getImg_url().equals("") || info.getImg_url().equals("-1"))) {
-                                                        if (new Float(info.getGrade()) >= 4) {
+                                                        if (Float.valueOf(info.getGrade()) >= 4) {
                                                             infodata.add(info);
                                                         }
                                                     }
                                                 } catch (Exception e) {
+                                                    e.printStackTrace();
                                                 }
                                             }
                                         } else {
                                             try {
-                                                if (new Float(info.getGrade()) >= 4) {
+                                                if (Float.valueOf(info.getGrade()) >= 4) {
                                                     infodata.add(info);
                                                 }
                                             } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
                                         }
                                     }
@@ -240,19 +250,21 @@ public class ParkspaceCommentFragment extends BaseFragment {
                                             if (info.getImg_url() != null) {
                                                 try {
                                                     if (!(info.getImg_url().equals("") || info.getImg_url().equals("-1"))) {
-                                                        if (new Float(info.getGrade()) < 4) {
+                                                        if (Float.valueOf(info.getGrade()) < 4) {
                                                             infodata.add(info);
                                                         }
                                                     }
                                                 } catch (Exception e) {
+                                                    e.printStackTrace();
                                                 }
                                             }
                                         } else {
                                             try {
-                                                if (new Float(info.getGrade()) < 4) {
+                                                if (Float.valueOf(info.getGrade()) < 4) {
                                                     infodata.add(info);
                                                 }
                                             } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
                                         }
                                     }
@@ -260,8 +272,7 @@ public class ParkspaceCommentFragment extends BaseFragment {
                                     infodata.addAll(datas.data);
                                 }
                                 if (infodata.size() > 0) {
-                                    mChooseData.addAll(datas.data);
-                                    mAdapter.notifyDataSetChanged();
+                                    mAdapter.notifyAddData(datas.data);
                                     infodata.clear();
                                 }
                                 mRecycleview.setLoadingMore(false);
@@ -413,69 +424,204 @@ public class ParkspaceCommentFragment extends BaseFragment {
     private void initAdapterData() {
         switch (type) {
             case 1:
-                mChooseData.clear();
+                mAdapter.clearAll();
                 if (needSeeImg) {
                     for (ParkspaceCommentInfo info : mCommentData) {
                         if (!(info.getImg_url().equals("") || info.getImg_url().equals("-1"))) {
-                            mChooseData.add(info);
+                            mAdapter.notifyAddData(info);
                         }
                     }
                 } else {
-                    mChooseData.addAll(mCommentData);
+                    mAdapter.notifyAddData(mCommentData);
                 }
-                mAdapter.notifyDataSetChanged();
                 break;
             case 2:
-                mChooseData.clear();
+                mAdapter.clearAll();
                 for (ParkspaceCommentInfo info : mCommentData) {
                     if (needSeeImg) {
                         if (!(info.getImg_url().equals("") || info.getImg_url().equals("-1"))) {
                             try {
-                                if (new Float(info.getGrade()) >= 4) {
-                                    mChooseData.add(info);
+                                if (Float.valueOf(info.getGrade()) >= 4) {
+                                    mAdapter.notifyAddData(info);
                                 }
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     } else {
                         try {
-                            if (new Float(info.getGrade()) >= 4) {
-                                mChooseData.add(info);
+                            if (Float.valueOf(info.getGrade()) >= 4) {
+                                mAdapter.notifyAddData(info);
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }
-                mAdapter.notifyDataSetChanged();
                 break;
             case 3:
-                mChooseData.clear();
+                mAdapter.clearAll();
                 for (ParkspaceCommentInfo info : mCommentData) {
                     if (needSeeImg) {
                         if (!(info.getImg_url().equals("") || info.getImg_url().equals("-1"))) {
                             try {
-                                if (new Float(info.getGrade()) < 4) {
-                                    mChooseData.add(info);
+                                if (Float.valueOf(info.getGrade()) < 4) {
+                                    mAdapter.notifyAddData(info);
                                 }
                             } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     } else {
                         try {
-                            if (new Float(info.getGrade()) < 4) {
-                                mChooseData.add(info);
+                            if (Float.valueOf(info.getGrade()) < 4) {
+                                mAdapter.notifyAddData(info);
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 }
                 mAdapter.notifyDataSetChanged();
                 break;
         }
-        if (mChooseData.size() > 0) {
+        if (mAdapter.getDataSize() > 0) {
             linearlayout_nodata.setVisibility(View.GONE);
         } else {
             linearlayout_nodata.setVisibility(View.VISIBLE);
         }
     }
+
+    class ParkSpaceCommentAdapter extends BaseAdapter<ParkspaceCommentInfo> {
+
+        private ArrayList<String> mCommentPictures;
+
+        ParkSpaceCommentAdapter(RecyclerView recyclerView) {
+            super(recyclerView);
+            mCommentPictures = new ArrayList<>();
+        }
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, ParkspaceCommentInfo parkspaceCommentInfo, int position) {
+            holder.showCircleUserPic(R.id.id_item_parkspacemoment_layout_imageview_user, parkspaceCommentInfo.getUser_img_url())
+                    .setText(R.id.id_item_parkspacemoment_layout_textview_user, parkspaceCommentInfo.getNickname().equals("-1") ?
+                            parkspaceCommentInfo.getUsername().substring(0, 3) + "*****" +
+                                    parkspaceCommentInfo.getUsername().substring(8, parkspaceCommentInfo.getUsername().length()) :
+                            parkspaceCommentInfo.getNickname())
+                    .setText(R.id.id_item_parkspacemoment_layout_textview_grade, parkspaceCommentInfo.getGrade() == null ? (4 + "分") : parkspaceCommentInfo.getGrade() + "分")
+                    .setText(R.id.id_item_parkspacemoment_layout_textview_content, parkspaceCommentInfo.getContent())
+                    .setText(R.id.id_item_parkspacemoment_layout_textview_parktime, "停车时间 " + parkspaceCommentInfo.getPark_time());
+            CBRatingBar cbRatingBar = holder.getView(R.id.id_item_parkspacecomment_layout_cbratingbar);
+            cbRatingBar.setStarProgress(parkspaceCommentInfo.getGrade() == null ? 80 : (Float.valueOf(parkspaceCommentInfo.getGrade()) * 100 / 5));
+            if (position == getDataSize() - 1) {
+                holder.getView(R.id.id_item_parkspacemoment_layout_imageview_downline).setVisibility(View.GONE);
+            }
+            LinearLayout linearlayout_show = holder.getView(R.id.id_item_parkspacemoment_layout_linearlayout_show);
+            ImageView imageview_show1 = holder.getView(R.id.id_item_parkspacemoment_layout_imageview_show1);
+            ImageView imageview_show2 = holder.getView(R.id.id_item_parkspacemoment_layout_imageview_show2);
+            ImageView imageview_show3 = holder.getView(R.id.id_item_parkspacemoment_layout_imageview_show3);
+
+            if (parkspaceCommentInfo.getImg_url().equals("-1") || parkspaceCommentInfo.getImg_url().equals("")) {
+                linearlayout_show.setVisibility(View.GONE);
+            } else {
+                final String img_Url[] = parkspaceCommentInfo.getImg_url().split(",");
+                if (!(img_Url.length > 0)) {
+                    linearlayout_show.setVisibility(View.GONE);
+                } else if (img_Url.length == 1) {
+                    ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                    imageview_show1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                        }
+                    });
+                    linearlayout_show.setVisibility(View.VISIBLE);
+                } else if (img_Url.length == 2) {
+                    ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                    imageview_show1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                        }
+                    });
+                    ImageUtil.showImpPic(imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                    imageview_show2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                        }
+                    });
+                    linearlayout_show.setVisibility(View.VISIBLE);
+                } else if (img_Url.length == 3) {
+                    ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                    imageview_show1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                        }
+                    });
+                    ImageUtil.showImpPic(imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                    imageview_show2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                        }
+                    });
+                    ImageUtil.showImpPic(imageview_show3, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
+                    imageview_show3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
+                        }
+                    });
+                    linearlayout_show.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
+        @Override
+        protected int itemViewId() {
+            return R.layout.item_parkspacecomment_layout;
+        }
+
+        @Override
+        public void notifyAddData(ParkspaceCommentInfo parkspaceCommentInfo) {
+            super.notifyAddData(parkspaceCommentInfo);
+            String img_Url[] = parkspaceCommentInfo.getImg_url().split(",");
+            if (img_Url.length > 0 && !img_Url[0].equals("-1")) {
+                for (String s : img_Url) {
+                    mCommentPictures.add(HttpConstants.ROOT_IMG_URL_PSCOM + s);
+                }
+            }
+        }
+
+        @Override
+        public void notifyAddData(List<ParkspaceCommentInfo> data) {
+            super.notifyAddData(data);
+            String img_Url[];
+            for (ParkspaceCommentInfo parkspaceCommentInfo : data) {
+                img_Url = parkspaceCommentInfo.getImg_url().split(",");
+                if (img_Url.length > 0 && !img_Url[0].equals("-1")) {
+                    for (String s : img_Url) {
+                        mCommentPictures.add(HttpConstants.ROOT_IMG_URL_PSCOM + s);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void clearAll() {
+            super.clearAll();
+            mCommentPictures.clear();
+        }
+
+        private void startBigPictureActivity(String pictureUrl) {
+            Intent intent = new Intent(getActivity(), BigPictureActivity.class);
+            intent.putStringArrayListExtra("picture_list", mCommentPictures);
+            intent.putExtra("position", mCommentPictures.indexOf(pictureUrl));
+            startActivity(intent);
+        }
+
+    }
+
 }

@@ -11,16 +11,10 @@
         android:orientation="horizontal"
         android:layout_marginTop="12dp">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardElevation="0dp"
-            app:cardCornerRadius="17dp">
-            <ImageView
-                android:id="@+id/id_item_parkspacemoment_layout_imageview_user"
-                android:layout_width="34dp"
-                android:layout_height="34dp" />
-        </android.support.v7.widget.CardView>
+        <com.tuzhao.publicwidget.others.CircleImageView
+            android:layout_width="34dp"
+            android:id="@+id/id_item_parkspacemoment_layout_imageview_user"
+            android:layout_height="34dp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -39,6 +33,7 @@
                     android:id="@+id/id_item_parkspacemoment_layout_textview_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="天涯过客"
                     android:textColor="@color/b1"
                     android:textSize="12sp"/>
                 <LinearLayout

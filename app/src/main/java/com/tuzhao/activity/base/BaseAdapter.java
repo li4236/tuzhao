@@ -206,7 +206,14 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void notifyAddData(T t) {
         mData.add(t);
-        notifyDataSetChanged();
+        notifyItemInserted(getHeadViewCount() + mData.size() - 1);
+        notifyItemRangeChanged(getHeadViewCount() + mData.size() - 1, 1);
+    }
+
+    public void notifyAddData(List<T> data) {
+        mData.addAll(data);
+        notifyItemInserted(getHeadViewCount() + mData.size() - data.size());
+        notifyItemRangeChanged(getHeadViewCount() + mData.size() - data.size(), data.size());
     }
 
     public void notifyAddData(int position, T t) {
