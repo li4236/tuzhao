@@ -9,20 +9,21 @@
 
     <com.tuzhao.publicwidget.others.CircularArcView
         android:id="@+id/circle_arc"
-        android:layout_width="102dp"
-        android:layout_height="102dp"
+        android:layout_width="126dp"
+        android:layout_height="126dp"
         android:layout_marginTop="42dp"
         app:CircularArcView_arc_color="@color/y2"
         app:CircularArcView_circle_color="#ffebac"
-        app:CircularArcView_circle_radius="44dp"
+        app:CircularArcView_circle_radius="53dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:stroke_width="4dp" />
 
     <ImageView
         android:id="@+id/lock_iv"
-        android:layout_width="48dp"
-        android:layout_height="58dp"
+        android:layout_width="52dp"
+        android:layout_height="70dp"
         android:contentDescription="@string/picture_description"
         app:layout_constraintBottom_toBottomOf="@id/circle_arc"
         app:layout_constraintEnd_toEndOf="@id/circle_arc"
@@ -32,22 +33,23 @@
     <TextView
         android:id="@+id/open_lock_tv"
         style="@style/SixtyTextB1Style"
-        android:layout_marginTop="36dp"
         android:text="正在开锁中."
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circle_arc" />
 
     <TextView
+        android:id="@+id/retry_tv"
         style="@style/SixtyTextB1Style"
         android:layout_width="110dp"
         android:layout_height="36dp"
         android:background="@drawable/normal_y6_to_y4_press_y12_to_y5_all_18dp"
         android:text="重试"
         android:visibility="invisible"
-        android:id="@+id/retry_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/open_lock_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/circle_arc" />
 
 </android.support.constraint.ConstraintLayout>

@@ -41,7 +41,6 @@ public class CustomDialog extends Dialog {
     public CustomDialog(@NonNull Context context, View view) {
         super(context, R.style.ParkDialog);
         setContentView(view);
-        setCancelable(false);
         setCanceledOnTouchOutside(false);
     }
 

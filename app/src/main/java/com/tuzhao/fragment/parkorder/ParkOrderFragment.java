@@ -190,7 +190,11 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 orderTimeDescription.setText(actualPay);
 
                 orderStatus.setTextColor(Color.parseColor("#1dd0a1"));
-                orderStatus.setText("已完成");
+                if (parkOrderInfo.getOrder_status().equals("4")) {
+                    orderStatus.setText("待评论");
+                } else {
+                    orderStatus.setText("已完成");
+                }
                 break;
             case "6":
                 //已取消（超时取消、正常手动取消）

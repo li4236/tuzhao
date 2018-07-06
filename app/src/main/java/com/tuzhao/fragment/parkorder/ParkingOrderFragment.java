@@ -170,6 +170,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             case R.id.cancel_appoint_cl:
                 if (mParkOrderInfo.getExtensionTime().equals("-1")) {
                     showFiveToast("只能延长一次时间哦");
+                } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                        DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) <= 0) {
+                    showFiveToast("您已超时，不可延长时间");
                 } else if (!mCanExtendsionTime) {
                     showFiveToast("暂无可延长时间");
                 } else {
@@ -219,7 +222,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
             //超时了
             mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
-            if (getText(mRemainTime).equals("（已超时）")) {
+            if (!getText(mRemainTime).equals("（已超时）")) {
                 mRemainTime.setText("（已超时）");
             }
             if (mCanExtendsionTime) {
@@ -441,6 +444,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     }
 
     private void extendParkingTime(final Calendar parkEndCalendar) {
+        showLoadingDialog("正在延长...");
         getOkGo(HttpConstants.extendParkingTime)
                 .params("orderId", mParkOrderInfo.getId())
                 .params("extendTime", DateUtil.getCalendarDistance(mStartExtendCalendar, parkEndCalendar))

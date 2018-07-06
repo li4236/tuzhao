@@ -1,5 +1,7 @@
 package com.tuzhao.fragment.parkorder;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -69,9 +71,23 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private boolean mIsTimeOut;
 
+    private boolean mOpenLockSuccess;
+
+    private boolean mIsOpening;
+
     private CustomDialog mLockDialog;
 
     private AnimatorSet mAnimatorSet;
+
+    private AnimatorSet mResumeAnimatorSet;
+
+    private ObjectAnimator mAlphaAnimator;
+
+    private ValueAnimator mValueAnimator;
+
+    private long mAnimatorDuration;
+
+    private int mAnimatorRepeatCount;
 
     private MainTimeUtil mMainTimeUtil;
 
@@ -147,27 +163,36 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         OnLockListener lockListener = new OnLockListener() {
             @Override
             public void openSuccess() {
-                dismmisLoadingDialog();
-                showFiveToast("成功开锁");
-                mOpenLock.setText("已开锁");
-                finishAppointment(mParkOrderInfo);
+                mOpenLockSuccess = true;
+                mIsOpening = false;
                 cancelOpenLockAnimator();
-                mLockDialog.dismiss();
+                if (mLockDialog != null && !mLockDialog.isShowing()) {
+                    finishAppointment(mParkOrderInfo);
+                    showFiveToast("开锁成功");
+                }
             }
 
             @Override
             public void openFailed() {
-
+                mIsOpening = false;
+                if (mLockDialog.isShowing()) {
+                    mOpenLockTv.setVisibility(View.INVISIBLE);
+                    mRetryTv.setVisibility(View.VISIBLE);
+                    cancelOpenLockAnimator();
+                } else {
+                    showFiveToast("开锁失败，请稍后重试");
+                }
             }
 
             @Override
             public void openSuccessHaveCar() {
-                dismmisLoadingDialog();
-                showFiveToast("成功开锁");
-                mOpenLock.setText("已开锁");
-                finishAppointment(mParkOrderInfo);
+                mOpenLockSuccess = true;
+                mIsOpening = false;
                 cancelOpenLockAnimator();
-                mLockDialog.dismiss();
+                if (mLockDialog != null && !mLockDialog.isShowing()) {
+                    finishAppointment(mParkOrderInfo);
+                    showFiveToast("开锁成功");
+                }
 
                 /*dismmisLoadingDialog();
                 showFiveToast("车锁已开，因为车位上方有车辆滞留");
@@ -194,15 +219,16 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
             @Override
             public void onError() {
-                dismmisLoadingDialog();
-                mOpenLock.setClickable(true);
-                showFiveToast("开锁失败，请稍后重试");
-                cancelOpenLockAnimator();
-                mOpenLockTv.setVisibility(View.INVISIBLE);
-                mRetryTv.setVisibility(View.VISIBLE);
+                mIsOpening = false;
+                if (mLockDialog.isShowing()) {
+                    mOpenLockTv.setVisibility(View.INVISIBLE);
+                    mRetryTv.setVisibility(View.VISIBLE);
+                    cancelOpenLockAnimator();
+                } else {
+                    showFiveToast("开锁失败，请稍后重试");
+                }
             }
         };
-
         MyReceiver.addLockListener(mParkOrderInfo.getLockId(), lockListener);
     }
 
@@ -214,7 +240,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mTimeUtil.cancel();
         }
         mHandler.removeCallbacksAndMessages(null);
-        cancelOpenLockAnimator();
+        cancelAllAnimator();
     }
 
     @Override
@@ -257,10 +283,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 showAppointmentDetail();
                 break;
             case R.id.open_lock:
-                if (getText(mOpenLock).equals("已开锁")) {
-                    showFiveToast("锁已经开啦");
-                } else if (!mIsTimeOut) {
+                if (!mIsTimeOut) {
                     showFiveToast("还没到开始停车时间哦");
+                } else if (mIsOpening) {
+                    showOpenLockDialog();
                 } else {
                     openParkLock();
                 }
@@ -395,11 +421,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 }
             });
         }
-
         mLockDialog.show();
         startOpenLockAnimator();
     }
 
+    /**
+     * 打开dialog后开始放大旋转和缩小旋转动画
+     */
     private void startOpenLockAnimator() {
         if (mAnimatorSet == null) {
             mAnimatorSet = new AnimatorSet();
@@ -407,15 +435,39 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             ratation.setRepeatCount(ValueAnimator.INFINITE);
             ratation.setRepeatMode(ValueAnimator.RESTART);
 
-            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1, 1.4f);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1, 1.2f);
             scaleX.setRepeatMode(ValueAnimator.REVERSE);
             scaleX.setRepeatCount(ValueAnimator.INFINITE);
 
-            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1, 1.4f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1, 1.2f);
             scaleY.setRepeatCount(ValueAnimator.INFINITE);
             scaleY.setRepeatMode(ValueAnimator.REVERSE);
 
+            ratation.addListener(new AnimatorListenerAdapter() {
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    super.onAnimationRepeat(animation);
+                    //记录动画重复的次数，用于判断开锁成功后动画是正在放大还是缩小
+                    mAnimatorRepeatCount++;
+
+                    //记录动画时长，用与判断开锁成功后动画距离重复开始执行的时间差
+                    mAnimatorDuration = System.currentTimeMillis();
+                }
+
+            });
+
             mAnimatorSet.playTogether(ratation, scaleX, scaleY);
+            mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    super.onAnimationCancel(animation);
+                    if (mOpenLockSuccess) {
+                        mLockDialog.setCancelable(false);
+                        resumeLockAnimator();
+                    }
+                }
+            });
             mAnimatorSet.setDuration(1000);
 
             mMainTimeUtil = new MainTimeUtil(1000, new TimeUtil.TimeCallback() {
@@ -436,12 +488,122 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mMainTimeUtil.start();
     }
 
+    private void resumeLockAnimator() {
+        mResumeAnimatorSet = new AnimatorSet();
+        mAnimatorDuration = System.currentTimeMillis() - mAnimatorDuration;
+        if (mAnimatorRepeatCount % 2 == 0) {
+            //开锁成功后动画正在放大
+
+            //先把动画接着放大
+            AnimatorSet animatorSet = new AnimatorSet();
+            ObjectAnimator ratation = ObjectAnimator.ofFloat(mCircularArcView, "rotation", (float) (360 * mAnimatorDuration / 1000.0), 360);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1.2f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1.2f);
+            animatorSet.playTogether(ratation, scaleX, scaleY);
+            animatorSet.setDuration(1000 - mAnimatorDuration);
+
+            //然后缩小为原来大小
+            AnimatorSet animator = new AnimatorSet();
+            ObjectAnimator ratationResume = ObjectAnimator.ofFloat(mCircularArcView, "rotation", 0, 360);
+            ObjectAnimator scaleXResume = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1);
+            ObjectAnimator scaleYResume = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1);
+            animator.playTogether(ratationResume, scaleXResume, scaleYResume);
+            animator.setDuration(1000);
+            mResumeAnimatorSet.playSequentially(animatorSet, animator);
+        } else {
+            //开锁成功后动画正在缩小
+
+            //接着原来的动画缩小为原来大小
+            ObjectAnimator ratation = ObjectAnimator.ofFloat(mCircularArcView, "rotation", (float) (360 * mAnimatorDuration / 1000.0), 360);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1);
+            mResumeAnimatorSet.playTogether(ratation, scaleX, scaleY);
+            mResumeAnimatorSet.setDuration(mAnimatorDuration);
+        }
+
+        mResumeAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mOpenLockTv.setText("开锁成功");
+                startLockCloseAnimator();
+            }
+        });
+        mResumeAnimatorSet.start();
+    }
+
+    /**
+     * 缩小为原来大小后把中间的透明度逐渐变为0，同时把圆弧闭合
+     */
+    private void startLockCloseAnimator() {
+        ImageUtil.showPic(mLockIv, R.drawable.ic_unlock);
+        mAlphaAnimator = ObjectAnimator.ofInt(mLockIv, "alpha", 255, 0);
+        mAlphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int alpha = (int) animation.getAnimatedValue();
+                mCircularArcView.setCicleAlpha(alpha);
+            }
+        });
+        mAlphaAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                startOpenLockSuccessAnimatior();
+            }
+        });
+        mAlphaAnimator.setDuration(800);
+        mAlphaAnimator.start();
+    }
+
+    /**
+     * 在中间逐渐显示√
+     */
+    private void startOpenLockSuccessAnimatior() {
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(800);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int progress = (int) animation.getAnimatedValue();
+                mCircularArcView.setProgress(progress);
+            }
+        });
+
+        mValueAnimator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                finishAppointment(mParkOrderInfo);
+                mLockDialog.dismiss();
+            }
+        });
+        mValueAnimator.start();
+    }
+
     private void cancelOpenLockAnimator() {
         if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
             mAnimatorSet.cancel();
         }
         if (mMainTimeUtil != null) {
             mMainTimeUtil.cancel();
+        }
+    }
+
+    private void cancelAllAnimator() {
+        cancelOpenLockAnimator();
+
+        if (mResumeAnimatorSet != null && mResumeAnimatorSet.isRunning()) {
+            mResumeAnimatorSet.cancel();
+        }
+
+        if (mAlphaAnimator != null && mAlphaAnimator.isRunning()) {
+            mAlphaAnimator.cancel();
+        }
+
+        if (mValueAnimator != null && mValueAnimator.isRunning()) {
+            mValueAnimator.cancel();
         }
     }
 
@@ -455,8 +617,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     }
 
     private void openParkLock() {
-        mOpenLock.setClickable(false);
-        showOpenLockDialog();
+        showLoadingDialog();
         OkGo.post(HttpConstants.controlParkLock)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
@@ -467,15 +628,17 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> aVoid, Call call, Response response) {
-
+                        dismmisLoadingDialog();
+                        mIsOpening = true;
+                        if (mLockDialog == null || !mLockDialog.isShowing()) {
+                            showOpenLockDialog();
+                        }
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        mOpenLock.setClickable(true);
-                        mLockDialog.dismiss();
-                        cancelOpenLockAnimator();
+                        mIsOpening = false;
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":

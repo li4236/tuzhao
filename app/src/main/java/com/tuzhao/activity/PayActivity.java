@@ -174,9 +174,9 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         OkGo.post(HttpConstants.alipayApplyOrder)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("order_id", mOrderId)
-                .params("citycode", mCityCode)
-                .params("discount_id", mDiscountId)
+                .params("orderId", mOrderId)
+                .params("cityCode", mCityCode)
+                .params("discountId", mDiscountId)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
