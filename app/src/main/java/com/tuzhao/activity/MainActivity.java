@@ -137,6 +137,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private MapView mapView;
     private AMap aMap;
     private SensorEventHelper mSensorHelper;
+    private SensorEventHelper mCircleSensorHelper;
     private ImageView imageview_turnown, imageview_spark, imageview_scharge,
             imageview_search;
     private CircleImageView imageview_user, imageview_huser;
@@ -238,6 +239,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         mSensorHelper = new SensorEventHelper(this);//初始化定位图标旋转
         mSensorHelper.registerSensorListener();
+        mCircleSensorHelper = new SensorEventHelper(this);
+        mCircleSensorHelper.registerSensorListener();
 
         geocoderSearch = new GeocodeSearch(this);
         mFragmentManager = getSupportFragmentManager();
@@ -815,7 +818,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         mSensorHelper.registerSensorListener();
                     }
                     mSensorHelper.setCurrentMarker(mLocationMarker);//定位图标旋转
-                    //mLocationCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
+                    if (mCircleSensorHelper == null) {
+                        mCircleSensorHelper = new SensorEventHelper(MainActivity.this);
+                        mCircleSensorHelper.registerSensorListener();
+                    }
+                    mCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
+
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
                     Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
@@ -826,7 +834,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
                 }
-                // mListener.onLocationChanged(amapLocation);
             } else {
                 if (!mHadShowGps) {
                     openGps();
@@ -956,6 +963,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (mLocationMarker != null) {
             mSensorHelper.setCurrentMarker(mLocationMarker);
         }
+
+        if (mCircleSensorHelper == null) {
+            mCircleSensorHelper = new SensorEventHelper(this);
+            mCircleSensorHelper.registerSensorListener();
+        }
+        if (mLocationCircleMarker != null) {
+            mCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
+        }
     }
 
     @Override
@@ -973,6 +988,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mSensorHelper = null;
         }
 
+        if (mCircleSensorHelper != null) {
+            mCircleSensorHelper.unRegisterSensorListener();
+            mCircleSensorHelper.setCurrentMarker(null);
+            mCircleSensorHelper = null;
+        }
     }
 
     @Override
@@ -1065,7 +1085,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             LatLngBounds latLngBounds = builder.build();
             //aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
             aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 1000 / clusterItems.size()));
-            Log.e(TAG, "onClick: than one" );
+            Log.e(TAG, "onClick: than one");
         } else {
             //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
