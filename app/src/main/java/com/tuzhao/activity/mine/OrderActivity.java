@@ -227,6 +227,15 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                         fragmentTransaction.commit();
                     }
                     break;
+                case ConstansUtil.CHANGE_APPOINTMENT_INFO:
+                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    ParkOrderInfo changeOrderInfo = changBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                    if (changeOrderInfo != null) {
+                        FragmentTransaction changeTransaction = getSupportFragmentManager().beginTransaction();
+                        changeTransaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(changeOrderInfo));
+                        changeTransaction.commit();
+                    }
+                    break;
                 case ConstansUtil.FINISH_PARK:
                     Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
                     ParkOrderInfo parkingOrderInfo = parkingBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
@@ -245,15 +254,6 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                         finishTransaction.commit();
                     }
                     break;
-                /*case ConstansUtil.OPEN_PARK_COMMENT:
-                    android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.order_container, CommentOrderFragment.newInstance(mParkOrderInfo));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                    break;
-                case ConstansUtil.CLOSE_PARK_COMMENT:
-                    getSupportFragmentManager().popBackStack();
-                    break;*/
             }
         }
     }

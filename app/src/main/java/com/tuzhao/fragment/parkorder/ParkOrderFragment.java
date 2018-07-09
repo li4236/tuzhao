@@ -242,6 +242,13 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         }
                     }
                     break;
+                case ConstansUtil.CHANGE_APPOINTMENT_INFO:
+                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    ParkOrderInfo changeOrderInfo = changBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                    if (changeOrderInfo != null) {
+                        mCommonAdapter.notifyDataChange(changeOrderInfo);
+                    }
+                    break;
                 case ConstansUtil.CANCEL_ORDER:
                     Bundle cancelBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
                     ParkOrderInfo cancelParkOrderInfo = cancelBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);

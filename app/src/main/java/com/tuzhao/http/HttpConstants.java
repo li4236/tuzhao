@@ -521,4 +521,14 @@ public class HttpConstants {
      */
     public static String extendParkingTime = ROOT_URL + "extendParkingTime";
 
+    /**
+     * 重新给订单分配车位
+     */
+    public static String redistributionOrderParkSpace = ROOT_URL + "redistributionOrderParkSpace";
+
+    /**
+     * 预约订单锁定的车位
+     */
+    public static String reserveLockedParkSpaceForOrder = ROOT_URL + "reserveLockedParkSpaceForOrder";
+
 }

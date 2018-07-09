@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,15 +26,18 @@ import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
+import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.callback.JsonListCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.others.CircularArcView;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
@@ -45,6 +49,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -71,7 +77,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private boolean mIsTimeOut;
 
-    private boolean mOpenLockSuccess;
+    /**
+     * -1（未开锁），0（开锁成功），1（开锁成功，车位上方有车停留）2（开锁失败）
+     */
+    private int mOpenLockStatus = -1;
 
     private boolean mIsOpening;
 
@@ -112,6 +121,12 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     private Handler mHandler;
 
     private static final int TIME_IN_MILLISS = 0x123;
+
+    private List<Park_Info> mParkSpaceList;
+
+    private List<Park_Info> mCanParkList;
+
+    private int mExtensionTime;
 
     public static AppointmentDetailFragment newInstance(ParkOrderInfo parkOrderInfo) {
         AppointmentDetailFragment fragment = new AppointmentDetailFragment();
@@ -163,7 +178,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         OnLockListener lockListener = new OnLockListener() {
             @Override
             public void openSuccess() {
-                mOpenLockSuccess = true;
+                mOpenLockStatus = 0;
                 mIsOpening = false;
                 cancelOpenLockAnimator();
                 if (mLockDialog != null && !mLockDialog.isShowing()) {
@@ -174,10 +189,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
             @Override
             public void openFailed() {
+                mOpenLockStatus = 2;
                 mIsOpening = false;
                 if (mLockDialog.isShowing()) {
-                    mOpenLockTv.setVisibility(View.INVISIBLE);
-                    mRetryTv.setVisibility(View.VISIBLE);
                     cancelOpenLockAnimator();
                 } else {
                     showFiveToast("开锁失败，请稍后重试");
@@ -186,20 +200,22 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
             @Override
             public void openSuccessHaveCar() {
-                mOpenLockSuccess = true;
+                mOpenLockStatus = 1;
                 mIsOpening = false;
                 cancelOpenLockAnimator();
-                if (mLockDialog != null && !mLockDialog.isShowing()) {
-                    finishAppointment(mParkOrderInfo);
-                    showFiveToast("开锁成功");
-                }
-
-                /*dismmisLoadingDialog();
-                showFiveToast("车锁已开，因为车位上方有车辆滞留");
-                mOpenLock.setText("已开锁");
-                handleOpenLock();
-                cancelOpenLockAnimator();
-                mLockDialog.dismiss();*/
+                mLockDialog.dismiss();
+                TipeDialog tipeDialog = new TipeDialog.Builder(requireContext())
+                        .setTitle("提示")
+                        .setMessage("车锁已开，因为车位上方有车辆滞留，是否为您重新分配车位？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getParkSpaceList();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create();
+                tipeDialog.show();
             }
 
             @Override
@@ -219,10 +235,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
             @Override
             public void onError() {
+                mOpenLockStatus = 2;
                 mIsOpening = false;
                 if (mLockDialog.isShowing()) {
-                    mOpenLockTv.setVisibility(View.INVISIBLE);
-                    mRetryTv.setVisibility(View.VISIBLE);
                     cancelOpenLockAnimator();
                 } else {
                     showFiveToast("开锁失败，请稍后重试");
@@ -240,6 +255,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mTimeUtil.cancel();
         }
         mHandler.removeCallbacksAndMessages(null);
+        mOpenLockStatus = -1;
         cancelAllAnimator();
     }
 
@@ -421,6 +437,11 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 }
             });
         }
+
+        if (isVisible(mRetryTv)) {
+            mRetryTv.setVisibility(View.INVISIBLE);
+            mOpenLockTv.setVisibility(View.VISIBLE);
+        }
         mLockDialog.show();
         startOpenLockAnimator();
     }
@@ -462,8 +483,11 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 @Override
                 public void onAnimationCancel(Animator animation) {
                     super.onAnimationCancel(animation);
-                    if (mOpenLockSuccess) {
-                        mLockDialog.setCancelable(false);
+                    Log.e(TAG, "onAnimationCancel: " + mOpenLockStatus);
+                    if (mOpenLockStatus == 0 || mOpenLockStatus == 2) {
+                        if (mOpenLockStatus == 0) {
+                            mLockDialog.setCancelable(false);
+                        }
                         resumeLockAnimator();
                     }
                 }
@@ -489,6 +513,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     }
 
     private void resumeLockAnimator() {
+        Log.e(TAG, "resumeLockAnimator: ");
         mResumeAnimatorSet = new AnimatorSet();
         mAnimatorDuration = System.currentTimeMillis() - mAnimatorDuration;
         if (mAnimatorRepeatCount % 2 == 0) {
@@ -525,8 +550,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mOpenLockTv.setText("开锁成功");
-                startLockCloseAnimator();
+                if (mOpenLockStatus == 0) {
+                    mOpenLockTv.setText("开锁成功");
+                    startLockCloseAnimator();
+                } else if (mOpenLockStatus == 2) {
+                    mOpenLockTv.setVisibility(View.INVISIBLE);
+                    mRetryTv.setVisibility(View.VISIBLE);
+                }
             }
         });
         mResumeAnimatorSet.start();
@@ -552,7 +582,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 startOpenLockSuccessAnimatior();
             }
         });
-        mAlphaAnimator.setDuration(800);
+        mAlphaAnimator.setDuration(1000);
         mAlphaAnimator.start();
     }
 
@@ -560,8 +590,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
      * 在中间逐渐显示√
      */
     private void startOpenLockSuccessAnimatior() {
-        mValueAnimator = ValueAnimator.ofInt(0, 100);
-        mValueAnimator.setDuration(800);
+        mValueAnimator = ValueAnimator.ofInt(0, 120);
+        mValueAnimator.setDuration(1200);
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -617,7 +647,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     }
 
     private void openParkLock() {
-        showLoadingDialog();
+        showOpenLockDialog();
+        mIsOpening = true;
         OkGo.post(HttpConstants.controlParkLock)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
@@ -628,17 +659,15 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> aVoid, Call call, Response response) {
-                        dismmisLoadingDialog();
-                        mIsOpening = true;
-                        if (mLockDialog == null || !mLockDialog.isShowing()) {
-                            showOpenLockDialog();
-                        }
+
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         mIsOpening = false;
+                        mOpenLockStatus = 2;
+                        cancelOpenLockAnimator();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
@@ -665,6 +694,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         } else {
             //有人延迟停车还没走
             // TODO: 2018/6/6
+            getParkSpaceList();
         }
     }
 
@@ -703,5 +733,263 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
         IntentObserable.dispatch(intent);
     }
+
+    private void getParkSpaceList() {
+        getOkGo(HttpConstants.getParkList)
+                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("parkspace_id", mParkOrderInfo.getBelong_park_space())
+                .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {
+                        mParkSpaceList = o.data;
+                        if (mCanParkList == null) {
+                            mCanParkList = new LinkedList<>();
+                        }
+                        DataUtil.findCanParkList(mCanParkList, mParkSpaceList, DateUtil.getYearToMinute(mParkOrderInfo.getOrder_starttime(), 0),
+                                mParkOrderInfo.getOrder_endtime());
+                        if (mCanParkList.isEmpty()) {
+                            showNoParkSpaceDialog();
+                        } else {
+                            if (mCanParkList.size() > 1) {
+                                DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrder_endtime());
+                            }
+                            showAlertDialog(true);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast("获取车位信息失败，请检查网络后返回重试");
+                        }
+                    }
+                });
+    }
+
+    private void showNoParkSpaceDialog() {
+        TipeDialog tipeDialog = new TipeDialog.Builder(requireContext())
+                .setTitle("提示")
+                .setMessage("很抱歉，暂无适合您的车位。\n是否需要取消该订单")
+                .setNegativeButton("不取消", null)
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cancelAppointment();
+                    }
+                })
+                .create();
+        tipeDialog.show();
+    }
+
+    private void showAlertDialog(boolean showDialog) {
+        if (showDialog) {
+            Calendar canParkEndCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
+            canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
+            Log.e("TAG", "showAlertDialog shareTime: " + DateUtil.getTwoYearToMinutesString(
+                    mCanParkList.get(0).getShareTimeCalendar()[0], mCanParkList.get(0).getShareTimeCalendar()[1]));
+            if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkList.get(0).getShareTimeCalendar()[1]) >= 0) {
+                addNewParkOrder();
+            } else {
+                final TipeDialog.Builder builder = new TipeDialog.Builder(requireContext());
+                mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkList.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
+                builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
+                builder.setTitle("确认预定");
+                builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        showLoadingDialog("匹配中...");
+                        addNewParkOrder();
+                    }
+                });
+
+                builder.setNegativeButton("取消",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                builder.create().show();
+            }
+
+        } else {
+            addNewParkOrder();
+        }
+    }
+
+    private void addNewParkOrder() {
+        final StringBuilder readyParkId = new StringBuilder();
+        for (int i = 1, size = mCanParkList.size() > 3 ? 3 : mCanParkList.size(); i < size; i++) {
+            readyParkId.append(mCanParkList.get(i).getId());
+            readyParkId.append(",");
+        }
+        if (readyParkId.length() > 0) {
+            readyParkId.deleteCharAt(readyParkId.length() - 1);
+        }
+
+        showLoadingDialog("重新分配...");
+        getOkGo(HttpConstants.redistributionOrderParkSpace)
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("orderId", mParkOrderInfo.getId())
+                .params("parkSpaceId", mCanParkList.get(0).getId())
+                .params("alternateParkSpaceId", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
+                .params("cityCode", mParkOrderInfo.getCitycode())
+                .execute(new JsonListCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        switch (responseData.code) {
+                            case "0":
+                                redistributionParkSpace(responseData.data.getExtensionTime());
+                                break;
+                            case "101":
+                                mCanParkList.remove(0);
+                                String[] readyPark = readyParkId.toString().split(",");
+                                if (!readyPark[0].equals("")) {
+                                    for (int i = 0; i < readyPark.length; i++) {
+                                        mCanParkList.remove(0);
+                                    }
+                                }
+
+                                if (mCanParkList.size() > 0) {
+                                    if (mCanParkList.size() != 1) {
+                                        DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrder_endtime());
+                                    }
+                                    addNewParkOrder();
+                                } else {
+                                    showLoadingDialog();
+                                    showFiveToast("未匹配到合适您时间的车位，请尝试更换时间");
+                                }
+                                break;
+                            case "106":
+                                mCanParkList.remove(0);
+                                showRequestAppointOrderDialog(mCanParkList.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
+                                break;
+                            case "102":
+                                String parkSpaceId = responseData.data.getExtensionTime().substring(0, responseData.data.getExtensionTime().indexOf(","));
+                                for (int i = 0; i < mCanParkList.size(); i++) {
+                                    if (mCanParkList.get(i).getId().equals(parkSpaceId)) {
+                                        showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime().split(",")[1]));
+                                        break;
+                                    }
+                                }
+                                break;
+                            case "103":
+                                showFiveToast("内部错误，请重新选择");
+                                finish();
+                                break;
+                            case "104":
+                                showFiveToast("您有效订单已达上限，暂不可预约车位哦");
+                                break;
+                            case "105":
+                                showFiveToast("您当前车位在该时段内已有过预约，请尝试更换时间");
+                                break;
+                            case "107":
+                                showFiveToast("您有订单需要前去付款，要先处理哦");
+                            default:
+                                showFiveToast("服务器正在维护中");
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        dismmisLoadingDialog();
+                        showFiveToast(e.getMessage());
+                    }
+                });
+    }
+
+    /**
+     * @param park_info     预约的车位
+     * @param extensionTime 可停车的顺延时长（分钟）
+     */
+    private void showRequestAppointOrderDialog(final Park_Info park_info, int extensionTime) {
+        TipeDialog.Builder builder = new TipeDialog.Builder(requireContext());
+        mExtensionTime = extensionTime;
+        builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
+        builder.setTitle("确认预定");
+        builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                showLoadingDialog("提交中...");
+                reserveLockedParkSpaceForOrder(park_info);
+            }
+        });
+
+        builder.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    private void reserveLockedParkSpaceForOrder(Park_Info park_info) {
+        getOkGo(HttpConstants.reserveLockedParkSpaceForOrder)
+                .params("orderId", mParkOrderInfo.getId())
+                .params("parkSpaceId", park_info.getId())
+                .params("cityCode", mParkOrderInfo.getCitycode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        redistributionParkSpace(responseData.data.getExtensionTime());
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        showLoadingDialog();
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "102":
+                                    showFiveToast("请求已超时，请重新预定");
+                                    break;
+                                case "901":
+                                    showFiveToast("服务器正在维护中");
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void redistributionParkSpace(String extendsionTime) {
+        mParkOrderInfo.setPark_id(mCanParkList.get(0).getId());
+        mParkOrderInfo.setExtensionTime(extendsionTime);
+        mCanParkList.remove(0);
+
+        Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+        IntentObserable.dispatch(intent);
+    }
+
+    /*private void requestOrderData(String orderNumber) {
+        OkGo.post(HttpConstants.getDetailOfParkOrder)
+                .tag(TAG)
+                .headers("token", UserManager.getInstance().getToken())
+                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("order_number", orderNumber)
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
+                        showFiveToast("预约成功");
+                        Intent intent = new Intent(getActivity(), OrderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
+                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast(e.getMessage());
+                        }
+                    }
+                });
+    }*/
 
 }

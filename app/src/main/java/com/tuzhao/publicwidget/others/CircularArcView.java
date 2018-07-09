@@ -176,8 +176,10 @@ public class CircularArcView extends View {
     }
 
     public void setProgress(int progress) {
-        mProgress = progress;
-        invalidate();
+        if (progress >= 0 && progress <= 100) {
+            mProgress = progress;
+            invalidate();
+        }
     }
 
     public void setCicleAlpha(int cicleAlpha) {

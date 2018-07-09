@@ -1043,8 +1043,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("car_number", textview_carnumble.getText().toString())
                 .params("park_interval", start_time + "*" + end_time)
                 .params("park_updatetime", mCanParkInfo.get(0).getUpdate_time())
-                .params("readypark_id", readyParkId.toString())
-                .params("readypark_updatetime", readyParkUpdateTime.toString())
+                .params("readypark_id", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
+                .params("readypark_updatetime", readyParkUpdateTime.toString().equals("") ? "-1" : readyParkUpdateTime.toString())
                 .params("citycode", parkspace_info.getCity_code())
                 .execute(new JsonListCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
@@ -1056,8 +1056,10 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                             case "101":
                                 mCanParkInfo.remove(0);
                                 String[] readyPark = readyParkId.toString().split(",");
-                                for (int i = 0; i < readyPark.length; i++) {
-                                    mCanParkInfo.remove(0);
+                                if (!readyPark[0].equals("")) {
+                                    for (int i = 0; i < readyPark.length; i++) {
+                                        mCanParkInfo.remove(0);
+                                    }
                                 }
 
                                 if (mCanParkInfo.size() > 0) {
