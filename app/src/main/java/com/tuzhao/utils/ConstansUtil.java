@@ -12,6 +12,7 @@ public class ConstansUtil {
 
     public static final int Y2_COLOR = Color.parseColor("#ffcc30");
 
+    public static final int Y3_COLOR = Color.parseColor("#ffa830");
 
     /**
      * 微信的AppId

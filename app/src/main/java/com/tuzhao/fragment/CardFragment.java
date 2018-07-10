@@ -106,7 +106,7 @@ public class CardFragment extends BaseRefreshFragment<CardInfo> {
 
     @Override
     protected void bindData(BaseViewHolder holder, CardInfo cardInfo, int position) {
-        holder.setText(R.id.monthly_card_area, cardInfo.getArea() + "卡")
+        holder.setText(R.id.monthly_card_area, cardInfo.getArea())
                 .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate() + "过期")
                 .showPic(R.id.monthly_card_iv, cardInfo.getArea().equals("全国") ? R.drawable.ic_allcity : R.drawable.ic_vip)
                 .setText(R.id.monthly_card_status, cardInfo.getStatus().equals("1") ? "生效中" : "已过期");

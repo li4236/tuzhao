@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import com.tuzhao.info.CardBean;
 import com.tuzhao.info.CardInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.utils.ConstansUtil;
 
 import java.util.ArrayList;
 
@@ -37,6 +37,8 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
 
     private TextView mExpiredCard;
 
+    private ViewStub mViewStub;
+
     private ArrayList<CardInfo> mAllCardList;
 
     private ArrayList<CardInfo> mAreaCardList;
@@ -44,6 +46,8 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
     private ArrayList<CardInfo> mNationalCardList;
 
     private ArrayList<CardInfo> mExpiredCardList;
+
+    private int mLastPosition = 0;
 
     @Override
     protected int resourceId() {
@@ -89,16 +93,46 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                         mNationalCard.setText("全国月卡（" + mNationalCardList.size() + ")");
                         mExpiredCard.setText("过期月卡（" + o.data.getExpiredCardSize() + "）");
 
-                        if (mAllCardList.isEmpty() && o.data.getExpiredCardSize().equals("0")) {
-                            ViewStub viewStub = findViewById(R.id.no_monthly_card_vs);
-                            viewStub.setVisibility(View.VISIBLE);
-                        } else {
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAllCardList, 0));
-                            transaction.commit();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAllCardList, 0));
+                        transaction.commit();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showViewStub(View.VISIBLE);
+                                    break;
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
+    }
+
+    private void showViewStub(int visibility) {
+        if (mViewStub == null) {
+            mViewStub = findViewById(R.id.no_monthly_card_vs);
+            View view = mViewStub.inflate();
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            view.findViewById(R.id.buy_now).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+        mViewStub.setVisibility(visibility);
     }
 
     @NonNull
@@ -112,23 +146,48 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (v.getId()) {
             case R.id.all_card:
+                setTextNormalColor(0);
+                mAllCard.setTextColor(ConstansUtil.Y3_COLOR);
                 transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAllCardList, 0));
                 transaction.commit();
                 break;
             case R.id.area_card:
+                setTextNormalColor(1);
+                mAreaCard.setTextColor(ConstansUtil.Y3_COLOR);
                 transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAreaCardList, 1));
                 transaction.commit();
                 break;
             case R.id.national_card:
+                setTextNormalColor(2);
+                mNationalCard.setTextColor(ConstansUtil.Y3_COLOR);
                 transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mNationalCardList, 2));
                 transaction.commit();
                 break;
             case R.id.expired_card:
+                setTextNormalColor(3);
+                mExpiredCard.setTextColor(ConstansUtil.Y3_COLOR);
                 transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mExpiredCardList, 3));
                 transaction.commit();
                 break;
         }
-        Log.e(TAG, "onClick: " + v.getId());
+    }
+
+    private void setTextNormalColor(int position) {
+        switch (mLastPosition) {
+            case 0:
+                mAllCard.setTextColor(ConstansUtil.B1_COLOR);
+                break;
+            case 1:
+                mAreaCard.setTextColor(ConstansUtil.B1_COLOR);
+                break;
+            case 2:
+                mNationalCard.setTextColor(ConstansUtil.B1_COLOR);
+                break;
+            case 3:
+                mExpiredCard.setTextColor(ConstansUtil.B1_COLOR);
+                break;
+        }
+        mLastPosition = position;
     }
 
     @Override
