@@ -66,6 +66,7 @@ import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.CarNumberActivity;
 import com.tuzhao.activity.mine.CollectionActivity;
 import com.tuzhao.activity.mine.CreditActivity;
+import com.tuzhao.activity.mine.MyCardPackageActivity;
 import com.tuzhao.activity.mine.MyParkspaceActivityRefactor;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
@@ -418,7 +419,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_monthly_card:
-
+                intent = new Intent(MainActivity.this, MyCardPackageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_parkorder:
                 intent = new Intent(MainActivity.this, ParkOrderActivity.class);

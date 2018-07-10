@@ -87,7 +87,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
     @Override
     protected void loadData() {
-        getOkgo(HttpConstants.getKindParkOrder)
+        getOkgos(HttpConstants.getKindParkOrder)
                 .params("order_status", mOrderStatus)
                 .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
                     @Override

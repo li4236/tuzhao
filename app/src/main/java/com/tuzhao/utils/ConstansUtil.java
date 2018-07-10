@@ -50,6 +50,11 @@ public class ConstansUtil {
     public static final String PARK_SPACE_INFO = "ParkSpaceInfo";
 
     /**
+     * 类型
+     */
+    public static final String TYPE = "Type";
+
+    /**
      * 城市码
      */
     public static final String CITY_CODE = "CityCode";
@@ -260,5 +265,10 @@ public class ConstansUtil {
      * 修改审核前的停车位的资料
      */
     public static final String MODIFY_AUDIT_PARK_SPACE_INFO = "ModifyAuditParkSpaceInfo";
+
+    /**
+     * 卡列表
+     */
+    public static final String CARD_INFO_LIST = "CardInfoList";
 
 }

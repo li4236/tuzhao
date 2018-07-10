@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/monthly_card_iv"
+            android:layout_width="180dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_monthly" />
+
+        <TextView
+            android:id="@+id/no_monthly_card_tv"
+            style="@style/SixtyTextB1Style"
+            android:layout_marginTop="14dp"
+            android:text="您暂时没有月卡哦"
+            android:textColor="#999999"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/monthly_card_iv" />
+
+        <TextView
+            android:id="@+id/buy_now"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/little_yuan_yellow_5dp"
+            android:gravity="center"
+            android:text="立即购买"
+            android:textColor="@color/b1"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/no_monthly_card_tv" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

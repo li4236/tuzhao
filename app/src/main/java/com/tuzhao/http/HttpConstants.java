@@ -531,4 +531,14 @@ public class HttpConstants {
      */
     public static String reserveLockedParkSpaceForOrder = ROOT_URL + "reserveLockedParkSpaceForOrder";
 
+    /**
+     *获取用户全部卡，地区卡，全国卡
+     */
+    public static String getUserCards = ROOT_URL + "getUserCards";
+
+    /**
+     * 获取用户已过期的卡
+     */
+    public static String getUserExpiredCards = ROOT_URL + "getUserExpiredCards";
+
 }
