@@ -255,7 +255,6 @@
         android:id="@+id/park_comment_cl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/view_appointment_detail">
 
         <View
@@ -272,6 +271,7 @@
             android:layout_marginBottom="14dp"
             android:layout_marginTop="14dp"
             android:drawableEnd="@mipmap/ic_right"
+            android:id="@+id/park_comment_tv"
             android:drawablePadding="8dp"
             android:text="停车评价"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/w0"
+    android:paddingBottom="14dp">
+
+    <ImageView
+        android:id="@+id/close_comment"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="6dp"
+        android:contentDescription="@string/picture_description"
+        android:padding="12dp"
+        android:src="@drawable/ic_bigclose"
+        app:layout_constraintBottom_toBottomOf="@+id/park_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/park_comment" />
+
+    <TextView
+        android:id="@+id/park_comment"
+        style="@style/TwentyTextB1Style"
+        android:text="停车评价"
+        app:layout_constraintBottom_toTopOf="@+id/park_comment_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/park_comment_divider"
+        style="@style/dividerStyle"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/comment_order_user_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="10dp"
+        android:text="你的评分"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/park_comment_divider" />
+
+    <com.cb.ratingbar.CBRatingBar
+        android:id="@+id/comment_order_crb"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_order_user_tv"
+        app:starCanTouch="false"
+        app:starCount="5"
+        app:starCoverColor="#ffcb30"
+        app:starEndColor="#00ff00"
+        app:starFillColor="#ffffff"
+        app:starMaxProgress="100"
+        app:starPathData="@string/round_star"
+        app:starPathDataId="@string/round_star"
+        app:starPointCount="5"
+        app:starProgress="100"
+        app:starShowStroke="true"
+        app:starSize="20dp"
+        app:starSpace="8dp"
+        app:starStartColor="#0000ff"
+        app:starStrokeColor="#ffcb30"
+        app:starStrokeWidth="2px"
+        app:starUseGradient="false" />
+
+    <View
+        android:id="@+id/center_divider"
+        style="@style/dividerStyle"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_order_crb" />
+
+    <TextView
+        android:id="@+id/comment_order_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:gravity="start"
+        android:textColor="@color/b1"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/center_divider"
+        app:layout_constraintStart_toStartOf="@+id/center_divider"
+        app:layout_constraintTop_toBottomOf="@+id/center_divider" />
+
+    <!-- <TextView
+         android:id="@+id/comment_order_pic_hint"
+         style="@style/TenTextG6Stytle"
+         android:layout_marginEnd="16dp"
+         android:text="最多三张哦"
+         app:layout_constraintBottom_toBottomOf="@+id/comment_order_pic_add"
+         app:layout_constraintEnd_toEndOf="parent" />-->
+
+    <ImageView
+        android:id="@+id/comment_order_pic_add"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comment_order_et" />
+
+    <ImageView
+        android:id="@+id/comment_order_pic_one"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/comment_order_pic_add"
+        app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+
+    <ImageView
+        android:id="@+id/comment_order_pic_two"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/comment_order_pic_add"
+        app:layout_constraintStart_toEndOf="@+id/comment_order_pic_one"
+        app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+
+</android.support.constraint.ConstraintLayout>

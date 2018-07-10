@@ -541,4 +541,9 @@ public class HttpConstants {
      */
     public static String getUserExpiredCards = ROOT_URL + "getUserExpiredCards";
 
+    /**
+     * 获取订单的评价
+     */
+    public static String getOrderComment = ROOT_URL + "getOrderComment";
+
 }
