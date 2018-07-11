@@ -35,7 +35,7 @@
                     android:id="@+id/choose_card_type"
                     style="@style/ThirtyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginTop="18dp"
                     android:text="请选择您要购买的卡种："
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -164,7 +164,7 @@
                     android:id="@+id/monthly_card_price_rv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="14dp"
+                    android:layout_marginEnd="12dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -205,12 +205,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/first_indicate" />
 
             <TextView
+                android:id="@+id/third_indicate"
                 style="@style/ThirtyTextB1Style"
                 android:layout_width="0dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
                 android:gravity="start"
-                android:id="@+id/third_indicate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/second_indicate"
                 app:layout_constraintTop_toBottomOf="@+id/second_indicate" />

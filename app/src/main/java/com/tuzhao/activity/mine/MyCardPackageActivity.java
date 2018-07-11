@@ -45,6 +45,12 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
 
     private int mLastPosition = 0;
 
+    private MonthlyCardFragment mAllCardFragment;
+
+    private MonthlyCardFragment mAreaCardFragment;
+
+    private MonthlyCardFragment mNationalCardFragment;
+
     private MonthlyCardFragment mExpriredFragment;
 
     @Override
@@ -63,6 +69,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
         mAreaCard.setOnClickListener(this);
         mNationalCard.setOnClickListener(this);
         mExpiredCard.setOnClickListener(this);
+        findViewById(R.id.buy_monthly_card).setOnClickListener(this);
     }
 
     @Override
@@ -146,19 +153,28 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
             case R.id.all_card:
                 setTextNormalColor(0);
                 mAllCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mAllCardList, 0));
+                if (mAllCardFragment == null) {
+                    mAllCardFragment = MonthlyCardFragment.newInstance(mAllCardList, 0);
+                }
+                transaction.replace(R.id.monthly_card_container, mAllCardFragment);
                 transaction.commit();
                 break;
             case R.id.area_card:
                 setTextNormalColor(1);
                 mAreaCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mAreaCardList, 1));
+                if (mAreaCardFragment == null) {
+                    mAreaCardFragment = MonthlyCardFragment.newInstance(mAreaCardList, 1);
+                }
+                transaction.replace(R.id.monthly_card_container, mAreaCardFragment);
                 transaction.commit();
                 break;
             case R.id.national_card:
                 setTextNormalColor(2);
                 mNationalCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mNationalCardList, 2));
+                if (mNationalCardFragment == null) {
+                    mNationalCardFragment = MonthlyCardFragment.newInstance(mNationalCardList, 2);
+                }
+                transaction.replace(R.id.monthly_card_container, mNationalCardFragment);
                 transaction.commit();
                 break;
             case R.id.expired_card:
@@ -169,6 +185,9 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                 }
                 transaction.replace(R.id.monthly_card_container, mExpriredFragment);
                 transaction.commit();
+                break;
+            case R.id.buy_monthly_card:
+                startActivity(BuyMonthlyCardActivity.class);
                 break;
         }
     }

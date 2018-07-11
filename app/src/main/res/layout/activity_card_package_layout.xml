@@ -9,6 +9,18 @@
         layout="@layout/base_toolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/buy_monthly_card"
+        style="@style/TwentyTextB1Style"
+        android:layout_height="0dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:text="购卡"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/base_tb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/base_tb" />
+
     <View
         android:id="@+id/top_divider"
         style="@style/dividerStyle"

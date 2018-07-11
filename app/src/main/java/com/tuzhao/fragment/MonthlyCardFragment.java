@@ -83,13 +83,11 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.Car
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mType == 3) {
-            Bundle bundle = getArguments();
-            if (bundle != null) {
-                bundle.clear();
-                bundle.putParcelableArrayList(ConstansUtil.CARD_INFO_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
-                bundle.putInt(ConstansUtil.TYPE, mType);
-            }
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            bundle.clear();
+            bundle.putParcelableArrayList(ConstansUtil.CARD_INFO_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
+            bundle.putInt(ConstansUtil.TYPE, mType);
         }
     }
 
