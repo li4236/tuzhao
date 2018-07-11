@@ -11,7 +11,7 @@ public class CardBean {
 
     private ArrayList<CardInfo> areaCards;
 
-    private ArrayList<CardInfo> nationalCard;
+    private ArrayList<CardInfo> nationalCards;
 
     public String getExpiredCardSize() {
         return expiredCardSize;
@@ -29,11 +29,11 @@ public class CardBean {
         this.areaCards = areaCards;
     }
 
-    public ArrayList<CardInfo> getNationalCard() {
-        return nationalCard;
+    public ArrayList<CardInfo> getNationalCards() {
+        return nationalCards;
     }
 
-    public void setNationalCard(ArrayList<CardInfo> nationalCard) {
-        this.nationalCard = nationalCard;
+    public void setNationalCards(ArrayList<CardInfo> nationalCards) {
+        this.nationalCards = nationalCards;
     }
 }

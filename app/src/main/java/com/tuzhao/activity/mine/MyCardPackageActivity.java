@@ -84,7 +84,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                     @Override
                     public void onSuccess(Base_Class_Info<CardBean> o, Call call, Response response) {
                         mAreaCardList = o.data.getAreaCards();
-                        mNationalCardList = o.data.getNationalCard();
+                        mNationalCardList = o.data.getNationalCards();
                         mAllCardList.addAll(mAreaCardList);
                         mAllCardList.addAll(mNationalCardList);
 
@@ -128,7 +128,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
             view.findViewById(R.id.buy_now).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    startActivity(BuyMonthlyCardActivity.class);
                 }
             });
         }

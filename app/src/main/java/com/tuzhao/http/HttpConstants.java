@@ -546,4 +546,9 @@ public class HttpConstants {
      */
     public static String getOrderComment = ROOT_URL + "getOrderComment";
 
+    /**
+     * 获取开放的地区的月卡
+     */
+    public static String getOpenAreaMonthlyCard = ROOT_URL + "getOpenAreaMonthlyCard";
+
 }

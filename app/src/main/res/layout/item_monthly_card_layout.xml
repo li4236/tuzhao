@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_vip"
         app:layout_constraintCircleRadius="10dp" />
 
     <TextView

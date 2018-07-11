@@ -1,5 +1,9 @@
 package com.tuzhao.utils;
 
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.tuzhao.info.Park_Info;
@@ -157,6 +161,12 @@ public class DataUtil {
             }
         }
 
+    }
+
+    public static SpannableString getFirstTwoTransparentSpannable(String text) {
+        SpannableString spannableString = new SpannableString("月卡" + text);
+        spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
     }
 
 }

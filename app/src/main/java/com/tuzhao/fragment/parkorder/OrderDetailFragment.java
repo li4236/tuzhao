@@ -47,6 +47,7 @@ import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.SoftKeyBroadManager;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,6 +119,8 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private CustomDialog mOrderCommentDialog;
 
     private ParkspaceCommentInfo mCommentInfo;
+
+    private DecimalFormat mDecimalFormat;
 
     private SoftKeyBroadManager.SoftKeyboardStateListener mKeyboardStateListener;
 
@@ -205,6 +208,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
         mTotalCredit.setText(totalCredit);
 
+        mDecimalFormat = new DecimalFormat("0.0");
         IntentObserable.registerObserver(this);
     }
 
@@ -549,7 +553,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 .params("parkspace_id", mParkOrderInfo.getBelong_park_space())
                 .params("city_code", mParkOrderInfo.getCitycode())
                 .params("order_id", mParkOrderInfo.getId())
-                .params("grade", mCBRatingBar.getTouchCount() == -1 ? "1" : (mCBRatingBar.getStarProgress() + ""))
+                .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress()))
                 .params("content", mCommentEt.getText().toString())
                 .addFileParams("imgs[]", mCommentPicFiles)
                 .execute(new JsonCallback<Base_Class_Info<NearPointPCInfo>>() {

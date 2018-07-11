@@ -61,6 +61,16 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setTextColor(@IdRes int id, int color) {
+        ((TextView) getView(id)).setTextColor(color);
+        return this;
+    }
+
+    public BaseViewHolder setBackground(@IdRes int id, @DrawableRes int drawableRes) {
+        getView(id).setBackgroundResource(drawableRes);
+        return this;
+    }
+
     public BaseViewHolder setRadioCheck(@IdRes int id, boolean check) {
         ((RadioButton) getView(id)).setChecked(check);
         return this;
