@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.tuzhao.R;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 
 /**
@@ -156,26 +157,26 @@ public class CreditView extends View {
 
         mVeryPoorRectF.left = mTextSize / 2;
         mVeryPoorRectF.top = mSixDp;
-        mVeryPoorRectF.right = (float) (150 / 750.0 * width + mVeryPoorRectF.left);
+        mVeryPoorRectF.right = (ConstansUtil.POOR_CREDIT_SCORE - ConstansUtil.VERY_POOR_CREDIT_SCORE) / 750 * width + mVeryPoorRectF.left;
         mVeryPoorRectF.bottom = mVeryPoorRectF.top + mFourDp;
 
         mPoorRectF.left = mVeryPoorRectF.right + mSixDp;
         mPoorRectF.top = mVeryPoorRectF.top;
-        mPoorRectF.right = (float) (mPoorRectF.left + 200 / 750.0 * width);
+        mPoorRectF.right = (float) (mPoorRectF.left + (ConstansUtil.FINE_CREDIT_SCORE - ConstansUtil.POOR_CREDIT_SCORE) / 750.0 * width);
         mPoorRectF.bottom = mVeryPoorRectF.bottom;
 
         mFineRectF.left = mPoorRectF.right + mSixDp;
         mFineRectF.top = mVeryPoorRectF.top;
         mFineRectF.bottom = mVeryPoorRectF.bottom;
-        mFineRectF.right = (float) (mFineRectF.left + 100 / 750.0 * width);
+        mFineRectF.right = (float) (mFineRectF.left + (ConstansUtil.GOOD_CREDIT_SCORE - ConstansUtil.FINE_CREDIT_SCORE) / 750.0 * width);
 
         mGoodRect.left = mFineRectF.right + mSixDp;
         mGoodRect.top = mVeryPoorRectF.top;
         mGoodRect.bottom = mVeryPoorRectF.bottom;
-        mGoodRect.right = (float) (mGoodRect.left + 100 / 750.0 * width);
+        mGoodRect.right = (float) (mGoodRect.left + (ConstansUtil.VERY_GOOD_CREDIT_SCORE - ConstansUtil.GOOD_CREDIT_SCORE) / 750.0 * width);
 
         mVeryGoodRect.left = mGoodRect.right + mSixDp;
-        mVeryGoodRect.right = (float) (mVeryGoodRect.left + 200 / 750.0 * width);
+        mVeryGoodRect.right = (float) (mVeryGoodRect.left + (ConstansUtil.MAX_CREDIT_SCORE - ConstansUtil.VERY_GOOD_CREDIT_SCORE) / 750.0 * width);
         mVeryGoodRect.top = mVeryPoorRectF.top;
         mVeryGoodRect.bottom = mVeryPoorRectF.bottom;
 

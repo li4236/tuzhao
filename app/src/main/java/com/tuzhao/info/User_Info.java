@@ -1,8 +1,7 @@
 package com.tuzhao.info;
 
-import android.util.Log;
-
 import com.tuzhao.info.base_info.BaseInfo;
+import com.tuzhao.utils.ConstansUtil;
 
 /**
  * Created by TZL12 on 2017/5/16.
@@ -22,7 +21,7 @@ public class User_Info extends BaseInfo {
     private String last_time;//用户最后一次登陆时的时间
     private String credit;//信用分
     private int ride_time;//到达的弹性时间
-    private int leave_time;//离开的弹性时间
+    private int leave_time = -1;//离开的弹性时间
     private String serect_code;//用户通行码
     private String alinumber = "-1";//支付宝账号
     private String aliNickName = "";//支付宝用户昵称
@@ -252,7 +251,22 @@ public class User_Info extends BaseInfo {
     }
 
     public int getLeave_time() {
-        Log.e("TAG", "getLeave_time: "+leave_time );
+        if (leave_time == -1) {
+            float creditScore = Float.valueOf(credit);
+            if (creditScore >= ConstansUtil.VERY_GOOD_CREDIT_SCORE) {
+                leave_time = 60;
+            } else if (creditScore >= ConstansUtil.GOOD_CREDIT_SCORE) {
+                leave_time = 45;
+            } else if (creditScore >= ConstansUtil.FINE_CREDIT_SCORE) {
+                leave_time = 30;
+            } else if (creditScore >= ConstansUtil.POOR_CREDIT_SCORE) {
+                leave_time = 15;
+            } else if (creditScore >= ConstansUtil.VERY_POOR_CREDIT_SCORE) {
+                leave_time = 10;
+            } else {
+                leave_time = 0;
+            }
+        }
         return leave_time;
     }
 

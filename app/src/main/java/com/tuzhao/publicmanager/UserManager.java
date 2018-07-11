@@ -69,7 +69,7 @@ public class UserManager {
                         early_time = 3;
                     }
                 }
-                userInfo.setLeave_time(leave_time);
+                //userInfo.setLeave_time(leave_time);
                 userInfo.setRide_time(early_time);
             }
         } catch (Exception e) {

@@ -16,6 +16,18 @@ public class ConstansUtil {
 
     public static final int G10_COLOR = Color.parseColor("#cccccc");
 
+    public static final float MAX_CREDIT_SCORE = 950;
+
+    public static final float VERY_GOOD_CREDIT_SCORE = 750;
+
+    public static final float GOOD_CREDIT_SCORE = 650;
+
+    public static final float FINE_CREDIT_SCORE = 550;
+
+    public static final float POOR_CREDIT_SCORE = 350;
+
+    public static final float VERY_POOR_CREDIT_SCORE = 200;
+
     /**
      * 微信的AppId
      */

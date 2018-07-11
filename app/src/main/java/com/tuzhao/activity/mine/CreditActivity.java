@@ -18,6 +18,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.others.CreditView;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 
 /**
@@ -85,21 +86,20 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
     protected void initData() {
         mCurrentCredit.setText(com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit());
         mCredit = Integer.valueOf(UserManager.getInstance().getUserInfo().getCredit());
-        if (mCredit <= 350) {
+        if (mCredit <= ConstansUtil.POOR_CREDIT_SCORE) {
             mCreditStage.setText("较差");
             mCreditStage.setBackgroundResource(R.drawable.r7_all_3dp);
             ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
-        } else if (mCredit <= 550) {
+        } else if (mCredit <= ConstansUtil.FINE_CREDIT_SCORE) {
             mCreditStage.setText("一般");
             mCreditStage.setBackgroundResource(R.drawable.y2_all_3dp);
             ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
-        } else if (mCredit <= 650) {
+        } else if (mCredit <= ConstansUtil.GOOD_CREDIT_SCORE) {
             mCreditStage.setText("良好");
             mCreditStage.setBackgroundResource(R.drawable.y3_all_3dp);
-        } else if (mCredit <= 750) {
+        } else if (mCredit <= ConstansUtil.VERY_GOOD_CREDIT_SCORE) {
             mCreditStage.setText("优秀");
             mCreditStage.setBackgroundResource(R.drawable.blue5_all_3dp);
-            ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
         } else {
             mCreditStage.setText("极好");
             mCreditStage.setBackgroundResource(R.drawable.green10_all_3dp);
@@ -117,7 +117,7 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         hideTwoWord(firstRule);
         mFirstRule.setText(firstRule);
 
-        SpannableString secondRule = new SpannableString("规则“免担保金”：途找信用等级为良好及以上，用户下单预约车位免担保金，" +
+        SpannableString secondRule = new SpannableString("规则“免保证金”：途找信用等级为良好及以上，用户下单预约车位免担保金，" +
                 "保证金会在每次订单结算后退还到个人途找余额账户，余额可随时提现。");
         hideTwoWord(secondRule);
         mSecondRule.setText(secondRule);
