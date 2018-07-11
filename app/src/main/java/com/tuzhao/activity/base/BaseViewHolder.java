@@ -101,6 +101,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder showPicWithNoAnimate(@IdRes int id, @DrawableRes int drawableId) {
+        ImageUtil.showPicWithNoAnimate((ImageView) getView(id),drawableId);
+        return this;
+    }
+
     public BaseViewHolder showCirclePic(@IdRes int id, String url) {
         if (url == null || url.equals("")) {
             Log.e(TAG, "showCirclePic: url is null or empty");

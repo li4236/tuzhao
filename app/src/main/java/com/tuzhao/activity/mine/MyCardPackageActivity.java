@@ -10,11 +10,9 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.fragment.CardFragment;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.CardBean;
-import com.tuzhao.info.CardInfo;
+import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
@@ -27,7 +25,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class MyCardPackageActivity extends BaseStatusActivity implements View.OnClickListener, SuccessCallback<ArrayList<CardInfo>> {
+public class MyCardPackageActivity extends BaseStatusActivity implements View.OnClickListener {
 
     private TextView mAllCard;
 
@@ -39,15 +37,15 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
 
     private ViewStub mViewStub;
 
-    private ArrayList<CardInfo> mAllCardList;
+    private ArrayList<MonthlyCardBean.CardBean> mAllCardList;
 
-    private ArrayList<CardInfo> mAreaCardList;
+    private ArrayList<MonthlyCardBean.CardBean> mAreaCardList;
 
-    private ArrayList<CardInfo> mNationalCardList;
-
-    private ArrayList<CardInfo> mExpiredCardList;
+    private ArrayList<MonthlyCardBean.CardBean> mNationalCardList;
 
     private int mLastPosition = 0;
+
+    private CardFragment mExpriredFragment;
 
     @Override
     protected int resourceId() {
@@ -70,32 +68,32 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
     @Override
     protected void initData() {
         super.initData();
-        mAllCardList = new ArrayList<>();
-        mAreaCardList = new ArrayList<>();
+        mAllCardList = new ArrayList<>(4);
+        mAreaCardList = new ArrayList<>(1);
         mNationalCardList = new ArrayList<>();
-        mExpiredCardList = new ArrayList<>();
         getUserCards();
     }
 
     private void getUserCards() {
         getOkGo(HttpConstants.getUserCards)
-                .execute(new JsonCallback<Base_Class_Info<CardBean>>() {
+                .execute(new JsonCallback<Base_Class_Info<MonthlyCardBean>>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void onSuccess(Base_Class_Info<CardBean> o, Call call, Response response) {
-                        mAreaCardList = o.data.getAreaCards();
-                        mNationalCardList = o.data.getNationalCards();
+                    public void onSuccess(Base_Class_Info<MonthlyCardBean> o, Call call, Response response) {
+                        mAreaCardList = (ArrayList<MonthlyCardBean.CardBean>) o.data.getAreaCards();
+                        mNationalCardList = (ArrayList<MonthlyCardBean.CardBean>) o.data.getNationalCards();
                         mAllCardList.addAll(mAreaCardList);
                         mAllCardList.addAll(mNationalCardList);
 
                         mAllCard.setText("全部（" + mAllCardList.size() + "）");
                         mAreaCard.setText("地区月卡（" + mAreaCardList.size() + "）");
-                        mNationalCard.setText("全国月卡（" + mNationalCardList.size() + ")");
+                        mNationalCard.setText("全国月卡（" + mNationalCardList.size() + "）");
                         mExpiredCard.setText("过期月卡（" + o.data.getExpiredCardSize() + "）");
 
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAllCardList, 0));
                         transaction.commit();
+                        dismmisLoadingDialog();
                     }
 
                     @Override
@@ -166,7 +164,10 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
             case R.id.expired_card:
                 setTextNormalColor(3);
                 mExpiredCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mExpiredCardList, 3));
+                if (mExpriredFragment == null) {
+                    mExpriredFragment = CardFragment.newInstance(new ArrayList<MonthlyCardBean.CardBean>(), 3);
+                }
+                transaction.replace(R.id.monthly_card_container, mExpriredFragment);
                 transaction.commit();
                 break;
         }
@@ -188,15 +189,6 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                 break;
         }
         mLastPosition = position;
-    }
-
-    @Override
-    public void onSuccess(ArrayList<CardInfo> cardInfos) {
-        if (mExpiredCardList.containsAll(cardInfos)) {
-            //下拉刷新的则把旧数据清空，显示新的数据
-            mExpiredCardList.clear();
-        }
-        mExpiredCardList.addAll(cardInfos);
     }
 
 }
