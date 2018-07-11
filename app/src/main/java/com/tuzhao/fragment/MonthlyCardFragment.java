@@ -25,26 +25,26 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class CardFragment extends BaseRefreshFragment<MonthlyCardBean.CardBean> {
+public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.CardBean> {
 
     /**
      * 0（全部卡），1（地区卡），2（全国卡），3（过期卡）
      */
     private int mType;
 
-    public static CardFragment newInstance(ArrayList<MonthlyCardBean.CardBean> list, int type) {
-        CardFragment cardFragment = new CardFragment();
+    public static MonthlyCardFragment newInstance(ArrayList<MonthlyCardBean.CardBean> list, int type) {
+        MonthlyCardFragment monthlyCardFragment = new MonthlyCardFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(ConstansUtil.CARD_INFO_LIST, list);
         bundle.putInt(ConstansUtil.TYPE, type);
-        cardFragment.setArguments(bundle);
-        return cardFragment;
+        monthlyCardFragment.setArguments(bundle);
+        return monthlyCardFragment;
     }
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        View footerView = getLayoutInflater().inflate(R.layout.layout_placeholder, mRecyclerView.getRecyclerView(),false);
+        View footerView = getLayoutInflater().inflate(R.layout.layout_placeholder, mRecyclerView.getRecyclerView(), false);
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 DensityUtil.dp2px(mRecyclerView.getContext(), 20));
         footerView.setLayoutParams(layoutParams);
@@ -108,7 +108,9 @@ public class CardFragment extends BaseRefreshFragment<MonthlyCardBean.CardBean> 
                             loadDataFail(e, new LoadFailCallback() {
                                 @Override
                                 public void onLoadFail(Exception e) {
-
+                                    if (e.getMessage().equals("101")) {
+                                        showFiveToast("没有更多数据啦");
+                                    }
                                 }
                             });
                         }

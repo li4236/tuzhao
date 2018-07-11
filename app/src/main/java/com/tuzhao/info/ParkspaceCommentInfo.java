@@ -98,4 +98,20 @@ public class ParkspaceCommentInfo extends BaseInfo {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Override
+    public String toString() {
+        return "ParkspaceCommentInfo{" +
+                "id='" + id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", username='" + username + '\'' +
+                ", user_img_url='" + user_img_url + '\'' +
+                ", parkspace_id='" + parkspace_id + '\'' +
+                ", grade='" + grade + '\'' +
+                ", content='" + content + '\'' +
+                ", park_time='" + park_time + '\'' +
+                ", img_url='" + img_url + '\'' +
+                '}';
+    }
 }

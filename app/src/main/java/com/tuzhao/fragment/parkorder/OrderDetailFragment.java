@@ -154,6 +154,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
         mChangeCredit = view.findViewById(R.id.pay_for_order_credit);
         mTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
+        mParkComment = view.findViewById(R.id.park_comment_tv);
 
         view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
@@ -165,9 +166,8 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         view.findViewById(R.id.park_comment_cl).setOnClickListener(this);
 
         if (mParkOrderInfo.getOrder_status().equals("5")) {
-            mParkComment = view.findViewById(R.id.park_comment_tv);
             mParkComment.setText("已评价");
-            getOrderComment(false);
+            //getOrderComment(false);
         }
     }
 
@@ -261,9 +261,9 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             case R.id.park_comment_cl:
                 if (mParkOrderInfo.getOrder_status().equals("4")) {
                     showComentDialog();
-                } else {
+                }/* else {
                     showOrderCommentDialog();
-                }
+                }*/
                 break;
         }
     }
@@ -450,6 +450,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private void getOrderComment(final boolean showDialog) {
         getOkGo(HttpConstants.getOrderComment)
                 .params("orderId", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<ParkspaceCommentInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkspaceCommentInfo> o, Call call, Response response) {
@@ -486,41 +487,48 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             ImageView firstPic = constraintLayout.findViewById(R.id.comment_order_pic_add);
             ImageView secondPic = constraintLayout.findViewById(R.id.comment_order_pic_one);
             ImageView thirdPic = constraintLayout.findViewById(R.id.comment_order_pic_two);
-
-            cbRatingBar.setStarProgress(Float.valueOf(mCommentInfo.getGrade()));
+            cbRatingBar.setStarProgress(Float.valueOf(mCommentInfo.getGrade()) * 20);
             if ((mCommentInfo.getContent() == null || mCommentInfo.getContent().equals("")) && mCommentInfo.getImg_url().equals("-1")) {
                 divider.setVisibility(View.GONE);
-                if (mCommentInfo.getContent() == null || mCommentInfo.getContent().equals("")) {
-                    commentContent.setVisibility(View.GONE);
-                } else {
-                    commentContent.setText(mCommentInfo.getContent());
-                }
+            }
+            if (mCommentInfo.getContent() == null || mCommentInfo.getContent().equals("")) {
+                commentContent.setVisibility(View.GONE);
+            } else {
+                commentContent.setText(mCommentInfo.getContent());
+            }
 
-                if (!mCommentInfo.getImg_url().equals("-1")) {
-                    String[] commentPics = mCommentInfo.getImg_url().split(",");
-                    if (commentPics.length >= 1 && commentPics[0].equals("")) {
-                        switch (commentPics.length) {
-                            case 1:
-                                firstPic.setVisibility(View.VISIBLE);
-                                ImageUtil.showPic(firstPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[0]);
-                                break;
-                            case 2:
-                                firstPic.setVisibility(View.VISIBLE);
-                                ImageUtil.showPic(firstPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[0]);
-                                secondPic.setVisibility(View.VISIBLE);
-                                ImageUtil.showPic(secondPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[1]);
-                            case 3:
-                                firstPic.setVisibility(View.VISIBLE);
-                                ImageUtil.showPic(firstPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[0]);
-                                secondPic.setVisibility(View.VISIBLE);
-                                ImageUtil.showPic(secondPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[1]);
-                                thirdPic.setVisibility(View.VISIBLE);
-                                ImageUtil.showPic(thirdPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[2]);
-                                break;
-                        }
+            if (!mCommentInfo.getImg_url().equals("-1")) {
+                String[] commentPics = mCommentInfo.getImg_url().split(",");
+                if (commentPics.length >= 1 && !commentPics[0].equals("")) {
+                    switch (commentPics.length) {
+                        case 1:
+                            firstPic.setVisibility(View.VISIBLE);
+                            ImageUtil.showPic(firstPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[0]);
+                            break;
+                        case 2:
+                            firstPic.setVisibility(View.VISIBLE);
+                            ImageUtil.showPic(firstPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[0]);
+                            secondPic.setVisibility(View.VISIBLE);
+                            ImageUtil.showPic(secondPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[1]);
+                            break;
+                        case 3:
+                            firstPic.setVisibility(View.VISIBLE);
+                            ImageUtil.showPic(firstPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[0]);
+                            secondPic.setVisibility(View.VISIBLE);
+                            ImageUtil.showPic(secondPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[1]);
+                            thirdPic.setVisibility(View.VISIBLE);
+                            ImageUtil.showPic(thirdPic, HttpConstants.ROOT_IMG_URL_PSCOM + commentPics[2]);
+                            break;
                     }
                 }
             }
+
+            constraintLayout.findViewById(R.id.close_comment).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOrderCommentDialog.dismiss();
+                }
+            });
         }
         mOrderCommentDialog.show();
     }
@@ -553,7 +561,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 .params("parkspace_id", mParkOrderInfo.getBelong_park_space())
                 .params("city_code", mParkOrderInfo.getCitycode())
                 .params("order_id", mParkOrderInfo.getId())
-                .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress()))
+                .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress() / 20.0))
                 .params("content", mCommentEt.getText().toString())
                 .addFileParams("imgs[]", mCommentPicFiles)
                 .execute(new JsonCallback<Base_Class_Info<NearPointPCInfo>>() {
@@ -577,7 +585,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         dismmisLoadingDialog();
                         mCommentOrderDialog.dismiss();
                         mParkComment.setText("已评价");
-                        getOrderComment(false);
+                        //getOrderComment(false);
                     }
 
                     @Override

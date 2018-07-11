@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.fragment.CardFragment;
+import com.tuzhao.fragment.MonthlyCardFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -45,7 +45,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
 
     private int mLastPosition = 0;
 
-    private CardFragment mExpriredFragment;
+    private MonthlyCardFragment mExpriredFragment;
 
     @Override
     protected int resourceId() {
@@ -91,7 +91,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                         mExpiredCard.setText("过期月卡（" + o.data.getExpiredCardSize() + "）");
 
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAllCardList, 0));
+                        transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mAllCardList, 0));
                         transaction.commit();
                         dismmisLoadingDialog();
                     }
@@ -146,26 +146,26 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
             case R.id.all_card:
                 setTextNormalColor(0);
                 mAllCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAllCardList, 0));
+                transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mAllCardList, 0));
                 transaction.commit();
                 break;
             case R.id.area_card:
                 setTextNormalColor(1);
                 mAreaCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mAreaCardList, 1));
+                transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mAreaCardList, 1));
                 transaction.commit();
                 break;
             case R.id.national_card:
                 setTextNormalColor(2);
                 mNationalCard.setTextColor(ConstansUtil.Y3_COLOR);
-                transaction.replace(R.id.monthly_card_container, CardFragment.newInstance(mNationalCardList, 2));
+                transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mNationalCardList, 2));
                 transaction.commit();
                 break;
             case R.id.expired_card:
                 setTextNormalColor(3);
                 mExpiredCard.setTextColor(ConstansUtil.Y3_COLOR);
                 if (mExpriredFragment == null) {
-                    mExpriredFragment = CardFragment.newInstance(new ArrayList<MonthlyCardBean.CardBean>(), 3);
+                    mExpriredFragment = MonthlyCardFragment.newInstance(new ArrayList<MonthlyCardBean.CardBean>(), 3);
                 }
                 transaction.replace(R.id.monthly_card_container, mExpriredFragment);
                 transaction.commit();
