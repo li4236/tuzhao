@@ -106,7 +106,7 @@
          app:layout_constraintEnd_toEndOf="parent" />-->
 
     <ImageView
-        android:id="@+id/comment_order_pic_add"
+        android:id="@+id/comment_order_pic"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginStart="42dp"
@@ -125,8 +125,8 @@
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
         android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/comment_order_pic_add"
-        app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+        app:layout_constraintStart_toEndOf="@+id/comment_order_pic"
+        app:layout_constraintTop_toTopOf="@+id/comment_order_pic" />
 
     <ImageView
         android:id="@+id/comment_order_pic_two"
@@ -136,8 +136,8 @@
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/comment_order_pic_add"
+        app:layout_constraintBottom_toBottomOf="@+id/comment_order_pic"
         app:layout_constraintStart_toEndOf="@+id/comment_order_pic_one"
-        app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+        app:layout_constraintTop_toTopOf="@+id/comment_order_pic" />
 
 </android.support.constraint.ConstraintLayout>

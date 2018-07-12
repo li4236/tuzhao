@@ -103,8 +103,8 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
         mCBRatingBar = view.findViewById(R.id.comment_order_crb);
         mCommentEt = view.findViewById(R.id.comment_order_et);
         mCommentCount = view.findViewById(R.id.comment_order_comment_count);
-        mAddIv = view.findViewById(R.id.comment_order_pic_add);
-        mDeleteAddIv = view.findViewById(R.id.comment_order_pic_add_delete);
+        mAddIv = view.findViewById(R.id.comment_order_pic);
+        mDeleteAddIv = view.findViewById(R.id.comment_order_pic_delete);
         mOneIv = view.findViewById(R.id.comment_order_pic_one);
         mDeleteOneIv = view.findViewById(R.id.comment_order_pic_one_delete);
         mTwoIv = view.findViewById(R.id.comment_order_pic_two);
@@ -185,7 +185,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
                 intent.setAction(ConstansUtil.CLOSE_PARK_COMMENT);
                 IntentObserable.dispatch(intent);
                 break;
-            case R.id.comment_order_pic_add:
+            case R.id.comment_order_pic:
                 if (mCommentPicFiles.size() < 3) {
                     if (getActivity() != null) {
                         new ImagePicker()
@@ -197,7 +197,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
                     }
                 }
                 break;
-            case R.id.comment_order_pic_add_delete:
+            case R.id.comment_order_pic_delete:
                 mCommentPicFiles.remove(0);
                 showChooesPic();
                 break;

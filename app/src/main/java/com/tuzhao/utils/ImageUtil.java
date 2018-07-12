@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.util.LruCache;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
@@ -39,6 +40,8 @@ import top.zibin.luban.OnCompressListener;
 public class ImageUtil {
 
     private static final String TAG = "ImageUtil";
+
+    private static LruCache<SuccessCallback<File>, Long> sLruCache = new LruCache<>(3);
 
     public static void showPic(ImageView imageView, String url) {
         GlideApp.with(imageView)
@@ -305,7 +308,7 @@ public class ImageUtil {
 
     }
 
-    public static void compressPhoto(final Context context, String path, final SuccessCallback<File> callback) {
+    public static void compressPhoto(final Context context, final String path, final SuccessCallback<File> callback) {
         //进行图片逐个压缩
         Luban.with(context)
                 .load(path)
@@ -320,10 +323,17 @@ public class ImageUtil {
                     @Override
                     public void onSuccess(File file) {
                         // 压缩成功后调用，返回压缩后的图片文件
-                        if (file.length() > 1024 * 250) {
+                        long sLong;
+                        if (sLruCache.get(callback) == null) {
+                            sLruCache.put(callback, -1L);
+                        }
+                        sLong = sLruCache.get(callback);
+                        if (file.length() > 1024 * 250 && sLong != file.length() && (sLong == -1 || (sLong - file.length()) > 1024)) {
+                            sLruCache.put(callback, file.length());
                             compressPhoto(context, file.getAbsolutePath(), callback);
                         } else {
                             callback.onSuccess(file);
+                            sLruCache.remove(callback);
                         }
                     }
 

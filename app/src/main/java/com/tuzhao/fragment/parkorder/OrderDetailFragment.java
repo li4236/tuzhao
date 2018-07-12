@@ -7,12 +7,16 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -27,12 +31,16 @@ import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
+import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.ParkspaceCommentInfo;
+import com.tuzhao.info.PropertyPhoto;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -45,6 +53,7 @@ import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.SoftKeyBroadManager;
+import com.tuzhao.utils.ViewUtil;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -53,8 +62,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 /**
  * Created by juncoder on 2018/6/1.
@@ -78,7 +85,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private ArrayList<String> mParkSpacePictures;
 
-    private CustomDialog mCustomDialog;
+    private CustomDialog mOrderDetailDialog;
 
     private TextView mParkComment;
 
@@ -100,7 +107,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mCommentCount;
 
-    private ImageView mAddIv;
+/*    private ImageView mAddIv;
 
     private ImageView mDeleteAddIv;
 
@@ -110,11 +117,15 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private ImageView mTwoIv;
 
-    private ImageView mDeleteTwoIv;
+    private ImageView mDeleteTwoIv;*/
 
     private TextView mApplyComment;
 
-    private List<File> mCommentPicFiles;
+    private ImagePicker mPropertyImagePicker;
+
+    private PropertyAdapter mPropertyAdapter;
+
+    private CustomDialog mCustomDialog;
 
     private CustomDialog mOrderCommentDialog;
 
@@ -125,6 +136,8 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private SoftKeyBroadManager.SoftKeyboardStateListener mKeyboardStateListener;
 
     private SoftKeyBroadManager mSoftKeyBroadManager;
+
+    private int mChoosePosition;
 
     public static OrderDetailFragment newInstance(ParkOrderInfo parkOrderInfo) {
         OrderDetailFragment fragment = new OrderDetailFragment();
@@ -318,12 +331,12 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void showParkDetail() {
-        if (mCustomDialog == null) {
+        if (mOrderDetailDialog == null) {
             if (getContext() != null) {
-                mCustomDialog = new CustomDialog(getContext(), mParkOrderInfo, true);
+                mOrderDetailDialog = new CustomDialog(getContext(), mParkOrderInfo, true);
             }
         }
-        mCustomDialog.show();
+        mOrderDetailDialog.show();
     }
 
     private void showOrderDetail() {
@@ -350,14 +363,19 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             mCBRatingBar = commentView.findViewById(R.id.comment_order_crb);
             mCommentEt = commentView.findViewById(R.id.comment_order_et);
             mCommentCount = commentView.findViewById(R.id.comment_order_comment_count);
-            mAddIv = commentView.findViewById(R.id.comment_order_pic_add);
-            mDeleteAddIv = commentView.findViewById(R.id.comment_order_pic_add_delete);
+            /*mAddIv = commentView.findViewById(R.id.comment_order_pic);
+            mDeleteAddIv = commentView.findViewById(R.id.comment_order_pic_delete);
             mOneIv = commentView.findViewById(R.id.comment_order_pic_one);
             mDeleteOneIv = commentView.findViewById(R.id.comment_order_pic_one_delete);
             mTwoIv = commentView.findViewById(R.id.comment_order_pic_two);
-            mDeleteTwoIv = commentView.findViewById(R.id.comment_order_pic_two_delete);
+            mDeleteTwoIv = commentView.findViewById(R.id.comment_order_pic_two_delete);*/
             mApplyComment = commentView.findViewById(R.id.comment_order_apply);
             mCloseDialog = commentView.findViewById(R.id.close_comment);
+            RecyclerView recyclerView = commentView.findViewById(R.id.comment_order_pic_rv);
+            recyclerView.setLayoutManager(new LinearLayoutManager(commentView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            mPropertyAdapter = new PropertyAdapter();
+            recyclerView.setAdapter(mPropertyAdapter);
+            mPropertyAdapter.addData(new PropertyPhoto());
             initCommentView();
             //initCommentSoftKeyBorad();
         }
@@ -365,9 +383,9 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void initCommentView() {
-        mCommentPicFiles = new ArrayList<>(3);
+        // mCommentPicFiles = new ArrayList<>(3);
 
-        mAddIv.setOnClickListener(new View.OnClickListener() {
+        /*mAddIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mCommentPicFiles.size() < 3) {
@@ -413,7 +431,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 }
                 showChooesPic();
             }
-        });
+        });*/
 
         mApplyComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -445,6 +463,244 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 mCommentCount.setText(mCommentEt.getText().length() + "/150");
             }
         });
+    }
+
+    private void showDialog() {
+        if (mCustomDialog == null) {
+            View view = getLayoutInflater().inflate(R.layout.dialog_selete_photo_layout, null);
+            mCustomDialog = new CustomDialog(requireContext(), view, true);
+            view.findViewById(R.id.exchang_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startTakePropertyPhoto();
+                    mCustomDialog.dismiss();
+                }
+            });
+
+            view.findViewById(R.id.delete_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deletePhoto(mPropertyAdapter.get(mChoosePosition).getPath());
+                    mCustomDialog.dismiss();
+                }
+            });
+
+            view.findViewById(R.id.cancel_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCustomDialog.dismiss();
+                }
+            });
+        }
+
+        mCustomDialog.show();
+    }
+
+    private void startTakePropertyPhoto() {
+        if (mPropertyImagePicker == null) {
+            mPropertyImagePicker = new ImagePicker()
+                    .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
+                    .needCamera(true)
+                    .pickType(ImagePickType.MULTI)
+                    .maxNum(3);
+        }
+        int maxNum = 1;
+        if (mPropertyAdapter.get(0).getPath().equals("-1")) {
+            maxNum = 3;
+        } else if (mPropertyAdapter.getDataSize() == 2 && mPropertyAdapter.get(1).getPath().equals("-1")) {
+            maxNum = 2;
+        }
+        mPropertyImagePicker.maxNum(maxNum);
+        mPropertyImagePicker.start(requireActivity(), ConstansUtil.PICTURE_REQUEST_CODE);
+    }
+
+    private void handleImageBean(final List<ImageBean> imageBeans) {
+        if (imageBeans.size() == 2) {
+            switch (mChoosePosition) {
+                case 0:
+                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                        @Override
+                        public void onSuccess(File file) {
+                            handleCompressPhoto(file, 0);
+                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                                @Override
+                                public void onSuccess(File file) {
+                                    handleCompressPhoto(file, 1);
+                                }
+                            });
+                        }
+                    });
+                    break;
+                case 1:
+                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                        @Override
+                        public void onSuccess(File file) {
+                            handleCompressPhoto(file, 1);
+                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                                @Override
+                                public void onSuccess(File file) {
+                                    handleCompressPhoto(file, 2);
+                                }
+                            });
+                        }
+                    });
+                    break;
+            }
+        } else {
+            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                @Override
+                public void onSuccess(File file) {
+                    handleCompressPhoto(file, 0);
+                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                        @Override
+                        public void onSuccess(File file) {
+                            handleCompressPhoto(file, 1);
+                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<File>() {
+                                @Override
+                                public void onSuccess(File file) {
+                                    handleCompressPhoto(file, 2);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void compressFirstPhoto(String path, SuccessCallback<File> callback) {
+        ImageUtil.compressPhoto(requireContext(), path, callback);
+    }
+
+    private void compressSecondPhoto(String path, SuccessCallback<File> callback) {
+        ImageUtil.compressPhoto(requireContext(), path, callback);
+    }
+
+    private void compressThirdPhoto(String path, SuccessCallback<File> callback) {
+        ImageUtil.compressPhoto(requireContext(), path, callback);
+    }
+
+    private void handleCompressPhoto(File file, int position) {
+        switch (position) {
+            case 0:
+                if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
+                    //还没有图片
+                    PropertyPhoto firstProperty = new PropertyPhoto(file.getAbsolutePath());
+                    mPropertyAdapter.notifyAddData(0, firstProperty);
+                } else {
+                    PropertyPhoto firstProperty = mPropertyAdapter.getData().get(0);
+                    firstProperty.setPath(file.getAbsolutePath());
+                    firstProperty.setShowProgress(true);
+                    firstProperty.setProgress("0%");
+                    mPropertyAdapter.notifyDataChange(0, firstProperty);
+                }
+                uploadPhoto(file);
+                break;
+            case 1:
+                if (mPropertyAdapter.getDataSize() < 3) {
+                    PropertyPhoto secondProperty = new PropertyPhoto(file.getAbsolutePath());
+                    mPropertyAdapter.notifyAddData(mPropertyAdapter.getDataSize() - 1, secondProperty);
+                } else {
+                    PropertyPhoto secondProperty = mPropertyAdapter.getData().get(1);
+                    secondProperty.setPath(file.getAbsolutePath());
+                    secondProperty.setProgress("0%");
+                    secondProperty.setShowProgress(true);
+                    mPropertyAdapter.notifyDataChange(1, secondProperty);
+                }
+                uploadPhoto(file);
+                break;
+            case 2:
+                if (mPropertyAdapter.getDataSize() < 3) {
+                    PropertyPhoto thirdProperty = new PropertyPhoto(file.getAbsolutePath());
+                    mPropertyAdapter.notifyAddData(thirdProperty);
+                } else if (mPropertyAdapter.getDataSize() == 3) {
+                    PropertyPhoto thirdProperty = mPropertyAdapter.getData().get(2);
+                    thirdProperty.setPath(file.getAbsolutePath());
+                    thirdProperty.setUploadSuccess(false);
+                    thirdProperty.setShowProgress(true);
+                    thirdProperty.setProgress("0%");
+                    mPropertyAdapter.notifyDataChange(2, thirdProperty);
+                }
+                uploadPhoto(file);
+                break;
+        }
+    }
+
+    private void uploadPhoto(final File file) {
+        OkGo.post(HttpConstants.uploadPicture)
+                .retryCount(0)
+                .headers("token", com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getToken())
+                .params("type", 2)
+                .params("picture", file)
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
+
+                    @Override
+                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_PSCOM + stringBase_class_info.data);
+                        setUploadProgress(file.getAbsolutePath(), 1);
+                    }
+
+                    @Override
+                    public void upProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
+                        super.upProgress(currentSize, totalSize, progress, networkSpeed);
+                        if (progress != 1) {
+                            setUploadProgress(file.getAbsolutePath(), progress);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        deletePhoto(file.getAbsolutePath());
+                    }
+                });
+    }
+
+    private void setUploadProgress(String filePath, float progress) {
+        String progressString = (int) (progress * 100) + "%";
+        for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
+            if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
+                PropertyPhoto firstProperty = mPropertyAdapter.getData().get(i);
+                firstProperty.setProgress(progressString);
+                if (progress == 1.0) {
+                    firstProperty.setShowProgress(false);
+                }
+                mPropertyAdapter.notifyDataChange(i, firstProperty, 1);
+                break;
+            }
+        }
+    }
+
+    private void setServerUrl(String filePath, String url) {
+        for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
+            if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
+                PropertyPhoto firstProperty = mPropertyAdapter.get(i);
+                firstProperty.setPath(url);
+                firstProperty.setShowProgress(false);
+                firstProperty.setUploadSuccess(true);
+                mPropertyAdapter.notifyDataChange(i, firstProperty, 1);
+                break;
+            }
+        }
+    }
+
+    private void deletePhoto(String filePath) {
+        for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
+            if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
+                if (i == 2) {
+                    mPropertyAdapter.notifyDataChange(2, new PropertyPhoto());
+                } else {
+                    mPropertyAdapter.notifyRemoveData(i);
+                }
+                break;
+            }
+        }
+
+        if (mPropertyAdapter.getDataSize() == 0 || !mPropertyAdapter.get(mPropertyAdapter.getDataSize() - 1).getPath().equals("-1")) {
+            //如果第一张张不是拍摄图，则添加拍摄图
+            mPropertyAdapter.notifyAddData(new PropertyPhoto());
+        }
+
     }
 
     private void getOrderComment(final boolean showDialog) {
@@ -484,7 +740,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             CBRatingBar cbRatingBar = constraintLayout.findViewById(R.id.comment_order_crb);
             View divider = constraintLayout.findViewById(R.id.center_divider);
             TextView commentContent = constraintLayout.findViewById(R.id.comment_order_et);
-            ImageView firstPic = constraintLayout.findViewById(R.id.comment_order_pic_add);
+            ImageView firstPic = constraintLayout.findViewById(R.id.comment_order_pic);
             ImageView secondPic = constraintLayout.findViewById(R.id.comment_order_pic_one);
             ImageView thirdPic = constraintLayout.findViewById(R.id.comment_order_pic_two);
             cbRatingBar.setStarProgress(Float.valueOf(mCommentInfo.getGrade()) * 20);
@@ -554,6 +810,19 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void requestAddPsComment() {
+        showLoadingDialog("评价中");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (PropertyPhoto propertyPhoto : mPropertyAdapter.getData()) {
+            if (!propertyPhoto.getPath().equals("-1")) {
+                stringBuilder.append(propertyPhoto.getPath().replace(HttpConstants.ROOT_IMG_URL_PSCOM, ""));
+                stringBuilder.append(",");
+            }
+        }
+        if (stringBuilder.length() > 0) {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        } else {
+            stringBuilder.append("-1");
+        }
         OkGo.post(HttpConstants.addPsComment)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
@@ -563,16 +832,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 .params("order_id", mParkOrderInfo.getId())
                 .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress() / 20.0))
                 .params("content", mCommentEt.getText().toString())
-                .addFileParams("imgs[]", mCommentPicFiles)
+                .params("imgs", stringBuilder.toString())
                 .execute(new JsonCallback<Base_Class_Info<NearPointPCInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<NearPointPCInfo> homePCInfoBase_class_info, Call call, Response response) {
-                        for (File file : mCommentPicFiles) {
-                            if (file.exists()) {
-                                file.delete();
-                            }
-                        }
-
                         Intent intent = new Intent();
                         intent.setAction(ConstansUtil.COMMENT_SUCCESS);
                         Bundle bundle = new Bundle();
@@ -581,10 +844,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
 
+                        mParkComment.setText("已评价");
                         showFiveToast("评价成功");
                         dismmisLoadingDialog();
                         mCommentOrderDialog.dismiss();
-                        mParkComment.setText("已评价");
                         //getOrderComment(false);
                     }
 
@@ -593,20 +856,11 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         super.onError(call, response, e);
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
-                                case "101":
-                                    showFiveToast("评论失败");
-                                    break;
-                                case "102":
-                                    showFiveToast("评论失败");
-                                    break;
-                                case "103":
-                                    showFiveToast("评论失败");
-                                    break;
                                 case "104":
                                     showFiveToast("抱歉，已评论过了哦");
                                     break;
-                                case "105":
-                                    showFiveToast("评论失败");
+                                default:
+                                    showFiveToast("评论失败，请稍后重试");
                                     break;
                             }
                         }
@@ -614,7 +868,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 });
     }
 
-    private void showChooesPic() {
+    /*private void showChooesPic() {
         switch (mCommentPicFiles.size()) {
             case 0:
                 setAddIvNormal();
@@ -664,7 +918,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             mTwoIv.setVisibility(visibility);
             mDeleteTwoIv.setVisibility(visibility);
         }
-    }
+    }*/
 
     @Override
     public void onReceive(Intent intent) {
@@ -672,32 +926,15 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             switch (intent.getAction()) {
                 case ConstansUtil.PHOTO_IMAGE:
                     final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-                    for (ImageBean imageBean : imageBeans) {
-                        //进行图片逐个压缩
-                        if (getContext() != null)
-                            Luban.with(getContext())
-                                    .load(imageBean.getImagePath())
-                                    .ignoreBy(1)
-                                    .setTargetDir(getContext().getApplicationContext().getFilesDir().getAbsolutePath())
-                                    .setCompressListener(new OnCompressListener() {
-                                        @Override
-                                        public void onStart() {
-                                            // 压缩开始前调用，可以在方法内启动 loading UI
-                                        }
-
-                                        @Override
-                                        public void onSuccess(File file) {
-                                            // 压缩成功后调用，返回压缩后的图片文件
-                                            mCommentPicFiles.add(file);
-                                            showChooesPic();
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            // 当压缩过程出现问题时调用
-
-                                        }
-                                    }).launch();
+                    if (imageBeans.size() == 1) {
+                        ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                            @Override
+                            public void onSuccess(File file) {
+                                handleCompressPhoto(file, mChoosePosition);
+                            }
+                        });
+                    } else {
+                        handleImageBean(imageBeans);
                     }
                     break;
                 case ConstansUtil.DIALOG_SHOW:
@@ -709,4 +946,54 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             }
         }
     }
+
+    class PropertyAdapter extends BaseAdapter<PropertyPhoto> {
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, final PropertyPhoto propertyPhoto, final int position) {
+            ImageView imageView = holder.getView(R.id.property_photo_iv);
+            TextView textView = holder.getView(R.id.property_upload_tv);
+            Log.e(TAG, "conver: " + propertyPhoto.getPath() + "  position:" + position);
+            if (propertyPhoto.getPath().equals("-1")) {
+                ImageUtil.showPic(imageView, R.drawable.ic_addimg);
+                if (isVisible(textView)) {
+                    textView.setVisibility(View.GONE);
+                }
+                ViewUtil.showProgressStatus(textView, false);
+            } else {
+                if (imageView.getPaddingTop() != 0) {
+                    imageView.setPadding(0, 0, 0, 0);
+                    imageView.setBackgroundResource(0);
+                }
+                ImageUtil.showPicWithNoAnimate(imageView, propertyPhoto.getPath());
+                ViewUtil.showProgressStatus(textView, propertyPhoto.isShowProgress());
+                textView.setText(propertyPhoto.getProgress());
+            }
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mChoosePosition = position;
+                    if (propertyPhoto.getPath().equals("-1")) {
+                        startTakePropertyPhoto();
+                    } else {
+                        showDialog();
+                    }
+                }
+            });
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //do nothing
+                }
+            });
+        }
+
+        @Override
+        protected int itemViewId() {
+            return R.layout.item_property_photo_layout;
+        }
+
+    }
+
 }

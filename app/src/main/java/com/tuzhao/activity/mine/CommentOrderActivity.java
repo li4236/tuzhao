@@ -87,8 +87,8 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
         mCBRatingBar = findViewById(R.id.comment_order_crb);
         mCommentEt = findViewById(R.id.comment_order_et);
         mCommentCount = findViewById(R.id.comment_order_comment_count);
-        mAddIv = findViewById(R.id.comment_order_pic_add);
-        mDeleteAddIv = findViewById(R.id.comment_order_pic_add_delete);
+        mAddIv = findViewById(R.id.comment_order_pic);
+        mDeleteAddIv = findViewById(R.id.comment_order_pic_delete);
         mOneIv = findViewById(R.id.comment_order_pic_one);
         mDeleteOneIv = findViewById(R.id.comment_order_pic_one_delete);
         mTwoIv = findViewById(R.id.comment_order_pic_two);
@@ -145,7 +145,7 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.comment_order_pic_add:
+            case R.id.comment_order_pic:
                 if (mCommentPicFiles.size() < 3) {
                     new ImagePicker()
                             .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
@@ -155,7 +155,7 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
                             .start(CommentOrderActivity.this, REQUEST_CODE_PICTURE);
                 }
                 break;
-            case R.id.comment_order_pic_add_delete:
+            case R.id.comment_order_pic_delete:
                 mCommentPicFiles.remove(0);
                 showChooesPic();
                 break;

@@ -137,7 +137,7 @@
                      app:layout_constraintEnd_toEndOf="parent" />-->
 
                 <ImageView
-                    android:id="@+id/comment_order_pic_add"
+                    android:id="@+id/comment_order_pic"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginBottom="15dp"
@@ -151,16 +151,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
                 <ImageView
-                    android:id="@+id/comment_order_pic_add_delete"
+                    android:id="@+id/comment_order_pic_delete"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:contentDescription="@string/picture_description"
                     android:src="@mipmap/ic_delimg"
                     android:visibility="invisible"
-                    app:layout_constraintBottom_toTopOf="@+id/comment_order_pic_add"
-                    app:layout_constraintEnd_toEndOf="@+id/comment_order_pic_add"
-                    app:layout_constraintStart_toEndOf="@+id/comment_order_pic_add"
-                    app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+                    app:layout_constraintBottom_toTopOf="@+id/comment_order_pic"
+                    app:layout_constraintEnd_toEndOf="@+id/comment_order_pic"
+                    app:layout_constraintStart_toEndOf="@+id/comment_order_pic"
+                    app:layout_constraintTop_toTopOf="@+id/comment_order_pic" />
 
                 <ImageView
                     android:id="@+id/comment_order_pic_one"
@@ -170,8 +170,8 @@
                     android:contentDescription="@string/picture_description"
                     android:scaleType="centerCrop"
                     android:visibility="gone"
-                    app:layout_constraintStart_toEndOf="@+id/comment_order_pic_add"
-                    app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+                    app:layout_constraintStart_toEndOf="@+id/comment_order_pic"
+                    app:layout_constraintTop_toTopOf="@+id/comment_order_pic" />
 
                 <ImageView
                     android:id="@+id/comment_order_pic_one_delete"
@@ -193,9 +193,9 @@
                     android:contentDescription="@string/picture_description"
                     android:scaleType="centerCrop"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/comment_order_pic_add"
+                    app:layout_constraintBottom_toBottomOf="@+id/comment_order_pic"
                     app:layout_constraintStart_toEndOf="@+id/comment_order_pic_one"
-                    app:layout_constraintTop_toTopOf="@+id/comment_order_pic_add" />
+                    app:layout_constraintTop_toTopOf="@+id/comment_order_pic" />
 
                 <ImageView
                     android:id="@+id/comment_order_pic_two_delete"
