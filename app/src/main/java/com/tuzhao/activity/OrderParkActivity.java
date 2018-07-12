@@ -1046,12 +1046,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("readypark_id", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
                 .params("readypark_updatetime", readyParkUpdateTime.toString().equals("") ? "-1" : readyParkUpdateTime.toString())
                 .params("citycode", parkspace_info.getCity_code())
-                .execute(new JsonListCallback<Base_Class_Info<ParkOrderInfo>>() {
+                .execute(new JsonListCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<String> responseData, Call call, Response response) {
                         switch (responseData.code) {
                             case "0":
-                                requestOrderData(responseData.data.getOrder_number());
+                                requestOrderData(responseData.data);
                                 break;
                             case "101":
                                 mCanParkInfo.remove(0);
@@ -1074,13 +1074,13 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 break;
                             case "106":
                                 mCanParkInfo.remove(0);
-                                showRequestAppointOrderDialog(mCanParkInfo.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
+                                showRequestAppointOrderDialog(mCanParkInfo.get(0), Integer.valueOf(responseData.data) / 60);
                                 break;
                             case "102":
-                                String parkSpaceId = responseData.data.getExtensionTime().substring(0, responseData.data.getExtensionTime().indexOf(","));
+                                String parkSpaceId = responseData.data.substring(0, responseData.data.indexOf(","));
                                 for (int i = 0; i < mCanParkInfo.size(); i++) {
                                     if (mCanParkInfo.get(i).getId().equals(parkSpaceId)) {
-                                        showRequestAppointOrderDialog(mCanParkInfo.get(i), Integer.valueOf(responseData.data.getExtensionTime().split(",")[1]));
+                                        showRequestAppointOrderDialog(mCanParkInfo.get(i), Integer.valueOf(responseData.data.split(",")[1]));
                                         break;
                                     }
                                 }
