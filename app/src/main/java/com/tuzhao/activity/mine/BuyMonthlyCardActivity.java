@@ -1,10 +1,10 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +15,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
+import com.tuzhao.activity.PayActivity;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
@@ -26,6 +27,8 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/10.
  */
-public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.OnClickListener {
+public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private ImageView mAreaCardIv;
 
@@ -45,8 +48,6 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
     private ImageView mNationalCardIv;
 
     private TextView mChooseCardTv;
-
-    private RecyclerView mRecyclerView;
 
     private CardPriceAdapter mAdapter;
 
@@ -64,10 +65,19 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
 
     private AMapLocationClient mAMapLocationClient;
 
+    /**
+     * 选择的城市码，定位成功后如果请求到数据则自动选择当前城市，如果是手动选择城市的则记录选择的是哪个城市，用于支付请求参数
+     */
     private String mChooseCityCode = "-1";
 
+    /**
+     * 用于记录上一个选择的城市对应mMonthlyCards的哪个位置，当点了全国再点城市时可以快速获取到数据
+     */
     private int[] mLastChooseArea = new int[2];
 
+    /**
+     * 记录全国对应的mMonthlyCards的位置
+     */
     private int mNationalPosition = -1;
 
     @Override
@@ -81,14 +91,14 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         mMonthlyCardArea = findViewById(R.id.monthly_card_area);
         mNationalCardIv = findViewById(R.id.national_monthly_card_iv);
         mChooseCardTv = findViewById(R.id.current_choose_monthly_card);
-        mRecyclerView = findViewById(R.id.monthly_card_price_rv);
+        RecyclerView recyclerView = findViewById(R.id.monthly_card_price_rv);
         mFirstIndicate = findViewById(R.id.first_indicate);
         mSecondIndicate = findViewById(R.id.second_indicate);
         mThirdIndicate = findViewById(R.id.third_indicate);
 
-        mAdapter = new CardPriceAdapter(mRecyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new CardPriceAdapter(recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setAdapter(mAdapter);
 
         mAreaCardIv.setOnClickListener(this);
         mNationalCardIv.setOnClickListener(this);
@@ -112,13 +122,16 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         mThirdIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便多地停车经常出差用户，推出全国月卡，全国月卡在各地都能使用，收费采取统一收费。"));
 
         if (LocationManager.getInstance().hasLocation()) {
+            //如果已经定位成功的则显示当前的城市
             mChooseCityCode = LocationManager.getInstance().getmAmapLocation().getCityCode();
             setCurrenCityMonthlyCard();
         } else {
+            //没有定位成功则开始定位
             initLocation();
             mAMapLocationClient.startLocation();
         }
 
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -132,18 +145,26 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         switch (v.getId()) {
             case R.id.area_monthly_card_iv:
                 if (mMonthlyCards == null) {
+                    //还没有请求到数据的就开始请求
                     getOpenAreaMonthlyCard(true, false);
                 } else if (mLastChooseArea[0] == -1) {
+                    //如果之前没有定位成功的则让用户自己选城市
                     showPickerView(true);
                 } else {
+                    //显示之前的城市月卡
                     setLastChooseCityMonthlyCard();
                 }
                 break;
             case R.id.national_monthly_card_iv:
                 if (mNationalPosition != -1) {
+                    //显示全国月卡
                     setCurrenCityMonthlyCard();
                 } else {
-                    getOpenAreaMonthlyCard(true, true);
+                    if (mMonthlyCards == null) {
+                        getOpenAreaMonthlyCard(false, true);
+                    } else {
+                        showFiveToast("全国月卡暂未开放，敬请期待!");
+                    }
                 }
                 break;
             case R.id.current_choose_monthly_card:
@@ -171,8 +192,12 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         if (mAMapLocationClient != null) {
             mAMapLocationClient.onDestroy();
         }
+        IntentObserable.unregisterObserver(this);
     }
 
+    /**
+     * 为了让一开始进入界面价格那里不为空，显示一些假数据
+     */
     private void initOriginMonthlyCardPrice() {
         ArrayList<MonthlyCard.City.MonthlyCardPrice> list = new ArrayList<>();
         MonthlyCard.City.MonthlyCardPrice monthlyCardPrice = new MonthlyCard.City.MonthlyCardPrice();
@@ -219,10 +244,16 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                         if (!showPickerView) {
                             if (!mMonthlyCards.isEmpty()) {
                                 if (mChooseCityCode.equals("-1") && !seleteNationalCard) {
+                                    //如果没有定位成功则默认选择第一个城市
                                     mChooseCityCode = mMonthlyCards.get(0).getCitys().get(0).getCityCode();
                                 } else if (seleteNationalCard) {
-                                    mNationalPosition = mMonthlyCards.size() - 1;
-                                    mChooseCityCode = mMonthlyCards.get(mNationalPosition).getCitys().get(0).getCityCode();
+                                    if (!mMonthlyCards.get(mMonthlyCards.size() - 1).getCitys().get(0).getCityCode().equals("0000")) {
+                                        showFiveToast("全国月卡暂未开放，敬请期待!");
+                                    } else {
+                                        //全国月卡的位置为最后一个
+                                        mNationalPosition = mMonthlyCards.size() - 1;
+                                        mChooseCityCode = mMonthlyCards.get(mNationalPosition).getCitys().get(0).getCityCode();
+                                    }
                                 }
                                 setCurrenCityMonthlyCard();
                             }
@@ -254,6 +285,8 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                     mNationalPosition = i;
                     continue;
                 }
+                mProvinces.add(mMonthlyCards.get(i).getProvince());
+
                 provinceWithCity = new ArrayList<>();
                 for (int j = 0, citySize = mMonthlyCards.get(i).getCitys().size(); j < citySize; j++) {
                     provinceWithCity.add(mMonthlyCards.get(i).getCitys().get(j).getCity());
@@ -262,15 +295,15 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             }
 
             mPickerView = new OptionsPickerView<>(this);
-            mPickerView.setCyclic(false);
+            mPickerView.setPicker(mProvinces, citys, null, true);
             mPickerView.setTextSize(16);
             mPickerView.setTitle("月卡地区");
-            mPickerView.setPicker(mProvinces, citys, null, true);
+            mPickerView.setCyclic(false);
             mPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     mChooseCityCode = mMonthlyCards.get(options1).getCitys().get(option2).getCityCode();
-                    mAdapter.setNewData(mMonthlyCards.get(options1).getCitys().get(option2).getMonthlyCardPrices());
+                    mAdapter.setNewData(mMonthlyCards.get(options1).getCitys().get(option2).getCityMonthlyCards());
                     mLastChooseArea[0] = options1;
                     mLastChooseArea[1] = option2;
                     setCurrentChooseCard(true);
@@ -319,14 +352,14 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             if (mChooseCityCode.equals("0000")) {
                 MonthlyCard.City city = mMonthlyCards.get(mNationalPosition).getCitys().get(0);
                 mChooseCityCode = city.getCityCode();
-                mAdapter.setNewData(city.getMonthlyCardPrices());
+                mAdapter.setNewData(city.getCityMonthlyCards());
                 setCurrentChooseCard(false);
                 mChooseCardTv.setText("当前选择：全国月卡");
             } else {
                 for (int i = 0, size = mMonthlyCards.size(); i < size; i++) {
                     for (int j = 0, citySize = mMonthlyCards.get(i).getCitys().size(); j < citySize; j++) {
                         if (mChooseCityCode.equals(mMonthlyCards.get(i).getCitys().get(j).getCityCode())) {
-                            mAdapter.setNewData(mMonthlyCards.get(i).getCitys().get(j).getMonthlyCardPrices());
+                            mAdapter.setNewData(mMonthlyCards.get(i).getCitys().get(j).getCityMonthlyCards());
                             String cityName = mMonthlyCards.get(i).getCitys().get(j).getCity();
                             if (cityName.contains("全国")) {
                                 mChooseCardTv.setText("当前选择：全国月卡");
@@ -350,7 +383,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
     private void setLastChooseCityMonthlyCard() {
         MonthlyCard.City city = mMonthlyCards.get(mLastChooseArea[0]).getCitys().get(mLastChooseArea[1]);
         mChooseCityCode = city.getCityCode();
-        mAdapter.setNewData(city.getMonthlyCardPrices());
+        mAdapter.setNewData(city.getCityMonthlyCards());
         String cityName = city.getCity().replace("市", "");
         setCurrentChooseCard(true);
         mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
@@ -370,6 +403,15 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         }
     }
 
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
+                finish();
+            }
+        }
+    }
+
     class CardPriceAdapter extends BaseAdapter<MonthlyCard.City.MonthlyCardPrice> {
 
         CardPriceAdapter(RecyclerView recyclerView) {
@@ -377,9 +419,8 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         }
 
         @Override
-        protected void conver(@NonNull BaseViewHolder holder, MonthlyCard.City.MonthlyCardPrice monthlyCardPrice, int position) {
+        protected void conver(@NonNull BaseViewHolder holder, final MonthlyCard.City.MonthlyCardPrice monthlyCardPrice, int position) {
             final boolean canChoose = mMonthlyCards != null && !mMonthlyCards.isEmpty();
-            Log.e(TAG, "conver: " + monthlyCardPrice.getAllotedPeriod());
             holder.setText(R.id.validity_period, monthlyCardPrice.getAllotedPeriod() + "天")
                     .setText(R.id.monthly_card_price, monthlyCardPrice.getPrice() + "元")
                     .setTextColor(R.id.validity_period, canChoose ? ConstansUtil.Y3_COLOR : ConstansUtil.G10_COLOR)
@@ -389,7 +430,12 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                 @Override
                 public void onClick(View v) {
                     if (canChoose) {
-
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ConstansUtil.PAY_TYPE, "2");
+                        bundle.putString(ConstansUtil.PAY_MONEY, monthlyCardPrice.getPrice() + "元");
+                        bundle.putString(ConstansUtil.CITY_CODE, mChooseCityCode);
+                        bundle.putString(ConstansUtil.ALLOTED_PERIOD, monthlyCardPrice.getAllotedPeriod());
+                        startActivity(PayActivity.class, bundle);
                     }
                 }
             });
@@ -401,4 +447,5 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         }
 
     }
+
 }

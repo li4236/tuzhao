@@ -100,7 +100,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlSymmetry" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/id_activity_main_layout_linearlayout_monthly_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_linearlayout_mywallet"
-                    tools:ignore="RtlSymmetry" />
+                    tools:ignore="RtlSymmetry" />-->
 
                 <TextView
                     android:id="@+id/id_activity_main_layout_linearlayout_parkorder"
@@ -131,7 +131,7 @@
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_linearlayout_monthly_card"
+                    app:layout_constraintTop_toBottomOf="@+id/id_activity_main_layout_linearlayout_mywallet"
                     tools:ignore="RtlSymmetry" />
 
                 <TextView

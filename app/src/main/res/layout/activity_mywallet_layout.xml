@@ -109,6 +109,35 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/id_activity_mywallet_layout_linearlayout_monthly_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/picture_description"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_fapiao2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:background="@drawable/linebottom_white_gray_shallow_1px"
+                android:gravity="center_vertical"
+                android:paddingBottom="13dp"
+                android:paddingTop="13dp"
+                android:text="我的卡包"
+                android:textColor="@color/b1"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/id_activity_mywallet_layout_linearlayout_invoice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

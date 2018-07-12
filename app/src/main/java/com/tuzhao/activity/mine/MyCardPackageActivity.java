@@ -1,6 +1,7 @@
 package com.tuzhao.activity.mine;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 
@@ -25,7 +27,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class MyCardPackageActivity extends BaseStatusActivity implements View.OnClickListener {
+public class MyCardPackageActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private TextView mAllCard;
 
@@ -78,10 +80,10 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
         mAllCardList = new ArrayList<>(4);
         mAreaCardList = new ArrayList<>(1);
         mNationalCardList = new ArrayList<>();
-        getUserCards();
+        getUserCards(false);
     }
 
-    private void getUserCards() {
+    private void getUserCards(final boolean reset) {
         getOkGo(HttpConstants.getUserCards)
                 .execute(new JsonCallback<Base_Class_Info<MonthlyCardBean>>() {
                     @SuppressLint("SetTextI18n")
@@ -89,8 +91,14 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                     public void onSuccess(Base_Class_Info<MonthlyCardBean> o, Call call, Response response) {
                         mAreaCardList = (ArrayList<MonthlyCardBean.CardBean>) o.data.getAreaCards();
                         mNationalCardList = (ArrayList<MonthlyCardBean.CardBean>) o.data.getNationalCards();
+                        if (reset) {
+                            mAllCardList.clear();
+                            mAreaCardFragment = null;
+                            mNationalCardFragment = null;
+                        }
                         mAllCardList.addAll(mAreaCardList);
                         mAllCardList.addAll(mNationalCardList);
+                        mAllCardFragment = MonthlyCardFragment.newInstance(mAllCardList, 0);
 
                         mAllCard.setText("全部（" + mAllCardList.size() + "）");
                         mAreaCard.setText("地区月卡（" + mAreaCardList.size() + "）");
@@ -98,7 +106,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
                         mExpiredCard.setText("过期月卡（" + o.data.getExpiredCardSize() + "）");
 
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.monthly_card_container, MonthlyCardFragment.newInstance(mAllCardList, 0));
+                        transaction.replace(R.id.monthly_card_container, mAllCardFragment);
                         transaction.commit();
                         dismmisLoadingDialog();
                     }
@@ -210,4 +218,12 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
         mLastPosition = position;
     }
 
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
+                getUserCards(true);
+            }
+        }
+    }
 }

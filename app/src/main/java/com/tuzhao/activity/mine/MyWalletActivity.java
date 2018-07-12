@@ -70,6 +70,13 @@ public class MyWalletActivity extends BaseActivity {
             }
         });
 
+        findViewById(R.id.id_activity_mywallet_layout_linearlayout_monthly_card).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyWalletActivity.this, MyCardPackageActivity.class));
+            }
+        });
+
         findViewById(R.id.id_activity_mywallet_layout_linearlayout_bill).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -34,7 +34,7 @@ public class ConstansUtil {
     public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";
 
     /**
-     * 支付类型，0是停车订单支付，1是添加车位缴纳押金支付
+     * 支付类型，0是停车订单支付，1是添加车位缴纳押金支付，2是购买月卡支付
      */
     public static final String PAY_TYPE = "PayType";
 
@@ -285,5 +285,10 @@ public class ConstansUtil {
      * 卡列表
      */
     public static final String CARD_INFO_LIST = "CardInfoList";
+
+    /**
+     * 月卡的有效期
+     */
+    public static final String ALLOTED_PERIOD = "AllotedPeriod";
 
 }

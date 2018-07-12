@@ -170,7 +170,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         if (!mData.isEmpty()) {
             mData.clear();
         }
-        mData = newData;
+        mData.addAll(newData);
         notifyDataSetChanged();
     }
 
@@ -179,7 +179,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             if (!mData.isEmpty()) {
                 mData.clear();
             }
-            mData = newData;
+            mData.addAll(newData);
             notifyDataSetChanged();
         }
     }

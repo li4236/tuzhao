@@ -66,7 +66,6 @@ import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.CarNumberActivity;
 import com.tuzhao.activity.mine.CollectionActivity;
 import com.tuzhao.activity.mine.CreditActivity;
-import com.tuzhao.activity.mine.MyCardPackageActivity;
 import com.tuzhao.activity.mine.MyParkspaceActivityRefactor;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
@@ -143,7 +142,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             imageview_search;
     private CircleImageView imageview_user, imageview_huser;
     private TextView textview_username, textview_citynodata, textview_credit;
-    private TextView textview_mywallet, textview_monthly_card, textview_parkorder, textview_share,
+    private TextView textview_mywallet, textview_parkorder, textview_share,
             textview_mycarnumble, textview_mypark, textview_set, textview_mycollection, textview_find;
     private TextView mParkNow;
     private ConstraintLayout constraintLayout_openuser, constraintLayout_user;
@@ -253,7 +252,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         constraintLayout_user = findViewById(R.id.user_info);
         textview_set = findViewById(R.id.id_activity_main_layout_linearlayout_set);
         textview_mywallet = findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
-        textview_monthly_card = findViewById(R.id.id_activity_main_layout_linearlayout_monthly_card);
         textview_parkorder = findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
         textview_mycarnumble = findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
         textview_mypark = findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
@@ -307,7 +305,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         constraintLayout_user.setOnClickListener(this);
         imageview_search.setOnClickListener(this);
         textview_mywallet.setOnClickListener(this);
-        textview_monthly_card.setOnClickListener(this);
         textview_parkorder.setOnClickListener(this);
         textview_mycarnumble.setOnClickListener(this);
         textview_mycollection.setOnClickListener(this);
@@ -416,10 +413,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.id_activity_main_layout_linearlayout_mywallet:
                 intent = new Intent(MainActivity.this, MyWalletActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.id_activity_main_layout_linearlayout_monthly_card:
-                intent = new Intent(MainActivity.this, MyCardPackageActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_parkorder:

@@ -506,6 +506,26 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 });
     }
 
+    private void getParkLockStatus() {
+        showLoadingDialog("正在查询");
+        getOkGo(HttpConstants.selectParkState)
+                .params("device_name", "")
+                .params("select_type", 2)
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showFiveToast("结束停车失败，请联系客服");
+                    }
+                });
+    }
+
     private void finishPark() {
         //请求改变订单状态，完成订单
         showLoadingDialog("正在结束停车");

@@ -532,7 +532,7 @@ public class HttpConstants {
     public static String reserveLockedParkSpaceForOrder = ROOT_URL + "reserveLockedParkSpaceForOrder";
 
     /**
-     *获取用户全部卡，地区卡，全国卡
+     * 获取用户全部卡，地区卡，全国卡
      */
     public static String getUserCards = ROOT_URL + "getUserCards";
 
@@ -550,5 +550,20 @@ public class HttpConstants {
      * 获取开放的地区的月卡
      */
     public static String getOpenAreaMonthlyCard = ROOT_URL + "getOpenAreaMonthlyCard";
+
+    /**
+     * 查询车位锁状态
+     */
+    public static String selectParkState = ROOT_URL + "selectParkState";
+
+    /**
+     * 获取支付宝购买月卡订单信息
+     */
+    public static String getAlipayBuyMonthlyCardInfo = ROOT_URL + "getAlipayBuyMonthlyCardInfo";
+
+    /**
+     * 获取微信缴纳车锁押金订单信息
+     */
+    public static String getWechatBuyMonthlyCardInfo = ROOT_URL + "getWechatBuyMonthlyCardInfo";
 
 }

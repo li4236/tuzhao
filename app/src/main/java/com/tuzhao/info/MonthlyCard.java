@@ -1,5 +1,7 @@
 package com.tuzhao.info;
 
+import com.tuzhao.utils.DateUtil;
+
 import java.util.List;
 
 /**
@@ -45,7 +47,7 @@ public class MonthlyCard {
          */
         private String cityCode;
 
-        private List<MonthlyCardPrice> monthlyCardPrices;
+        private List<MonthlyCardPrice> cityMonthlyCards;
 
         public static class MonthlyCardPrice {
             /**
@@ -67,14 +69,22 @@ public class MonthlyCard {
             }
 
             public String getPrice() {
-                return price;
+                return DateUtil.decreseOneZero(price);
             }
 
             public void setPrice(String price) {
                 this.price = price;
             }
-        }
 
+            @Override
+            public String toString() {
+                return "MonthlyCardPrice{" +
+                        "allotedPeriod='" + allotedPeriod + '\'' +
+                        ", price='" + price + '\'' +
+                        '}';
+            }
+
+        }
 
         public String getCity() {
             return city;
@@ -92,12 +102,31 @@ public class MonthlyCard {
             this.cityCode = cityCode;
         }
 
-        public List<MonthlyCardPrice> getMonthlyCardPrices() {
-            return monthlyCardPrices;
+        public List<MonthlyCardPrice> getCityMonthlyCards() {
+            return cityMonthlyCards;
         }
 
-        public void setMonthlyCardPrices(List<MonthlyCardPrice> monthlyCardPrices) {
-            this.monthlyCardPrices = monthlyCardPrices;
+        public void setCityMonthlyCards(List<MonthlyCardPrice> cityMonthlyCards) {
+            this.cityMonthlyCards = cityMonthlyCards;
         }
+
+        @Override
+        public String toString() {
+            return "City{" +
+                    "city='" + city + '\'' +
+                    ", cityCode='" + cityCode + '\'' +
+                    ", cityMonthlyCards=" + cityMonthlyCards +
+                    '}';
+        }
+
     }
+
+    @Override
+    public String toString() {
+        return "MonthlyCard{" +
+                "province='" + province + '\'' +
+                ", citys=" + citys +
+                '}';
+    }
+
 }
