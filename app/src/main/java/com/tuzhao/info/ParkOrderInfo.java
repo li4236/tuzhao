@@ -3,6 +3,7 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.tuzhao.info.base_info.BaseInfo;
 
 import java.util.Objects;
@@ -15,6 +16,8 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
 
     private String id;//订单id
     private String parkspace_id;//停车场id
+
+    @SerializedName(value = "park_id",alternate = {"parkSpaceId"})
     private String park_id;//停车位id
     private String parkspace_name;//停车场名字
     private String ps_address;//停车场地址

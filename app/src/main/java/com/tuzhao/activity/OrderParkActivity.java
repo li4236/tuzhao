@@ -29,7 +29,7 @@ import com.tuzhao.info.Park_Space_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.callback.JsonListCallback;
+import com.tuzhao.publicwidget.callback.JsonCodeCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
@@ -1046,7 +1046,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .params("readypark_id", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
                 .params("readypark_updatetime", readyParkUpdateTime.toString().equals("") ? "-1" : readyParkUpdateTime.toString())
                 .params("citycode", parkspace_info.getCity_code())
-                .execute(new JsonListCallback<Base_Class_Info<String>>() {
+                .execute(new JsonCodeCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> responseData, Call call, Response response) {
                         switch (responseData.code) {

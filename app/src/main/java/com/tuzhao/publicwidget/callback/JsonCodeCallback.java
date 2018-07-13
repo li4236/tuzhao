@@ -18,7 +18,7 @@ import okhttp3.Response;
  * </p>
  */
 
-public abstract class JsonListCallback<T> extends AbsCallback<T> {
+public abstract class JsonCodeCallback<T> extends AbsCallback<T> {
 
     @Override
     public T convertSuccess(Response response) throws Exception {

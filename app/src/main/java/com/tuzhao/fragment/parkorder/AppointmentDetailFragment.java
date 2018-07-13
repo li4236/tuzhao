@@ -31,7 +31,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.callback.JsonListCallback;
+import com.tuzhao.publicwidget.callback.JsonCodeCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
@@ -743,7 +743,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                             if (mCanParkList.size() > 1) {
                                 DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrder_endtime());
                             }
-                            showAlertDialog(true);
+                            redistributionOrderParkSpace();
+                            //startRedistributionOrderParkSpace();
                         }
                     }
 
@@ -772,41 +773,43 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         tipeDialog.show();
     }
 
-    private void showAlertDialog(boolean showDialog) {
-        if (showDialog) {
-            Calendar canParkEndCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
-            canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
-            Log.e("TAG", "showAlertDialog shareTime: " + DateUtil.getTwoYearToMinutesString(
-                    mCanParkList.get(0).getShareTimeCalendar()[0], mCanParkList.get(0).getShareTimeCalendar()[1]));
-            if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkList.get(0).getShareTimeCalendar()[1]) >= 0) {
-                addNewParkOrder();
-            } else {
-                final TipeDialog.Builder builder = new TipeDialog.Builder(requireContext());
-                mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkList.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
-                builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
-                builder.setTitle("确认预定");
-                builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        showLoadingDialog("匹配中...");
-                        addNewParkOrder();
-                    }
-                });
-
-                builder.setNegativeButton("取消",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-
-                builder.create().show();
-            }
-
+    /**
+     * 开始重新分配给该订单，如果车位的顺延时长不足则提示
+     */
+    private void startRedistributionOrderParkSpace() {
+        Calendar canParkEndCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
+        canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
+        Log.e("TAG", "startRedistributionOrderParkSpace shareTime: " + DateUtil.getTwoYearToMinutesString(
+                mCanParkList.get(0).getShareTimeCalendar()[0], mCanParkList.get(0).getShareTimeCalendar()[1]));
+        if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkList.get(0).getShareTimeCalendar()[1]) >= 0) {
+            redistributionOrderParkSpace();
         } else {
-            addNewParkOrder();
+            final TipeDialog.Builder builder = new TipeDialog.Builder(requireContext());
+            mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkList.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
+            builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
+            builder.setTitle("确认预定");
+            builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    showLoadingDialog("匹配中...");
+                    redistributionOrderParkSpace();
+                }
+            });
+
+            builder.setNegativeButton("取消",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+            builder.create().show();
         }
+
     }
 
-    private void addNewParkOrder() {
+    /**
+     * 请求重新分配车位给该订单
+     */
+    private void redistributionOrderParkSpace() {
         final StringBuilder readyParkId = new StringBuilder();
         for (int i = 1, size = mCanParkList.size() > 3 ? 3 : mCanParkList.size(); i < size; i++) {
             readyParkId.append(mCanParkList.get(i).getId());
@@ -824,12 +827,12 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .params("parkSpaceId", mCanParkList.get(0).getId())
                 .params("alternateParkSpaceId", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
                 .params("cityCode", mParkOrderInfo.getCitycode())
-                .execute(new JsonListCallback<Base_Class_Info<ParkOrderInfo>>() {
+                .execute(new JsonCodeCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
                         switch (responseData.code) {
                             case "0":
-                                redistributionParkSpace(responseData.data.getExtensionTime());
+                                redistributionParkSpace(responseData.data);
                                 break;
                             case "101":
                                 mCanParkList.remove(0);
@@ -844,7 +847,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                     if (mCanParkList.size() != 1) {
                                         DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrder_endtime());
                                     }
-                                    addNewParkOrder();
+                                    redistributionOrderParkSpace();
                                 } else {
                                     showLoadingDialog();
                                     showFiveToast("未匹配到合适您时间的车位，请尝试更换时间");
@@ -855,10 +858,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                 showRequestAppointOrderDialog(mCanParkList.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
                                 break;
                             case "102":
-                                String parkSpaceId = responseData.data.getExtensionTime().substring(0, responseData.data.getExtensionTime().indexOf(","));
                                 for (int i = 0; i < mCanParkList.size(); i++) {
-                                    if (mCanParkList.get(i).getId().equals(parkSpaceId)) {
-                                        showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime().split(",")[1]));
+                                    if (mCanParkList.get(i).getId().equals(responseData.data.getPark_id())) {
+                                        showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime()));
                                         break;
                                     }
                                 }
@@ -883,8 +885,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
-                        dismmisLoadingDialog();
-                        showFiveToast(e.getMessage());
+                        if (!handleException(e)) {
+                            showFiveToast(e.getMessage());
+                        }
                     }
                 });
     }
@@ -914,6 +917,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         builder.create().show();
     }
 
+    /**
+     * 预约被锁定的车位
+     */
     private void reserveLockedParkSpaceForOrder(Park_Info park_info) {
         getOkGo(HttpConstants.reserveLockedParkSpaceForOrder)
                 .params("orderId", mParkOrderInfo.getId())
@@ -922,7 +928,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        redistributionParkSpace(responseData.data.getExtensionTime());
+                        redistributionParkSpace(responseData.data);
                     }
 
                     @Override
@@ -942,10 +948,18 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 });
     }
 
-    private void redistributionParkSpace(String extendsionTime) {
-        mParkOrderInfo.setPark_id(mCanParkList.get(0).getId());
-        mParkOrderInfo.setExtensionTime(extendsionTime);
-        mCanParkList.remove(0);
+    /**
+     * 重新分配车位给该订单
+     */
+    private void redistributionParkSpace(ParkOrderInfo parkOrderInfo) {
+        mParkOrderInfo.setPark_id(parkOrderInfo.getPark_id());
+        mParkOrderInfo.setExtensionTime(parkOrderInfo.getExtensionTime());
+        for (int i = 0; i < mCanParkList.size(); i++) {
+            if (mCanParkList.get(i).getId().equals(parkOrderInfo.getPark_id())) {
+                mCanParkList.remove(i);
+                break;
+            }
+        }
 
         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
         Bundle bundle = new Bundle();
