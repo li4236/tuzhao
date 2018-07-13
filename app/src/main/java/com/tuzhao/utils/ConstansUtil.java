@@ -14,6 +14,8 @@ public class ConstansUtil {
 
     public static final int Y3_COLOR = Color.parseColor("#ffa830");
 
+    public static final int G6_COLOR = Color.parseColor("#808080");
+
     public static final int G10_COLOR = Color.parseColor("#cccccc");
 
     public static final float MAX_CREDIT_SCORE = 950;
@@ -290,5 +292,10 @@ public class ConstansUtil {
      * 月卡的有效期
      */
     public static final String ALLOTED_PERIOD = "AllotedPeriod";
+
+    /**
+     * 显示空布局
+     */
+    public static final String SHOW_EMPTY_VIEW = "ShowEmptyView";
 
 }

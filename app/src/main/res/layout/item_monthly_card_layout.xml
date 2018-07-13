@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="133dp"
-    android:layout_marginEnd="14dp"
-    android:layout_marginStart="22dp"
+    android:layout_height="166dp"
+    android:layout_marginEnd="50dp"
+    android:layout_marginStart="58dp"
     android:layout_marginTop="20dp">
 
     <ImageView
@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/monthly_card_type"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         android:layout_marginStart="10dp"
         android:layout_marginTop="12dp"
         android:text="途找停车月卡"
@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/monthly_card_status"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         android:layout_marginEnd="10dp"
         android:text="生效中"
         app:layout_constraintEnd_toEndOf="@+id/monthly_card_iv"
@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/monthly_card_area"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         android:layout_marginBottom="12dp"
         android:text="中山卡"
         app:layout_constraintBottom_toBottomOf="@+id/monthly_card_iv"
@@ -40,7 +40,7 @@
 
     <TextView
         android:id="@+id/monthly_card_expried_date"
-        style="@style/TwentyTextB1Style"
+        style="@style/FortyTextB1Style"
         app:layout_constraintBottom_toBottomOf="@+id/monthly_card_area"
         app:layout_constraintEnd_toEndOf="@+id/monthly_card_status" />
 

@@ -9,24 +9,12 @@
         layout="@layout/base_toolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/buy_monthly_card"
-        style="@style/TwentyTextB1Style"
-        android:layout_height="0dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:text="购卡"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/base_tb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/base_tb" />
-
     <View
         android:id="@+id/top_divider"
         style="@style/dividerStyle"
         app:layout_constraintTop_toBottomOf="@+id/base_tb" />
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/monthly_card_ll"
         android:layout_width="120dp"
         android:layout_height="0dp"
@@ -77,16 +65,90 @@
             android:paddingTop="10dp"
             android:text="过期月卡（0）" />
 
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/monthly_carl_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <TextView
+            android:id="@+id/all_card"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginStart="16dp"
+            android:paddingBottom="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:text="月卡"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/all_card_indicate"
+            android:layout_width="30dp"
+            android:layout_height="4dp"
+            android:background="@color/y3"
+            app:layout_constraintEnd_toEndOf="@id/all_card"
+            app:layout_constraintStart_toStartOf="@id/all_card"
+            app:layout_constraintTop_toBottomOf="@+id/all_card" />
+
+        <TextView
+            android:id="@+id/expired_card"
+            style="@style/TwentyTextG6Style"
+            android:layout_height="0dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="过期"
+            app:layout_constraintBottom_toBottomOf="@+id/all_card"
+            app:layout_constraintStart_toEndOf="@id/all_card"
+            app:layout_constraintTop_toTopOf="@+id/all_card" />
+
+        <View
+            android:id="@+id/expired_card_indicate"
+            android:layout_width="30dp"
+            android:layout_height="4dp"
+            android:background="@color/y3"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/expired_card"
+            app:layout_constraintStart_toStartOf="@id/expired_card"
+            app:layout_constraintTop_toBottomOf="@+id/expired_card" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/monthly_card_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/buy_monthly_card_cl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/monthly_card_ll"
-        app:layout_constraintTop_toTopOf="@+id/monthly_card_ll" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monthly_carl_cl" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/buy_monthly_card_cl"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@color/w0"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/buy_monthly_card"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="340dp"
+            android:layout_height="40dp"
+            android:background="@drawable/little_yuan_yellow_5dp"
+            android:text="购买月卡"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <ViewStub
         android:id="@+id/no_monthly_card_vs"

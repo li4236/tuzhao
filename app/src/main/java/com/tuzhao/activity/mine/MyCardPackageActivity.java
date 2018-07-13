@@ -1,6 +1,5 @@
 package com.tuzhao.activity.mine;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,17 +11,9 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.MonthlyCardFragment;
-import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.MonthlyCardBean;
-import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
-
-import java.util.ArrayList;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/7/9.
@@ -31,27 +22,15 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
 
     private TextView mAllCard;
 
-    private TextView mAreaCard;
-
-    private TextView mNationalCard;
+    private View mAllCardIndicate;
 
     private TextView mExpiredCard;
 
+    private View mExpiredCardIndicate;
+
     private ViewStub mViewStub;
 
-    private ArrayList<MonthlyCardBean.CardBean> mAllCardList;
-
-    private ArrayList<MonthlyCardBean.CardBean> mAreaCardList;
-
-    private ArrayList<MonthlyCardBean.CardBean> mNationalCardList;
-
-    private int mLastPosition = 0;
-
     private MonthlyCardFragment mAllCardFragment;
-
-    private MonthlyCardFragment mAreaCardFragment;
-
-    private MonthlyCardFragment mNationalCardFragment;
 
     private MonthlyCardFragment mExpriredFragment;
 
@@ -63,69 +42,30 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
     @Override
     protected void initView(Bundle savedInstanceState) {
         mAllCard = findViewById(R.id.all_card);
-        mAreaCard = findViewById(R.id.area_card);
-        mNationalCard = findViewById(R.id.national_card);
+        mAllCardIndicate = findViewById(R.id.all_card_indicate);
         mExpiredCard = findViewById(R.id.expired_card);
+        mExpiredCardIndicate = findViewById(R.id.expired_card_indicate);
 
         mAllCard.setOnClickListener(this);
-        mAreaCard.setOnClickListener(this);
-        mNationalCard.setOnClickListener(this);
+        mAllCardIndicate.setOnClickListener(this);
         mExpiredCard.setOnClickListener(this);
+        mExpiredCardIndicate.setOnClickListener(this);
         findViewById(R.id.buy_monthly_card).setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
-        super.initData();
-        mAllCardList = new ArrayList<>(4);
-        mAreaCardList = new ArrayList<>(1);
-        mNationalCardList = new ArrayList<>();
-        getUserCards(false);
+        IntentObserable.registerObserver(this);
+        mAllCardFragment = MonthlyCardFragment.newInstance(1);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.monthly_card_container, mAllCardFragment);
+        transaction.commit();
     }
 
-    private void getUserCards(final boolean reset) {
-        getOkGo(HttpConstants.getUserCards)
-                .execute(new JsonCallback<Base_Class_Info<MonthlyCardBean>>() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onSuccess(Base_Class_Info<MonthlyCardBean> o, Call call, Response response) {
-                        mAreaCardList = (ArrayList<MonthlyCardBean.CardBean>) o.data.getAreaCards();
-                        mNationalCardList = (ArrayList<MonthlyCardBean.CardBean>) o.data.getNationalCards();
-                        if (reset) {
-                            mAllCardList.clear();
-                            mAreaCardFragment = null;
-                            mNationalCardFragment = null;
-                        }
-                        mAllCardList.addAll(mAreaCardList);
-                        mAllCardList.addAll(mNationalCardList);
-                        mAllCardFragment = MonthlyCardFragment.newInstance(mAllCardList, 0);
-
-                        mAllCard.setText("全部（" + mAllCardList.size() + "）");
-                        mAreaCard.setText("地区月卡（" + mAreaCardList.size() + "）");
-                        mNationalCard.setText("全国月卡（" + mNationalCardList.size() + "）");
-                        mExpiredCard.setText("过期月卡（" + o.data.getExpiredCardSize() + "）");
-
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.monthly_card_container, mAllCardFragment);
-                        transaction.commit();
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "101":
-                                    showViewStub(View.VISIBLE);
-                                    break;
-                                default:
-                                    showFiveToast(e.getMessage());
-                                    break;
-                            }
-                        }
-                    }
-                });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     private void showViewStub(int visibility) {
@@ -156,43 +96,33 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (v.getId()) {
             case R.id.all_card:
-                setTextNormalColor(0);
-                mAllCard.setTextColor(ConstansUtil.Y3_COLOR);
-                if (mAllCardFragment == null) {
-                    mAllCardFragment = MonthlyCardFragment.newInstance(mAllCardList, 0);
+            case R.id.all_card_indicate:
+                if (!isVisible(mAllCardIndicate)) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    mAllCard.setTextColor(ConstansUtil.B1_COLOR);
+                    mExpiredCard.setTextColor(ConstansUtil.G6_COLOR);
+                    mAllCardIndicate.setVisibility(View.VISIBLE);
+                    mExpiredCardIndicate.setVisibility(View.INVISIBLE);
+                    transaction.replace(R.id.monthly_card_container, mAllCardFragment);
+                    transaction.commit();
                 }
-                transaction.replace(R.id.monthly_card_container, mAllCardFragment);
-                transaction.commit();
-                break;
-            case R.id.area_card:
-                setTextNormalColor(1);
-                mAreaCard.setTextColor(ConstansUtil.Y3_COLOR);
-                if (mAreaCardFragment == null) {
-                    mAreaCardFragment = MonthlyCardFragment.newInstance(mAreaCardList, 1);
-                }
-                transaction.replace(R.id.monthly_card_container, mAreaCardFragment);
-                transaction.commit();
-                break;
-            case R.id.national_card:
-                setTextNormalColor(2);
-                mNationalCard.setTextColor(ConstansUtil.Y3_COLOR);
-                if (mNationalCardFragment == null) {
-                    mNationalCardFragment = MonthlyCardFragment.newInstance(mNationalCardList, 2);
-                }
-                transaction.replace(R.id.monthly_card_container, mNationalCardFragment);
-                transaction.commit();
                 break;
             case R.id.expired_card:
-                setTextNormalColor(3);
-                mExpiredCard.setTextColor(ConstansUtil.Y3_COLOR);
-                if (mExpriredFragment == null) {
-                    mExpriredFragment = MonthlyCardFragment.newInstance(new ArrayList<MonthlyCardBean.CardBean>(), 3);
+            case R.id.expired_card_indicate:
+                if (!isVisible(mExpiredCardIndicate)) {
+                    mAllCard.setTextColor(ConstansUtil.G6_COLOR);
+                    mExpiredCard.setTextColor(ConstansUtil.B1_COLOR);
+                    mAllCardIndicate.setVisibility(View.INVISIBLE);
+                    mExpiredCardIndicate.setVisibility(View.VISIBLE);
+                    if (mExpriredFragment == null) {
+                        mExpriredFragment = MonthlyCardFragment.newInstance(2);
+                    }
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.monthly_card_container, mExpriredFragment);
+                    fragmentTransaction.commit();
                 }
-                transaction.replace(R.id.monthly_card_container, mExpriredFragment);
-                transaction.commit();
                 break;
             case R.id.buy_monthly_card:
                 startActivity(BuyMonthlyCardActivity.class);
@@ -200,30 +130,15 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
         }
     }
 
-    private void setTextNormalColor(int position) {
-        switch (mLastPosition) {
-            case 0:
-                mAllCard.setTextColor(ConstansUtil.B1_COLOR);
-                break;
-            case 1:
-                mAreaCard.setTextColor(ConstansUtil.B1_COLOR);
-                break;
-            case 2:
-                mNationalCard.setTextColor(ConstansUtil.B1_COLOR);
-                break;
-            case 3:
-                mExpiredCard.setTextColor(ConstansUtil.B1_COLOR);
-                break;
-        }
-        mLastPosition = position;
-    }
-
     @Override
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
-            if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
-                getUserCards(true);
+            if (intent.getAction().equals(ConstansUtil.SHOW_EMPTY_VIEW)) {
+                showViewStub(View.VISIBLE);
+            } else if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
+                showViewStub(View.INVISIBLE);
             }
         }
     }
+
 }

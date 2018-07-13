@@ -1,5 +1,6 @@
 package com.tuzhao.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -8,14 +9,14 @@ import android.view.ViewGroup;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
-import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.MonthlyCardBean;
+import com.tuzhao.info.CardBean;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.IntentObserable;
 
 import java.util.ArrayList;
 
@@ -25,17 +26,16 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.CardBean> {
+public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
 
     /**
-     * 0（全部卡），1（地区卡），2（全国卡），3（过期卡）
+     * 1（全部卡），2（过期卡）
      */
     private int mType;
 
-    public static MonthlyCardFragment newInstance(ArrayList<MonthlyCardBean.CardBean> list, int type) {
+    public static MonthlyCardFragment newInstance(int type) {
         MonthlyCardFragment monthlyCardFragment = new MonthlyCardFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(ConstansUtil.CARD_INFO_LIST, list);
         bundle.putInt(ConstansUtil.TYPE, type);
         monthlyCardFragment.setArguments(bundle);
         return monthlyCardFragment;
@@ -55,19 +55,16 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.Car
     protected void initData() {
         if (getArguments() != null) {
             mType = getArguments().getInt(ConstansUtil.TYPE);
-            ArrayList<MonthlyCardBean.CardBean> list = getArguments().getParcelableArrayList(ConstansUtil.CARD_INFO_LIST);
-            Base_Class_List_Info<MonthlyCardBean.CardBean> cardInfoBaseClassListInfo = new Base_Class_List_Info<>();
-            cardInfoBaseClassListInfo.data = list;
-            if (mType != 3) {
-                mRecyclerView.setRefreshEnabled(false);
-                mRecyclerView.setLoadingMoreEnable(false);
-                loadDataSuccess(cardInfoBaseClassListInfo);
+            ArrayList<CardBean> list = getArguments().getParcelableArrayList(ConstansUtil.CARD_INFO_LIST);
+            if (list == null) {
+                getUserExpiredCards();
             } else {
-                if (list != null && !list.isEmpty()) {
+                Base_Class_List_Info<CardBean> cardInfoBaseClassListInfo = new Base_Class_List_Info<>();
+                cardInfoBaseClassListInfo.data = list;
+                if (!list.isEmpty()) {
                     loadDataSuccess(cardInfoBaseClassListInfo);
                 } else {
-                    showLoadingDialog();
-                    getUserExpiredCards();
+                    notifyShowEmptyView();
                 }
             }
         }
@@ -75,9 +72,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.Car
 
     @Override
     protected void loadData() {
-        if (mType == 3) {
-            getUserExpiredCards();
-        }
+        getUserExpiredCards();
     }
 
     @Override
@@ -92,28 +87,35 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.Car
     }
 
     private void getUserExpiredCards() {
-        getOkgos(HttpConstants.getUserExpiredCards)
-                .execute(new JsonCallback<Base_Class_List_Info<MonthlyCardBean.CardBean>>() {
+        getOkgos(HttpConstants.getUserMonthlyCards)
+                .params("type", mType)
+                .execute(new JsonCallback<Base_Class_List_Info<CardBean>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<MonthlyCardBean.CardBean> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_List_Info<CardBean> o, Call call, Response response) {
                         loadDataSuccess(o);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        if (mCommonAdapter.getData().size() == 0) {
+                            notifyShowEmptyView();
+                        }
+                        stopLoadStatus();
                         if (!handleException(e)) {
-                            loadDataFail(e, new LoadFailCallback() {
-                                @Override
-                                public void onLoadFail(Exception e) {
-                                    if (e.getMessage().equals("101")) {
-                                        showFiveToast("没有更多数据啦");
-                                    }
-                                }
-                            });
+                            switch (e.getMessage()) {
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
+    }
+
+    private void notifyShowEmptyView() {
+        Intent intent = new Intent(ConstansUtil.SHOW_EMPTY_VIEW);
+        IntentObserable.dispatch(intent);
     }
 
     @Override
@@ -122,11 +124,15 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean.Car
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, MonthlyCardBean.CardBean cardInfo, int position) {
+    protected void bindData(BaseViewHolder holder, CardBean cardInfo, int position) {
         holder.setText(R.id.monthly_card_area, cardInfo.getArea().replace("市", "") + "卡")
                 .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期")
-                .showPicWithNoAnimate(R.id.monthly_card_iv, cardInfo.getArea().equals("全国") ? R.drawable.ic_allcity : R.drawable.ic_vip)
-                .setText(R.id.monthly_card_status, cardInfo.getStatus().equals("1") ? "生效中" : "已过期");
+                .setText(R.id.monthly_card_status, mType == 1 ? "生效中" : "已过期");
+        if (mType == 2) {
+            holder.showPicWithNoAnimate(R.id.monthly_card_iv, cardInfo.getArea().equals("全国") ? R.drawable.ic_grayallcity : R.drawable.ic_grayvip);
+        } else {
+            holder.showPicWithNoAnimate(R.id.monthly_card_iv, cardInfo.getArea().equals("全国") ? R.drawable.ic_allcity : R.drawable.ic_vip);
+        }
     }
 
     @Override
