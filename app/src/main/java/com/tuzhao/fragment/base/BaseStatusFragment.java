@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,6 +154,7 @@ public abstract class BaseStatusFragment extends Fragment {
                         showFiveToast("获取数据异常，请稍后重试");
                         return true;
                     default:
+                        Log.e(TAG, "handleException: "+e.getMessage() );
                         return false;
                 }
             } else {

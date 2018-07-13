@@ -151,12 +151,14 @@ public class MyReceiver extends BroadcastReceiver {
                                     onLockListener.openSuccessHaveCar();
                                     break;
                                 case "open_failed":
+                                case "open_failed_offline":
                                     onLockListener.openFailed();
                                     break;
                                 case "close_successful":
                                     onLockListener.closeSuccess();
                                     break;
                                 case "close_failed":
+                                case "close_failed_offline":
                                     onLockListener.closeFailed();
                                     break;
                                 case "close_failed_car":

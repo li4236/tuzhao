@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
+import com.tuzhao.activity.jiguang_notification.MyReceiver;
+import com.tuzhao.activity.jiguang_notification.OnLockListener;
 import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
@@ -83,6 +85,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private boolean mCanExtendsionTime;
 
+    private OnLockListener mOnLockListener;
+
     public static ParkingOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         ParkingOrderFragment fragment = new ParkingOrderFragment();
         Bundle bundle = new Bundle();
@@ -148,6 +152,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     public void onDestroyView() {
         super.onDestroyView();
         mPollingUtil.cancel();
+        if (mOnLockListener != null) {
+            MyReceiver.removeLockListener(mParkOrderInfo.getLockId());
+        }
     }
 
     @Override
@@ -188,7 +195,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 showAppointmentDetail();
                 break;
             case R.id.finish_park:
-                finishPark();
+                showLoadingDialog("正在结单...");
+                closeParkLock();
                 break;
         }
     }
@@ -526,9 +534,89 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 });
     }
 
+    private void closeParkLock() {
+        getOkGo(HttpConstants.controlParkLock)
+                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("order_id", mParkOrderInfo.getId())
+                .params("ctrl_type", 2)
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        initLockListener();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void initLockListener() {
+        mOnLockListener = new OnLockListener() {
+            @Override
+            public void openSuccess() {
+
+            }
+
+            @Override
+            public void openFailed() {
+
+            }
+
+            @Override
+            public void openSuccessHaveCar() {
+
+            }
+
+            @Override
+            public void closeSuccess() {
+                finishPark();
+            }
+
+            @Override
+            public void closeFailed() {
+                showFiveToast("关锁失败，请稍后重试或联系客服");
+            }
+
+            @Override
+            public void closeFailedHaveCar() {
+                showFiveToast("请先把车移除车位再结单哦");
+            }
+
+        };
+        MyReceiver.addLockListener(mParkOrderInfo.getLockId(), mOnLockListener);
+    }
+
+    private void getOrderStatus() {
+        getOkGo(HttpConstants.getDetailOfParkOrder)
+                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("order_number", mParkOrderInfo.getOrder_number())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        if (o.data.getOrder_status().equals("2")) {
+                            closeParkLock();
+                        } else if (o.data.getOrder_status().equals("3")) {
+                            notifyFinishPark(o.data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
     private void finishPark() {
         //请求改变订单状态，完成订单
-        showLoadingDialog("正在结束停车");
         getOkGo(HttpConstants.endParking)
                 .params("order_id", mParkOrderInfo.getId())
                 .params("citycode", mParkOrderInfo.getCitycode())
@@ -536,16 +624,12 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> info, Call call, Response response) {
-                        Intent intent = new Intent();
-                        intent.setAction(ConstansUtil.FINISH_PARK);
-                        Bundle bundle = new Bundle();
                         mParkOrderInfo.setOrder_status("3");
                         mParkOrderInfo.setOrder_fee(info.data.getOrder_fee());
                         mParkOrderInfo.setFine_fee(info.data.getFine_fee());
                         mParkOrderInfo.setPark_end_time(info.data.getPark_end_time());
-                        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
-                        IntentObserable.dispatch(intent);
+                        notifyFinishPark(mParkOrderInfo);
+                        showFiveToast("已结束停车");
                         dismmisLoadingDialog();
                     }
 
@@ -564,6 +648,16 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                         }
                     }
                 });
+    }
+
+    private void notifyFinishPark(ParkOrderInfo parkOrderInfo) {
+        Intent intent = new Intent();
+        intent.setAction(ConstansUtil.FINISH_PARK);
+        Bundle bundle = new Bundle();
+        mParkOrderInfo.setOrder_status("3");
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+        IntentObserable.dispatch(intent);
     }
 
     @Override

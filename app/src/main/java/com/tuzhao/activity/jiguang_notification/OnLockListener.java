@@ -17,5 +17,4 @@ public interface OnLockListener {
 
     void closeFailedHaveCar();
 
-    void onError();
 }

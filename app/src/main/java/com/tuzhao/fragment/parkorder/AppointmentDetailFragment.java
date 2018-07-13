@@ -233,16 +233,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
             }
 
-            @Override
-            public void onError() {
-                mOpenLockStatus = 2;
-                mIsOpening = false;
-                if (mLockDialog.isShowing()) {
-                    cancelOpenLockAnimator();
-                } else {
-                    showFiveToast("开锁失败，请稍后重试");
-                }
-            }
         };
         MyReceiver.addLockListener(mParkOrderInfo.getLockId(), lockListener);
     }

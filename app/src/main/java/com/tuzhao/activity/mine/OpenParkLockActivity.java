@@ -95,10 +95,6 @@ public class OpenParkLockActivity extends BaseActivity {
                 textview_state.setText("关锁失败，因为车位上方有车辆滞留");
             }
 
-            @Override
-            public void onError() {
-                textview_state.setText("请求失败，请稍后重试");
-            }
         };
 
         MyReceiver.addLockListener(parkOrderInfo.getLockId(), lockListener);

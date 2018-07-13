@@ -182,10 +182,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 showFiveToast("关锁失败，因为车位上方有车辆滞留");
             }
 
-            @Override
-            public void onError() {
-                showFiveToast("开锁失败，请稍后重试");
-            }
         };
 
         MyReceiver.addLockListener(mParkInfo.getParkLockId(), lockListener);
