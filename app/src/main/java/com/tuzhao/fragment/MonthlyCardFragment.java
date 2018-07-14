@@ -104,6 +104,11 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
                         stopLoadStatus();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
+                                case "101":
+                                    if (!mCommonAdapter.getData().isEmpty()) {
+                                        showFiveToast("没有更多数据了哦");
+                                    }
+                                    break;
                                 default:
                                     showFiveToast(e.getMessage());
                                     break;

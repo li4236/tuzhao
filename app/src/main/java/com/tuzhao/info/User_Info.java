@@ -15,6 +15,10 @@ public class User_Info extends BaseInfo {
     private String password;//用户密码
     private String balance;//账户余额
     private String nickname;//用户昵称
+    private String realName;//真实姓名
+    private String gender;//性别
+    private String birthday;//生日
+    private String numberOfPark;//停车次数
     private String img_url;//用户头像
     private String car_number;//车牌号
     private String create_time;//用户注册时间
@@ -25,6 +29,8 @@ public class User_Info extends BaseInfo {
     private String serect_code;//用户通行码
     private String alinumber = "-1";//支付宝账号
     private String aliNickName = "";//支付宝用户昵称
+    private String wechatName;//微信的用户id
+    private String sesameScore;
 
     private String stage;//阶段分
     private String default_late_time;//默认晚退延时时间
@@ -298,6 +304,54 @@ public class User_Info extends BaseInfo {
         this.create_time = create_time;
     }
 
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getNumberOfPark() {
+        return numberOfPark;
+    }
+
+    public void setNumberOfPark(String numberOfPark) {
+        this.numberOfPark = numberOfPark;
+    }
+
+    public String getWechatName() {
+        return wechatName;
+    }
+
+    public void setWechatName(String wechatName) {
+        this.wechatName = wechatName;
+    }
+
+    public String getSesameScore() {
+        return sesameScore;
+    }
+
+    public void setSesameScore(String sesameScore) {
+        this.sesameScore = sesameScore;
+    }
+
     @Override
     public String toString() {
         return "User_Info{" +
@@ -307,6 +361,10 @@ public class User_Info extends BaseInfo {
                 ", password='" + password + '\'' +
                 ", balance='" + balance + '\'' +
                 ", nickname='" + nickname + '\'' +
+                ", realName='" + realName + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", numberOfPark='" + numberOfPark + '\'' +
                 ", img_url='" + img_url + '\'' +
                 ", car_number='" + car_number + '\'' +
                 ", create_time='" + create_time + '\'' +
@@ -317,6 +375,8 @@ public class User_Info extends BaseInfo {
                 ", serect_code='" + serect_code + '\'' +
                 ", alinumber='" + alinumber + '\'' +
                 ", aliNickName='" + aliNickName + '\'' +
+                ", wechatName='" + wechatName + '\'' +
+                ", sesameScore='" + sesameScore + '\'' +
                 ", stage='" + stage + '\'' +
                 ", default_late_time='" + default_late_time + '\'' +
                 ", add_late_time='" + add_late_time + '\'' +

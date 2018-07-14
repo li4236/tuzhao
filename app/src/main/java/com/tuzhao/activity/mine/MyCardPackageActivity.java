@@ -100,6 +100,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
             case R.id.all_card:
             case R.id.all_card_indicate:
                 if (!isVisible(mAllCardIndicate)) {
+                    showViewStub(View.GONE);
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     mAllCard.setTextColor(ConstansUtil.B1_COLOR);
                     mExpiredCard.setTextColor(ConstansUtil.G6_COLOR);
@@ -112,6 +113,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
             case R.id.expired_card:
             case R.id.expired_card_indicate:
                 if (!isVisible(mExpiredCardIndicate)) {
+                    showViewStub(View.GONE);
                     mAllCard.setTextColor(ConstansUtil.G6_COLOR);
                     mExpiredCard.setTextColor(ConstansUtil.B1_COLOR);
                     mAllCardIndicate.setVisibility(View.INVISIBLE);

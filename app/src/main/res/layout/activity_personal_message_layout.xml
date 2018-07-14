@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:background="#f5d981" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/person_message_cl"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.tuzhao.publicwidget.others.CircleImageView
+                    android:id="@+id/user_protrait"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="26dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/nickname"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toEndOf="@id/user_protrait"
+                    app:layout_constraintTop_toTopOf="@+id/user_protrait" />
+
+                <TextView
+                    android:id="@+id/user_gender"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="@id/nickname"
+                    app:layout_constraintTop_toBottomOf="@+id/nickname" />
+
+                <TextView
+                    android:id="@+id/birthday"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="@id/nickname"
+                    app:layout_constraintTop_toBottomOf="@+id/user_gender" />
+
+                <ImageView
+                    android:id="@+id/edit_personal_message"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/picture_description"
+                    android:padding="16dp"
+                    android:src="@mipmap/ic_write"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/number_of_park"
+                    style="@style/FortyTextB1Style"
+                    android:layout_marginBottom="16dp"
+                    android:text="停车次数0次"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/user_protrait" />
+
+                <TextView
+                    android:id="@+id/user_level"
+                    style="@style/FortyTextB1Style"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/number_of_park"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/security_information"
+                style="@style/TwentyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:text="安全信息"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/person_message_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/telephone_number_cl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/security_information">
+
+                <ImageView
+                    android:id="@+id/telephone_number_iv"
+                    android:layout_width="8dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_phonenumber"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="手机号码"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/telephone_number_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/telephone_number_tv"
+                    style="@style/CenterVerticalTwentyTextB1"
+                    android:layout_marginEnd="4dp"
+                    android:text="未绑定"
+                    android:textColor="@color/g6"
+                    app:layout_constraintEnd_toStartOf="@+id/telephone_number_right" />
+
+                <ImageView
+                    android:id="@+id/telephone_number_right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/modify_password_cl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/telephone_number_cl">
+
+                <ImageView
+                    android:id="@+id/modify_password_iv"
+                    android:layout_width="10dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_newlock"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="修改密码"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/modify_password_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/modify_password_right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/account_bingding"
+                style="@style/TwentyTextB1Style"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:text="账号绑定"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/modify_password_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/wechat_bingding_cl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/account_bingding">
+
+                <ImageView
+                    android:id="@+id/wechat_bingding_iv"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="13dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_wechatpay"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="微信绑定"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/wechat_bingding_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/wechat_bingding_tv"
+                    style="@style/CenterVerticalTwentyTextB1"
+                    android:layout_marginEnd="4dp"
+                    android:text="未绑定"
+                    android:textColor="@color/g6"
+                    app:layout_constraintEnd_toStartOf="@+id/wechat_bingding_right" />
+
+                <ImageView
+                    android:id="@+id/wechat_bingding_right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/alipay_bingding_cl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/wechat_bingding_cl">
+
+                <ImageView
+                    android:id="@+id/alipay_bingding_iv"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="13dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_alipay"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="支付宝绑定"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/alipay_bingding_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/alipay_bingding_tv"
+                    style="@style/CenterVerticalTwentyTextB1"
+                    android:layout_marginEnd="4dp"
+                    android:text="未绑定"
+                    android:textColor="@color/g6"
+                    app:layout_constraintEnd_toStartOf="@+id/alipay_bingding_right" />
+
+                <ImageView
+                    android:id="@+id/alipay_bingding_right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/user_authentication"
+                style="@style/TwentyTextB1Style"
+                android:layout_marginTop="12dp"
+                android:text="用户认证"
+                app:layout_constraintStart_toStartOf="@id/account_bingding"
+                app:layout_constraintTop_toBottomOf="@+id/alipay_bingding_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/sesame_certification_cl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/w0"
+                android:paddingBottom="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/user_authentication">
+
+                <ImageView
+                    android:id="@+id/sesame_certification_iv"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="13dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_sesame"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="芝麻认证"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/sesame_certification_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/sesame_certification_tv"
+                    style="@style/CenterVerticalTwentyTextB1"
+                    android:layout_marginEnd="4dp"
+                    android:text="未认证"
+                    android:textColor="@color/g6"
+                    app:layout_constraintEnd_toStartOf="@+id/sesame_certification_right" />
+
+                <ImageView
+                    android:id="@+id/sesame_certification_right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

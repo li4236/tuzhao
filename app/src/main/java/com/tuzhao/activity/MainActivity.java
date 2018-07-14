@@ -69,7 +69,7 @@ import com.tuzhao.activity.mine.CreditActivity;
 import com.tuzhao.activity.mine.MyParkspaceActivityRefactor;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
-import com.tuzhao.activity.mine.PersonalMessageActivity;
+import com.tuzhao.activity.mine.PersonalMessageRefactorActivity;
 import com.tuzhao.activity.mine.PhotoActivity;
 import com.tuzhao.activity.mine.SetActivity;
 import com.tuzhao.activity.mine.ShareActivity;
@@ -397,7 +397,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.user_info:
                 //跳转个人页面
-                intent = new Intent(MainActivity.this, PersonalMessageActivity.class);
+                intent = new Intent(MainActivity.this, PersonalMessageRefactorActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_content_main_layout_imageview_search:
