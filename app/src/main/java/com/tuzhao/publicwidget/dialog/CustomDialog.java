@@ -190,11 +190,16 @@ public class CustomDialog extends Dialog {
             }
         });
 
+        SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
+                DateUtil.deleteSecond(parkOrderInfo.getOrder_endtime()), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
+                Double.valueOf(parkOrderInfo.getLow_fee()))) + "元");
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        parkFee.setText(spannableString);
+
         mIsPolling = true;
         mPollingUtil = new PollingUtil(1000 * 60, new PollingUtil.OnTimeCallback() {
             @Override
             public void onTime() {
-                double overFee;
                 if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
                         DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
                     //停车时长超过预约时长
@@ -213,9 +218,9 @@ public class CustomDialog extends Dialog {
                     if (string.contains("小时")) {
                         hourPosition = string.indexOf("小时");
                         if (dayPosition != -1) {
-                            overtimeMinutes = Integer.valueOf(string.substring(dayPosition + 1, hourPosition)) * 60;
+                            overtimeMinutes += Integer.valueOf(string.substring(dayPosition + 1, hourPosition)) * 60;
                         } else {
-                            overtimeMinutes = Integer.valueOf(string.substring(0, hourPosition)) * 60;
+                            overtimeMinutes += Integer.valueOf(string.substring(0, hourPosition)) * 60;
                         }
                         timeout.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), dayPosition + 1, hourPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -232,9 +237,7 @@ public class CustomDialog extends Dialog {
                     overtimeDuration.setText(timeout);
 
                     //计算出超时费用
-                    overFee = Double.parseDouble(DateUtil.decreseOneZero(decimalFormat.format(
-                            Double.valueOf(parkOrderInfo.getFine()) * overtimeMinutes / 60)));
-                    String fineFee = overFee + "元";
+                    String fineFee = decimalFormat.format(Double.valueOf(parkOrderInfo.getFine()) / 60.0 * overtimeMinutes) + "元";
                     SpannableString spannableString = new SpannableString(fineFee);
                     spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, fineFee.length() - 1,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -243,7 +246,7 @@ public class CustomDialog extends Dialog {
                     findViewById(R.id.overtime_duration_tv).setVisibility(View.VISIBLE);
                     findViewById(R.id.overtime_fee_tv).setVisibility(View.VISIBLE);
 
-                    //总费用为预约时间费用加超时费用
+                    /*//总费用为预约时间费用加超时费用
                     SpannableString spannable = new SpannableString("约" + DateUtil.decreseOneZero(decimalFormat.format(
                             DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
                                     DateUtil.getYearToMinute(parkOrderInfo.getOrder_endtime(),
@@ -251,15 +254,15 @@ public class CustomDialog extends Dialog {
                                     parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                                     Double.valueOf(parkOrderInfo.getLow_fee())) + overFee)) + "元");
                     spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannable.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    parkFee.setText(spannable);
-                } else {
+                    parkFee.setText(spannable);*/
+                } /*else {
                     //没有超时
                     SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
                             DateUtil.getCurrentYearToMinutes(), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                             Double.valueOf(parkOrderInfo.getLow_fee()))) + "元");
                     spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     parkFee.setText(spannableString);
-                }
+                }*/
 
             }
         });

@@ -31,7 +31,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="14dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_surplus"
+        android:src="@drawable/ic_remain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
@@ -44,14 +44,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
-    <TextView
+<!--    <TextView
         android:id="@+id/appointment_income_time_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="4dp"
         android:text="(剩余时长)"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time" />-->
 
     <ImageView
         android:id="@+id/appointment_park_date_iv"
@@ -59,7 +59,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_timing"
+        android:src="@drawable/ic_timeto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -71,14 +71,14 @@
         app:layout_constraintStart_toStartOf="@id/appointment_park_date_iv"
         app:layout_constraintTop_toBottomOf="@+id/appointment_park_date_iv" />
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/appointment_park_date_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="4dp"
         android:text="（开始时间）"
         app:layout_constraintEnd_toEndOf="@id/appointment_park_date"
         app:layout_constraintStart_toStartOf="@id/appointment_park_date"
-        app:layout_constraintTop_toBottomOf="@+id/appointment_park_date" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_date" />-->
 
     <ImageView
         android:id="@+id/park_duration_iv"
@@ -86,7 +86,7 @@
         android:layout_height="30dp"
         android:layout_marginEnd="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_cash"
+        android:src="@drawable/ic_money8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -98,14 +98,14 @@
         app:layout_constraintStart_toStartOf="@+id/park_duration_iv"
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/park_hint"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="4dp"
         android:text="（已停时长）"
         app:layout_constraintEnd_toEndOf="@+id/park_duration"
         app:layout_constraintStart_toStartOf="@+id/park_duration"
-        app:layout_constraintTop_toBottomOf="@+id/park_duration" />
+        app:layout_constraintTop_toBottomOf="@+id/park_duration" />-->
 
     <TextView
         android:id="@+id/leave_time"
@@ -114,7 +114,7 @@
         android:textColor="#ff0101"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/park_duration" />
 
     <TextView
         android:id="@+id/overtime_fee"

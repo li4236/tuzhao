@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
@@ -30,9 +31,11 @@ import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.PollingUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -53,7 +56,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private TextView mStartParkTime;
 
-    private TextView mRemainTime;
+    private ImageView mRemainTimeIv;
+
+    //private TextView mRemainTime;
 
     private TextView mParkSpaceLocation;
 
@@ -62,6 +67,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     private TextView mLeaveTime;
 
     private TextView mOvertimeFee;
+
+    private DecimalFormat mDecimalFormat;
 
     private ArrayList<String> mParkSpacePictures;
 
@@ -108,7 +115,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
         mParkDate = view.findViewById(R.id.appointment_park_date);
         mStartParkTime = view.findViewById(R.id.appointment_income_time);
-        mRemainTime = view.findViewById(R.id.appointment_income_time_tv);
+        mRemainTimeIv = view.findViewById(R.id.appointment_income_time_iv);
+        //mRemainTime = view.findViewById(R.id.appointment_income_time_tv);
         mLeaveTime = view.findViewById(R.id.leave_time);
         mOvertimeFee = view.findViewById(R.id.overtime_fee);
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
@@ -126,7 +134,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     @Override
     protected void initData() {
-        mParkDate.setText(DateUtil.getPointToMinute(mParkOrderInfo.getPark_start_time()));
+        mDecimalFormat = new DecimalFormat("0.00");
+
+        mParkDate.setText(DateUtil.getDayPointMinute(mParkOrderInfo.getPark_start_time()));
         mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
         String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
         mLeaveTime.setText(leaveTime);
@@ -228,14 +238,26 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     private void calculateDuration() {
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
+            mStartParkTime.setText(DateUtil.getDistanceForHourMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
+            ImageUtil.showPic(mRemainTimeIv, R.drawable.ic_overtime);
             //超时了
-            mStartParkTime.setText(DateUtil.getDistanceForDayTimeMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
-            if (!getText(mRemainTime).equals("（已超时）")) {
+          /*  if (!getText(mRemainTime).equals("（已超时）")) {
                 mRemainTime.setText("（已超时）");
-            }
+            }*/
             if (mCanExtendsionTime) {
                 mCanExtendsionTime = false;
             }
+
+            Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
+            calendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
+
+            double parkFee = Double.valueOf(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.getCalenarYearToMinutes(calendar),
+                    mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee())));
+
+            long overTimeMinutes = DateUtil.getCalendarDistance(calendar, Calendar.getInstance());
+            parkFee += Double.valueOf(mParkOrderInfo.getFine()) / 60.0 * overTimeMinutes;
+
+            mParkDuration.setText(String.valueOf(mDecimalFormat.format(parkFee)));
         } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0
                 && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
@@ -243,14 +265,19 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             //在顺延时间内
             mStartParkTime.setText(DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(),
                     mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()));
-            if (!getText(mRemainTime).equals("（剩余宽限时长）")) {
+            ImageUtil.showPic(mRemainTimeIv, R.drawable.ic_shunyan);
+            /*if (!getText(mRemainTime).equals("（剩余宽限时长）")) {
                 mRemainTime.setText("（剩余宽限时长）");
-            }
+            }*/
+            mParkDuration.setText(mDecimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.deleteSecond(DateUtil.getCurrentYearToSecond()),
+                    mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()))));
         } else {
             //未到顺延时间
             mStartParkTime.setText(DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrder_endtime()));
+            mParkDuration.setText(mDecimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.deleteSecond(DateUtil.getCurrentYearToSecond()),
+                    mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()))));
         }
-        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), DateUtil.getCurrentYearToSecond()));
+
     }
 
     private void calculateMaxMinutes() {
