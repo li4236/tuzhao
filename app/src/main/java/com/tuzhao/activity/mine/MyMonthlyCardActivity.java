@@ -30,6 +30,10 @@ public class MyMonthlyCardActivity extends BaseStatusActivity implements View.On
 
     private ViewStub mViewStub;
 
+    private TextView mNoMonthlyCardTv;
+
+    private TextView mBuyNowTv;
+
     private MonthlyCardFragment mAllCardFragment;
 
     private MonthlyCardFragment mExpriredFragment;
@@ -72,6 +76,8 @@ public class MyMonthlyCardActivity extends BaseStatusActivity implements View.On
         if (mViewStub == null) {
             mViewStub = findViewById(R.id.no_monthly_card_vs);
             View view = mViewStub.inflate();
+            mNoMonthlyCardTv = view.findViewById(R.id.no_monthly_card_tv);
+            mBuyNowTv = view.findViewById(R.id.buy_now);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,6 +90,19 @@ public class MyMonthlyCardActivity extends BaseStatusActivity implements View.On
                     startActivity(BuyMonthlyCardActivity.class);
                 }
             });
+        }
+        if (visibility == View.VISIBLE) {
+            if (isVisible(mAllCardIndicate)) {
+                mNoMonthlyCardTv.setText("您暂时没有月卡哦");
+                if (!isVisible(mBuyNowTv)) {
+                    mBuyNowTv.setVisibility(View.VISIBLE);
+                }
+            } else {
+                mNoMonthlyCardTv.setText("您没有过期的月卡哦");
+                if (isVisible(mBuyNowTv)) {
+                    mBuyNowTv.setVisibility(View.GONE);
+                }
+            }
         }
         mViewStub.setVisibility(visibility);
     }
