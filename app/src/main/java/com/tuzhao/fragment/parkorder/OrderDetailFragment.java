@@ -79,6 +79,8 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mChangeCredit;
 
+    private TextView mParkSpaceLocation;
+
     //private TextView mTotalCredit;
 
     private ParkOrderInfo mParkOrderInfo;
@@ -166,6 +168,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         mParkTime = view.findViewById(R.id.pay_for_order_time);
         //mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
         mChangeCredit = view.findViewById(R.id.pay_for_order_credit);
+        mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         //mTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
         mParkComment = view.findViewById(R.id.park_comment_tv);
 
@@ -200,6 +203,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         mOrderFee.setText(DateUtil.decreseOneZero(mParkOrderInfo.getActual_pay_fee()));
+        mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
         if (mParkOrderInfo.getDiscount() != null && !mParkOrderInfo.getDiscount().getId().equals("-1")) {
             String disount = "（优惠券—" + DateUtil.decreseOneZero(mParkOrderInfo.getDiscount().getDiscount()) + "）";
             SpannableString spannableString = new SpannableString(disount);

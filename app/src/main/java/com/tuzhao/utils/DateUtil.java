@@ -2890,4 +2890,20 @@ public class DateUtil {
             return null;
         }
     }
+
+    public interface StartParkCallback {
+
+        void beforeStartTimeOfAppointment();
+
+        void afterStartTimeOfAppointment();
+
+    }
+
+    public interface EndParkCallPark {
+
+        void onAppointmentTime();
+
+        void onOverTime();
+
+    }
 }

@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
@@ -44,9 +42,6 @@ import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.MainTimeUtil;
 import com.tuzhao.utils.TimeUtil;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -63,25 +58,15 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private ParkOrderInfo mParkOrderInfo;
 
-    private ImageView mParkDateIv;
-
     private TextView mParkDate;
 
     private TextView mStartParkTime;
-
-    private ImageView mStartParkTimeIv;
 
     private TextView mParkSpaceLocation;
 
     private TextView mParkDuration;
 
-    private ImageView mParkDurationIv;
-
-    private TextView mOpenLock;
-
     private ArrayList<String> mParkSpacePictures;
-
-    private boolean mIsTimeOut;
 
     /**
      * -1（未开锁），0（开锁成功），1（开锁成功，车位上方有车停留）2（开锁失败）
@@ -116,17 +101,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private CustomDialog mCustomDialog;
 
-    private TimeUtil mTimeUtil;
-
-    private long mInterval = 60 * 1000;
-
     private Calendar mCurrentCalendar;
 
     private Calendar mOrderStartCalendar;
-
-    private Handler mHandler;
-
-    private static final int TIME_IN_MILLISS = 0x123;
 
     private List<Park_Info> mParkSpaceList;
 
@@ -153,14 +130,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
         }
 
-        mParkDateIv = view.findViewById(R.id.appointment_park_date_iv);
         mParkDate = view.findViewById(R.id.appointment_park_date);
         mStartParkTime = view.findViewById(R.id.appointment_income_time);
-        mStartParkTimeIv = view.findViewById(R.id.appointment_income_time_iv);
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         mParkDuration = view.findViewById(R.id.park_duration);
-        mParkDurationIv = view.findViewById(R.id.park_duration_iv);
-        mOpenLock = view.findViewById(R.id.open_lock);
 
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
@@ -169,7 +142,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
-        mOpenLock.setOnClickListener(this);
+        view.findViewById(R.id.open_lock).setOnClickListener(this);
     }
 
     @Override
@@ -181,8 +154,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
         mCurrentCalendar = Calendar.getInstance();
         mOrderStartCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime());
-        initHandler();
-        startPollingTime();
 
         OnLockListener lockListener = new OnLockListener() {
             @Override
@@ -250,10 +221,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     public void onDestroyView() {
         super.onDestroyView();
         MyReceiver.removeLockListener(mParkOrderInfo.getLockId());
-        if (mTimeUtil != null) {
-            mTimeUtil.cancel();
-        }
-        mHandler.removeCallbacksAndMessages(null);
         mOpenLockStatus = -1;
         cancelAllAnimator();
     }
@@ -298,79 +265,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 showAppointmentDetail();
                 break;
             case R.id.open_lock:
-                if (!mIsTimeOut) {
-                    showFiveToast("还没到开始停车时间哦");
-                } else if (mIsOpening) {
+                if (mIsOpening) {
                     showOpenLockDialog();
                 } else {
                     openParkLock();
                 }
                 break;
         }
-    }
-
-    /**
-     * 获取网络当前时间的时间戳
-     */
-    private void getCurrentTimeInMillis() {
-        try {
-            URL url = new URL("http://www.baidu.com");// 取得资源对象
-            URLConnection uc = url.openConnection();// 生成连接对象
-            uc.connect();// 发出连接
-            Message message = mHandler.obtainMessage();
-            message.what = TIME_IN_MILLISS;
-            message.obj = uc.getDate();// 读取网站日期时间
-            mHandler.sendMessage(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initHandler() {
-        mHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == TIME_IN_MILLISS) {
-                    mCurrentCalendar.setTimeInMillis((long) msg.obj);
-                    if (mOrderStartCalendar.compareTo(mCurrentCalendar) > 0) {
-                        //未到预约开始停车时间
-                        mOpenLock.setBackgroundResource(R.drawable.all_g1_5dp);
-                        if (mInterval == 60 * 1000) {
-                            caculateIntervalTime();
-                            mTimeUtil.setInterval(mInterval);
-                        }
-                    } else {
-                        ImageUtil.showPic(mParkDateIv, R.drawable.ic_date7);
-                        ImageUtil.showPic(mStartParkTimeIv, R.drawable.ic_timeto6);
-                        ImageUtil.showPic(mParkDurationIv, R.drawable.ic_alltime6);
-                        mIsTimeOut = true;
-                        mOpenLock.setBackgroundResource(R.drawable.little_yuan_yellow_5dp);
-                        mTimeUtil.cancel();
-                        mTimeUtil = null;
-                    }
-                }
-                return true;
-            }
-        });
-    }
-
-    private void caculateIntervalTime() {
-        long intervalTime = (mCurrentCalendar.getTimeInMillis() - mOrderStartCalendar.getTimeInMillis());
-        if (intervalTime >= 60 * 1000) {
-            mInterval = intervalTime / 2;
-        } else {
-            mInterval = Math.abs(intervalTime) + 1;     //防止等于0报错
-        }
-    }
-
-    private void startPollingTime() {
-        mTimeUtil = new TimeUtil(mInterval, new TimeUtil.TimeCallback() {
-            @Override
-            public void onTimeIn() {
-                getCurrentTimeInMillis();
-            }
-        });
-        mTimeUtil.start();
     }
 
     private void cancelAppointment() {
@@ -397,6 +298,16 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "103":
+                                case "104":
+                                    showFiveToast("服务器异常，请稍后重试");
+                                    break;
+                                case "102":
+                                    showFiveToast("取消订单失败，请稍后重试");
+                                    break;
+                            }
                             showFiveToast(e.getMessage());
                         }
                     }
@@ -649,19 +560,19 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     }
 
     private void openParkLock() {
-        showOpenLockDialog();
-        mIsOpening = true;
-        OkGo.post(HttpConstants.controlParkLock)
+        showLoadingDialog();
+        OkGo.post(HttpConstants.requestOrderPark)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("ctrl_type", "1")
-                .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("orderId", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> aVoid, Call call, Response response) {
-
+                        dismmisLoadingDialog();
+                        showOpenLockDialog();
+                        mIsOpening = true;
                     }
 
                     @Override
@@ -748,7 +659,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                             mCanParkList = new LinkedList<>();
                         }
                         DataUtil.findCanParkList(mCanParkList, mParkSpaceList, DateUtil.getYearToMinute(mParkOrderInfo.getOrder_starttime(), 0),
-                                mParkOrderInfo.getOrder_endtime());
+                                DateUtil.deleteSecond(mParkOrderInfo.getOrder_endtime()));
                         if (mCanParkList.isEmpty()) {
                             showNoParkSpaceDialog();
                         } else {

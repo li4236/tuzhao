@@ -251,8 +251,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
             calendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
 
-            double parkFee = Double.valueOf(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.getCalenarYearToMinutes(calendar),
-                    mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee())));
+            double parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.getCalenarYearToMinutes(calendar),
+                    mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
 
             long overTimeMinutes = DateUtil.getCalendarDistance(calendar, Calendar.getInstance());
             parkFee += Double.valueOf(mParkOrderInfo.getFine()) / 60.0 * overTimeMinutes;

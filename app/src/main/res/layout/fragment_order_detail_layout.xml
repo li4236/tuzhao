@@ -110,7 +110,7 @@
             app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />-->
 
     <View
-        android:id="@+id/park_hint_divider"
+        android:id="@+id/park_location_divider"
         style="@style/dividerStyle"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
@@ -118,6 +118,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />
+
+    <ImageView
+        android:id="@+id/appointment_park_location_iv"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="9dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_position"
+        app:layout_constraintBottom_toBottomOf="@+id/appointment_park_location"
+        app:layout_constraintStart_toStartOf="@+id/park_hint_divider"
+        app:layout_constraintTop_toTopOf="@+id/appointment_park_location" />
+
+    <TextView
+        android:id="@+id/appointment_park_location"
+        style="@style/TwentyTextG6Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="2"
+        app:layout_constraintEnd_toEndOf="@id/park_hint_divider"
+        app:layout_constraintStart_toEndOf="@+id/appointment_park_location_iv"
+        app:layout_constraintTop_toBottomOf="@+id/park_location_divider" />
+
+    <View
+        android:id="@+id/park_hint_divider"
+        style="@style/dividerStyle"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_location" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/contact_service_cl"

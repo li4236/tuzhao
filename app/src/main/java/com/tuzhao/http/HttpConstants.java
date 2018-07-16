@@ -561,4 +561,9 @@ public class HttpConstants {
      */
     public static String getWechatBuyMonthlyCardInfo = ROOT_URL + "getWechatBuyMonthlyCardInfo";
 
+    /**
+     * 请求订单停车
+     */
+    public static String requestOrderPark = ROOT_URL + "requestOrderPark";
+
 }
