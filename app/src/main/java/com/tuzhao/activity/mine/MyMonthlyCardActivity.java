@@ -18,7 +18,7 @@ import com.tuzhao.utils.IntentObserver;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class MyCardPackageActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
+public class MyMonthlyCardActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private TextView mAllCard;
 
@@ -91,7 +91,7 @@ public class MyCardPackageActivity extends BaseStatusActivity implements View.On
     @NonNull
     @Override
     protected String title() {
-        return "卡包";
+        return "月卡";
     }
 
     @Override

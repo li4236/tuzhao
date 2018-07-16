@@ -168,7 +168,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.mine.CreditActivity" />
         <activity android:name=".activity.mine.CreditRecordActivity" />
-        <activity android:name=".activity.mine.MyCardPackageActivity" />
+        <activity android:name=".activity.mine.MyMonthlyCardActivity" />
         <activity android:name=".activity.mine.BuyMonthlyCardActivity" />
         <activity android:name=".activity.mine.PersonalMessageRefactorActivity" />
 

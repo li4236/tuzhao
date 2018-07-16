@@ -306,7 +306,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             mPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
-                    if (mLastChooseArea[0] != options1 && mLastChooseArea[1] != option2 &&
+                    if (mLastChooseArea[0] != options1 || mLastChooseArea[1] != option2 ||
                             !mChooseCityCode.equals(mMonthlyCards.get(options1).getCitys().get(option2).getCityCode())) {
                         //只有选择不一样的城市才刷新数据
                         mChooseCityCode = mMonthlyCards.get(options1).getCitys().get(option2).getCityCode();
@@ -369,17 +369,12 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                         if (mChooseCityCode.equals(mMonthlyCards.get(i).getCitys().get(j).getCityCode())) {
                             mAdapter.setNewData(mMonthlyCards.get(i).getCitys().get(j).getCityMonthlyCards());
                             String cityName = mMonthlyCards.get(i).getCitys().get(j).getCity();
-                            if (cityName.contains("全国")) {
-                                mChooseCardTv.setText("当前选择：全国月卡");
-                                setCurrentChooseCard(false);
-                            } else {
-                                mLastChooseArea[0] = i;
-                                mLastChooseArea[1] = j;
-                                setCurrentChooseCard(true);
-                                cityName = cityName.replace("市", "");
-                                mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
-                                mMonthlyCardArea.setText(cityName + "卡");
-                            }
+                            mLastChooseArea[0] = i;
+                            mLastChooseArea[1] = j;
+                            setCurrentChooseCard(true);
+                            cityName = cityName.replace("市", "");
+                            mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
+                            mMonthlyCardArea.setText(cityName + "卡");
                             break;
                         }
                     }
