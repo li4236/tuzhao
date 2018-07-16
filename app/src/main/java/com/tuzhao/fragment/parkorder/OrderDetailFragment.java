@@ -71,15 +71,15 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     private TextView mOrderFee;
 
-    private TextView mOrderDiscount;
+    //private TextView mOrderDiscount;
 
     private TextView mParkTime;
 
-    private TextView mParkTimeDescription;
+    //private TextView mParkTimeDescription;
 
     private TextView mChangeCredit;
 
-    private TextView mTotalCredit;
+    //private TextView mTotalCredit;
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -162,11 +162,11 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         }
 
         mOrderFee = view.findViewById(R.id.pay_for_order_fee);
-        mOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
+        //mOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
         mParkTime = view.findViewById(R.id.pay_for_order_time);
-        mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
+        //mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
         mChangeCredit = view.findViewById(R.id.pay_for_order_credit);
-        mTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
+        //mTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
         mParkComment = view.findViewById(R.id.park_comment_tv);
 
         view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
@@ -204,22 +204,22 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             String disount = "（优惠券—" + DateUtil.decreseOneZero(mParkOrderInfo.getDiscount().getDiscount()) + "）";
             SpannableString spannableString = new SpannableString(disount);
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 4, disount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mOrderDiscount.setText(spannableString);
+            //mOrderDiscount.setText(spannableString);
         }
 
         mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
-            String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
-            mParkTimeDescription.setText(timeout);
+            //String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
+            //mParkTimeDescription.setText(timeout);
             mChangeCredit.setTextColor(Color.parseColor("#ff6c6c"));
             mChangeCredit.setText("-5");
         } else {
             mChangeCredit.setText("+3");
         }
 
-        String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
-        mTotalCredit.setText(totalCredit);
+        /*String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
+        mTotalCredit.setText(totalCredit);*/
 
         mDecimalFormat = new DecimalFormat("0.0");
         IntentObserable.registerObserver(this);

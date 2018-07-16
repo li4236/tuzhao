@@ -51,17 +51,19 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
     private ParkOrderInfo mParkOrderInfo;
 
+    private ImageView mParkDurationIv;
+
     private TextView mParkTime;
 
-    private TextView mParkTimeDescription;
+    //private TextView mParkTimeDescription;
 
     private TextView mParkOrderFee;
 
-    private TextView mParkOrderDiscount;
+    //private TextView mParkOrderDiscount;
 
     private TextView mParkOrderCredit;
 
-    private TextView mUserTotalCredit;
+    //private TextView mUserTotalCredit;
 
     private ImageView mCollectIv;
 
@@ -108,14 +110,15 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
         }
 
+        mParkDurationIv = view.findViewById(R.id.pay_for_order_time_iv);
         mParkTime = view.findViewById(R.id.pay_for_order_time);
-        mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
+        //mParkTimeDescription = view.findViewById(R.id.appointment_park_date_tv);
         mCollectIv = view.findViewById(R.id.collect_park_lot_iv);
         mCollectTv = view.findViewById(R.id.collect_park_lot_tv);
         mParkOrderFee = view.findViewById(R.id.pay_for_order_fee);
-        mParkOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
+        //mParkOrderDiscount = view.findViewById(R.id.pay_for_order_discount);
         mParkOrderCredit = view.findViewById(R.id.pay_for_order_credit);
-        mUserTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
+        //mUserTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
         mParkDiscount = view.findViewById(R.id.park_discount);
         mShouldPayFee = view.findViewById(R.id.pay_for_order_should_pay);
 
@@ -138,14 +141,17 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
-            mParkTimeDescription.setText(timeout);
+            /*String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
+            mParkTimeDescription.setText(timeout);*/
 
+            ImageUtil.showPic(mParkDurationIv, R.drawable.ic_overtime);
+            mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
             mParkOrderCredit.setText("-5");
         } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时间在顺延时长内
             mParkOrderCredit.setText("+3");
+            mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
         } else {
             //停车时间不到预约的结束时间
             int totalAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime());
@@ -158,7 +164,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             mParkOrderCredit.setText("+3");
         }
 
-        mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
         mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
         String startDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time());
         String endDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time());
@@ -169,8 +174,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         Log.e(TAG, "initData: " + new DecimalFormat("0.00").format(DateUtil.caculateParkFee(startDate, endDate, mParkOrderInfo.getHigh_time(),
                 Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()))));
 
-        String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
-        mUserTotalCredit.setText(totalCredit);
+        /*String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
+        mUserTotalCredit.setText(totalCredit);*/
 
         setCollection(CollectionManager.getInstance().isContainParkLot(mParkOrderInfo.getBelong_park_space()));
         calculateShouldPayFee();
@@ -387,7 +392,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      */
     private void calculateShouldPayFee() {
         mShouldPay = Double.parseDouble(DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrder_fee())));
-        String shouldPay = "确认支付" + mShouldPay + "元";
+        String shouldPay;
         if (mChooseDiscount != null) {
             double discountFee = Double.valueOf(mChooseDiscount.getDiscount());
             if (Double.valueOf(mChooseDiscount.getDiscount()) >= 0) {
@@ -395,7 +400,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 SpannableString spannableString = new SpannableString(discount);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")),
                         discount.indexOf("—"), discount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mParkOrderDiscount.setText(spannableString);
+                //mParkOrderDiscount.setText(spannableString);
 
                 String parkDiscount = "—￥" + discountFee;
                 mParkDiscount.setText(parkDiscount);
@@ -410,9 +415,12 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 } else {
                     shouldPay = "确认支付0.0元";
                 }
+            } else {
+                shouldPay = "确认支付" + mShouldPay + "元";
             }
         } else {
-            mParkDiscount.setText("（未用优惠券）");
+            //mParkDiscount.setText("（未用优惠券）");
+            shouldPay = "确认支付" + mShouldPay + "元";
             String discountCount = mCanUseDiscounts.size() + "张优惠券";
             mParkDiscount.setText(discountCount);
         }

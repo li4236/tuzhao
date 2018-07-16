@@ -30,7 +30,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="14dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_order_money"
+        android:src="@drawable/ic_cost6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
@@ -44,17 +44,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
-    <TextView
-        android:id="@+id/pay_for_order_discount"
-        style="@style/TenTextG6Stytle"
-        android:paddingBottom="6dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="6dp"
-        android:paddingTop="4dp"
-        android:text="（未用优惠劵）"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee" />
+    <!--   <TextView
+           android:id="@+id/pay_for_order_discount"
+           style="@style/TenTextG6Stytle"
+           android:paddingBottom="6dp"
+           android:paddingEnd="6dp"
+           android:paddingStart="6dp"
+           android:paddingTop="4dp"
+           android:text="（未用优惠劵）"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/pay_for_order_fee" />-->
 
     <ImageView
         android:id="@+id/pay_for_order_time_iv"
@@ -62,7 +62,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_order_time"
+        android:src="@drawable/ic_alltime6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -74,14 +74,14 @@
         app:layout_constraintStart_toStartOf="@id/pay_for_order_time_iv"
         app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time_iv" />
 
-    <TextView
-        android:id="@+id/appointment_park_date_tv"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginTop="4dp"
-        android:text="（无超时）"
-        app:layout_constraintEnd_toEndOf="@id/pay_for_order_time"
-        app:layout_constraintStart_toStartOf="@id/pay_for_order_time"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time" />
+    <!--    <TextView
+            android:id="@+id/appointment_park_date_tv"
+            style="@style/TenTextG6Stytle"
+            android:layout_marginTop="4dp"
+            android:text="（无超时）"
+            app:layout_constraintEnd_toEndOf="@id/pay_for_order_time"
+            app:layout_constraintStart_toStartOf="@id/pay_for_order_time"
+            app:layout_constraintTop_toBottomOf="@+id/pay_for_order_time" />-->
 
     <ImageView
         android:id="@+id/pay_for_order_credit_iv"
@@ -89,7 +89,7 @@
         android:layout_height="30dp"
         android:layout_marginEnd="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_credit"
+        android:src="@drawable/ic_credit6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -101,13 +101,13 @@
         app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit_iv"
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
-    <TextView
-        android:id="@+id/pay_for_order_total_credit"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit"
-        app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />
+    <!--    <TextView
+            android:id="@+id/pay_for_order_total_credit"
+            style="@style/TenTextG6Stytle"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/pay_for_order_credit"
+            app:layout_constraintStart_toStartOf="@+id/pay_for_order_credit"
+            app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />-->
 
     <View
         android:id="@+id/park_hint_divider"
@@ -117,7 +117,7 @@
         android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_total_credit" />
+        app:layout_constraintTop_toBottomOf="@+id/pay_for_order_credit" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/contact_service_cl"
@@ -267,11 +267,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/park_comment_tv"
             style="@style/TwentyTextB1Style"
             android:layout_marginBottom="14dp"
             android:layout_marginTop="14dp"
             android:drawableEnd="@mipmap/ic_right"
-            android:id="@+id/park_comment_tv"
             android:drawablePadding="8dp"
             android:text="停车评价"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -63,13 +63,19 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private ParkOrderInfo mParkOrderInfo;
 
+    private ImageView mParkDateIv;
+
     private TextView mParkDate;
 
     private TextView mStartParkTime;
 
+    private ImageView mStartParkTimeIv;
+
     private TextView mParkSpaceLocation;
 
     private TextView mParkDuration;
+
+    private ImageView mParkDurationIv;
 
     private TextView mOpenLock;
 
@@ -147,10 +153,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
         }
 
+        mParkDateIv = view.findViewById(R.id.appointment_park_date_iv);
         mParkDate = view.findViewById(R.id.appointment_park_date);
         mStartParkTime = view.findViewById(R.id.appointment_income_time);
+        mStartParkTimeIv = view.findViewById(R.id.appointment_income_time_iv);
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         mParkDuration = view.findViewById(R.id.park_duration);
+        mParkDurationIv = view.findViewById(R.id.park_duration_iv);
         mOpenLock = view.findViewById(R.id.open_lock);
 
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
@@ -166,7 +175,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     @Override
     protected void initData() {
         mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
-        mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrder_starttime()));
+        mStartParkTime.setText(DateUtil.getPointToMinute(mParkOrderInfo.getOrder_starttime()));
         mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
         mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
 
@@ -331,6 +340,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                             mTimeUtil.setInterval(mInterval);
                         }
                     } else {
+                        ImageUtil.showPic(mParkDateIv, R.drawable.ic_date7);
+                        ImageUtil.showPic(mStartParkTimeIv, R.drawable.ic_timeto6);
+                        ImageUtil.showPic(mParkDurationIv, R.drawable.ic_alltime6);
                         mIsTimeOut = true;
                         mOpenLock.setBackgroundResource(R.drawable.little_yuan_yellow_5dp);
                         mTimeUtil.cancel();

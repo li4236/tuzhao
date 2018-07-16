@@ -31,7 +31,7 @@
         android:layout_height="30dp"
         android:layout_marginTop="14dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_into"
+        android:src="@drawable/ic_graytimeto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
@@ -44,14 +44,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
-    <TextView
-        android:id="@+id/appointment_income_time_tv"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginTop="4dp"
-        android:text="(进场时间)"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time" />
+    <!--
+        <TextView
+            android:id="@+id/appointment_income_time_tv"
+            style="@style/TenTextG6Stytle"
+            android:layout_marginTop="4dp"
+            android:text="(进场时间)"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appointment_income_time" />
+    -->
 
     <ImageView
         android:id="@+id/appointment_park_date_iv"
@@ -59,7 +61,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_date"
+        android:src="@drawable/ic_graydate7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -71,14 +73,14 @@
         app:layout_constraintStart_toStartOf="@id/appointment_park_date_iv"
         app:layout_constraintTop_toBottomOf="@+id/appointment_park_date_iv" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/appointment_park_date_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginTop="4dp"
         android:text="（停车日期）"
         app:layout_constraintEnd_toEndOf="@id/appointment_park_date"
         app:layout_constraintStart_toStartOf="@id/appointment_park_date"
-        app:layout_constraintTop_toBottomOf="@+id/appointment_park_date" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_park_date" />-->
 
     <ImageView
         android:id="@+id/park_duration_iv"
@@ -86,7 +88,7 @@
         android:layout_height="30dp"
         android:layout_marginEnd="56dp"
         android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_order_time"
+        android:src="@drawable/ic_graytime11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
@@ -98,14 +100,14 @@
         app:layout_constraintStart_toStartOf="@+id/park_duration_iv"
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_iv" />
 
-    <TextView
-        android:id="@+id/park_hint"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginTop="4dp"
-        android:text="（停车时长）"
-        app:layout_constraintEnd_toEndOf="@+id/park_duration"
-        app:layout_constraintStart_toStartOf="@+id/park_duration"
-        app:layout_constraintTop_toBottomOf="@+id/park_duration" />
+    <!--  <TextView
+          android:id="@+id/park_hint"
+          style="@style/TenTextG6Stytle"
+          android:layout_marginTop="4dp"
+          android:text="（停车时长）"
+          app:layout_constraintEnd_toEndOf="@+id/park_duration"
+          app:layout_constraintStart_toStartOf="@+id/park_duration"
+          app:layout_constraintTop_toBottomOf="@+id/park_duration" />-->
 
     <View
         android:id="@+id/park_hint_divider"
@@ -115,7 +117,7 @@
         android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_hint" />
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time" />
 
     <ImageView
         android:id="@+id/appointment_park_location_iv"
