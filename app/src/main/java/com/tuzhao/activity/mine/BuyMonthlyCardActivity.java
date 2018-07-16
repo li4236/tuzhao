@@ -9,10 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.PayActivity;
@@ -22,7 +18,6 @@ import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.MonthlyCard;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
-import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
@@ -63,7 +58,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
 
     private OptionsPickerView<String> mPickerView;
 
-    private AMapLocationClient mAMapLocationClient;
+    //private AMapLocationClient mAMapLocationClient;
 
     /**
      * 选择的城市码，定位成功后如果请求到数据则自动选择当前城市，如果是手动选择城市的则记录选择的是哪个城市，用于支付请求参数
@@ -121,7 +116,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("由于各地区停车费用各不相同，所以月卡采取分地区制，请选择自己常在停车地区购买月卡。"));
         mThirdIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便多地停车经常出差用户，推出全国月卡，全国月卡在各地都能使用，收费采取统一收费。"));
 
-        if (LocationManager.getInstance().hasLocation()) {
+        /*if (LocationManager.getInstance().hasLocation()) {
             //如果已经定位成功的则显示当前的城市
             mChooseCityCode = LocationManager.getInstance().getmAmapLocation().getCityCode();
             setCurrenCityMonthlyCard();
@@ -129,7 +124,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             //没有定位成功则开始定位
             initLocation();
             mAMapLocationClient.startLocation();
-        }
+        }*/
 
         IntentObserable.registerObserver(this);
     }
@@ -193,9 +188,9 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mAMapLocationClient != null) {
+        /*if (mAMapLocationClient != null) {
             mAMapLocationClient.onDestroy();
-        }
+        }*/
         IntentObserable.unregisterObserver(this);
     }
 
@@ -247,19 +242,21 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                         mMonthlyCards = o.data;
                         if (!showPickerView) {
                             if (!mMonthlyCards.isEmpty()) {
-                                if (mChooseCityCode.equals("-1") && !seleteNationalCard) {
+                               /* if (mChooseCityCode.equals("-1") && !seleteNationalCard) {
                                     //如果没有定位成功则默认选择第一个城市
                                     mChooseCityCode = mMonthlyCards.get(0).getCitys().get(0).getCityCode();
-                                } else if (seleteNationalCard) {
+                                } else*/
+                                if (seleteNationalCard) {
                                     if (!mMonthlyCards.get(mMonthlyCards.size() - 1).getCitys().get(0).getCityCode().equals("0000")) {
                                         showFiveToast("全国月卡暂未开放，敬请期待!");
                                     } else {
                                         //全国月卡的位置为最后一个
                                         mNationalPosition = mMonthlyCards.size() - 1;
                                         mChooseCityCode = mMonthlyCards.get(mNationalPosition).getCitys().get(0).getCityCode();
+                                        setCurrenCityMonthlyCard();
                                     }
                                 }
-                                setCurrenCityMonthlyCard();
+                                //setCurrenCityMonthlyCard();
                             }
                         }
                         showPickerView(showPickerView);
@@ -329,7 +326,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
 
     }
 
-    private void initLocation() {
+/*    private void initLocation() {
         if (mAMapLocationClient == null) {
             mAMapLocationClient = new AMapLocationClient(this);
             AMapLocationClientOption aMapLocationClientOption = new AMapLocationClientOption();
@@ -353,7 +350,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                 }
             });
         }
-    }
+    }*/
 
     private void setCurrenCityMonthlyCard() {
         if (mMonthlyCards != null) {
