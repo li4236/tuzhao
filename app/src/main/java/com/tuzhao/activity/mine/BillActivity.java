@@ -59,7 +59,7 @@ public class BillActivity extends BaseActivity {
 
     private void initView() {
         mRecycleview = findViewById(R.id.id_activity_bill_layout_recycleview);
-        linearlayout_norecord =  findViewById(R.id.id_activity_bill_layout_linearlayout_nodata);
+        linearlayout_norecord = findViewById(R.id.id_activity_bill_layout_linearlayout_nodata);
         mRecycleview.init(new LinearLayoutManager(BillActivity.this), new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
         mRecycleview.setLoadingMoreEnable(true);
@@ -69,7 +69,7 @@ public class BillActivity extends BaseActivity {
 
     private void initData() {
         initLoading();
-        requstGetRecordList(null,null);
+        requstGetRecordList(null, null);
     }
 
     private void requstGetRecordList(String startItem, String pageSize) {
@@ -77,7 +77,7 @@ public class BillActivity extends BaseActivity {
         OkGo.post(HttpConstants.getUserBill)
                 .tag(BillActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("startItem", startItem == null ? "0" : startItem)
                 .params("pageSize", pageSize == null ? "15" : pageSize)
                 .execute(new JsonCallback<Base_Class_List_Info<ConsumRecordInfo>>() {
@@ -119,15 +119,15 @@ public class BillActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mLoadingDialog.isShowing()){
+                        if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(BillActivity.this,e)){
+                        if (!DensityUtil.isException(BillActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getUserBill" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
                                 case 101:
-                                    if (isFirstIn){
+                                    if (isFirstIn) {
                                         isFirstIn = false;
                                         linearlayout_norecord.setVisibility(View.VISIBLE);
                                     }
@@ -138,13 +138,13 @@ public class BillActivity extends BaseActivity {
                                         mDataList.clear();
                                         mAdapter.notifyDataSetChanged();
                                         linearlayout_norecord.setVisibility(View.VISIBLE);
-                                        MyToast.showToast(BillActivity.this,"没有数据哦", 5);
+                                        MyToast.showToast(BillActivity.this, "没有数据哦", 5);
                                     }
                                     if (mRecycleview.isLoadingMore()) {
                                         isNoData = true;
                                         isNoInternet = false;
                                         mRecycleview.setLoadingMore(false);
-                                        MyToast.showToast(BillActivity.this,"没有更多数据", 5);
+                                        MyToast.showToast(BillActivity.this, "没有更多数据", 5);
                                     }
                                     break;
                                 case 901:
@@ -154,7 +154,7 @@ public class BillActivity extends BaseActivity {
                                     if (mRecycleview.isLoadingMore()) {
                                         mRecycleview.setLoadingMore(false);
                                     }
-                                    MyToast.showToast(BillActivity.this,"服务器正在维护中", 5);
+                                    MyToast.showToast(BillActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         }
