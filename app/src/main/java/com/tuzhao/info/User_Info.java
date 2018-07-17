@@ -30,7 +30,7 @@ public class User_Info extends BaseInfo {
     private String alinumber = "-1";//支付宝账号
     private String aliNickName = "";//支付宝用户昵称
     private String wechatName;//微信的用户id
-    private String sesameScore;
+    private String sesameFraction;
 
     private String stage;//阶段分
     private String default_late_time;//默认晚退延时时间
@@ -344,12 +344,12 @@ public class User_Info extends BaseInfo {
         this.wechatName = wechatName;
     }
 
-    public String getSesameScore() {
-        return sesameScore;
+    public String getSesameFraction() {
+        return sesameFraction;
     }
 
-    public void setSesameScore(String sesameScore) {
-        this.sesameScore = sesameScore;
+    public void setSesameFraction(String sesameFraction) {
+        this.sesameFraction = sesameFraction;
     }
 
     @Override
@@ -376,7 +376,7 @@ public class User_Info extends BaseInfo {
                 ", alinumber='" + alinumber + '\'' +
                 ", aliNickName='" + aliNickName + '\'' +
                 ", wechatName='" + wechatName + '\'' +
-                ", sesameScore='" + sesameScore + '\'' +
+                ", sesameFraction='" + sesameFraction + '\'' +
                 ", stage='" + stage + '\'' +
                 ", default_late_time='" + default_late_time + '\'' +
                 ", add_late_time='" + add_late_time + '\'' +

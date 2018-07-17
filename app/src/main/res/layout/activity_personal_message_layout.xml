@@ -22,87 +22,109 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="126dp"
                 android:background="#f5d981" />
 
-            <android.support.constraint.ConstraintLayout
+            <android.support.v7.widget.CardView
                 android:id="@+id/person_message_cl"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="146dp"
                 android:layout_marginEnd="18dp"
                 android:layout_marginStart="18dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/w0"
+                android:layout_marginTop="18dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="4dp"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.tuzhao.publicwidget.others.CircleImageView
-                    android:id="@+id/user_protrait"
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="26dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/nickname"
-                    style="@style/TwentyTextB1Style"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/user_protrait"
-                    app:layout_constraintTop_toTopOf="@+id/user_protrait" />
+                    <com.tuzhao.publicwidget.others.CircleImageView
+                        android:id="@+id/user_protrait"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/user_gender"
-                    style="@style/TwentyTextB1Style"
-                    android:layout_marginTop="4dp"
-                    app:layout_constraintStart_toStartOf="@id/nickname"
-                    app:layout_constraintTop_toBottomOf="@+id/nickname" />
+                    <TextView
+                        android:id="@+id/nickname"
+                        style="@style/SixtyTextB1Style"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintStart_toEndOf="@id/user_protrait"
+                        app:layout_constraintTop_toTopOf="@+id/user_protrait" />
 
-                <TextView
-                    android:id="@+id/birthday"
-                    style="@style/TwentyTextB1Style"
-                    android:layout_marginTop="4dp"
-                    app:layout_constraintStart_toStartOf="@id/nickname"
-                    app:layout_constraintTop_toBottomOf="@+id/user_gender" />
+                    <TextView
+                        android:id="@+id/user_gender"
+                        style="@style/TwentyTextB1Style"
+                        android:layout_marginTop="4dp"
+                        android:text="男"
+                        app:layout_constraintStart_toStartOf="@id/nickname"
+                        app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
-                <ImageView
-                    android:id="@+id/edit_personal_message"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:layout_marginTop="10dp"
-                    android:contentDescription="@string/picture_description"
-                    android:padding="16dp"
-                    android:src="@mipmap/ic_write"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:id="@+id/user_gender_iv"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginStart="6dp"
+                        android:contentDescription="@string/picture_description"
+                        android:src="@drawable/ic_man"
+                        app:layout_constraintBottom_toBottomOf="@id/user_gender"
+                        app:layout_constraintStart_toEndOf="@id/user_gender"
+                        app:layout_constraintTop_toTopOf="@+id/user_gender" />
 
-                <TextView
-                    android:id="@+id/number_of_park"
-                    style="@style/FortyTextB1Style"
-                    android:layout_marginBottom="16dp"
-                    android:text="停车次数0次"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/user_protrait" />
+                    <TextView
+                        android:id="@+id/birthday"
+                        style="@style/TwentyTextB1Style"
+                        android:layout_marginTop="4dp"
+                        android:text="2018.07.17"
+                        app:layout_constraintStart_toStartOf="@id/nickname"
+                        app:layout_constraintTop_toBottomOf="@+id/user_gender" />
 
-                <TextView
-                    android:id="@+id/user_level"
-                    style="@style/FortyTextB1Style"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="@id/number_of_park"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    <ImageView
+                        android:id="@+id/edit_personal_message"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="@string/picture_description"
+                        android:padding="16dp"
+                        android:src="@mipmap/ic_write"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            </android.support.constraint.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/number_of_park"
+                        style="@style/FortyTextB1Style"
+                        android:layout_marginBottom="16dp"
+                        android:text="停车次数0次"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/user_protrait" />
+
+                    <TextView
+                        android:id="@+id/user_level"
+                        style="@style/FortyTextB1Style"
+                        android:layout_marginEnd="16dp"
+                        android:text="停车小白"
+                        app:layout_constraintBottom_toBottomOf="@id/number_of_park"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.v7.widget.CardView>
 
             <TextView
                 android:id="@+id/security_information"
                 style="@style/TwentyTextB1Style"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
-                android:text="安全信息"
+                android:text="账号安全"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/person_message_cl" />
 
@@ -126,18 +148,17 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/telephone_number_tv"
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:text="手机号码"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/telephone_number_iv"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/telephone_number_tv"
                     style="@style/CenterVerticalTwentyTextB1"
                     android:layout_marginEnd="4dp"
-                    android:text="未绑定"
+                    android:text="换绑"
                     android:textColor="@color/g6"
                     app:layout_constraintEnd_toStartOf="@+id/telephone_number_right" />
 
@@ -217,7 +238,7 @@
                     android:layout_height="14dp"
                     android:layout_marginStart="13dp"
                     android:contentDescription="@string/picture_description"
-                    android:src="@drawable/ic_wechatpay"
+                    android:src="@drawable/ic_wechat3"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -313,7 +334,6 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="12dp"
                 android:background="@color/w0"
-                android:paddingBottom="4dp"
                 app:layout_constraintTop_toBottomOf="@+id/user_authentication">
 
                 <ImageView
@@ -345,6 +365,54 @@
 
                 <ImageView
                     android:id="@+id/sesame_certification_right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@mipmap/ic_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/real_name_certification_cl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/w0"
+                app:layout_constraintTop_toBottomOf="@+id/sesame_certification_cl">
+
+                <ImageView
+                    android:id="@+id/real_name_certification_iv"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="13dp"
+                    android:contentDescription="@string/picture_description"
+                    android:src="@drawable/ic_realname"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:text="实名认证"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/real_name_certification_iv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/real_name_certification_tv"
+                    style="@style/CenterVerticalTwentyTextB1"
+                    android:layout_marginEnd="4dp"
+                    android:text="未认证"
+                    android:textColor="@color/g6"
+                    app:layout_constraintEnd_toStartOf="@+id/real_name_certification_right" />
+
+                <ImageView
+                    android:id="@+id/real_name_certification_right"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginEnd="16dp"

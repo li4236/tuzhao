@@ -3,6 +3,7 @@ package com.tuzhao.activity.mine;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -13,7 +14,6 @@ import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.utils.ImageUtil;
 
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Created by juncoder on 2018/7/14.
@@ -25,6 +25,8 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
     private TextView mNickname;
 
     private TextView mUserGender;
+
+    private ImageView mUserGenderIv;
 
     private TextView mBirthday;
 
@@ -40,6 +42,8 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
     private TextView mSesame;
 
+    private TextView mRealName;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_personal_message_layout;
@@ -50,6 +54,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         mCircleImageView = findViewById(R.id.user_protrait);
         mNickname = findViewById(R.id.nickname);
         mUserGender = findViewById(R.id.user_gender);
+        mUserGenderIv = findViewById(R.id.user_gender_iv);
         mBirthday = findViewById(R.id.birthday);
         mNumberOfPark = findViewById(R.id.number_of_park);
         mUserLevel = findViewById(R.id.user_level);
@@ -57,6 +62,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         mWechat = findViewById(R.id.wechat_bingding_tv);
         mAlipay = findViewById(R.id.alipay_bingding_tv);
         mSesame = findViewById(R.id.sesame_certification_tv);
+        mRealName = findViewById(R.id.real_name_certification_tv);
 
         mCircleImageView.setOnClickListener(this);
         findViewById(R.id.edit_personal_message).setOnClickListener(this);
@@ -71,32 +77,42 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
     protected void initData() {
         User_Info userInfo = com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo();
         ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + userInfo.getImg_url());
-        StringBuilder stringBuilder = new StringBuilder();
+        String nickname;
         if (userInfo.getNickname().equals("-1")) {
-            stringBuilder.append("tuzhao");
-            Random random = new Random(10);
-            for (int i = 0; i < 3; i++) {
-                stringBuilder.append(random.nextInt());
-            }
+            nickname = "昵称（未设置）";
         } else {
-            stringBuilder.append(userInfo.getNickname());
+            nickname = com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getNickname();
         }
+        mNickname.setText(nickname);
 
-        if (userInfo.getRealName() == null || Objects.equals(userInfo.getRealName(), "") || Objects.equals(userInfo.getRealName(), "-1")) {
-            stringBuilder.append("（未实名）");
+        if (Objects.equals(userInfo.getGender(), "1")) {
+            mUserGender.setText("男");
+            ImageUtil.showPic(mUserGenderIv, R.drawable.ic_man);
         } else {
-            stringBuilder.append("（");
-            stringBuilder.append(userInfo.getRealName());
-            stringBuilder.append("）");
+            mUserGender.setText("女");
+            ImageUtil.showPic(mUserGenderIv, R.drawable.ic_woman);
         }
-        mNickname.setText(stringBuilder.toString());
-
-        mUserGender.setText(Objects.equals(userInfo.getGender(), "1") ? "男" : "女");
         mBirthday.setText(userInfo.getBirthday());
-        mNumberOfPark.setText("停车次数" + userInfo.getNumberOfPark() + "次");
+        if (userInfo.getNumberOfPark() != null && !userInfo.getNumberOfPark().equals("-1")) {
+            int numberOfPark = Integer.parseInt(userInfo.getNumberOfPark());
+            if (0 < numberOfPark && numberOfPark <= 20) {
+                mUserLevel.setText("停车小白");
+            } else if (numberOfPark <= 50) {
+                mUserLevel.setText("泊车达人");
+            } else if (numberOfPark <= 100) {
+                mUserLevel.setText("资深途友");
+            } else {
+                mUserLevel.setText("神级泊客");
+            }
+            mNumberOfPark.setText("总停车次数" + numberOfPark + "次");
+        }
 
         if (!userInfo.getUsername().equals("-1")) {
-            mTelephoneNumber.setText(userInfo.getUsername());
+            StringBuilder telephone = new StringBuilder(userInfo.getUsername());
+            if (telephone.length() > 6) {
+                telephone.replace(3, 8, "*****");
+            }
+            mTelephoneNumber.setText(telephone.toString());
         }
 
         if (!Objects.equals(userInfo.getWechatName(), "-1")) {
@@ -107,8 +123,12 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             mAlipay.setText(userInfo.getAliNickName());
         }
 
-        if (!Objects.equals(userInfo.getSerect_code(), "-1")) {
-            mSesame.setText(userInfo.getSerect_code());
+        if (!Objects.equals(userInfo.getSesameFraction(), "-1")) {
+            mSesame.setText(userInfo.getSesameFraction());
+        }
+
+        if (userInfo.getRealName() != null && !userInfo.getRealName().equals("-1")) {
+            mRealName.setText(userInfo.getRealName());
         }
 
     }

@@ -26,7 +26,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -332,19 +331,27 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             }
         });
 
-        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+        aMap.setOnMapClickListener(new AMap.OnMapClickListener() {
             @Override
-            public void onTouch(MotionEvent motionEvent) {
+            public void onMapClick(LatLng latLng) {
                 if (show) {
                     controlAnimfragment(mFragment_content);
                 } else if (showClusters) {
                     if (mLastPosition != null) {
                         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastPosition.target, mLastPosition.zoom));
                         showClusters = false;
+                        mLastPosition = null;
                     }
                 }
             }
         });
+       /* aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                Log.e(TAG, "onTouch: " );
+
+            }
+        });*/
 
         aMap.setOnMapLongClickListener(new AMap.OnMapLongClickListener() {
             @Override
@@ -1153,6 +1160,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", 0, -mTranslationY);
             if (mLastPosition != null) {
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastPosition.target, mLastPosition.zoom));
+                mLastPosition = null;
             }
         }
         objectAnimator.setDuration(500);
