@@ -43,6 +43,7 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
@@ -161,7 +162,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private boolean mHadShowGps;
     private boolean isFirstloc = true;
     private LatLng mLastlocationLatlng = null, showmarklal = null, lastLatlng = null;
-    private float morenZoom = 14;//地图的默认缩放等级
+    private float morenZoom = 14f;//地图的默认缩放等级
+    private CameraPosition mLastPosition;//点击marker时地图的位置，用于点击地图后返回地图点击前的位置
     private List<ClusterItem> mMarkerData = new ArrayList<>();//当前城市地图标点的数据
     private List<ClusterItem> mShowMarkerData = new ArrayList<>();//当前城市地图标点的数据
     private List<ClusterItem> mQMarkerData = new ArrayList<>();//其他城市地图标点的数据
@@ -171,7 +173,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private FragmentManager mFragmentManager;
     private View mFragment_content;
     private float mTranslationY;
-    private boolean show = false, show1 = false, isSPark = true, isSCharge = true, isFirstMove = true, isLcData = true;
+    private boolean show = false, showClusters, show1 = false, isSPark = true, isSCharge = true, isFirstMove = true, isLcData = true;
     private int mapwidth, mapheight;//地图控件的宽高，用来地图中心点
     private int moveDistance = 2000;//移动再次请求的距离
     private GeocodeSearch geocoderSearch;//将经纬度转化为地址
@@ -335,6 +337,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             public void onTouch(MotionEvent motionEvent) {
                 if (show) {
                     controlAnimfragment(mFragment_content);
+                } else if (showClusters) {
+                    if (mLastPosition != null) {
+                        aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastPosition.target, mLastPosition.zoom));
+                        showClusters = false;
+                    }
                 }
             }
         });
@@ -375,12 +382,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 }
                 break;
             case R.id.id_content_main_layout_imageview_turnown:
+                //左下角的定位图标
                 isFirstMove = true;
                 isLcData = true;
                 if (show) {
                     controlAnimfragment(mFragment_content);
                 }
-                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
+                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                 if (mMarkerData.size() == 0 && LocationManager.getInstance().hasLocation()) {
                     initLoading("正在加载...");
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, "当前城市");
@@ -455,6 +463,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                        });*/
                 break;
             case R.id.id_content_main_layout_imageview_spark:
+                //右上角的车场图标
                 if (show) {
                     controlAnimfragment(mFragment_content);
                 }
@@ -511,6 +520,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 }
                 break;
             case R.id.id_content_main_layout_imageview_scharge:
+                //右上角的电站图标
                 if (show) {
                     controlAnimfragment(mFragment_content);
                 }
@@ -808,7 +818,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 LocationManager.getInstance().setmAmapLocation(amapLocation);
                 setViewClick();
                 mLastlocationLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
-                lastLatlng = mLastlocationLatlng;
+                lastLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 if (isFirstloc) {
                     //第一次定位成功
                     isFirstloc = false;
@@ -824,12 +834,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     }
                     mCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
 
-                    aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
+                    aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                     Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                 } else {
                     if (mMarkerData == null) {
-                        aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, 14));
+                        aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                         requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
@@ -1083,9 +1093,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 builder.include(clusterItem.getPosition());
             }
             LatLngBounds latLngBounds = builder.build();
+            showClusters = true;
+            mLastPosition = aMap.getCameraPosition();
             //aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
-            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 1000 / clusterItems.size()));
-            Log.e(TAG, "onClick: than one");
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int) (mapwidth / 5.0)));
         } else {
             //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
@@ -1105,7 +1116,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             info.setPrice(clusterItems.get(0).getPrice());
             info.setGrade(clusterItems.get(0).getGrade());
             showUpWindowOnMap(info, clusterItems.get(0).isparkspace());
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(clusterItems.get(0).getPosition(), 15.5f));
+            LatLng latLng = new LatLng(showmarklal.latitude, showmarklal.longitude - 0.0005);
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.5f));
         }
     }
 
@@ -1135,9 +1147,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         show = !show;
         ObjectAnimator objectAnimator;
         if (show) {
+            mLastPosition = aMap.getCameraPosition();
             objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", -mTranslationY, 0);
         } else {
             objectAnimator = ObjectAnimator.ofFloat(ll_view, "translationY", 0, -mTranslationY);
+            if (mLastPosition != null) {
+                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastPosition.target, mLastPosition.zoom));
+            }
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();
@@ -1307,7 +1323,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
-                    options.anchor(0.5f, 0.5f);
+                    //options.anchor(0.5f, 0.5f);
                     options.position(latLng);
                     if (mSearchMarker != null) {
                         mSearchMarker.remove();
@@ -1375,7 +1391,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
-                    options.anchor(0.5f, 0.5f);
+                    //options.anchor(0.5f, 0.5f);
                     options.position(latLng);
                     if (mSearchMarker != null) {
                         mSearchMarker.remove();
