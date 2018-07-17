@@ -87,6 +87,9 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
     }
 
     private void getUserExpiredCards() {
+        if (mCommonAdapter.getData().size() == 0) {
+            showLoadingDialog();
+        }
         getOkgos(HttpConstants.getUserMonthlyCards)
                 .params("type", mType)
                 .execute(new JsonCallback<Base_Class_List_Info<CardBean>>() {

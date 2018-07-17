@@ -36,6 +36,11 @@ public class ConstansUtil {
     public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";
 
     /**
+     * 微信登录返回的code
+     */
+    public static final String WECHAT_CODE = "WechatCode";
+
+    /**
      * 支付类型，0是停车订单支付，1是添加车位缴纳押金支付，2是购买月卡支付
      */
     public static final String PAY_TYPE = "PayType";

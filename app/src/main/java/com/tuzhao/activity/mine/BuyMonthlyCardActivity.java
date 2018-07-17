@@ -157,6 +157,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             case R.id.national_monthly_card_iv:
                 if (mNationalPosition != -1) {
                     //显示全国月卡
+                    mChooseCityCode = "0000";
                     setCurrenCityMonthlyCard();
                 } else {
                     if (mMonthlyCards == null) {
@@ -252,7 +253,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                                     } else {
                                         //全国月卡的位置为最后一个
                                         mNationalPosition = mMonthlyCards.size() - 1;
-                                        mChooseCityCode = mMonthlyCards.get(mNationalPosition).getCitys().get(0).getCityCode();
+                                        mChooseCityCode = "0000";
                                         setCurrenCityMonthlyCard();
                                     }
                                 }
@@ -356,7 +357,6 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         if (mMonthlyCards != null) {
             if (mChooseCityCode.equals("0000")) {
                 MonthlyCard.City city = mMonthlyCards.get(mNationalPosition).getCitys().get(0);
-                mChooseCityCode = city.getCityCode();
                 mAdapter.setNewData(city.getCityMonthlyCards());
                 setCurrentChooseCard(false);
                 mChooseCardTv.setText("当前选择：全国月卡");

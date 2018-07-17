@@ -75,7 +75,7 @@
                         android:id="@+id/monthly_card_area"
                         style="@style/TenTextB1Style"
                         android:layout_marginBottom="8dp"
-                        android:text="中山卡"
+                        android:text="地区卡"
                         android:textSize="8sp"
                         app:layout_constraintBottom_toBottomOf="@+id/area_monthly_card_iv"
                         app:layout_constraintStart_toStartOf="@+id/area_monthly_card_type" />
