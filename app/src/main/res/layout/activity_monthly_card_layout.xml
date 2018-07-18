@@ -132,7 +132,6 @@
         android:id="@+id/buy_monthly_card_cl"
         android:layout_width="match_parent"
         android:layout_height="68dp"
-        android:background="@color/w0"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView

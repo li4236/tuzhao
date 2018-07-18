@@ -40,7 +40,7 @@ public class MyMonthlyCardActivity extends BaseStatusActivity implements View.On
 
     @Override
     protected int resourceId() {
-        return R.layout.activity_card_package_layout;
+        return R.layout.activity_monthly_card_layout;
     }
 
     @Override
