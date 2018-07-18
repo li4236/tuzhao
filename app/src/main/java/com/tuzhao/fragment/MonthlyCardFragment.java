@@ -17,6 +17,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
+public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> implements IntentObserver {
 
     /**
      * 1（全部卡），2（过期卡）
@@ -64,9 +65,10 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
                 if (!list.isEmpty()) {
                     loadDataSuccess(cardInfoBaseClassListInfo);
                 } else {
-                    notifyShowEmptyView();
+                    notifyShowEmptyView(true);
                 }
             }
+            IntentObserable.registerObserver(this);
         }
     }
 
@@ -84,6 +86,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
             bundle.putParcelableArrayList(ConstansUtil.CARD_INFO_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
             bundle.putInt(ConstansUtil.TYPE, mType);
         }
+        IntentObserable.unregisterObserver(this);
     }
 
     private void getUserExpiredCards() {
@@ -102,7 +105,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (mCommonAdapter.getData().size() == 0) {
-                            notifyShowEmptyView();
+                            notifyShowEmptyView(true);
                         }
                         stopLoadStatus();
                         if (!handleException(e)) {
@@ -121,8 +124,9 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
                 });
     }
 
-    private void notifyShowEmptyView() {
+    private void notifyShowEmptyView(boolean show) {
         Intent intent = new Intent(ConstansUtil.SHOW_EMPTY_VIEW);
+        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, show);
         IntentObserable.dispatch(intent);
     }
 
@@ -159,4 +163,14 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
         return 0;
     }
 
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
+                if (mType == 1) {
+                    onRefresh();
+                }
+            }
+        }
+    }
 }
