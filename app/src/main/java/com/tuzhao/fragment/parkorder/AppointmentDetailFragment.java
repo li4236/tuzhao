@@ -268,7 +268,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 if (mIsOpening) {
                     showOpenLockDialog();
                 } else {
-                    openParkLock();
+                    requestOrderPark();
                 }
                 break;
         }
@@ -342,7 +342,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             mRetryTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openParkLock();
+                    requestOrderPark();
                     mRetryTv.setVisibility(View.INVISIBLE);
                     mOpenLockTv.setVisibility(View.VISIBLE);
                     mOpenLockTv.setText("正在开锁中.");
@@ -559,7 +559,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mCustomDialog.show();
     }
 
-    private void openParkLock() {
+    private void requestOrderPark() {
         showLoadingDialog();
         OkGo.post(HttpConstants.requestOrderPark)
                 .tag(TAG)
@@ -585,6 +585,19 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                             switch (e.getMessage()) {
                                 case "101":
                                     showFiveToast("设备暂时离线，请稍后重试");
+                                    break;
+                                case "103":
+                                    Calendar calendar = Calendar.getInstance();
+                                    if (calendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime())) < 0) {
+                                        showFiveToast("该车位已有别人预约，请到您预约的时间再停车哦");
+                                    } else {
+                                        showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    }
+                                case "102":
+                                case "104":
+                                case "105":
+                                case "106":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
                                     break;
                                 default:
                                     showFiveToast("开锁失败，请稍后重试");

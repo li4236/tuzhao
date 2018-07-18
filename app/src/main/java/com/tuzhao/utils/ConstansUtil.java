@@ -18,6 +18,8 @@ public class ConstansUtil {
 
     public static final int G10_COLOR = Color.parseColor("#cccccc");
 
+    public static final String SERVER_ERROR = "服务器异常，请稍后重试";
+
     public static final float MAX_CREDIT_SCORE = 950;
 
     public static final float VERY_GOOD_CREDIT_SCORE = 750;

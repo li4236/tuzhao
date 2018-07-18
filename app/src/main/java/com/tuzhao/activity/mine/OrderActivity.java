@@ -219,9 +219,8 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (parkOrderInfo != null) {
                         parkOrderInfo.setOrder_status("2");
-                        if (parkOrderInfo.getPark_start_time().startsWith("0000")) {
-                            parkOrderInfo.setPark_start_time(DateUtil.getCurrentYearToSecond());
-                        }
+                        parkOrderInfo.setPark_start_time(DateUtil.getCurrentYearToSecond());
+
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.order_container, ParkingOrderFragment.newInstance(mParkOrderInfo));
                         fragmentTransaction.commit();
