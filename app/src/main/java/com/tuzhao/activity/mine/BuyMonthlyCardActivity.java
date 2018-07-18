@@ -36,9 +36,13 @@ import okhttp3.Response;
  */
 public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
+    private ImageView mAreaCardPark;
+
     private ImageView mAreaCardIv;
 
     private TextView mMonthlyCardArea;
+
+    private ImageView mNationalCardPark;
 
     private ImageView mNationalCardIv;
 
@@ -82,8 +86,10 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mAreaCardPark = findViewById(R.id.area_monthly_card_park);
         mAreaCardIv = findViewById(R.id.area_monthly_card_iv);
-        mMonthlyCardArea = findViewById(R.id.monthly_card_area);
+        mMonthlyCardArea = findViewById(R.id.area_monthly_card);
+        mNationalCardPark = findViewById(R.id.national_monthly_card_park);
         mNationalCardIv = findViewById(R.id.national_monthly_card_iv);
         mChooseCardTv = findViewById(R.id.current_choose_monthly_card);
         RecyclerView recyclerView = findViewById(R.id.monthly_card_price_rv);
@@ -109,9 +115,10 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
 
         initOriginMonthlyCardPrice();
         getOpenAreaMonthlyCard(false, false);
-
-        ImageUtil.showPic(mAreaCardIv, R.drawable.ic_grayvip);
-        ImageUtil.showPic(mNationalCardIv, R.drawable.ic_grayallcity);
+        ImageUtil.showPicWithNoAnimate(mAreaCardPark, R.drawable.ic_blacklogo);
+        ImageUtil.showPicWithNoAnimate(mAreaCardIv, R.drawable.ic_graycitycard_shadow);
+        ImageUtil.showPicWithNoAnimate(mNationalCardPark, R.drawable.ic_graylogo);
+        ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_grayallcity_shadow);
         mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便经常停车的用户，途找推出了月卡功能，若停车次数较多，购买月卡停车较为划算。"));
         mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("由于各地区停车费用各不相同，所以月卡采取分地区制，请选择自己常在停车地区购买月卡。"));
         mThirdIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便多地停车经常出差用户，推出全国月卡，全国月卡在各地都能使用，收费采取统一收费。"));
@@ -395,11 +402,13 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
      */
     private void setCurrentChooseCard(boolean isArea) {
         if (isArea) {
-            ImageUtil.showPic(mAreaCardIv, R.drawable.ic_vip);
-            ImageUtil.showPic(mNationalCardIv, R.drawable.ic_grayallcity);
+            ImageUtil.showPicWithNoAnimate(mAreaCardIv, R.drawable.ic_citycard_shadow);
+            ImageUtil.showPicWithNoAnimate(mNationalCardPark, R.drawable.ic_graylogo);
+            ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_grayallcity_shadow);
         } else {
-            ImageUtil.showPic(mAreaCardIv, R.drawable.ic_grayvip);
-            ImageUtil.showPic(mNationalCardIv, R.drawable.ic_allcity);
+            ImageUtil.showPicWithNoAnimate(mAreaCardIv, R.drawable.ic_graycitycard_shadow);
+            ImageUtil.showPicWithNoAnimate(mNationalCardPark, R.drawable.ic_pinklogo);
+            ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_allcity_shadow);
         }
     }
 
@@ -436,6 +445,8 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                         bundle.putString(ConstansUtil.CITY_CODE, mChooseCityCode);
                         bundle.putString(ConstansUtil.ALLOTED_PERIOD, monthlyCardPrice.getAllotedPeriod());
                         startActivity(PayActivity.class, bundle);
+                    } else {
+                        showFiveToast("请先选择要购买的月卡类型哦");
                     }
                 }
             });

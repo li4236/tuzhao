@@ -28,21 +28,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private View mItemView;
 
-    private BaseAdapter mBaseAdapter;
-
     BaseViewHolder(View itemView) {
         super(itemView);
         mItemView = itemView;
         mViews = new SparseArray<>();
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBaseAdapter.getOnItemClickListener() != null) {
-                    mBaseAdapter.getOnItemClickListener().onItemClick(mItemView, getAdapterPosition() - mBaseAdapter.getHeadViewCount());
-                }
-            }
-        });
-
     }
 
     public <T extends View> T getView(@IdRes int id) {
@@ -124,10 +113,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
         ImageUtil.showPic((CircleImageView) getView(id), HttpConstants.ROOT_IMG_URL_USER + url, R.mipmap.ic_usericon);
         return this;
-    }
-
-    void setBaseAdapter(BaseAdapter baseAdapter) {
-        mBaseAdapter = baseAdapter;
     }
 
 }

@@ -133,13 +133,24 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> {
 
     @Override
     protected void bindData(BaseViewHolder holder, CardBean cardInfo, int position) {
-        holder.setText(R.id.monthly_card_area, cardInfo.getArea().replace("市", "") + "卡")
-                .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期")
-                .setText(R.id.monthly_card_status, mType == 1 ? "生效中" : "已过期");
+        holder.setText(R.id.area_monthly_card, cardInfo.getArea().replace("市", "") + "卡")
+                .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期");
         if (mType == 2) {
-            holder.showPicWithNoAnimate(R.id.monthly_card_iv, cardInfo.getArea().equals("全国") ? R.drawable.ic_grayallcity : R.drawable.ic_grayvip);
+            if (cardInfo.getArea().equals("全国")) {
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_grayallcity_shadow);
+                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_graylogo);
+            } else {
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_graycitycard_shadow);
+                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
+            }
         } else {
-            holder.showPicWithNoAnimate(R.id.monthly_card_iv, cardInfo.getArea().equals("全国") ? R.drawable.ic_allcity : R.drawable.ic_vip);
+            if (cardInfo.getArea().equals("全国")) {
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_allcity_shadow);
+                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_pinklogo);
+            } else {
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_citycard_shadow);
+                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
+            }
         }
     }
 
