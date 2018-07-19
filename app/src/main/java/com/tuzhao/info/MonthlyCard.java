@@ -2,6 +2,8 @@ package com.tuzhao.info;
 
 import com.tuzhao.utils.DateUtil;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -48,6 +50,8 @@ public class MonthlyCard {
         private String cityCode;
 
         private List<MonthlyCardPrice> cityMonthlyCards;
+
+        private boolean sort;
 
         public static class MonthlyCardPrice {
             /**
@@ -103,6 +107,15 @@ public class MonthlyCard {
         }
 
         public List<MonthlyCardPrice> getCityMonthlyCards() {
+            if (!sort) {
+                Collections.sort(cityMonthlyCards, new Comparator<MonthlyCardPrice>() {
+                    @Override
+                    public int compare(MonthlyCardPrice o1, MonthlyCardPrice o2) {
+                        return Integer.valueOf(o1.getAllotedPeriod())-Integer.valueOf(o2.getAllotedPeriod());
+                    }
+                });
+                sort = true;
+            }
             return cityMonthlyCards;
         }
 
