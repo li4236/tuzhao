@@ -17,6 +17,7 @@ import com.alipay.sdk.app.AuthTask;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
@@ -32,6 +33,7 @@ import com.tuzhao.publicwidget.others.CircleImageView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
 import java.util.Map;
@@ -166,6 +168,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             mRealName.setText(userInfo.getRealName());
         }
 
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -228,6 +231,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                             requestUnbind(2);
                         }
                     });
+                    builder.create().show();
                 }
                 break;
             case R.id.sesame_certification_cl:
@@ -245,6 +249,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        IntentObserable.unregisterObserver(this);
     }
 
     private void initHandler() {
@@ -361,7 +366,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            showFiveToast("解除绑定失败，请稍后重试");
                         }
                     }
                 });
@@ -382,10 +387,10 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         getOkGo(HttpConstants.requestBindWechat)
                 .params("code", code)
                 .params("passCode", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
-                .execute(new JsonCallback<Base_Class_Info<String>>() {
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
-                        UserManager.getInstance().getUserInfo().setOpenId(o.data);
+                    public void onSuccess(String s, Call call, Response response) {
+                        UserManager.getInstance().getUserInfo().setOpenId(s);
                         mWechat.setText("解绑");
                         showFiveToast("绑定成功");
                         dismmisLoadingDialog();
@@ -395,7 +400,12 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            showFiveToast(e.getMessage());
+                            if (e.getMessage().equals("103")) {
+                                mWechat.setText("解绑");
+                                showFiveToast("绑定成功");
+                            } else {
+                                showFiveToast(ConstansUtil.SERVER_ERROR);
+                            }
                         }
                     }
                 });

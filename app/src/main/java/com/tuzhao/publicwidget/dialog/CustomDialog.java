@@ -60,14 +60,14 @@ public class CustomDialog extends Dialog {
         super(context, R.style.ParkDialog);
         setContentView(R.layout.dialog_order_detail_layout);
         TextView appointmentParkTime = findViewById(R.id.appointment_start_park_time);
-        TextView actualParkTime = findViewById(R.id.actual_start_park_time);
+        TextView actualStartParkTime = findViewById(R.id.actual_start_park_time);
         TextView appointParkDuration = findViewById(R.id.appointment_park_duration);
         TextView actualParkDuration = findViewById(R.id.actual_park_duration);
         TextView gracePeriodDuration = findViewById(R.id.grace_period);
         TextView overtimeDuration = findViewById(R.id.overtime_duration);
         TextView overtimeFee = findViewById(R.id.overtime_fee);
         appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()));
-        actualParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
+        actualStartParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
         appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
         actualParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
 

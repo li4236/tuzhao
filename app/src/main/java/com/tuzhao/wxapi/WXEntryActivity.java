@@ -2,7 +2,6 @@ package com.tuzhao.wxapi;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
