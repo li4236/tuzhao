@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.MonthlyCard;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -439,12 +441,22 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                 @Override
                 public void onClick(View v) {
                     if (canChoose) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ConstansUtil.PAY_TYPE, "2");
-                        bundle.putString(ConstansUtil.PAY_MONEY, monthlyCardPrice.getPrice() + "元");
-                        bundle.putString(ConstansUtil.CITY_CODE, mChooseCityCode);
-                        bundle.putString(ConstansUtil.ALLOTED_PERIOD, monthlyCardPrice.getAllotedPeriod());
-                        startActivity(PayActivity.class, bundle);
+                        TipeDialog tipeDialog = new TipeDialog.Builder(BuyMonthlyCardActivity.this)
+                                .setTitle("购买月卡")
+                                .setMessage("购买" + monthlyCardPrice.getAllotedPeriod() + "天月卡，支付" + monthlyCardPrice.getPrice() + "元")
+                                .setNegativeButton("取消", null)
+                                .setPositiveButton("去支付", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(ConstansUtil.PAY_TYPE, "2");
+                                        bundle.putString(ConstansUtil.PAY_MONEY, monthlyCardPrice.getPrice() + "元");
+                                        bundle.putString(ConstansUtil.CITY_CODE, mChooseCityCode);
+                                        bundle.putString(ConstansUtil.ALLOTED_PERIOD, monthlyCardPrice.getAllotedPeriod());
+                                        startActivity(PayActivity.class, bundle);
+                                    }
+                                }).create();
+                        tipeDialog.show();
                     } else {
                         showFiveToast("请先选择要购买的月卡类型哦");
                     }
