@@ -56,15 +56,14 @@
         android:id="@+id/id_content_main_layout_textview_citynodata"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="40dp"
         android:background="@drawable/white_all_20dp"
         android:gravity="center"
         android:textColor="@color/b1"
         android:textSize="13sp"
         android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/id_content_main_layout_relativelayout_openuser"
         app:layout_constraintEnd_toEndOf="@id/six_gl"
-        app:layout_constraintStart_toStartOf="@id/third_gl"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/third_gl" />
 
     <FrameLayout
         android:id="@+id/id_content_main_layout_linerlayout_fragment"

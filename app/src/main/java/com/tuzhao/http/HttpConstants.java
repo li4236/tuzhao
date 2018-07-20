@@ -572,13 +572,7 @@ public class HttpConstants {
     public static final String requestBindWechat = ROOT_URL + "requestBindWechat";
 
     /**
-     * 请求解除绑定微信
+     * 请求解除绑定第三方账号
      */
-    public static final String requestUnbindWechat = ROOT_URL + "requestUnbindWechat";
-
-    /**
-     * 请求解除绑定支付宝
-     */
-    public static final String requestUnbindAlipay = ROOT_URL + "requestUnbindAlipay";
-
+    public static final String requestUnbindThirdPartyAccount = ROOT_URL + "requestUnbindThirdPartyAccount";
 }

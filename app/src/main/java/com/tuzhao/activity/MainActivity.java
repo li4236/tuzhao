@@ -26,6 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -107,6 +108,7 @@ import com.tuzhao.utils.ImageUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -163,6 +165,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private LatLng mLastlocationLatlng = null, showmarklal = null, lastLatlng = null;
     private float morenZoom = 14f;//地图的默认缩放等级
     private CameraPosition mLastPosition;//点击marker时地图的位置，用于点击地图后返回地图点击前的位置
+    private LatLng mLastLatLng;//上次移动地图时的坐标
+    private String mLastCity;//上次移动地图时未开放的城市名字
     private List<ClusterItem> mMarkerData = new ArrayList<>();//当前城市地图标点的数据
     private List<ClusterItem> mShowMarkerData = new ArrayList<>();//当前城市地图标点的数据
     private List<ClusterItem> mQMarkerData = new ArrayList<>();//其他城市地图标点的数据
@@ -172,6 +176,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private FragmentManager mFragmentManager;
     private View mFragment_content;
     private float mTranslationY;
+    private float mCityNoDataTranslationY;
     private boolean show = false, showClusters, show1 = false, isSPark = true, isSCharge = true, isFirstMove = true, isLcData = true;
     private int mapwidth, mapheight;//地图控件的宽高，用来地图中心点
     private int moveDistance = 2000;//移动再次请求的距离
@@ -345,13 +350,22 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 }
             }
         });
-       /* aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+
+        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
             @Override
             public void onTouch(MotionEvent motionEvent) {
-                Log.e(TAG, "onTouch: " );
-
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (mLastLatLng == null) {
+                        mLastLatLng = aMap.getCameraPosition().target;
+                    } else {
+                        if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getCameraPosition().target) / 1000 >= 10) {
+                            mLastLatLng = aMap.getCameraPosition().target;
+                            getAddressOrCitycode(mLastLatLng, true);
+                        }
+                    }
+                }
             }
-        });*/
+        });
 
         aMap.setOnMapLongClickListener(new AMap.OnMapLongClickListener() {
             @Override
@@ -361,6 +375,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 getAddressOrCitycode(latLng, false);
             }
         });
+
     }
 
     @Override
@@ -398,7 +413,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                 if (mMarkerData.size() == 0 && LocationManager.getInstance().hasLocation()) {
                     initLoading("正在加载...");
-                    requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, "当前城市");
+                    requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
+                            LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
+                            LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, "当前城市");
                 } else {
                     if (isSPark && isSCharge) {
                         showMarkers(mMarkerData);
@@ -783,7 +800,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                     //城市未开放
                                     String noOpen = cityname + "暂未开放";
                                     textview_citynodata.setText(noOpen);
-                                    if (!show1) {
+                                    if (!show1 || !Objects.equals(mLastCity, cityname)) {
+                                        mLastCity = cityname;
                                         controlAnim(true);
                                     }
                                     break;
@@ -826,6 +844,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 setViewClick();
                 mLastlocationLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 lastLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+                mLastLatLng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 if (isFirstloc) {
                     //第一次定位成功
                     isFirstloc = false;
@@ -840,10 +859,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         mCircleSensorHelper.registerSensorListener();
                     }
                     mCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
-
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                     Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
-                    requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
+                    requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
+                            LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
+                            LocationManager.getInstance().getmAmapLocation().getLongitude() + "",
+                            "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                 } else {
                     if (mMarkerData == null) {
                         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
@@ -1195,17 +1216,19 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private void controlAnim(boolean show) {
         show1 = show;
+        if (mCityNoDataTranslationY == 0) {
+            mCityNoDataTranslationY = textview_citynodata.getY() + textview_citynodata.getHeight();
+        }
         ObjectAnimator objectAnimator;
         if (show) {
             textview_citynodata.setVisibility(View.VISIBLE);
-            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", -960, 0);
+            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", -mCityNoDataTranslationY, 0);
         } else {
             textview_citynodata.setVisibility(View.GONE);
-            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", 0, -1920);
+            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", 0, -mCityNoDataTranslationY);
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();
-
         /*ValueAnimator va;
         int height = 40;
         if (show) {
@@ -1464,7 +1487,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void getAddressOrCitycode(final LatLng latLng, final boolean isCamreaMove) {
-
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             /**
              * 逆地理编码回调
@@ -1502,6 +1524,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             builder.create().show();
                         }
                     } else {
+                        Log.e(TAG, "onRegeocodeSearched: " + result.getRegeocodeAddress().getCityCode());
                         if (result.getRegeocodeAddress().getCityCode().equals("1900")) {
                             textview_citynodata.setText("当前位置暂未开放");
                             if (!show1) {
@@ -1513,7 +1536,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         } else {
                             isLcData = false;
                             moveCityCode = result.getRegeocodeAddress().getCityCode();
-                            requestHomePCLocData(moveCityCode, latLng.latitude + "", latLng.longitude + "", "10", isLcData, result.getRegeocodeAddress().getCity());
+                            requestHomePCLocData(moveCityCode, latLng.latitude + "", latLng.longitude + "",
+                                    "10", isLcData, result.getRegeocodeAddress().getCity());
                         }
                     }
 

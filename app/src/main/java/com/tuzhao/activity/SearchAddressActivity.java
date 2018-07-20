@@ -333,7 +333,7 @@ public class SearchAddressActivity extends BaseActivity {
 
     private void SearchWord(String keyword, String cityCode) {
 
-        PoiSearch.Query query = new PoiSearch.Query(keyword, "", cityCode);
+        PoiSearch.Query query = new PoiSearch.Query(keyword, "");
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
 //        query.setPageNum(currentPage);//设置查询页码
         PoiSearch poiSearch = new PoiSearch(this, query);

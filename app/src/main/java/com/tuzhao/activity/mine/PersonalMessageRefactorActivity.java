@@ -151,7 +151,6 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             }
             mTelephoneNumber.setText(telephone.toString());
         }
-
         if (!Objects.equals(userInfo.getOpenId(), "-1")) {
             mWechat.setText(UNBIND);
         }
@@ -210,6 +209,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                             requestUnbind(1);
                         }
                     });
+                    builder.create().show();
                 }
                 break;
             case R.id.alipay_bingding_cl:
@@ -346,7 +346,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
     private void requestUnbind(final int type) {
         showLoadingDialog("解除绑定");
-        getOkGo(type == 1 ? HttpConstants.requestUnbindWechat : HttpConstants.requestUnbindAlipay)
+        getOkGo(HttpConstants.requestUnbindThirdPartyAccount)
                 .params("passCode", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" +
                         UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
                 .params("type", type)

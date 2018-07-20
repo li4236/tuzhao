@@ -228,7 +228,7 @@
                 app:layout_constraintStart_toStartOf="@+id/first_indicate"
                 app:layout_constraintTop_toBottomOf="@+id/first_indicate" />
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/third_indicate"
                 style="@style/ThirtyTextB1Style"
                 android:layout_width="0dp"
@@ -237,7 +237,7 @@
                 android:gravity="start"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/second_indicate"
-                app:layout_constraintTop_toBottomOf="@+id/second_indicate" />
+                app:layout_constraintTop_toBottomOf="@+id/second_indicate" />-->
 
         </android.support.constraint.ConstraintLayout>
 

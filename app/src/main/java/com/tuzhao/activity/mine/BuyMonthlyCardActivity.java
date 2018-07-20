@@ -56,7 +56,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
 
     private TextView mSecondIndicate;
 
-    private TextView mThirdIndicate;
+    //private TextView mThirdIndicate;
 
     private List<MonthlyCard> mMonthlyCards;
 
@@ -97,7 +97,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         RecyclerView recyclerView = findViewById(R.id.monthly_card_price_rv);
         mFirstIndicate = findViewById(R.id.first_indicate);
         mSecondIndicate = findViewById(R.id.second_indicate);
-        mThirdIndicate = findViewById(R.id.third_indicate);
+        //mThirdIndicate = findViewById(R.id.third_indicate);
 
         mAdapter = new CardPriceAdapter(recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -121,9 +121,9 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         ImageUtil.showPicWithNoAnimate(mAreaCardIv, R.drawable.ic_graycitycard_shadow);
         ImageUtil.showPicWithNoAnimate(mNationalCardPark, R.drawable.ic_graylogo);
         ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_grayallcity_shadow);
-        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便经常停车的用户，途找推出了月卡功能，若停车次数较多，购买月卡停车较为划算。"));
-        mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("由于各地区停车费用各不相同，所以月卡采取分地区制，请选择自己常在停车地区购买月卡。"));
-        mThirdIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便多地停车经常出差用户，推出全国月卡，全国月卡在各地都能使用，收费采取统一收费。"));
+        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受7折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
+        mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("各地区停车费用均有差异，地区卡只能在选定的一个城市使用，全国卡则全国通用。"));
+        //mThirdIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便多地停车经常出差用户，推出全国月卡，全国月卡在各地都能使用，收费采取统一收费。"));
 
         /*if (LocationManager.getInstance().hasLocation()) {
             //如果已经定位成功的则显示当前的城市
