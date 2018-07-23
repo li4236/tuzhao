@@ -8,28 +8,32 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by juncoder on 2018/6/20.
- * <p>
- * 定时器，OnTimeCallback在主线程回调
- * </p>
+ * Created by juncoder on 2018/7/23.
  */
-public class PollingUtil {
+public class CountdownUtil {
 
     private Handler mHandler;
 
     private Timer mTimer;
 
-    private long mPeriod;
+    private int mCountdown;
+
+    private int mCurrentCountdown;
 
     private static final int WHAT = 0x111;
 
-    public PollingUtil(long period, final OnTimeCallback onTimeCallback) {
-        mPeriod = period;
+    public CountdownUtil(int countdown, final OnTimeCallback callback) {
+        mCountdown = countdown;
         mHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
                 if (msg.what == WHAT) {
-                    onTimeCallback.onTime();
+                    int time = msg.arg1;
+                    if (time <= 0) {
+                        callback.onTimeEnd();
+                    } else {
+                        callback.onTime(time);
+                    }
                     return true;
                 }
                 return false;
@@ -41,15 +45,20 @@ public class PollingUtil {
         if (mTimer != null) {
             mTimer.cancel();
         }
+        mCurrentCountdown = mCountdown;
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Message message = mHandler.obtainMessage();
                 message.what = WHAT;
+                message.arg1 = mCurrentCountdown--;
                 mHandler.sendMessage(message);
+                if (mCurrentCountdown < 0) {
+                    mTimer.cancel();
+                }
             }
-        }, 0, mPeriod);
+        }, 0, 1000);
     }
 
     public void cancel() {
@@ -61,7 +70,11 @@ public class PollingUtil {
     }
 
     public interface OnTimeCallback {
-        void onTime();
+
+        void onTime(int time);
+
+        void onTimeEnd();
+
     }
 
 }

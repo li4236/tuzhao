@@ -189,7 +189,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
                 break;
             case R.id.modify_password_cl:
-
+                startActivity(ChangePasswordRefactorActivity.class);
                 break;
             case R.id.wechat_bingding_cl:
                 if (getText(mWechat).equals(UNBOUND)) {

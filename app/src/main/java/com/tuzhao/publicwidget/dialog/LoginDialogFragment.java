@@ -1,12 +1,17 @@
 package com.tuzhao.publicwidget.dialog;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -38,7 +43,10 @@ import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.SmsObserver;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -79,26 +87,9 @@ public class LoginDialogFragment extends DialogFragment {
 
     private DateUtil dateUtil = new DateUtil();
 
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CODE_ING://已发送,开始倒计时
-                    textview_getconfirm_code.setText("重新发送(" + (--TIME) + "s)");
-                    if (isAdded()) {//判断fragment是否已经加入到activity中
-                        textview_getconfirm_code.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
-                    }
+    private Handler handler;
 
-                    break;
-                case CODE_REPEAT://重新发送
-                    textview_getconfirm_code.setText("重新获取验证码");
-                    if (isAdded()) {//判断fragment是否已经加入到activity中
-                        textview_getconfirm_code.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_little_yuan_yellow_5dp));
-                    }
-                    textview_getconfirm_code.setClickable(true);
-                    break;
-            }
-        }
-    };
+    private SmsObserver mSmsObserver;
 
     @Nullable
     @Override
@@ -106,7 +97,7 @@ public class LoginDialogFragment extends DialogFragment {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);//设置没有title
         getDialog().setCanceledOnTouchOutside(false);//设置阴影部分点击不可消失
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mContentView = inflater.inflate(R.layout.dialog_login_layout, container);
 
         initView();//初始化控件
@@ -139,6 +130,28 @@ public class LoginDialogFragment extends DialogFragment {
 
     private void initData() {
 
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                switch (msg.what) {
+                    case CODE_ING://已发送,开始倒计时
+                        textview_getconfirm_code.setText("重新发送(" + (--TIME) + "s)");
+                        if (isAdded()) {//判断fragment是否已经加入到activity中
+                            textview_getconfirm_code.setTextColor(ContextCompat.getColor(getContext(), R.color.gray));
+                        }
+                        return true;
+                    case CODE_REPEAT://重新发送
+                        textview_getconfirm_code.setText("重新获取验证码");
+                        if (isAdded()) {//判断fragment是否已经加入到activity中
+                            textview_getconfirm_code.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.line_little_yuan_yellow_5dp));
+                        }
+                        textview_getconfirm_code.setClickable(true);
+                        return true;
+                }
+                return false;
+            }
+        });
+
         databaseImp = new DatabaseImp(getContext());
         User_Info user_info = databaseImp.getUserFormDatabase();
         if (user_info != null) {
@@ -148,6 +161,12 @@ public class LoginDialogFragment extends DialogFragment {
                 edittext_username.setText(user_info.getUsername());
                 imageview_del2.setVisibility(View.VISIBLE);
             }
+        }
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0x111);
+        } else {
+            initReadSms();
         }
     }
 
@@ -336,6 +355,27 @@ public class LoginDialogFragment extends DialogFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0x111) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initReadSms();
+            }
+        }
+    }
+
+    private void initReadSms() {
+        mSmsObserver = new SmsObserver(new Handler(), requireContext(), new SmsObserver.SmsListener() {
+            @Override
+            public void onResult(String smsContent) {
+                edittext_confirm_code.setText(smsContent);
+            }
+        });
+
+        requireContext().getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
     }
 
     //初始化加载框控件
@@ -736,5 +776,10 @@ public class LoginDialogFragment extends DialogFragment {
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
+
+        if (getContext() != null && mSmsObserver != null) {
+            getContext().getContentResolver().unregisterContentObserver(mSmsObserver);
+        }
     }
+
 }

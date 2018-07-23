@@ -110,6 +110,10 @@
         <item name="colorControlActivated">@color/y2</item>
     </style>
 
+    <style name="CenterEditText" parent="MyEditText">
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="dividerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

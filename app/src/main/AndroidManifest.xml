@@ -171,6 +171,9 @@
         <activity android:name=".activity.mine.MyMonthlyCardActivity" />
         <activity android:name=".activity.mine.BuyMonthlyCardActivity" />
         <activity android:name=".activity.mine.PersonalMessageRefactorActivity" />
+        <activity android:name=".activity.mine.ChangePasswordRefactorActivity" />
+        <activity android:name=".activity.mine.SMSVerificationActivity"
+            android:windowSoftInputMode="stateAlwaysVisible"/>
 
         <!--QQ分享-->
         <activity
@@ -249,7 +252,6 @@
                 <category android:name="com.tuzhao" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.mine.CreditActivity" />
 
         <!--  Required SDK 核心功能 -->
         <!--  可配置android:process参数将PushService放在其他进程中 -->

@@ -1,6 +1,5 @@
 package com.tuzhao.utils;
 
-import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;

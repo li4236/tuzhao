@@ -575,4 +575,15 @@ public class HttpConstants {
      * 请求解除绑定第三方账号
      */
     public static final String requestUnbindThirdPartyAccount = ROOT_URL + "requestUnbindThirdPartyAccount";
+
+    /**
+     * 请求发送修改密码的验证码
+     */
+    public static final String sendChangePasswordCode = ROOT_URL + "sendChangePasswordCode";
+
+    /**
+     * 验证修改密码的验证码
+     */
+    public static final String verifyChangePasswordCode = ROOT_URL + "verifyChangePasswordCode";
+
 }

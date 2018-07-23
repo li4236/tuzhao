@@ -39,8 +39,7 @@ import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
-import com.tuzhao.utils.MainTimeUtil;
-import com.tuzhao.utils.TimeUtil;
+import com.tuzhao.utils.PollingUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -89,7 +88,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private int mAnimatorRepeatCount;
 
-    private MainTimeUtil mMainTimeUtil;
+    private PollingUtil mPollingUtil;
 
     private CircularArcView mCircularArcView;
 
@@ -407,9 +406,9 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             });
             mAnimatorSet.setDuration(1000);
 
-            mMainTimeUtil = new MainTimeUtil(1000, new TimeUtil.TimeCallback() {
+            mPollingUtil = new PollingUtil(1000, new PollingUtil.OnTimeCallback() {
                 @Override
-                public void onTimeIn() {
+                public void onTime() {
                     if (getText(mOpenLockTv).equals("正在开锁中...")) {
                         mOpenLockTv.setText("正在开锁中.");
                     } else if (getText(mOpenLockTv).equals("正在开锁中..")) {
@@ -422,7 +421,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         }
 
         mAnimatorSet.start();
-        mMainTimeUtil.start();
+        mPollingUtil.start();
     }
 
     private void resumeLockAnimator() {
@@ -529,8 +528,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
             mAnimatorSet.cancel();
         }
-        if (mMainTimeUtil != null) {
-            mMainTimeUtil.cancel();
+        if (mPollingUtil != null) {
+            mPollingUtil.cancel();
         }
     }
 

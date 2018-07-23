@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <TextView
+        android:id="@+id/input_sms_hint"
+        style="@style/SixtyTextG6Style"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/verify_code_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_sms_hint">
+
+        <EditText
+            android:id="@+id/first_verify_code"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/normal_g6_focus_y3_stroke_all_3dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:labelFor="@+id/first_verify_code"
+            android:maxLength="1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/second_verify_code"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/normal_g6_focus_y3_stroke_all_3dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:labelFor="@+id/second_verify_code"
+            android:maxLength="1"
+            app:layout_constraintStart_toEndOf="@+id/first_verify_code" />
+
+        <EditText
+            android:id="@+id/third_verify_code"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/normal_g6_focus_y3_stroke_all_3dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:labelFor="@+id/third_verify_code"
+            android:maxLength="1"
+            app:layout_constraintStart_toEndOf="@+id/second_verify_code" />
+
+        <EditText
+            android:id="@+id/fourth_verify_code"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/normal_g6_focus_y3_stroke_all_3dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:labelFor="@+id/fourth_verify_code"
+            android:maxLength="1"
+            app:layout_constraintStart_toEndOf="@+id/third_verify_code" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/verify_code_error"
+        style="@style/FortyTextB1Style"
+        android:layout_marginTop="20dp"
+        android:text="验证码错误"
+        android:textColor="#ff0101"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/verify_code_cl"
+        app:layout_constraintTop_toBottomOf="@+id/verify_code_cl" />
+
+    <TextView
+        android:id="@+id/send_again"
+        style="@style/FortyTextG7Style"
+        android:textColor="@color/g6"
+        app:layout_constraintEnd_toEndOf="@+id/verify_code_cl"
+        app:layout_constraintTop_toTopOf="@+id/verify_code_error" />
+
+</android.support.constraint.ConstraintLayout>

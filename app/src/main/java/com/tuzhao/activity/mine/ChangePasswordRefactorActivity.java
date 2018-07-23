@@ -38,7 +38,7 @@ public class ChangePasswordRefactorActivity extends BaseStatusActivity {
         findViewById(R.id.telephone_number_cv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(SMSVerificationActivity.class);
             }
         });
     }
