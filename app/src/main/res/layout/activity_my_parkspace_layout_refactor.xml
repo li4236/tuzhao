@@ -88,4 +88,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/left_iv" />
 
+    <ViewStub
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout="@layout/empty_and_buy_layout"
+        android:id="@+id/park_space_vs"
+        android:layout_height="0dp" />
+
 </android.support.constraint.ConstraintLayout>

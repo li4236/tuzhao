@@ -3,12 +3,15 @@ package com.tuzhao.activity.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,15 +51,21 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
 
     private TextView mCurrentParkspace;
 
+    private ImageView mLeft;
+
+    private ImageView mRight;
+
     private FragmentAdater mFragmentAdater;
+
+    private ViewStub mViewStub;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_parkspace_layout_refactor);
         mFragments = new ArrayList<>();
-        ImageView left = findViewById(R.id.left_iv);
-        ImageView right = findViewById(R.id.right_iv);
+        mLeft = findViewById(R.id.left_iv);
+        mRight = findViewById(R.id.right_iv);
 
         mViewPager = findViewById(R.id.my_parkspace_vp);
         mCurrentParkspace = findViewById(R.id.my_parkspace_current);
@@ -80,13 +89,13 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             }
         });
 
-        ImageUtil.showPic(left, R.drawable.ic_left1);
-        ImageUtil.showPic(right, R.drawable.ic_left2);
+        ImageUtil.showPic(mLeft, R.drawable.ic_left1);
+        ImageUtil.showPic(mRight, R.drawable.ic_left2);
 
         findViewById(R.id.toolbar_back).setOnClickListener(this);
         findViewById(R.id.audit_tv).setOnClickListener(this);
-        left.setOnClickListener(this);
-        right.setOnClickListener(this);
+        mLeft.setOnClickListener(this);
+        mRight.setOnClickListener(this);
         loadData();
     }
 
@@ -102,6 +111,9 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                         mFragmentAdater.notifyDataSetChanged();
                         String text = "(" + 1 + "/" + mFragments.size() + ")";
                         mCurrentParkspace.setText(text);
+                        if (mFragments.isEmpty()) {
+                            showViewStub();
+                        }
                         Log.e("TAG", "onActivityResult: ");
                         break;
                     }
@@ -127,12 +139,16 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {
-                        for (Park_Info park_info : o.data) {
-                            mFragments.add(MyParkspaceFragment.newInstance(park_info));
+                        if (o.data.isEmpty()) {
+                            showViewStub();
+                        } else {
+                            for (Park_Info park_info : o.data) {
+                                mFragments.add(MyParkspaceFragment.newInstance(park_info));
+                            }
+                            mFragmentAdater.notifyDataSetChanged();
+                            String text = "(" + 1 + "/" + mFragments.size() + ")";
+                            mCurrentParkspace.setText(text);
                         }
-                        mFragmentAdater.notifyDataSetChanged();
-                        String text = "(" + 1 + "/" + mFragments.size() + ")";
-                        mCurrentParkspace.setText(text);
                         dismmisLoadingDialog();
                     }
 
@@ -140,6 +156,9 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
+                        if (mFragments.isEmpty()) {
+                            showViewStub();
+                        }
                         if (!DensityUtil.isException(MyParkspaceActivityRefactor.this, e)) {
                             if (e instanceof IllegalStateException) {
                                 switch (e.getMessage()) {
@@ -215,6 +234,35 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void showViewStub() {
+        if (mViewStub == null) {
+            mViewStub = findViewById(R.id.park_space_vs);
+            ConstraintLayout view = (ConstraintLayout) mViewStub.inflate();
+            ConstraintLayout constraintLayout = view.findViewById(R.id.content_cl);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(view);
+            constraintSet.setMargin(R.id.content_cl, ConstraintSet.BOTTOM, 0);
+            constraintSet.applyTo(view);
+
+            ImageView imageView = constraintLayout.findViewById(R.id.monthly_card_iv);
+            TextView textView = constraintLayout.findViewById(R.id.no_monthly_card_tv);
+            TextView addNow = constraintLayout.findViewById(R.id.buy_now);
+            ImageUtil.showPic(imageView, R.drawable.ic_nospace);
+            textView.setText("您还没添加车位哦");
+            addNow.setText("立即添加");
+            addNow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MyParkspaceActivityRefactor.this, AddParkSpaceActivity.class));
+                }
+            });
+        }
+        if (mViewStub.getVisibility() != View.VISIBLE) {
+            mViewStub.setVisibility(View.VISIBLE);
+        }
+
     }
 
     class FragmentAdater extends FragmentPagerAdapter {
