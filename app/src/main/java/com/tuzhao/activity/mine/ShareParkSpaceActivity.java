@@ -37,10 +37,10 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.setDimensionRatio(R.id.no_address_empty_iv, "438:334");
+        constraintSet.setDimensionRatio(R.id.no_address_empty_iv, "361:300");
         constraintSet.applyTo(constraintLayout);
         ImageView imageView = constraintLayout.findViewById(R.id.no_address_empty_iv);
-        ImageUtil.showPic(imageView, R.drawable.ic_noshare);
+        ImageUtil.showPic(imageView, R.drawable.ic_noshare2);
         TextView textView = constraintLayout.findViewById(R.id.no_address_empty_tv);
         textView.setText("暂无好友给您分享车位哦...");
         mRecyclerView.setEmptyView(constraintLayout);
