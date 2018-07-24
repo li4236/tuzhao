@@ -31,7 +31,6 @@ import okhttp3.Response;
  */
 public class CancelOrderFragment extends BaseStatusFragment implements View.OnClickListener {
 
-
     private ParkOrderInfo mParkOrderInfo;
 
     private TextView mParkDate;
