@@ -11,7 +11,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.CardBean;
+import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
@@ -27,7 +27,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> implements IntentObserver {
+public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> implements IntentObserver {
 
     /**
      * 1（全部卡），2（过期卡）
@@ -56,11 +56,11 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> implement
     protected void initData() {
         if (getArguments() != null) {
             mType = getArguments().getInt(ConstansUtil.TYPE);
-            ArrayList<CardBean> list = getArguments().getParcelableArrayList(ConstansUtil.CARD_INFO_LIST);
+            ArrayList<MonthlyCardBean> list = getArguments().getParcelableArrayList(ConstansUtil.CARD_INFO_LIST);
             if (list == null) {
                 getUserExpiredCards();
             } else {
-                Base_Class_List_Info<CardBean> cardInfoBaseClassListInfo = new Base_Class_List_Info<>();
+                Base_Class_List_Info<MonthlyCardBean> cardInfoBaseClassListInfo = new Base_Class_List_Info<>();
                 cardInfoBaseClassListInfo.data = list;
                 if (!list.isEmpty()) {
                     loadDataSuccess(cardInfoBaseClassListInfo);
@@ -95,9 +95,9 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> implement
         }
         getOkgos(HttpConstants.getUserMonthlyCards)
                 .params("type", mType)
-                .execute(new JsonCallback<Base_Class_List_Info<CardBean>>() {
+                .execute(new JsonCallback<Base_Class_List_Info<MonthlyCardBean>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<CardBean> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_List_Info<MonthlyCardBean> o, Call call, Response response) {
                         loadDataSuccess(o);
                     }
 
@@ -136,7 +136,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<CardBean> implement
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, CardBean cardInfo, int position) {
+    protected void bindData(BaseViewHolder holder, MonthlyCardBean cardInfo, int position) {
         holder.setText(R.id.area_monthly_card, cardInfo.getArea().replace("市", "") + "卡")
                 .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期");
         if (mType == 2) {

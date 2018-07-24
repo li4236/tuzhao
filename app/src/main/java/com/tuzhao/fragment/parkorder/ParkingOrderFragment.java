@@ -68,6 +68,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private TextView mOvertimeFee;
 
+    private TextView mFinishPark;
+
     private DecimalFormat mDecimalFormat;
 
     private ArrayList<String> mParkSpacePictures;
@@ -121,6 +123,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         mOvertimeFee = view.findViewById(R.id.overtime_fee);
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         mParkDuration = view.findViewById(R.id.park_duration);
+        mFinishPark = view.findViewById(R.id.finish_park);
 
         view.setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
@@ -130,7 +133,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
-        view.findViewById(R.id.finish_park).setOnClickListener(this);
+        mFinishPark.setOnClickListener(this);
     }
 
     @Override
@@ -208,6 +211,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             case R.id.finish_park:
                 showLoadingDialog("正在结单...");
                 closeParkLock();
+                mFinishPark.setClickable(false);
                 break;
         }
     }
@@ -563,6 +567,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     }
 
     private void closeParkLock() {
+        initLockListener();
         getOkGo(HttpConstants.controlParkLock)
                 .params("citycode", mParkOrderInfo.getCitycode())
                 .params("order_id", mParkOrderInfo.getId())
@@ -570,12 +575,13 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        initLockListener();
+                        mFinishPark.setClickable(true);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        mFinishPark.setClickable(true);
                         if (!handleException(e)) {
 
                         }
@@ -584,39 +590,43 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     }
 
     private void initLockListener() {
-        mOnLockListener = new OnLockListener() {
-            @Override
-            public void openSuccess() {
+        if (mOnLockListener == null) {
+            mOnLockListener = new OnLockListener() {
+                @Override
+                public void openSuccess() {
 
-            }
+                }
 
-            @Override
-            public void openFailed() {
+                @Override
+                public void openFailed() {
 
-            }
+                }
 
-            @Override
-            public void openSuccessHaveCar() {
+                @Override
+                public void openSuccessHaveCar() {
 
-            }
+                }
 
-            @Override
-            public void closeSuccess() {
-                finishPark();
-            }
+                @Override
+                public void closeSuccess() {
+                    finishPark();
+                }
 
-            @Override
-            public void closeFailed() {
-                showFiveToast("关锁失败，请稍后重试或联系客服");
-            }
+                @Override
+                public void closeFailed() {
+                    dismmisLoadingDialog();
+                    showFiveToast("关锁失败，请稍后重试或联系客服");
+                }
 
-            @Override
-            public void closeFailedHaveCar() {
-                showFiveToast("请先把车移除车位再结单哦");
-            }
+                @Override
+                public void closeFailedHaveCar() {
+                    dismmisLoadingDialog();
+                    showFiveToast("请先把车移除车位再结单哦");
+                }
 
-        };
-        MyReceiver.addLockListener(mParkOrderInfo.getLockId(), mOnLockListener);
+            };
+            MyReceiver.addLockListener(mParkOrderInfo.getLockId(), mOnLockListener);
+        }
     }
 
     private void getOrderStatus() {

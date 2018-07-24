@@ -8,11 +8,12 @@ import java.util.Objects;
 /**
  * Created by juncoder on 2018/7/9.
  */
-public class CardBean implements Parcelable {
+public class MonthlyCardBean implements Parcelable {
 
     private int id;
     private String area;
     private String expiredDate;
+    private String cityCode;
 
     public int getId() {
         return id;
@@ -38,17 +39,24 @@ public class CardBean implements Parcelable {
         this.expiredDate = expiredDate;
     }
 
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CardBean cardBean = (CardBean) o;
-        return id == cardBean.id;
+        MonthlyCardBean monthlyCardBean = (MonthlyCardBean) o;
+        return id == monthlyCardBean.id;
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id);
     }
 
@@ -62,26 +70,28 @@ public class CardBean implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.area);
         dest.writeString(this.expiredDate);
+        dest.writeString(this.cityCode);
     }
 
-    public CardBean() {
+    public MonthlyCardBean() {
     }
 
-    CardBean(Parcel in) {
+    MonthlyCardBean(Parcel in) {
         this.id = in.readInt();
         this.area = in.readString();
         this.expiredDate = in.readString();
+        this.cityCode = in.readString();
     }
 
-    public static final Parcelable.Creator<CardBean> CREATOR = new Parcelable.Creator<CardBean>() {
+    public static final Parcelable.Creator<MonthlyCardBean> CREATOR = new Parcelable.Creator<MonthlyCardBean>() {
         @Override
-        public CardBean createFromParcel(Parcel source) {
-            return new CardBean(source);
+        public MonthlyCardBean createFromParcel(Parcel source) {
+            return new MonthlyCardBean(source);
         }
 
         @Override
-        public CardBean[] newArray(int size) {
-            return new CardBean[size];
+        public MonthlyCardBean[] newArray(int size) {
+            return new MonthlyCardBean[size];
         }
     };
 

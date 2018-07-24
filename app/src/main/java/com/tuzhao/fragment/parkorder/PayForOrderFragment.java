@@ -19,6 +19,7 @@ import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.Discount_Info;
 import com.tuzhao.info.ParkOrderInfo;
@@ -76,6 +77,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private ArrayList<Discount_Info> mDiscountInfos;
 
     private ArrayList<Discount_Info> mCanUseDiscounts;
+
+    private ArrayList<MonthlyCardBean> mMonthlyCards;
 
     private ArrayList<String> mParkSpacePictures;
 
@@ -138,7 +141,12 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     protected void initData() {
         mDiscountInfos = new ArrayList<>();
         mCanUseDiscounts = new ArrayList<>();
+        mMonthlyCards = new ArrayList<>();
+        mDecimalFormat = new DecimalFormat("0.00");
+
         getDiscount();
+        getMonthlyCard();
+
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
@@ -181,8 +189,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         setCollection(CollectionManager.getInstance().isContainParkLot(mParkOrderInfo.getBelong_park_space()));
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
-
-        //initHandler();
     }
 
     @Override
@@ -311,6 +317,28 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     }
 
     /**
+     * 获取有效的月卡
+     */
+    private void getMonthlyCard() {
+        getOkGo(HttpConstants.getUserMonthlyCards)
+                .params("startItem", 0)
+                .params("pageSize", 15)
+                .params("type", "1")
+                .execute(new JsonCallback<Base_Class_List_Info<MonthlyCardBean>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<MonthlyCardBean> o, Call call, Response response) {
+                        for (MonthlyCardBean monthlyCardBean : o.data) {
+                            if (monthlyCardBean.getCityCode().equals(mParkOrderInfo.getCitycode()) ||
+                                    monthlyCardBean.getCityCode().equals("0000")) {
+                                mMonthlyCards.add(monthlyCardBean);
+                            }
+                        }
+                        calculateShouldPayFee();
+                    }
+                });
+    }
+
+    /**
      * 获取优惠券
      */
     private void getDiscount() {
@@ -318,7 +346,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 .execute(new JsonCallback<Base_Class_List_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> o, Call call, Response response) {
-                        mDiscountInfos = o.data;
+                        mDiscountInfos.addAll(o.data);
                         for (Discount_Info discount_info : mDiscountInfos) {
                             if (discount_info.getIs_usable().equals("1")) {
                                 //可用
@@ -406,21 +434,16 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 String parkDiscount = "—￥" + discountFee;
                 mParkDiscount.setText(parkDiscount);
 
-                if (mDecimalFormat == null) {
-                    mDecimalFormat = new DecimalFormat("0.00");
-                }
-
                 mShouldPay = Double.parseDouble(mDecimalFormat.format(Double.valueOf(mParkOrderInfo.getOrder_fee()) - discountFee));
-                if (mShouldPay >= 0) {
-                    shouldPay = "确认支付" + DateUtil.decreseOneZero(mShouldPay) + "元";
-                } else {
-                    shouldPay = "确认支付0.0元";
-                }
+                calculateParkFeeWithMonthlyCard();
+                shouldPay = "确认支付" + DateUtil.decreseOneZero(mShouldPay) + "元";
             } else {
+                calculateParkFeeWithMonthlyCard();
                 shouldPay = "确认支付" + mShouldPay + "元";
             }
         } else {
             //mParkDiscount.setText("（未用优惠券）");
+            calculateParkFeeWithMonthlyCard();
             shouldPay = "确认支付" + mShouldPay + "元";
             String discountCount = mCanUseDiscounts.size() + "张优惠券";
             mParkDiscount.setText(discountCount);
@@ -428,6 +451,21 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mShouldPayFee.setText(shouldPay);
     }
 
+    /**
+     * 如果有月卡的话则价格打七折
+     */
+    private void calculateParkFeeWithMonthlyCard() {
+        if (!mMonthlyCards.isEmpty()) {
+            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * 0.7));
+        }
+        if (mShouldPay <= 0) {
+            mShouldPay = 0.01;
+        }
+    }
+
+    /**
+     * 支付成功后查询订单是否已经完成
+     */
     private void getParkOrder() {
         if (mRequestCount >= 3) {
             dismmisLoadingDialog();
