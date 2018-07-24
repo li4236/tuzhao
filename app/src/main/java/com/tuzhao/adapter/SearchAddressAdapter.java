@@ -26,14 +26,23 @@ public class SearchAddressAdapter extends BaseAdapter implements Filterable {
     private Context context;
     private ArrayList<Search_Address_Info> mUnfilteredData;
 
-    public SearchAddressAdapter(List<Search_Address_Info> mList, Context context) {
-        this.mList = mList;
+    public SearchAddressAdapter(Context context) {
+        this.mList = new ArrayList<>();
         this.context = context;
+    }
+
+    public void setNewData(List<Search_Address_Info> list) {
+        mList.clear();
+        mList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public Search_Address_Info get(int position) {
+        return mList.get(position);
     }
 
     @Override
     public int getCount() {
-
         return mList == null ? 0 : mList.size();
     }
 
@@ -66,7 +75,7 @@ public class SearchAddressAdapter extends BaseAdapter implements Filterable {
     }
 
     class ViewHolder {
-        public TextView keyword;
+         TextView keyword;
     }
 
     @Override
@@ -83,7 +92,7 @@ public class SearchAddressAdapter extends BaseAdapter implements Filterable {
             FilterResults results = new FilterResults();
 
             if (mUnfilteredData == null) {
-                mUnfilteredData = new ArrayList<Search_Address_Info>(mList);
+                mUnfilteredData = new ArrayList<>(mList);
             }
 
             if (prefix == null || prefix.length() == 0) {
@@ -104,7 +113,7 @@ public class SearchAddressAdapter extends BaseAdapter implements Filterable {
 
                         String valueText = pc.getKeyword().toLowerCase();
 
-                        if (valueText.indexOf(prefixString) != -1) { //实现模糊查询
+                        if (valueText.contains(prefixString)) { //实现模糊查询
                             //    valueText.contains(prefixString) 源码 ,匹配开头
                             newValues.add(pc);
                         }

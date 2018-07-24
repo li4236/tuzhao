@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -27,6 +28,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -48,7 +50,6 @@ import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +69,6 @@ public class SearchAddressActivity extends BaseActivity {
 
     private AutoCompleteTextView etextview_input;
     private SearchAddressAdapter adapter;
-    private ArrayList<Search_Address_Info> mData = new ArrayList<>();
     private ProgressBar progressbar;
     private ImageView imageview_clean;
     private TextView textview_goback, linearlayout_clean;
@@ -93,6 +93,7 @@ public class SearchAddressActivity extends BaseActivity {
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
     private String mCloudGrammar = null;// 云端语法文件
     private String mEngineType = SpeechConstant.TYPE_CLOUD;
+    private boolean mUserReject;//用户拒绝开启录音权限
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,39 +162,38 @@ public class SearchAddressActivity extends BaseActivity {
         }
 
         etextview_input = findViewById(R.id.id_activity_searchaddress_layout_etextview_input);
-        adapter = new SearchAddressAdapter(mData, SearchAddressActivity.this);
+        adapter = new SearchAddressAdapter(SearchAddressActivity.this);
         etextview_input.setAdapter(adapter);
-        etextview_input.setDropDownVerticalOffset(DensityUtil.dp2px(this, 13));
         etextview_input.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                etextview_input.setText(mData.get(position).getKeyword());
+                etextview_input.setText(adapter.get(position).getKeyword());
                 Intent intent;
                 switch (Integer.parseInt(whatPage)) {
                     case 1:
                         intent = new Intent(SearchAddressActivity.this, MainActivity.class);
-                        intent.putExtra("keyword", mData.get(position).getKeyword());
-                        intent.putExtra("lat", mData.get(position).getLatitude() + "");
-                        intent.putExtra("lon", mData.get(position).getLongitude() + "");
-                        intent.putExtra("citycode", mData.get(position).getCitycode());
+                        intent.putExtra("keyword", adapter.get(position).getKeyword());
+                        intent.putExtra("lat", adapter.get(position).getLatitude() + "");
+                        intent.putExtra("lon", adapter.get(position).getLongitude() + "");
+                        intent.putExtra("citycode", adapter.get(position).getCitycode());
                         setResult(1, intent);
                         finish();
                         break;
                     case 2:
                         intent = new Intent(SearchAddressActivity.this, MainActivity.class);
-                        intent.putExtra("keyword", mData.get(position).getKeyword());
-                        intent.putExtra("lat", mData.get(position).getLatitude() + "");
-                        intent.putExtra("lon", mData.get(position).getLongitude() + "");
-                        intent.putExtra("citycode", mData.get(position).getCitycode());
+                        intent.putExtra("keyword", adapter.get(position).getKeyword());
+                        intent.putExtra("lat", adapter.get(position).getLatitude() + "");
+                        intent.putExtra("lon", adapter.get(position).getLongitude() + "");
+                        intent.putExtra("citycode", adapter.get(position).getCitycode());
                         setResult(2, intent);
                         finish();
                         break;
                 }
                 if (historyDatas.size() > 5) {
                     databaseImp.deleteSearchLog("");
-                    databaseImp.insertSearchLog(mData.get(position));
+                    databaseImp.insertSearchLog(adapter.get(position));
                 } else {
-                    databaseImp.insertSearchLog(mData.get(position));
+                    databaseImp.insertSearchLog(adapter.get(position));
                 }
 
                 finish();
@@ -216,9 +216,7 @@ public class SearchAddressActivity extends BaseActivity {
                 if (imageview_clean.getVisibility() == View.GONE) {
                     imageview_clean.setVisibility(View.VISIBLE);
                 }
-                if (city != null) {
-                    SearchWord(etextview_input.getText().toString(), city);
-                }
+                SearchWord(etextview_input.getText().toString());
             }
         }
 
@@ -245,9 +243,7 @@ public class SearchAddressActivity extends BaseActivity {
                         imageview_clean.setVisibility(View.VISIBLE);
                     }
 
-                    if (city != null) {
-                        SearchWord(etextview_input.getText().toString(), city);
-                    }
+                    SearchWord(etextview_input.getText().toString());
                 } else {
                     if (imageview_clean.getVisibility() == View.VISIBLE) {
                         imageview_clean.setVisibility(View.GONE);
@@ -331,32 +327,32 @@ public class SearchAddressActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void SearchWord(String keyword, String cityCode) {
-
+    private void SearchWord(String keyword) {
         PoiSearch.Query query = new PoiSearch.Query(keyword, "");
+        query.setLocation(new LatLonPoint(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude()));
+        query.setDistanceSort(false);
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
 //        query.setPageNum(currentPage);//设置查询页码
         PoiSearch poiSearch = new PoiSearch(this, query);
         poiSearch.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
             @Override
             public void onPoiSearched(PoiResult poiResult, int i) {
-                mData.clear();
+                List<Search_Address_Info> list = new ArrayList<>();
                 for (PoiItem pois : poiResult.getPois()) {
                     Search_Address_Info info = new Search_Address_Info();
                     info.setKeyword(pois.getTitle());
                     info.setLatitude(pois.getLatLonPoint().getLatitude());
                     info.setLongitude(pois.getLatLonPoint().getLongitude());
                     info.setCitycode(pois.getCityCode());
-                    mData.add(info);
+                    list.add(info);
                 }
 
                 if (progressbar.getVisibility() == View.VISIBLE) {
                     progressbar.setVisibility(View.GONE);
                 }
 
-                adapter = new SearchAddressAdapter(mData, SearchAddressActivity.this);
+                adapter.setNewData(list);
                 etextview_input.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -405,8 +401,7 @@ public class SearchAddressActivity extends BaseActivity {
                     city = location.getCityCode();
 
                     if (etextview_input.getText().length() > 0) {
-
-                        SearchWord(etextview_input.getText().toString(), city);
+                        SearchWord(etextview_input.getText().toString());
                     }
                 } else {
                     //定位失败
@@ -440,7 +435,6 @@ public class SearchAddressActivity extends BaseActivity {
     }
 
     private void initVoice() {
-        checkPermission(Manifest.permission.RECORD_AUDIO);
         //1.创建SpeechRecognizer对象，第二个参数：本地识别时传InitListener
         final SpeechRecognizer mIat = SpeechRecognizer.createRecognizer(SearchAddressActivity.this, null);
         //dialogManager = DialogManager.getInstance();
@@ -469,7 +463,24 @@ public class SearchAddressActivity extends BaseActivity {
             //会话发生错误回调接口
             public void onError(SpeechError error) {
                 //打印错误码描述
-                MyToast.showToast(SearchAddressActivity.this, error.getPlainDescription(false) + "，请重试", 5);
+                if (ActivityCompat.checkSelfPermission(SearchAddressActivity.this, Manifest.permission.RECORD_AUDIO) !=
+                        PackageManager.PERMISSION_GRANTED && error.getPlainDescription(false).contains("启动录音失败")) {
+                    TipeDialog tipeDialog = new TipeDialog.Builder(SearchAddressActivity.this)
+                            .setTitle("提示")
+                            .setMessage("打开录音权限才可以进行语音输入")
+                            .setPositiveButton("授权", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mUserReject = false;
+                                    requestPermission(Manifest.permission.RECORD_AUDIO);
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .create();
+                    tipeDialog.show();
+                } else {
+                    MyToast.showToast(SearchAddressActivity.this, error.getPlainDescription(false) + "，请重试", 5);
+                }
             }
 
             //开始录音
@@ -529,6 +540,7 @@ public class SearchAddressActivity extends BaseActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    requestPermission(Manifest.permission.RECORD_AUDIO);
                     mDialog.show();
                     mVoiceDialog.updateUI(R.mipmap.listener01, "正在录音");
                     dictationResultStr = "[";
@@ -546,34 +558,20 @@ public class SearchAddressActivity extends BaseActivity {
 
     }
 
-    private void checkPermission(final String permission) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                new TipeDialog.Builder(this)
-                        .setTitle("权限申请")
-                        .setMessage("需要麦克风权限才能使用语音输入功能")
-                        .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestPermission(permission);
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        } else {
-            requestPermission(permission);
+    private void requestPermission(String permission) {
+        if (!mUserReject && ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, 0x111);
         }
     }
 
-    private void requestPermission(String permission) {
-        ActivityCompat.requestPermissions(this, new String[]{permission}, 0x111);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0x111) {
+            if (permissions[0].equals(Manifest.permission.RECORD_AUDIO) && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                mUserReject = true;
+            }
+        }
     }
 
 }

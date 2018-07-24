@@ -15,14 +15,12 @@ import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.WechatPayParam;
 import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -62,6 +60,9 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
 
     private Thread mPayThread;
 
+    /**
+     * 0(停车订单)  1(车锁押金) 2(购买月卡)
+     */
     private String mPayType;
 
     private String mParkSpaceId;
@@ -122,7 +123,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 break;
         }
 
-        initHandler();
         IntentObserable.registerObserver(this);
     }
 
@@ -197,6 +197,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        initHandler();
                         startAlipay(o.data);
                         dismmisLoadingDialog();
                     }
@@ -260,74 +261,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         return baseRequest;
     }
 
-    private void alipayParkOrder() {
-        showLoadingDialog();
-        OkGo.post(HttpConstants.alipayApplyOrder)
-                .tag(TAG)
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("orderId", mOrderId)
-                .params("cityCode", mCityCode)
-                .params("discountId", mDiscountId)
-                .execute(new JsonCallback<Base_Class_Info<String>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
-                        startAlipay(stringBase_class_info.data);
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        mPayImmediately.setClickable(true);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
-                                    finish();
-                                    break;
-                                default:
-                                    showFiveToast(e.getMessage());
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void alipayLockDeposit() {
-        showLoadingDialog();
-        OkGo.post(HttpConstants.getAlipayLockDepositInfo)
-                .tag(TAG)
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkSpaceId", mParkSpaceId)
-                .params("cityCode", mCityCode)
-                .execute(new JsonCallback<Base_Class_Info<String>>() {
-
-                    @Override
-                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
-                        startAlipay(stringBase_class_info.data);
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        mPayImmediately.setClickable(true);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
-                                    finish();
-                                    break;
-                                default:
-                                    showFiveToast(e.getMessage());
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
-
     private void startAlipay(final String orderInfo) {
         Runnable payRunnable = new Runnable() {
 
@@ -349,69 +282,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         }
         mPayThread = new Thread(payRunnable);
         mPayThread.start();
-
-        mPayImmediately.setClickable(true);
-    }
-
-    private void wechatPayParkOrder() {
-        showLoadingDialog();
-        getOkGo(HttpConstants.getWechatPayOrder)
-                .params("orderId", mOrderId)
-                .params("cityCode", mCityCode)
-                .params("discountId", mDiscountId)
-                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
-                        startWechatPay(o.data);
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        mPayImmediately.setClickable(true);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
-                                    finish();
-                                    break;
-                                default:
-                                    showFiveToast(e.getMessage());
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void wechatPayLockDeposit() {
-        getOkGo(HttpConstants.getWechatLockDepositInfo)
-                .params("parkSpaceId", mParkSpaceId)
-                .params("cityCode", mCityCode)
-                .execute(new JsonCallback<Base_Class_Info<WechatPayParam>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<WechatPayParam> o, Call call, Response response) {
-                        startWechatPay(o.data);
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        mPayImmediately.setClickable(true);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
-                                    finish();
-                                    break;
-                                default:
-                                    showFiveToast(e.getMessage());
-                                    break;
-                            }
-                        }
-                    }
-                });
     }
 
     private void startWechatPay(WechatPayParam wechatPayParam) {
@@ -431,47 +301,47 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         if (!payReq.checkArgs()) {
             System.out.println("微信支付暂不可用，请使用支付宝支付");
         }
-        mPayImmediately.setClickable(true);
     }
 
     private void initHandler() {
-        mHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-
-                switch (msg.what) {
-                    case OrderInfoUtil2_0.SDK_PAY_FLAG: {
-                        @SuppressWarnings("unchecked")
-                        //如果消息是支付成功 则SDK正常运行，将随该消息附带的msg.obj强转回map中，建立新的payresult支付结果
-                                PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                        /**
-                         对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                         */
-                        // 同步返回需要验证的信息，从支付结果中取到resultinfo
-                        String resultStatus = payResult.getResultStatus();
-                        // 判断resultStatus 为9000则代表支付成功
-                        if (TextUtils.equals(resultStatus, "9000")) {
-                            IntentObserable.dispatch(new Intent(ConstansUtil.PAY_SUCCESS));
-                            // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        } else if (TextUtils.equals(resultStatus, "6001")) {
-                            // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showFiveToast("支付取消");
-                        } else if (TextUtils.equals(resultStatus, "6002")) {
-                            showFiveToast("网络异常，请稍后再试");
-                        } else if (TextUtils.equals(resultStatus, "4000")) {
-                            showFiveToast("系统异常，请稍后再试");
-                        } else {
-                            showFiveToast("支付失败");
+        if (mHandler == null) {
+            mHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case OrderInfoUtil2_0.SDK_PAY_FLAG: {
+                            @SuppressWarnings("unchecked")
+                            //如果消息是支付成功 则SDK正常运行，将随该消息附带的msg.obj强转回map中，建立新的payresult支付结果
+                                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                            /**
+                             对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                             */
+                            // 同步返回需要验证的信息，从支付结果中取到resultinfo
+                            String resultStatus = payResult.getResultStatus();
+                            // 判断resultStatus 为9000则代表支付成功
+                            if (TextUtils.equals(resultStatus, "9000")) {
+                                IntentObserable.dispatch(new Intent(ConstansUtil.PAY_SUCCESS));
+                                // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                            } else if (TextUtils.equals(resultStatus, "6001")) {
+                                // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                                showFiveToast("支付取消");
+                            } else if (TextUtils.equals(resultStatus, "6002")) {
+                                showFiveToast("网络异常，请稍后再试");
+                            } else if (TextUtils.equals(resultStatus, "4000")) {
+                                showFiveToast("系统异常，请稍后再试");
+                            } else {
+                                showFiveToast("支付失败");
+                            }
+                            mPayImmediately.setClickable(true);
+                            break;
                         }
-                        mPayImmediately.setClickable(true);
-                        break;
+                        default:
+                            break;
                     }
-                    default:
-                        break;
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     @Override

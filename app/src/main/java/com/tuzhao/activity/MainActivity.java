@@ -361,6 +361,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getCameraPosition().target) / 1000 >= 10) {
                             mLastLatLng = aMap.getCameraPosition().target;
                             getAddressOrCitycode(mLastLatLng, true);
+                            Log.e(TAG, "onTouch: " );
                         }
                     }
                 }
@@ -371,7 +372,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             @Override
             public void onMapLongClick(LatLng latLng) {
                 initLoading("加载中...");
-                Log.e("当前经纬度", latLng.latitude + "    " + latLng.longitude);
                 getAddressOrCitycode(latLng, false);
             }
         });
@@ -1124,7 +1124,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             showClusters = true;
             mLastPosition = aMap.getCameraPosition();
             //aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
-            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, (int) (mapwidth / 5.0)));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, clusterItems.size() > 5 ? (int) (mapwidth / 5.0) : (int) (mapwidth * 1.0 / (clusterItems.size()+1))));
         } else {
             //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
