@@ -75,7 +75,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
     private TextView mSesame;
 
-    private TextView mRealName;
+    //private TextView mRealName;
 
     private Handler mHandler;
 
@@ -99,7 +99,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         mWechat = findViewById(R.id.wechat_bingding_tv);
         mAlipay = findViewById(R.id.alipay_bingding_tv);
         mSesame = findViewById(R.id.sesame_certification_tv);
-        mRealName = findViewById(R.id.real_name_certification_tv);
+        //mRealName = findViewById(R.id.real_name_certification_tv);
 
         mCircleImageView.setOnClickListener(this);
         findViewById(R.id.edit_personal_message).setOnClickListener(this);
@@ -163,10 +163,6 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             mSesame.setText("已认证");
         }
 
-        if (userInfo.getRealName() != null && !userInfo.getRealName().equals("-1")) {
-            mRealName.setText(userInfo.getRealName());
-        }
-
         IntentObserable.registerObserver(this);
     }
 
@@ -197,7 +193,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                 } else {
                     TipeDialog.Builder builder = new TipeDialog.Builder(PersonalMessageRefactorActivity.this);
                     builder.setTitle("解除绑定");
-                    builder.setMessage("将与当前绑定的微信账号解除绑定，解除绑定后可重新绑定新的微信账号，是否解除绑定？");
+                    builder.setMessage("解除绑定后可重新绑定新的微信账号，是否解除绑定？");
                     builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -218,7 +214,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     reqeustAlipayLogin();
                 } else {
                     TipeDialog.Builder builder = new TipeDialog.Builder(PersonalMessageRefactorActivity.this);
-                    builder.setMessage("将与当前绑定的支付宝账号解除绑定，解除绑定后可重新绑定新的支付宝账号，是否解除绑定？");
+                    builder.setMessage("解除绑定后可重新绑定新的支付宝账号，是否解除绑定？");
                     builder.setTitle("解除绑定");
                     builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
