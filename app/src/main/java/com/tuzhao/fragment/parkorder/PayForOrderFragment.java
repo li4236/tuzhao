@@ -122,6 +122,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         mParkDiscount = view.findViewById(R.id.park_discount);
         mShouldPayFee = view.findViewById(R.id.pay_for_order_should_pay);
 
+        view.setOnClickListener(this);
         view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);

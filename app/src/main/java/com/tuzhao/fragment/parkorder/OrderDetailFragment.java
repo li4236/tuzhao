@@ -172,6 +172,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         //mTotalCredit = view.findViewById(R.id.pay_for_order_total_credit);
         mParkComment = view.findViewById(R.id.park_comment_tv);
 
+        view.setOnClickListener(this);
         view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);

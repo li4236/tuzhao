@@ -122,6 +122,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         mParkDuration = view.findViewById(R.id.park_duration);
 
+        view.setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);

@@ -134,6 +134,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
         mParkDuration = view.findViewById(R.id.park_duration);
 
+        view.setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
@@ -395,7 +396,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 @Override
                 public void onAnimationCancel(Animator animation) {
                     super.onAnimationCancel(animation);
-                    Log.e(TAG, "onAnimationCancel: " + mOpenLockStatus);
                     if (mOpenLockStatus == 0 || mOpenLockStatus == 2) {
                         if (mOpenLockStatus == 0) {
                             mLockDialog.setCancelable(false);
@@ -425,7 +425,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     }
 
     private void resumeLockAnimator() {
-        Log.e(TAG, "resumeLockAnimator: ");
         mResumeAnimatorSet = new AnimatorSet();
         mAnimatorDuration = System.currentTimeMillis() - mAnimatorDuration;
         if (mAnimatorRepeatCount % 2 == 0) {
