@@ -142,6 +142,10 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                         if (o.data.isEmpty()) {
                             showViewStub();
                         } else {
+                            if (mLeft.getVisibility() != View.VISIBLE) {
+                                mLeft.setVisibility(View.VISIBLE);
+                                mRight.setVisibility(View.VISIBLE);
+                            }
                             for (Park_Info park_info : o.data) {
                                 mFragments.add(MyParkspaceFragment.newInstance(park_info));
                             }
@@ -186,7 +190,6 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                         }
                     }
                 });
-
     }
 
     private void showLoadingDialog() {
@@ -261,6 +264,8 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
         }
         if (mViewStub.getVisibility() != View.VISIBLE) {
             mViewStub.setVisibility(View.VISIBLE);
+            mLeft.setVisibility(View.INVISIBLE);
+            mRight.setVisibility(View.INVISIBLE);
         }
 
     }
