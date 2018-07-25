@@ -107,6 +107,7 @@ import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
@@ -167,7 +168,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private CameraPosition mLastPosition;//点击marker时地图的位置，用于点击地图后返回地图点击前的位置
     private LatLng mLastLatLng;//上次移动地图时的坐标
     private String mLastCity;//上次移动地图时未开放的城市名字
-    private List<ClusterItem> mMarkerData = new ArrayList<>();//当前城市地图标点的数据
+    private List<ClusterItem> mMarkerData = new LinkedList<>();//当前城市地图标点的数据
     private List<ClusterItem> mShowMarkerData = new ArrayList<>();//当前城市地图标点的数据
     private List<ClusterItem> mQMarkerData = new ArrayList<>();//其他城市地图标点的数据
     private List<ClusterItem> mShowQMarkerData = new ArrayList<>();//其他城市地图标点的数据
@@ -361,7 +362,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getCameraPosition().target) / 1000 >= 10) {
                             mLastLatLng = aMap.getCameraPosition().target;
                             getAddressOrCitycode(mLastLatLng, true);
-                            Log.e(TAG, "onTouch: " );
+                            Log.e(TAG, "onTouch: ");
                         }
                     }
                 }
@@ -413,6 +414,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                 if (mMarkerData.size() == 0 && LocationManager.getInstance().hasLocation()) {
                     initLoading("正在加载...");
+                    Log.e(TAG, "onClick: 1");
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
                             LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
                             LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, "当前城市");
@@ -686,17 +688,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 });
     }
 
-    private void addMarkerInScreenCenter() {
-        /*if (screenMarker == null) {
-            screenMarker = aMap.addMarker(new MarkerOptions().zIndex(2).icon(BitmapDescriptorFactory.fromResource(R.mipmap.biaozhu2)));
-        }
-        screenMarker.setAnchor(0.5f, 1.0f);
-        LatLng latLng = aMap.getCameraPosition().target;
-        Point screenPosition = aMap.getProjection().toScreenLocation(latLng);
-        screenMarker.setPositionByPixels(screenPosition.x, screenPosition.y);
-        screenMarker.setClickable(false);*/
-    }
-
     private void requestHomePCLocData(final String citycode, String lat, String lon, String radius, final boolean isLc, final String cityname) {
         OkGo.post(HttpConstants.getNearPointLocData)
                 .tag(HttpConstants.getNearPointLocData)
@@ -711,45 +702,48 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (show1) {
                             controlAnim(false);
                         }
-                        if (mLoadingDialog != null) {
-                            if (mLoadingDialog.isShowing()) {
-                                mLoadingDialog.dismiss();
-                            }
-                        }
                         if (isLc) {
-                            if (mMarkerData.size() == 0) {
-                                mMarkerData = new ArrayList<>();
-                                mYData = homePC_info.data;
-                                for (NearPointPCInfo info : mYData) {
-                                    RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
-                                            info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
-                                            info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
+                            //mMarkerData = new ArrayList<>();
+                            //mYData = homePC_info.data;
+                            if (mMarkerData.size() + homePC_info.data.size() > 80) {
+                                for (int i = 0, moreDataSize = mMarkerData.size() + homePC_info.data.size() - 80; i <= moreDataSize; i++) {
+                                    mMarkerData.remove(0);
+                                }
+                                //最多显示80个marker
+                            }
+
+                            for (NearPointPCInfo info : homePC_info.data) {
+                                RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
+                                        info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
+                                        info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
+                                if (!mMarkerData.contains(item)) {
                                     mMarkerData.add(item);
                                 }
-                                if (isSPark && isSCharge) {
-                                    showMarkers(mMarkerData);
-                                } else if (isSPark) {
-                                    mShowMarkerData.clear();
-                                    for (ClusterItem item : mMarkerData) {
-                                        if (item.isparkspace()) {
-                                            mShowMarkerData.add(item);
-                                        }
+                            }
+
+                            if (isSPark && isSCharge) {
+                                showMarkers(mMarkerData);
+                            } else if (isSPark) {
+                                mShowMarkerData.clear();
+                                for (ClusterItem item : mMarkerData) {
+                                    if (item.isparkspace()) {
+                                        mShowMarkerData.add(item);
                                     }
-                                    showMarkers(mShowMarkerData);
-                                } else {
-                                    mShowMarkerData.clear();
-                                    for (ClusterItem item : mMarkerData) {
-                                        if (!item.isparkspace()) {
-                                            mShowMarkerData.add(item);
-                                        }
-                                    }
-                                    showMarkers(mShowMarkerData);
                                 }
+                                showMarkers(mShowMarkerData);
+                            } else {
+                                mShowMarkerData.clear();
+                                for (ClusterItem item : mMarkerData) {
+                                    if (!item.isparkspace()) {
+                                        mShowMarkerData.add(item);
+                                    }
+                                }
+                                showMarkers(mShowMarkerData);
                             }
                         } else {
-                            mQMarkerData = new ArrayList<>();
-                            mQYData = homePC_info.data;
-                            for (NearPointPCInfo info : mQYData) {
+                            mQMarkerData.clear();
+                            //mQYData = homePC_info.data;
+                            for (NearPointPCInfo info : homePC_info.data) {
                                 RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
                                         info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
                                         info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
@@ -776,6 +770,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 }
                             }
                         }
+                        dismissLoading();
                     }
 
                     @Override
@@ -861,6 +856,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     mCircleSensorHelper.setCurrentMarker(mLocationCircleMarker);
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                     Log.e("TAG", "last latitude" + mLastlocationLatlng.latitude + "  longtitude:" + mLastlocationLatlng.longitude);
+                    isLcData = true;
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
                             LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
                             LocationManager.getInstance().getmAmapLocation().getLongitude() + "",
@@ -868,6 +864,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 } else {
                     if (mMarkerData == null) {
                         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
+                        isLcData = true;
                         requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
@@ -1124,7 +1121,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             showClusters = true;
             mLastPosition = aMap.getCameraPosition();
             //aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
-            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, clusterItems.size() > 5 ? (int) (mapwidth / 5.0) : (int) (mapwidth * 1.0 / (clusterItems.size()+1))));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, clusterItems.size() > 5 ? (int) (mapwidth / 5.0) : (int) (mapwidth * 1.0 / (clusterItems.size() + 1))));
         } else {
             //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
@@ -1418,7 +1415,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     LatLng latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat")), Double.parseDouble(data.getStringExtra("lon")));
                     search_address = data.getStringExtra("keyword");
                     MarkerOptions options = new MarkerOptions();
-                    View view_ChargeStation = LayoutInflater.from(MainActivity.this).inflate(R.layout.view_icon_chargestation_location, null);
+                    View view_ChargeStation = getLayoutInflater().inflate(R.layout.view_icon_chargestation_location, null);
                     ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
@@ -1433,6 +1430,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
                     String citycode = data.getStringExtra("citycode");
                     isLcData = false;
+                    Log.e(TAG, "onActivityResult: 4");
                     requestHomePCLocData(citycode, data.getStringExtra("lat"), data.getStringExtra("lon"), "10", isLcData, "当前城市");
                 } else {
                     if (isLcData) {
@@ -1530,21 +1528,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             if (!show1) {
                                 controlAnim(true);
                             }
-                            if (mLoadingDialog.isShowing()) {
-                                mLoadingDialog.dismiss();
-                            }
+                            dismissLoading();
                         } else {
-                            isLcData = false;
+                            isLcData = true;
                             moveCityCode = result.getRegeocodeAddress().getCityCode();
+                            Log.e(TAG, "onRegeocodeSearched: 5");
                             requestHomePCLocData(moveCityCode, latLng.latitude + "", latLng.longitude + "",
                                     "10", isLcData, result.getRegeocodeAddress().getCity());
                         }
                     }
 
                 } else {
-                    if (mLoadingDialog.isShowing()) {
-                        mLoadingDialog.dismiss();
-                    }
+                    dismissLoading();
                     MyToast.showToast(MainActivity.this, "选择的标记点异常，请重试", 5);
                 }
             }
@@ -1618,6 +1613,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private void setViewClick() {
         mParkNow.setClickable(true);
         mParkNow.setBackground(ContextCompat.getDrawable(this, R.drawable.normal_y6_press_y7_round));
+    }
+
+    private void dismissLoading() {
+        if (mLoadingDialog != null) {
+            if (mLoadingDialog.isShowing()) {
+                mLoadingDialog.dismiss();
+            }
+        }
+    }
+
+    private void showFiveToast(String msg) {
+        MyToast.showToast(this, msg, 5);
     }
 
     private void checkPermission(final String permission, String message, final int requestCode) {

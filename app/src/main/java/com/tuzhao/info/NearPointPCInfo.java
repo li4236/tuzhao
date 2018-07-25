@@ -2,6 +2,8 @@ package com.tuzhao.info;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Objects;
+
 /**
  * Created by TZL12 on 2017/5/16.
  */
@@ -106,5 +108,20 @@ public class NearPointPCInfo extends BaseInfo {
 
     public void setGrade(double grade) {
         this.grade = grade;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NearPointPCInfo that = (NearPointPCInfo) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(cancharge, that.cancharge);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, cancharge);
     }
 }

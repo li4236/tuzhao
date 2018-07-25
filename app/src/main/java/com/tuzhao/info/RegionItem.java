@@ -3,6 +3,8 @@ package com.tuzhao.info;
 import com.amap.api.maps.model.LatLng;
 import com.tuzhao.publicwidget.map.ClusterItem;
 
+import java.util.Objects;
+
 /**
  * Created by yiyi.qi on 16/10/10.
  */
@@ -71,5 +73,21 @@ public class RegionItem implements ClusterItem {
 
     public double getGrade() {
         return grade;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RegionItem item = (RegionItem) o;
+        return isparkspace == item.isparkspace &&
+                Objects.equals(id, item.id) &&
+                Objects.equals(cancharge, item.cancharge);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, cancharge, isparkspace);
     }
 }

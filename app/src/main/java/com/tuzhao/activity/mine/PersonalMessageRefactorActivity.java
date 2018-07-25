@@ -132,7 +132,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         mBirthday.setText(userInfo.getBirthday());
         if (userInfo.getNumberOfPark() != null && !userInfo.getNumberOfPark().equals("-1")) {
             int numberOfPark = Integer.parseInt(userInfo.getNumberOfPark());
-            if (0 < numberOfPark && numberOfPark <= 20) {
+            if (numberOfPark <= 20) {
                 mUserLevel.setText("停车小白");
             } else if (numberOfPark <= 50) {
                 mUserLevel.setText("泊车达人");

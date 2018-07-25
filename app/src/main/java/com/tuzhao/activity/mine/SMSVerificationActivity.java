@@ -248,7 +248,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
      */
     private void sendChangePasswordCode() {
         mSendAgain.setClickable(false);
-        startCountdown();
         showLoadingDialog("正在发送...");
         getOkGo(HttpConstants.sendChangePasswordCode)
                 .params("telephone", UserManager.getInstance().getUserInfo().getUsername())

@@ -321,7 +321,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mCopyClusters.clear();
 
         LatLngBounds visibleBounds = mAMap.getProjection().getVisibleRegion().latLngBounds;
-        Log.e(TAG, "calculateClusters: "+mClusterItems.size() );
         for (ClusterItem clusterItem : mClusterItems) {
             if (mIsCanceled) {
                 return;
