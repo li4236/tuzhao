@@ -20,6 +20,7 @@ import android.view.animation.CycleInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
@@ -55,6 +56,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     private TextView mVerfiCodeError;
 
     private TextView mSendAgain;
+
+    private String mTelephoneToken;
 
     private CountdownUtil mCountdownUtil;
 
@@ -167,10 +170,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         mSmsObserver = new SmsObserver(new Handler(), this, new SmsObserver.SmsListener() {
             @Override
             public void onResult(String smsContent) {
-                if (TextUtils.isEmpty(smsContent)) {
-                    for (int i = 0; i < mVerfifyCodes.length; i++) {
-                        mVerfifyCodes[i].setText(smsContent.charAt(i));
-                    }
+                for (int i = 0; i < mVerfifyCodes.length; i++) {
+                    mVerfifyCodes[i].setText(String.valueOf(smsContent.charAt(i)));
                 }
             }
         });
@@ -251,9 +252,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         showLoadingDialog("正在发送...");
         getOkGo(HttpConstants.sendChangePasswordCode)
                 .params("telephone", UserManager.getInstance().getUserInfo().getUsername())
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        mTelephoneToken = o.data;
                         startCountdown();
                         dismmisLoadingDialog();
                     }
@@ -262,14 +264,17 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            showFiveToast("今日发送已达上限，请明天再试");
                         }
                     }
                 });
+
     }
 
     private void verifyChangePasswordCode(String verifyCode) {
-        getOkGo(HttpConstants.verifyChangePasswordCode)
+        OkGo.post(HttpConstants.verifyChangePasswordCode)
+                .tag(TAG)
+                .headers("telephoneToken", mTelephoneToken)
                 .params("verifyCode", verifyCode)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
@@ -281,7 +286,15 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            setVerifyCodeStatus(false);
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("验证码已过期，请重新发送");
+                                    break;
+                                case "102":
+                                    showFiveToast("验证码错误");
+                                    setVerifyCodeStatus(false);
+                                    break;
+                            }
                         }
                     }
                 });

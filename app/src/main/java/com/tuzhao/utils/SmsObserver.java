@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +42,7 @@ public class SmsObserver extends ContentObserver {
         Cursor cursor = contentResolver.query(Uri.parse(SMS_URI_INBOX), new String[]{"_id", "address", "body", "read"}, "body like ? and read = ?",
                 new String[]{"%途找停车%", "0"}, "date desc");
         if (cursor != null) {
-            //华为读取不到短信的
+            //华为,小米读取不到短信的
             if (cursor.moveToFirst()) {
                 String smsBody = cursor.getString(cursor.getColumnIndex("body"));
                 String regEx = "[^0-9]";
