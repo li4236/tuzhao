@@ -53,7 +53,8 @@ public class MyReceiver extends BroadcastReceiver {
         if (bundle != null) {
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
                 String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-                Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+                Log.e(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+                MyApplication.getInstance().getDatabaseImp().setRegistrationId(regId);
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
                 // 自定义消息不会展示在通知栏
                 Log.e("收到的自定义消息", bundle.getString(JPushInterface.EXTRA_EXTRA));
