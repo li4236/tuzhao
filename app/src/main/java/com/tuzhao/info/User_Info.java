@@ -14,7 +14,7 @@ public class User_Info extends BaseInfo {
     private String username;//用户名：手机号码
     private String password;//用户密码
     private String balance;//账户余额
-    private String nickname;//用户昵称
+    private String nickname="-1";//用户昵称
     private String realName;//真实姓名
     private String gender;//性别
     private String birthday;//生日

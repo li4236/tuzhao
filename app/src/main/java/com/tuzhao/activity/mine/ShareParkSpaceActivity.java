@@ -86,6 +86,14 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     }
 
     private String getParkspaceStatus(Park_Info park_info) {
+        switch (park_info.getPark_status()) {
+            case "0":
+                return "未开放";
+            case "3":
+                return "停租中";
+            case "4":
+                return "已删除";
+        }
         String nowDate = DateUtil.getCurrentYearToMinutes();
         String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60 * 2);
 

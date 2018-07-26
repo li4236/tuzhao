@@ -10,8 +10,8 @@ public class HttpConstants {
 
     //    private static String ROOT_URL = "http://120.78.54.188/Home/charge/";//真正服务器
 //    public static final String ROOT_IMG_URL = "http://120.78.54.188/Public/Uploads/";//真正服务器
-    public static final String ROOT_URL = "https://api.toozhao.cn/public/index.php/tianzhili/";//测试服务器
-    public static final String ROOT_BASE_IMG_URL = "https://api.toozhao.cn/public/uploads/";//测试服务器图片基本Url
+    private static final String ROOT_URL = "https://api.toozhao.cn/public/index.php/tianzhili/";//测试服务器
+    private static final String ROOT_BASE_IMG_URL = "https://api.toozhao.cn/public/uploads/";//测试服务器图片基本Url
     public static final String ROOT_MAPSTYLE_URL = ROOT_BASE_IMG_URL + "map_style/mystyle_sdk.data";//地图样式文件
     public static final String ROOT_IMG_URL_USER = ROOT_BASE_IMG_URL + "headimgs/";//用户头像
     public static final String ROOT_IMG_URL_PS = ROOT_BASE_IMG_URL + "parkspaces/";//车场图片
