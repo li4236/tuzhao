@@ -13,6 +13,7 @@ public class UserManager {
 
     private static UserManager userManager = null;
     private User_Info userInfo = null;
+    private boolean mHasLogin;
 
     public static UserManager getInstance() {
 
@@ -27,7 +28,6 @@ public class UserManager {
                 return userManager;
             }
         } else {
-
             return userManager;
         }
     }
@@ -38,7 +38,7 @@ public class UserManager {
     public void setUserInfo(User_Info userInfo) {
         Log.e("TAG", "setUserInfo: " + userInfo);
         try {
-            if (userInfo.getCredit() != null) {
+            if (userInfo!=null&&userInfo.getCredit() != null) {
                 int credit = Integer.parseInt(userInfo.getCredit());
                 int leave_time;
                 int early_time;
@@ -77,11 +77,14 @@ public class UserManager {
         }
 
         this.userInfo = userInfo;
-
     }
 
     public boolean hasLogined() {
-        return userInfo != null;
+        return mHasLogin;
+    }
+
+    public void setHasLogin(boolean hasLogin) {
+        mHasLogin = hasLogin;
     }
 
     /**

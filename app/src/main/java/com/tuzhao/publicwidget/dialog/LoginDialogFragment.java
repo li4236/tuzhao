@@ -403,6 +403,7 @@ public class LoginDialogFragment extends DialogFragment {
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
                         UserManager.getInstance().setUserInfo(userInfo);
+                        UserManager.getInstance().setHasLogin(true);
                         //更新覆盖本地数据库的用户信息
                         DatabaseImp databaseImp = new DatabaseImp(getContext());
                         databaseImp.insertUserToDatabase(userInfo);
@@ -492,6 +493,7 @@ public class LoginDialogFragment extends DialogFragment {
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
                         UserManager.getInstance().setUserInfo(userInfo);
+                        UserManager.getInstance().setHasLogin(true);
                         //更新覆盖本地数据库的用户信息
                         DatabaseImp databaseImp = new DatabaseImp(getContext());
                         databaseImp.insertUserToDatabase(userInfo);
@@ -579,6 +581,7 @@ public class LoginDialogFragment extends DialogFragment {
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
                         UserManager.getInstance().setUserInfo(userInfo);
+                        UserManager.getInstance().setHasLogin(true);
                         //更新覆盖本地数据库的用户信息
                         DatabaseImp databaseImp = new DatabaseImp(getContext());
                         databaseImp.insertUserToDatabase(userInfo);

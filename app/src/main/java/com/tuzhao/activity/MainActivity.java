@@ -104,6 +104,8 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -121,7 +123,7 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
 import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 import static com.tuzhao.utils.DensityUtil.dp2px;
 
-public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender, ClusterClickListener {
+public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender, ClusterClickListener, IntentObserver {
 
     private static final String TAG = "MainActivity";
 
@@ -289,6 +291,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private void initData() {
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
+        IntentObserable.registerObserver(this);
         if (UserManager.getInstance().hasLogined()) {
             ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
@@ -983,7 +986,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     public void login() {
-        loginDialogFragment = new LoginDialogFragment();
+        if (loginDialogFragment == null) {
+            loginDialogFragment = new LoginDialogFragment();
+        }
         loginDialogFragment.show(getSupportFragmentManager(), "hahah");
     }
 
@@ -1045,6 +1050,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
         unregisterLogin();
         unregisterLogout();
+        IntentObserable.unregisterObserver(this);
         NetStateReceiver.removeRegisterObserver(mNetChangeObserver);
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
@@ -1248,6 +1254,28 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         });
         va.setDuration(150);
         va.start();*/
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (Objects.equals(intent.getAction(), ConstansUtil.FORCE_LOGOUT)) {
+            mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
+            mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
+            ImageUtil.showPic(imageview_huser, R.mipmap.ic_usericon);
+
+            TipeDialog tipeDialog = new TipeDialog.Builder(this)
+                    .setCancelable(false)
+                    .setTitle("异地登录")
+                    .setMessage("您的账号于" + intent.getStringExtra(ConstansUtil.REQUEST_FOR_RESULT) + "在别的设备登录，如果不是您本人操作，请更换密码")
+                    .setPositiveButton("重新登录", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            login();
+                        }
+                    })
+                    .create();
+            tipeDialog.show();
+        }
     }
 
     /**

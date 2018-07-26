@@ -165,8 +165,7 @@ public class MyApplication extends MultiDexApplication {
      * 自动登录
      */
     private void autoLogin() {
-        databaseImp = new DatabaseImp(mApplication);
-        databaseImp.setRegistrationId(JPushInterface.getRegistrationID(this));
+        getDatabaseImp().setRegistrationId(JPushInterface.getRegistrationID(this));
         User_Info user_info = databaseImp.getUserFormDatabase();
         if (user_info != null) {
             Log.e("dsa", "自动登录：" + user_info.getUsername() + user_info.getPassword() + user_info.getAutologin());
@@ -190,6 +189,7 @@ public class MyApplication extends MultiDexApplication {
                         User_Info userInfo = responseData.data;
                         userInfo.setAutologin("1");
                         UserManager.getInstance().setUserInfo(userInfo);
+                        UserManager.getInstance().setHasLogin(true);
                         //更新覆盖本地数据库的用户信息
                         databaseImp.insertUserToDatabase(userInfo);
 
@@ -227,6 +227,9 @@ public class MyApplication extends MultiDexApplication {
     }
 
     public DatabaseImp getDatabaseImp() {
+        if (databaseImp == null) {
+            databaseImp = new DatabaseImp(this);
+        }
         return databaseImp;
     }
 

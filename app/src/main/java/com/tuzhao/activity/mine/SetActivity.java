@@ -47,11 +47,11 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
     private void initView() {
 
         ((TextView) findViewById(R.id.id_activity_set_layout_textview_thisversion)).setText("当前版本：" + dateUtil.getVersion(this));
-        linearlayout_safe =  findViewById(R.id.id_activity_set_layout_linearlayout_safe);
-        linearlayout_suggest =  findViewById(R.id.id_activity_set_layout_linearlayout_suggest);
-        linearlayout_law =  findViewById(R.id.id_activity_set_layout_linearlayout_law);
-        linearlayout_checkversion =  findViewById(R.id.id_activity_set_layout_linearlayout_checkversion);
-        linearlayout_loginout =  findViewById(R.id.id_activity_set_layout_linearlayout_loginout);
+        linearlayout_safe = findViewById(R.id.id_activity_set_layout_linearlayout_safe);
+        linearlayout_suggest = findViewById(R.id.id_activity_set_layout_linearlayout_suggest);
+        linearlayout_law = findViewById(R.id.id_activity_set_layout_linearlayout_law);
+        linearlayout_checkversion = findViewById(R.id.id_activity_set_layout_linearlayout_checkversion);
+        linearlayout_loginout = findViewById(R.id.id_activity_set_layout_linearlayout_loginout);
     }
 
     private void initData() {
@@ -92,12 +92,12 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
                         .setUpdateListener(new UpdateListener() {
                             @Override
                             public void noUpdate() {
-                                MyToast.showToast(SetActivity.this,"已经是最新版本了哦",5);
+                                MyToast.showToast(SetActivity.this, "已经是最新版本了哦", 5);
                             }
 
                             @Override
                             public void onCheckError(int code, String errorMsg) {
-                                MyToast.showToast(SetActivity.this,"检测更新失败",5);
+                                MyToast.showToast(SetActivity.this, "检测更新失败", 5);
                             }
                         })
                         .check(SetActivity.this);
@@ -115,6 +115,7 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
                         databaseImp.insertUserToDatabase(user_info);
                         //清空缓存的登录信息
                         UserManager.getInstance().setUserInfo(null);
+                        UserManager.getInstance().setHasLogin(false);
                         //发送退出登录的广播
                         sendLogoutBroadcast();
                         MyToast.showToast(SetActivity.this, "已退出登录", 5);

@@ -30,7 +30,6 @@ public final class LocalBroadcastManager {
     private static LocalBroadcastManager mInstance;
 
     public static LocalBroadcastManager getInstance(Context context) {
-        Object var1 = mLock;
         synchronized (mLock) {
             if (mInstance == null) {
                 mInstance = new LocalBroadcastManager(context.getApplicationContext());
@@ -208,8 +207,7 @@ public final class LocalBroadcastManager {
 
     private void executePendingBroadcasts() {
         while (true) {
-            BroadcastRecord[] brs = null;
-            HashMap i = this.mReceivers;
+            BroadcastRecord[] brs ;
             synchronized (this.mReceivers) {
                 int br = this.mPendingBroadcasts.size();
                 if (br <= 0) {
@@ -223,9 +221,8 @@ public final class LocalBroadcastManager {
 
             for (int var6 = 0; var6 < brs.length; ++var6) {
                 BroadcastRecord var7 = brs[var6];
-
                 for (int j = 0; j < var7.receivers.size(); ++j) {
-                    ((ReceiverRecord) var7.receivers.get(j)).receiver.onReceive(this.mAppContext, var7.intent);
+                    (var7.receivers.get(j)).receiver.onReceive(this.mAppContext, var7.intent);
                 }
             }
         }
