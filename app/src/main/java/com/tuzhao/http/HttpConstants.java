@@ -586,4 +586,9 @@ public class HttpConstants {
      */
     public static final String verifyChangePasswordCode = ROOT_URL + "verifyChangePasswordCode";
 
+    /**
+     * 通过原密码修改密码
+     */
+    public static final String requestChangePassword = ROOT_URL + "requestChangePassword";
+
 }

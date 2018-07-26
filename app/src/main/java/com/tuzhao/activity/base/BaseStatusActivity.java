@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -299,6 +300,14 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected String getText(TextView textView) {
         return textView.getText().toString();
+    }
+
+    protected int getTextLength(TextView textView) {
+        return getText(textView).trim().length();
+    }
+
+    protected void setSelection(EditText editText) {
+        editText.setSelection(editText.getText().length());
     }
 
     protected void customToolBar(Toolbar toolbar) {

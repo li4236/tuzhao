@@ -185,7 +185,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
                 break;
             case R.id.modify_password_cl:
-                startActivity(ChangePasswordRefactorActivity.class);
+                startActivity(ChangePasswordMethodActivity.class);
                 break;
             case R.id.wechat_bingding_cl:
                 if (getText(mWechat).equals(UNBOUND)) {
@@ -309,7 +309,8 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
     private void requestUploadUserAliNumber(final String aliuser_id, String authCode) {
         getOkGo(HttpConstants.uploadUserAliNumber)
-                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
+                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*"
+                        + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
                 .params("authCode", authCode)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override

@@ -305,4 +305,9 @@ public class ConstansUtil {
      */
     public static final String SHOW_EMPTY_VIEW = "ShowEmptyView";
 
+    /**
+     * 通行码，短信修改密码时返回
+     */
+    public static final String PASS_CODE = "PassCode";
+
 }

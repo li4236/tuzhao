@@ -31,15 +31,15 @@ public class TokenInterceptor implements Interceptor {
         if (isTokenExpired(body)) {//根据和服务端的约定判断token过期
             //同步请求方式，获取最新的Token
             String newToken = getNewToken();
-            if (newToken!=null){
+            if (newToken != null) {
                 //使用新的Token，创建新的请求
                 Request newRequest = chain.request()
                         .newBuilder()
-                        .header("token",newToken)
+                        .header("token", newToken)
                         .build();
                 //重新请求
                 return chain.proceed(newRequest);
-            }else {
+            } else {
                 return response.newBuilder().body(ResponseBody.create(responseBody.contentType(), body)).build();
             }
         }
@@ -60,17 +60,16 @@ public class TokenInterceptor implements Interceptor {
 
     /**
      * 同步请求方式，获取最新的Token
-     *
-     * @return
      */
     private String getNewToken() throws IOException {
         // 通过一个特定的接口获取新的token，此处要用到同步的retrofit请求
         User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
-        if (user_info != null){
+        if (user_info != null) {
             Response response = OkGo.post(HttpConstants.requestLogin)
                     .tag(this)
                     .params("username", user_info.getUsername())
                     .params("password", user_info.getPassword())
+                    .params("registrationId", MyApplication.getInstance().getDatabaseImp().getRegistrationId())
                     .execute();
             try {
                 String reBody = response.body().string();

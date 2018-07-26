@@ -36,7 +36,7 @@ public class UpdateConfig {
                 .setCheckJsonParser(new ParseData() {
                     @Override
                     public Update parse(String response) {
-                        Log.e("版本检查更新的数据",response.toString());
+                        Log.e("版本检查更新的数据",response);
                         Update update = new Update();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -51,7 +51,7 @@ public class UpdateConfig {
                             /**可填：此apk包的更新内容*/
                             update.setUpdateContent(jsonObject.optString("newcontent"));
                             /**可填：此apk包是否为强制更新*/
-                            update.setForce(jsonObject.optString("ismustupdate").equals("1") ?  false: true);
+                            update.setForce(!jsonObject.optString("ismustupdate").equals("1") );
                             /**可填：此apk包的md5*/
                             update.setMd5(jsonObject.optString("new_md5"));
                             update.setTime(jsonObject.optString("time"));

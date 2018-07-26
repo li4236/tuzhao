@@ -12,7 +12,7 @@ import com.tuzhao.publicmanager.UserManager;
 /**
  * Created by juncoder on 2018/7/20.
  */
-public class ChangePasswordRefactorActivity extends BaseStatusActivity {
+public class ChangePasswordMethodActivity extends BaseStatusActivity {
 
     private TextView mChangePassword;
 
@@ -20,7 +20,7 @@ public class ChangePasswordRefactorActivity extends BaseStatusActivity {
 
     @Override
     protected int resourceId() {
-        return R.layout.activity_change_password_layout;
+        return R.layout.activity_change_password_method_layout;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ChangePasswordRefactorActivity extends BaseStatusActivity {
         findViewById(R.id.origin_password_cv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(ChangePasswordRefactoryActivity.class);
             }
         });
 

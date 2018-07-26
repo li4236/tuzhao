@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.widget.EditText;
@@ -53,6 +54,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     private EditText[] mVerfifyCodes;
 
+    private TextWatcher[] mTextWatchers;
+
     private TextView mVerfiCodeError;
 
     private TextView mSendAgain;
@@ -67,6 +70,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     private SmsObserver mSmsObserver;
 
+    private boolean mAddTextWatcher;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_sms_verification_layout;
@@ -74,6 +79,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mTextWatchers = new TextWatcher[4];
         mVerfifyCodes = new EditText[4];
         mInputSmsHint = findViewById(R.id.input_sms_hint);
         mVerifyCodeCl = findViewById(R.id.verify_code_cl);
@@ -86,9 +92,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
         for (int i = 0; i < 4; i++) {
             final int finalI = i;
-            mVerfifyCodes[finalI].addTextChangedListener(new TextWatcher() {
+            mTextWatchers[finalI] = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
                 }
 
                 @Override
@@ -102,8 +109,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 public void afterTextChanged(Editable s) {
 
                 }
-            });
+            };
+            mVerfifyCodes[finalI].addTextChangedListener(mTextWatchers[finalI]);
         }
+        mAddTextWatcher = true;
 
         mSendAgain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,8 +180,11 @@ public class SMSVerificationActivity extends BaseStatusActivity {
             @Override
             public void onResult(String smsContent) {
                 for (int i = 0; i < mVerfifyCodes.length; i++) {
+                    mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                     mVerfifyCodes[i].setText(String.valueOf(smsContent.charAt(i)));
                 }
+                mAddTextWatcher = false;
+                verifyChangePasswordCode(smsContent);
             }
         });
         getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
@@ -272,26 +284,36 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     }
 
     private void verifyChangePasswordCode(String verifyCode) {
+        if (mTelephoneToken == null) {
+            showFiveToast("请先发送短信");
+            return;
+        }
+        showLoadingDialog("正在验证...");
         OkGo.post(HttpConstants.verifyChangePasswordCode)
                 .tag(TAG)
                 .headers("telephoneToken", mTelephoneToken)
                 .params("verifyCode", verifyCode)
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-
+                    public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        startActivity(ChangePasswordRefactoryActivity.class, ConstansUtil.PASS_CODE, o.data);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        if (!mAddTextWatcher) {
+                            for (int i = 0; i < 4; i++) {
+                                mVerfifyCodes[i].addTextChangedListener(mTextWatchers[i]);
+                            }
+                            mAddTextWatcher = true;
+                        }
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
                                     showFiveToast("验证码已过期，请重新发送");
                                     break;
                                 case "102":
-                                    showFiveToast("验证码错误");
                                     setVerifyCodeStatus(false);
                                     break;
                             }
@@ -331,6 +353,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
+                    Log.e(TAG, "onAnimationEnd: ");
                     setVerifyCodeStatus(true);
                 }
             });

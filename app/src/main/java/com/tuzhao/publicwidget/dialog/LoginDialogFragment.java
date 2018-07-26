@@ -163,11 +163,6 @@ public class LoginDialogFragment extends DialogFragment {
             }
         }
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0x111);
-        } else {
-            initReadSms();
-        }
     }
 
     private void initEvent() {
@@ -183,6 +178,13 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (edittext_phonenumble.getText().length() > 0) {
+
+                    if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0x111);
+                    } else {
+                        initReadSms();
+                    }
+
                     if (DateUtil.isPhoneNumble(edittext_phonenumble.getText().toString())) {
                         //获取验证码,并进入60秒倒计时状态
                         isGetCode = true;
@@ -368,14 +370,16 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void initReadSms() {
-        mSmsObserver = new SmsObserver(new Handler(), requireContext(), new SmsObserver.SmsListener() {
-            @Override
-            public void onResult(String smsContent) {
-                edittext_confirm_code.setText(smsContent);
-            }
-        });
+        if (mSmsObserver == null) {
+            mSmsObserver = new SmsObserver(new Handler(), requireContext(), new SmsObserver.SmsListener() {
+                @Override
+                public void onResult(String smsContent) {
+                    edittext_confirm_code.setText(smsContent);
+                }
+            });
 
-        requireContext().getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
+            requireContext().getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
+        }
     }
 
     //初始化加载框控件
@@ -477,6 +481,7 @@ public class LoginDialogFragment extends DialogFragment {
                 .tag(HttpConstants.requestLogin)//
                 .params("username", username)
                 .params("password", DensityUtil.MD5code(password))//通过MD5加密
+                .params("registrationId", databaseImp.getRegistrationId())
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
@@ -559,11 +564,11 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void requestChangePassword(String password) {
-
         OkGo.post(HttpConstants.setPasswordLogin)//请求数据的接口地址
                 .tag(getContext())
                 .headers("phoneToken", phone_token)
                 .params("password", DensityUtil.MD5code(password))//通过MD5加密
+                .params("registrationId", databaseImp.getRegistrationId())
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {

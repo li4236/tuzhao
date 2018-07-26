@@ -71,6 +71,8 @@ public class MyApplication extends MultiDexApplication {
          */
         JPushInterface.setDebugMode(true);//true代表为调试模式，可以打印日志
         JPushInterface.init(this);//整个应用初始化极光推送，一次就好
+        Log.e("TAG", "onCreate udid: "+JPushInterface.getUdid(this) );
+        Log.e("TAG", "onCreate registration: "+JPushInterface.getRegistrationID(this) );
 
         //微信功能初始化
         WeChatManager.getInstance().registerWeChat(MyApplication.getInstance().getApplicationContext());
@@ -164,6 +166,7 @@ public class MyApplication extends MultiDexApplication {
      */
     private void autoLogin() {
         databaseImp = new DatabaseImp(mApplication);
+        databaseImp.setRegistrationId(JPushInterface.getRegistrationID(this));
         User_Info user_info = databaseImp.getUserFormDatabase();
         if (user_info != null) {
             Log.e("dsa", "自动登录：" + user_info.getUsername() + user_info.getPassword() + user_info.getAutologin());
@@ -175,11 +178,11 @@ public class MyApplication extends MultiDexApplication {
     }
 
     private void requestLogin(final String username, String password) {
-
         OkGo.post(HttpConstants.requestLogin)//请求数据的接口地址
                 .tag(HttpConstants.requestLogin)//
                 .params("username", username)
                 .params("password", password)
+                .params("registrationId",databaseImp.getRegistrationId())
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
