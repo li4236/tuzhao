@@ -715,7 +715,42 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (show1) {
                             controlAnim(false);
                         }
-                        if (isLc) {
+                        if (mMarkerData.size() + homePC_info.data.size() > 80) {
+                            for (int i = 0, moreDataSize = mMarkerData.size() + homePC_info.data.size() - 80; i <= moreDataSize; i++) {
+                                mMarkerData.remove(0);
+                            }
+                            //最多显示80个marker
+                        }
+
+                        for (NearPointPCInfo info : homePC_info.data) {
+                            RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
+                                    info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
+                                    info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
+                            if (!mMarkerData.contains(item)) {
+                                mMarkerData.add(item);
+                            }
+                        }
+
+                        if (isSPark && isSCharge) {
+                            showMarkers(mMarkerData);
+                        } else if (isSPark) {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mMarkerData) {
+                                if (item.isparkspace()) {
+                                    mShowMarkerData.add(item);
+                                }
+                            }
+                            showMarkers(mShowMarkerData);
+                        } else {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mMarkerData) {
+                                if (!item.isparkspace()) {
+                                    mShowMarkerData.add(item);
+                                }
+                            }
+                            showMarkers(mShowMarkerData);
+                        }
+                        /*if (isLc) {
                             //mMarkerData = new ArrayList<>();
                             //mYData = homePC_info.data;
                             if (mMarkerData.size() + homePC_info.data.size() > 80) {
@@ -782,7 +817,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                     showMarkers(mShowQMarkerData);
                                 }
                             }
-                        }
+                        }*/
                         dismissLoading();
                     }
 
