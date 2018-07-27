@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
+import com.tuzhao.application.MyApplication;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.SMSInfo;
@@ -90,6 +91,7 @@ public class LoginDialogFragment extends DialogFragment {
     private Handler handler;
 
     private SmsObserver mSmsObserver;
+    private boolean mHadRequest;
 
     @Nullable
     @Override
@@ -152,7 +154,7 @@ public class LoginDialogFragment extends DialogFragment {
             }
         });
 
-        databaseImp = new DatabaseImp(getContext());
+        databaseImp = MyApplication.getInstance().getDatabaseImp();
         User_Info user_info = databaseImp.getUserFormDatabase();
         if (user_info != null) {
             //本地数据库有之前登录过的用户信息，则自动将用户名填入文本框中
@@ -179,8 +181,9 @@ public class LoginDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 if (edittext_phonenumble.getText().length() > 0) {
 
-                    if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    if (!mHadRequest && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions(new String[]{Manifest.permission.READ_SMS}, 0x111);
+                        mHadRequest = true;
                     } else {
                         initReadSms();
                     }
