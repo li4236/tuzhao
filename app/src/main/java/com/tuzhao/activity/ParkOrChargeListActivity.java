@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -77,6 +78,9 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     private boolean isFirstIn = true;
     private int mLoadingtimes = 0;
 
+    /**
+     * TextView最多能展示的文字个数
+     */
     private int mMaxTextNum;
 
     @Override
@@ -119,6 +123,8 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         textview_nodata = findViewById(R.id.id_activity_parkorcharge_layout_textview_nodata);
         linearlayout_nodata = findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_nodata);
         linearlayout_address = findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_address);
+
+        textview_address.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
 
     private void initData() {
@@ -308,24 +314,26 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                         textview_address.setText("不支持当前位置，请点击尝试查找其他位置");
                     } else {
                         if (mMaxTextNum <= 0) {
-                            mMaxTextNum = (int) (textview_address.getWidth() / textview_address.getTextSize()) - 1;
-                            if (mMaxTextNum <= 10) {
-                                mMaxTextNum = 12;
+                            mMaxTextNum = (int) ((textview_address.getWidth() - DensityUtil.dp2px(ParkOrChargeListActivity.this, 16)) / textview_address.getTextSize());
+                            if (mMaxTextNum <= 8) {
+                                //getWidth可能为0，或者有这么小屏幕的手机?
+                                mMaxTextNum = 10;
                             }
                         }
+                        
                         StringBuilder address = new StringBuilder(result.getRegeocodeAddress().getFormatAddress());
                         int position;
                         if (address.length() >= mMaxTextNum) {
-                            if ((position = address.indexOf("自治州")) != -1) {
-                                address.delete(0, position + 1);
-                            } else if ((position = address.indexOf("市")) != -1) {
+                            if ((position = address.indexOf("自治州")) != -1&& position != address.length() - 1) {
+                                address.delete(0, position + 3);
+                            } else if ((position = address.indexOf("市")) != -1&& position != address.length() - 1) {
                                 address.delete(0, position + 1);
                             } else if ((position = address.indexOf("地区")) != -1) {
-                                address.delete(0, position + 1);
+                                address.delete(0, position + 2);
                             } else if ((position = address.indexOf("行政区")) != -1) {
                                 //河南省
-                                address.delete(0, position + 1);
-                            } else if ((position = address.indexOf("盟")) != -1) {
+                                address.delete(0, position + 3);
+                            } else if ((position = address.indexOf("盟")) != -1&& position != address.length() - 1) {
                                 //内蒙古
                                 address.delete(0, position + 1);
                             } else if ((position = address.indexOf("省")) != -1) {
@@ -334,15 +342,21 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                         }
 
                         if (address.length() >= mMaxTextNum) {
+                            //如果还是显示不完全继续删
                             if ((position = address.indexOf("街道")) != -1 && position != address.length() - 1) {
-                                address.delete(0, position + 1);
+                                address.delete(0, position + 2);
                             } else if ((position = address.indexOf("区")) != -1 && position != address.length() - 1) {
                                 address.delete(0, position + 1);
-                            } else if ((position = address.indexOf("县")) != -1) {
+                            } else if ((position = address.indexOf("县")) != -1&& position != address.length() - 1) {
                                 address.delete(0, position + 1);
-                            } else if ((position = address.indexOf("镇")) != -1) {
+                            } else if ((position = address.indexOf("镇")) != -1&& position != address.length() - 1) {
                                 address.delete(0, position + 1);
                             }
+                        }
+
+                        if (address.length() > mMaxTextNum) {
+                            //全删了等下重新获取
+                            address.delete(0, address.length());
                         }
 
                         if (address.length() == 0 || address.charAt(0) == ' ') {
