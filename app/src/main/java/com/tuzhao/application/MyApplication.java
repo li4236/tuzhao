@@ -166,7 +166,7 @@ public class MyApplication extends MultiDexApplication {
         if (!JPushInterface.getRegistrationID(this).equals("")) {
             getDatabaseImp().setRegistrationId(JPushInterface.getRegistrationID(this));
         }
-        User_Info user_info = databaseImp.getUserFormDatabase();
+        User_Info user_info = getDatabaseImp().getUserFormDatabase();
         if (user_info != null) {
             Log.e("dsa", "自动登录：" + user_info.getUsername() + user_info.getPassword() + user_info.getAutologin());
             //本地数据库有之前登录过的用户信息，则后台自动登录

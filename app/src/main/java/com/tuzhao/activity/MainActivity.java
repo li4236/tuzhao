@@ -220,8 +220,17 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         initVersion();
         initView(savedInstanceState);//初始化控件
         if (Build.VERSION.SDK_INT >= 23) {
-            checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, "需要开启读取存储信息权限以便提供更好的服务", WRITE_REQUEST_CODE);
+            /*checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, "需要开启读取存储信息权限以便提供更好的服务", WRITE_REQUEST_CODE);
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, "需要开启位置信息权限才可以使用地图服务功能", LOCATION_REQUEST_CODE);
+       */
+            if (havePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) || havePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                //在某些手机不会弹出两个申请权限窗口，因此只能先申请一个，在申请结果回调了再申请另一个
+                if (havePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
+                } else {
+                    requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
+                }
+            }
         } else {
             initMapStyle();//初始化地图样式文件
         }
@@ -1674,7 +1683,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private void checkPermission(final String permission, String message, final int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            /*if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 new TipeDialog.Builder(this)
                         .setTitle("权限申请")
                         .setMessage(message)
@@ -1693,13 +1702,17 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         .create()
                         .show();
             } else {
-                requestPermission(permission, requestCode);
-            }
+            }*/
+            requestPermission(permission, requestCode);
         } else {
             if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 initMapStyle();
             }
         }
+    }
+
+    private boolean havePermission(String permission) {
+        return ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermission(String permission, int requestCode) {
@@ -1709,16 +1722,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == LOCATION_REQUEST_CODE) {
-                isFirstloc = true;
-                mlocationClient.stopLocation();
-                mlocationClient.startLocation();
-            } else if (requestCode == WRITE_REQUEST_CODE) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initMapStyle();
+                Log.e(TAG, "onRequestPermissionsResult: ");
                 isFirstloc = true;
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
+            }
+            if (havePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
+            }
+        } else if (requestCode == WRITE_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initMapStyle();
+            }
+            if (havePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
             }
         }
     }

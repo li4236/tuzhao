@@ -320,7 +320,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                                 mMaxTextNum = 10;
                             }
                         }
-                        
+
                         StringBuilder address = new StringBuilder(result.getRegeocodeAddress().getFormatAddress());
                         int position;
                         if (address.length() >= mMaxTextNum) {
