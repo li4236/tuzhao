@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.widget.EditText;
@@ -70,13 +73,12 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     private SmsObserver mSmsObserver;
 
-    private boolean mAddTextWatcher;
-
     @Override
     protected int resourceId() {
         return R.layout.activity_sms_verification_layout;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView(Bundle savedInstanceState) {
         mTextWatchers = new TextWatcher[4];
@@ -102,6 +104,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (!TextUtils.isEmpty(getText(mVerfifyCodes[finalI]))) {
                         setFocus(finalI);
+                    } else {
+                        deleteAll();
                     }
                 }
 
@@ -111,8 +115,34 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 }
             };
             mVerfifyCodes[finalI].addTextChangedListener(mTextWatchers[finalI]);
+
+            mVerfifyCodes[finalI].setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        for (EditText mVerfifyCode : mVerfifyCodes) {
+                            if (TextUtils.isEmpty(getText(mVerfifyCode))) {
+                                mVerfifyCodes[finalI].clearFocus();
+                                mVerfifyCode.requestFocus();
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+
+            mVerfifyCodes[finalI].setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        Log.e(TAG, "onKey: ");
+                        deleteAll();
+                    }
+                    return false;
+                }
+            });
         }
-        mAddTextWatcher = true;
 
         mSendAgain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,11 +213,19 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                     mVerfifyCodes[i].setText(String.valueOf(smsContent.charAt(i)));
                 }
-                mAddTextWatcher = false;
                 verifyChangePasswordCode(smsContent);
             }
         });
         getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
+    }
+
+    private void deleteAll() {
+        for (int i = 0; i < mVerfifyCodes.length; i++) {
+            mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
+            mVerfifyCodes[i].setText("");
+            mVerfifyCodes[i].addTextChangedListener(mTextWatchers[i]);
+        }
+        mVerfifyCodes[0].requestFocus();
     }
 
     /**
@@ -213,13 +251,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     verifyCode.append(getText(editText));
                 }
                 verifyChangePasswordCode(verifyCode.toString());
-            } else {
-                //如果还有没输入验证码的则从前面往后遍历看是哪个没输入，请求焦点
-                for (int i = 0; i < mVerfifyCodes.length - 1; i++) {
-                    if (TextUtils.isEmpty(getText(mVerfifyCodes[i]))) {
-                        mVerfifyCodes[i].requestFocus();
-                    }
-                }
             }
         }
     }
@@ -302,12 +333,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (!mAddTextWatcher) {
-                            for (int i = 0; i < 4; i++) {
-                                mVerfifyCodes[i].addTextChangedListener(mTextWatchers[i]);
-                            }
-                            mAddTextWatcher = true;
-                        }
+                        deleteAll();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
