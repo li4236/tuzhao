@@ -224,7 +224,7 @@ public class LoginDialogFragment extends DialogFragment {
                         break;
                     case 2:
                         if (edittext_username.getText().length() > 0) {
-                            if (dateUtil.isPhoneNumble(edittext_username.getText().toString())) {
+                            if (DateUtil.isPhoneNumble(edittext_username.getText().toString())) {
                                 if (edittext_password.getText().length() > 0) {
                                     initLoading("正在登陆...");
                                     requestPasswordLogin(edittext_username.getText().toString(), edittext_password.getText().toString().trim());
@@ -265,7 +265,7 @@ public class LoginDialogFragment extends DialogFragment {
                 if (edittext_phonenumble.getText().length() > 0) {
                     edittext_username.setText(edittext_phonenumble.getText().toString());
                 }
-                if (dateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length() > 0) {
+                if (DateUtil.isPhoneNumble(edittext_username.getText().toString()) && edittext_password.getText().length() > 0) {
                     textview_login.setEnabled(true);
                     textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
                     textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));
@@ -288,7 +288,7 @@ public class LoginDialogFragment extends DialogFragment {
                 if (edittext_username.getText().length() > 0) {
                     edittext_phonenumble.setText(edittext_username.getText().toString());
                 }
-                if (dateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length() > 0 && isGetCode) {
+                if (DateUtil.isPhoneNumble(edittext_phonenumble.getText().toString()) && edittext_confirm_code.getText().length() > 0 && isGetCode) {
                     textview_login.setEnabled(true);
                     textview_login.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_yellow_5dp));
                     textview_login.setTextColor(ContextCompat.getColor(getContext(), R.color.b1));

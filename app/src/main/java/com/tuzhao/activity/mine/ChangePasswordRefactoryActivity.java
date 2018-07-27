@@ -414,7 +414,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                     startOriginPasswordErrorAnimator();
                 } else if (getTextLength(mNewPassword) < 8) {
                     startNewPasswrodErrorAnimator();
-                } else if (!getText(mConfirmPassword).equals(getText(mNewPassword))) {
+                } else if(getText(mOriginalPassword).equals(getText(mNewPassword))){
+                    showFiveToast("新密码不能与原密码相同哦");
+                }else if (!getText(mConfirmPassword).equals(getText(mNewPassword))) {
                     startConfirmPasswordErrorAnimator();
                 } else {
                     mChangePassword.setClickable(false);
@@ -433,7 +435,7 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 .params("newPassword", DensityUtil.MD5code(getText(mNewPassword)));
 
         if (mPassCode == null) {
-            baseRequest.params("originalPassword", getText(mOriginalPassword));
+            baseRequest.params("originalPassword", DensityUtil.MD5code(getText(mOriginalPassword)));
         }
 
         baseRequest.execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -443,7 +445,7 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(mUserInfo);
                 dismmisLoadingDialog();
                 showFiveToast("密码修改成功");
-                startActivity(MainActivity.class);
+                startActivity(MainActivity.class,ConstansUtil.REQUEST_FOR_RESULT,ConstansUtil.CHANGE_PASSWORD);
             }
 
             @Override
@@ -451,7 +453,16 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 super.onError(call, response, e);
                 mChangePassword.setClickable(true);
                 if (!handleException(e)) {
-
+                    switch (e.getMessage()) {
+                        case "101":
+                        case "104":
+                        case "105":
+                            showFiveToast("服务器异常，请稍后再试");
+                            break;
+                        case "103":
+                            startOriginPasswordErrorAnimator();
+                            break;
+                    }
                 }
             }
         });

@@ -320,4 +320,9 @@ public class ConstansUtil {
      */
     public static final String PASS_CODE = "PassCode";
 
+    /**
+     * 修改密码
+     */
+    public static final String CHANGE_PASSWORD = "ChangePassword";
+
 }

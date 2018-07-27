@@ -1085,6 +1085,20 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (Objects.equals(getIntent().getStringExtra(ConstansUtil.REQUEST_FOR_RESULT), ConstansUtil.CHANGE_PASSWORD)) {
+            mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
