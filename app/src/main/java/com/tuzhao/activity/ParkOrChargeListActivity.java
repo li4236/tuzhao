@@ -49,6 +49,8 @@ import okhttp3.Response;
 
 public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDoneListener {
 
+    private static final String TAG = "ParkOrChargeListActivit";
+
     private DropDownMenu dropDownMenu;
     private DropMenuAdapter dropMenuAdapter;//筛选器适配
     private SuperRefreshRecyclerView mRecycleview;
@@ -75,6 +77,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     private boolean isFirstIn = true;
     private int mLoadingtimes = 0;
 
+    private int mMaxTextNum;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -304,7 +307,53 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                     if (result.getRegeocodeAddress().getFormatAddress().equals("")) {
                         textview_address.setText("不支持当前位置，请点击尝试查找其他位置");
                     } else {
-                        textview_address.setText(result.getRegeocodeAddress().getFormatAddress());
+                        if (mMaxTextNum <= 0) {
+                            mMaxTextNum = (int) (textview_address.getWidth() / textview_address.getTextSize()) - 1;
+                            if (mMaxTextNum <= 10) {
+                                mMaxTextNum = 12;
+                            }
+                        }
+                        StringBuilder address = new StringBuilder(result.getRegeocodeAddress().getFormatAddress());
+                        int position;
+                        if (address.length() >= mMaxTextNum) {
+                            if ((position = address.indexOf("自治州")) != -1) {
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("市")) != -1) {
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("地区")) != -1) {
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("行政区")) != -1) {
+                                //河南省
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("盟")) != -1) {
+                                //内蒙古
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("省")) != -1) {
+                                address.delete(0, position + 1);
+                            }
+                        }
+
+                        if (address.length() >= mMaxTextNum) {
+                            if ((position = address.indexOf("街道")) != -1 && position != address.length() - 1) {
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("区")) != -1 && position != address.length() - 1) {
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("县")) != -1) {
+                                address.delete(0, position + 1);
+                            } else if ((position = address.indexOf("镇")) != -1) {
+                                address.delete(0, position + 1);
+                            }
+                        }
+
+                        if (address.length() == 0 || address.charAt(0) == ' ') {
+                            address.append(result.getRegeocodeAddress().getDistrict());
+                            address.append(result.getRegeocodeAddress().getTownship());
+                            if (!result.getRegeocodeAddress().getPois().isEmpty()) {
+                                address.append(result.getRegeocodeAddress().getPois().get(0));
+                            }
+                        }
+
+                        textview_address.setText(address);
                     }
                 }
             }

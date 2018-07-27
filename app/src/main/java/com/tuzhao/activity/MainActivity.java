@@ -622,8 +622,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             case R.id.id_content_main_layout_textview_parknow:
                 intent = new Intent(MainActivity.this, ParkOrChargeListActivity.class);
                 intent.putExtra("citycode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
-                if (mLastlocationLatlng != null) {
-                    if (aMap.getCameraPosition().target.latitude != mLastlocationLatlng.latitude) {
+                /*if (mLastlocationLatlng != null) {
+                    if (aMap.getCameraPosition().target.latitude != mLastlocationLatlng.latitude&&
+                            aMap.getCameraPosition().target.longitude!=mLastlocationLatlng.longitude) {
                         if (isLcData) {
                             intent.putExtra("lat", mLastlocationLatlng.latitude);
                             intent.putExtra("lon", mLastlocationLatlng.longitude);
@@ -636,9 +637,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
                     }
                 } else {
-                    intent.putExtra("lat", aMap.getCameraPosition().target.latitude);
-                    intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
-                }
+                }*/
+                intent.putExtra("lat", aMap.getCameraPosition().target.latitude);
+                intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
                 startActivity(intent);
                 break;
         }
@@ -1574,7 +1575,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             }
                             dismissLoading();
                         } else {
-                            isLcData = true;
+                            isLcData = false;
                             moveCityCode = result.getRegeocodeAddress().getCityCode();
                             Log.e(TAG, "onRegeocodeSearched: 5");
                             requestHomePCLocData(moveCityCode, latLng.latitude + "", latLng.longitude + "",
