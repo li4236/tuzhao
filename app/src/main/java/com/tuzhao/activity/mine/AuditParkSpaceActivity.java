@@ -28,6 +28,9 @@ import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -100,6 +103,17 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
                 .execute(new JsonCallback<Base_Class_List_Info<ParkSpaceInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<ParkSpaceInfo> o, Call call, Response response) {
+                        Collections.sort(o.data, new Comparator<ParkSpaceInfo>() {
+                            @Override
+                            public int compare(ParkSpaceInfo o1, ParkSpaceInfo o2) {
+                                if (o1.getStatus().equals("6") && !o2.getStatus().equals("6")) {
+                                    return 1;
+                                } else if (!o1.getStatus().equals("6") && o2.getStatus().equals("6")) {
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                        });
                         loadDataSuccess(o);
                     }
 
