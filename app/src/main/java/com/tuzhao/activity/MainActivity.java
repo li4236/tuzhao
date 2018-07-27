@@ -1194,7 +1194,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             fragmentTransaction.replace(R.id.id_content_main_layout_linerlayout_fragment, chargeFragment);
             fragmentTransaction.commit();
         }
-        controlAnimfragment(mFragment_content);
+        if (!show) {
+            controlAnimfragment(mFragment_content);
+        }
     }
 
     private void controlAnimfragment(final View ll_view) {
