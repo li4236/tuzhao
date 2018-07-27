@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -23,6 +24,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
@@ -41,6 +43,27 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
+
+        ConstraintLayout view = (ConstraintLayout) getLayoutInflater().inflate(R.layout.empty_and_buy_layout, mRecyclerView,false);
+        ConstraintLayout constraintLayout = view.findViewById(R.id.content_cl);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(view);
+        constraintSet.setMargin(R.id.content_cl, ConstraintSet.BOTTOM, 0);
+        constraintSet.applyTo(view);
+
+        ImageView imageView = constraintLayout.findViewById(R.id.monthly_card_iv);
+        TextView textView = constraintLayout.findViewById(R.id.no_monthly_card_tv);
+        TextView addNow = constraintLayout.findViewById(R.id.buy_now);
+        ImageUtil.showPic(imageView, R.drawable.ic_nospace);
+        textView.setText("您还没添加车位哦");
+        addNow.setText("立即添加");
+        addNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AuditParkSpaceActivity.this, AddParkSpaceActivity.class));
+            }
+        });
+        mRecyclerView.setEmptyView(view);
     }
 
     @Override

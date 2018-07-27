@@ -870,7 +870,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         bundle.putString(ConstansUtil.PARK_SPACE_ID, o.data);
                         bundle.putString(ConstansUtil.CITY_CODE, mParkSpaceInfo.getCityCode());
                         startActivity(PayActivity.class, bundle);
-                        finish();
                     }
 
                     @Override
@@ -913,7 +912,8 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
-
+                startActivity(AuditParkSpaceActivity.class);
+                finish();
             }
         }
     }
@@ -924,7 +924,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         protected void conver(@NonNull BaseViewHolder holder, final PropertyPhoto propertyPhoto, final int position) {
             ImageView imageView = holder.getView(R.id.property_photo_iv);
             TextView textView = holder.getView(R.id.property_upload_tv);
-            Log.e(TAG, "conver: " + propertyPhoto.getPath() + "  position:" + position);
             if (propertyPhoto.getPath().equals("-1")) {
                 setTakePhotoPic(imageView);
                 if (isVisible(textView)) {
