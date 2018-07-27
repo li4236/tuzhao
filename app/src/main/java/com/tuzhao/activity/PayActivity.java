@@ -1,5 +1,6 @@
 package com.tuzhao.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,12 +19,14 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.mine.AuditParkSpaceActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.WechatPayParam;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -344,6 +347,34 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         }
     }
 
+    private void showPaySuccessDialog() {
+        new TipeDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage("支付成功！")
+                .setCancelable(false)
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //通知审核中的车位已经缴纳押金
+                        Intent payIntent = new Intent(ConstansUtil.PAY_DEPOSIT_SUM_SUCCESS);
+                        payIntent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
+                        IntentObserable.dispatch(payIntent);
+                        startActivity(AuditParkSpaceActivity.class);
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //通知审核中的车位已经缴纳押金
+                        Intent payIntent = new Intent(ConstansUtil.PAY_DEPOSIT_SUM_SUCCESS);
+                        payIntent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
+                        IntentObserable.dispatch(payIntent);
+                        startActivity(AuditParkSpaceActivity.class);
+                    }
+                })
+                .create().show();
+    }
+
     @Override
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
@@ -351,11 +382,10 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
             switch (intent.getAction()) {
                 case ConstansUtil.PAY_SUCCESS:
                     if (Objects.equals(mPayType, "1")) {
-                        Intent payIntent = new Intent(ConstansUtil.PAY_DEPOSIT_SUM_SUCCESS);
-                        payIntent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
-                        IntentObserable.dispatch(payIntent);
+                        showPaySuccessDialog();
+                    } else {
+                        finish();
                     }
-                    finish();
                     break;
                 case ConstansUtil.PAY_CANCEL:
                     showFiveToast("支付取消");
@@ -372,4 +402,11 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(AuditParkSpaceActivity.class);
+        finish();
+    }
+
 }

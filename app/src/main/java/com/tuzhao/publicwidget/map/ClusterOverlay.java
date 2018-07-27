@@ -32,6 +32,7 @@ import com.tuzhao.info.RegionItem;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.tuzhao.activity.MainActivity.ONLYCHARGE;
 import static com.tuzhao.activity.MainActivity.ONLYPARK;
@@ -65,16 +66,17 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     private double mClusterDistance;
     private LruCache<Integer, BitmapDescriptor> mLruCache;
     private LruCache<Integer, BitmapDescriptor> mLruCacheName;
-    private HandlerThread mMarkerHandlerThread = new HandlerThread("addMarker");
-    private HandlerThread mSignClusterThread = new HandlerThread("calculateCluster");
+    private HandlerThread mMarkerHandlerThread;
+    private HandlerThread mSignClusterThread;
     private Handler mMarkerhandler;
     private Handler mSignClusterHandler;
     private float mPXInMeters;
-    private boolean mIsCanceled = false;
+    private volatile boolean mIsCanceled = false;
     private Marker screeMarker = null;
     private Animation animation = null;
 
     private OnCameraMoveRequestData onCameraMoveRequestData;
+    private AtomicInteger mAtomicInteger;
 
     /**
      * 构造函数
@@ -121,6 +123,8 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
         mLastHash = new HashSet<>();
         mCurrentHash = new HashSet<>();
+
+        mAtomicInteger = new AtomicInteger();
 
         this.mAMap = amap;
         mClusterSize = clusterSize;
@@ -184,6 +188,8 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
     //初始化Handler
     private void initThreadHandler() {
+        mMarkerHandlerThread = new HandlerThread("addMarker");
+        mSignClusterThread = new HandlerThread("calculateCluster" + mAtomicInteger.getAndIncrement());
         mMarkerHandlerThread.start();
         mSignClusterThread.start();
         mMarkerhandler = new MarkerHandler(mMarkerHandlerThread.getLooper());
@@ -312,7 +318,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
      * 计算出在当前地图上的聚合点
      */
     private void calculateClusters() {
-        mIsCanceled = false;
         mClusters.clear();
         mCurrentClusters.clear();
         mCurrentHash.clear();
@@ -420,6 +425,29 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     private void assignClusters() {
         mIsCanceled = true;
         mSignClusterHandler.removeMessages(SignClusterHandler.CALCULATE_CLUSTER);
+        mSignClusterThread = new HandlerThread("calculateCluster" + mAtomicInteger.getAndIncrement());
+        mSignClusterThread.start();
+        mSignClusterHandler = new SignClusterHandler(mSignClusterThread.getLooper());
+        mSignClusterHandler.sendEmptyMessage(SignClusterHandler.CALCULATE_CLUSTER);
+    }
+
+    /**
+     * 未完善
+     */
+    public void assignClusters(List<ClusterItem> clusterItems) {
+        mIsCanceled = true;
+        mSignClusterHandler.removeMessages(SignClusterHandler.CALCULATE_CLUSTER);
+
+        mClusterItems = clusterItems;
+
+        mMarkerHandlerThread = new HandlerThread("addMarker"+mAtomicInteger.getAndIncrement());
+        mMarkerHandlerThread.start();
+        mMarkerhandler.removeCallbacksAndMessages(null);
+        mMarkerhandler = new MarkerHandler(mMarkerHandlerThread.getLooper());
+
+        mSignClusterThread = new HandlerThread("calculateCluster" + mAtomicInteger.getAndIncrement());
+        mSignClusterThread.start();
+        mSignClusterHandler = new SignClusterHandler(mSignClusterThread.getLooper());
         mSignClusterHandler.sendEmptyMessage(SignClusterHandler.CALCULATE_CLUSTER);
     }
 
@@ -567,7 +595,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     }
 
     /**
-     * 处理market添加，更新等操作
+     * 处理marker添加，更新等操作
      */
     class MarkerHandler extends Handler {
 
@@ -587,7 +615,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         }
 
         public void handleMessage(Message message) {
-
             switch (message.what) {
                 case ADD_CLUSTER_LIST:
                     List<Cluster> clusters = (List<Cluster>) message.obj;
@@ -623,6 +650,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         public void handleMessage(Message message) {
             switch (message.what) {
                 case CALCULATE_CLUSTER:
+                    mIsCanceled = false;
                     calculateClusters();
                     break;
                 case CALCULATE_SINGLE_CLUSTER:

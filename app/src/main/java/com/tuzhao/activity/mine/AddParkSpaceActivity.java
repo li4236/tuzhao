@@ -37,8 +37,6 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
-import com.tuzhao.utils.IntentObserable;
-import com.tuzhao.utils.IntentObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/6/4.
  */
-public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
+public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener{
 
     private TextView mParkLotName;
 
@@ -165,13 +163,11 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
 
         mParkSpaceInfo = new ParkSpaceInfo();
         initAppointmentOption();
-        IntentObserable.registerObserver(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        IntentObserable.unregisterObserver(this);
     }
 
     @NonNull
@@ -870,6 +866,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         bundle.putString(ConstansUtil.PARK_SPACE_ID, o.data);
                         bundle.putString(ConstansUtil.CITY_CODE, mParkSpaceInfo.getCityCode());
                         startActivity(PayActivity.class, bundle);
+                        finish();
                     }
 
                     @Override
@@ -906,16 +903,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onReceive(Intent intent) {
-        if (intent.getAction() != null) {
-            if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
-                startActivity(AuditParkSpaceActivity.class);
-                finish();
-            }
-        }
     }
 
     class PropertyAdapter extends BaseAdapter<PropertyPhoto> {
