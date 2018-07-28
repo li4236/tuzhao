@@ -83,7 +83,7 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
     protected void initData() {
         mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
         mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrder_starttime()));
-        mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
+        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
         mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
     }
 
@@ -93,7 +93,7 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
             case R.id.appointment_calculate_rule:
             case R.id.appointment_calculate_rule_iv:
                 Bundle bundle = new Bundle();
-                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                 startActivity(BillingRuleActivity.class, bundle);
                 break;

@@ -1337,6 +1337,24 @@ public class DateUtil {
     }
 
     /**
+     * @param date xxxx-MM-dd HH:mm:ss(xxxx-MM-dd也行)
+     * @return date对应的年月日，格式2018年05月07日
+     */
+    public static String getYearToDayWithText(String date) {
+        return date.substring(0, date.indexOf("-")) + "年" + date.substring(6, date.lastIndexOf("-")) + "月"
+                + date.substring(date.lastIndexOf("-")+1, date.indexOf(" ")) + "日";
+    }
+
+    /**
+     * @param date xxxx-MM-dd HH:mm:ss(xxxx-MM-dd也行)
+     * @return date对应的年月日，格式2018年05月07日
+     */
+    public static String getYearToDayWithPointText(String date) {
+        return date.substring(0, date.indexOf("-")) + "." + date.substring(6, date.lastIndexOf("-")) + "."
+                + date.substring(date.lastIndexOf("-")+1, date.indexOf(" "));
+    }
+
+    /**
      * @return 日历对应的年月日，格式2018年05月07日
      */
     public static String getCalendarYearToDayWithText(Calendar calendar) {
@@ -2889,6 +2907,64 @@ public class DateUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static long getActualParkTime(ParkOrderInfo parkOrderInfo) {
+        Calendar orderStartCalendar = getYearToSecondCalendar(parkOrderInfo.getOrder_starttime());
+        Calendar orderEndCalendar = getYearToSecondCalendar(parkOrderInfo.getOrder_endtime());
+        Calendar parkStartCalendar = getYearToSecondCalendar(parkOrderInfo.getPark_start_time());
+        Calendar parkEndCalendar = getYearToSecondCalendar(parkOrderInfo.getPark_end_time());
+        Calendar orderExtendEndCalendar = getYearToSecondCalendar(parkOrderInfo.getOrder_endtime());
+        orderExtendEndCalendar.add(Calendar.SECOND, parkOrderInfo.getExtensionTime().equals("-1") ? 0 : Integer.valueOf(parkOrderInfo.getExtensionTime()));
+
+        long parkDuration;
+        if (orderStartCalendar.compareTo(parkStartCalendar) > 0) {
+            //提前停车
+            if (orderExtendEndCalendar.compareTo(parkEndCalendar) < 0) {
+                //超时停车
+                parkDuration = getCalendarDistance(parkStartCalendar, parkEndCalendar);
+            } else if (orderEndCalendar.compareTo(parkEndCalendar) < 0) {
+                //还没到预约的结束时间，提前结束停车
+                if (orderStartCalendar.compareTo(parkEndCalendar) > 0) {
+                    //还没到预约开始停车时间就跑了的
+                    parkDuration = getCalendarDistance(parkStartCalendar, parkEndCalendar);
+                } else {
+                    if (getCalendarDistance(parkEndCalendar, orderEndCalendar) >= getCalendarDistance(orderStartCalendar, orderEndCalendar) / 5.0) {
+                        //过早离开（剩余停车时长大于总预约时长的1/5）
+                        parkDuration = getCalendarDistance(parkStartCalendar, parkEndCalendar);
+                    } else {
+                        parkDuration = getCalendarDistance(parkStartCalendar, parkEndCalendar);
+                    }
+                }
+            } else {
+                //在顺延时长内结束停车
+                parkDuration = getCalendarDistance(parkStartCalendar, parkEndCalendar);
+            }
+        } else {
+            //在预约开始停车后开始停车
+            if (orderExtendEndCalendar.compareTo(parkEndCalendar) < 0) {
+                //超时停车
+                parkDuration = getCalendarDistance(orderStartCalendar, parkEndCalendar);
+            } else if (orderEndCalendar.compareTo(parkEndCalendar) < 0) {
+                //还没到预约的结束时间，提前结束停车
+                if (orderStartCalendar.compareTo(parkEndCalendar) > 0) {
+                    //还没到预约开始停车时间就跑了的
+                    parkDuration = getCalendarDistance(orderStartCalendar, parkEndCalendar);
+                } else {
+                    //在预约开始停车后再结束停车的
+                    if (getCalendarDistance(parkEndCalendar, orderEndCalendar) >= getCalendarDistance(orderStartCalendar, orderEndCalendar) / 5.0) {
+                        //过早离开（剩余停车时长大于总预约时长的1/5）
+                        parkDuration = getCalendarDistance(orderStartCalendar, parkEndCalendar);
+                    } else {
+                        parkDuration = getCalendarDistance(orderStartCalendar, parkEndCalendar);
+                    }
+                }
+            } else {
+                //在顺延时长内结束停车
+                parkDuration = getCalendarDistance(orderStartCalendar, parkEndCalendar);
+            }
+        }
+        return parkDuration;
     }
 
     public interface StartParkCallback {

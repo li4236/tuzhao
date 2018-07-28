@@ -15,13 +15,13 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.PayActivity;
-import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
+import com.tuzhao.activity.mine.OrderComplaintActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.Discount_Info;
+import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
@@ -186,7 +186,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         /*String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
         mUserTotalCredit.setText(totalCredit);*/
 
-        setCollection(CollectionManager.getInstance().isContainParkLot(mParkOrderInfo.getBelong_park_space()));
+        setCollection(CollectionManager.getInstance().isContainParkLot(mParkOrderInfo.getParkLotId()));
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
     }
@@ -207,10 +207,12 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         switch (v.getId()) {
             case R.id.pay_for_order_question_tv:
             case R.id.appointment_calculate_rule_iv:
-                Bundle parkLotBundle = new Bundle();
-                parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                startActivity(OrderComplaintActivity.class,ConstansUtil.PARK_ORDER_INFO,mParkOrderInfo);
+
+                /*Bundle parkLotBundle = new Bundle();
+                parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
-                startActivity(BillingRuleActivity.class, parkLotBundle);
+                startActivity(BillingRuleActivity.class, parkLotBundle);*/
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
@@ -225,7 +227,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 break;
             case R.id.collect_park_lot_cl:
                 if (getText(mCollectTv).equals("已收藏")) {
-                    deleteCollectParkLot(CollectionManager.getInstance().getCollection(mParkOrderInfo.getBelong_park_space()));
+                    deleteCollectParkLot(CollectionManager.getInstance().getCollection(mParkOrderInfo.getParkLotId()));
                 } else {
                     collectParkLot();
                 }
@@ -273,7 +275,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     private void collectParkLot() {
         showLoadingDialog("正在添加收藏...");
         getOkGo(HttpConstants.addCollection)
-                .params("belong_id", mParkOrderInfo.getBelong_park_space())
+                .params("belong_id", mParkOrderInfo.getParkLotId())
                 .params("type", 1)
                 .params("citycode", mParkOrderInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {

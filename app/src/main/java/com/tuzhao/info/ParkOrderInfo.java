@@ -17,7 +17,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
     private String id;//订单id
     private String parkspace_id;//停车场id
 
-    @SerializedName(value = "park_id",alternate = {"parkSpaceId"})
+    @SerializedName(value = "park_id", alternate = {"parkSpaceId"})
     private String park_id;//停车位id
     private String parkspace_name;//停车场名字
     private String ps_address;//停车场地址
@@ -77,7 +77,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.longitude = longitude;
     }
 
-    public String getBelong_park_space() {
+    public String getParkLotId() {
         return parkspace_id;
     }
 
@@ -85,7 +85,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.parkspace_id = belong_park_space;
     }
 
-    public String getPark_id() {
+    public String getParkSpaceid() {
         return park_id;
     }
 
@@ -93,7 +93,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.park_id = park_id;
     }
 
-    public String getPark_space_name() {
+    public String getParkLotName() {
         return parkspace_name;
     }
 
@@ -101,7 +101,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.parkspace_name = park_space_name;
     }
 
-    public String getPark_space_address() {
+    public String getParkLotAddress() {
         return ps_address;
     }
 
@@ -109,7 +109,7 @@ public class ParkOrderInfo extends BaseInfo implements Parcelable {
         this.ps_address = park_space_address;
     }
 
-    public String getAddress_memo() {
+    public String getParkSpaceLocationDescribe() {
         return location_describe;
     }
 

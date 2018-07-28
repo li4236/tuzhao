@@ -19,6 +19,8 @@ public class HttpConstants {
     public static final String ROOT_IMG_URL_CS = ROOT_BASE_IMG_URL + "chargestations/";//电场
     public static final String ROOT_IMG_URL_ID_CARD = ROOT_BASE_IMG_URL + "idcard/";//身份证照
     public static final String ROOT_IMG_URL_PROPERTY = ROOT_BASE_IMG_URL + "property/";//产权照
+    public static final String ROOT_IMG_URL_DRIVER_LICENSE = ROOT_BASE_IMG_URL + "driver/";//驾驶证照
+    public static final String ROOT_IMG_URL_COMPLAINT = ROOT_BASE_IMG_URL + "complaint/";//投诉照
 
     /**
      * 请求主页地图页面停车位和充电桩的具体位置的经纬度
@@ -590,5 +592,10 @@ public class HttpConstants {
      * 通过原密码修改密码
      */
     public static final String requestChangePassword = ROOT_URL + "requestChangePassword";
+
+    /**
+     * 订单投诉
+     */
+    public static final String orderComplaint = ROOT_URL + "orderComplaint";
 
 }

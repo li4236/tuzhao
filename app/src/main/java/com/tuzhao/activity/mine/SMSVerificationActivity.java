@@ -136,7 +136,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        Log.e(TAG, "onKey: ");
                         deleteAll();
                     }
                     return false;

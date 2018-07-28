@@ -274,7 +274,7 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                         public void onClick(View v) {
                             //立即评价
                             Intent intent = new Intent(ParkOrderDetailsActivity.this, CommentPsActivity.class);
-                            intent.putExtra("parkspace_id", parkOrderinfo.getBelong_park_space());
+                            intent.putExtra("parkspace_id", parkOrderinfo.getParkLotId());
                             intent.putExtra("parkspace_img", parkOrderinfo.getPictures().split(",")[0]);
                             intent.putExtra("order_id", parkOrderinfo.getId());
                             intent.putExtra("city_code", parkOrderinfo.getCitycode());
@@ -287,7 +287,7 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                         public void onClick(View v) {
                             //再次租用
                             Intent intent = new Intent(ParkOrderDetailsActivity.this, ParkspaceDetailActivity.class);
-                            intent.putExtra("parkspace_id", parkOrderinfo.getBelong_park_space());
+                            intent.putExtra("parkspace_id", parkOrderinfo.getParkLotId());
                             intent.putExtra("city_code", parkOrderinfo.getCitycode());
                             startActivity(intent);
                         }
@@ -306,7 +306,7 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                         public void onClick(View v) {
                             //再次租用
                             Intent intent = new Intent(ParkOrderDetailsActivity.this, ParkspaceDetailActivity.class);
-                            intent.putExtra("parkspace_id", parkOrderinfo.getBelong_park_space());
+                            intent.putExtra("parkspace_id", parkOrderinfo.getParkLotId());
                             intent.putExtra("city_code", parkOrderinfo.getCitycode());
                             startActivity(intent);
                         }
@@ -323,7 +323,7 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                         public void onClick(View v) {
                             //再次租用
                             Intent intent = new Intent(ParkOrderDetailsActivity.this, ParkspaceDetailActivity.class);
-                            intent.putExtra("parkspace_id", parkOrderinfo.getBelong_park_space());
+                            intent.putExtra("parkspace_id", parkOrderinfo.getParkLotId());
                             intent.putExtra("city_code", parkOrderinfo.getCitycode());
                             startActivity(intent);
                         }
@@ -340,7 +340,7 @@ public class ParkOrderDetailsActivity extends BaseActivity {
                         public void onClick(View v) {
                             //再次租用
                             Intent intent = new Intent(ParkOrderDetailsActivity.this, ParkspaceDetailActivity.class);
-                            intent.putExtra("parkspace_id", parkOrderinfo.getBelong_park_space());
+                            intent.putExtra("parkspace_id", parkOrderinfo.getParkLotId());
                             intent.putExtra("city_code", parkOrderinfo.getCitycode());
                             startActivity(intent);
                         }
@@ -353,10 +353,10 @@ public class ParkOrderDetailsActivity extends BaseActivity {
     }
 
     private void initViewDataAgain(final ParkOrderInfo parkOrderinfo) {
-        ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_psname)).setText(parkOrderinfo.getPark_space_name());
-        ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_pname)).setText(parkOrderinfo.getAddress_memo());
+        ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_psname)).setText(parkOrderinfo.getParkLotName());
+        ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_pname)).setText(parkOrderinfo.getParkSpaceLocationDescribe());
         ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_popentime)).setText("开放时间（" + parkOrderinfo.getOpen_time() + "）");
-        ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_psaddress)).setText(parkOrderinfo.getPark_space_address());
+        ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_psaddress)).setText(parkOrderinfo.getParkLotAddress());
         ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_order_starttime)).setText(parkOrderinfo.getOrder_starttime());
         ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_order_endtime)).setText(parkOrderinfo.getOrder_endtime());
         ((TextView) findViewById(R.id.id_activity_parkorderdetail_layout_textview_carnumble)).setText(parkOrderinfo.getCar_numble());

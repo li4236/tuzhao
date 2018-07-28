@@ -21,7 +21,7 @@ public class ViewUtil {
         }
     }
 
-    private static boolean isVisible(View view) {
+    public static boolean isVisible(View view) {
         return view.getVisibility() == View.VISIBLE;
     }
 

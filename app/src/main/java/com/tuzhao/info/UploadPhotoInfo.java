@@ -3,7 +3,7 @@ package com.tuzhao.info;
 /**
  * Created by juncoder on 2018/6/15.
  */
-public class PropertyPhoto {
+public class UploadPhotoInfo {
 
     private String path = "-1";
 
@@ -13,11 +13,11 @@ public class PropertyPhoto {
 
     private boolean uploadSuccess;
 
-    public PropertyPhoto() {
+    public UploadPhotoInfo() {
 
     }
 
-    public PropertyPhoto(String path) {
+    public UploadPhotoInfo(String path) {
         this.path = path;
         showProgress = true;
         progress = "0%";

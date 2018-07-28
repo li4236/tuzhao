@@ -149,7 +149,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     protected void initData() {
         mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
         mStartParkTime.setText(DateUtil.getPointToMinute(mParkOrderInfo.getOrder_starttime()));
-        mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
+        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
         mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
 
         mCurrentCalendar = Calendar.getInstance();
@@ -231,7 +231,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             case R.id.appointment_calculate_rule:
             case R.id.appointment_calculate_rule_iv:
                 Bundle bundle = new Bundle();
-                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                 startActivity(BillingRuleActivity.class, bundle);
                 break;
@@ -661,7 +661,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     private void getParkSpaceList() {
         getOkGo(HttpConstants.getParkList)
                 .params("citycode", mParkOrderInfo.getCitycode())
-                .params("parkspace_id", mParkOrderInfo.getBelong_park_space())
+                .params("parkspace_id", mParkOrderInfo.getParkLotId())
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Info> o, Call call, Response response) {
@@ -793,7 +793,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                 break;
                             case "102":
                                 for (int i = 0; i < mCanParkList.size(); i++) {
-                                    if (mCanParkList.get(i).getId().equals(responseData.data.getPark_id())) {
+                                    if (mCanParkList.get(i).getId().equals(responseData.data.getParkSpaceid())) {
                                         showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime()));
                                         break;
                                     }
@@ -886,10 +886,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
      * 重新分配车位给该订单
      */
     private void redistributionParkSpace(ParkOrderInfo parkOrderInfo) {
-        mParkOrderInfo.setPark_id(parkOrderInfo.getPark_id());
+        mParkOrderInfo.setPark_id(parkOrderInfo.getParkSpaceid());
         mParkOrderInfo.setExtensionTime(parkOrderInfo.getExtensionTime());
         for (int i = 0; i < mCanParkList.size(); i++) {
-            if (mCanParkList.get(i).getId().equals(parkOrderInfo.getPark_id())) {
+            if (mCanParkList.get(i).getId().equals(parkOrderInfo.getParkSpaceid())) {
                 mCanParkList.remove(i);
                 break;
             }

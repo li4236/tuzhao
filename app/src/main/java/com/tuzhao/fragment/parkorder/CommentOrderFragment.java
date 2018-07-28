@@ -232,7 +232,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", mParkOrderInfo.getBelong_park_space())
+                .params("parkspace_id", mParkOrderInfo.getParkLotId())
                 .params("city_code", mParkOrderInfo.getCitycode())
                 .params("order_id", mParkOrderInfo.getId())
                 .params("grade", mCBRatingBar.getTouchCount() == -1 ? "1" : (mCBRatingBar.getTouchCount() + ""))

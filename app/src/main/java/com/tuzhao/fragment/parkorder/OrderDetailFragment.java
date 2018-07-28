@@ -40,7 +40,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.ParkspaceCommentInfo;
-import com.tuzhao.info.PropertyPhoto;
+import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -204,7 +204,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         mOrderFee.setText(DateUtil.decreseOneZero(mParkOrderInfo.getActual_pay_fee()));
-        mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
+        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
         if (mParkOrderInfo.getDiscount() != null && !mParkOrderInfo.getDiscount().getId().equals("-1")) {
             String disount = "（优惠券—" + DateUtil.decreseOneZero(mParkOrderInfo.getDiscount().getDiscount()) + "）";
             SpannableString spannableString = new SpannableString(disount);
@@ -243,7 +243,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             case R.id.pay_for_order_question_tv:
             case R.id.appointment_calculate_rule_iv:
                 Bundle parkLotBundle = new Bundle();
-                parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                 startActivity(BillingRuleActivity.class, parkLotBundle);
                 break;
@@ -380,7 +380,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             recyclerView.setLayoutManager(new LinearLayoutManager(commentView.getContext(), LinearLayoutManager.HORIZONTAL, false));
             mPropertyAdapter = new PropertyAdapter();
             recyclerView.setAdapter(mPropertyAdapter);
-            mPropertyAdapter.addData(new PropertyPhoto());
+            mPropertyAdapter.addData(new UploadPhotoInfo());
             initCommentView();
             //initCommentSoftKeyBorad();
         }
@@ -590,10 +590,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             case 0:
                 if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
                     //还没有图片
-                    PropertyPhoto firstProperty = new PropertyPhoto(file.getAbsolutePath());
+                    UploadPhotoInfo firstProperty = new UploadPhotoInfo(file.getAbsolutePath());
                     mPropertyAdapter.notifyAddData(0, firstProperty);
                 } else {
-                    PropertyPhoto firstProperty = mPropertyAdapter.getData().get(0);
+                    UploadPhotoInfo firstProperty = mPropertyAdapter.getData().get(0);
                     firstProperty.setPath(file.getAbsolutePath());
                     firstProperty.setShowProgress(true);
                     firstProperty.setProgress("0%");
@@ -603,10 +603,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 break;
             case 1:
                 if (mPropertyAdapter.getDataSize() < 3) {
-                    PropertyPhoto secondProperty = new PropertyPhoto(file.getAbsolutePath());
+                    UploadPhotoInfo secondProperty = new UploadPhotoInfo(file.getAbsolutePath());
                     mPropertyAdapter.notifyAddData(mPropertyAdapter.getDataSize() - 1, secondProperty);
                 } else {
-                    PropertyPhoto secondProperty = mPropertyAdapter.getData().get(1);
+                    UploadPhotoInfo secondProperty = mPropertyAdapter.getData().get(1);
                     secondProperty.setPath(file.getAbsolutePath());
                     secondProperty.setProgress("0%");
                     secondProperty.setShowProgress(true);
@@ -616,10 +616,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 break;
             case 2:
                 if (mPropertyAdapter.getDataSize() < 3) {
-                    PropertyPhoto thirdProperty = new PropertyPhoto(file.getAbsolutePath());
+                    UploadPhotoInfo thirdProperty = new UploadPhotoInfo(file.getAbsolutePath());
                     mPropertyAdapter.notifyAddData(thirdProperty);
                 } else if (mPropertyAdapter.getDataSize() == 3) {
-                    PropertyPhoto thirdProperty = mPropertyAdapter.getData().get(2);
+                    UploadPhotoInfo thirdProperty = mPropertyAdapter.getData().get(2);
                     thirdProperty.setPath(file.getAbsolutePath());
                     thirdProperty.setUploadSuccess(false);
                     thirdProperty.setShowProgress(true);
@@ -665,7 +665,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         String progressString = (int) (progress * 100) + "%";
         for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
             if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
-                PropertyPhoto firstProperty = mPropertyAdapter.getData().get(i);
+                UploadPhotoInfo firstProperty = mPropertyAdapter.getData().get(i);
                 firstProperty.setProgress(progressString);
                 if (progress == 1.0) {
                     firstProperty.setShowProgress(false);
@@ -679,7 +679,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private void setServerUrl(String filePath, String url) {
         for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
             if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
-                PropertyPhoto firstProperty = mPropertyAdapter.get(i);
+                UploadPhotoInfo firstProperty = mPropertyAdapter.get(i);
                 firstProperty.setPath(url);
                 firstProperty.setShowProgress(false);
                 firstProperty.setUploadSuccess(true);
@@ -693,7 +693,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
             if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
                 if (i == 2) {
-                    mPropertyAdapter.notifyDataChange(2, new PropertyPhoto());
+                    mPropertyAdapter.notifyDataChange(2, new UploadPhotoInfo());
                 } else {
                     mPropertyAdapter.notifyRemoveData(i);
                 }
@@ -703,7 +703,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
         if (mPropertyAdapter.getDataSize() == 0 || !mPropertyAdapter.get(mPropertyAdapter.getDataSize() - 1).getPath().equals("-1")) {
             //如果第一张张不是拍摄图，则添加拍摄图
-            mPropertyAdapter.notifyAddData(new PropertyPhoto());
+            mPropertyAdapter.notifyAddData(new UploadPhotoInfo());
         }
 
     }
@@ -817,9 +817,9 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private void requestAddPsComment() {
         showLoadingDialog("评价中");
         StringBuilder stringBuilder = new StringBuilder();
-        for (PropertyPhoto propertyPhoto : mPropertyAdapter.getData()) {
-            if (!propertyPhoto.getPath().equals("-1")) {
-                stringBuilder.append(propertyPhoto.getPath().replace(HttpConstants.ROOT_IMG_URL_PSCOM, ""));
+        for (UploadPhotoInfo uploadPhotoInfo : mPropertyAdapter.getData()) {
+            if (!uploadPhotoInfo.getPath().equals("-1")) {
+                stringBuilder.append(uploadPhotoInfo.getPath().replace(HttpConstants.ROOT_IMG_URL_PSCOM, ""));
                 stringBuilder.append(",");
             }
         }
@@ -832,7 +832,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", mParkOrderInfo.getBelong_park_space())
+                .params("parkspace_id", mParkOrderInfo.getParkLotId())
                 .params("city_code", mParkOrderInfo.getCitycode())
                 .params("order_id", mParkOrderInfo.getId())
                 .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress() / 20.0))
@@ -952,14 +952,14 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         }
     }
 
-    class PropertyAdapter extends BaseAdapter<PropertyPhoto> {
+    class PropertyAdapter extends BaseAdapter<UploadPhotoInfo> {
 
         @Override
-        protected void conver(@NonNull BaseViewHolder holder, final PropertyPhoto propertyPhoto, final int position) {
+        protected void conver(@NonNull BaseViewHolder holder, final UploadPhotoInfo uploadPhotoInfo, final int position) {
             ImageView imageView = holder.getView(R.id.property_photo_iv);
             TextView textView = holder.getView(R.id.property_upload_tv);
-            Log.e(TAG, "conver: " + propertyPhoto.getPath() + "  position:" + position);
-            if (propertyPhoto.getPath().equals("-1")) {
+            Log.e(TAG, "conver: " + uploadPhotoInfo.getPath() + "  position:" + position);
+            if (uploadPhotoInfo.getPath().equals("-1")) {
                 ImageUtil.showPic(imageView, R.drawable.ic_addimg);
                 if (isVisible(textView)) {
                     textView.setVisibility(View.GONE);
@@ -970,15 +970,15 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     imageView.setPadding(0, 0, 0, 0);
                     imageView.setBackgroundResource(0);
                 }
-                ImageUtil.showPicWithNoAnimate(imageView, propertyPhoto.getPath());
-                ViewUtil.showProgressStatus(textView, propertyPhoto.isShowProgress());
-                textView.setText(propertyPhoto.getProgress());
+                ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath());
+                ViewUtil.showProgressStatus(textView, uploadPhotoInfo.isShowProgress());
+                textView.setText(uploadPhotoInfo.getProgress());
             }
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mChoosePosition = position;
-                    if (propertyPhoto.getPath().equals("-1")) {
+                    if (uploadPhotoInfo.getPath().equals("-1")) {
                         startTakePropertyPhoto();
                     } else {
                         showDialog();

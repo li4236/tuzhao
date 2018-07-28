@@ -97,6 +97,21 @@ public class ImageUtil {
                 });
     }
 
+    public static void showPicWithNoAnimate(final ImageView imageView, String url,int drawableRes) {
+        GlideApp.with(imageView)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(drawableRes)
+                .error(drawableRes)
+                .dontAnimate()
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        imageView.setImageDrawable(resource);
+                    }
+                });
+    }
+
     public static void showNoCenterPic(ImageView imageView, int resourceId) {
         GlideApp.with(imageView)
                 .load(resourceId)
@@ -114,9 +129,9 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void showImgPic(ImageView imageView, int url) {
+    public static void showImgPic(ImageView imageView, int drawableRes) {
         GlideApp.with(imageView)
-                .load(url)
+                .load(drawableRes)
                 .centerCrop()
                 .placeholder(R.mipmap.ic_img)
                 .error(R.mipmap.ic_img)
@@ -329,6 +344,7 @@ public class ImageUtil {
                         }
                         sLong = sLruCache.get(callback);
                         if (file.length() > 1024 * 250 && sLong != file.length() && (sLong == -1 || (sLong - file.length()) > 1024)) {
+                            //防止某些图片一直压缩不了
                             sLruCache.put(callback, file.length());
                             compressPhoto(context, file.getAbsolutePath(), callback);
                         } else {

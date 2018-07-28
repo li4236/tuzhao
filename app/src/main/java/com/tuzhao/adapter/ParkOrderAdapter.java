@@ -100,9 +100,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showPic(((AppointParkViewHolder) holder).imageview_bigshow,
                     urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "", R.mipmap.ic_img);
-            ((AppointParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
-            ((AppointParkViewHolder) holder).textview_address.setText(mData.get(position).getPark_space_address());
-            ((AppointParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
+            ((AppointParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getParkLotName());
+            ((AppointParkViewHolder) holder).textview_address.setText(mData.get(position).getParkLotAddress());
+            ((AppointParkViewHolder) holder).textview_address_description.setText(mData.get(position).getParkSpaceLocationDescribe());
             ((AppointParkViewHolder) holder).textview_startime.setText("进场时间：" + mData.get(position).getOrder_starttime().substring(5, mData.get(position).getOrder_starttime().length() - 3));
             ((AppointParkViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
 
@@ -161,8 +161,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showPic(((ReadyPayViewHolder) holder).imageview_bigshow,
                     urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "", R.mipmap.ic_img);
-            ((ReadyPayViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
-            ((ReadyPayViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
+            ((ReadyPayViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getParkLotName());
+            ((ReadyPayViewHolder) holder).textview_address_description.setText(mData.get(position).getParkSpaceLocationDescribe());
             ((ReadyPayViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
             //计算时间
             float minutes = dateUtil.getTimeDifferenceMinute(mData.get(position).getPark_start_time(), mData.get(position).getPark_end_time(), false);
@@ -236,8 +236,8 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ImageUtil.showImpPic(((FinishParkViewHolder) holder).imageview_bigshow,
                     urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "");
 
-            ((FinishParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
-            ((FinishParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
+            ((FinishParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getParkLotName());
+            ((FinishParkViewHolder) holder).textview_address_description.setText(mData.get(position).getParkSpaceLocationDescribe());
             ((FinishParkViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
             //计算时间
             float minutes = dateUtil.getTimeDifferenceMinute(mData.get(position).getPark_start_time(), mData.get(position).getPark_end_time(), false);
@@ -254,7 +254,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         public void onClick(View v) {
                             //去评论按钮的点击事件
                             Intent intent = new Intent(mContext, CommentOrderActivity.class);
-                            intent.putExtra("parkspace_id", mData.get(position).getBelong_park_space());
+                            intent.putExtra("parkspace_id", mData.get(position).getParkLotId());
                             intent.putExtra("parkspace_img", mData.get(position).getPictures().split(",")[0]);
                             intent.putExtra("order_id", mData.get(position).getId());
                             intent.putExtra("city_code", mData.get(position).getCitycode());
@@ -309,7 +309,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //再次租用按钮的点击事件
                     Intent intent = new Intent(mContext, ParkspaceDetailActivity.class);
-                    intent.putExtra("parkspace_id", mData.get(position).getBelong_park_space());
+                    intent.putExtra("parkspace_id", mData.get(position).getParkLotId());
                     intent.putExtra("city_code", mData.get(position).getCitycode());
                     mContext.startActivity(intent);
                 }
@@ -361,9 +361,9 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String[] urlList = mData.get(position).getPictures().split(",");
             ImageUtil.showImpPic(((CancleParkViewHolder) holder).imageview_bigshow,
                     urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "");
-            ((CancleParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getPark_space_name());
-            ((CancleParkViewHolder) holder).textview_address.setText(mData.get(position).getPark_space_address());
-            ((CancleParkViewHolder) holder).textview_address_description.setText(mData.get(position).getAddress_memo());
+            ((CancleParkViewHolder) holder).textview_parkspace_name.setText(mData.get(position).getParkLotName());
+            ((CancleParkViewHolder) holder).textview_address.setText(mData.get(position).getParkLotAddress());
+            ((CancleParkViewHolder) holder).textview_address_description.setText(mData.get(position).getParkSpaceLocationDescribe());
             ((CancleParkViewHolder) holder).textview_startime.setText("进场时间：" + mData.get(position).getOrder_starttime().substring(5, mData.get(position).getOrder_starttime().length() - 3));
             ((CancleParkViewHolder) holder).textview_carnumber.setText("预停车辆：" + mData.get(position).getCar_numble());
 
@@ -394,7 +394,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     //再次租用按钮的点击事件
                     Intent intent = new Intent(mContext, ParkspaceDetailActivity.class);
-                    intent.putExtra("parkspace_id", mData.get(position).getBelong_park_space());
+                    intent.putExtra("parkspace_id", mData.get(position).getParkLotId());
                     intent.putExtra("city_code", mData.get(position).getCitycode());
                     mContext.startActivity(intent);
                 }

@@ -211,7 +211,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
         }
 
         holder.setText(R.id.my_order_appoint_date, parkOrderInfo.getOrder_time().substring(0, parkOrderInfo.getOrder_time().indexOf(" ")))
-                .setText(R.id.my_order_park_lot, parkOrderInfo.getPark_space_name())
+                .setText(R.id.my_order_park_lot, parkOrderInfo.getParkLotName())
                 .setText(R.id.my_order_park_car_number, parkOrderInfo.getCar_numble())
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override

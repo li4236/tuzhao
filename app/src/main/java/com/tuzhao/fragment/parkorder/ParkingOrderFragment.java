@@ -141,7 +141,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         mDecimalFormat = new DecimalFormat("0.00");
 
         mParkDate.setText(DateUtil.getDayPointMinute(mParkOrderInfo.getPark_start_time()));
-        mParkSpaceLocation.setText(mParkOrderInfo.getAddress_memo());
+        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
         String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
         mLeaveTime.setText(leaveTime);
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";
@@ -177,7 +177,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             case R.id.appointment_calculate_rule:
             case R.id.appointment_calculate_rule_iv:
                 Bundle bundle = new Bundle();
-                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getBelong_park_space());
+                bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
                 startActivity(BillingRuleActivity.class, bundle);
                 break;
@@ -464,7 +464,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private void getParkSpaceTime() {
         getOkGo(HttpConstants.getParkSpaceTime)
-                .params("parkSpaceId", mParkOrderInfo.getPark_id())
+                .params("parkSpaceId", mParkOrderInfo.getParkSpaceid())
                 .params("cityCode", mParkOrderInfo.getCitycode())
                 .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
                     @Override
