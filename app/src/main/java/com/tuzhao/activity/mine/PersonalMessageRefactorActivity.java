@@ -155,7 +155,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             mWechat.setText(UNBIND);
         }
 
-        if (!Objects.equals(userInfo.getAliNickName(), "-1")) {
+        if (!Objects.equals(userInfo.getAlinumber(), "-1")) {
             mAlipay.setText(UNBIND);
         }
 
@@ -388,7 +388,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         UserManager.getInstance().getUserInfo().setOpenId(s);
-                        mWechat.setText("解绑");
+                        mWechat.setText(UNBIND);
                         showFiveToast("绑定成功");
                         dismmisLoadingDialog();
                     }
@@ -398,7 +398,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                         super.onError(call, response, e);
                         if (!handleException(e)) {
                             if (e.getMessage().equals("103")) {
-                                mWechat.setText("解绑");
+                                mWechat.setText(UNBIND);
                                 showFiveToast("绑定成功");
                             } else {
                                 showFiveToast(ConstansUtil.SERVER_ERROR);
