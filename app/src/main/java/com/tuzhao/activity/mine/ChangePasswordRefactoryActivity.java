@@ -95,9 +95,11 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
     private static final String PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT = "密码长度不能少于8位";
 
+    private static final String SAME_OF_ORIGIN_PASSWORD = "新密码不能与原密码一样";
+
     private static final String INPUT_NEW_PASSWORD_AGAIN = "请再次输入新密码";
 
-    private static final String PASSWORD_IS_DIFFERENT = "两次输入的密码不一致";
+    private static final String PASSWORD_IS_DIFFERENT = "两次输入的密码不一样";
 
     private boolean mOriginPasswrodShow;
 
@@ -360,20 +362,21 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    mHandler.removeMessages(HIDE_ORIGINAL_PASSWORD_ERROR);
+                   /* mHandler.removeMessages(HIDE_ORIGINAL_PASSWORD_ERROR);
                     mHandler.sendEmptyMessageDelayed(HIDE_ORIGINAL_PASSWORD_ERROR, 1500);
 
-                    mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
-                    mOriginalPassword.requestFocus();
+                    mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    //mOriginalPassword.requestFocus();
                     mOriginalPassword.setSelection(getTextLength(mOriginalPassword));
+                    setFocus();
                 }
             });
         }
-        if (!isVisible(mOriginalPasswordError)) {
+        /*if (!isVisible(mOriginalPasswordError)) {
             mOriginalPasswordError.setVisibility(View.VISIBLE);
         }
-        mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
-        mOriginalPassword.clearFocus();
+        mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        //mOriginalPassword.clearFocus();
         mOriginPasswordErrorAnimator.start();
     }
 
@@ -389,16 +392,17 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    mHandler.sendEmptyMessageDelayed(HIDE_NEW_PASSWORD_ERROR, 1500);
-                    mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
-                    mNewPassword.requestFocus();
+                    /*mHandler.sendEmptyMessageDelayed(HIDE_NEW_PASSWORD_ERROR, 1500);
+                    mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    //mNewPassword.requestFocus();
                     mNewPassword.setSelection(getTextLength(mNewPassword));
+                    setFocus();
                 }
             });
         }
-        mNewPasswordError.setVisibility(View.VISIBLE);
-        mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
-        mNewPassword.clearFocus();
+        /*mNewPasswordError.setVisibility(View.VISIBLE);
+        mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        //mNewPassword.clearFocus();
         mNewPasswrodErrorAnimator.start();
     }
 
@@ -414,20 +418,31 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    mHandler.removeMessages(HIDE_CONFIRM_PASSWORD_ERROR);
+                    /*mHandler.removeMessages(HIDE_CONFIRM_PASSWORD_ERROR);
                     mHandler.sendEmptyMessageDelayed(HIDE_CONFIRM_PASSWORD_ERROR, 1500);
-                    mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
-                    mConfirmPassword.requestFocus();
+                    mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    //mConfirmPassword.requestFocus();
                     mConfirmPassword.setSelection(getTextLength(mConfirmPassword));
+                    setFocus();
                 }
             });
         }
-        if (!isVisible(mConfirmPasswordError)) {
+        /*if (!isVisible(mConfirmPasswordError)) {
             mConfirmPasswordError.setVisibility(View.VISIBLE);
         }
-        mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
-        mConfirmPassword.clearFocus();
+        mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        //mConfirmPassword.clearFocus();
         mConfirmPasswordErrorAnimator.start();
+    }
+
+    private void setFocus() {
+        if (isVisible(mOriginalPasswordError)) {
+            mOriginalPassword.requestFocus();
+        } else if (isVisible(mNewPasswordError)) {
+            mNewPassword.requestFocus();
+        } else if (isVisible(mConfirmPasswordError)) {
+            mConfirmPassword.requestFocus();
+        }
     }
 
     @Override
@@ -525,6 +540,13 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
             }
             showView(mNewPasswordError);
             return false;
+        } else if (DensityUtil.MD5code(getText(mNewPassword)).equals(mLocalOriginalPassword)) {
+            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mNewPasswordError).equals(SAME_OF_ORIGIN_PASSWORD)) {
+                mNewPasswordError.setText(SAME_OF_ORIGIN_PASSWORD);
+            }
+            showView(mNewPasswordError);
+            return false;
         } else {
             mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
             hideView(mNewPasswordError);
@@ -561,13 +583,16 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         boolean result = true;
         if (isVisible(mOriginalPassword)) {
             if (!originPasswrodIsCorrect()) {
+                startOriginPasswordErrorAnimator();
                 result = false;
             }
         }
         if (!newPasswordIsCorrect()) {
+            startNewPasswrodErrorAnimator();
             result = false;
         }
         if (!confirmPasswordIsCorrect()) {
+            startConfirmPasswordErrorAnimator();
             result = false;
         }
         return result;
