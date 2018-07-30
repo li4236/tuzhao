@@ -492,6 +492,19 @@ public class ParkspaceCommentFragment extends BaseFragment {
         }
     }
 
+    private void showView(View view) {
+        if (view.getVisibility() != View.VISIBLE) {
+            view.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+    private void hideView(View view) {
+        if (view.getVisibility() != View.GONE) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
     class ParkSpaceCommentAdapter extends BaseAdapter<ParkspaceCommentInfo> {
 
         private ArrayList<String> mCommentPictures;
@@ -522,12 +535,14 @@ public class ParkspaceCommentFragment extends BaseFragment {
             ImageView imageview_show3 = holder.getView(R.id.id_item_parkspacemoment_layout_imageview_show3);
 
             if (parkspaceCommentInfo.getImg_url().equals("-1") || parkspaceCommentInfo.getImg_url().equals("")) {
-                linearlayout_show.setVisibility(View.GONE);
+                hideView(linearlayout_show);
             } else {
                 final String img_Url[] = parkspaceCommentInfo.getImg_url().split(",");
-                if (!(img_Url.length > 0)) {
-                    linearlayout_show.setVisibility(View.GONE);
-                } else if (img_Url.length == 1) {
+                showView(linearlayout_show);
+                if (img_Url.length == 1) {
+                    showView(imageview_show1);
+                    hideView(imageview_show2);
+                    hideView(imageview_show3);
                     ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                     imageview_show1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -535,8 +550,10 @@ public class ParkspaceCommentFragment extends BaseFragment {
                             startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                         }
                     });
-                    linearlayout_show.setVisibility(View.VISIBLE);
                 } else if (img_Url.length == 2) {
+                    showView(imageview_show1);
+                    showView(imageview_show2);
+                    hideView(imageview_show3);
                     ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                     imageview_show1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -551,8 +568,10 @@ public class ParkspaceCommentFragment extends BaseFragment {
                             startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                         }
                     });
-                    linearlayout_show.setVisibility(View.VISIBLE);
                 } else if (img_Url.length == 3) {
+                    showView(imageview_show1);
+                    showView(imageview_show2);
+                    showView(imageview_show3);
                     ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                     imageview_show1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -574,7 +593,6 @@ public class ParkspaceCommentFragment extends BaseFragment {
                             startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
                         }
                     });
-                    linearlayout_show.setVisibility(View.VISIBLE);
                 }
             }
         }
