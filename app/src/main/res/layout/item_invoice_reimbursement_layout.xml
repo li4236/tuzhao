@@ -29,9 +29,9 @@
             android:id="@+id/invoice_reimbursement_rb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:button="@null"
             android:drawableStart="@drawable/yellow_checkbox_bg"
+            android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,6 @@
             android:layout_marginTop="14dp"
             android:contentDescription="@string/picture_description"
             android:scaleType="centerCrop"
-            android:src="@drawable/amap_route_color_texture_0_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@+id/invoice_reimbursement_rb"
@@ -53,9 +52,13 @@
         <TextView
             android:id="@+id/invoice_reimbursement_location"
             style="@style/TwentyTextB1Style"
+            android:layout_width="0dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="18dp"
-            android:text="地下一层08车位"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/invoice_reimbursement_iv"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,7 +66,6 @@
             android:id="@+id/invoice_reimbursement_park_duration"
             style="@style/TwentyTextB1Style"
             android:layout_marginTop="6dp"
-            android:text="停车时长：1小时35分"
             app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_location"
             app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_location" />
 
