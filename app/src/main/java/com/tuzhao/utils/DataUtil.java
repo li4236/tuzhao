@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by juncoder on 2018/7/9.
@@ -167,6 +169,16 @@ public class DataUtil {
         SpannableString spannableString = new SpannableString("月卡" + text);
         spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
+    }
+
+    /**
+     * @return true:密码是由大于8位的字符组成，并且至少包含一个数字和字母
+     */
+    public static boolean passwordLegal(String password) {
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(password);
+        return m.matches();
     }
 
 }

@@ -1342,7 +1342,7 @@ public class DateUtil {
      */
     public static String getYearToDayWithText(String date) {
         return date.substring(0, date.indexOf("-")) + "年" + date.substring(6, date.lastIndexOf("-")) + "月"
-                + date.substring(date.lastIndexOf("-")+1, date.indexOf(" ")) + "日";
+                + date.substring(date.lastIndexOf("-") + 1, date.indexOf(" ")) + "日";
     }
 
     /**
@@ -1351,7 +1351,7 @@ public class DateUtil {
      */
     public static String getYearToDayWithPointText(String date) {
         return date.substring(0, date.indexOf("-")) + "." + date.substring(6, date.lastIndexOf("-")) + "."
-                + date.substring(date.lastIndexOf("-")+1, date.indexOf(" "));
+                + date.substring(date.lastIndexOf("-") + 1, date.indexOf(" "));
     }
 
     /**
@@ -2473,7 +2473,6 @@ public class DateUtil {
      * 验证手机号是否正确
      *
      * @param phone_numble 手机号
-     * @return
      */
     public static boolean isPhoneNumble(String phone_numble) {
 //		Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
@@ -2482,10 +2481,10 @@ public class DateUtil {
        /* String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(phone_numble);*/
-        String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         if (phone_numble.length() != 11) {
             return false;
         } else {
+            String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(phone_numble);
             return m.matches();
@@ -2518,13 +2517,8 @@ public class DateUtil {
      * @return
      */
     public boolean isCorrectPassword(String password) {
-
         if (password != null && !password.equals("")) {
-            if (password.length() >= 8 && password.length() <= 16) {
-                return true;
-            } else {
-                return false;
-            }
+            return password.length() >= 8 && password.length() <= 16;
         } else {
             return false;
         }

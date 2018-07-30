@@ -405,8 +405,12 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        startActivity(AuditParkSpaceActivity.class);
-        finish();
+        if (Objects.equals(mPayType, "1")) {
+            startActivity(AuditParkSpaceActivity.class);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

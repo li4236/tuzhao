@@ -87,6 +87,18 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
     private static final int HIDE_CONFIRM_PASSWORD_ERROR = 0x666;
 
+    private static final String INPUT_ORIGIN_PASSWORD = "请输入原密码";
+
+    private static final String ORIGIN_PASSWROD_INCORRECT = "原密码不正确";
+
+    private static final String INPUT_NEW_PASSWORD = "请输入新密码";
+
+    private static final String PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT = "密码长度不能少于8位";
+
+    private static final String INPUT_NEW_PASSWORD_AGAIN = "请再次输入新密码";
+
+    private static final String PASSWORD_IS_DIFFERENT = "两次输入的密码不一致";
+
     private boolean mOriginPasswrodShow;
 
     private boolean mNewPasswordShow;
@@ -96,6 +108,8 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
     private String mPassCode;
 
     private User_Info mUserInfo;
+
+    private boolean mAlreadyClick;
 
     @Override
     protected int resourceId() {
@@ -140,17 +154,21 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
             mClearOriginalPassword.setVisibility(View.GONE);
         }
 
+        initHandle();
+        initEditTextChange();
+        //initEditTextFocusChange();
+    }
+
+    private void initHandle() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case ORIGIN_PASSWROD_ERROR:
                         startOriginPasswordErrorAnimator();
-                        showFiveToast("原密码错误");
                         return true;
                     case NEW_PASSWROD_ERROR:
                         startNewPasswrodErrorAnimator();
-                        showFiveToast("密码长度不能小于8位");
                         return true;
                     case CONFIRM_PASSWROD_ERROR:
                         startConfirmPasswordErrorAnimator();
@@ -168,7 +186,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 return false;
             }
         });
+    }
 
+    private void initEditTextChange() {
         mOriginalPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -177,11 +197,6 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
                 if (getTextLength(mOriginalPassword) == 0) {
                     if (isVisible(mClearOriginalPassword)) {
                         mClearOriginalPassword.setVisibility(View.INVISIBLE);
@@ -190,11 +205,19 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                     if (!isVisible(mClearOriginalPassword)) {
                         mClearOriginalPassword.setVisibility(View.VISIBLE);
                     }
-                    /*if (!getText(mOriginalPassword).equals(mLocalOriginalPassword)) {
+                    if (mAlreadyClick) {
+                        originPasswrodIsCorrect();
+                    }
+                    /*if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
                         mHandler.removeMessages(ORIGIN_PASSWROD_ERROR);
-                        mHandler.sendEmptyMessageDelayed(ORIGIN_PASSWROD_ERROR, 800);
+                        mHandler.sendEmptyMessageDelayed(ORIGIN_PASSWROD_ERROR, 1000);
                     }*/
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -219,10 +242,8 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                     if (!isVisible(mClearNewPassword)) {
                         mClearNewPassword.setVisibility(View.VISIBLE);
                     }
-                    /*if (getTextLength(mNewPassword) < 8) {
-                        mHandler.removeMessages(NEW_PASSWROD_ERROR);
-                        mHandler.sendEmptyMessageDelayed(NEW_PASSWROD_ERROR, 800);
-                    }*/
+                    newPasswordIsCorrect();
+                    confirmPasswordIsCorrect();
                 }
             }
         });
@@ -241,13 +262,10 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
             @Override
             public void afterTextChanged(Editable s) {
                 if (getTextLength(mConfirmPassword) == 0) {
-                    if (isVisible(mClearConfirmPassowrd)) {
-                        mClearConfirmPassowrd.setVisibility(View.INVISIBLE);
-                    }
+                    hideView(mClearConfirmPassowrd);
                 } else {
-                    if (!isVisible(mClearConfirmPassowrd)) {
-                        mClearConfirmPassowrd.setVisibility(View.VISIBLE);
-                    }
+                    showView(mClearConfirmPassowrd);
+                    confirmPasswordIsCorrect();
                     /*if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
                         mHandler.removeMessages(CONFIRM_PASSWROD_ERROR);
                         mHandler.sendEmptyMessageDelayed(CONFIRM_PASSWROD_ERROR, 800);
@@ -255,7 +273,58 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 }
             }
         });
+    }
 
+    private void initEditTextFocusChange() {
+        if (isVisible(mOriginalPassword)) {
+            mOriginalPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        if (DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                            if (newPasswordIsCorrect()) {
+                                if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
+                                    mOriginalPassword.clearFocus();
+                                    startConfirmPasswordErrorAnimator();
+                                }
+                            } else {
+                                mOriginalPassword.clearFocus();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        mNewPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (isVisible(mOriginalPassword)) {
+                        if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                            mNewPassword.clearFocus();
+                            startOriginPasswordErrorAnimator();
+                        }
+                    }
+                }
+            }
+        });
+
+        mConfirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (isVisible(mOriginalPassword)) {
+                        if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                            mConfirmPassword.clearFocus();
+                            startOriginPasswordErrorAnimator();
+                            return;
+                        }
+                    }
+                    newPasswordIsCorrect();
+                }
+            }
+        });
     }
 
     @NonNull
@@ -410,20 +479,98 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 mClearConfirmPassowrd.setVisibility(View.INVISIBLE);
                 break;
             case R.id.change_password:
-                if (isVisible(mOriginalPassword) && !DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
-                    startOriginPasswordErrorAnimator();
-                } else if (getTextLength(mNewPassword) < 8) {
-                    startNewPasswrodErrorAnimator();
-                } else if(getText(mOriginalPassword).equals(getText(mNewPassword))){
-                    showFiveToast("新密码不能与原密码相同哦");
-                }else if (!getText(mConfirmPassword).equals(getText(mNewPassword))) {
-                    startConfirmPasswordErrorAnimator();
-                } else {
+                mAlreadyClick = true;
+                if (allPasswrodIsLegal()) {
                     mChangePassword.setClickable(false);
                     changePasswordByOriginal();
                 }
                 break;
         }
+    }
+
+    private boolean originPasswrodIsCorrect() {
+        if (getTextLength(mOriginalPassword) == 0) {
+            mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mOriginalPasswordError).equals(INPUT_ORIGIN_PASSWORD)) {
+                mOriginalPasswordError.setText(INPUT_ORIGIN_PASSWORD);
+            }
+            showView(mOriginalPasswordError);
+            return false;
+        } else if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+            mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mOriginalPasswordError).equals(ORIGIN_PASSWROD_INCORRECT)) {
+                mOriginalPasswordError.setText(ORIGIN_PASSWROD_INCORRECT);
+            }
+            showView(mOriginalPasswordError);
+            return false;
+        } else {
+            mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+            hideView(mOriginalPasswordError);
+            return true;
+        }
+    }
+
+    private boolean newPasswordIsCorrect() {
+        if (getTextLength(mNewPassword) == 0) {
+            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mNewPasswordError).equals(INPUT_NEW_PASSWORD)) {
+                mNewPasswordError.setText(INPUT_NEW_PASSWORD);
+            }
+            showView(mNewPasswordError);
+            return false;
+        } else if (getTextLength(mNewPassword) < 8) {
+            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mNewPasswordError).equals(PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT)) {
+                mNewPasswordError.setText(PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT);
+            }
+            showView(mNewPasswordError);
+            return false;
+        } else {
+            mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+            hideView(mNewPasswordError);
+            return true;
+        }
+    }
+
+    private boolean confirmPasswordIsCorrect() {
+        if (mAlreadyClick) {
+            if (getTextLength(mConfirmPassword) == 0) {
+                mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+                if (!getText(mConfirmPasswordError).equals(INPUT_NEW_PASSWORD_AGAIN)) {
+                    mConfirmPasswordError.setText(INPUT_NEW_PASSWORD_AGAIN);
+                }
+                showView(mConfirmPasswordError);
+                return false;
+            } else if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
+                mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+                if (!getText(mConfirmPasswordError).equals(PASSWORD_IS_DIFFERENT)) {
+                    mConfirmPasswordError.setText(PASSWORD_IS_DIFFERENT);
+                }
+                showView(mConfirmPasswordError);
+                return false;
+            } else {
+                mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                hideView(mConfirmPasswordError);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean allPasswrodIsLegal() {
+        boolean result = true;
+        if (isVisible(mOriginalPassword)) {
+            if (!originPasswrodIsCorrect()) {
+                result = false;
+            }
+        }
+        if (!newPasswordIsCorrect()) {
+            result = false;
+        }
+        if (!confirmPasswordIsCorrect()) {
+            result = false;
+        }
+        return result;
     }
 
     private void changePasswordByOriginal() {
@@ -445,7 +592,7 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(mUserInfo);
                 dismmisLoadingDialog();
                 showFiveToast("密码修改成功");
-                startActivity(MainActivity.class,ConstansUtil.REQUEST_FOR_RESULT,ConstansUtil.CHANGE_PASSWORD);
+                startActivity(MainActivity.class, ConstansUtil.REQUEST_FOR_RESULT, ConstansUtil.CHANGE_PASSWORD);
             }
 
             @Override

@@ -318,4 +318,21 @@ public abstract class BaseStatusActivity extends BaseActivity {
         return view.getVisibility() == View.VISIBLE;
     }
 
+    protected void showView(View view) {
+        if (view.getVisibility() != View.VISIBLE) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void hideView(View view) {
+        if (view.getVisibility() != View.INVISIBLE) {
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    protected void goneView(View view) {
+        if (view.getVisibility() != View.GONE) {
+            view.setVisibility(View.GONE);
+        }
+    }
 }
