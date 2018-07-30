@@ -211,8 +211,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         super.onResume();
         if (mClipData != null) {
             for (int i = 0; i < 4; i++) {
+                mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                 mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
             }
+            verifyChangePasswordCode((String) mClipData);
         }
     }
 
