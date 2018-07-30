@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.ClipboardManager;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,6 +75,12 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     private SmsObserver mSmsObserver;
 
+    private ClipboardManager mClipboardManager;
+
+    private ClipboardManager.OnPrimaryClipChangedListener mClipChangedListener;
+
+    private CharSequence mClipData;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_sms_verification_layout;
@@ -93,6 +100,16 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         mVerfiCodeError = findViewById(R.id.verify_code_error);
         mSendAgain = findViewById(R.id.send_again);
 
+        initEditText();
+        mSendAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendChangePasswordCode();
+            }
+        });
+    }
+
+    private void initEditText() {
         for (int i = 0; i < 4; i++) {
             final int finalI = i;
             mTextWatchers[finalI] = new TextWatcher() {
@@ -144,13 +161,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 }
             });
         }
-
-        mSendAgain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendChangePasswordCode();
-            }
-        });
     }
 
     @Override
@@ -167,6 +177,43 @@ public class SMSVerificationActivity extends BaseStatusActivity {
             registerSmsObserver();
         }
         sendChangePasswordCode();
+        registerClipEvents();
+    }
+
+    private void registerClipEvents() {
+        mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (mClipboardManager != null) {
+            mClipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener() {
+                @Override
+                public void onPrimaryClipChanged() {
+                    if (mClipboardManager.hasPrimaryClip() && mClipboardManager.getPrimaryClip().getItemCount() > 0) {
+                        mClipData = mClipboardManager.getPrimaryClip().getItemAt(0).getText();
+                        if (mClipData.length() == 4) {
+                            for (int i = 0; i < mClipData.length(); i++) {
+                                if (!Character.isDigit(mClipData.charAt(i))) {
+                                    //判断复制的是否是纯数字
+                                    mClipData = null;
+                                    break;
+                                }
+                            }
+                        } else {
+                            mClipData = null;
+                        }
+                    }
+                }
+            };
+            mClipboardManager.addPrimaryClipChangedListener(mClipChangedListener);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mClipData != null) {
+            for (int i = 0; i < 4; i++) {
+                mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
+            }
+        }
     }
 
     @Override
@@ -200,6 +247,9 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
         if (mSmsObserver != null) {
             getContentResolver().unregisterContentObserver(mSmsObserver);
+        }
+        if (mClipboardManager != null) {
+            mClipboardManager.removePrimaryClipChangedListener(mClipChangedListener);
         }
     }
 
@@ -329,11 +379,13 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
                         startActivity(ChangePasswordRefactoryActivity.class, ConstansUtil.PASS_CODE, o.data);
+                        finish();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        mClipData = null;
                         deleteAll();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {

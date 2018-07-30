@@ -454,7 +454,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     }
 
     /**
-     * 如果有月卡的话则价格打七折
+     * 如果有月卡的话则价格打折
      */
     private void calculateParkFeeWithMonthlyCard() {
         if (!mMonthlyCards.isEmpty()) {
