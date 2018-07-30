@@ -458,7 +458,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      */
     private void calculateParkFeeWithMonthlyCard() {
         if (!mMonthlyCards.isEmpty()) {
-            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * 0.7));
+            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
         }
         if (mShouldPay <= 0) {
             mShouldPay = 0.01;

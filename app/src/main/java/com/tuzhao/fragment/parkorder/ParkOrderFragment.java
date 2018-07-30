@@ -154,9 +154,9 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     //停车时长超过预约时长
                     parkTimeDistance = "已超时" + DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), parkOrderInfo.getExtensionTime());
                 } else if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
-                        DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond()))<0) {
+                        DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
                     //在顺延时长内
-                    parkTimeDistance = "宽限剩余" + DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime(),parkOrderInfo.getExtensionTime());
+                    parkTimeDistance = "宽限剩余" + DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime());
                 } else {
                     parkTimeDistance = "剩余" + DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrder_endtime());
                 }
