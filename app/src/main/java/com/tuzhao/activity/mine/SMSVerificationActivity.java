@@ -34,6 +34,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.CountdownUtil;
 import com.tuzhao.utils.SmsObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -124,6 +125,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                             if (TextUtils.isEmpty(getText(mVerfifyCode))) {
                                 mVerfifyCodes[finalI].clearFocus();
                                 mVerfifyCode.requestFocus();
+                                ViewUtil.showInputMethod(mVerfifyCode);     //如果软键盘被用户关了，请求focus不会自己再弹出来
                                 return true;
                             }
                         }
