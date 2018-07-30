@@ -1,6 +1,5 @@
 package com.tuzhao.activity.mine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +7,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,6 +21,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.CityUtil;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.ArrayList;
 
@@ -449,10 +448,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     private void closeKeyboard() {
         View view = getWindow().peekDecorView();
         if (view != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null) {
-                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+            ViewUtil.closeInputMethod(view);
         }
     }
 
@@ -583,6 +579,16 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
      */
     private boolean isTypeThree() {
         return getText(mTicketType).equals("专票");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mTicketTypeOption.isShowing() || mCityOption.isShowing()) {
+            mTicketTypeOption.dismiss();
+            mCityOption.dismiss();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

@@ -125,7 +125,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                             if (TextUtils.isEmpty(getText(mVerfifyCode))) {
                                 mVerfifyCodes[finalI].clearFocus();
                                 mVerfifyCode.requestFocus();
-                                ViewUtil.showInputMethod(mVerfifyCode);     //如果软键盘被用户关了，请求focus不会自己再弹出来
+                                ViewUtil.openInputMethod(mVerfifyCode);     //如果软键盘被用户关了，请求focus不会自己再弹出来
                                 return true;
                             }
                         }

@@ -65,6 +65,36 @@ public class BasePickerView {
     }
 
     protected void initEvents() {
+        //消失动画
+        outAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                Log.e("TAG", "onAnimationStart: ");
+                isDismissing = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Log.e("TAG", "onAnimationEnd: ");
+                //从activity根视图移除
+                decorView.removeView(rootView);
+                isDismissing = false;
+                if (onDismissListener != null) {
+                    onDismissListener.onDismiss(BasePickerView.this);
+                }
+                /*decorView.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });*/
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     /**
@@ -103,40 +133,10 @@ public class BasePickerView {
         }
 
         if (isDismissing) {
-            Log.e("TAG", "dismiss: isDismissing");
             return;
         }
 
-        Log.e("TAG", "dismiss: ");
-        //消失动画
-        outAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                decorView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        //从activity根视图移除
-                        decorView.removeView(rootView);
-                        isDismissing = false;
-                        if (onDismissListener != null) {
-                            onDismissListener.onDismiss(BasePickerView.this);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
         contentContainer.startAnimation(outAnim);
-        isDismissing = true;
     }
 
     public Animation getInAnimation() {
