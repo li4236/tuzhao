@@ -168,7 +168,11 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 //待付款
                 circleView.setColor(Color.parseColor("#ff6c6c"));
                 orderTime.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
-                String shouldPay = "￥" + parkOrderInfo.getOrder_fee();
+                double orderFee = Double.parseDouble(parkOrderInfo.getOrder_fee());
+                if (orderFee <= 0) {
+                    orderFee = 0.01;
+                }
+                String shouldPay = "￥" + orderFee;
                 orderTimeDescription.setText(shouldPay);
                 orderStatus.setTextColor(Color.parseColor("#ff6c6c"));
                 orderStatus.setText("待支付");
