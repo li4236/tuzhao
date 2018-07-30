@@ -3,6 +3,7 @@ package com.tuzhao.publicmanager;
 import android.util.Log;
 
 import com.tuzhao.info.User_Info;
+import com.tuzhao.utils.DateUtil;
 
 /**
  * Created by TZL12 on 2017/5/16.
@@ -14,6 +15,7 @@ public class UserManager {
     private static UserManager userManager = null;
     private User_Info userInfo = null;
     private boolean mHasLogin;
+    private String mLoginTime;
 
     public static UserManager getInstance() {
 
@@ -85,6 +87,13 @@ public class UserManager {
 
     public void setHasLogin(boolean hasLogin) {
         mHasLogin = hasLogin;
+        if (hasLogin) {
+            mLoginTime = DateUtil.getCurrentYearToSecond();
+        }
+    }
+
+    public String getLoginTime() {
+        return mLoginTime;
     }
 
     /**

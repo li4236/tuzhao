@@ -13,6 +13,7 @@ import com.tuzhao.application.MyApplication;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 
 import org.json.JSONException;
@@ -63,8 +64,10 @@ public class MyReceiver extends BroadcastReceiver {
                     if (jsonObject.optString("type").equals("ctrl")) {
                         notifyListeners(jsonObject);
                     } else if (jsonObject.optString("type").equals("logout")) {
-                        if (UserManager.getInstance().hasLogined()) {
-                            //退出登录
+                        String time = jsonObject.optString("time");
+                        if (UserManager.getInstance().hasLogined() && DateUtil.getYearToSecondCalendar(time).compareTo(
+                                DateUtil.getYearToSecondCalendar(UserManager.getInstance().getLoginTime())) >= 0) {
+                            //如果登录之后别人在别的设备登录了则退出登录
                             User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
                             user_info.setAutologin("0");
                             MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(user_info);
@@ -76,7 +79,7 @@ public class MyReceiver extends BroadcastReceiver {
                             context.startActivity(intent1);
 
                             Intent intent2 = new Intent(ConstansUtil.FORCE_LOGOUT);
-                            intent2.putExtra(ConstansUtil.REQUEST_FOR_RESULT, jsonObject.optString("time"));
+                            intent2.putExtra(ConstansUtil.REQUEST_FOR_RESULT, time);
                             IntentObserable.dispatch(intent2);
                         }
                     }
