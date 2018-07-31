@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -128,19 +129,8 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     @Override
     protected void bindData(BaseViewHolder holder, final InvoiceInfo invoiceInfo, int position) {
-        String pic = invoiceInfo.getPictures();
-        if (pic.contains(",")) {
-            pic = pic.substring(0, pic.indexOf(","));
-        }
-        holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
-                .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
-                .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
-                .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
-                .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
-                .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic, R.mipmap.ic_img)
-                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"));
         final CheckBox checkBox = holder.getView(R.id.invoice_reimbursement_rb);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
@@ -159,7 +149,42 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     setTotalPrice();
                 }
             }
+        };
+
+        checkBox.setOnCheckedChangeListener(checkedChangeListener);
+
+        String pic = invoiceInfo.getPictures();
+        if (pic.contains(",")) {
+            pic = pic.substring(0, pic.indexOf(","));
+        }
+        holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
+                .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
+                .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
+                .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
+                .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
+                .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic, R.mipmap.ic_img)
+                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"))
+                .itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!checkBox.isChecked()) {
+                    invoiceInfo.setCheck("true");
+                    mChooseInvoice.add(invoiceInfo);
+                    if (mChooseInvoice.size() == mCommonAdapter.getData().size()) {
+                        mAllChoose.setChecked(true);
+                    }
+                } else {
+                    invoiceInfo.setCheck("false");
+                    mAllChoose.setChecked(false);
+                    mChooseInvoice.remove(invoiceInfo);
+                }
+                checkBox.setOnCheckedChangeListener(null);
+                checkBox.setChecked(!checkBox.isChecked());
+                checkBox.setOnCheckedChangeListener(checkedChangeListener);
+                setTotalPrice();
+            }
         });
+
     }
 
     @Override
@@ -207,4 +232,5 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
             }
         }
     }
+
 }

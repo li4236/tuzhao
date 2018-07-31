@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ParkSpaceInfo implements Parcelable {
 
-    @SerializedName(value = "id",alternate = {"parkAuditId"})
+    @SerializedName(value = "id", alternate = {"parkAuditId"})
     private String id;
 
-    //车位状态(0:已提交，1:审核中，2:审核通过，3:上门安装（拆卸），4:审核失败，5:安装/拆卸完毕，6:已取消)
+    //车位状态(0:已提交,需要判断是否缴纳押金，1:审核中，2:待安装（拆卸），3：安装（拆卸）完成，4:审核失败，5:退款完成，6:已取消)
     private String status;
 
     private String parkLotId;
@@ -56,6 +56,10 @@ public class ParkSpaceInfo implements Parcelable {
 
     //审核失败的理由
     private String reason;
+
+    //申请时间
+    @SerializedName(value = "applyTime",alternate = {"applicationTime"})
+    private String applyTime;
 
     public String getId() {
         return id;
@@ -209,6 +213,14 @@ public class ParkSpaceInfo implements Parcelable {
         this.reason = reason;
     }
 
+    public String getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(String applyTime) {
+        this.applyTime = applyTime;
+    }
+
     @Override
     public String toString() {
         return "ParkSpaceInfo{" +
@@ -231,6 +243,7 @@ public class ParkSpaceInfo implements Parcelable {
                 ", installTime='" + installTime + '\'' +
                 ", depositStatus='" + depositStatus + '\'' +
                 ", reason='" + reason + '\'' +
+                ", applyTime='" + applyTime + '\'' +
                 '}';
     }
 
@@ -260,6 +273,7 @@ public class ParkSpaceInfo implements Parcelable {
         dest.writeString(this.installTime);
         dest.writeString(this.depositStatus);
         dest.writeString(this.reason);
+        dest.writeString(this.applyTime);
     }
 
     public ParkSpaceInfo() {
@@ -285,6 +299,7 @@ public class ParkSpaceInfo implements Parcelable {
         this.installTime = in.readString();
         this.depositStatus = in.readString();
         this.reason = in.readString();
+        this.applyTime = in.readString();
     }
 
     public static final Creator<ParkSpaceInfo> CREATOR = new Creator<ParkSpaceInfo>() {

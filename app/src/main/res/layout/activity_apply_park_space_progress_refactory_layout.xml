@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/apply_park_space_progress_refactory_cl"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/top_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        android:paddingBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <TextView
+            android:id="@+id/park_lot_name"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="start"
+            app:layout_constraintEnd_toStartOf="@+id/apply_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/park_space_name"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/park_lot_name"
+            app:layout_constraintTop_toBottomOf="@+id/park_lot_name" />
+
+        <TextView
+            android:id="@+id/apply_time"
+            style="@style/TwentyTextG6Style"
+            app:layout_constraintEnd_toEndOf="@id/park_space_name"
+            app:layout_constraintTop_toTopOf="@+id/park_lot_name" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/apply_park_space_progress_cl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_name">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/under_review_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.tuzhao.publicwidget.others.CircleView
+                    android:id="@+id/under_review_cv"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    app:color="@color/y2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/end_under_review_line"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:background="@color/y2"
+                    app:layout_constraintBottom_toBottomOf="@+id/under_review_cv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/under_review_cv"
+                    app:layout_constraintTop_toTopOf="@+id/under_review_cv" />
+
+                <TextView
+                    android:id="@+id/under_review_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_marginTop="12dp"
+                    android:text="审核中"
+                    app:layout_constraintEnd_toEndOf="@id/under_review_cv"
+                    app:layout_constraintStart_toStartOf="@id/under_review_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/under_review_cv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/waiting_installation_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/under_review_cl"
+                app:layout_constraintTop_toTopOf="@+id/under_review_cl">
+
+                <View
+                    android:id="@+id/start_waiting_installation_line"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toBottomOf="@+id/waiting_installation_cv"
+                    app:layout_constraintEnd_toStartOf="@+id/waiting_installation_cv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/waiting_installation_cv" />
+
+                <com.tuzhao.publicwidget.others.CircleView
+                    android:id="@+id/waiting_installation_cv"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    app:color="@color/g10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/end_waiting_installation_line"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:background="@color/g10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/waiting_installation_cv"
+                    app:layout_constraintTop_toTopOf="@+id/start_waiting_installation_line" />
+
+                <TextView
+                    android:id="@+id/waiting_installation_tv"
+                    style="@style/TenTextG10Stytle"
+                    android:layout_marginTop="12dp"
+                    android:text="安装中"
+                    app:layout_constraintEnd_toEndOf="@id/waiting_installation_cv"
+                    app:layout_constraintStart_toStartOf="@id/waiting_installation_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/waiting_installation_cv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/installation_complete_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/waiting_installation_cl"
+                app:layout_constraintTop_toTopOf="@+id/under_review_cl">
+
+                <View
+                    android:id="@+id/start_installation_complete_line"
+                    android:layout_width="40dp"
+                    android:layout_height="4dp"
+                    android:background="@color/g10"
+                    app:layout_constraintBottom_toBottomOf="@+id/installation_complete_cv"
+                    app:layout_constraintEnd_toStartOf="@+id/installation_complete_cv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/installation_complete_cv" />
+
+                <com.tuzhao.publicwidget.others.CircleView
+                    android:id="@+id/installation_complete_cv"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    app:color="@color/g10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/installation_complete_tv"
+                    style="@style/TenTextG10Stytle"
+                    android:layout_marginTop="12dp"
+                    android:text="已安装"
+                    app:layout_constraintEnd_toEndOf="@id/installation_complete_cv"
+                    app:layout_constraintStart_toStartOf="@id/installation_complete_cv"
+                    app:layout_constraintTop_toBottomOf="@+id/installation_complete_cv" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/expected_install_time"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@+id/park_space_name"
+            app:layout_constraintTop_toBottomOf="@+id/apply_park_space_progress_cl" />
+
+        <TextView
+            android:id="@+id/handle_result_tv"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginTop="10dp"
+            android:text="处理结果："
+            app:layout_constraintStart_toStartOf="@id/expected_install_time"
+            app:layout_constraintTop_toBottomOf="@+id/expected_install_time" />
+
+        <TextView
+            android:id="@+id/handle_result"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/handle_result_tv"
+            app:layout_constraintTop_toTopOf="@+id/handle_result_tv" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/cancel_apply_tv"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/y3_all_8dp"
+        android:gravity="center"
+        android:text="取消申请"
+        android:textColor="@color/y3"
+        app:layout_constraintEnd_toStartOf="@+id/modify_info_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_cl" />
+
+    <TextView
+        android:id="@+id/modify_info_tv"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:background="@drawable/little_yuan_yellow_8dp"
+        android:gravity="center"
+        android:text="修改资料"
+        android:textColor="@color/b1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancel_apply_tv"
+        app:layout_constraintTop_toTopOf="@+id/cancel_apply_tv" />
+
+    <TextView
+        style="@style/TwentyTextB1Style"
+        android:layout_marginBottom="30dp"
+        android:text="如有问题，请联系客服  ＞"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/contact_service"
+        android:textColor="#66a4ff"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

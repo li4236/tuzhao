@@ -318,7 +318,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                         dismmisLoadingDialog();
                         MyToast.showToast(PersonalMessageRefactorActivity.this, "绑定成功", 5);
                         UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
-                        UserManager.getInstance().getUserInfo().setAliNickName(class_info.data);
+                        UserManager.getInstance().getUserInfo().setAliNickname(class_info.data);
                         mAlipay.setText(UNBIND);
                     }
 

@@ -28,7 +28,7 @@ public class User_Info extends BaseInfo {
     private int leave_time = -1;//离开的弹性时间
     private String serect_code;//用户通行码
     private String alinumber = "-1";//支付宝账号
-    private String aliNickName = "";//支付宝用户昵称
+    private String aliNickname = "";//支付宝用户昵称
     private String openId;//微信的用户的openId
     private String sesameFraction;
 
@@ -288,12 +288,12 @@ public class User_Info extends BaseInfo {
         this.alinumber = alinumber;
     }
 
-    public String getAliNickName() {
-        return aliNickName;
+    public String getAliNickname() {
+        return aliNickname;
     }
 
-    public void setAliNickName(String aliNickName) {
-        this.aliNickName = aliNickName;
+    public void setAliNickname(String aliNickname) {
+        this.aliNickname = aliNickname;
     }
 
     public String getCreate_time() {
@@ -374,7 +374,7 @@ public class User_Info extends BaseInfo {
                 ", leave_time=" + leave_time +
                 ", serect_code='" + serect_code + '\'' +
                 ", alinumber='" + alinumber + '\'' +
-                ", aliNickName='" + aliNickName + '\'' +
+                ", aliNickname='" + aliNickname + '\'' +
                 ", openId='" + openId + '\'' +
                 ", sesameFraction='" + sesameFraction + '\'' +
                 ", stage='" + stage + '\'' +

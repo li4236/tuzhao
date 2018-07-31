@@ -818,7 +818,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         if (mCancelDialog == null) {
             mCancelDialog = new TipeDialog.Builder(requireContext())
                     .setTitle("取消申请")
-                    .setMessage("确认取消申请?\n(押金将在三个工作日内退回)")
+                    .setMessage("确认取消申请?\n(押金将在24小时内退回原支付账户)")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

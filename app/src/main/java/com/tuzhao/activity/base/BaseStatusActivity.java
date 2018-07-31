@@ -335,4 +335,10 @@ public abstract class BaseStatusActivity extends BaseActivity {
             view.setVisibility(View.GONE);
         }
     }
+
+    protected int dpToPx(float dp) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
 }

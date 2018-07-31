@@ -47,7 +47,7 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
         super.initView(savedInstanceState);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
 
-        ConstraintLayout view = (ConstraintLayout) getLayoutInflater().inflate(R.layout.empty_and_buy_layout, mRecyclerView,false);
+        ConstraintLayout view = (ConstraintLayout) getLayoutInflater().inflate(R.layout.empty_and_buy_layout, mRecyclerView, false);
         ConstraintLayout constraintLayout = view.findViewById(R.id.content_cl);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(view);
@@ -171,46 +171,37 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
                 auditStatus = "已提交";
                 break;
             case "1":
-                if (parkSpaceInfo.getType().equals("1")) {
-                    auditStatus = "安装审核";
-                } else {
-                    auditStatus = "拆卸审核";
-                }
+                auditStatus = "审核中";
                 break;
             case "2":
-                auditStatus = "审核通过";
-                break;
-            case "3":
                 if (parkSpaceInfo.getType().equals("1")) {
-                    auditStatus = "上门安装";
+                    auditStatus = "待安装";
                 } else {
-                    auditStatus = "上门拆卸";
+                    auditStatus = "待拆卸";
                 }
                 break;
-            case "4":
-                auditStatus = "审核失败";
-                break;
-            case "5":
+            case "3":
                 if (parkSpaceInfo.getType().equals("1")) {
                     auditStatus = "安装完毕";
                 } else {
                     auditStatus = "拆卸完毕";
                 }
                 break;
+            case "4":
+                auditStatus = "审核失败";
+                break;
+            case "5":
+                auditStatus = "退款完毕";
+                break;
             case "6":
                 auditStatus = "已取消";
-                break;
-            case "7":
-                auditStatus = "押金退还中";
                 break;
             default:
                 auditStatus = "未知状态";
                 break;
         }
-        if (!auditStatus.equals("已取消")) {
-            if (parkSpaceInfo.getDepositStatus().equals("0")) {
-                auditStatus = "待缴押金";
-            }
+        if (parkSpaceInfo.getDepositStatus().equals("0")) {
+            auditStatus = "待缴押金";
         }
         holder.setText(R.id.my_parkspace_description, parkSpaceInfo.getParkSpaceDescription())
                 .setText(R.id.my_parkspace_park_location, parkSpaceInfo.getParkLotName())
@@ -225,27 +216,32 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
                         payDepositSum(parkSpaceInfo);
                     }
                 } else {
-                    Intent intent = new Intent(AuditParkSpaceActivity.this, ApplyParkSpaceProgressActivity.class);
+                    Intent intent = new Intent(AuditParkSpaceActivity.this, ApplyParkSpaceProgressRefactoryActivity.class);
                     intent.putExtra(ConstansUtil.PARK_SPACE_INFO, parkSpaceInfo);
                     startActivity(intent);
                 }
             }
         });
 
-        if (auditStatus.equals("上门安装")) {
-            holder.setText(R.id.audit_parkspace_install_time, "预计安装时间:" + parkSpaceInfo.getInstallTime());
-        } else if (auditStatus.equals("上门拆卸")) {
-            holder.setText(R.id.audit_parkspace_install_time, "预计拆卸时间:" + parkSpaceInfo.getInstallTime());
-        } else if (auditStatus.equals("审核失败")) {
-            holder.setText(R.id.audit_parkspace_install_time, "原因:" + parkSpaceInfo.getReason());
-        } else {
-            ConstraintLayout constraintLayout = (ConstraintLayout) holder.itemView;
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(constraintLayout);
-            constraintSet.connect(R.id.audit_parkspace_status, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            constraintSet.connect(R.id.audit_parkspace_status, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-            constraintSet.connect(R.id.my_parkspace_park_location, ConstraintSet.END, R.id.audit_parkspace_status, ConstraintSet.START);
-            constraintSet.applyTo(constraintLayout);
+        switch (auditStatus) {
+            case "待安装":
+                holder.setText(R.id.audit_parkspace_install_time, "预计安装时间:" + parkSpaceInfo.getInstallTime());
+                break;
+            case "待拆卸":
+                holder.setText(R.id.audit_parkspace_install_time, "预计拆卸时间:" + parkSpaceInfo.getInstallTime());
+                break;
+            case "审核失败":
+                holder.setText(R.id.audit_parkspace_install_time, "原因:" + parkSpaceInfo.getReason());
+                break;
+            default:
+                ConstraintLayout constraintLayout = (ConstraintLayout) holder.itemView;
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(R.id.audit_parkspace_status, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                constraintSet.connect(R.id.audit_parkspace_status, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                constraintSet.connect(R.id.my_parkspace_park_location, ConstraintSet.END, R.id.audit_parkspace_status, ConstraintSet.START);
+                constraintSet.applyTo(constraintLayout);
+                break;
         }
 
     }
@@ -280,6 +276,7 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
                         if (mCommonAdapter.get(i).getId().equals(spaceId)) {
                             ParkSpaceInfo paySpaceInfo = mCommonAdapter.get(i);
                             paySpaceInfo.setDepositStatus("1");
+                            paySpaceInfo.setStatus("1");
                             mCommonAdapter.notifyDataChange(i, paySpaceInfo);
                             break;
                         }

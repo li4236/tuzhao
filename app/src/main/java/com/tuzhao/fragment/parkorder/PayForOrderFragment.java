@@ -207,7 +207,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         switch (v.getId()) {
             case R.id.pay_for_order_question_tv:
             case R.id.appointment_calculate_rule_iv:
-                startActivity(OrderComplaintActivity.class,ConstansUtil.PARK_ORDER_INFO,mParkOrderInfo);
+                startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
 
                 /*Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
@@ -458,7 +458,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      */
     private void calculateParkFeeWithMonthlyCard() {
         if (!mMonthlyCards.isEmpty()) {
-            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
+            // TODO: 2018/7/31
+            //mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
         }
         if (mShouldPay <= 0) {
             mShouldPay = 0.01;
