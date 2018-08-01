@@ -27,8 +27,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     private View mFooterView;
 
-    private BaseViewHolder mBaseViewHolder;
-
     private OnItemClickListener mOnItemClickListener;
 
     private static final int HEADER_VIEW = 0x111;
@@ -61,8 +59,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         } else if (viewType == FOOTER_VIEW) {
             return new BaseViewHolder(mFooterView);
         }
-        mBaseViewHolder = new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId() == 0 ? itemViewId(viewType) : itemViewId(), parent, false));
-        return mBaseViewHolder;
+        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId() == 0 ? itemViewId(viewType) : itemViewId(), parent, false));
     }
 
     @Override
@@ -92,7 +89,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     protected abstract void conver(@NonNull BaseViewHolder holder, T t, int position);
 
-    int getHeadViewCount() {
+    private int getHeadViewCount() {
         if (mHeaderView == null) {
             return 0;
         }
@@ -139,10 +136,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
-    }
-
-    public BaseViewHolder getBaseViewHolder() {
-        return mBaseViewHolder;
     }
 
     @LayoutRes

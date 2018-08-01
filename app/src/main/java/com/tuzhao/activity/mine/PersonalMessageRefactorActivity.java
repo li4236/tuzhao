@@ -113,7 +113,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
     @Override
     protected void initData() {
         User_Info userInfo = com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo();
-        ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + userInfo.getImg_url());
+        ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + userInfo.getImg_url(), R.mipmap.ic_usericon);
         String nickname;
         if (userInfo.getNickname().equals("-1")) {
             nickname = "昵称（未设置）";

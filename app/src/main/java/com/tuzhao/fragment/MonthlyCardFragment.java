@@ -47,7 +47,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
         super.initView(view, savedInstanceState);
         View footerView = getLayoutInflater().inflate(R.layout.layout_placeholder, mRecyclerView.getRecyclerView(), false);
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                DensityUtil.dp2px(mRecyclerView.getContext(), 20));
+                DensityUtil.dp2px(mRecyclerView.getContext(), 8));
         footerView.setLayoutParams(layoutParams);
         mCommonAdapter.setFooterView(footerView);
     }
@@ -173,4 +173,5 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
             }
         }
     }
+
 }

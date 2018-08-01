@@ -126,6 +126,9 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
             mCommonAdapter.clearAll();
         }
         mCommonAdapter.addData(base_class_list_info.data);
+        if (mStartItme == 0 && !base_class_list_info.data.isEmpty()) {
+            mRecyclerView.getRecyclerView().scrollToPosition(0);
+        }
         mRecyclerView.showData();
         stopLoadStatus();
         increateStartItem();
