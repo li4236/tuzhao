@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -38,6 +37,8 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     private TextView mTotalPrice;
 
+    private TextView mInvoceReimburesmentSubmit;
+
     private DecimalFormat mDecimalFormat;
 
     private com.tuzhao.publicwidget.others.CheckBox mAllChoose;
@@ -51,6 +52,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         mDecimalFormat = new DecimalFormat("0.00");
         mTotalPrice = findViewById(R.id.invoice_reimbursement_total_invoice);
         mAllChoose = findViewById(R.id.invoice_reimbursement_all_rb);
+        mInvoceReimburesmentSubmit = findViewById(R.id.invoice_reimbursement_submit);
         mAllChoose.setCheckDrawable(ContextCompat.getDrawable(this, R.drawable.ic_chose));
         mAllChoose.setNoCheckDrawble(ContextCompat.getDrawable(this, R.drawable.ic_nochose));
         mAllChoose.setOnCheckChangeListener(new com.tuzhao.publicwidget.others.CheckBox.OnCheckChangeListener() {
@@ -61,18 +63,18 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
             }
         });
 
-        findViewById(R.id.invoice_reimbursement_submit).setOnClickListener(new View.OnClickListener() {
+        mInvoceReimburesmentSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCommonAdapter.getData().isEmpty()) {
+                /*if (mCommonAdapter.getData().isEmpty()) {
                     showFiveToast("没有能够报销的发票哦");
                 } else if (mChooseInvoice.isEmpty()) {
                     showFiveToast("你还没选择需要报销的发票哦");
                 } else if (calculateTotalPrice() < 100) {
                     showFiveToast("订单总额大于100才可以开票哦");
                 } else {
-                    startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
-                }
+                }*/
+                startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
             }
         });
     }
@@ -207,8 +209,20 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
     }
 
     private void setTotalPrice() {
-        String string = "开票总额:" + mDecimalFormat.format(calculateTotalPrice()) + "元";
+        double totalPrice = Double.parseDouble(mDecimalFormat.format(calculateTotalPrice()));
+        String string = "开票总额:" + totalPrice + "元";
         mTotalPrice.setText(string);
+        if (totalPrice >= 100) {
+            mInvoceReimburesmentSubmit.setBackgroundResource(R.drawable.bg_yellow);
+            if (!mInvoceReimburesmentSubmit.isClickable()) {
+                mInvoceReimburesmentSubmit.setClickable(true);
+            }
+        } else {
+            mInvoceReimburesmentSubmit.setBackgroundColor(ConstansUtil.G10_COLOR);
+            if (mInvoceReimburesmentSubmit.isClickable()) {
+                mInvoceReimburesmentSubmit.setClickable(false);
+            }
+        }
     }
 
     private void setAllCheck(boolean check) {
