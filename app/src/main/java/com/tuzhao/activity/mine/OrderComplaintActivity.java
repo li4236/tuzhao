@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -160,7 +159,6 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG, "onActivityResult: " + requestCode);
         if (requestCode == ConstansUtil.PICTURE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             //选择的图片
             Intent intent = new Intent(ConstansUtil.PHOTO_IMAGE);
@@ -226,9 +224,24 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
                     mUploadPicture.setChoosePosition(position);
                     if (uploadPhotoInfo.getPath().equals("-1")) {
                         mUploadPicture.startTakePropertyPhoto();
+                    } else {
+                        mUploadPicture.startTakePropertyPhoto(1);
                     }
                 }
             });
+
+            holder.getView(R.id.delete_complaint_photo).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mUploadPicture.deletePhoto(uploadPhotoInfo.getPath());
+                }
+            });
+
+            if (!uploadPhotoInfo.getPath().equals("-1") && uploadPhotoInfo.isUploadSuccess() && !uploadPhotoInfo.isShowProgress()) {
+                showView(holder.getView(R.id.delete_complaint_photo));
+            } else {
+                goneView(holder.getView(R.id.delete_complaint_photo));
+            }
         }
 
         @Override

@@ -115,6 +115,11 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         mImagePicker.start(mActivity, ConstansUtil.PICTURE_REQUEST_CODE);
     }
 
+    public void startTakePropertyPhoto(int maxNum) {
+        mImagePicker.maxNum(maxNum);
+        mImagePicker.start(mActivity, ConstansUtil.PICTURE_REQUEST_CODE);
+    }
+
     private void initDialog() {
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_selete_photo_layout, null);
         mCustomDialog = new CustomDialog(mActivity, view, true);
@@ -316,7 +321,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         }
     }
 
-    private void deletePhoto(String filePath) {
+    public void deletePhoto(String filePath) {
         for (int i = 0; i < mAdapter.getDataSize(); i++) {
             if (mAdapter.get(i).getPath().equals(filePath)) {
                 if (i == mMaxNum - 1) {
