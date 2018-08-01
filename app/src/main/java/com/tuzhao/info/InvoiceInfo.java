@@ -19,7 +19,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
 
     private String pictures;
 
-    private String check = "false";
+    private boolean check = false;
 
     private String locationDescribe;
 
@@ -59,11 +59,11 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.pictures = pictures;
     }
 
-    public String getCheck() {
+    public boolean getCheck() {
         return check;
     }
 
-    public void setCheck(String check) {
+    public void setCheck(boolean check) {
         this.check = check;
     }
 
@@ -117,7 +117,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.parkspaceName);
         dest.writeString(this.parkStarttime);
         dest.writeString(this.pictures);
-        dest.writeString(this.check);
+        dest.writeByte(this.check ? (byte) 1 : (byte) 0);
         dest.writeString(this.locationDescribe);
         dest.writeString(this.parkDuration);
         dest.writeString(this.actualFee);
@@ -131,13 +131,13 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.parkspaceName = in.readString();
         this.parkStarttime = in.readString();
         this.pictures = in.readString();
-        this.check = in.readString();
+        this.check = in.readByte() != 0;
         this.locationDescribe = in.readString();
         this.parkDuration = in.readString();
         this.actualFee = in.readString();
     }
 
-    public static final Parcelable.Creator<InvoiceInfo> CREATOR = new Parcelable.Creator<InvoiceInfo>() {
+    public static final Creator<InvoiceInfo> CREATOR = new Creator<InvoiceInfo>() {
         @Override
         public InvoiceInfo createFromParcel(Parcel source) {
             return new InvoiceInfo(source);
@@ -148,4 +148,5 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
             return new InvoiceInfo[size];
         }
     };
+
 }

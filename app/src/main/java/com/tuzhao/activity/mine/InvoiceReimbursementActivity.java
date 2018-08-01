@@ -138,13 +138,13 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
                         && !mRecyclerView.getRecyclerView().isComputingLayout()) {
                     if (isChecked) {
-                        invoiceInfo.setCheck("true");
+                        invoiceInfo.setCheck(true);
                         mChooseInvoice.add(invoiceInfo);
                         if (mChooseInvoice.size() == mCommonAdapter.getData().size()) {
                             mAllChoose.setChecked(true);
                         }
                     } else {
-                        invoiceInfo.setCheck("false");
+                        invoiceInfo.setCheck(false);
                         mAllChoose.setChecked(false);
                         mChooseInvoice.remove(invoiceInfo);
                     }
@@ -165,18 +165,18 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
                 .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
                 .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic, R.mipmap.ic_img)
-                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck().equals("true"))
+                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck())
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!checkBox.isChecked()) {
-                    invoiceInfo.setCheck("true");
+                    invoiceInfo.setCheck(true);
                     mChooseInvoice.add(invoiceInfo);
                     if (mChooseInvoice.size() == mCommonAdapter.getData().size()) {
                         mAllChoose.setChecked(true);
                     }
                 } else {
-                    invoiceInfo.setCheck("false");
+                    invoiceInfo.setCheck(false);
                     mAllChoose.setChecked(false);
                     mChooseInvoice.remove(invoiceInfo);
                 }
@@ -228,7 +228,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
     private void setAllCheck(boolean check) {
         mChooseInvoice.clear();
         for (InvoiceInfo invoiceInfo : mCommonAdapter.getData()) {
-            invoiceInfo.setCheck(check ? "true" : "false");
+            invoiceInfo.setCheck(check);
             if (check) {
                 mChooseInvoice.add(invoiceInfo);
             }
