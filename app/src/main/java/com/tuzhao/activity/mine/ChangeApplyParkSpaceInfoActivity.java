@@ -1,8 +1,6 @@
-package com.tuzhao.fragment.applyParkSpaceProgress;
+package com.tuzhao.activity.mine;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -24,17 +22,16 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
-import com.tuzhao.activity.mine.SelectParkSpaceActivity;
-import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkSpaceInfo;
 import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -49,30 +46,18 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * Created by juncoder on 2018/6/4.
  */
-public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.OnClickListener {
-
-    private TextView mParkLotNameTv;
+public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity implements View.OnClickListener {
 
     private TextView mParkLotName;
 
-    private TextView mRevenueRatioTv;
-
     private TextView mRevenueRatio;
-
-    private TextView mParkSpaceDescriptionTv;
 
     private EditText mParkSpaceDescription;
 
-    private TextView mRealNameTv;
-
     private EditText mRealName;
-
-    private TextView mIdcardPhotoTv;
 
     private ImageView mIdCardPositivePhoto;
 
@@ -86,15 +71,11 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private TextView mIdCardNegativePhotoTv;
 
-    private TextView mPropetyPhotoTv;
-
     private ConstraintLayout mPropertyPhotoCl;
 
     private ConstraintLayout mTakePropertyPhotoCl;
 
     private TextView mParkSpaceHint;
-
-    private TextView mModifyInfoTv;
 
     private PropertyAdapter mPropertyAdapter;
 
@@ -108,15 +89,9 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private OptionsPickerView<String> mAppointmentOption;
 
-    private TextView mAppointmentTimeTv;
-
     private TextView mChooseAppointmentTime;
 
-    private TextView mCancelApply;
-
     private ParkSpaceInfo mParkSpaceInfo;
-
-    private TipeDialog mCancelDialog;
 
     private int mChoosePosition;
 
@@ -124,56 +99,36 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private int mEightyDp;
 
-    private boolean mIsModifyInfo;
-
-    private int mB1Color;
-
-    public static ParkSpaceInfoFragment newInstance(ParkSpaceInfo parkSpaceInfo) {
-        ParkSpaceInfoFragment fragment = new ParkSpaceInfoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, parkSpaceInfo);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     @Override
     protected int resourceId() {
-        return R.layout.fragment_park_space_info_layout;
+        return R.layout.activity_change_apply_park_space_info_layout;
     }
 
     @Override
-    protected void initView(View view, Bundle savedInstanceState) {
-        mParkLotNameTv = view.findViewById(R.id.parking_lot_name_tv);
-        mParkLotName = view.findViewById(R.id.car_number);
-        mRevenueRatioTv = view.findViewById(R.id.revenue_ratio_tv);
-        mRevenueRatio = view.findViewById(R.id.revenue_ratio);
-        mRealNameTv = view.findViewById(R.id.real_name_tv);
-        mRealName = view.findViewById(R.id.real_name_et);
-        mParkSpaceDescriptionTv = view.findViewById(R.id.park_space_description_tv);
-        mParkSpaceDescription = view.findViewById(R.id.park_space_description);
-        mIdcardPhotoTv = view.findViewById(R.id.id_card_photo_tv);
-        mIdCardPositivePhoto = view.findViewById(R.id.id_card_positive_photo_iv);
-        mIdCardPositiveUploadTv = view.findViewById(R.id.id_card_positive_upload_tv);
-        mIdCardPositivePhotoTv = view.findViewById(R.id.id_card_positive_photo_tv);
-        mIdCardNegativePhoto = view.findViewById(R.id.id_card_negative_photo_iv);
-        mIdCardNegativeUploadTv = view.findViewById(R.id.id_card_negative_upload_tv);
-        mIdCardNegativePhotoTv = view.findViewById(R.id.id_card_negative_photo_tv);
-        mPropetyPhotoTv = view.findViewById(R.id.property_photo_tv);
-        mPropertyPhotoCl = view.findViewById(R.id.property_photos_cl);
-        mTakePropertyPhotoCl = view.findViewById(R.id.take_property_photo_cl);
-        mAppointmentTimeTv = view.findViewById(R.id.appointment_time);
-        mChooseAppointmentTime = view.findViewById(R.id.choose_appointment_time);
-        mParkSpaceHint = view.findViewById(R.id.park_space_hint);
-        mCancelApply = view.findViewById(R.id.cancel_apply_tv);
-        mModifyInfoTv = view.findViewById(R.id.modify_info_tv);
+    protected void initView(Bundle savedInstanceState) {
+        mParkLotName = findViewById(R.id.car_number);
+        mRevenueRatio = findViewById(R.id.revenue_ratio);
+        mRealName = findViewById(R.id.real_name_et);
+        mParkSpaceDescription = findViewById(R.id.park_space_description);
+        mIdCardPositivePhoto = findViewById(R.id.id_card_positive_photo_iv);
+        mIdCardPositiveUploadTv = findViewById(R.id.id_card_positive_upload_tv);
+        mIdCardPositivePhotoTv = findViewById(R.id.id_card_positive_photo_tv);
+        mIdCardNegativePhoto = findViewById(R.id.id_card_negative_photo_iv);
+        mIdCardNegativeUploadTv = findViewById(R.id.id_card_negative_upload_tv);
+        mIdCardNegativePhotoTv = findViewById(R.id.id_card_negative_photo_tv);
+        mPropertyPhotoCl = findViewById(R.id.property_photos_cl);
+        mTakePropertyPhotoCl = findViewById(R.id.take_property_photo_cl);
+        mChooseAppointmentTime = findViewById(R.id.choose_appointment_time);
+        mParkSpaceHint = findViewById(R.id.park_space_hint);
 
-        RecyclerView recyclerView = view.findViewById(R.id.property_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        RecyclerView recyclerView = findViewById(R.id.property_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mPropertyAdapter = new PropertyAdapter();
         recyclerView.setAdapter(mPropertyAdapter);
         mPropertyAdapter.addData(new UploadPhotoInfo());
 
-        view.findViewById(R.id.parking_lot_name_cl).setOnClickListener(this);
+        findViewById(R.id.parking_lot_name_cl).setOnClickListener(this);
+        findViewById(R.id.modify_info_tv).setOnClickListener(this);
         mRevenueRatio.setOnClickListener(this);
         mIdCardPositivePhotoTv.setOnClickListener(this);
         mIdCardPositiveUploadTv.setOnClickListener(this);
@@ -183,8 +138,6 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         mIdCardNegativePhoto.setOnClickListener(this);
         mTakePropertyPhotoCl.setOnClickListener(this);
         mChooseAppointmentTime.setOnClickListener(this);
-        mCancelApply.setOnClickListener(this);
-        mModifyInfoTv.setOnClickListener(this);
     }
 
     @Override
@@ -194,12 +147,11 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 "2、审核成功后不可取消，可在安装后申请取消车位";
         mParkSpaceHint.setText(hint);
 
-        mSixtyDp = DensityUtil.dp2px(requireContext(), 16);
-        mEightyDp = DensityUtil.dp2px(requireContext(), 18);
-        mB1Color = Color.parseColor("#323232");
+        mSixtyDp = DensityUtil.dp2px(this, 16);
+        mEightyDp = DensityUtil.dp2px(this, 18);
 
-        if (getArguments() != null) {
-            mParkSpaceInfo = getArguments().getParcelable(ConstansUtil.PARK_SPACE_INFO);
+        if (getIntent() != null) {
+            mParkSpaceInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
 
             assert mParkSpaceInfo != null;
             mParkLotName.setText(mParkSpaceInfo.getParkLotName());
@@ -207,28 +159,25 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             mRevenueRatio.setText(revenueRatio);
             mParkSpaceDescription.setText(mParkSpaceInfo.getParkSpaceDescription());
             mRealName.setText(mParkSpaceInfo.getRealName());
-
-            setEditTextEnable(mParkSpaceDescription, false);
-            setEditTextEnable(mRealName, false);
-
+            Log.e(TAG, "initData: " + mParkSpaceInfo);
             if (!mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
-                showPhoto(mParkSpaceInfo.getIdCardPositiveUrl(), 0);
+                showPhoto(HttpConstants.ROOT_IMG_URL_ID_CARD + mParkSpaceInfo.getIdCardPositiveUrl(), 0);
             }
 
             if (!mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
-                showPhoto(mParkSpaceInfo.getIdCardNegativeUrl(), 1);
+                showPhoto(HttpConstants.ROOT_IMG_URL_ID_CARD + mParkSpaceInfo.getIdCardNegativeUrl(), 1);
             }
 
             if (!mParkSpaceInfo.getPropertyFirstUrl().equals("-1")) {
-                showPhoto(mParkSpaceInfo.getPropertyFirstUrl(), 2);
+                showPhoto(HttpConstants.ROOT_IMG_URL_PROPERTY + mParkSpaceInfo.getPropertyFirstUrl(), 2);
             }
 
             if (!mParkSpaceInfo.getPropertySecondUrl().equals("-1")) {
-                showPhoto(mParkSpaceInfo.getPropertySecondUrl(), 3);
+                showPhoto(HttpConstants.ROOT_IMG_URL_PROPERTY + mParkSpaceInfo.getPropertySecondUrl(), 3);
             }
 
             if (!mParkSpaceInfo.getPropertyThirdUrl().equals("-1")) {
-                showPhoto(mParkSpaceInfo.getPropertyThirdUrl(), 4);
+                showPhoto(HttpConstants.ROOT_IMG_URL_PROPERTY + mParkSpaceInfo.getPropertyThirdUrl(), 4);
             }
 
             Calendar installCalendar = DateUtil.getYearToDayCalendar(mParkSpaceInfo.getInstallTime().split(" ")[0], false);
@@ -255,23 +204,17 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
             initAppointmentOption();
 
-            if (mParkSpaceInfo.getType().equals("1")) {
-                if (mParkSpaceInfo.getStatus().equals("0") || mParkSpaceInfo.getStatus().equals("1")) {
-                    mModifyInfoTv.setVisibility(View.VISIBLE);
-                } else {
-                    mCancelApply.setVisibility(View.GONE);
-                }
-            } else if (mParkSpaceInfo.getType().equals("2")) {
-                if (!mParkSpaceInfo.getStatus().equals("0") || !mParkSpaceInfo.getStatus().equals("1")) {
-                    mCancelApply.setVisibility(View.GONE);
-                }
-                mModifyInfoTv.setVisibility(View.GONE);
-            }
         } else {
-            showFiveToast("获取申请进度失败，请稍后重试");
+            showFiveToast("获取申请资料失败，请稍后重试");
             finish();
         }
 
+    }
+
+    @NonNull
+    @Override
+    protected String title() {
+        return "修改资料";
     }
 
     @Override
@@ -279,53 +222,36 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         switch (v.getId()) {
             case R.id.parking_lot_name_cl:
             case R.id.revenue_ratio:
-                if (mIsModifyInfo) {
-                    Intent intent = new Intent(getActivity(), SelectParkSpaceActivity.class);
-                    startActivityForResult(intent, 1);
-                }
+                Intent intent = new Intent(this, SelectParkSpaceActivity.class);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.id_card_positive_photo_tv:
             case R.id.id_card_positive_photo_iv:
-                if (mIsModifyInfo) {
-                    mChoosePosition = 0;
-                    if (mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
-                        startTakePhoto();
-                    } else {
-                        showDialog();
-                    }
+                mChoosePosition = 0;
+                if (mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
+                    startTakePhoto();
+                } else {
+                    showDialog();
                 }
                 break;
             case R.id.id_card_negative_photo_tv:
             case R.id.id_card_negative_photo_iv:
-                if (mIsModifyInfo) {
-                    mChoosePosition = 1;
-                    if (mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
-                        startTakePhoto();
-                    } else {
-                        showDialog();
-                    }
+                mChoosePosition = 1;
+                if (mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
+                    startTakePhoto();
+                } else {
+                    showDialog();
                 }
                 break;
             case R.id.take_property_photo_cl:
-                if (mIsModifyInfo) {
-                    mChoosePosition = 2;
-                    startTakePhoto();
-                }
+                mChoosePosition = 2;
+                startTakePhoto();
                 break;
             case R.id.choose_appointment_time:
-                if (mIsModifyInfo) {
-                    mAppointmentOption.show();
-                }
-                break;
-            case R.id.cancel_apply_tv:
-                showCancelDialog();
+                mAppointmentOption.show();
                 break;
             case R.id.modify_info_tv:
-                if (mIsModifyInfo) {
-                    verifyInfo();
-                } else {
-                    setCanModify();
-                }
+                verifyInfo();
                 break;
         }
     }
@@ -348,7 +274,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             //选择的图片
             final List<ImageBean> imageBeans = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             if (imageBeans.size() == 1) {
-                ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                ImageUtil.compressPhoto(this, imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
                     @Override
                     public void onSuccess(File file) {
                         handleCompressPhoto(file, mChoosePosition);
@@ -380,7 +306,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             mAppointmentTimeFramne.add(timeFrame);
         }
 
-        mAppointmentOption = new OptionsPickerView<>(requireContext());
+        mAppointmentOption = new OptionsPickerView<>(this);
         mAppointmentOption.setPicker(mAppointmentDays, mAppointmentTimeFramne, true);
         mAppointmentOption.setTextSize(16);
         mAppointmentOption.setCyclic(false);
@@ -391,27 +317,6 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 mChooseAppointmentTime.setText(chooseTime);
             }
         });
-    }
-
-    private void setCanModify() {
-        mIsModifyInfo = true;
-        mModifyInfoTv.setText("确认提交");
-
-        mParkLotNameTv.setTextColor(mB1Color);
-        mParkLotName.setTextColor(mB1Color);
-        mRevenueRatioTv.setTextColor(mB1Color);
-        mRevenueRatio.setTextColor(mB1Color);
-        mParkSpaceDescriptionTv.setTextColor(mB1Color);
-        mParkSpaceDescription.setTextColor(mB1Color);
-        mRealNameTv.setTextColor(mB1Color);
-        mRealName.setTextColor(mB1Color);
-        mIdcardPhotoTv.setTextColor(mB1Color);
-        mPropetyPhotoTv.setTextColor(mB1Color);
-        mAppointmentTimeTv.setTextColor(mB1Color);
-        mChooseAppointmentTime.setTextColor(mB1Color);
-
-        setEditTextEnable(mParkSpaceDescription, true);
-        setEditTextEnable(mRealName, true);
     }
 
     private void startTakePhoto() {
@@ -448,14 +353,12 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                     mPropertyPhotoCl.setVisibility(View.VISIBLE);
                 }
                 UploadPhotoInfo firstProperty = new UploadPhotoInfo(url);
-                firstProperty.setPath(url);
                 firstProperty.setUploadSuccess(true);
                 firstProperty.setShowProgress(false);
                 mPropertyAdapter.notifyAddData(0, firstProperty);
                 break;
             case 3:
                 UploadPhotoInfo secondProperty = new UploadPhotoInfo(url);
-                secondProperty.setPath(url);
                 secondProperty.setUploadSuccess(true);
                 secondProperty.setShowProgress(false);
                 mPropertyAdapter.notifyAddData(1, secondProperty);
@@ -585,15 +488,15 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     }
 
     private void compressFirstPhoto(String path, SuccessCallback<File> callback) {
-        ImageUtil.compressPhoto(requireContext(), path, callback);
+        ImageUtil.compressPhoto(this, path, callback);
     }
 
     private void compressSecondPhoto(String path, SuccessCallback<File> callback) {
-        ImageUtil.compressPhoto(requireContext(), path, callback);
+        ImageUtil.compressPhoto(this, path, callback);
     }
 
     private void compressThirdPhoto(String path, SuccessCallback<File> callback) {
-        ImageUtil.compressPhoto(requireContext(), path, callback);
+        ImageUtil.compressPhoto(this, path, callback);
     }
 
     private void uploadPhoto(final File file, final int type, final int position) {
@@ -690,7 +593,7 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
     private void showDialog() {
         if (mCustomDialog == null) {
             View view = getLayoutInflater().inflate(R.layout.dialog_selete_photo_layout, null);
-            mCustomDialog = new CustomDialog(requireContext(), view, true);
+            mCustomDialog = new CustomDialog(this, view, true);
             view.findViewById(R.id.exchang_tv).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -727,7 +630,12 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             mIdCardPositivePhotoTv.setVisibility(View.GONE);
         }
 
-        ImageUtil.showPicWithNoAnimate(mIdCardPositivePhoto, path);
+        ImageUtil.showPicWithNoAnimate(mIdCardPositivePhoto, path, new LoadFailCallback() {
+            @Override
+            public void onLoadFail(Exception e) {
+                deletePhoto(e.getMessage(), 0);
+            }
+        });
 
         if (showUpload) {
             if (!isVisible(mIdCardPositiveUploadTv)) {
@@ -746,7 +654,12 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
             mIdCardNegativePhotoTv.setVisibility(View.GONE);
         }
 
-        ImageUtil.showPicWithNoAnimate(mIdCardNegativePhoto, path);
+        ImageUtil.showPicWithNoAnimate(mIdCardNegativePhoto, path, new LoadFailCallback() {
+            @Override
+            public void onLoadFail(Exception e) {
+                deletePhoto(e.getMessage(), 1);
+            }
+        });
 
         if (showUpload) {
             if (!isVisible(mIdCardNegativeUploadTv)) {
@@ -790,7 +703,6 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 if (mPropertyAdapter.getDataSize() == 0 || !mPropertyAdapter.get(mPropertyAdapter.getDataSize() - 1).getPath().equals("-1")) {
                     //如果最后那张不是拍摄图，则添加拍摄图
                     mPropertyAdapter.addData(new UploadPhotoInfo());
-                    Log.e(TAG, "deletePhoto: ");
                 }
                 if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
                     //如果没有图片则显示大的拍摄图
@@ -812,61 +724,6 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                 textView.setVisibility(View.GONE);
             }
         }
-    }
-
-    private void showCancelDialog() {
-        if (mCancelDialog == null) {
-            mCancelDialog = new TipeDialog.Builder(requireContext())
-                    .setTitle("取消申请")
-                    .setMessage("确认取消申请?\n(押金将在24小时内退回原支付账户)")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            cancelApplyParkSpace();
-                        }
-                    })
-                    .create();
-        }
-        mCancelDialog.show();
-    }
-
-    private void cancelApplyParkSpace() {
-        showLoadingDialog("正在取消");
-        getOkGo(HttpConstants.cancelApplyParkSpace)
-                .params("parkAuditId", mParkSpaceInfo.getId())
-                .params("cityCode", mParkSpaceInfo.getCityCode())
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        Intent intent = new Intent();
-                        intent.setAction(ConstansUtil.CANCEL_APPLY_PARK_SPACE);
-                        intent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceInfo.getId());
-                        IntentObserable.dispatch(intent);
-                        showFiveToast("取消成功");
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "101":
-                                case "102":
-                                case "104":
-                                    showFiveToast("取消申请失败，请稍后重试");
-                                    finish();
-                                    break;
-                                case "103":
-                                    showFiveToast("已安排师傅，不可取消");
-                                    break;
-                                case "105":
-                                    showFiveToast("押金退还失败，请稍后重试");
-                                    break;
-                            }
-                        }
-                    }
-                });
     }
 
     /**
@@ -907,7 +764,11 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
     private void modifyAuditInfo() {
         showLoadingDialog("正在修改");
-        Log.e(TAG, "addUserPark: " + mParkSpaceInfo);
+        mParkSpaceInfo.setIdCardPhoto(mParkSpaceInfo.getIdCardPositiveUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, "")
+                + "," + mParkSpaceInfo.getIdCardNegativeUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, ""));
+        mParkSpaceInfo.setParkSpaceDescription(getText(mParkSpaceDescription).trim());
+        mParkSpaceInfo.setRealName(getText(mRealName).trim());
+
         StringBuilder propertyPhoto = new StringBuilder(mPropertyAdapter.get(0).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
         propertyPhoto.append(",");
         if (mPropertyAdapter.getDataSize() == 2 && !mPropertyAdapter.get(1).getPath().equals("-1")) {
@@ -923,13 +784,11 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
 
         final Calendar calendar = Calendar.getInstance();
         String appointmentDate = getText(mChooseAppointmentTime);
-        if (appointmentDate.startsWith("今天")) {
-            //今天的话不用加
-        } else if (appointmentDate.startsWith("明天")) {
+        if (appointmentDate.startsWith("明天")) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         } else if (appointmentDate.startsWith("后天")) {
             calendar.add(Calendar.DAY_OF_MONTH, 2);
-        } else {
+        } else if (!appointmentDate.startsWith("今天")) {
             calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))) - 1);
             calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(appointmentDate.substring(appointmentDate.indexOf("月") + 1,
                     appointmentDate.indexOf("日"))));
@@ -937,13 +796,6 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
         appointmentDate = DateUtil.getCalendarYearToDay(calendar) + " " +
                 appointmentDate.substring(appointmentDate.length() - 2, appointmentDate.length());
         mParkSpaceInfo.setInstallTime(appointmentDate);
-
-        mParkSpaceInfo.setIdCardPhoto(mParkSpaceInfo.getIdCardPositiveUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, "")
-                + "," + mParkSpaceInfo.getIdCardNegativeUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, ""));
-        mParkSpaceInfo.setParkSpaceDescription(getText(mParkSpaceDescription).trim());
-        mParkSpaceInfo.setRealName(getText(mRealName).trim());
-
-        Log.e(TAG, "addUserPark: " + propertyPhoto);
 
         getOkGo(HttpConstants.modifyAuditParkSpaceInfo)
                 .params("parkAuditId", mParkSpaceInfo.getId())
@@ -1017,20 +869,23 @@ public class ParkSpaceInfoFragment extends BaseStatusFragment implements View.On
                     imageView.setPadding(0, 0, 0, 0);
                     imageView.setBackgroundResource(0);
                 }
-                ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath());
+                ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath(), new LoadFailCallback() {
+                    @Override
+                    public void onLoadFail(Exception e) {
+                        deletePhoto(e.getMessage(), -1);
+                    }
+                });
                 showProgressStatus(textView, uploadPhotoInfo.isShowProgress());
                 textView.setText(uploadPhotoInfo.getProgress());
             }
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mIsModifyInfo) {
-                        mChoosePosition = position + 2;
-                        if (uploadPhotoInfo.getPath().equals("-1")) {
-                            startTakePhoto();
-                        } else {
-                            showDialog();
-                        }
+                    mChoosePosition = position + 2;
+                    if (uploadPhotoInfo.getPath().equals("-1")) {
+                        startTakePhoto();
+                    } else {
+                        showDialog();
                     }
                 }
             });

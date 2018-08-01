@@ -26,6 +26,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.tuzhao.R;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
 
 import java.io.File;
@@ -80,6 +81,26 @@ public class ImageUtil {
                     @Override
                     public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                         imageView.setImageDrawable(resource);
+                    }
+                });
+    }
+
+    public static void showPicWithNoAnimate(final ImageView imageView, final String url, final LoadFailCallback callback) {
+        GlideApp.with(imageView)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .dontAnimate()
+                .placeholder(R.mipmap.ic_img)
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        imageView.setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        callback.onLoadFail(new Exception(url));
                     }
                 });
     }

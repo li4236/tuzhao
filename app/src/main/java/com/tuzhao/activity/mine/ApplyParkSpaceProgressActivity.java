@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.fragment.applyParkSpaceProgress.ParkSpaceInfoFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkSpaceInfo;
 import com.tuzhao.publicwidget.others.CircleView;
@@ -135,7 +134,7 @@ public class ApplyParkSpaceProgressActivity extends BaseStatusActivity {
                 parkSpaceInfo.setPropertyThirdUrl(HttpConstants.ROOT_IMG_URL_PROPERTY + propertyPhotos[2]);
             }
 
-            transaction.replace(R.id.apply_park_space_progress_container, ParkSpaceInfoFragment.newInstance(parkSpaceInfo));
+            //transaction.replace(R.id.apply_park_space_progress_container, ChangeApplyParkSpaceInfoActivity.newInstance(parkSpaceInfo));
             transaction.commit();
         } else {
             showFiveToast("获取申请进度失败，请稍后重试");

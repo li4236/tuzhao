@@ -1,6 +1,7 @@
 package com.tuzhao.info;
 
-import com.tuzhao.info.base_info.BaseInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by juncoder on 2018/4/14.
@@ -9,7 +10,7 @@ import com.tuzhao.info.base_info.BaseInfo;
  * </p>
  */
 
-public class InvoiceSituation extends BaseInfo {
+public class InvoiceSituation implements Parcelable {
 
     //发票id
     private String invoiceSituationId;
@@ -192,4 +193,61 @@ public class InvoiceSituation extends BaseInfo {
     public void setInvoiceDate(String invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.invoiceSituationId);
+        dest.writeString(this.status);
+        dest.writeString(this.company);
+        dest.writeString(this.personName);
+        dest.writeString(this.telephone);
+        dest.writeString(this.address);
+        dest.writeString(this.ticketContent);
+        dest.writeString(this.ticketRise);
+        dest.writeString(this.taxpayerNumber);
+        dest.writeString(this.type);
+        dest.writeString(this.progress);
+        dest.writeString(this.courierNumber);
+        dest.writeString(this.deliveryDate);
+        dest.writeString(this.invoiceDate);
+        dest.writeString(this.totalPrice);
+    }
+
+    public InvoiceSituation() {
+    }
+
+    protected InvoiceSituation(Parcel in) {
+        this.invoiceSituationId = in.readString();
+        this.status = in.readString();
+        this.company = in.readString();
+        this.personName = in.readString();
+        this.telephone = in.readString();
+        this.address = in.readString();
+        this.ticketContent = in.readString();
+        this.ticketRise = in.readString();
+        this.taxpayerNumber = in.readString();
+        this.type = in.readString();
+        this.progress = in.readString();
+        this.courierNumber = in.readString();
+        this.deliveryDate = in.readString();
+        this.invoiceDate = in.readString();
+        this.totalPrice = in.readString();
+    }
+
+    public static final Creator<InvoiceSituation> CREATOR = new Creator<InvoiceSituation>() {
+        @Override
+        public InvoiceSituation createFromParcel(Parcel source) {
+            return new InvoiceSituation(source);
+        }
+
+        @Override
+        public InvoiceSituation[] newArray(int size) {
+            return new InvoiceSituation[size];
+        }
+    };
 }

@@ -4,13 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
     <ScrollView
         android:id="@+id/park_space_info_sv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_apply_tv"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toTopOf="@+id/modify_info_tv"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -30,7 +40,6 @@
                     android:paddingBottom="14dp"
                     android:paddingTop="14dp"
                     android:text="车场名称："
-                    android:textColor="@color/g15"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +50,6 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="16dp"
                     android:gravity="start"
-                    android:textColor="@color/g15"
                     app:layout_constraintBottom_toBottomOf="@+id/parking_lot_name_tv"
                     app:layout_constraintEnd_toStartOf="@+id/park_lot_name_iv"
                     app:layout_constraintStart_toEndOf="@+id/parking_lot_name_tv"
@@ -68,7 +76,6 @@
                 android:paddingEnd="22dp"
                 android:paddingStart="16dp"
                 android:text="收益比："
-                android:textColor="@color/g15"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/parking_lot_name_cl" />
 
@@ -81,8 +88,6 @@
                 android:gravity="start"
                 android:paddingBottom="14dp"
                 android:paddingStart="6dp"
-                android:text="@string/picture_description"
-                android:textColor="@color/g15"
                 app:layout_constraintBottom_toBottomOf="@+id/revenue_ratio_tv"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/revenue_ratio_tv"
@@ -103,7 +108,6 @@
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="14dp"
                     android:text="车位描述："
-                    android:textColor="@color/g15"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -119,7 +123,6 @@
                     android:hint="如:负一层B区01"
                     android:inputType="text"
                     android:labelFor="@+id/park_space_description"
-                    android:textColor="@color/g15"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/park_space_description_tv"
@@ -142,7 +145,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="14dp"
                     android:text="真实姓名："
-                    android:textColor="@color/g15"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -158,7 +160,6 @@
                     android:inputType="text"
                     android:labelFor="@+id/real_name_et"
                     android:maxLength="18"
-                    android:textColor="@color/g15"
                     android:textColorHint="@color/g6"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -181,7 +182,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:text="身份证照："
-                    android:textColor="@color/g15"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -277,7 +277,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:text="产权照片："
-                    android:textColor="@color/g15"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -342,7 +341,6 @@
                 android:paddingStart="16dp"
                 android:paddingTop="15dp"
                 android:text="预约时间："
-                android:textColor="@color/g15"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/property_photo_cl" />
 
@@ -354,7 +352,6 @@
                 android:background="@color/w0"
                 android:gravity="start|center_vertical"
                 android:text="选择安装师傅上门安装时间"
-                android:textColor="@color/g15"
                 app:layout_constraintBottom_toBottomOf="@+id/appointment_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/appointment_time"
@@ -378,29 +375,18 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/cancel_apply_tv"
-        android:layout_width="152dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/y3_all_8dp"
-        android:gravity="center"
-        android:text="取消申请"
-        android:textColor="@color/y3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/modify_info_tv"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
         android:id="@+id/modify_info_tv"
-        android:layout_width="152dp"
+        android:layout_width="0dp"
         android:layout_height="40dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
         android:background="@drawable/little_yuan_yellow_8dp"
         android:gravity="center"
-        android:text="修改资料"
+        android:text="确认提交"
         android:textColor="@color/b1"
-        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cancel_apply_tv"
-        app:layout_constraintTop_toTopOf="@+id/cancel_apply_tv" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

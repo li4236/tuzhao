@@ -1,6 +1,7 @@
 package com.tuzhao.info;
 
-import com.tuzhao.info.base_info.BaseInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -9,7 +10,7 @@ import java.util.Calendar;
  * Created by TZL12 on 2017/5/19.
  */
 
-public class Park_Info extends BaseInfo {
+public class Park_Info implements Parcelable {
     private String id;
     private String parkspace_id;//停车位所属停车场
     private String user_id;//停车位所属用户
@@ -406,4 +407,97 @@ public class Park_Info extends BaseInfo {
                 ", shareTimeCalendar=" + Arrays.toString(shareTimeCalendar) +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.parkspace_id);
+        dest.writeString(this.user_id);
+        dest.writeString(this.userName);
+        dest.writeString(this.park_number);
+        dest.writeString(this.open_date);
+        dest.writeString(this.open_time);
+        dest.writeString(this.shareDay);
+        dest.writeString(this.pauseShareDate);
+        dest.writeString(this.location_describe);
+        dest.writeString(this.parking_user_id);
+        dest.writeString(this.park_img);
+        dest.writeString(this.parkspace_name);
+        dest.writeString(this.park_status);
+        dest.writeString(this.high_time);
+        dest.writeString(this.low_time);
+        dest.writeString(this.high_fee);
+        dest.writeString(this.low_fee);
+        dest.writeString(this.high_max_fee);
+        dest.writeString(this.low_max_fee);
+        dest.writeString(this.order_times);
+        dest.writeString(this.fine);
+        dest.writeString(this.profit_ratio);
+        dest.writeString(this.installTime);
+        dest.writeString(this.reason);
+        dest.writeString(this.type);
+        dest.writeString(this.citycode);
+        dest.writeString(this.create_time);
+        dest.writeString(this.update_time);
+        dest.writeString(this.parkLockId);
+        dest.writeString(this.parkLockStatus);
+        dest.writeString(this.voltage);
+        dest.writeString(this.indicator);
+    }
+
+    public Park_Info() {
+    }
+
+    protected Park_Info(Parcel in) {
+        this.id = in.readString();
+        this.parkspace_id = in.readString();
+        this.user_id = in.readString();
+        this.userName = in.readString();
+        this.park_number = in.readString();
+        this.open_date = in.readString();
+        this.open_time = in.readString();
+        this.shareDay = in.readString();
+        this.pauseShareDate = in.readString();
+        this.location_describe = in.readString();
+        this.parking_user_id = in.readString();
+        this.park_img = in.readString();
+        this.parkspace_name = in.readString();
+        this.park_status = in.readString();
+        this.high_time = in.readString();
+        this.low_time = in.readString();
+        this.high_fee = in.readString();
+        this.low_fee = in.readString();
+        this.high_max_fee = in.readString();
+        this.low_max_fee = in.readString();
+        this.order_times = in.readString();
+        this.fine = in.readString();
+        this.profit_ratio = in.readString();
+        this.installTime = in.readString();
+        this.reason = in.readString();
+        this.type = in.readString();
+        this.citycode = in.readString();
+        this.create_time = in.readString();
+        this.update_time = in.readString();
+        this.parkLockId = in.readString();
+        this.parkLockStatus = in.readString();
+        this.voltage = in.readString();
+        this.indicator = in.readString();
+    }
+
+    public static final Creator<Park_Info> CREATOR = new Creator<Park_Info>() {
+        @Override
+        public Park_Info createFromParcel(Parcel source) {
+            return new Park_Info(source);
+        }
+
+        @Override
+        public Park_Info[] newArray(int size) {
+            return new Park_Info[size];
+        }
+    };
 }

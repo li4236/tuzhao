@@ -1,12 +1,13 @@
 package com.tuzhao.info;
 
-import com.tuzhao.info.base_info.BaseInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by juncoder on 2018/3/29.
  */
 
-public class AcceptTicketAddressInfo extends BaseInfo {
+public class AcceptTicketAddressInfo implements Parcelable {
 
     private String ticketId;
 
@@ -157,4 +158,58 @@ public class AcceptTicketAddressInfo extends BaseInfo {
     public void setIsDefault(String isDefault) {
         this.isDefault = isDefault;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.ticketId);
+        dest.writeString(this.type);
+        dest.writeString(this.company);
+        dest.writeString(this.companyPhone);
+        dest.writeString(this.acceptPersonName);
+        dest.writeString(this.acceptPersonTelephone);
+        dest.writeString(this.acceptPersonEmail);
+        dest.writeString(this.acceptArea);
+        dest.writeString(this.acceptAddress);
+        dest.writeString(this.taxNumber);
+        dest.writeString(this.bank);
+        dest.writeString(this.bankNumber);
+        dest.writeString(this.isDefault);
+    }
+
+    public AcceptTicketAddressInfo() {
+    }
+
+    protected AcceptTicketAddressInfo(Parcel in) {
+        this.ticketId = in.readString();
+        this.type = in.readString();
+        this.company = in.readString();
+        this.companyPhone = in.readString();
+        this.acceptPersonName = in.readString();
+        this.acceptPersonTelephone = in.readString();
+        this.acceptPersonEmail = in.readString();
+        this.acceptArea = in.readString();
+        this.acceptAddress = in.readString();
+        this.taxNumber = in.readString();
+        this.bank = in.readString();
+        this.bankNumber = in.readString();
+        this.isDefault = in.readString();
+    }
+
+    public static final Creator<AcceptTicketAddressInfo> CREATOR = new Creator<AcceptTicketAddressInfo>() {
+        @Override
+        public AcceptTicketAddressInfo createFromParcel(Parcel source) {
+            return new AcceptTicketAddressInfo(source);
+        }
+
+        @Override
+        public AcceptTicketAddressInfo[] newArray(int size) {
+            return new AcceptTicketAddressInfo[size];
+        }
+    };
 }

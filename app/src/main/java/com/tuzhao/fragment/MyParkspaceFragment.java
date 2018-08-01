@@ -74,7 +74,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     public static MyParkspaceFragment newInstance(Park_Info mParkInfo) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ConstansUtil.PARK_SPACE_INFO, mParkInfo);
+        bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, mParkInfo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -96,7 +96,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mParkInfo = (Park_Info) getArguments().getSerializable(ConstansUtil.PARK_SPACE_INFO);
+            mParkInfo = getArguments().getParcelable(ConstansUtil.PARK_SPACE_INFO);
         } else if (mParkInfo == null) {
             showFiveToast("打开失败，请稍后重试");
             if (getActivity() != null) {

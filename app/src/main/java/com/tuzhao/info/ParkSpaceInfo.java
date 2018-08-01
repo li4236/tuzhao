@@ -58,7 +58,7 @@ public class ParkSpaceInfo implements Parcelable {
     private String reason;
 
     //申请时间
-    @SerializedName(value = "applyTime",alternate = {"applicationTime"})
+    @SerializedName(value = "applyTime", alternate = {"applicationTime"})
     private String applyTime;
 
     public String getId() {
@@ -110,6 +110,11 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getIdCardPositiveUrl() {
+        if (idCardPositiveUrl.equals("-1")) {
+            if (idCardPhoto != null && !idCardPhoto.equals("-1")) {
+                idCardPositiveUrl = idCardPhoto.split(",")[0];
+            }
+        }
         return idCardPositiveUrl;
     }
 
@@ -118,6 +123,11 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getIdCardNegativeUrl() {
+        if (idCardNegativeUrl.equals("-1")) {
+            if (idCardPhoto != null && !idCardPhoto.equals("-1")) {
+                idCardNegativeUrl = idCardPhoto.split(",")[1];
+            }
+        }
         return idCardNegativeUrl;
     }
 
@@ -125,7 +135,23 @@ public class ParkSpaceInfo implements Parcelable {
         this.idCardNegativeUrl = idCardNegativeUrl;
     }
 
+    private void setProperty() {
+        if (propertyPhoto != null && !propertyPhoto.equals("-1")) {
+            String[] propertyPhotos = propertyPhoto.split(",");
+            propertyFirstUrl = propertyPhotos[0];
+            if (propertyPhotos.length >= 2) {
+                propertySecondUrl = propertyPhotos[1];
+            }
+            if (propertyPhotos.length == 3) {
+                propertyThirdUrl = propertyPhotos[2];
+            }
+        }
+    }
+
     public String getPropertyFirstUrl() {
+        if (propertyFirstUrl.equals("-1")) {
+            setProperty();
+        }
         return propertyFirstUrl;
     }
 
@@ -134,6 +160,9 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getPropertySecondUrl() {
+        if (propertySecondUrl.equals("-1")) {
+            setProperty();
+        }
         return propertySecondUrl;
     }
 
@@ -142,6 +171,9 @@ public class ParkSpaceInfo implements Parcelable {
     }
 
     public String getPropertyThirdUrl() {
+        if (propertyThirdUrl.equals("-1")) {
+            setProperty();
+        }
         return propertyThirdUrl;
     }
 

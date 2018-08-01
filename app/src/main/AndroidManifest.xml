@@ -185,6 +185,8 @@
             android:name=".activity.mine.OrderComplaintActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.mine.ApplyParkSpaceProgressRefactoryActivity" />
+        <activity android:name=".activity.mine.ChangeApplyParkSpaceInfoActivity"
+            android:windowSoftInputMode="adjustPan"/>
 
         <!--QQ分享-->
         <activity

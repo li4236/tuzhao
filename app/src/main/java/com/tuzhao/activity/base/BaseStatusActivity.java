@@ -24,7 +24,6 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -240,7 +239,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    protected void startActivity(Class<?> tClass, String key, Serializable data) {
+    protected void startActivity(Class<?> tClass, String key, Parcelable data) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, data);
         startActivity(intent);
@@ -270,7 +269,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivityForResult(intent, requestCode);
     }
 
-    protected void startActivityForResult(Class<?> tClass, int requestCode, String key, Serializable value) {
+    protected void startActivityForResult(Class<?> tClass, int requestCode, String key, Parcelable value) {
         Intent intent = new Intent(this, tClass);
         intent.putExtra(key, value);
         startActivityForResult(intent, requestCode);

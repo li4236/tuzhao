@@ -178,6 +178,7 @@ public class ApplyParkSpaceProgressRefactoryActivity extends BaseStatusActivity 
                     goneButton();
                     break;
             }
+            IntentObserable.registerObserver(this);
         } else {
             showFiveToast("获取申请进度失败，请稍后重试");
         }
@@ -196,7 +197,7 @@ public class ApplyParkSpaceProgressRefactoryActivity extends BaseStatusActivity 
                 showCancelDialog();
                 break;
             case R.id.modify_info_tv:
-
+                startActivity(ChangeApplyParkSpaceInfoActivity.class, ConstansUtil.PARK_SPACE_INFO, mParkSpaceInfo);
                 break;
             case R.id.contact_service:
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
@@ -207,10 +208,17 @@ public class ApplyParkSpaceProgressRefactoryActivity extends BaseStatusActivity 
 
     @Override
     public void onReceive(Intent intent) {
-        if (Objects.equals(intent.getAction(), ConstansUtil.PARK_SPACE_INFO)) {
-
+        if (Objects.equals(intent.getAction(), ConstansUtil.MODIFY_AUDIT_PARK_SPACE_INFO)) {
+            mParkSpaceInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
+            mParkLotName.setText(mParkSpaceInfo.getParkLotName());
+            mParkSpaceName.setText(mParkSpaceInfo.getParkSpaceDescription());
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     private boolean isInstallation() {
