@@ -81,6 +81,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     private CharSequence mClipData;
 
+    private boolean mIsResume;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_sms_verification_layout;
@@ -199,6 +201,16 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                         } else {
                             mClipData = null;
                         }
+
+                        //短信来了直接在弹窗就复制了的，则直接输入
+                        if (mClipData != null && mIsResume) {
+                            for (int i = 0; i < 4; i++) {
+                                mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
+                                mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
+                            }
+                            verifyChangePasswordCode((String) mClipData);
+                            mClipData = null;
+                        }
                     }
                 }
             };
@@ -209,13 +221,21 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mIsResume = true;
         if (mClipData != null) {
             for (int i = 0; i < 4; i++) {
                 mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                 mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
             }
             verifyChangePasswordCode((String) mClipData);
+            mClipData = null;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsResume = false;
     }
 
     @Override
@@ -387,7 +407,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        mClipData = null;
                         deleteAll();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
