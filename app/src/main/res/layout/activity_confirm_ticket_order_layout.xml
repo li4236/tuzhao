@@ -203,10 +203,11 @@
         <TextView
             android:id="@+id/confirm_ticket_order_undo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_height="0dp"
+            android:paddingEnd="16dp"
             android:text="误删订单点击此处，撤销删除"
             android:textColor="@color/b1"
+            android:gravity="center_vertical"
             android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -60,6 +60,8 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
     private ConstraintLayout mOrderUndoCl;
 
+    private TextView mConfirmInvoice;
+
     private List<InvoiceInfo> mInvoiceInfos;
 
     private List<InvoiceInfo> mUndoInvoiceInfos;
@@ -98,6 +100,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         mOrderAddressCl = findViewById(R.id.confirm_ticket_order_address_cl);
         mNoAddressCl = findViewById(R.id.confirm_ticket_order_no_address_cl);
         mOrderUndoCl = findViewById(R.id.confirm_ticket_order_undo_cl);
+        mConfirmInvoice = findViewById(R.id.confirm_ticket_order_confirm);
 
         TextView orderUndo = findViewById(R.id.confirm_ticket_order_undo);
         String undoString = orderUndo.getText().toString();
@@ -116,7 +119,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
 
         mOrderAddressCl.setOnClickListener(this);
         mNoAddressCl.setOnClickListener(this);
-        findViewById(R.id.confirm_ticket_order_confirm).setOnClickListener(this);
+        mConfirmInvoice.setOnClickListener(this);
         orderUndo.setOnClickListener(this);
     }
 
@@ -267,18 +270,10 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         mTotalMoney.setText(price);
     }
 
-    private void showOrderUndo() {
-        if (mOrderUndoCl.getVisibility() != View.VISIBLE) {
-            mOrderUndoCl.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.confirm_ticket_order_no_address_cl:
-                startActivityForResult(AcceptTicketAddressActivity.class, REQUEST_ADDRESS);
-                break;
             case R.id.confirm_ticket_order_address_cl:
                 startActivityForResult(AcceptTicketAddressActivity.class, REQUEST_ADDRESS);
                 break;
@@ -305,6 +300,10 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                 setTotalPrice();
                 if (mUndoInvoiceInfos.isEmpty()) {
                     mOrderUndoCl.setVisibility(View.GONE);
+                }
+                if (mTotalPrice >= 100) {
+                    mConfirmInvoice.setBackgroundResource(R.drawable.bg_yellow);
+                    mConfirmInvoice.setClickable(false);
                 }
                 break;
         }
@@ -336,10 +335,14 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                 @Override
                 public void onClick(View v) {
                     mTotalPrice = Double.valueOf(mDecimalFormat.format(mTotalPrice - Double.valueOf(invoiceInfo.getActualFee())));
+                    if (mTotalPrice < 100) {
+                        mConfirmInvoice.setBackgroundColor(ConstansUtil.G10_COLOR);
+                        mConfirmInvoice.setClickable(false);
+                    }
                     setTotalPrice();
                     mUndoInvoiceInfos.add(invoiceInfo);
                     notifyRemoveData(position);
-                    showOrderUndo();
+                    showView(mOrderUndoCl);
                 }
             });
 
