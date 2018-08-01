@@ -125,7 +125,10 @@ public class ParkSpaceInfo implements Parcelable {
     public String getIdCardNegativeUrl() {
         if (idCardNegativeUrl.equals("-1")) {
             if (idCardPhoto != null && !idCardPhoto.equals("-1")) {
-                idCardNegativeUrl = idCardPhoto.split(",")[1];
+                String[] idCardPhotos = idCardPhoto.split(",");
+                if (idCardPhotos.length == 2) {
+                    idCardNegativeUrl = idCardPhoto.split(",")[1];
+                }
             }
         }
         return idCardNegativeUrl;

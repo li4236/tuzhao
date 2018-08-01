@@ -158,8 +158,9 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             String revenueRatio = mParkSpaceInfo.getRevenueRatio() + " （车位主 : 物业 : 平台）";
             mRevenueRatio.setText(revenueRatio);
             mParkSpaceDescription.setText(mParkSpaceInfo.getParkSpaceDescription());
+            setSelection(mParkSpaceDescription);
             mRealName.setText(mParkSpaceInfo.getRealName());
-            Log.e(TAG, "initData: " + mParkSpaceInfo);
+
             if (!mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
                 showPhoto(HttpConstants.ROOT_IMG_URL_ID_CARD + mParkSpaceInfo.getIdCardPositiveUrl(), 0);
             }
@@ -203,7 +204,6 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             mChooseAppointmentTime.setText(installTime.toString());
 
             initAppointmentOption();
-
         } else {
             showFiveToast("获取申请资料失败，请稍后重试");
             finish();
@@ -686,12 +686,14 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                 mIdCardPositivePhotoTv.setVisibility(View.VISIBLE);
                 showProgressStatus(mIdCardPositiveUploadTv, false);
                 mParkSpaceInfo.setIdCardPositiveUrl("-1");
+                mParkSpaceInfo.setIdCardPhoto("-1," + mParkSpaceInfo.getIdCardNegativeUrl());
                 break;
             case 1:
                 ImageUtil.showPic(mIdCardNegativePhoto, R.drawable.ic_idcard2);
                 mIdCardNegativePhotoTv.setVisibility(View.VISIBLE);
                 showProgressStatus(mIdCardNegativeUploadTv, false);
                 mParkSpaceInfo.setIdCardNegativeUrl("-1");
+                mParkSpaceInfo.setIdCardPhoto(mParkSpaceInfo.getIdCardPositiveUrl() + ",-1");
                 break;
             default:
                 for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
@@ -764,10 +766,14 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
 
     private void modifyAuditInfo() {
         showLoadingDialog("正在修改");
-        mParkSpaceInfo.setIdCardPhoto(mParkSpaceInfo.getIdCardPositiveUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, "")
-                + "," + mParkSpaceInfo.getIdCardNegativeUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, ""));
+
+        mParkSpaceInfo.setParkLotName(getText(mParkLotName));
+        mParkSpaceInfo.setRevenueRatio(getText(mRevenueRatio).split(" （")[0]);
         mParkSpaceInfo.setParkSpaceDescription(getText(mParkSpaceDescription).trim());
         mParkSpaceInfo.setRealName(getText(mRealName).trim());
+
+        mParkSpaceInfo.setIdCardPhoto(mParkSpaceInfo.getIdCardPositiveUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, "")
+                + "," + mParkSpaceInfo.getIdCardNegativeUrl().replace(HttpConstants.ROOT_IMG_URL_ID_CARD, ""));
 
         StringBuilder propertyPhoto = new StringBuilder(mPropertyAdapter.get(0).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
         propertyPhoto.append(",");
@@ -810,8 +816,14 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         Intent intent = new Intent(ConstansUtil.MODIFY_AUDIT_PARK_SPACE_INFO);
+                        mParkSpaceInfo.setIdCardPositiveUrl("-1");      //防止下次再读取时会带有url前缀
+                        mParkSpaceInfo.setIdCardNegativeUrl("-1");
+                        mParkSpaceInfo.setPropertyFirstUrl("-1");
+                        mParkSpaceInfo.setPropertySecondUrl("-1");
+                        mParkSpaceInfo.setPropertyThirdUrl("-1");
                         intent.putExtra(ConstansUtil.PARK_SPACE_INFO, mParkSpaceInfo);
                         IntentObserable.dispatch(intent);
+                        Log.e(TAG, "onSuccess: " + mParkSpaceInfo);
                         showFiveToast("修改成功");
                         finish();
                     }

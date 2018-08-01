@@ -209,7 +209,7 @@ public class ApplyParkSpaceProgressRefactoryActivity extends BaseStatusActivity 
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.MODIFY_AUDIT_PARK_SPACE_INFO)) {
-            mParkSpaceInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
+            mParkSpaceInfo = intent.getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
             mParkLotName.setText(mParkSpaceInfo.getParkLotName());
             mParkSpaceName.setText(mParkSpaceInfo.getParkSpaceDescription());
         }

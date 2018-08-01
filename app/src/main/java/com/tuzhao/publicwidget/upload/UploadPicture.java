@@ -13,6 +13,7 @@ import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.UploadPhotoInfo;
@@ -105,7 +106,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                 .maxNum(mMaxNum);
     }
 
-    private void startTakePropertyPhoto() {
+    public void startTakePropertyPhoto() {
         int maxNum = 1;
         if (mAdapter.get(mAdapter.getDataSize() - 1).getPath().equals("-1")) {
             maxNum = mMaxNum - mAdapter.getDataSize() + 1;
@@ -328,7 +329,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         }
 
         if (mAdapter.getDataSize() == 0 || !mAdapter.get(mAdapter.getDataSize() - 1).getPath().equals("-1")) {
-            //如果第一张不是拍摄图，则添加拍摄图
+            //如果没有拍摄图或最后一张不是拍摄图，则添加拍摄图
             mAdapter.notifyAddData(new UploadPhotoInfo());
         }
 
@@ -374,7 +375,12 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     imageView.setBackgroundResource(0);
                 }
             }
-            ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath(), R.mipmap.ic_img);
+            ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath(), new LoadFailCallback() {
+                @Override
+                public void onLoadFail(Exception e) {
+                    deletePhoto(e.getMessage());
+                }
+            });
             ViewUtil.showProgressStatus(textView, uploadPhotoInfo.isShowProgress());
             textView.setText(uploadPhotoInfo.getProgress());
         }
@@ -427,6 +433,10 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
 
     public void setAdapter(AD adapter) {
         mAdapter = adapter;
+    }
+
+    public void setChoosePosition(int choosePosition) {
+        mChoosePosition = choosePosition;
     }
 
     public void setMaxNum(int maxNum) {

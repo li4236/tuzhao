@@ -2,7 +2,7 @@ package com.tuzhao.utils;
 
 import android.content.Intent;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ public class IntentObserable {
     private static List<IntentObserver> mIntentObservers;
 
     static {
-        mIntentObservers = new ArrayList<>(2);
+        mIntentObservers = new LinkedList<>();
     }
 
     public static void dispatch(Intent intent) {

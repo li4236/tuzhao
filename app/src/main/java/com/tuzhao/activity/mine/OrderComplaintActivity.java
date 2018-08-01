@@ -218,8 +218,17 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     class UploadAdapter extends BaseAdapter<UploadPhotoInfo> {
 
         @Override
-        protected void conver(@NonNull BaseViewHolder holder, UploadPhotoInfo uploadPhotoInfo, int position) {
+        protected void conver(@NonNull BaseViewHolder holder, final UploadPhotoInfo uploadPhotoInfo, final int position) {
             mUploadPicture.conver((ImageView) holder.getView(R.id.complaint_photo_iv), (TextView) holder.getView(R.id.complaint_upload_tv), uploadPhotoInfo, position);
+            holder.getView(R.id.complaint_photo_iv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mUploadPicture.setChoosePosition(position);
+                    if (uploadPhotoInfo.getPath().equals("-1")) {
+                        mUploadPicture.startTakePropertyPhoto();
+                    }
+                }
+            });
         }
 
         @Override
