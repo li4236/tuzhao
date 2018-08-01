@@ -140,7 +140,7 @@ public class ParkOrderDetailsActivity extends BaseActivity {
 
         if (getIntent().hasExtra("parkorderinfo") || getIntent().hasExtra("parkorder_number")) {
             if (getIntent().hasExtra("parkorderinfo")) {
-                parkOrderInfo = (ParkOrderInfo) getIntent().getSerializableExtra("parkorderinfo");
+                parkOrderInfo = getIntent().getParcelableExtra("parkorderinfo");
                 initViewData(parkOrderInfo);
             } else {
                 parkorder_number = getIntent().getStringExtra("parkorder_number");

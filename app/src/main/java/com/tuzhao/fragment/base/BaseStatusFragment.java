@@ -24,7 +24,6 @@ import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -177,7 +176,7 @@ public abstract class BaseStatusFragment extends Fragment {
         startActivity(intent);
     }
 
-    protected void startActivity(Class<?> tClass, String key, Serializable data) {
+    protected void startActivity(Class<?> tClass, String key, Parcelable data) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(key, data);
         startActivity(intent);

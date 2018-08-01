@@ -102,7 +102,7 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
             mCreditStage.setBackgroundResource(R.drawable.blue5_all_3dp);
         } else {
             mCreditStage.setText("极好");
-            mCreditStage.setBackgroundResource(R.drawable.green10_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.green11_all_3dp);
         }
 
         String parkGracePeriod = String.valueOf(UserManager.getInstance().getUserInfo().getLeave_time());

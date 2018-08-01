@@ -251,7 +251,7 @@ public class RentingParkOrderFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("parkorderinfo", parkOrderInfo);
+                bundle.putParcelable("parkorderinfo", parkOrderInfo);
                 intent.putExtra("orderInfoBundle", bundle);
                 mContext.startActivity(intent);
             }

@@ -35,6 +35,7 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.BillingRuleActivity;
+import com.tuzhao.activity.mine.OrderComplaintActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
@@ -156,7 +157,6 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-
         if (getArguments() != null) {
             mParkOrderInfo = getArguments().getParcelable(ConstansUtil.PARK_ORDER_INFO);
         } else {
@@ -174,12 +174,11 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
 
         view.setOnClickListener(this);
         view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
-        view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
         view.findViewById(R.id.delete_order_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
-        view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
+        view.findViewById(R.id.order_complaint).setOnClickListener(this);
         view.findViewById(R.id.park_comment_cl).setOnClickListener(this);
 
         if (mParkOrderInfo.getOrder_status().equals("5")) {
@@ -241,7 +240,6 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pay_for_order_question_tv:
-            case R.id.appointment_calculate_rule_iv:
                 Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
@@ -275,6 +273,9 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             case R.id.view_appointment_detail:
             case R.id.view_appointment_detail_iv:
                 showParkDetail();
+                break;
+            case R.id.order_complaint:
+                startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.park_comment_cl:
                 if (mParkOrderInfo.getOrder_status().equals("4")) {
@@ -845,7 +846,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         intent.setAction(ConstansUtil.COMMENT_SUCCESS);
                         Bundle bundle = new Bundle();
                         mParkOrderInfo.setOrder_status("5");
-                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
 

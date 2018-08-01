@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.tuzhao.info.base_info.BaseInfo;
 
 import java.util.Objects;
 
@@ -12,7 +11,7 @@ import java.util.Objects;
  * Created by TZL12 on 2017/9/13.
  */
 
-public class ParkOrderInfo extends BaseInfo implements Parcelable {
+public class ParkOrderInfo implements Parcelable {
 
     private String id;//订单id
     private String parkspace_id;//停车场id

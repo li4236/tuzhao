@@ -83,7 +83,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
     public static CommentOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         CommentOrderFragment fragment = new CommentOrderFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -96,7 +96,7 @@ public class CommentOrderFragment extends BaseStatusFragment implements View.OnC
     @Override
     protected void initView(final View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
+            mParkOrderInfo = getArguments().getParcelable(ConstansUtil.PARK_ORDER_INFO);
         }
 
         mParkspaceIv = view.findViewById(R.id.comment_order_parkspace_iv);

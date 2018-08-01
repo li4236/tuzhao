@@ -140,12 +140,6 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         return "确认订单";
     }
 
-    @Override
-    protected void turnBack() {
-        super.turnBack();
-
-    }
-
     private void getDefalutAddress() {
         getOkGo(HttpConstants.getDefalutAcceptTicketAddress)
                 .execute(new JsonCallback<Base_Class_Info<AcceptTicketAddressInfo>>() {
@@ -314,7 +308,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ADDRESS && resultCode == RESULT_OK) {
             if (data != null) {
-                mAddressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ACCEPT_ADDRESS_INFO);
+                mAddressInfo = data.getParcelableExtra(ConstansUtil.ACCEPT_ADDRESS_INFO);
                 setAddressInfo();
             }
         }
@@ -353,4 +347,5 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
             return R.layout.item_confirm_ticket_order_layout;
         }
     }
+
 }

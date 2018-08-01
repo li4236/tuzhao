@@ -216,9 +216,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="14dp"
         app:layout_constraintEnd_toEndOf="@+id/appointment_detail_divider"
-        app:layout_constraintStart_toStartOf="@+id/appointment_detail_divider"
+        app:layout_constraintStart_toStartOf="@+id/car_pic_cl"
         app:layout_constraintTop_toBottomOf="@+id/appointment_detail_divider">
 
         <TextView
@@ -263,15 +263,21 @@
     <TextView
         android:id="@+id/pay_for_order_question_tv"
         style="@style/TenTextG6Stytle"
-        android:paddingBottom="14dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="11dp"
-        android:paddingTop="14dp"
-        android:text="计费有疑问"
-        app:layout_constraintStart_toStartOf="@id/park_discount_divider"
+        android:padding="14dp"
+        android:text="计费规则"
+        app:layout_constraintStart_toStartOf="@id/car_pic_cl"
         app:layout_constraintTop_toBottomOf="@+id/park_discount_divider" />
 
-    <ImageView
+    <TextView
+        android:id="@+id/order_complaint"
+        style="@style/TenTextG6Stytle"
+        android:padding="14dp"
+        android:text="订单投诉"
+        app:layout_constraintBottom_toBottomOf="@+id/pay_for_order_question_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--<ImageView
         android:id="@+id/appointment_calculate_rule_iv"
         android:layout_width="10dp"
         android:layout_height="10dp"
@@ -279,29 +285,26 @@
         android:src="@drawable/ic_question"
         app:layout_constraintBottom_toBottomOf="@+id/pay_for_order_question_tv"
         app:layout_constraintStart_toEndOf="@+id/pay_for_order_question_tv"
-        app:layout_constraintTop_toTopOf="@+id/pay_for_order_question_tv" />
+        app:layout_constraintTop_toTopOf="@+id/pay_for_order_question_tv" />-->
 
     <TextView
         android:id="@+id/view_appointment_detail"
         style="@style/TenTextG6Stytle"
-        android:paddingBottom="15dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="6dp"
-        android:paddingTop="14dp"
+        android:padding="14dp"
         android:text="停车详情"
-        app:layout_constraintEnd_toStartOf="@+id/view_appointment_detail_iv"
+        app:layout_constraintEnd_toEndOf="@+id/collect_park_lot_cl"
         app:layout_constraintTop_toBottomOf="@+id/park_discount_divider" />
 
-    <ImageView
-        android:id="@+id/view_appointment_detail_iv"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginEnd="11dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_explicit"
-        app:layout_constraintBottom_toBottomOf="@+id/view_appointment_detail"
-        app:layout_constraintEnd_toEndOf="@id/appointment_detail_divider"
-        app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />
+    <!-- <ImageView
+         android:id="@+id/view_appointment_detail_iv"
+         android:layout_width="10dp"
+         android:layout_height="10dp"
+         android:layout_marginEnd="11dp"
+         android:contentDescription="@string/picture_description"
+         android:src="@drawable/ic_explicit"
+         app:layout_constraintBottom_toBottomOf="@+id/view_appointment_detail"
+         app:layout_constraintEnd_toEndOf="@id/appointment_detail_divider"
+         app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />-->
 
     <TextView
         android:id="@+id/pay_for_order_should_pay"

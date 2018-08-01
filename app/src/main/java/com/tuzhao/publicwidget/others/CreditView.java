@@ -87,7 +87,7 @@ public class CreditView extends View {
         mPoorColor = Color.parseColor("#ffcc30");
         mFineColor = Color.parseColor("#ffa830");
         mGoodColor = Color.parseColor("#3dd6fa");
-        mVeryPoorColor = Color.parseColor("#14d499");
+        mVeryPoorColor = Color.parseColor("#82D093");
         mTextColor = Color.parseColor("#323232");
         mTextSize = (int) DensityUtil.sp2px(context, 8);
         init();
@@ -142,7 +142,7 @@ public class CreditView extends View {
         mPoorColor = typedArray.getColor(R.styleable.CreditView_poor_color, Color.parseColor("#ffcc30"));
         mFineColor = typedArray.getColor(R.styleable.CreditView_fine_color, Color.parseColor("#ffa830"));
         mGoodColor = typedArray.getColor(R.styleable.CreditView_good_color, Color.parseColor("#3dd6fa"));
-        mVeryGoodColor = typedArray.getColor(R.styleable.CreditView_very_good_color, Color.parseColor("#14d499"));
+        mVeryGoodColor = typedArray.getColor(R.styleable.CreditView_very_good_color, Color.parseColor("#82D093"));
         mTextColor = typedArray.getColor(R.styleable.CreditView_text_color, Color.parseColor("#323232"));
         mTextSize = typedArray.getDimensionPixelSize(R.styleable.CreditView_text_size, (int) DensityUtil.sp2px(context, 8));
         typedArray.recycle();

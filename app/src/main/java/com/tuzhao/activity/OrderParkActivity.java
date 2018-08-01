@@ -1292,7 +1292,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, OrderActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
+                        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                         startActivity(intent);
                         finish();

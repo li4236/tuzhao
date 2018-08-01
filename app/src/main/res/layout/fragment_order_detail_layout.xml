@@ -246,15 +246,21 @@
     <TextView
         android:id="@+id/pay_for_order_question_tv"
         style="@style/TenTextG6Stytle"
-        android:paddingBottom="14dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="11dp"
-        android:paddingTop="14dp"
-        android:text="计费有疑问"
-        app:layout_constraintStart_toStartOf="@id/actual_detail_divider"
+        android:padding="14dp"
+        android:text="计费规则"
+        app:layout_constraintStart_toStartOf="@id/car_pic_cl"
         app:layout_constraintTop_toBottomOf="@+id/actual_detail_divider" />
 
-    <ImageView
+    <TextView
+        android:id="@+id/order_complaint"
+        style="@style/TenTextG6Stytle"
+        android:padding="14dp"
+        android:text="订单投诉"
+        app:layout_constraintBottom_toBottomOf="@+id/pay_for_order_question_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--<ImageView
         android:id="@+id/appointment_calculate_rule_iv"
         android:layout_width="10dp"
         android:layout_height="10dp"
@@ -262,20 +268,17 @@
         android:src="@drawable/ic_question"
         app:layout_constraintBottom_toBottomOf="@+id/pay_for_order_question_tv"
         app:layout_constraintStart_toEndOf="@+id/pay_for_order_question_tv"
-        app:layout_constraintTop_toTopOf="@+id/pay_for_order_question_tv" />
+        app:layout_constraintTop_toTopOf="@+id/pay_for_order_question_tv" />-->
 
     <TextView
         android:id="@+id/view_appointment_detail"
         style="@style/TenTextG6Stytle"
-        android:paddingBottom="14dp"
-        android:paddingEnd="6dp"
-        android:paddingStart="6dp"
-        android:paddingTop="14dp"
+        android:padding="14dp"
         android:text="停车详情"
-        app:layout_constraintEnd_toStartOf="@+id/view_appointment_detail_iv"
+        app:layout_constraintEnd_toEndOf="@+id/delete_order_cl"
         app:layout_constraintTop_toBottomOf="@+id/actual_detail_divider" />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/view_appointment_detail_iv"
         android:layout_width="10dp"
         android:layout_height="10dp"
@@ -284,7 +287,7 @@
         android:src="@drawable/ic_explicit"
         app:layout_constraintBottom_toBottomOf="@+id/view_appointment_detail"
         app:layout_constraintEnd_toEndOf="@id/actual_detail_divider"
-        app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />
+        app:layout_constraintTop_toTopOf="@+id/view_appointment_detail" />-->
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/park_comment_cl"

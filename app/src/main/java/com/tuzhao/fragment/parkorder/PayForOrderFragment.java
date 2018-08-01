@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.PayActivity;
+import com.tuzhao.activity.mine.BillingRuleActivity;
 import com.tuzhao.activity.mine.DiscountActivity;
 import com.tuzhao.activity.mine.OrderComplaintActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
@@ -97,7 +98,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     public static PayForOrderFragment newInstance(ParkOrderInfo parkOrderInfo) {
         PayForOrderFragment fragment = new PayForOrderFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -110,7 +111,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
+            mParkOrderInfo = getArguments().getParcelable(ConstansUtil.PARK_ORDER_INFO);
         }
 
         mParkDurationIv = view.findViewById(R.id.pay_for_order_time_iv);
@@ -127,13 +128,12 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
         view.setOnClickListener(this);
         view.findViewById(R.id.pay_for_order_question_tv).setOnClickListener(this);
-        view.findViewById(R.id.appointment_calculate_rule_iv).setOnClickListener(this);
         view.findViewById(R.id.car_pic_cl).setOnClickListener(this);
         view.findViewById(R.id.contact_service_cl).setOnClickListener(this);
         view.findViewById(R.id.collect_park_lot_cl).setOnClickListener(this);
         view.findViewById(R.id.park_discount_cl).setOnClickListener(this);
         view.findViewById(R.id.view_appointment_detail).setOnClickListener(this);
-        view.findViewById(R.id.view_appointment_detail_iv).setOnClickListener(this);
+        view.findViewById(R.id.order_complaint).setOnClickListener(this);
         mShouldPayFee.setOnClickListener(this);
     }
 
@@ -196,8 +196,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         super.onDestroyView();
         IntentObserable.unregisterObserver(this);
 
-        if (mCustomDialog != null && mCustomDialog.isShowing()) {
-            mCustomDialog.dismiss();
+        if (mCustomDialog != null) {
+            mCustomDialog.cancel();
         }
 
     }
@@ -206,13 +206,10 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pay_for_order_question_tv:
-            case R.id.appointment_calculate_rule_iv:
-                startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-
-                /*Bundle parkLotBundle = new Bundle();
+                Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
                 parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
-                startActivity(BillingRuleActivity.class, parkLotBundle);*/
+                startActivity(BillingRuleActivity.class, parkLotBundle);
                 break;
             case R.id.car_pic_cl:
                 if (mParkOrderInfo.getPictures() == null || mParkOrderInfo.getPictures().equals("-1")) {
@@ -243,6 +240,9 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     startActivityForResult(DiscountActivity.class, ConstansUtil.DISOUNT_REQUEST_CODE,
                             ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrder_fee(), ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
                 }
+                break;
+            case R.id.order_complaint:
+                startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.pay_for_order_should_pay:
                 if (mShouldPay >= 0.01) {

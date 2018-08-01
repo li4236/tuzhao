@@ -112,7 +112,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     //立即开锁的点击事件
                     Intent intent = new Intent(mContext, OpenParkLockActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("orderInfo", mData.get(position));
+                    bundle.putParcelable("orderInfo", mData.get(position));
                     intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
@@ -123,7 +123,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     //订单详情点击事件
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    bundle.putParcelable("parkorderinfo", mData.get(position));
                     intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
@@ -212,7 +212,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     //跳转订单详情页面
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    bundle.putParcelable("parkorderinfo", mData.get(position));
                     intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
@@ -321,7 +321,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     //跳转订单详情页面
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    bundle.putParcelable("parkorderinfo", mData.get(position));
                     intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }
@@ -406,7 +406,7 @@ public class ParkOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     //跳转订单详情页面
                     Intent intent = new Intent(mContext, ParkOrderDetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("parkorderinfo", mData.get(position));
+                    bundle.putParcelable("parkorderinfo", mData.get(position));
                     intent.putExtra("orderInfoBundle", bundle);
                     mContext.startActivity(intent);
                 }

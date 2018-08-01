@@ -113,7 +113,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     public static AppointmentDetailFragment newInstance(ParkOrderInfo parkOrderInfo) {
         AppointmentDetailFragment fragment = new AppointmentDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -126,7 +126,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mParkOrderInfo = (ParkOrderInfo) getArguments().getSerializable(ConstansUtil.PARK_ORDER_INFO);
+            mParkOrderInfo = getArguments().getParcelable(ConstansUtil.PARK_ORDER_INFO);
         }
 
         mParkDate = view.findViewById(R.id.appointment_park_date);
@@ -285,7 +285,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                         Intent intent = new Intent();
                         intent.setAction(ConstansUtil.CANCEL_ORDER);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                         intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
                         dismmisLoadingDialog();
