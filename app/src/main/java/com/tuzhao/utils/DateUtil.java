@@ -3,7 +3,6 @@ package com.tuzhao.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -2503,11 +2502,16 @@ public class DateUtil {
     }
 
     public static boolean isCarNumber(String carNumber) {
-        if (TextUtils.isEmpty(carNumber.trim())) {
+        if (carNumber.length() < 6) {
             return false;
         }
         Pattern pattern = Pattern.compile("^(([\\u4e00-\\u9fa5]{1}[A-Z]{1})[-]?|([wW][Jj][\\u4e00-\\u9fa5]{1}[-]?)|([a-zA-Z]{2}))([A-Za-z0-9]{5}|[DdFf][A-HJ-NP-Za-hj-np-z0-9][0-9]{4}|[0-9]{5}[DdFf])$");
-        return pattern.matcher(carNumber).matches();
+        boolean result = pattern.matcher(carNumber).matches();
+        if (!result && carNumber.contains("云A-V")) {
+            carNumber = carNumber.replace("云A-V", "云A");
+            result = pattern.matcher(carNumber).matches();
+        }
+        return result;
     }
 
     /**

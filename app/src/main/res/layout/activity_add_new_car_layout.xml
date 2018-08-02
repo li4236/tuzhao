@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,19 +33,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/license_plate_attribution"
+            style="@style/ThirtyTextB1Style"
+            android:layout_height="0dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="24dp"
+            android:text="粤T"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/car_number_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/car_number_et"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:background="@null"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/w1"
+            android:digits="0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
             android:gravity="center_vertical|start"
-            android:inputType="text"
-            android:maxLength="7"
+            android:hint="请输入您的五位车牌号码"
+            android:inputType="textCapCharacters"
+            android:maxLength="6"
+            android:paddingStart="6dp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/car_number_tv"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/license_plate_attribution"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextFields" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -123,6 +142,20 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@id/drive_license_photo_tv"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/upload_progress_tv"
+            style="@style/FortyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#47000000"
+            android:text="0%"
+            android:textColor="@color/w0"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/drive_license_photo"
+            app:layout_constraintEnd_toEndOf="@+id/drive_license_photo"
+            app:layout_constraintStart_toStartOf="@+id/drive_license_photo"
+            app:layout_constraintTop_toTopOf="@+id/drive_license_photo" />
 
         <ImageView
             android:id="@+id/delete_drive_license_photo"

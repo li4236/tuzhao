@@ -10,6 +10,7 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.publicmanager.UserManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -165,6 +166,9 @@ public class DataUtil {
 
     }
 
+    /**
+     * @return 在text前面加上两个字的空位
+     */
     public static SpannableString getFirstTwoTransparentSpannable(String text) {
         SpannableString spannableString = new SpannableString("月卡" + text);
         spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -181,4 +185,347 @@ public class DataUtil {
         return m.matches();
     }
 
+    public static void initLicensePlateAttribution(ArrayList<String> city, ArrayList<ArrayList<String>> letter) {
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+
+        city.add("京");
+        ArrayList<String> cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("E")) {
+                break;
+            }
+        }
+        cityWithLetter.add("J");
+        cityWithLetter.add("K");
+        cityWithLetter.add("L");
+        cityWithLetter.add("M");
+        cityWithLetter.add("Y");
+        letter.add(cityWithLetter);
+
+        city.add("泸");
+        cityWithLetter = new ArrayList<>();
+        cityWithLetter.add("A");
+        cityWithLetter.add("B");
+        cityWithLetter.add("C");
+        cityWithLetter.add("D");
+        cityWithLetter.add("R");
+        letter.add(cityWithLetter);
+
+        city.add("津");
+        cityWithLetter = new ArrayList<>();
+        cityWithLetter.add("A");
+        cityWithLetter.add("B");
+        cityWithLetter.add("C");
+        cityWithLetter.add("D");
+        cityWithLetter.add("E");
+        letter.add(cityWithLetter);
+
+        city.add("渝");
+        cityWithLetter = new ArrayList<>();
+        cityWithLetter.add("A");
+        cityWithLetter.add("B");
+        cityWithLetter.add("C");
+        cityWithLetter.add("F");
+        cityWithLetter.add("G");
+        cityWithLetter.add("H");
+        letter.add(cityWithLetter);
+
+        city.add("冀");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("J")) {
+                break;
+            }
+        }
+        cityWithLetter.add("R");
+        cityWithLetter.add("S");
+        cityWithLetter.add("T");
+        letter.add(cityWithLetter);
+
+        city.add("豫");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("S")) {
+                break;
+            }
+        }
+        cityWithLetter.add("U");
+        letter.add(cityWithLetter);
+
+        city.add("云");
+        cityWithLetter = new ArrayList<>();
+        cityWithLetter.add("A");
+        cityWithLetter.add("A-V");
+        cityWithLetter.add("C");
+        cityWithLetter.add("D");
+        cityWithLetter.add("E");
+        cityWithLetter.add("F");
+        cityWithLetter.add("G");
+        cityWithLetter.add("H");
+        cityWithLetter.add("J");
+        cityWithLetter.add("K");
+        cityWithLetter.add("L");
+        cityWithLetter.add("M");
+        cityWithLetter.add("N");
+        cityWithLetter.add("P");
+        cityWithLetter.add("Q");
+        cityWithLetter.add("R");
+        cityWithLetter.add("S");
+        letter.add(cityWithLetter);
+
+        city.add("辽");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("P")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("黑");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("P")) {
+                break;
+            }
+        }
+        cityWithLetter.add("R");
+        letter.add(cityWithLetter);
+
+        city.add("湘");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("N")) {
+                break;
+            }
+        }
+        cityWithLetter.add("U");
+        letter.add(cityWithLetter);
+
+        city.add("皖");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("S")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("鲁");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("S")) {
+                break;
+            }
+        }
+        cityWithLetter.add("U");
+        cityWithLetter.add("V");
+        cityWithLetter.add("Y");
+        letter.add(cityWithLetter);
+
+        city.add("新");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("R")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("苏");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("N")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("浙");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("L")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("赣");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("M")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("鄂");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("S")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("桂");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("P")) {
+                break;
+            }
+        }
+        cityWithLetter.add("R");
+        letter.add(cityWithLetter);
+
+        city.add("甘");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("P")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("晋");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            if (string.equals("G")) {
+                continue;
+            }
+            cityWithLetter.add(string);
+            if (string.equals("M")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("蒙");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("M")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("陕");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("K")) {
+                break;
+            }
+        }
+        cityWithLetter.add("V");
+        letter.add(cityWithLetter);
+
+        city.add("吉");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("K")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("闽");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("K")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("贵");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("J")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("粤");
+        letter.add(new ArrayList<>(Arrays.asList(letters)));
+
+        city.add("川");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            if (string.equals("N")||string.contains("P")) {
+                continue;
+            }
+            cityWithLetter.add(string);
+        }
+        letter.add(cityWithLetter);
+
+        city.add("青");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("H")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("藏");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("J")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("琼");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("E")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+
+        city.add("宁");
+        cityWithLetter = new ArrayList<>();
+        for (String string : letters) {
+            cityWithLetter.add(string);
+            if (string.equals("E")) {
+                break;
+            }
+        }
+        letter.add(cityWithLetter);
+    }
+
+    public static boolean containLowerCase(String string) {
+        for(int i=0;i<string.length();i++) {
+            if (Character.isLowerCase(string.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
