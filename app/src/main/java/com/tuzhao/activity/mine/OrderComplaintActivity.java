@@ -180,37 +180,53 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
                 mCustomDialog.show();
                 break;
             case R.id.confirm_submit:
-                if (!mHaveChooseReason && getTextLength(mQuestionDescription) == 0) {
-                    showFiveToast("请选择投诉理由或输入详细说明");
+                if (!mHaveChooseReason) {
+                    showFiveToast("请选择投诉理由");
                 } else if (getText(mComplaintReason).equals("其他") && getTextLength(mQuestionDescription) == 0) {
                     showFiveToast("请对您要投诉的问题进行说明");
                 } else {
                     mConfirmSubmit.setClickable(false);
-                    showFiveToast("正在投诉...");
-                    getOkGo(HttpConstants.orderComplaint)
-                            .params("orderId", mParkOrderInfo.getId())
-                            .params("reason", mHaveChooseReason ? getText(mComplaintReason) : "")
-                            .params("detailDescription", getText(mQuestionDescription))
-                            .params("complaintPhoto", mUploadPicture.getUploadPictures())
-                            .execute(new JsonCallback<Base_Class_Info<Void>>() {
-                                @Override
-                                public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                                    showFiveToast("投诉成功，我们将尽快为您处理");
-                                    finish();
-                                }
-
-                                @Override
-                                public void onError(Call call, Response response, Exception e) {
-                                    super.onError(call, response, e);
-                                    mConfirmSubmit.setClickable(true);
-                                    if (!handleException(e)) {
-                                        showFiveToast(e.getMessage());
-                                    }
-                                }
-                            });
+                    orderComplaint();
                 }
                 break;
         }
+    }
+
+    private void orderComplaint() {
+        showFiveToast("正在投诉...");
+        getOkGo(HttpConstants.orderComplaint)
+                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("orderId", mParkOrderInfo.getId())
+                .params("reason", mHaveChooseReason ? getText(mComplaintReason) : "")
+                .params("detailDescription", getText(mQuestionDescription))
+                .params("complaintPhoto", mUploadPicture.getUploadPictures())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        showFiveToast("投诉成功，我们将尽快为您处理");
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mConfirmSubmit.setClickable(true);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("请选择投诉理由");
+                                    break;
+                                case "102":
+                                case "103":
+                                case "104":
+                                case "105":
+                                case "106":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                            }
+                        }
+                    }
+                });
     }
 
     class UploadAdapter extends BaseAdapter<UploadPhotoInfo> {
