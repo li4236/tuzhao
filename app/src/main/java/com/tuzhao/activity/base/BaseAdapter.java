@@ -27,8 +27,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     private View mFooterView;
 
-    private OnItemClickListener mOnItemClickListener;
-
     private static final int HEADER_VIEW = 0x111;
 
     private static final int FOOTER_VIEW = 0x222;
@@ -84,6 +82,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             return FOOTER_VIEW;
         }
 
+        if (converGetItemViewType(position - getHeadViewCount()) != -1) {
+            return converGetItemViewType(position - getHeadViewCount());
+        }
+
         return super.getItemViewType(position);
     }
 
@@ -112,7 +114,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     public void setHeaderView(View headerView) {
-        if (mRecyclerView != null) {
+        if (headerView.getLayoutParams() == null) {
             headerView.setLayoutParams(mRecyclerView.getLayoutParams());
         }
         mHeaderView = headerView;
@@ -127,20 +129,27 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     public void setFooterView(View footerView) {
+        if (footerView.getLayoutParams() == null) {
+            footerView.setLayoutParams(mRecyclerView.getLayoutParams());
+        }
         mFooterView = footerView;
-    }
-
-    public OnItemClickListener getOnItemClickListener() {
-        return mOnItemClickListener;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
     }
 
     @LayoutRes
     protected abstract int itemViewId();
 
+    /**
+     * 如果子类需要不同的itemViewType则重写该方法
+     *
+     * @param position 对应data的实际position
+     */
+    protected int converGetItemViewType(int position) {
+        return -1;
+    }
+
+    /**
+     * 如果子类需要不同的布局则重写该方法
+     */
     @LayoutRes
     protected int itemViewId(int viewType) {
         return 0;
@@ -176,10 +185,16 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         }
     }
 
+    /**
+     * 只是添加新的数据进来，并不会通知更新布局
+     */
     public void justAddData(T t) {
         mData.add(t);
     }
 
+    /**
+     * 在position为0的位置插入一条数据
+     */
     public void addFirstData(T t) {
         mData.add(0, t);
         notifyItemInserted(getHeadViewCount());
@@ -196,6 +211,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         notifyItemInserted(size + getHeadViewCount());
     }
 
+    /**
+     * 在position位置插入一条数据
+     */
     public void addData(int position, T t) {
         mData.add(position, t);
         notifyItemInserted(getHeadViewCount() + position);
@@ -219,6 +237,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         notifyItemRangeChanged(getHeadViewCount() + position, mData.size() - position);
     }
 
+    /**
+     * 修改changeDataPosition的数据为newData
+     */
     public void notifyDataChange(int changeDataPosition, T newData) {
         mData.set(changeDataPosition, newData);
         notifyItemChanged(changeDataPosition + getHeadViewCount());
@@ -229,6 +250,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         notifyItemChanged(changeDataPosition, payload);
     }
 
+    /**
+     * 需要重写T的equals方法已便找到需要修改的是哪项
+     */
     public void notifyDataChange(T newData) {
         int position = mData.indexOf(newData);
         if (position != -1) {
@@ -286,15 +310,14 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         }
     }
 
+    /**
+     * 清除所有数据并通知布局修改
+     */
     public void clearAll() {
         if (!mData.isEmpty()) {
             mData.clear();
             notifyDataSetChanged();
         }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
     }
 
 }

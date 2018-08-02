@@ -109,7 +109,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      * @param params 如果还需要其他参数则按键值对输入
      */
     protected BaseRequest getOkgos(String url, String... params) {
-        BaseRequest baseRequest = getOkgos(url);
+        BaseRequest baseRequest = getOkGo(url);
         for (int i = 0; i < params.length; i += 2) {
             baseRequest.params(params[i], params[i + 1]);
         }
@@ -118,12 +118,19 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
                 .params("pageSize", 15);
     }
 
+    /**
+     * 加载成功后调用该方法会自动添加新的数据并更新布局
+     *
+     * @param base_class_list_info 新的数据不能为null
+     */
     protected void loadDataSuccess(Base_Class_List_Info<T> base_class_list_info) {
         if (mStartItme == 0 && !mCommonAdapter.getData().isEmpty()) {
+            //如果是刷新的则把旧数据清除
             mCommonAdapter.clearAll();
         }
         mCommonAdapter.addData(base_class_list_info.data);
-        if (mStartItme == 0&&!base_class_list_info.data.isEmpty()) {
+        if (mStartItme == 0 && mCommonAdapter.getFooterView() != null && !base_class_list_info.data.isEmpty()) {
+            //如果有底部布局的话第一次加载会移动到底部布局的位置，需要把它移回去
             mRecyclerView.getRecyclerView().scrollToPosition(0);
         }
         mRecyclerView.showData();

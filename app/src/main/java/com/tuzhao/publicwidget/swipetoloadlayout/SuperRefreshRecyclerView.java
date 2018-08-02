@@ -63,7 +63,7 @@ public class SuperRefreshRecyclerView extends FrameLayout {
         this.layoutManager = layoutManager;
         swipeToLoadLayout.setOnRefreshListener(onRefreshListener);
         swipeToLoadLayout.setOnLoadMoreListener(onLoadMoreListener);
-        recyclerView.setOnScrollListener(new RecyclerViewListener());
+        recyclerView.addOnScrollListener(new RecyclerViewListener());
     }
 
     public void showEmpty(OnClickListener onEmptyClick) {
