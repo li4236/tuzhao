@@ -34,6 +34,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="14dp"
         android:layout_above="@+id/id_activity_carnumber_textView_add"
         android:layout_below="@id/id_activity_carnumble_layout_relativelayouttop">
 

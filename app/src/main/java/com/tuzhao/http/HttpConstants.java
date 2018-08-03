@@ -598,4 +598,9 @@ public class HttpConstants {
      */
     public static final String orderComplaint = ROOT_URL + "orderComplaint";
 
+    /**
+     * 获取用户的车牌号
+     */
+    public static final String getCarNumber = ROOT_URL + "getCarNumber";
+
 }

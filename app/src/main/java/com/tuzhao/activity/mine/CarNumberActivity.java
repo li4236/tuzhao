@@ -24,10 +24,12 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -42,13 +44,15 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
 
     private ImageView mIv_back;
     private TextView mTv_add;
-    private RecyclerView mCarnumber;
+    private RecyclerView mRecyclerView;
     private CarNumberAdpater mCarNumberAdpater;
     private User_Info mUserInfo;
     private List<String> mCar_numbers = new ArrayList<>();
     private String mNumberInTextview = null;
 
     private LinearLayout linearLayout_nadata;
+
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +64,32 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
         setStyle(true);
     }
 
+    private void initView() {
+        mIv_back = findViewById(R.id.id_activity_carnumber_imageView_back);
+        mTv_add = findViewById(R.id.id_activity_carnumber_textView_add);
+        linearLayout_nadata = findViewById(R.id.id_activity_carnumber_linearlayout_nodata);
+        mRecyclerView = findViewById(R.id.id_activity_carnumber_listview_carnumber);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mCarNumberAdpater = new CarNumberAdpater(this);
+        mRecyclerView.setAdapter(mCarNumberAdpater);
+    }
+
+    private void initData() {
+        mUserInfo = UserManager.getInstance().getUserInfo();
+        if (getIntent().hasExtra("numberInTextview")) {
+            mNumberInTextview = getIntent().getStringExtra("numberInTextview");
+            String[] strings = mUserInfo.getCar_number().split(",");
+            mCar_numbers.addAll(Arrays.asList(strings));
+            mCarNumberAdpater.setData(mCar_numbers);
+        } else {
+            getCarNumber();
+        }
+    }
+
     private void initEvent() {
         mIv_back.setOnClickListener(this);
         mTv_add.setOnClickListener(this);
-        mCarnumber.setAdapter(mCarNumberAdpater);
         mCarNumberAdpater.setOnItemClickListener(new CarNumberAdpater.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
@@ -77,39 +103,6 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        if (mCar_numbers.size() <= 0) {
-            linearLayout_nadata.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void initData() {
-        mUserInfo = UserManager.getInstance().getUserInfo();
-        if (getIntent().hasExtra("numberInTextview")) {
-            mNumberInTextview = getIntent().getStringExtra("numberInTextview");
-        }
-        mCarnumber.setLayoutManager(new LinearLayoutManager(this));
-
-        if (mUserInfo.getCar_number() == null || mUserInfo.getCar_number().length() == 0) {
-            mCarNumberAdpater = new CarNumberAdpater(this);
-        } else {
-            String[] strings = mUserInfo.getCar_number().split(",");
-            if (strings.length == 1 && strings[0].equals("-1")) {
-                mCarNumberAdpater = new CarNumberAdpater(this);
-            } else {
-                for (int i = 0; i < strings.length; i++) {
-                    mCar_numbers.add(strings[i]);
-                }
-                mCarNumberAdpater = new CarNumberAdpater(this, mCar_numbers);
-            }
-        }
-    }
-
-    private void initView() {
-        mIv_back = findViewById(R.id.id_activity_carnumber_imageView_back);
-        mTv_add = findViewById(R.id.id_activity_carnumber_textView_add);
-        mCarnumber = findViewById(R.id.id_activity_carnumber_listview_carnumber);
-        mCarnumber.setItemAnimator(new DefaultItemAnimator());
-        linearLayout_nadata = findViewById(R.id.id_activity_carnumber_linearlayout_nodata);
     }
 
     @Override
@@ -136,7 +129,7 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
         if (mCar_numbers.isEmpty()) {
             mCar_numbers.add(data.getStringExtra("car_number"));
             mCarNumberAdpater = new CarNumberAdpater(this, mCar_numbers);
-            mCarnumber.setAdapter(mCarNumberAdpater);
+            mRecyclerView.setAdapter(mCarNumberAdpater);
             mCarNumberAdpater.setOnItemClickListener(new CarNumberAdpater.OnItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
@@ -166,24 +159,56 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
                 handler.sendMessage(message);
             }
         }
-        deleteUserCarNumber(mCar_numbers.get(position));
-        mCarNumberAdpater.removeData(position);
+        deleteUserCarNumber(position);
     }
 
-    private void deleteUserCarNumber(String number) {
-        OkGo.post(HttpConstants.deleteUserCarNumber)
+    private void getCarNumber() {
+        showLoadingDialog("加载中...");
+        OkGo.post(HttpConstants.getCarNumber)
                 .tag(CarNumberActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", mUserInfo.getToken())
-                .params("car_number", number)
-                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
-
+                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        mUserInfo.setCar_number(stringBase_class_info.data);
+                        if (!mUserInfo.getCar_number().equals("")) {
+                            mCar_numbers.addAll(Arrays.asList(mUserInfo.getCar_number().split(",")));
+                            mCarNumberAdpater.setData(mCar_numbers);
+                        } else {
+                            linearLayout_nadata.setVisibility(View.VISIBLE);
+                        }
+                        cancelDialog();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        cancelDialog();
+                        if (!DensityUtil.isException(CarNumberActivity.this, e)) {
+                            linearLayout_nadata.setVisibility(View.GONE);
+                        }
+                    }
+                });
+    }
+
+    private void deleteUserCarNumber(final int position) {
+        showLoadingDialog("正在删除...");
+        OkGo.post(HttpConstants.deleteUserCarNumber)
+                .tag(CarNumberActivity.this)
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", mUserInfo.getToken())
+                .params("car_number", mCar_numbers.get(position))
+                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<User_Info> responseData, Call call, Response response) {
+                        mCarNumberAdpater.removeData(position);
+                        cancelDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        cancelDialog();
                         if (!DensityUtil.isException(CarNumberActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
@@ -196,4 +221,19 @@ public class CarNumberActivity extends BaseActivity implements View.OnClickListe
                     }
                 });
     }
+
+    private void showLoadingDialog(String msg) {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
+        }
+        mLoadingDialog = new LoadingDialog(this, msg);
+        mLoadingDialog.show();
+    }
+
+    private void cancelDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.cancel();
+        }
+    }
+
 }

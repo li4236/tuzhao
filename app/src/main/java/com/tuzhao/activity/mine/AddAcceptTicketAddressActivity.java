@@ -375,13 +375,15 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         } else if (isEmpty(mCompanyTelephone)) {
             showToast(mCompanyTelephone);
             return false;
+        }else if(getTextLength(mCompanyTelephone)<6){
+            showFiveToast("公司电话格式不正确哦");
         } else if (isEmpty(mAcceptPersonName)) {
             showToast(mAcceptPersonName);
             return false;
         } else if (isEmpty(mTaxNumber)) {
             showToast(mTaxNumber);
             return false;
-        } else if (getText(mTaxNumber).length() < 15) {
+        } else if (getTextLength(mTaxNumber)< 15) {
             showFiveToast("你的纳税人识别号长度不够哦");
             return false;
         }

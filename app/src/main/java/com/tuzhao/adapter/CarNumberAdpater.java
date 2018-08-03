@@ -2,6 +2,7 @@ package com.tuzhao.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,14 @@ public class CarNumberAdpater extends RecyclerView.Adapter<CarNumberAdpater.MyVi
         mIDeleteBtnClickListener = (IonSlidingViewClickListener) mContext;
     }
 
+    public void setData(List<String> data) {
+        mData = data;
+        notifyDataSetChanged();
+    }
+
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mUserInfo = UserManager.getInstance().getUserInfo();
         return new MyViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_carnumber,parent,false));
     }
@@ -85,14 +92,15 @@ public class CarNumberAdpater extends RecyclerView.Adapter<CarNumberAdpater.MyVi
     public void removeData(int position){
         mData.remove(position);
         if (mData.isEmpty()){
-            mUserInfo.setCar_number(null);
+            mUserInfo.setCar_number("");
         }else {
-            String s = "";
-            for (int i = 0 ; i< mData.size() ; i++){
-                s  =   s + mData.get(i) + ",";
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String string : mData) {
+                stringBuilder.append(string);
+                stringBuilder.append(",");
             }
-            s = s.substring(0,s.length()-1);
-            mUserInfo.setCar_number(s);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            mUserInfo.setCar_number(stringBuilder.toString());
         }
 
         notifyItemRemoved(position);

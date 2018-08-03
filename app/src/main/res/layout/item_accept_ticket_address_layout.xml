@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="@color/w0"
-    android:paddingBottom="9dp">
+    android:background="@color/w0">
 
     <TextView
         android:id="@+id/accept_ticket_address_name"
@@ -68,10 +67,12 @@
         android:id="@+id/accept_ticket_address_delete"
         style="@style/TenTextG6Stytle"
         android:layout_height="0dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="9dp"
         android:drawablePadding="7dp"
         android:drawableStart="@mipmap/ic_del"
+        android:paddingBottom="9dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="10dp"
+        android:paddingTop="9dp"
         android:text="删除"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
@@ -80,10 +81,12 @@
         android:id="@+id/accept_ticket_address_edit"
         style="@style/TenTextG6Stytle"
         android:layout_height="0dp"
-        android:layout_marginEnd="20dp"
         android:drawablePadding="7dp"
         android:drawableStart="@mipmap/ic_write"
+        android:paddingEnd="10dp"
+        android:paddingStart="16dp"
         android:text="编辑"
+        app:layout_constraintBottom_toBottomOf="@+id/accept_ticket_address_delete"
         app:layout_constraintEnd_toStartOf="@id/accept_ticket_address_delete"
         app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_delete" />
 

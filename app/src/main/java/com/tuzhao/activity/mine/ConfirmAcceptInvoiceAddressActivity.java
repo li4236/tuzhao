@@ -185,12 +185,12 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             addressInfo.setIsDefault("1");
             mCommonAdapter.notifyDataChange(addressInfo);
         }
+
         getOkgos(HttpConstants.setDefaultAcceptTicketAddress)
                 .params("ticketId", addressInfo.getTicketId())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
-                        dismmisLoadingDialog();
                     }
 
                     @Override
@@ -213,9 +213,6 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> base_class_info, Call call, Response response) {
-                        if (addressInfo.getIsDefault().equals("1")) {
-                            mDefalutAddressPosition = -1;
-                        }
                         mCommonAdapter.notifyRemoveData(addressInfo);
                         findDefaultAddressPosition();
                         adjustFooterView();
