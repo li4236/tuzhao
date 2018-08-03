@@ -1,11 +1,15 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -92,7 +96,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mAddressInfo = (AcceptTicketAddressInfo) getIntent().getSerializableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS);
+        mAddressInfo = getIntent().getParcelableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS);
 
         mTicketType = findViewById(R.id.ticket_type);
         mCompanyName = findViewById(R.id.company_name);
@@ -113,6 +117,11 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
         mTicketType.setOnClickListener(this);
         mAcceptArea.setOnClickListener(this);
+
+        TextView taxNumber = findViewById(R.id.accept_ticket_tax_number_tv);
+        SpannableString spannableString = new SpannableString("税占位号");
+        spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 1, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        taxNumber.setText(spannableString);
 
         TextView saveTicketAddress = findViewById(R.id.save_accept_ticket_address);
         saveTicketAddress.setText(mAddressInfo == null ? "新建收票地址" : "保存修改");
@@ -139,17 +148,17 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ticket_type:
-                closeKeyboard();
+                ViewUtil.closeInputMethod(getWindow().peekDecorView());
                 mTicketTypeOption.show();
                 break;
             case R.id.accept_ticket_area:
-                closeKeyboard();
+                ViewUtil.closeInputMethod(getWindow().peekDecorView());
                 mCityOption.show();
                 break;
             case R.id.save_accept_ticket_address:
                 if (isEmpty(mTicketType)) {
                     showToast(mTicketType);
-                    closeKeyboard();
+                    ViewUtil.closeInputMethod(getWindow().peekDecorView());
                     mTicketTypeOption.show();
                 } else if (allNoEmpty()) {
                     if (mAddressInfo == null) {
@@ -268,7 +277,12 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         mCityOption.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
-                String area = mProvinces.get(options1) + mCitys.get(options1).get(option2) + mCounties.get(options1).get(option2).get(options3);
+                String area;
+                if (mProvinces.get(options1).equals(mCitys.get(options1).get(option2))) {
+                    area = mProvinces.get(options1) + mCounties.get(options1).get(option2).get(options3);
+                } else {
+                    area = mProvinces.get(options1) + mCitys.get(options1).get(option2) + mCounties.get(options1).get(option2).get(options3);
+                }
                 mAcceptArea.setText(area);
             }
         });
@@ -314,7 +328,6 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         mConstraintSet.clone(mAcceptTicketMainCl);
         mConstraintSet.connect(R.id.add_accept_ticket_address_tax_number_cl, ConstraintSet.TOP, R.id.add_accept_ticket_address_address_cl, ConstraintSet.BOTTOM);
         mConstraintSet.applyTo(mAcceptTicketMainCl);
-
     }
 
     /**
@@ -440,16 +453,6 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                 break;
         }
         return noEmpty;
-    }
-
-    /**
-     * 关闭软键盘，防止在输入时弹出选择器被挡住
-     */
-    private void closeKeyboard() {
-        View view = getWindow().peekDecorView();
-        if (view != null) {
-            ViewUtil.closeInputMethod(view);
-        }
     }
 
     /**

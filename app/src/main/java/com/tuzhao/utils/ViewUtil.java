@@ -31,9 +31,11 @@ public class ViewUtil {
      * 弹出软键盘
      */
     public static void openInputMethod(View view) {
-        InputMethodManager methodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (methodManager != null) {
-            methodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+        if (view != null) {
+            InputMethodManager methodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (methodManager != null) {
+                methodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
+            }
         }
     }
 
@@ -41,9 +43,11 @@ public class ViewUtil {
      * 关闭软键盘
      */
     public static void closeInputMethod(View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null) {
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
     }
 
