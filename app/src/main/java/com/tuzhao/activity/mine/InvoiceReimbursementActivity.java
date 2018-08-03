@@ -20,6 +20,7 @@ import com.tuzhao.info.InvoiceInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         mTotalPrice = findViewById(R.id.invoice_reimbursement_total_invoice);
         mAllChoose = findViewById(R.id.invoice_reimbursement_all_rb);
         mInvoceReimburesmentSubmit = findViewById(R.id.invoice_reimbursement_submit);
+
         mAllChoose.setCheckDrawable(ContextCompat.getDrawable(this, R.drawable.ic_chose));
         mAllChoose.setNoCheckDrawble(ContextCompat.getDrawable(this, R.drawable.ic_nochose));
         mAllChoose.setOnCheckChangeListener(new com.tuzhao.publicwidget.others.CheckBox.OnCheckChangeListener() {
@@ -66,17 +68,15 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         mInvoceReimburesmentSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (mCommonAdapter.getData().isEmpty()) {
-                    showFiveToast("没有能够报销的发票哦");
-                } else if (mChooseInvoice.isEmpty()) {
-                    showFiveToast("你还没选择需要报销的发票哦");
-                } else if (calculateTotalPrice() < 100) {
-                    showFiveToast("订单总额大于100才可以开票哦");
-                } else {
-                }*/
                 startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
             }
         });
+
+        View headView = getLayoutInflater().inflate(R.layout.layout_placeholder, mRecyclerView, false);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(mRecyclerView.getRecyclerView().getLayoutParams());
+        layoutParams.height = dpToPx(10);
+        headView.setLayoutParams(layoutParams);
+        mCommonAdapter.setHeaderView(headView);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     @Override
     protected void bindData(BaseViewHolder holder, final InvoiceInfo invoiceInfo, int position) {
-        final CheckBox checkBox = holder.getView(R.id.invoice_reimbursement_rb);
+        final CheckBox checkBox = holder.getView(R.id.invoice_reimbursement_cb);
         final CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -160,12 +160,10 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
             pic = pic.substring(0, pic.indexOf(","));
         }
         holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
-                .setText(R.id.invoice_reimbursement_park_duration, "停车时长:" + invoiceInfo.getParkDuration())
-                .setText(R.id.invoice_reimbursement_park_time, invoiceInfo.getParkStarttime())
+                .setText(R.id.invoice_reimbursement_park_time, DateUtil.getMonthToDay(invoiceInfo.getParkStarttime()))
                 .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
-                .setText(R.id.invoice_reimbursement_total_price, "￥" + invoiceInfo.getActualFee())
-                .showPic(R.id.invoice_reimbursement_iv, HttpConstants.ROOT_IMG_URL_PS + pic, R.mipmap.ic_img)
-                .setCheckboxCheck(R.id.invoice_reimbursement_rb, invoiceInfo.getCheck())
+                .setText(R.id.invoice_reimbursement_total_price, invoiceInfo.getActualFee())
+                .setCheckboxCheck(R.id.invoice_reimbursement_cb, invoiceInfo.getCheck())
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,10 +207,11 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
     }
 
     private void setTotalPrice() {
-        double totalPrice = Double.parseDouble(mDecimalFormat.format(calculateTotalPrice()));
-        String string = "开票总额:" + totalPrice + "元";
+        String totalPriceString = mDecimalFormat.format(calculateTotalPrice());
+        String string = "开票总额:" + totalPriceString + "元";
         mTotalPrice.setText(string);
-        if (totalPrice >= 100) {
+        
+        if (Double.valueOf(totalPriceString) >= 100) {
             mInvoceReimburesmentSubmit.setBackgroundResource(R.drawable.bg_yellow);
             if (!mInvoceReimburesmentSubmit.isClickable()) {
                 mInvoceReimburesmentSubmit.setClickable(true);

@@ -128,7 +128,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
         super.initData();
         mUndoInvoiceInfos = new ArrayList<>(mInvoiceInfos.size());
         mOrderAdapter.setNewData(mInvoiceInfos);
-        mNestedScrollView.smoothScrollTo(0, 0);
+        mNestedScrollView.scrollTo(0, 0);
         calculateTotalPrice();
         setTotalPrice();
         getDefalutAddress();

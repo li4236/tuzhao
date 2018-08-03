@@ -931,16 +931,19 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.PHOTO_IMAGE:
-                    final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-                    if (imageBeans.size() == 1) {
-                        ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
-                            @Override
-                            public void onSuccess(File file) {
-                                handleCompressPhoto(file, mChoosePosition);
-                            }
-                        });
-                    } else {
-                        handleImageBean(imageBeans);
+                    if (mCustomDialog != null && mCustomDialog.isShowing()) {
+                        //如果是订单投诉里面选择图片的也会传到这里，所以需要判断
+                        final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
+                        if (imageBeans.size() == 1) {
+                            ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                                @Override
+                                public void onSuccess(File file) {
+                                    handleCompressPhoto(file, mChoosePosition);
+                                }
+                            });
+                        } else {
+                            handleImageBean(imageBeans);
+                        }
                     }
                     break;
                 case ConstansUtil.DIALOG_SHOW:

@@ -1,103 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="@color/w0">
-
-    <TextView
-        android:id="@+id/invoice_reimbursement_park_lot"
-        style="@style/ThirtyTextB1Style"
-        android:layout_marginStart="46dp"
-        android:layout_marginTop="12dp"
-        android:drawablePadding="6dp"
-        android:drawableStart="@mipmap/ic_park6"
-        android:text="天之力停车场"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:background="@color/w0"
+    app:cardElevation="1dp">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/invoice_reimbursement_item_cl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@color/w1"
-        app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_park_lot">
+        android:layout_height="90dp">
 
         <CheckBox
-            android:id="@+id/invoice_reimbursement_rb"
+            android:id="@+id/invoice_reimbursement_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@null"
             android:drawableStart="@drawable/yellow_checkbox_bg"
-            android:padding="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/invoice_reimbursement_park_lot"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/invoice_reimbursement_park_lot" />
 
         <ImageView
-            android:id="@+id/invoice_reimbursement_iv"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginTop="14dp"
+            android:id="@+id/invoice_reimbursement_park_time_iv"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:contentDescription="@string/picture_description"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toEndOf="@+id/invoice_reimbursement_rb"
+            android:src="@mipmap/ic_time"
+            app:layout_constraintBottom_toBottomOf="@+id/invoice_reimbursement_park_time"
+            app:layout_constraintStart_toEndOf="@+id/invoice_reimbursement_cb"
+            app:layout_constraintTop_toTopOf="@+id/invoice_reimbursement_park_time" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_park_time"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toEndOf="@+id/invoice_reimbursement_park_time_iv"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.tuzhao.publicwidget.others.CircleView
+            android:id="@+id/invoice_reimbursement_park_lot_iv"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            app:color="#1dd0a1"
+            app:layout_constraintBottom_toBottomOf="@+id/invoice_reimbursement_park_lot"
+            app:layout_constraintEnd_toEndOf="@id/invoice_reimbursement_park_time_iv"
+            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_park_time_iv"
+            app:layout_constraintTop_toTopOf="@+id/invoice_reimbursement_park_lot" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_park_lot"
+            style="@style/ThirtyTextB1Style"
+            android:layout_width="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="start"
+            app:layout_constraintBottom_toTopOf="@+id/invoice_reimbursement_location"
+            app:layout_constraintEnd_toEndOf="@+id/invoice_reimbursement_location"
+            app:layout_constraintStart_toStartOf="@+id/invoice_reimbursement_park_time"
+            app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_park_time" />
+
+        <ImageView
+            android:id="@+id/invoice_reimbursement_location_iv"
+            android:layout_width="12dp"
+            android:layout_height="14dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_graygps2"
+            app:layout_constraintBottom_toBottomOf="@+id/invoice_reimbursement_location"
+            app:layout_constraintEnd_toEndOf="@id/invoice_reimbursement_park_time_iv"
+            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_park_time_iv"
+            app:layout_constraintTop_toTopOf="@+id/invoice_reimbursement_location" />
 
         <TextView
             android:id="@+id/invoice_reimbursement_location"
             style="@style/TwentyTextB1Style"
             android:layout_width="0dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="6dp"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/invoice_reimbursement_iv"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/invoice_reimbursement_park_duration"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginTop="6dp"
-            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_location"
-            app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_location" />
-
-        <TextView
-            android:id="@+id/invoice_reimbursement_park_time"
-            style="@style/TwentyTextB1Style"
-            android:layout_marginBottom="18dp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_location"
-            app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_park_duration" />
+            app:layout_constraintEnd_toStartOf="@+id/invoice_reimbursement_total_tv"
+            app:layout_constraintStart_toStartOf="@id/invoice_reimbursement_park_time" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_total_price"
+            style="@style/SixtyTextB1Style"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="14dp"
+            android:textColor="@color/y3"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/invoice_reimbursement_total_tv"
+            style="@style/TwentyTextB1Style"
+            android:text="￥"
+            android:textColor="@color/y3"
+            app:layout_constraintBaseline_toBaselineOf="@+id/invoice_reimbursement_total_price"
+            app:layout_constraintEnd_toStartOf="@id/invoice_reimbursement_total_price" />
 
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/invoice_reimbursement_total_price"
-        style="@style/SixtyTextB1Style"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="12dp"
-        android:text="￥163.33"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invoice_reimbursement_item_cl" />
-
-    <TextView
-        android:id="@+id/invoice_reimbursement_total_tv"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginEnd="4dp"
-        android:text="合计:"
-        app:layout_constraintBottom_toBottomOf="@+id/invoice_reimbursement_total_price"
-        app:layout_constraintEnd_toStartOf="@id/invoice_reimbursement_total_price"
-        app:layout_constraintTop_toTopOf="@+id/invoice_reimbursement_total_price" />
-
-</android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
