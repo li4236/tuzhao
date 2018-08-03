@@ -38,6 +38,8 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
 
     private TextView mTotalMoney;
 
+    private View mFooterView;
+
     private List<InvoiceInfo> mInvoiceInfos;
 
     private String mTotalPrice;
@@ -78,8 +80,8 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             }
         });
 
-        View footerView = getLayoutInflater().inflate(R.layout.add_accept_ticket_address_footer_layout, mRecyclerView.getRecyclerView(), false);
-        footerView.setOnClickListener(new View.OnClickListener() {
+        mFooterView = getLayoutInflater().inflate(R.layout.add_accept_ticket_address_footer_layout, mRecyclerView.getRecyclerView(), false);
+        mFooterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mCommonAdapter.getData().size() < 10) {
@@ -89,7 +91,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                 }
             }
         });
-        mCommonAdapter.setFooterView(footerView);
+        mCommonAdapter.setFooterView(mFooterView);
         mRecyclerView.setEmptyView(null);
     }
 
@@ -112,6 +114,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                     @Override
                     public void onSuccess(Base_Class_List_Info<AcceptTicketAddressInfo> o, Call call, Response response) {
                         loadDataSuccess(o);
+                        adjustFooterView();
                     }
 
                     @Override
@@ -138,6 +141,31 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
     }
 
     /**
+     * 如果收票地址超过10条则隐藏添加入口，如果不够则显示
+     */
+    private void adjustFooterView() {
+        if (mCommonAdapter.getDataSize() >= 10) {
+            if (mCommonAdapter.getFooterView() != null) {
+                mCommonAdapter.notifyRemoveFooterView();
+            }
+        } else {
+            if (mCommonAdapter.getFooterView() == null) {
+                mCommonAdapter.notifyAddFooterView(mFooterView);
+            }
+        }
+    }
+
+    private void findDefaultAddressPosition() {
+        mDefalutAddressPosition = -1;
+        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+            if (mCommonAdapter.get(i).getIsDefault().equals("1")) {
+                mDefalutAddressPosition = i;
+                break;
+            }
+        }
+    }
+
+    /**
      * 设置默认的收票地址
      *
      * @param addressInfo 要设置的收票地址
@@ -146,10 +174,6 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
         if (mDefalutAddressPosition != -1) {
             //取消上次的默认收票地址
             AcceptTicketAddressInfo acceptTicketAddressInfo = mCommonAdapter.get(mDefalutAddressPosition);
-            if (acceptTicketAddressInfo.getIsDefault().equals("0")) {
-                //如果是新添加的则原本的默认收票地址位置要+1
-                acceptTicketAddressInfo = mCommonAdapter.get(mDefalutAddressPosition + 1);
-            }
             acceptTicketAddressInfo.setIsDefault("0");
             mCommonAdapter.notifyDataChange(acceptTicketAddressInfo);
         }
@@ -193,6 +217,8 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                             mDefalutAddressPosition = -1;
                         }
                         mCommonAdapter.notifyRemoveData(addressInfo);
+                        findDefaultAddressPosition();
+                        adjustFooterView();
                     }
 
                     @Override
@@ -369,9 +395,14 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             AcceptTicketAddressInfo addressInfo;
             if ((addressInfo = data.getParcelableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS)) != null) {
+                if (mDefalutAddressPosition != -1) {
+                    mDefalutAddressPosition += 1;                 //新添加收票地址则之前默认收票地址的位置加1
+                }
                 addressInfo.setIsDefault("1");
-                mCommonAdapter.addFirstData(addressInfo);        //如果是新增发票则返回后把新增的发票添加
+                mCommonAdapter.addFirstData(addressInfo);        //如果是新增发票则返回后把新增的发票添加到头部
                 setDefaultAddress(addressInfo, 0);
+                adjustFooterView();
+                mRecyclerView.getRecyclerView().scrollToPosition(0);
             } else if ((addressInfo = data.getParcelableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS)) != null) {
                 mCommonAdapter.notifyDataChange(mChangeAddressPosition, addressInfo);       //如果是编辑发票则更新编辑后的发票
             }

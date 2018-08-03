@@ -133,7 +133,7 @@ public class CacheCall<T> implements Call<T> {
             }
 
             @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) {
                 int responseCode = response.code();
                 //304缓存数据
                 if (responseCode == 304 && cacheMode == CacheMode.DEFAULT) {

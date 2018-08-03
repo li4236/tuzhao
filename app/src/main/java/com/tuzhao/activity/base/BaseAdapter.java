@@ -135,6 +135,16 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         mFooterView = footerView;
     }
 
+    public void notifyRemoveFooterView() {
+        mFooterView = null;
+        notifyItemRemoved(getHeadViewCount() + mData.size());
+    }
+
+    public void notifyAddFooterView(View footerView) {
+        mFooterView = footerView;
+        notifyItemInserted(getHeadViewCount() + mData.size());
+    }
+
     @LayoutRes
     protected abstract int itemViewId();
 
@@ -198,7 +208,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void addFirstData(T t) {
         mData.add(0, t);
         notifyItemInserted(getHeadViewCount());
-        notifyItemRangeRemoved(1, mData.size() - 1);
+        notifyItemRangeChanged(1, mData.size() - 1);
     }
 
     public void addData(T t) {

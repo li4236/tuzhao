@@ -491,6 +491,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
                                 case "803":
                                     showFiveToast("数据异常，请稍后再试");
                                     finish();
+                                case "101":
                                 case "806":
                                     showFiveToast("最多只能创建10个地址哦");
                                     break;

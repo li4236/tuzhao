@@ -77,7 +77,9 @@ public class UserManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if (userInfo == null||userInfo.getToken()==null) {
+            mHasLogin = false;
+        }
         this.userInfo = userInfo;
     }
 

@@ -161,6 +161,24 @@ public class AcceptTicketAddressInfo implements Parcelable {
         this.isDefault = isDefault;
     }
 
+    @Override
+    public String toString() {
+        return "AcceptTicketAddressInfo{" +
+                "ticketId='" + ticketId + '\'' +
+                ", type='" + type + '\'' +
+                ", company='" + company + '\'' +
+                ", companyPhone='" + companyPhone + '\'' +
+                ", acceptPersonName='" + acceptPersonName + '\'' +
+                ", acceptPersonTelephone='" + acceptPersonTelephone + '\'' +
+                ", acceptPersonEmail='" + acceptPersonEmail + '\'' +
+                ", acceptArea='" + acceptArea + '\'' +
+                ", acceptAddress='" + acceptAddress + '\'' +
+                ", taxNumber='" + taxNumber + '\'' +
+                ", bank='" + bank + '\'' +
+                ", bankNumber='" + bankNumber + '\'' +
+                ", isDefault='" + isDefault + '\'' +
+                '}';
+    }
 
     @Override
     public int describeContents() {

@@ -130,7 +130,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
                     return (T) base_info;
                 }else{
                     //抛出异常错误码
-                    throw new IllegalStateException(""+code);
+                    throw new IllegalStateException(String.valueOf(code));
                 }
             }catch (NumberFormatException e){
                 //抛出异常错误码
