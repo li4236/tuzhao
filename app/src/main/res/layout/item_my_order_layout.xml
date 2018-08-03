@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    app:cardElevation="1dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
     android:background="@color/w0">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/my_order_appoint_date_iv"
@@ -22,7 +27,6 @@
         android:id="@+id/my_order_appoint_date"
         style="@style/TwentyTextB1Style"
         android:layout_marginStart="10dp"
-        android:text="5月21日"
         app:layout_constraintBottom_toBottomOf="@+id/my_order_appoint_date_iv"
         app:layout_constraintStart_toEndOf="@id/my_order_appoint_date_iv"
         app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date_iv" />
@@ -53,7 +57,6 @@
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="1"
-        android:text="天之力停车场"
         app:layout_constraintBottom_toBottomOf="@+id/my_order_status_iv"
         app:layout_constraintEnd_toStartOf="@+id/my_order_time"
         app:layout_constraintStart_toStartOf="@id/my_order_appoint_date"
@@ -75,7 +78,6 @@
     <TextView
         android:id="@+id/my_order_park_car_number"
         style="@style/TwentyTextG6Style"
-        android:text="粤TZL666"
         app:layout_constraintBottom_toBottomOf="@+id/my_order_park_car_number_iv"
         app:layout_constraintStart_toStartOf="@id/my_order_park_lot"
         app:layout_constraintTop_toTopOf="@+id/my_order_park_car_number_iv" />
@@ -95,4 +97,6 @@
         app:layout_constraintEnd_toEndOf="@id/my_order_time"
         app:layout_constraintTop_toTopOf="@+id/my_order_park_car_number" />
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
