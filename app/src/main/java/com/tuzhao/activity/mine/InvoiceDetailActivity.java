@@ -52,7 +52,7 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        if ((mInvoiceSituation = (InvoiceSituation) getIntent().getSerializableExtra(ConstansUtil.INVOICE_SITUATION)) == null) {
+        if ((mInvoiceSituation = getIntent().getParcelableExtra(ConstansUtil.INVOICE_SITUATION)) == null) {
             showFiveToast("获取发票详情失败，请返回重试");
             finish();
         }

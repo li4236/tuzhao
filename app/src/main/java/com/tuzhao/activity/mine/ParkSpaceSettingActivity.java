@@ -173,7 +173,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void onDestroy() {
         super.onDestroy();
         Intent intent = new Intent();
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
+        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
         setResult(RESULT_OK, intent);
     }
 
@@ -407,7 +407,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                         }
                         setParkspaceStatus();
                         Intent intent = new Intent();
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mPark_info);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
                         setResult(RESULT_OK, intent);
                         dismmisLoadingDialog();
                     }
@@ -439,8 +439,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT) != null) {
-                mPark_info = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
+            if (data.getSerializableExtra(ConstansUtil.FOR_REQEUST_RESULT) != null) {
+                mPark_info = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQEUST_RESULT);
                 setParkSpaceInfo();
             }
         }

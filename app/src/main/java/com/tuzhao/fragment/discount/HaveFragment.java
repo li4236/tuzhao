@@ -112,7 +112,7 @@ public class HaveFragment extends BaseFragment {
                         Intent intent = new Intent();
                         Bundle data = new Bundle();
                         data.putParcelable(ConstansUtil.CHOOSE_DISCOUNT, discountInfo);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, data);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, data);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }
@@ -126,7 +126,7 @@ public class HaveFragment extends BaseFragment {
                     Intent intent = new Intent();
                     Bundle data = new Bundle();
                     data.putParcelable(ConstansUtil.CHOOSE_DISCOUNT, null);
-                    intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, data);
+                    intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, data);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
                 }

@@ -652,7 +652,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                         mParkInfo.setPauseShareDate(pauseShareDate.toString());
                         mParkInfo.setOpen_time(everyDayShareTime.toString());
                         Intent intent = new Intent();
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, mParkInfo);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mParkInfo);
                         setResult(RESULT_OK, intent);
                         dismmisLoadingDialog();
                         showFiveToast("修改成功");
@@ -745,7 +745,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                     public void onSuccess(Base_Class_Info<Void> responseData, Call call, Response response) {
                         dismmisLoadingDialog();
                         Intent intent = new Intent();
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, true);
                         setResult(RESULT_OK, intent);
                         showFiveToast("提交成功");
                         finish();

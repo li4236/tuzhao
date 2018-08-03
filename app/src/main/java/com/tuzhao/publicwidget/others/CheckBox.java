@@ -21,6 +21,8 @@ public class CheckBox extends AppCompatTextView implements Checkable {
 
     private OnCheckChangeListener mOnCheckChangeListener;
 
+    private OnCheckHandeListener mOnCheckHandeListener;
+
     public CheckBox(Context context) {
         super(context);
     }
@@ -36,9 +38,15 @@ public class CheckBox extends AppCompatTextView implements Checkable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            setChecked(!mIsCheck);
-            setDrawableStart();
-            mOnCheckChangeListener.onCheckChange(mIsCheck);
+            if (mOnCheckHandeListener != null && mOnCheckHandeListener.onCheckChange(!mIsCheck)) {
+                setChecked(!mIsCheck);
+                setDrawableStart();
+
+                if (mOnCheckChangeListener != null) {
+                    mOnCheckChangeListener.onCheckChange(mIsCheck);
+                }
+
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -91,9 +99,24 @@ public class CheckBox extends AppCompatTextView implements Checkable {
         mOnCheckChangeListener = onCheckChangeListener;
     }
 
+    public OnCheckHandeListener getOnCheckHandeListener() {
+        return mOnCheckHandeListener;
+    }
+
+    public void setOnCheckHandeListener(OnCheckHandeListener onCheckHandeListener) {
+        mOnCheckHandeListener = onCheckHandeListener;
+    }
+
     public interface OnCheckChangeListener {
 
         void onCheckChange(boolean isCheck);
 
     }
+
+    public interface OnCheckHandeListener {
+
+        boolean onCheckChange(boolean isChecked);
+
+    }
+
 }

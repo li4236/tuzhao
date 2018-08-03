@@ -126,7 +126,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
 
     private void notifyShowEmptyView(boolean show) {
         Intent intent = new Intent(ConstansUtil.SHOW_EMPTY_VIEW);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, show);
+        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, show);
         IntentObserable.dispatch(intent);
     }
 

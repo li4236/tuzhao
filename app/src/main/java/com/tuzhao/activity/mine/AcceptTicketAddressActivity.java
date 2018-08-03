@@ -49,7 +49,7 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        mIsForResult = getIntent().getBooleanExtra(ConstansUtil.FOR_REQUEST_RESULT, false);
+        mIsForResult = getIntent().getBooleanExtra(ConstansUtil.FOR_REQEUST_RESULT, false);
 
         mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.setEmptyView(R.layout.no_address_empty_layout);

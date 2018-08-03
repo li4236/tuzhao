@@ -49,7 +49,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler 
                 //正确返回
                 if (resp.getType() == LOGIN) {
                     Intent intent = new Intent(ConstansUtil.WECHAT_CODE);
-                    intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, ((SendAuth.Resp) resp).code);
+                    intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, ((SendAuth.Resp) resp).code);
                     IntentObserable.dispatch(intent);
                 } else {
                     MyToast.showToast(WXEntryActivity.this, "分享成功", 5);

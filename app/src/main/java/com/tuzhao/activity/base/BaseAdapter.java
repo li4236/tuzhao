@@ -198,6 +198,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void addFirstData(T t) {
         mData.add(0, t);
         notifyItemInserted(getHeadViewCount());
+        notifyItemRangeRemoved(1, mData.size() - 1);
     }
 
     public void addData(T t) {
@@ -304,9 +305,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void removeData(List<T> data) {
         if (mData.containsAll(data)) {
             int startPosition = mData.indexOf(data.get(0));
-            int endPosition = mData.indexOf(data.get(data.size() - 1));
             mData.removeAll(data);
-            notifyItemMoved(startPosition + getHeadViewCount(), endPosition + getHeadViewCount());
+            notifyItemRangeRemoved(startPosition + getHeadViewCount(), data.size());
         }
     }
 

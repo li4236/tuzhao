@@ -2,100 +2,100 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    app:cardElevation="1dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
-    android:background="@color/w0">
+    android:background="@color/w0"
+    app:cardElevation="1dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/my_order_appoint_date_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="13dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@mipmap/ic_time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/my_order_appoint_date_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="13dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@mipmap/ic_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/my_order_appoint_date"
-        style="@style/TwentyTextB1Style"
-        android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/my_order_appoint_date_iv"
-        app:layout_constraintStart_toEndOf="@id/my_order_appoint_date_iv"
-        app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date_iv" />
+        <TextView
+            android:id="@+id/my_order_appoint_date"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/my_order_appoint_date_iv"
+            app:layout_constraintStart_toEndOf="@id/my_order_appoint_date_iv"
+            app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date_iv" />
 
-    <TextView
-        style="@style/TwentyTextB1Style"
-        android:layout_marginEnd="12dp"
-        android:id="@+id/my_order_waiting_for_pay"
-        android:textColor="@color/r6"
-        app:layout_constraintBottom_toBottomOf="@+id/my_order_appoint_date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date" />
+        <TextView
+            android:id="@+id/my_order_waiting_for_pay"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginEnd="12dp"
+            android:textColor="@color/r6"
+            app:layout_constraintBottom_toBottomOf="@+id/my_order_appoint_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date" />
 
-    <com.tuzhao.publicwidget.others.CircleView
-        android:id="@+id/my_order_status_iv"
-        android:layout_width="7dp"
-        android:layout_height="7dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="@id/my_order_appoint_date_iv"
-        app:layout_constraintStart_toStartOf="@id/my_order_appoint_date_iv"
-        app:layout_constraintTop_toBottomOf="@+id/my_order_appoint_date_iv" />
+        <com.tuzhao.publicwidget.others.CircleView
+            android:id="@+id/my_order_status_iv"
+            android:layout_width="7dp"
+            android:layout_height="7dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintEnd_toEndOf="@id/my_order_appoint_date_iv"
+            app:layout_constraintStart_toStartOf="@id/my_order_appoint_date_iv"
+            app:layout_constraintTop_toBottomOf="@+id/my_order_appoint_date_iv" />
 
-    <TextView
-        android:id="@+id/my_order_park_lot"
-        style="@style/TwentyTextB1Style"
-        android:layout_width="0dp"
-        android:layout_marginEnd="16dp"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/my_order_status_iv"
-        app:layout_constraintEnd_toStartOf="@+id/my_order_time"
-        app:layout_constraintStart_toStartOf="@id/my_order_appoint_date"
-        app:layout_constraintTop_toTopOf="@+id/my_order_status_iv" />
+        <TextView
+            android:id="@+id/my_order_park_lot"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/my_order_status_iv"
+            app:layout_constraintEnd_toStartOf="@+id/my_order_time"
+            app:layout_constraintStart_toStartOf="@id/my_order_appoint_date"
+            app:layout_constraintTop_toTopOf="@+id/my_order_status_iv" />
 
-    <ImageView
-        android:id="@+id/my_order_park_car_number_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:layout_marginTop="15dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_car_number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/my_order_status_iv"
-        app:layout_constraintStart_toStartOf="@id/my_order_status_iv"
-        app:layout_constraintTop_toBottomOf="@+id/my_order_status_iv" />
+        <ImageView
+            android:id="@+id/my_order_park_car_number_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="13dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_car_number"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/my_order_status_iv"
+            app:layout_constraintStart_toStartOf="@id/my_order_status_iv"
+            app:layout_constraintTop_toBottomOf="@+id/my_order_status_iv" />
 
-    <TextView
-        android:id="@+id/my_order_park_car_number"
-        style="@style/TwentyTextG6Style"
-        app:layout_constraintBottom_toBottomOf="@+id/my_order_park_car_number_iv"
-        app:layout_constraintStart_toStartOf="@id/my_order_park_lot"
-        app:layout_constraintTop_toTopOf="@+id/my_order_park_car_number_iv" />
+        <TextView
+            android:id="@+id/my_order_park_car_number"
+            style="@style/TwentyTextG6Style"
+            app:layout_constraintBottom_toBottomOf="@+id/my_order_park_car_number_iv"
+            app:layout_constraintStart_toStartOf="@id/my_order_park_lot"
+            app:layout_constraintTop_toTopOf="@+id/my_order_park_car_number_iv" />
 
-    <TextView
-        android:id="@+id/my_order_time"
-        style="@style/TwentyTextB1Style"
-        android:layout_marginEnd="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/my_order_park_lot"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/my_order_park_lot" />
+        <TextView
+            android:id="@+id/my_order_time"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/my_order_park_lot"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/my_order_park_lot" />
 
-    <TextView
-        android:id="@+id/my_order_time_description"
-        style="@style/TwentyTextB1Style"
-        app:layout_constraintBottom_toBottomOf="@+id/my_order_park_car_number"
-        app:layout_constraintEnd_toEndOf="@id/my_order_time"
-        app:layout_constraintTop_toTopOf="@+id/my_order_park_car_number" />
+        <TextView
+            android:id="@+id/my_order_time_description"
+            style="@style/TwentyTextB1Style"
+            app:layout_constraintBottom_toBottomOf="@+id/my_order_park_car_number"
+            app:layout_constraintEnd_toEndOf="@id/my_order_time"
+            app:layout_constraintTop_toTopOf="@+id/my_order_park_car_number" />
 
     </android.support.constraint.ConstraintLayout>
 

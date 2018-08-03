@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Objects;
+
 /**
  * Created by juncoder on 2018/3/28.
  */
@@ -149,4 +151,17 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         }
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InvoiceInfo that = (InvoiceInfo) o;
+        return Objects.equals(orderId, that.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(orderId);
+    }
 }

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:background="@color/w0">
+    android:background="@color/w0"
+    android:paddingBottom="9dp">
 
     <TextView
         android:id="@+id/accept_ticket_address_name"
@@ -51,28 +52,29 @@
         app:layout_constraintStart_toStartOf="@id/accept_ticket_address_name"
         app:layout_constraintTop_toBottomOf="@+id/accept_ticket_address_address" />
 
-    <CheckBox
+    <com.tuzhao.publicwidget.others.CheckBox
         android:id="@+id/accept_ticket_address_set_default"
         style="@style/YellowCheckStyle"
-        android:paddingBottom="9dp"
-        android:paddingTop="9dp"
-        android:text="设为默认"
+        android:paddingBottom="24dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="24dp"
         android:textColor="@color/g6"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/accept_ticket_address_name"
-        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/accept_ticket_address_delete"
         style="@style/TenTextG6Stytle"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="9dp"
         android:drawablePadding="7dp"
         android:drawableStart="@mipmap/ic_del"
         android:text="删除"
-        app:layout_constraintBottom_toBottomOf="@+id/accept_ticket_address_set_default"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_set_default" />
+        app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
     <TextView
         android:id="@+id/accept_ticket_address_edit"
@@ -82,8 +84,7 @@
         android:drawablePadding="7dp"
         android:drawableStart="@mipmap/ic_write"
         android:text="编辑"
-        app:layout_constraintBottom_toBottomOf="@+id/accept_ticket_address_set_default"
         app:layout_constraintEnd_toStartOf="@id/accept_ticket_address_delete"
-        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_set_default" />
+        app:layout_constraintTop_toTopOf="@+id/accept_ticket_address_delete" />
 
 </android.support.constraint.ConstraintLayout>

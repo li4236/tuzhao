@@ -502,7 +502,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
                         showFiveToast("延长时间成功");
                     }
@@ -694,7 +694,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         Bundle bundle = new Bundle();
         mParkOrderInfo.setOrder_status("3");
         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);
     }
 

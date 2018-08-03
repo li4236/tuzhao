@@ -490,7 +490,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             mParkOrderInfo.setOrder_status(o.data.getOrder_status());
                             mParkOrderInfo.setActual_pay_fee(o.data.getActual_pay_fee());
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                            intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                             IntentObserable.dispatch(intent);
                             dismmisLoadingDialog();
                         } else if (o.data.getOrder_status().equals("3")) {
@@ -534,7 +534,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             mParkOrderInfo.setOrder_status("4");
                             mParkOrderInfo.setActual_pay_fee("0.0");
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                            intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                            intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                             IntentObserable.dispatch(intent);
                             dismmisLoadingDialog();
                             getActivity().finish();
@@ -556,7 +556,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.CHOOSE_DISCOUNT:
-                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     mChooseDiscount = bundle.getParcelable(ConstansUtil.CHOOSE_DISCOUNT);
                     calculateShouldPayFee();
                     break;

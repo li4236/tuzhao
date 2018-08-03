@@ -68,7 +68,11 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         mInvoceReimburesmentSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
+                Intent intent = new Intent(InvoiceReimbursementActivity.this, ConfirmAcceptInvoiceAddressActivity.class);
+                intent.putParcelableArrayListExtra(ConstansUtil.INVOICE_LIST, mChooseInvoice);
+                intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, getText(mTotalPrice).substring(5, getTextLength(mTotalPrice) - 1));
+                startActivityForResult(intent, REQUEST_CODE);
+                //startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
             }
         });
 
@@ -112,11 +116,9 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                                         showFiveToast("账号异常，请重新登录");
                                         startLogin();
                                         break;
-                                    /*case "102":
-
-                                     *//* showFiveToast("查询不到订单信息，请稍后再试");
-                                        finish();*//*
-                                        break;*/
+                                    case "102":
+                                        showFiveToast("没有更多数据啦");
+                                        break;
                                 }
                             }
                         });
@@ -155,10 +157,6 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
         checkBox.setOnCheckedChangeListener(checkedChangeListener);
 
-        String pic = invoiceInfo.getPictures();
-        if (pic.contains(",")) {
-            pic = pic.substring(0, pic.indexOf(","));
-        }
         holder.setText(R.id.invoice_reimbursement_park_lot, invoiceInfo.getParkspaceName())
                 .setText(R.id.invoice_reimbursement_park_time, DateUtil.getMonthToDay(invoiceInfo.getParkStarttime()))
                 .setText(R.id.invoice_reimbursement_location, invoiceInfo.getLocationDescribe())
@@ -210,7 +208,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         String totalPriceString = mDecimalFormat.format(calculateTotalPrice());
         String string = "开票总额:" + totalPriceString + "元";
         mTotalPrice.setText(string);
-        
+
         if (Double.valueOf(totalPriceString) >= 100) {
             mInvoceReimburesmentSubmit.setBackgroundResource(R.drawable.bg_yellow);
             if (!mInvoceReimburesmentSubmit.isClickable()) {
@@ -240,8 +238,10 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             ArrayList<InvoiceInfo> arrayList;
-            if ((arrayList = data.getParcelableArrayListExtra(ConstansUtil.FOR_REQUEST_RESULT)) != null) {
+            if ((arrayList = data.getParcelableArrayListExtra(ConstansUtil.FOR_REQEUST_RESULT)) != null) {
                 mCommonAdapter.removeData(arrayList);
+                mChooseInvoice.clear();
+                setTotalPrice();
             }
         }
     }

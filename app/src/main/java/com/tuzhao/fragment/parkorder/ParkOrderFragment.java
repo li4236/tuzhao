@@ -231,7 +231,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.FINISH_APPOINTMENT:
-                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (parkOrderInfo != null) {
                         parkOrderInfo.setOrder_status("2");
@@ -250,14 +250,14 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.CHANGE_APPOINTMENT_INFO:
-                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo changeOrderInfo = changBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (changeOrderInfo != null) {
                         mCommonAdapter.notifyDataChange(changeOrderInfo);
                     }
                     break;
                 case ConstansUtil.CANCEL_ORDER:
-                    Bundle cancelBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle cancelBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo cancelParkOrderInfo = cancelBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (cancelParkOrderInfo != null) {
                         cancelParkOrderInfo.setOrder_status("6");
@@ -267,7 +267,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.CHANGE_PARK_ORDER_INRO:
-                    Bundle changeBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle changeBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo changeParkOrderInfo = changeBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (changeParkOrderInfo != null) {
                         mCommonAdapter.notifyDataChange(changeParkOrderInfo);
@@ -276,7 +276,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 case ConstansUtil.FINISH_PARK:
                     if (mOrderStatus == 0 || mOrderStatus == 2) {
                         //结束租用中
-                        Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo parkingOrderInfo = parkingBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         if (parkingOrderInfo != null) {
                             if (mOrderStatus == 0) {
@@ -289,20 +289,20 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     break;
                 case ConstansUtil.FINISH_PAY_ORDER:
                     if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
-                        Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         mCommonAdapter.notifyDataChange((ParkOrderInfo) finishBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO));
                     }
                     break;
                 case ConstansUtil.COMMENT_SUCCESS:
                     if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5) {
-                        Bundle commentBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        Bundle commentBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo commentOrder = commentBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         mCommonAdapter.notifyDataChange(commentOrder);
                     }
                     break;
                 case ConstansUtil.DELETE_PARK_ORDER:
                     if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5 || mOrderStatus == 6) {
-                        Bundle orderBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                        Bundle orderBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo orderInfo = orderBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         mCommonAdapter.removeData(orderInfo);
                     }

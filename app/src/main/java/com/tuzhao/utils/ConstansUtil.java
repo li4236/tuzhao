@@ -128,8 +128,7 @@ public class ConstansUtil {
     /**
      * activity返回给上个activity的结果的key
      */
-    public static final String FOR_REQUEST_RESULT = "ForRequestResult";
-
+    public static final String FOR_REQEUST_RESULT = "ForRequestResult";
 
     /**
      * 报销的发票的详情

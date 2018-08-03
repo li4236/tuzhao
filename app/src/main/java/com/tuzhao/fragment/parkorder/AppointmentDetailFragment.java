@@ -286,7 +286,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                         intent.setAction(ConstansUtil.CANCEL_ORDER);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
                         dismmisLoadingDialog();
                         if (getActivity() != null) {
@@ -654,7 +654,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);
     }
 
@@ -898,7 +898,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);
     }
 
@@ -915,7 +915,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                         Intent intent = new Intent(getActivity(), OrderActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                         startActivity(intent);
                         finish();
                     }

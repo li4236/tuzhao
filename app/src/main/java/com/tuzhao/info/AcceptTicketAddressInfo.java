@@ -3,6 +3,8 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
 /**
  * Created by juncoder on 2018/3/29.
  */
@@ -212,4 +214,19 @@ public class AcceptTicketAddressInfo implements Parcelable {
             return new AcceptTicketAddressInfo[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcceptTicketAddressInfo that = (AcceptTicketAddressInfo) o;
+        return Objects.equals(ticketId, that.ticketId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(ticketId);
+    }
+
 }

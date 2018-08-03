@@ -211,7 +211,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.FINISH_APPOINTMENT:
-                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (parkOrderInfo != null) {
                         parkOrderInfo.setOrder_status("2");
@@ -223,7 +223,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     }
                     break;
                 case ConstansUtil.CHANGE_APPOINTMENT_INFO:
-                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo changeOrderInfo = changBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (changeOrderInfo != null) {
                         FragmentTransaction changeTransaction = getSupportFragmentManager().beginTransaction();
@@ -232,7 +232,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     }
                     break;
                 case ConstansUtil.FINISH_PARK:
-                    Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle parkingBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo parkingOrderInfo = parkingBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (parkingOrderInfo != null) {
                         FragmentTransaction parkingTransaction = getSupportFragmentManager().beginTransaction();
@@ -241,7 +241,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     }
                     break;
                 case ConstansUtil.FINISH_PAY_ORDER:
-                    Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQUEST_RESULT);
+                    Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo finishParkOrder = finishBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (finishParkOrder != null) {
                         FragmentTransaction finishTransaction = getSupportFragmentManager().beginTransaction();

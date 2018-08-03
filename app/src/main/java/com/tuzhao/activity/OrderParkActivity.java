@@ -1293,7 +1293,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         Intent intent = new Intent(OrderParkActivity.this, OrderActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                         startActivity(intent);
                         finish();
                     }

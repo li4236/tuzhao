@@ -155,7 +155,7 @@ public class MyMonthlyCardActivity extends BaseStatusActivity implements View.On
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             if (intent.getAction().equals(ConstansUtil.SHOW_EMPTY_VIEW)) {
-                showViewStub(intent.getBooleanExtra(ConstansUtil.FOR_REQUEST_RESULT, true) ? View.VISIBLE : View.INVISIBLE);
+                showViewStub(intent.getBooleanExtra(ConstansUtil.FOR_REQEUST_RESULT, true) ? View.VISIBLE : View.INVISIBLE);
             }
         }
     }

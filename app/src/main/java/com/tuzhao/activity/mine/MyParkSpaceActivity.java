@@ -136,8 +136,8 @@ public class MyParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
-            if (data.hasExtra(ConstansUtil.FOR_REQUEST_RESULT)) {
-                Park_Info parkInfo = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQUEST_RESULT);
+            if (data.hasExtra(ConstansUtil.FOR_REQEUST_RESULT)) {
+                Park_Info parkInfo = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQEUST_RESULT);
                 //如果在车位设置或者共享时间修改那里改了数据的则同步数据
                 for (int i = 0; i < mCommonAdapter.getData().size(); i++) {
                     if (parkInfo.getId().equals(mCommonAdapter.getData().get(i).getId())) {

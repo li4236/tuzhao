@@ -413,7 +413,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.WECHAT_CODE:
-                    requestWechatBinding(intent.getStringExtra(ConstansUtil.FOR_REQUEST_RESULT));
+                    requestWechatBinding(intent.getStringExtra(ConstansUtil.FOR_REQEUST_RESULT));
                     break;
             }
         }

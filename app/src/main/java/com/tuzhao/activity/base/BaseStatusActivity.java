@@ -259,7 +259,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     protected void startActivityForResult(Class<?> tClass, int requestCode) {
         Intent intent = new Intent(this, tClass);
-        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, true);
+        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, true);
         startActivityForResult(intent, requestCode);
     }
 

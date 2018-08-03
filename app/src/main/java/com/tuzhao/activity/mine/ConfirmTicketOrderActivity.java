@@ -214,7 +214,7 @@ public class ConfirmTicketOrderActivity extends BaseStatusActivity implements Vi
                         dismmisLoadingDialog();
                         showFiveToast("开票成功,我们将尽快为您发货");
                         Intent intent = new Intent();
-                        intent.putParcelableArrayListExtra(ConstansUtil.FOR_REQUEST_RESULT, (ArrayList<? extends Parcelable>) mOrderAdapter.getData());
+                        intent.putParcelableArrayListExtra(ConstansUtil.FOR_REQEUST_RESULT, (ArrayList<? extends Parcelable>) mOrderAdapter.getData());
                         setResult(RESULT_OK, intent);
                         finish();
                     }

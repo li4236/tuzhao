@@ -113,7 +113,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.getBooleanExtra(ConstansUtil.FOR_REQUEST_RESULT, false)) {
+            if (data.getBooleanExtra(ConstansUtil.FOR_REQEUST_RESULT, false)) {
                 finish();
             }
         } else {

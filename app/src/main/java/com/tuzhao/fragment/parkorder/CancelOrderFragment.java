@@ -157,7 +157,7 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
                         intent.setAction(ConstansUtil.DELETE_PARK_ORDER);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
-                        intent.putExtra(ConstansUtil.FOR_REQUEST_RESULT, bundle);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                         IntentObserable.dispatch(intent);
                         if (getActivity() != null) {
                             getActivity().finish();
