@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -73,7 +72,6 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 intent.putParcelableArrayListExtra(ConstansUtil.INVOICE_LIST, mChooseInvoice);
                 intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, getText(mTotalPrice).substring(5, getTextLength(mTotalPrice) - 1));
                 startActivityForResult(intent, REQUEST_CODE);
-                //startActivityForResult(ConfirmTicketOrderActivity.class, REQUEST_CODE, ConstansUtil.INVOICE_LIST, mChooseInvoice);
             }
         });
 

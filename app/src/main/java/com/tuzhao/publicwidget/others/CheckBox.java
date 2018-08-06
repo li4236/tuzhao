@@ -38,7 +38,7 @@ public class CheckBox extends AppCompatTextView implements Checkable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (mOnCheckHandeListener != null && mOnCheckHandeListener.onCheckChange(!mIsCheck)) {
+            if (mOnCheckHandeListener == null || mOnCheckHandeListener.onCheckChange(!mIsCheck)) {
                 setChecked(!mIsCheck);
                 setDrawableStart();
 
@@ -53,8 +53,10 @@ public class CheckBox extends AppCompatTextView implements Checkable {
 
     @Override
     public void setChecked(boolean checked) {
-        mIsCheck = checked;
-        setDrawableStart();
+        if (mIsCheck != checked) {
+            mIsCheck = checked;
+            setDrawableStart();
+        }
     }
 
     @Override
