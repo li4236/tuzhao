@@ -315,8 +315,24 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void removeData(List<T> data) {
         if (mData.containsAll(data)) {
             int startPosition = mData.indexOf(data.get(0));
+            boolean isSequence = true;
+            int index = startPosition;
+            for (int i = 1; i < data.size(); i++) {
+                if (mData.indexOf(data.get(i)) == index + 1) {
+                    index++;
+                } else {
+                    isSequence = false;
+                    break;
+                }
+            }
             mData.removeAll(data);
-            notifyItemRangeRemoved(startPosition + getHeadViewCount(), data.size());
+            if (isSequence) {
+                //如果要删除的数据在原数据中是顺序存放的则删除后局部刷新
+                notifyItemRangeRemoved(startPosition + getHeadViewCount(), data.size());
+            } else {
+                //如果不是顺序存放的则全局刷新
+                notifyDataSetChanged();
+            }
         }
     }
 
