@@ -1,12 +1,13 @@
 package com.tuzhao.info;
 
-import com.tuzhao.info.base_info.BaseInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by juncoder on 2018/4/18.
  */
 
-public class NewParkSpaceInfo extends BaseInfo {
+public class NewParkSpaceInfo implements Parcelable {
 
     private String parkspace_id;
 
@@ -67,4 +68,43 @@ public class NewParkSpaceInfo extends BaseInfo {
     public void setHourRent(boolean dayRent) {
         isHourRent = dayRent;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.parkspace_id);
+        dest.writeString(this.citycode);
+        dest.writeString(this.address_memo);
+        dest.writeString(this.applicant_name);
+        dest.writeString(this.install_time);
+        dest.writeByte(this.isHourRent ? (byte) 1 : (byte) 0);
+    }
+
+    public NewParkSpaceInfo() {
+    }
+
+    protected NewParkSpaceInfo(Parcel in) {
+        this.parkspace_id = in.readString();
+        this.citycode = in.readString();
+        this.address_memo = in.readString();
+        this.applicant_name = in.readString();
+        this.install_time = in.readString();
+        this.isHourRent = in.readByte() != 0;
+    }
+
+    public static final Creator<NewParkSpaceInfo> CREATOR = new Creator<NewParkSpaceInfo>() {
+        @Override
+        public NewParkSpaceInfo createFromParcel(Parcel source) {
+            return new NewParkSpaceInfo(source);
+        }
+
+        @Override
+        public NewParkSpaceInfo[] newArray(int size) {
+            return new NewParkSpaceInfo[size];
+        }
+    };
 }

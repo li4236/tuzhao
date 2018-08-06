@@ -65,7 +65,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
 
-        if ((mPark_info = (Park_Info) getIntent().getSerializableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
+        if ((mPark_info = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
             showFiveToast("获取车位信息失败，请稍后重试");
             finish();
         }
@@ -439,8 +439,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.getSerializableExtra(ConstansUtil.FOR_REQEUST_RESULT) != null) {
-                mPark_info = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQEUST_RESULT);
+            if (data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT) != null) {
+                mPark_info = (Park_Info) data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
                 setParkSpaceInfo();
             }
         }

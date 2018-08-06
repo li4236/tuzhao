@@ -80,9 +80,9 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
     @Override
     protected void initView(Bundle savedInstanceState) {
 
-        if ((mNewParkSpaceInfo = (NewParkSpaceInfo) getIntent().getSerializableExtra(ConstansUtil.ADD_PARK_SPACE_TEME)) == null) {
+        if ((mNewParkSpaceInfo =  getIntent().getParcelableExtra(ConstansUtil.ADD_PARK_SPACE_TEME)) == null) {
 
-            if ((mParkInfo = (Park_Info) getIntent().getSerializableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
+            if ((mParkInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
                 showFiveToast("打开失败，请返回重试");
                 finish();
             }

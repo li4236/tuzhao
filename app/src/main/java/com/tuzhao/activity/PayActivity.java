@@ -38,7 +38,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 /**
- * Created by TZL12 on 2018/2/28.
+ * Created by juncoder on 2018/2/28.
  */
 
 public class PayActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {

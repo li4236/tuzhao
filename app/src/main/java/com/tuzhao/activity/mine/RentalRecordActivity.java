@@ -47,7 +47,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
 
-        if ((mPark_info = (Park_Info) getIntent().getSerializableExtra("parkdata")) == null) {
+        if ((mPark_info = getIntent().getParcelableExtra("parkdata")) == null) {
             showFiveToast("获取出租记录失败，请返回重试");
             finish();
         }

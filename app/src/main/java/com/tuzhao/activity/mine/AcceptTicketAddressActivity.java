@@ -326,9 +326,9 @@ public class AcceptTicketAddressActivity extends BaseRefreshActivity<AcceptTicke
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             AcceptTicketAddressInfo addressInfo;
-            if ((addressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS)) != null) {
+            if ((addressInfo = data.getParcelableExtra(ConstansUtil.ADD_ACCEPT_ADDRESS)) != null) {
                 mCommonAdapter.addData(addressInfo);        //如果是新增发票则返回后把新增的发票添加
-            } else if ((addressInfo = (AcceptTicketAddressInfo) data.getSerializableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS)) != null) {
+            } else if ((addressInfo = data.getParcelableExtra(ConstansUtil.CHAGNE_ACCEPT_ADDRESS)) != null) {
                 mCommonAdapter.notifyDataChange(mChangeAddressPosition, addressInfo);       //如果是编辑发票则更新编辑后的发票
             }
         }

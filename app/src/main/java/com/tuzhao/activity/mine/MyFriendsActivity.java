@@ -70,7 +70,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        if ((mPark_info = (Park_Info) getIntent().getSerializableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
+        if ((mPark_info = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
             showFiveToast("打开失败，请退出重试");
             finish();
         }

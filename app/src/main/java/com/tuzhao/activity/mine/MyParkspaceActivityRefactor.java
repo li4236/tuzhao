@@ -119,7 +119,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                     }
                 }
             } else if (data.hasExtra(ConstansUtil.FOR_REQEUST_RESULT)) {
-                Park_Info parkInfo = (Park_Info) data.getSerializableExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
                 for (int i = 0; i < mFragments.size(); i++) {
                     if (mFragments.get(i).getParkInfo().getId().equals(parkInfo.getId())) {
                         mFragments.get(i).setParkInfo(parkInfo);
