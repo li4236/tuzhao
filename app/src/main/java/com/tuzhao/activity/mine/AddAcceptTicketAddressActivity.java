@@ -249,6 +249,9 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
         for (CityInfo cityInfo : cityInfoArrayList) {
             //省
+            if (cityInfo.getName().equals("台湾省") || cityInfo.getName().equals("香港") || cityInfo.getName().equals("澳门")) {
+                continue;
+            }
             mProvinces.add(cityInfo.getName());
 
             citys = new ArrayList<>(cityInfo.getCityList().size());
@@ -375,7 +378,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         } else if (isEmpty(mCompanyTelephone)) {
             showToast(mCompanyTelephone);
             return false;
-        }else if(getTextLength(mCompanyTelephone)<6){
+        } else if (getTextLength(mCompanyTelephone) < 6) {
             showFiveToast("公司电话格式不正确哦");
         } else if (isEmpty(mAcceptPersonName)) {
             showToast(mAcceptPersonName);
@@ -383,7 +386,7 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         } else if (isEmpty(mTaxNumber)) {
             showToast(mTaxNumber);
             return false;
-        } else if (getTextLength(mTaxNumber)< 15) {
+        } else if (getTextLength(mTaxNumber) < 15) {
             showFiveToast("你的纳税人识别号长度不够哦");
             return false;
         }
