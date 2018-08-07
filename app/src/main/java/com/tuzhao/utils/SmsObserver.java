@@ -6,8 +6,6 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,11 +47,11 @@ public class SmsObserver extends ContentObserver {
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(smsBody);
                 String smsContent = m.replaceAll("").trim();
-                if (!TextUtils.isEmpty(smsContent)) {
+                if (smsContent.length()==4) {
                     listener.onResult(smsContent);
                 }
-                cursor.close();
             }
+            cursor.close();
         }
     }
 

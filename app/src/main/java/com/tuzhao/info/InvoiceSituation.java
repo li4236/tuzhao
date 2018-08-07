@@ -52,7 +52,7 @@ public class InvoiceSituation implements Parcelable {
     private String deliveryDate;
 
     //开票时间
-    private String invoiceDate;
+    private String applicationDate;
 
     //开票的总金额
     private String totalPrice;
@@ -186,12 +186,12 @@ public class InvoiceSituation implements Parcelable {
         this.deliveryDate = deliveryDate;
     }
 
-    public String getInvoiceDate() {
-        return invoiceDate;
+    public String getApplicationDate() {
+        return applicationDate;
     }
 
-    public void setInvoiceDate(String invoiceDate) {
-        this.invoiceDate = invoiceDate;
+    public void setApplicationDate(String applicationDate) {
+        this.applicationDate = applicationDate;
     }
 
     @Override
@@ -214,7 +214,7 @@ public class InvoiceSituation implements Parcelable {
         dest.writeString(this.progress);
         dest.writeString(this.courierNumber);
         dest.writeString(this.deliveryDate);
-        dest.writeString(this.invoiceDate);
+        dest.writeString(this.applicationDate);
         dest.writeString(this.totalPrice);
     }
 
@@ -235,7 +235,7 @@ public class InvoiceSituation implements Parcelable {
         this.progress = in.readString();
         this.courierNumber = in.readString();
         this.deliveryDate = in.readString();
-        this.invoiceDate = in.readString();
+        this.applicationDate = in.readString();
         this.totalPrice = in.readString();
     }
 

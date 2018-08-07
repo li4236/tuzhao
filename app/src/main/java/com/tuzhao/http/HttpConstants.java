@@ -579,14 +579,14 @@ public class HttpConstants {
     public static final String requestUnbindThirdPartyAccount = ROOT_URL + "requestUnbindThirdPartyAccount";
 
     /**
-     * 请求发送修改密码的验证码
+     * 请求发送验证码
      */
-    public static final String sendChangePasswordCode = ROOT_URL + "sendChangePasswordCode";
+    public static final String sendVerificationCode = ROOT_URL + "sendVerificationCode";
 
     /**
-     * 验证修改密码的验证码
+     * 校验验证码
      */
-    public static final String verifyChangePasswordCode = ROOT_URL + "verifyChangePasswordCode";
+    public static final String checkVerificationCode = ROOT_URL + "checkVerificationCode";
 
     /**
      * 通过原密码修改密码
@@ -602,5 +602,10 @@ public class HttpConstants {
      * 获取用户的车牌号
      */
     public static final String getCarNumber = ROOT_URL + "getCarNumber";
+
+    /**
+     * 修改手机号码
+     */
+    public static final String changeTelephoneNumber = ROOT_URL + "changeTelephoneNumber";
 
 }

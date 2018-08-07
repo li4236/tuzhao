@@ -106,7 +106,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         mSendAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendChangePasswordCode();
+                sendVerificationCode();
             }
         });
     }
@@ -178,7 +178,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         } else {
             registerSmsObserver();
         }
-        sendChangePasswordCode();
+        sendVerificationCode();
         registerClipEvents();
     }
 
@@ -208,7 +208,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                                 mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                                 mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
                             }
-                            verifyChangePasswordCode((String) mClipData);
+                            checkVerificationCode((String) mClipData);
                             mClipData = null;
                         }
                     }
@@ -227,7 +227,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                 mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
             }
-            verifyChangePasswordCode((String) mClipData);
+            checkVerificationCode((String) mClipData);
             mClipData = null;
         }
     }
@@ -286,7 +286,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
                     mVerfifyCodes[i].setText(String.valueOf(smsContent.charAt(i)));
                 }
-                verifyChangePasswordCode(smsContent);
+                checkVerificationCode(smsContent);
             }
         });
         getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
@@ -323,7 +323,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 for (EditText editText : mVerfifyCodes) {
                     verifyCode.append(getText(editText));
                 }
-                verifyChangePasswordCode(verifyCode.toString());
+                checkVerificationCode(verifyCode.toString());
             }
         }
     }
@@ -363,10 +363,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     /**
      * 请求发送验证码
      */
-    private void sendChangePasswordCode() {
+    private void sendVerificationCode() {
         mSendAgain.setClickable(false);
         showLoadingDialog("正在发送...");
-        getOkGo(HttpConstants.sendChangePasswordCode)
+        getOkGo(HttpConstants.sendVerificationCode)
                 .params("telephone", UserManager.getInstance().getUserInfo().getUsername())
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
@@ -387,20 +387,24 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     }
 
-    private void verifyChangePasswordCode(String verifyCode) {
+    private void checkVerificationCode(String verifyCode) {
         if (mTelephoneToken == null) {
             showFiveToast("请先发送短信");
             return;
         }
         showLoadingDialog("正在验证...");
-        OkGo.post(HttpConstants.verifyChangePasswordCode)
+        OkGo.post(HttpConstants.checkVerificationCode)
                 .tag(TAG)
                 .headers("telephoneToken", mTelephoneToken)
                 .params("verifyCode", verifyCode)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
-                        startActivity(ChangePasswordRefactoryActivity.class, ConstansUtil.PASS_CODE, o.data);
+                        if (getIntent().hasExtra(ConstansUtil.INTENT_MESSAGE)) {
+                            startActivity(ChangeTetephoneNumberActivity.class, ConstansUtil.PASS_CODE, o.data);
+                        } else {
+                            startActivity(ChangePasswordRefactoryActivity.class, ConstansUtil.PASS_CODE, o.data);
+                        }
                         finish();
                     }
 

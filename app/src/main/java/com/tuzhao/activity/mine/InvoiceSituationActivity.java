@@ -79,7 +79,7 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
         holder.setText(R.id.invoice_progress_company_item, invoiceSituation.getCompany())
                 .setText(R.id.invoice_progress_type_item, invoiceSituation.getType())
                 .setText(R.id.invoice_progress_status_item, invoiceSituation.getStatus())
-                .setText(R.id.invoice_progress_apply_item, invoiceSituation.getInvoiceDate() == null ? "暂未开票" : invoiceSituation.getDeliveryDate())
+                .setText(R.id.invoice_progress_apply_item, invoiceSituation.getApplicationDate() == null ? "暂未开票" : invoiceSituation.getDeliveryDate())
                 .setText(R.id.invoice_progress_price_item, "￥" + invoiceSituation.getTotalPrice())
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override

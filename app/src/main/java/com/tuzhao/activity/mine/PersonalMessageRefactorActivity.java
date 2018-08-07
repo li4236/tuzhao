@@ -182,7 +182,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
                 break;
             case R.id.telephone_number_cl:
-
+                startActivity(SMSVerificationActivity.class, ConstansUtil.INTENT_MESSAGE, ConstansUtil.TELEPHONE_NUMBER);
                 break;
             case R.id.modify_password_cl:
                 startActivity(ChangePasswordMethodActivity.class);

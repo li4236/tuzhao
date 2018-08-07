@@ -183,11 +183,12 @@
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".activity.mine.OrderComplaintActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activity.mine.ApplyParkSpaceProgressRefactoryActivity" />
         <activity android:name=".activity.mine.ChangeApplyParkSpaceInfoActivity"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activity.mine.ConfirmAcceptInvoiceAddressActivity" />
+        <activity android:name=".activity.mine.ChangeTetephoneNumberActivity" />
 
         <!--QQ分享-->
         <activity

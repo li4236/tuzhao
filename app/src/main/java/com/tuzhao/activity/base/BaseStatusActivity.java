@@ -305,6 +305,12 @@ public abstract class BaseStatusActivity extends BaseActivity {
         return getText(textView).trim().length();
     }
 
+    protected void setNewText(TextView text, String string) {
+        if (!text.getText().toString().equals(string)) {
+            text.setText(string);
+        }
+    }
+
     protected void setSelection(EditText editText) {
         editText.setSelection(editText.getText().length());
     }

@@ -324,4 +324,9 @@ public class ConstansUtil {
      */
     public static final String CHANGE_PASSWORD = "ChangePassword";
 
+    /**
+     * 手机号
+     */
+    public static final String TELEPHONE_NUMBER = "TelephoneNumber";
+
 }
