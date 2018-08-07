@@ -249,9 +249,6 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
 
         for (CityInfo cityInfo : cityInfoArrayList) {
             //省
-            if (cityInfo.getName().equals("台湾省") || cityInfo.getName().equals("香港") || cityInfo.getName().equals("澳门")) {
-                continue;
-            }
             mProvinces.add(cityInfo.getName());
 
             citys = new ArrayList<>(cityInfo.getCityList().size());
@@ -400,14 +397,14 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
         if (isEmpty(mAcceptTelephone)) {
             showToast(mAcceptTelephone);
             return false;
+        } else if (!DateUtil.isPhoneNumble(getText(mAcceptTelephone))) {
+            showFiveToast("手机号码不正确哦");
+            return false;
         } else if (isEmpty(mAcceptArea)) {
             showToast(mAcceptArea);
             return false;
         } else if (isEmpty(mAcceptDetailAddress)) {
             showToast(mAcceptDetailAddress);
-            return false;
-        } else if (!DateUtil.isPhoneNumble(getText(mAcceptTelephone))) {
-            showFiveToast("手机号码不正确哦");
             return false;
         }
         return true;

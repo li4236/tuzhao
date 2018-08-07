@@ -983,13 +983,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         options.icon(BitmapDescriptorFactory.fromView(arcView));
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
+        Log.e(TAG, "addLoactionMarker  longitude:"+latlng.longitude+"  latitude:"+latlng.latitude );
         mLocationMarker = aMap.addMarker(options);
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromView(circleView));
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.position(latlng);
-
+        Log.e(TAG, "addLoactionMarker  longitude:"+latlng.longitude+"  latitude:"+latlng.latitude );
         mLocationCircleMarker = aMap.addMarker(markerOptions);
         startMarkerAnimation();
     }

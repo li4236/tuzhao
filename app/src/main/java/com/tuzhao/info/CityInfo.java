@@ -20,12 +20,6 @@ public class CityInfo {
      */
 
     private String name;
-    private String id;
-    private int gisBd09Lat;
-    private int gisBd09Lng;
-    private int gisGcj02Lat;
-    private int gisGcj02Lng;
-    private String pinYin;
     private List<CityListBeanX> cityList;
 
     public String getName() {
@@ -34,54 +28,6 @@ public class CityInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getGisBd09Lat() {
-        return gisBd09Lat;
-    }
-
-    public void setGisBd09Lat(int gisBd09Lat) {
-        this.gisBd09Lat = gisBd09Lat;
-    }
-
-    public int getGisBd09Lng() {
-        return gisBd09Lng;
-    }
-
-    public void setGisBd09Lng(int gisBd09Lng) {
-        this.gisBd09Lng = gisBd09Lng;
-    }
-
-    public int getGisGcj02Lat() {
-        return gisGcj02Lat;
-    }
-
-    public void setGisGcj02Lat(int gisGcj02Lat) {
-        this.gisGcj02Lat = gisGcj02Lat;
-    }
-
-    public int getGisGcj02Lng() {
-        return gisGcj02Lng;
-    }
-
-    public void setGisGcj02Lng(int gisGcj02Lng) {
-        this.gisGcj02Lng = gisGcj02Lng;
-    }
-
-    public String getPinYin() {
-        return pinYin;
-    }
-
-    public void setPinYin(String pinYin) {
-        this.pinYin = pinYin;
     }
 
     public List<CityListBeanX> getCityList() {
@@ -96,12 +42,6 @@ public class CityInfo {
     public String toString() {
         return "CityInfo{" +
                 "name='" + name + '\'' +
-                ", id='" + id + '\'' +
-                ", gisBd09Lat=" + gisBd09Lat +
-                ", gisBd09Lng=" + gisBd09Lng +
-                ", gisGcj02Lat=" + gisGcj02Lat +
-                ", gisGcj02Lng=" + gisGcj02Lng +
-                ", pinYin='" + pinYin + '\'' +
                 ", cityList=" + cityList +
                 '}';
     }
@@ -114,7 +54,6 @@ public class CityInfo {
          */
 
         private String name;
-        private String id;
         private List<CityListBean> cityList;
 
         public String getName() {
@@ -123,14 +62,6 @@ public class CityInfo {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
         }
 
         public List<CityListBean> getCityList() {
@@ -145,7 +76,6 @@ public class CityInfo {
         public String toString() {
             return "CityListBeanX{" +
                     "name='" + name + '\'' +
-                    ", id='" + id + '\'' +
                     ", cityList=" + cityList +
                     '}';
         }
