@@ -15,7 +15,7 @@ public class InvoiceSituation implements Parcelable {
     //发票id
     private String invoiceSituationId;
 
-    //开票状态(已发出，待发货...)
+    //开票状态(0:未开票，1:已开票未寄出，2:已寄出，5:拒绝开票)
     private String status;
 
     //收票公司名称
@@ -56,6 +56,11 @@ public class InvoiceSituation implements Parcelable {
 
     //开票的总金额
     private String totalPrice;
+
+    /**
+     * 拒绝开票的理由
+     */
+    private String reason;
 
     public String getInvoiceSituationId() {
         return invoiceSituationId;
@@ -109,7 +114,7 @@ public class InvoiceSituation implements Parcelable {
             case "1":
                 return "未发出";
             case "2":
-                return courier + "(" + courierNumber + ")";
+                return "已寄出";
             case "3":
                 return "待收货";
             case "4":
@@ -196,6 +201,14 @@ public class InvoiceSituation implements Parcelable {
         this.applicationDate = applicationDate;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -218,6 +231,7 @@ public class InvoiceSituation implements Parcelable {
         dest.writeString(this.deliveryDate);
         dest.writeString(this.applicationDate);
         dest.writeString(this.totalPrice);
+        dest.writeString(this.reason);
     }
 
     public InvoiceSituation() {
@@ -239,6 +253,7 @@ public class InvoiceSituation implements Parcelable {
         this.deliveryDate = in.readString();
         this.applicationDate = in.readString();
         this.totalPrice = in.readString();
+        this.reason = in.readString();
     }
 
     public static final Creator<InvoiceSituation> CREATOR = new Creator<InvoiceSituation>() {

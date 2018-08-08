@@ -60,7 +60,7 @@ public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituati
                                         break;
                                     case "103":
                                     case "104":
-                                        showFiveToast("请求失败，请稍后重试");
+                                        showFiveToast("没有更多数据啦");
                                         break;
                                 }
                             }

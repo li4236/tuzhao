@@ -74,7 +74,6 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
-        super.initData();
         mInvoiceDetailStatus.setText(mInvoiceSituation.getStatus());
         String statusDescription;
         switch (mInvoiceSituation.getStatus()) {
@@ -86,6 +85,9 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
                 break;
             case "已收货":
                 statusDescription = "您已签收，如遇到问题请联系工作人员";
+                break;
+            case "拒绝开票":
+                statusDescription = mInvoiceSituation.getReason();
                 break;
             default:
                 statusDescription = "敬请留意近期快递电话、邮件";
@@ -102,14 +104,27 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
         mTaxpayerNumber.setText(mInvoiceSituation.getTaxpayerNumber());
         mTicketPrice.setText(mInvoiceSituation.getTotalPrice());
 
-        StringBuilder courierNumber = new StringBuilder("快递单号：");
-        courierNumber.append(mInvoiceSituation.getCourierNumber().equals("-1") ? "暂无" : mInvoiceSituation.getCourierNumber());
-        mCourierNumber.setText(courierNumber);
+        if (mInvoiceSituation.getType().equals("电子")) {
+            goneView(findViewById(R.id.invoice_detail_logistics_status));
+            goneView(findViewById(R.id.invoice_detail_logistics_status_divider));
+            goneView(mCourierNumber);
+            goneView(mDeliveryDate);
+        } else {
+            StringBuilder courierNumber = new StringBuilder("快递单号：");
+            if (mInvoiceSituation.getCourierNumber().equals("-1")) {
+                courierNumber.append("暂无");
+            } else {
+                courierNumber.append(mInvoiceSituation.getCourierNumber());
+                courierNumber.append("(");
+                courierNumber.append(mInvoiceSituation.getCourier());
+                courierNumber.append(")");
+            }
+            mCourierNumber.setText(courierNumber);
 
-        StringBuilder deliveryDate = new StringBuilder("发货时间：");
-        deliveryDate.append(mInvoiceSituation.getDeliveryDate() == null ? "暂未发货" : mInvoiceSituation.getDeliveryDate());
-        mDeliveryDate.setText(deliveryDate);
-        dismmisLoadingDialog();
+            StringBuilder deliveryDate = new StringBuilder("发货时间：");
+            deliveryDate.append(mInvoiceSituation.getDeliveryDate() == null ? "暂未发货" : mInvoiceSituation.getDeliveryDate());
+            mDeliveryDate.setText(deliveryDate);
+        }
     }
 
     @NonNull

@@ -241,6 +241,9 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                 mCommonAdapter.removeData(arrayList);
                 mChooseInvoice.clear();
                 setTotalPrice();
+                if (mCommonAdapter.getData().size() == 0) {
+                    showEmpty();
+                }
             }
         }
     }
