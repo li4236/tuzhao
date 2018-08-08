@@ -42,8 +42,8 @@ public class InvoiceSituation implements Parcelable {
     //发票类型
     private String type;
 
-    //进度（已发出 EMS 103454684541)
-    private String progress;
+    //快递公司
+    private String courier;
 
     //快递单号
     private String courierNumber;
@@ -86,12 +86,12 @@ public class InvoiceSituation implements Parcelable {
         this.type = type;
     }
 
-    public String getProgress() {
-        return progress;
+    public String getCourier() {
+        return courier;
     }
 
-    public void setProgress(String progress) {
-        this.progress = progress;
+    public void setCourier(String courier) {
+        this.courier = courier;
     }
 
     public String getTotalPrice() {
@@ -109,11 +109,13 @@ public class InvoiceSituation implements Parcelable {
             case "1":
                 return "未发出";
             case "2":
-                return progress;
+                return courier + "(" + courierNumber + ")";
             case "3":
                 return "待收货";
             case "4":
                 return "已收货";
+            case "5":
+                return "拒绝开票";
         }
         return status;
     }
@@ -211,7 +213,7 @@ public class InvoiceSituation implements Parcelable {
         dest.writeString(this.ticketRise);
         dest.writeString(this.taxpayerNumber);
         dest.writeString(this.type);
-        dest.writeString(this.progress);
+        dest.writeString(this.courier);
         dest.writeString(this.courierNumber);
         dest.writeString(this.deliveryDate);
         dest.writeString(this.applicationDate);
@@ -232,7 +234,7 @@ public class InvoiceSituation implements Parcelable {
         this.ticketRise = in.readString();
         this.taxpayerNumber = in.readString();
         this.type = in.readString();
-        this.progress = in.readString();
+        this.courier = in.readString();
         this.courierNumber = in.readString();
         this.deliveryDate = in.readString();
         this.applicationDate = in.readString();

@@ -538,7 +538,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 break;
             /*case 2:
                 UploadPhotoInfo firstProperty = mPropertyAdapter.getData().get(0);
-                firstProperty.setProgress(progressString);
+                firstProperty.setCourier(progressString);
                 if (progress == 1.0) {
                     firstProperty.setShowProgress(false);
                 }
@@ -546,7 +546,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 break;
             case 3:
                 UploadPhotoInfo secondProperty = mPropertyAdapter.getData().get(1);
-                secondProperty.setProgress(progressString);
+                secondProperty.setCourier(progressString);
                 if (progress == 1.0) {
                     secondProperty.setShowProgress(false);
                 }
@@ -554,7 +554,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 break;
             case 4:
                 UploadPhotoInfo thirdProperty = mPropertyAdapter.getData().get(2);
-                thirdProperty.setProgress(progressString);
+                thirdProperty.setCourier(progressString);
                 if (progress == 1.0) {
                     thirdProperty.setShowProgress(false);
                 }
@@ -711,7 +711,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             case 4:
                 UploadPhotoInfo thirdProperty = mPropertyAdapter.getData().get(mPropertyAdapter.getDataSize() - 1);
                 thirdProperty.setPath("-1");
-                thirdProperty.setProgress("0%");
+                thirdProperty.setCourier("0%");
                 thirdProperty.setShowProgress(false);
                 thirdProperty.setUploadSuccess(false);
                 mPropertyAdapter.notifyDataChange(mPropertyAdapter.getDataSize() - 1, thirdProperty);
@@ -952,7 +952,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 onBindViewHolder(holder, position);
             } else {
                 showProgressStatus((TextView) holder.getView(R.id.property_upload_tv), get(position).isShowProgress());
-                holder.setText(R.id.property_upload_tv, get(position).getProgress());
+                holder.setText(R.id.property_upload_tv, get(position).getCourier());
                 Log.e(TAG, "onBindViewHolder: " + position + "  path:" + get(position).getPath());
                 ImageUtil.showPicWithNoAnimate((ImageView) holder.getView(R.id.property_photo_iv), get(position).getPath());
             }

@@ -9,9 +9,6 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.view.WindowManager;
-
-import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +23,20 @@ public class WaveImageView extends AppCompatImageView {
 
     private Paint mPaint;
 
-    private Path mPath;
+    private Path mInnerWavePath;
+
+    private Path mOuterWavePath;
+
+    /**
+     * 各个点的横坐标
+     */
+    private int[] mAbscissa;
 
     private List<Point> mPoints;
 
-    private Point mScreenPoint;
+    private int mWidth;
+
+    private int mHeigth;
 
     public WaveImageView(Context context) {
         super(context);
@@ -54,15 +60,19 @@ public class WaveImageView extends AppCompatImageView {
         mPaint.setColor(Color.parseColor("#69ffffff"));
         mPaint.setPathEffect(new CornerPathEffect(10));
 
-        mPath = new Path();
-        mPoints = new ArrayList<>();
-        mScreenPoint = new Point(1080, 1920);
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            windowManager.getDefaultDisplay().getRealSize(mScreenPoint);
-        }
-        mScreenPoint.y = DensityUtil.dp2px(getContext(), 87);
+        mInnerWavePath = new Path();
+        mOuterWavePath = new Path();
 
+        mPoints = new ArrayList<>();
+        mAbscissa = new int[18];
+        mAbscissa[0] = 100;
+        mAbscissa[1] = 150;
+        mAbscissa[2] = 221;
+        mAbscissa[3] = 270;
+        mAbscissa[4] = 317;
+        mAbscissa[5] = 359;
+        mAbscissa[6] = 400;
+        mAbscissa[7] = 415;
         //最里面波浪的控制点和结束点
         mPoints.add(new Point(dpToPx(100), dpToPx(59)));
         mPoints.add(new Point(dpToPx(150), dpToPx(76)));
@@ -73,18 +83,17 @@ public class WaveImageView extends AppCompatImageView {
         mPoints.add(new Point(dpToPx(400), dpToPx(93)));
         mPoints.add(new Point(dpToPx(415), dpToPx(70)));
 
-       /* mPoints.add(new Point(dpToPx(26), dpToPx(56)));
-        mPoints.add(new Point(dpToPx(80), dpToPx(74)));
-        mPoints.add(new Point(dpToPx(158), dpToPx(91)));
-        mPoints.add(new Point(dpToPx(193), dpToPx(66)));
-        mPoints.add(new Point(dpToPx(240), dpToPx(37)));
-        mPoints.add(new Point(dpToPx(295), dpToPx(76)));
-        mPoints.add(new Point(dpToPx(341), dpToPx(86)));
-        mPoints.add(new Point(dpToPx(362), dpToPx(72)));
-        mPoints.add(new Point(dpToPx(387), dpToPx(62)));
-        mPoints.add(new Point(dpToPx(422), dpToPx(80)));*/
-
-       //外层波浪的控制点和结束点
+        mAbscissa[8] = 35;
+        mAbscissa[9] = 80;
+        mAbscissa[10] = 158;
+        mAbscissa[11] = 193;
+        mAbscissa[12] = 240;
+        mAbscissa[13] = 295;
+        mAbscissa[14] = 341;
+        mAbscissa[15] = 362;
+        mAbscissa[16] = 387;
+        mAbscissa[17] = 422;
+        //外层波浪的控制点和结束点
         mPoints.add(new Point(dpToPx(35), dpToPx(56)));
         mPoints.add(new Point(dpToPx(80), dpToPx(77)));
         mPoints.add(new Point(dpToPx(158), dpToPx(94)));
@@ -98,29 +107,51 @@ public class WaveImageView extends AppCompatImageView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        mPath.reset();
-        mPath.moveTo(dpToPx(76), dpToPx(87));   //先移动到里层波浪的起始点
-        for (int i = 0; i < 8; i += 2) {
-            mPath.quadTo(mPoints.get(i).x, mPoints.get(i).y, mPoints.get(i + 1).x, mPoints.get(i + 1).y);
-        }
-        mPath.lineTo(mScreenPoint.x, dpToPx(87));       //移动到View的右下角坐标，用来闭合
-        mPath.close();
-        canvas.drawPath(mPath, mPaint);
-
-        mPath.reset();
-        mPath.moveTo(0, dpToPx(87));
-        for (int i = 8; i <= mPoints.size() - 2; i += 2) {
-            mPath.quadTo(mPoints.get(i).x, mPoints.get(i).y, mPoints.get(i + 1).x, mPoints.get(i + 1).y);
-        }
-        mPath.lineTo(mScreenPoint.x, dpToPx(87));
-        mPath.close();
-        canvas.drawPath(mPath, mPaint);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mWidth = getMeasuredWidth();
+        mHeigth = getMeasuredHeight();
     }
 
-    private int dpToPx(int dpValue) {
-        return DensityUtil.dp2px(getContext(), dpValue);
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        //onMeasure会调用多次，onDraw调用一次,所以放在这里重新赋值横坐标
+        //view大小变化后(横竖屏切换)需要重新设置横坐标，因为高度是不变的，所以不用重新设置
+        for (int i = 0; i < mPoints.size(); i++) {
+            mPoints.get(i).x = getScaleWidth(mAbscissa[i]);
+        }
+
+        mInnerWavePath.reset();
+        mInnerWavePath.moveTo(dpToPx(76), dpToPx(87));   //先移动到里层波浪的起始点
+        for (int i = 0; i < 8; i += 2) {
+            mInnerWavePath.quadTo(mPoints.get(i).x, mPoints.get(i).y, mPoints.get(i + 1).x, mPoints.get(i + 1).y);
+        }
+        mInnerWavePath.lineTo(mWidth, mHeigth);       //移动到View的右下角坐标，用来闭合
+        mInnerWavePath.close();
+
+        mOuterWavePath.reset();
+        mOuterWavePath.moveTo(0, dpToPx(87));
+        for (int i = 8; i <= mPoints.size() - 2; i += 2) {
+            mOuterWavePath.quadTo(mPoints.get(i).x, mPoints.get(i).y, mPoints.get(i + 1).x, mPoints.get(i + 1).y);
+        }
+        mOuterWavePath.lineTo(mWidth, mHeigth);
+        mOuterWavePath.close();
+
+        canvas.drawPath(mInnerWavePath, mPaint);
+        canvas.drawPath(mOuterWavePath, mPaint);
+    }
+
+    private int dpToPx(float dpValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    /**
+     * 根据屏幕宽度获取对应比例的值
+     */
+    private int getScaleWidth(int dpValue) {
+        return (int) (dpValue / 375f * mWidth);
     }
 
 }
