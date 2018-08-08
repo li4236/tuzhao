@@ -30,6 +30,7 @@ public class User_Info extends BaseInfo {
     private String alinumber = "-1";//支付宝账号
     private String aliNickname = "";//支付宝用户昵称
     private String openId;//微信的用户的openId
+    private String wechatNickname;//微信昵称
     private String sesameFraction;
 
     private String stage;//阶段分
@@ -352,6 +353,14 @@ public class User_Info extends BaseInfo {
         this.sesameFraction = sesameFraction;
     }
 
+    public String getWechatNickname() {
+        return wechatNickname;
+    }
+
+    public void setWechatNickname(String wechatNickname) {
+        this.wechatNickname = wechatNickname;
+    }
+
     @Override
     public String toString() {
         return "User_Info{" +
@@ -376,6 +385,7 @@ public class User_Info extends BaseInfo {
                 ", alinumber='" + alinumber + '\'' +
                 ", aliNickname='" + aliNickname + '\'' +
                 ", openId='" + openId + '\'' +
+                ", wechatNickname='" + wechatNickname + '\'' +
                 ", sesameFraction='" + sesameFraction + '\'' +
                 ", stage='" + stage + '\'' +
                 ", default_late_time='" + default_late_time + '\'' +

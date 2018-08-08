@@ -388,10 +388,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     }
 
     private void checkVerificationCode(String verifyCode) {
-        if (mTelephoneToken == null) {
+        /*if (mTelephoneToken == null) {
             showFiveToast("请先发送短信");
             return;
-        }
+        }*/
         showLoadingDialog("正在验证...");
         OkGo.post(HttpConstants.checkVerificationCode)
                 .tag(TAG)

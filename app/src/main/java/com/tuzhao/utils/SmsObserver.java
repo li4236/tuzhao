@@ -61,7 +61,7 @@ public class SmsObserver extends ContentObserver {
     public interface SmsListener {
 
         /**
-         * 接受sms状态
+         * 接受sms内容
          */
         void onResult(String smsContent);
     }

@@ -17,7 +17,6 @@ import com.alipay.sdk.app.AuthTask;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
@@ -384,10 +383,11 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
         getOkGo(HttpConstants.requestBindWechat)
                 .params("code", code)
                 .params("passCode", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
-                .execute(new StringCallback() {
+                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        UserManager.getInstance().getUserInfo().setOpenId(s);
+                    public void onSuccess(Base_Class_Info<User_Info> o, Call call, Response response) {
+                        UserManager.getInstance().getUserInfo().setOpenId(o.data.getOpenId());
+                        UserManager.getInstance().getUserInfo().setWechatNickname(o.data.getWechatNickname());
                         mWechat.setText(UNBIND);
                         showFiveToast("绑定成功");
                         dismmisLoadingDialog();

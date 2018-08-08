@@ -29,6 +29,7 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.CountdownUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.SmsObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -90,7 +91,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                 int telephoneNumberLength = getTextLength(mTelephoneNumber);
                 if (telephoneNumberLength > 0) {
                     showView(mClearTetephoneNumber);
-                    if (telephoneNumberLength == 11 && DateUtil.isPhoneNumble(getText(mTelephoneNumber))) {
+                    if (telephoneNumberLength == 11 && DateUtil.isPhoneNumble(getText(mTelephoneNumber)) && mTelephoneToken != null) {
                         hideView(mTelephoneNumberError);
                         mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
                     }
@@ -130,6 +131,9 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
 
             }
         });
+
+        ViewUtil.openInputMethod(mTelephoneNumber);
+
         mClearTetephoneNumber.setOnClickListener(this);
         mGetVerificationCode.setOnClickListener(this);
         mClearVerificationCode.setOnClickListener(this);
@@ -182,6 +186,8 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                     showTelephoneError("手机号格式不正确");
                 } else if (!DateUtil.isPhoneNumble(getText(mTelephoneNumber))) {
                     showTelephoneError("手机号不正确");
+                } else if (getText(mTelephoneNumber).equals(UserManager.getInstance().getUserInfo().getUsername())) {
+                    showTelephoneError("不能与旧手机号一样");
                 } else {
                     hideView(mTelephoneNumberError);
                     mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
@@ -257,6 +263,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
 
                 @Override
                 public void onTimeEnd() {
+                    mGetVerificationCode.setText("获取验证码");
                     mGetVerificationCode.setTextColor(ConstansUtil.Y3_COLOR);
                     mGetVerificationCode.setClickable(true);
                 }
@@ -285,7 +292,30 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            showFiveToast(e.getMessage());
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showVerificationCodeError("验证码已过期，请重新获取");
+                                    break;
+                                case "102":
+                                    showVerificationCodeError("验证码不正确");
+                                    break;
+                                case "103":
+                                    showFiveToast("旧手机号的验证码出错，请重新获取");
+                                    finish();
+                                    break;
+                                case "104":
+                                    showFiveToast("修改失败，请稍后重试");
+                                    break;
+                                case "105":
+                                    showTelephoneError("新手机号不能与旧的相同哦");
+                                    break;
+                                case "106":
+                                    showTelephoneError("该手机号已被占用");
+                                    break;
+                                default:
+                                    showFiveToast(e.getMessage());
+                                    break;
+                            }
                         }
                     }
                 });
@@ -294,13 +324,13 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
     private void showTelephoneError(String msg) {
         setNewText(mTelephoneNumberError, msg);
         showView(mTelephoneNumberError);
-        mTelephoneNumber.setBackgroundResource(R.drawable.y3_stroke_all_3dp);
+        mTelephoneNumber.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
     }
 
     private void showVerificationCodeError(String msg) {
         setNewText(mVerificationCodeError, msg);
         showView(mVerificationCodeError);
-        mVerificationCode.setBackgroundResource(R.drawable.y3_stroke_all_3dp);
+        mVerificationCode.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
     }
 
 }
