@@ -9,13 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.fragment.MyParkspaceFragment;
@@ -30,6 +30,8 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/17.
  */
 
-public class MyParkspaceActivityRefactor extends BaseActivity implements View.OnClickListener {
+public class MyParkspaceActivityRefactor extends BaseActivity implements View.OnClickListener, IntentObserver {
 
     private LoadingDialog mLoadingDialog;
 
@@ -49,26 +51,27 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
 
     private List<MyParkspaceFragment> mFragments;
 
-    private TextView mCurrentParkspace;
-
-    private ImageView mLeft;
-
-    private ImageView mRight;
+    private TextView mApponitmentTv;
 
     private FragmentAdater mFragmentAdater;
 
     private ViewStub mViewStub;
+
+    private OptionsPickerView<String> mOptionsPickerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_parkspace_layout_refactor);
         mFragments = new ArrayList<>();
-        mLeft = findViewById(R.id.left_iv);
-        mRight = findViewById(R.id.right_iv);
 
         mViewPager = findViewById(R.id.my_parkspace_vp);
-        mCurrentParkspace = findViewById(R.id.my_parkspace_current);
+        mApponitmentTv = findViewById(R.id.appointment_tv);
+
+        ImageUtil.showPic((ImageView) findViewById(R.id.appointment_iv), R.drawable.ic_time2);
+        ImageUtil.showPic((ImageView) findViewById(R.id.add_park_space_iv), R.drawable.ic_addposition);
+        ImageUtil.showPic((ImageView) findViewById(R.id.my_parkspace_setting_iv), R.drawable.ic_setting2);
+
         mFragmentAdater = new FragmentAdater(getSupportFragmentManager());
         mViewPager.setAdapter(mFragmentAdater);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -79,8 +82,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
 
             @Override
             public void onPageSelected(int position) {
-                String text = "(" + (position + 1) + "/" + mFragments.size() + ")";
-                mCurrentParkspace.setText(text);
+                mApponitmentTv.setText(mFragments.get(position).getAppointmentTime());
             }
 
             @Override
@@ -89,14 +91,20 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             }
         });
 
-        ImageUtil.showPic(mLeft, R.drawable.ic_left1);
-        ImageUtil.showPic(mRight, R.drawable.ic_left2);
-
         findViewById(R.id.toolbar_back).setOnClickListener(this);
         findViewById(R.id.audit_tv).setOnClickListener(this);
-        mLeft.setOnClickListener(this);
-        mRight.setOnClickListener(this);
+        findViewById(R.id.appointment_cl).setOnClickListener(this);
+        findViewById(R.id.add_park_space_cl).setOnClickListener(this);
+        findViewById(R.id.my_parkspace_setting).setOnClickListener(this);
         loadData();
+
+        IntentObserable.registerObserver(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     @Override
@@ -109,12 +117,9 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                     if (mFragments.get(i).getParkInfo().getId().equals(parkSpaceId)) {
                         mFragments.remove(i);
                         mFragmentAdater.notifyDataSetChanged();
-                        String text = "(" + 1 + "/" + mFragments.size() + ")";
-                        mCurrentParkspace.setText(text);
                         if (mFragments.isEmpty()) {
                             showViewStub();
                         }
-                        Log.e("TAG", "onActivityResult: ");
                         break;
                     }
                 }
@@ -142,16 +147,11 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                         if (o.data.isEmpty()) {
                             showViewStub();
                         } else {
-                            if (mLeft.getVisibility() != View.VISIBLE) {
-                                mLeft.setVisibility(View.VISIBLE);
-                                mRight.setVisibility(View.VISIBLE);
-                            }
-                            for (Park_Info park_info : o.data) {
-                                mFragments.add(MyParkspaceFragment.newInstance(park_info));
+                            int size = o.data.size();
+                            for (int i = 0; i < size; i++) {
+                                mFragments.add(MyParkspaceFragment.newInstance(o.data.get(i), i, size));
                             }
                             mFragmentAdater.notifyDataSetChanged();
-                            String text = "(" + 1 + "/" + mFragments.size() + ")";
-                            mCurrentParkspace.setText(text);
                         }
                         dismmisLoadingDialog();
                     }
@@ -222,19 +222,18 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             case R.id.toolbar_back:
                 finish();
                 break;
-            case R.id.left_iv:
-                if (mViewPager.getCurrentItem() != 0) {
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-                }
-                break;
-            case R.id.right_iv:
-                if (mViewPager.getCurrentItem() != mFragments.size() - 1) {
-                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                }
-                break;
             case R.id.audit_tv:
                 Intent intent = new Intent(this, AuditParkSpaceActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.add_park_space_cl:
+                Intent intent1 = new Intent(this, AddParkSpaceActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.my_parkspace_setting:
+                Intent intent2 = new Intent(this, ParkSpaceSettingActivity.class);
+                intent2.putExtra(ConstansUtil.PARK_SPACE_INFO, mFragments.get(mViewPager.getCurrentItem()).getParkInfo());
+                startActivityForResult(intent2, ConstansUtil.REQUSET_CODE);
                 break;
         }
     }
@@ -264,10 +263,50 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
         }
         if (mViewStub.getVisibility() != View.VISIBLE) {
             mViewStub.setVisibility(View.VISIBLE);
-            mLeft.setVisibility(View.INVISIBLE);
-            mRight.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    private void showDialog() {
+        if (mOptionsPickerView == null) {
+            ArrayList<String> parkSpaceName = new ArrayList<>();
+            for (int i = 0; i < mFragments.size(); i++) {
+                parkSpaceName.add(mFragments.get(i).getParkInfo().getLocation_describe());
+            }
+            mOptionsPickerView = new OptionsPickerView<>(this);
+            mOptionsPickerView.setPicker(parkSpaceName);
+            mOptionsPickerView.setTextSize(16);
+            mOptionsPickerView.setCyclic(false);
+            mOptionsPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+                @Override
+                public void onOptionsSelect(int options1, int option2, int options3) {
+                    mViewPager.setCurrentItem(options1, true);
+                }
+            });
+        }
+        mOptionsPickerView.setSelectOptions(mViewPager.getCurrentItem());
+        mOptionsPickerView.show();
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case ConstansUtil.SHOW_DIALOG:
+                    showDialog();
+                    break;
+                case ConstansUtil.LEFT:
+                    if (mViewPager.getCurrentItem() != 0) {
+                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, true);
+                    }
+                    break;
+                case ConstansUtil.RIGHT:
+                    if (mViewPager.getCurrentItem() != mFragments.size() - 1) {
+                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                    }
+                    break;
+            }
+        }
     }
 
     class FragmentAdater extends FragmentPagerAdapter {
@@ -286,4 +325,5 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             return mFragments.size();
         }
     }
+
 }

@@ -23,6 +23,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.IntentObserable;
 
 import java.util.ArrayList;
 
@@ -153,7 +154,7 @@ public abstract class BaseStatusFragment extends Fragment {
                         showFiveToast("获取数据异常，请稍后重试");
                         return true;
                     default:
-                        Log.e(TAG, "handleException: "+e.getMessage() );
+                        Log.e(TAG, "handleException: " + e.getMessage());
                         return false;
                 }
             } else {
@@ -211,6 +212,17 @@ public abstract class BaseStatusFragment extends Fragment {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putParcelableArrayListExtra(key, data);
         startActivity(intent);
+    }
+
+    protected void dispatchIntent(String action) {
+        Intent intent = new Intent(action);
+        IntentObserable.dispatch(intent);
+    }
+
+    protected void dispatchIntent(String action, String key, String value) {
+        Intent intent = new Intent(action);
+        intent.putExtra(key, value);
+        IntentObserable.dispatch(intent);
     }
 
     /**

@@ -2,7 +2,7 @@
 <com.github.chrisbanes.photoview.PhotoView
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:id="@+id/photo_view"
-    android:theme="@style/TranslucentTheme"
+    android:theme="@style/TransparentTheme"
     android:background="@android:color/black"
     android:layout_height="match_parent">
 

@@ -148,18 +148,18 @@
     </declare-styleable>
 
     <declare-styleable name="CircularArcView">
-        <attr name="stroke_width" format="dimension"/>
-        <attr name="CircularArcView_arc_color" format="color"/>
+        <attr name="stroke_width" format="dimension" />
+        <attr name="CircularArcView_arc_color" format="color" />
         <attr name="CircularArcView_circle_color" format="color" />
         <attr name="CircularArcView_circle_radius" format="dimension" />
-        <attr name="sweep_angle" format="integer"/>
+        <attr name="sweep_angle" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="OvalView">
         <attr name="oval_color" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="CreditView" >
+    <declare-styleable name="CreditView">
         <attr name="flag_color" format="color" />
         <attr name="very_poor_color" format="color" />
         <attr name="poor_color" format="color" />
@@ -169,4 +169,16 @@
         <attr name="text_color" format="color" />
         <attr name="text_size" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="ArrowView">
+        <attr name="arrow_color" format="color" />
+        <attr name="arrow_width" format="dimension" />
+        <attr name="arrow_gravity">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+            <enum name="left" value="2" />
+            <enum name="right" value="3" />
+        </attr>
+    </declare-styleable>
+
 </resources>

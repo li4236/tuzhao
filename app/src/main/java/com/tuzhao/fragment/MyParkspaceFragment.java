@@ -6,9 +6,6 @@ import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,8 +14,6 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnLockListener;
-import com.tuzhao.activity.mine.AddParkSpaceActivity;
-import com.tuzhao.activity.mine.ParkSpaceSettingActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
@@ -61,8 +56,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private VoltageView mVoltageView;
 
-    private TextView mApponitmentTv;
-
     private AnimatorSet mAnimatorSet;
 
     private TextView mOpenLock;
@@ -71,10 +64,18 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private String mParkLockStatus;
 
-    public static MyParkspaceFragment newInstance(Park_Info mParkInfo) {
+    private StringBuilder mAppointmentTime = new StringBuilder("暂无预约");
+
+    private int mTotalSize;
+
+    private int mPosition;
+
+    public static MyParkspaceFragment newInstance(Park_Info mParkInfo, int position, int totalSize) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, mParkInfo);
+        bundle.putInt(ConstansUtil.POSITION, position);
+        bundle.putInt(ConstansUtil.SIZE, totalSize);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -88,6 +89,10 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         setParkspaceStatus();
     }
 
+    public String getAppointmentTime() {
+        return mAppointmentTime.toString();
+    }
+
     @Override
     protected int resourceId() {
         return R.layout.fragment_my_parkspace_layout;
@@ -97,6 +102,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     protected void initView(View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
             mParkInfo = getArguments().getParcelable(ConstansUtil.PARK_SPACE_INFO);
+            mPosition = getArguments().getInt(ConstansUtil.POSITION);
+            mTotalSize = getArguments().getInt(ConstansUtil.SIZE);
         } else if (mParkInfo == null) {
             showFiveToast("打开失败，请稍后重试");
             if (getActivity() != null) {
@@ -104,11 +111,10 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             }
         }
 
+        TextView numberOfParkSpace = view.findViewById(R.id.number_of_park_space);
         TextView parkspaceDescription = view.findViewById(R.id.parkspace_description);
         TextView parkLot = view.findViewById(R.id.parking_lot);
-        TextView addNewParkspace = view.findViewById(R.id.add_new_parkspace);
-        ImageView apponitmentIv = view.findViewById(R.id.appointment_iv);
-        ImageView settingIv = view.findViewById(R.id.my_parkspace_setting_iv);
+
 
         mCircularArcView = view.findViewById(R.id.circle_arc);
         mLock = view.findViewById(R.id.lock);
@@ -116,21 +122,25 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         mParkspaceStatus = view.findViewById(R.id.parkspace_status_tv);
         mVoltageView = view.findViewById(R.id.voltage_view);
         mOpenLock = view.findViewById(R.id.open_lock);
-        mApponitmentTv = view.findViewById(R.id.appointment_tv);
+
+        if (mTotalSize == 1) {
+            view.findViewById(R.id.left_park_space_iv).setVisibility(View.GONE);
+            view.findViewById(R.id.right_park_space_iv).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.right_park_space_iv).setOnClickListener(this);
+            view.findViewById(R.id.left_park_space_iv).setOnClickListener(this);
+            numberOfParkSpace.setOnClickListener(this);
+        }
 
         mOpenLock.setOnClickListener(this);
-        addNewParkspace.setOnClickListener(this);
-        view.findViewById(R.id.my_parkspace_setting).setOnClickListener(this);
 
         ImageUtil.showPic(mLock, R.drawable.lock);
-        ImageUtil.showPic(apponitmentIv, R.drawable.ic_time2);
-        ImageUtil.showPic(settingIv, R.drawable.ic_setting2);
+
+        numberOfParkSpace.setText(String.valueOf(mPosition + 1));
+        numberOfParkSpace.append("号车位");
 
         parkspaceDescription.setText(mParkInfo.getLocation_describe());
         parkLot.setText(mParkInfo.getParkspace_name());
-        SpannableString spannableString = new SpannableString(getText(addNewParkspace));
-        spannableString.setSpan(new UnderlineSpan(), 0, getText(addNewParkspace).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        addNewParkspace.setText(spannableString);
     }
 
     @Override
@@ -195,7 +205,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     if (getText(mParkspaceStatus).equals("已预约") && mRecentOrderMinutes <= 180) {
                         TipeDialog dialog = new TipeDialog.Builder(getContext())
                                 .setTitle("开锁")
-                                .setMessage(getText(mApponitmentTv) + ",确定开锁吗?")
+                                .setMessage(mAppointmentTime.toString() + ",确定开锁吗?")
                                 .setNegativeButton("取消", null)
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
@@ -211,11 +221,14 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     controlParkLock(false);
                 }
                 break;
-            case R.id.add_new_parkspace:
-                startActivity(AddParkSpaceActivity.class);
+            case R.id.number_of_park_space:
+                dispatchIntent(ConstansUtil.SHOW_DIALOG);
                 break;
-            case R.id.my_parkspace_setting:
-                startActivityForResult(ParkSpaceSettingActivity.class, ConstansUtil.REQUSET_CODE, ConstansUtil.PARK_SPACE_INFO, mParkInfo);
+            case R.id.left_park_space_iv:
+                dispatchIntent(ConstansUtil.LEFT);
+                break;
+            case R.id.right_park_space_iv:
+                dispatchIntent(ConstansUtil.RIGHT);
                 break;
         }
     }
@@ -258,51 +271,58 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void setParkspaceStatus() {
-        if (mParkInfo.getPark_status().equals("1")) {
-            mParkspaceStatus.setText("未开放");
-            mCircleView.setColor(Color.parseColor("#808080"));
-            cantOpenLock();
-        } else if (mParkInfo.getPark_status().equals("2")) {
-            String status = getParkSpaceStatus();
-            mParkspaceStatus.setText(status);
-            switch (status) {
-                case "租用中":
-                    mCircleView.setColor(Color.parseColor("#d01d2a"));
-                    break;
-                case "停租中":
-                    mCircleView.setColor(Color.parseColor("#808080"));
-                    break;
-                case "空闲中":
-                case "使用中":
-                    mCircleView.setColor(Color.parseColor("#1dd0a1"));
-                    break;
-                default:
-                    mCircleView.setColor(Color.parseColor("#6a6bd9"));
-                    mParkspaceStatus.setText("已预约");
-                    mRecentOrderMinutes = Integer.valueOf(status.substring(3, status.length()));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    if (mRecentOrderMinutes >= 60) {
-                        stringBuilder.append(mRecentOrderMinutes / 60);
-                        stringBuilder.append("小时");
-                    }
-                    stringBuilder.append(mRecentOrderMinutes % 60);
-                    stringBuilder.append("分钟后有预约");
-                    mApponitmentTv.setText(stringBuilder.toString());
-                    break;
-            }
-        } else if (mParkInfo.getPark_status().equals("3")) {
-            mParkspaceStatus.setText("停租中");
-            mCircleView.setColor(Color.parseColor("#808080"));
+        switch (mParkInfo.getPark_status()) {
+            case "1":
+                mParkspaceStatus.setText("未开放");
+                mCircleView.setColor(Color.parseColor("#808080"));
+                cantOpenLock();
+                break;
+            case "2":
+                String status = getParkSpaceStatus();
+                mParkspaceStatus.setText(status);
+                switch (status) {
+                    case "租用中":
+                        mCircleView.setColor(Color.parseColor("#d01d2a"));
+                        break;
+                    case "停租中":
+                        mCircleView.setColor(Color.parseColor("#808080"));
+                        break;
+                    case "空闲中":
+                    case "使用中":
+                        mCircleView.setColor(Color.parseColor("#1dd0a1"));
+                        break;
+                    default:
+                        mCircleView.setColor(Color.parseColor("#6a6bd9"));
+                        mParkspaceStatus.setText("已预约");
+                        mRecentOrderMinutes = Integer.valueOf(status.substring(3, status.length()));
+                        mAppointmentTime.delete(0, mAppointmentTime.length());
+                        if (mRecentOrderMinutes >= 60) {
+                            mAppointmentTime.append(mRecentOrderMinutes / 60);
+                            mAppointmentTime.append("小时");
+                        }
+                        mAppointmentTime.append(mRecentOrderMinutes % 60);
+                        mAppointmentTime.append("分钟后有预约");
+                        break;
+                }
+                break;
+            case "3":
+                mParkspaceStatus.setText("停租中");
+                mCircleView.setColor(Color.parseColor("#808080"));
+                break;
         }
 
-        if (mParkInfo.getParkLockStatus().equals("1")) {
-            initCloseLock();
-        } else if (mParkInfo.getParkLockStatus().equals("2")) {
-            initOpenLock();
-        } else if (mParkInfo.getParkLockStatus().equals("3")) {
-            cantOpenLock();
-            mCircleView.setColor(Color.parseColor("#808080"));
-            mParkspaceStatus.setText("离线中");
+        switch (mParkInfo.getParkLockStatus()) {
+            case "1":
+                initCloseLock();
+                break;
+            case "2":
+                initOpenLock();
+                break;
+            case "3":
+                cantOpenLock();
+                mCircleView.setColor(Color.parseColor("#808080"));
+                mParkspaceStatus.setText("离线中");
+                break;
         }
     }
 
@@ -375,14 +395,18 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         mParkLockStatus = stringBase_class_info.data;
-                        if (mParkLockStatus.equals("1")) {
-                            initCloseLock();
-                        } else if (mParkLockStatus.equals("2")) {
-                            initOpenLock();
-                        } else if (mParkLockStatus.equals("3")) {
-                            cantOpenLock();
-                            mCircleView.setColor(Color.parseColor("#808080"));
-                            mParkspaceStatus.setText("离线中");
+                        switch (mParkLockStatus) {
+                            case "1":
+                                initCloseLock();
+                                break;
+                            case "2":
+                                initOpenLock();
+                                break;
+                            case "3":
+                                cantOpenLock();
+                                mCircleView.setColor(Color.parseColor("#808080"));
+                                mParkspaceStatus.setText("离线中");
+                                break;
                         }
                         dismmisLoadingDialog();
                     }
@@ -508,7 +532,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private void cantOpenLock() {
         mOpenLock.setClickable(false);
-        mOpenLock.setBackgroundResource(R.drawable.g14_all_18dp);
+        //mOpenLock.setBackgroundResource(R.drawable.g14_all_18dp);
     }
 
 }

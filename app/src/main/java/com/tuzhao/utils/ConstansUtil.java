@@ -268,14 +268,19 @@ public class ConstansUtil {
     public static final String PARK_LOT_NAME = "ParkLotName";
 
     /**
-     * 评论的对话框弹出
+     * 对话框弹出,订单评论
      */
     public static final String DIALOG_SHOW = "DialogShow";
 
     /**
-     * 评论的对话框消失
+     * 对话框消失，订单评论
      */
     public static final String DIALOG_DISMISS = "DialogDismiss";
+
+    /**
+     * 弹出对话框，我的车位fragment
+     */
+    public static final String SHOW_DIALOG = "ShowDialog";
 
     public static final String SHARE_TIME_INFO = "ShareTimeInfo";
 
@@ -328,5 +333,25 @@ public class ConstansUtil {
      * 手机号
      */
     public static final String TELEPHONE_NUMBER = "TelephoneNumber";
+
+    /**
+     * 预约时间，我的车位fragment传给activity
+     */
+    public static final String APPOINTMENT_TIME = "AppointmentTime";
+
+    /**
+     * 数据的大小
+     */
+    public static final String SIZE = "Size";
+
+    /**
+     * 我的车位切换到左边
+     */
+    public static final String LEFT = "Left";
+
+    /**
+     * 我的车位切换到右边
+     */
+    public static final String RIGHT = "Right";
 
 }

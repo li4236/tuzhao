@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginEnd="15dp"
-    android:theme="@style/TranslucentTheme">
+    android:theme="@style/TransparentTheme">
 
     <ImageView
         android:id="@+id/property_photo_iv"
