@@ -8,7 +8,6 @@ import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -249,14 +248,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        Log.e(TAG, "onDetach: ");
         OkGo.getInstance().cancelTag(TAG);
         MyReceiver.removeLockListener(mParkInfo.getParkLockId());
         cancleAnimation();

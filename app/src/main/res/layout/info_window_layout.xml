@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:background="@color/w0"
         android:padding="8dp"
-        android:text="Android超长的测试停车场"
         android:textColor="@color/b1"
         android:textSize="12sp"
         app:layout_constraintCircleAngle="3"

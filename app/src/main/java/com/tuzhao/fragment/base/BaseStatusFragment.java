@@ -91,6 +91,9 @@ public abstract class BaseStatusFragment extends Fragment {
         this.TAG = TAG;
     }
 
+    /**
+     * @param autoCancelRequest 在onDestroyView的时候是否取消网络请求
+     */
     protected void setAutoCancelRequest(boolean autoCancelRequest) {
         mAutoCancelRequest = autoCancelRequest;
     }
