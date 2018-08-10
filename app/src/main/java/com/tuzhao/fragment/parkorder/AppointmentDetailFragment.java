@@ -100,10 +100,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private CustomDialog mCustomDialog;
 
-    private Calendar mCurrentCalendar;
-
-    private Calendar mOrderStartCalendar;
-
     private List<Park_Info> mParkSpaceList;
 
     private List<Park_Info> mCanParkList;
@@ -151,9 +147,6 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         mStartParkTime.setText(DateUtil.getPointToMinute(mParkOrderInfo.getOrder_starttime()));
         mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
         mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
-
-        mCurrentCalendar = Calendar.getInstance();
-        mOrderStartCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime());
 
         OnLockListener lockListener = new OnLockListener() {
             @Override

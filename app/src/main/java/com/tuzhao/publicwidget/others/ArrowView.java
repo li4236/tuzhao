@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.tuzhao.R;
@@ -63,7 +62,6 @@ public class ArrowView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.e("TAG", "onDraw: " + mGravity);
         switch (mGravity) {
             case TOP:
                 canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getPaddingTop(), getPaddingStart(), getMeasuredHeight() - getPaddingBottom(), mPaint);

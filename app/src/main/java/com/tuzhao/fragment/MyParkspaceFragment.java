@@ -1,12 +1,16 @@
 package com.tuzhao.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +24,6 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.others.CircleView;
 import com.tuzhao.publicwidget.others.CircularArcView;
@@ -33,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -56,19 +61,29 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private VoltageView mVoltageView;
 
-    private AnimatorSet mAnimatorSet;
-
     private TextView mOpenLock;
 
     private int mRecentOrderMinutes;
-
-    private String mParkLockStatus;
 
     private StringBuilder mAppointmentTime = new StringBuilder("暂无预约");
 
     private int mTotalSize;
 
     private int mPosition;
+
+    private AnimatorSet mAnimatorSet;
+
+    private AnimatorSet mResumeAnimatorSet;
+
+    private long mAnimatorDuration;
+
+    private Queue<Float> mScaleValues;
+
+    private AccelerateDecelerateInterpolator mInterpolator;
+
+    private int mLockStatus;
+
+    private String mExceptionMessage;
 
     public static MyParkspaceFragment newInstance(Park_Info mParkInfo, int position, int totalSize) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
@@ -129,7 +144,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         } else {
             view.findViewById(R.id.right_park_space_iv).setOnClickListener(this);
             view.findViewById(R.id.left_park_space_iv).setOnClickListener(this);
-            numberOfParkSpace.setOnClickListener(this);
+            parkspaceDescription.setOnClickListener(this);
         }
 
         mOpenLock.setOnClickListener(this);
@@ -146,6 +161,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
+        setAutoCancelRequest(false);
         scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
@@ -153,43 +169,38 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         OnLockListener lockListener = new OnLockListener() {
             @Override
             public void openSuccess() {
-                initCloseLock();
-                mParkInfo.setParkLockStatus("1");
-                mCircleView.setColor(Color.parseColor("#1dd0a1"));
-                mParkspaceStatus.setText("使用中");
+                mLockStatus = 1;
+                cancleAnimation();
             }
 
             @Override
             public void openFailed() {
-                initOpenLock();
-                showFiveToast("开锁失败，请稍后重试");
+                mLockStatus = 2;
+                cancleAnimation();
             }
 
             @Override
             public void openSuccessHaveCar() {
-                initCloseLock();
-                showFiveToast("车锁已开，因为车位上方有车辆滞留");
+                mLockStatus = 3;
+                cancleAnimation();
             }
 
             @Override
             public void closeSuccess() {
-                initOpenLock();
-                showFiveToast("成功关锁！");
-                mParkInfo.setParkLockStatus("2");
-                mCircleView.setColor(Color.parseColor("#1dd0a1"));
-                mParkspaceStatus.setText("空闲中");
+                mLockStatus = 4;
+                cancleAnimation();
             }
 
             @Override
             public void closeFailed() {
-                initCloseLock();
-                showFiveToast("关锁失败，请稍后重试");
+                mLockStatus = 5;
+                cancleAnimation();
             }
 
             @Override
             public void closeFailedHaveCar() {
-                initCloseLock();
-                showFiveToast("关锁失败，因为车位上方有车辆滞留");
+                mLockStatus = 6;
+                cancleAnimation();
             }
 
         };
@@ -201,7 +212,11 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.open_lock:
-                if (getText(mOpenLock).equals("开锁")) {
+                if (getText(mParkspaceStatus).equals("未开放")) {
+                    showFiveToast("该车位未开放");
+                } else if (getText(mParkspaceStatus).equals("离线中")) {
+                    showFiveToast("车锁离线中");
+                } else if (getText(mOpenLock).equals("开锁")) {
                     if (getText(mParkspaceStatus).equals("已预约") && mRecentOrderMinutes <= 180) {
                         TipeDialog dialog = new TipeDialog.Builder(getContext())
                                 .setTitle("开锁")
@@ -221,7 +236,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     controlParkLock(false);
                 }
                 break;
-            case R.id.number_of_park_space:
+            case R.id.parkspace_description:
                 dispatchIntent(ConstansUtil.SHOW_DIALOG);
                 break;
             case R.id.left_park_space_iv:
@@ -236,10 +251,18 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
-            mAnimatorSet.cancel();
-        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.e(TAG, "onDetach: ");
+        OkGo.getInstance().cancelTag(TAG);
         MyReceiver.removeLockListener(mParkInfo.getParkLockId());
+        cancleAnimation();
+        if (mResumeAnimatorSet != null) {
+            mResumeAnimatorSet.cancel();
+        }
     }
 
     /**
@@ -275,7 +298,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             case "1":
                 mParkspaceStatus.setText("未开放");
                 mCircleView.setColor(Color.parseColor("#808080"));
-                cantOpenLock();
                 break;
             case "2":
                 String status = getParkSpaceStatus();
@@ -319,7 +341,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 initOpenLock();
                 break;
             case "3":
-                cantOpenLock();
                 mCircleView.setColor(Color.parseColor("#808080"));
                 mParkspaceStatus.setText("离线中");
                 break;
@@ -384,7 +405,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         return null;
     }
 
-    private void getParkLockStatus() {
+    /*private void getParkLockStatus() {
         OkGo.post(HttpConstants.getParkLockStatus)
                 .tag(this.getClass().getName())
                 .addInterceptor(new TokenInterceptor())
@@ -430,7 +451,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                         }
                     }
                 });
-    }
+    }*/
 
     /**
      * @param isOpen true(开锁)    false(关锁)
@@ -438,10 +459,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private void controlParkLock(final boolean isOpen) {
         mOpenLock.setClickable(false);
         startAnimation();
-        OkGo.post(HttpConstants.userControlParkLock)
-                .tag(this.getClass().getName())
-                .addInterceptor(new TokenInterceptor())
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+        getOkGo(HttpConstants.userControlParkLock)
                 .params("cityCode", mParkInfo.getCitycode())
                 .params("parkSpaceId", mParkInfo.getId())
                 .params("controlType", isOpen ? "1" : "2")
@@ -454,28 +472,21 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        cancleAnimation();
-                        mOpenLock.setClickable(true);
+                        mLockStatus = 7;
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
-                                    showFiveToast("设备不在线");
+                                    mExceptionMessage = "设备不在线";
                                     break;
                                 case "102":
-                                    showFiveToast("你想干嘛?");
-                                    break;
-                                case "103":
-                                case "104":
-                                    showFiveToast("客户端异常，请稍后重试");
+                                    mExceptionMessage = "客户端异常，请稍后重试";
                                     break;
                                 case "105":
-                                    showFiveToast("账号异常，请重新登录");
-                                    if (getActivity() != null) {
-                                        getActivity().finish();
-                                    }
+                                    mExceptionMessage = "账号异常，请重新登录";
                                     break;
                             }
                         }
+                        cancleAnimation();
                     }
                 });
 
@@ -487,7 +498,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private void initCloseLock() {
         mOpenLock.setText("关锁");
         ImageUtil.showPic(mLock, R.drawable.ic_unlock);
-        cancleAnimation();
         mOpenLock.setClickable(true);
     }
 
@@ -497,7 +507,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
     private void initOpenLock() {
         mOpenLock.setText("开锁");
         ImageUtil.showPic(mLock, R.drawable.lock);
-        cancleAnimation();
         mOpenLock.setClickable(true);
     }
 
@@ -507,6 +516,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             ObjectAnimator ratation = ObjectAnimator.ofFloat(mCircularArcView, "rotation", 0, 360);
             ratation.setRepeatCount(ValueAnimator.INFINITE);
             ratation.setRepeatMode(ValueAnimator.RESTART);
+            mInterpolator = (AccelerateDecelerateInterpolator) ratation.getInterpolator();
 
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1, 1.2f);
             scaleX.setRepeatMode(ValueAnimator.REVERSE);
@@ -518,10 +528,99 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
             mAnimatorSet.playTogether(ratation, scaleX, scaleY);
             mAnimatorSet.setDuration(1000);
+
+            scaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    if (mScaleValues.size() >= 2) {
+                        //只保存两次的suofa缩放值，用于之后判断当前动画是正在缩小还是放大
+                        mScaleValues.poll();
+                    }
+                    mScaleValues.add((float) animation.getAnimatedValue());
+                }
+            });
+
+            ratation.addListener(new AnimatorListenerAdapter() {
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    super.onAnimationRepeat(animation);
+                    //记录动画时长，用与判断开锁成功后动画距离重复开始执行的时间差
+                    mAnimatorDuration = System.currentTimeMillis();
+                }
+
+            });
+
+            mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    super.onAnimationCancel(animation);
+                    resumeLockAnimator();
+                }
+            });
+        }
+
+        if (mScaleValues == null) {
+            mScaleValues = new LinkedList<>();
         }
         if (!mAnimatorSet.isRunning()) {
             mAnimatorSet.start();
         }
+
+    }
+
+    /**
+     * 过渡到view的初始状态
+     */
+    private void resumeLockAnimator() {
+        mAnimatorDuration = System.currentTimeMillis() - mAnimatorDuration;
+
+        //计算出当前的旋转角度
+        float currentRotation = 360 * mInterpolator.getInterpolation(mAnimatorDuration / 1000f) + 4;
+        float firstScale = mScaleValues.poll();
+        float secondScale = mScaleValues.poll();
+
+        //因为动画不是每一秒都回调onAnimationUpdate方法的，所以会有点误差，当计算到动画正在放大并且快结束的时候很可能是已经开始缩小了的，所以要进行缩小动画
+        boolean isSkip = secondScale > firstScale && currentRotation > 358;
+
+        mResumeAnimatorSet = new AnimatorSet();
+        if (secondScale > firstScale && currentRotation <= 358) {
+            //开锁成功后动画正在放大,先把动画接着放大
+            AnimatorSet animatorSet = new AnimatorSet();
+            ObjectAnimator ratation = ObjectAnimator.ofFloat(mCircularArcView, "rotation", currentRotation, 360);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1.2f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1.2f);
+            animatorSet.playTogether(ratation, scaleX, scaleY);
+            animatorSet.setDuration(1000 - mAnimatorDuration);
+
+            //然后缩小为原来大小
+            AnimatorSet animator = new AnimatorSet();
+            ObjectAnimator ratationResume = ObjectAnimator.ofFloat(mCircularArcView, "rotation", 0, 360);
+            ObjectAnimator scaleXResume = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1.2f, 1);
+            ObjectAnimator scaleYResume = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1.2f, 1);
+            animator.playTogether(ratationResume, scaleXResume, scaleYResume);
+            animator.setDuration(1000);
+            mResumeAnimatorSet.playSequentially(animatorSet, animator);
+        } else {
+            if (isSkip) {
+                mAnimatorDuration = 0;
+                currentRotation = 0;
+            }
+            //开锁成功后动画正在缩小,接着原来的动画缩小为原来大小
+            ObjectAnimator ratation = ObjectAnimator.ofFloat(mCircularArcView, "rotation", currentRotation, 360);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(mCircularArcView, "scaleX", 1);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(mCircularArcView, "scaleY", 1);
+            mResumeAnimatorSet.playTogether(ratation, scaleX, scaleY);
+            mResumeAnimatorSet.setDuration(1000 - mAnimatorDuration);
+        }
+        mResumeAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                showAnimationResult();
+            }
+        });
+        mResumeAnimatorSet.start();
     }
 
     private void cancleAnimation() {
@@ -530,9 +629,45 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         }
     }
 
-    private void cantOpenLock() {
-        mOpenLock.setClickable(false);
-        //mOpenLock.setBackgroundResource(R.drawable.g14_all_18dp);
+    private void showAnimationResult() {
+        switch (mLockStatus) {
+            case 1:
+                initCloseLock();
+                mParkInfo.setParkLockStatus("1");
+                mCircleView.setColor(Color.parseColor("#1dd0a1"));
+                mParkspaceStatus.setText("使用中");
+                break;
+            case 2:
+                initOpenLock();
+                showFiveToast("开锁失败，请稍后重试");
+                break;
+            case 3:
+                initCloseLock();
+                showFiveToast("车锁已开，因为车位上方有车辆滞留");
+                break;
+            case 4:
+                initOpenLock();
+                showFiveToast("成功关锁！");
+                mParkInfo.setParkLockStatus("2");
+                mCircleView.setColor(Color.parseColor("#1dd0a1"));
+                mParkspaceStatus.setText("空闲中");
+                break;
+            case 5:
+                initCloseLock();
+                showFiveToast("关锁失败，请稍后重试");
+                break;
+            case 6:
+                initCloseLock();
+                showFiveToast("关锁失败，因为车位上方有车辆滞留");
+                break;
+            case 7:
+                mOpenLock.setClickable(true);
+                if (mExceptionMessage != null) {
+                    showFiveToast(mExceptionMessage);
+                    mExceptionMessage = null;
+                }
+                break;
+        }
     }
 
 }

@@ -34,49 +34,22 @@
                     android:id="@+id/number_of_park_space"
                     style="@style/FortyTextB1Style"
                     android:layout_width="286dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="22dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:paddingBottom="8dp"
                     android:paddingEnd="12dp"
                     android:paddingStart="12dp"
-                    android:paddingTop="8dp"
                     android:textSize="17sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <com.tuzhao.publicwidget.others.ArrowView
-                    android:id="@+id/left_park_space_iv"
-                    android:layout_width="32dp"
-                    android:layout_height="36dp"
-                    android:paddingBottom="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingStart="12dp"
-                    android:paddingTop="12dp"
-                    app:arrow_gravity="left"
-                    app:layout_constraintBottom_toBottomOf="@+id/number_of_park_space"
-                    app:layout_constraintStart_toStartOf="@+id/number_of_park_space"
-                    app:layout_constraintTop_toTopOf="@+id/number_of_park_space" />
-
-                <com.tuzhao.publicwidget.others.ArrowView
-                    android:id="@+id/right_park_space_iv"
-                    android:layout_width="32dp"
-                    android:layout_height="36dp"
-                    android:paddingBottom="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingStart="12dp"
-                    android:paddingTop="12dp"
-                    app:arrow_gravity="right"
-                    app:layout_constraintBottom_toBottomOf="@+id/number_of_park_space"
-                    app:layout_constraintEnd_toEndOf="@+id/number_of_park_space"
-                    app:layout_constraintTop_toTopOf="@+id/number_of_park_space" />
 
                 <TextView
                     android:id="@+id/parking_lot"
                     style="@style/TwentyTextG6Style"
                     android:layout_width="0dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -158,17 +131,45 @@
                 <TextView
                     android:id="@+id/parkspace_description"
                     style="@style/ThirtyTextB1Style"
-                    android:layout_width="0dp"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_width="286dp"
+                    android:paddingBottom="18dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:paddingTop="18dp"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:paddingEnd="32dp"
+                    android:paddingStart="32dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/parkspace_status_tv" />
+
+                <com.tuzhao.publicwidget.others.ArrowView
+                    android:id="@+id/left_park_space_iv"
+                    android:layout_width="32dp"
+                    android:layout_height="36dp"
+                    android:paddingBottom="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingTop="12dp"
+                    app:arrow_gravity="left"
+                    app:layout_constraintBottom_toBottomOf="@+id/parkspace_description"
+                    app:layout_constraintStart_toStartOf="@+id/parkspace_description"
+                    app:layout_constraintTop_toTopOf="@+id/parkspace_description" />
+
+                <com.tuzhao.publicwidget.others.ArrowView
+                    android:id="@+id/right_park_space_iv"
+                    android:layout_width="32dp"
+                    android:layout_height="36dp"
+                    android:paddingBottom="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingTop="12dp"
+                    app:arrow_gravity="right"
+                    app:layout_constraintBottom_toBottomOf="@+id/parkspace_description"
+                    app:layout_constraintEnd_toEndOf="@+id/parkspace_description"
+                    app:layout_constraintTop_toTopOf="@+id/parkspace_description" />
 
             </android.support.constraint.ConstraintLayout>
 

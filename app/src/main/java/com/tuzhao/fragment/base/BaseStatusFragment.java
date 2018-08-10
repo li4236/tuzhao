@@ -39,6 +39,8 @@ public abstract class BaseStatusFragment extends Fragment {
 
     private String mDialogString = "";
 
+    private boolean mAutoCancelRequest = true;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,7 +82,17 @@ public abstract class BaseStatusFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        OkGo.getInstance().cancelTag(TAG);
+        if (mAutoCancelRequest) {
+            OkGo.getInstance().cancelTag(TAG);
+        }
+    }
+
+    protected void setTAG(String TAG) {
+        this.TAG = TAG;
+    }
+
+    protected void setAutoCancelRequest(boolean autoCancelRequest) {
+        mAutoCancelRequest = autoCancelRequest;
     }
 
     /**
@@ -130,10 +142,6 @@ public abstract class BaseStatusFragment extends Fragment {
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken());
-    }
-
-    protected void setTAG(String TAG) {
-        this.TAG = TAG;
     }
 
     protected boolean handleException(Exception e) {

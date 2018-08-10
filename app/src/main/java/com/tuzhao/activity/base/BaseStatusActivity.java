@@ -108,7 +108,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        OkGo.getInstance().cancelTag(this.getClass().getName());
+        OkGo.getInstance().cancelTag(TAG);
     }
 
     /**

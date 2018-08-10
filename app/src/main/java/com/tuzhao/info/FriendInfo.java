@@ -23,11 +23,6 @@ public class FriendInfo {
      */
     private String realName;
 
-    /**
-     * 用户昵称
-     */
-    private String userName;
-
     private String telephone;
 
     public String getFriendId() {
@@ -70,14 +65,6 @@ public class FriendInfo {
         this.realName = realName;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     @Override
     public String toString() {
         return "FriendInfo{" +
@@ -85,8 +72,8 @@ public class FriendInfo {
                 ", imgUrl='" + imgUrl + '\'' +
                 ", noteName='" + noteName + '\'' +
                 ", realName='" + realName + '\'' +
-                ", userName='" + userName + '\'' +
                 ", telephone='" + telephone + '\'' +
                 '}';
     }
+
 }

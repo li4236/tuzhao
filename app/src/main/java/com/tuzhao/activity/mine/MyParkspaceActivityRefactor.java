@@ -152,6 +152,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                                 mFragments.add(MyParkspaceFragment.newInstance(o.data.get(i), i, size));
                             }
                             mFragmentAdater.notifyDataSetChanged();
+                            findViewById(R.id.bottom_cl).setVisibility(View.VISIBLE);
                         }
                         dismmisLoadingDialog();
                     }

@@ -451,7 +451,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
         protected void conver(@NonNull final BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
             String noteName;
             if (friendInfo.getNoteName() == null || friendInfo.getNoteName().equals("-1")) {
-                if (friendInfo.getUserName() == null || friendInfo.getUserName().equals("-1")) {
+                if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
                     if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
                         if (friendInfo.getTelephone() == null || friendInfo.getTelephone().equals("-1")) {
                             noteName = "亲友" + (++mNotNameNum);
@@ -462,7 +462,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                         noteName = friendInfo.getRealName();
                     }
                 } else {
-                    noteName = friendInfo.getUserName();
+                    noteName = friendInfo.getRealName();
                 }
             } else {
                 noteName = friendInfo.getNoteName();
