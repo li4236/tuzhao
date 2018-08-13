@@ -97,7 +97,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:visibility="gone"
         app:cardCornerRadius="10dp"
         app:cardElevation="1dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,9 +118,9 @@
 
                 <ImageView
                     android:id="@+id/appointment_iv"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="16dp"
                     android:contentDescription="@string/picture_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -149,9 +148,9 @@
 
                 <ImageView
                     android:id="@+id/add_park_space_iv"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="16dp"
                     android:contentDescription="@string/picture_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -179,9 +178,9 @@
 
                 <ImageView
                     android:id="@+id/my_parkspace_setting_iv"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_marginTop="16dp"
                     android:contentDescription="@string/picture_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -13,5 +13,5 @@ public interface ClusterRender {
      * @param clusterNum
      * @return
      */
-     Drawable getDrawAble(int clusterNum,int type);
+     Drawable getDrawable(int clusterNum, int type);
 }

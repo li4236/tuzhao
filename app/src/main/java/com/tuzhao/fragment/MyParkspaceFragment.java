@@ -84,10 +84,10 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private String mExceptionMessage;
 
-    public static MyParkspaceFragment newInstance(Park_Info mParkInfo, int position, int totalSize) {
+    public static MyParkspaceFragment newInstance(Park_Info parkInfo, int position, int totalSize) {
         MyParkspaceFragment fragment = new MyParkspaceFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, mParkInfo);
+        bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, parkInfo);
         bundle.putInt(ConstansUtil.POSITION, position);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
         fragment.setArguments(bundle);

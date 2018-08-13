@@ -983,14 +983,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         options.icon(BitmapDescriptorFactory.fromView(arcView));
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
-        Log.e(TAG, "addLoactionMarker  longitude:"+latlng.longitude+"  latitude:"+latlng.latitude );
+        Log.e(TAG, "addLoactionMarker  longitude:" + latlng.longitude + "  latitude:" + latlng.latitude);
         mLocationMarker = aMap.addMarker(options);
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromView(circleView));
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.position(latlng);
-        Log.e(TAG, "addLoactionMarker  longitude:"+latlng.longitude+"  latitude:"+latlng.latitude );
+        Log.e(TAG, "addLoactionMarker  longitude:" + latlng.longitude + "  latitude:" + latlng.latitude);
         mLocationCircleMarker = aMap.addMarker(markerOptions);
         startMarkerAnimation();
     }
@@ -1154,23 +1154,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
      * 聚拢标点的绘制
      */
     @Override
-    public Drawable getDrawAble(int clusterNum, int type) {
+    public Drawable getDrawable(int clusterNum, int type) {
         Drawable bitmapDrawable = null;
         if (clusterNum == 1) {
             switch (type) {
                 case 1:
-                    bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_park8);
+                    bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.yellow_gps);
                     break;
                 case 2:
-                    bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_cdzz);
+                    bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.green_gps);
                     break;
                 case 3:
-                    bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_park8);
+                    bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.yellow_gps);
                     break;
             }
             return bitmapDrawable;
         } else {
-            bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_all);
+            bitmapDrawable = ContextCompat.getDrawable(this, R.mipmap.purple_gps);
         }
         return bitmapDrawable;
     }
@@ -1209,8 +1209,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             info.setPrice(clusterItems.get(0).getPrice());
             info.setGrade(clusterItems.get(0).getGrade());
             showUpWindowOnMap(info, clusterItems.get(0).isparkspace());
-            LatLng latLng = new LatLng(showmarklal.latitude, showmarklal.longitude - 0.0005);
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.5f));
+
+            //横坐标往右偏移一点以让图标居中
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(showmarklal.latitude, showmarklal.longitude - 0.000918), 15.5f));
         }
     }
 

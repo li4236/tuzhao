@@ -297,6 +297,9 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
         });
     }
 
+    /**
+     * 打开第三方地图进行导航
+     */
     private void openMap(String packageName) {
         if (DeviceUtils.isAppInstalled(this, packageName)) {
             Intent intent = new Intent();

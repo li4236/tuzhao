@@ -517,19 +517,22 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
             if (bitmapDescriptor == null) {
                 TextView textView = new TextView(mContext);
-                String tile = String.valueOf(cluster.getClusterCount());
-                textView.setText(tile);
+                int number = cluster.getClusterCount();
+                textView.setText(String.valueOf(number));
                 textView.setGravity(Gravity.CENTER);
                 textView.setTextColor(Color.BLACK);
-                if (cluster.getClusterCount() < 10) {
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-                } else if (cluster.getClusterCount() >= 10 && cluster.getClusterCount() <= 99) {
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
-                } else {
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 9);
+                if (number < 10) {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                } else if (number <= 99) {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                } else if(number<=999){
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                }else {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
                 }
-                if (mClusterRender != null && mClusterRender.getDrawAble(cluster.getClusterCount(), 0) != null) {
-                    textView.setBackground(mClusterRender.getDrawAble(cluster.getClusterCount(), 0));
+
+                if (mClusterRender != null && mClusterRender.getDrawable(cluster.getClusterCount(), 0) != null) {
+                    textView.setBackground(mClusterRender.getDrawable(cluster.getClusterCount(), 0));
                 }
                 bitmapDescriptor = BitmapDescriptorFactory.fromView(textView);
                 mLruCache.put(cluster.getClusterCount(), bitmapDescriptor);
@@ -549,8 +552,8 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
             bitmapDescriptor = mLruCacheName.get(type);
             if (bitmapDescriptor == null) {
                 TextView textView = new TextView(mContext);
-                if (mClusterRender != null && mClusterRender.getDrawAble(cluster.getClusterCount(), type) != null) {
-                    textView.setBackground(mClusterRender.getDrawAble(cluster.getClusterCount(), type));
+                if (mClusterRender != null && mClusterRender.getDrawable(cluster.getClusterCount(), type) != null) {
+                    textView.setBackground(mClusterRender.getDrawable(cluster.getClusterCount(), type));
                 }
                 bitmapDescriptor = BitmapDescriptorFactory.fromView(textView);
                 mLruCacheName.put(type, bitmapDescriptor);

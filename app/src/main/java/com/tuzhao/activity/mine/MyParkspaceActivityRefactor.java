@@ -51,6 +51,8 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
 
     private List<MyParkspaceFragment> mFragments;
 
+    private List<Park_Info> mParkInfos;
+
     private TextView mApponitmentTv;
 
     private FragmentAdater mFragmentAdater;
@@ -64,6 +66,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_parkspace_layout_refactor);
         mFragments = new ArrayList<>();
+        mParkInfos = new ArrayList<>();
 
         mViewPager = findViewById(R.id.my_parkspace_vp);
         mApponitmentTv = findViewById(R.id.appointment_tv);
@@ -113,9 +116,10 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
         if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
             if (data.hasExtra(ConstansUtil.PARK_SPACE_ID)) {
                 String parkSpaceId = data.getStringExtra(ConstansUtil.PARK_SPACE_ID);
-                for (int i = 0; i < mFragments.size(); i++) {
-                    if (mFragments.get(i).getParkInfo().getId().equals(parkSpaceId)) {
+                for (int i = 0; i < mParkInfos.size(); i++) {
+                    if (mParkInfos.get(i).getId().equals(parkSpaceId)) {
                         mFragments.remove(i);
+                        initDialog();
                         mFragmentAdater.notifyDataSetChanged();
                         if (mFragments.isEmpty()) {
                             showViewStub();
@@ -147,10 +151,12 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                         if (o.data.isEmpty()) {
                             showViewStub();
                         } else {
-                            int size = o.data.size();
+                            mParkInfos.addAll(o.data);
+                            int size = mParkInfos.size();
                             for (int i = 0; i < size; i++) {
-                                mFragments.add(MyParkspaceFragment.newInstance(o.data.get(i), i, size));
+                                mFragments.add(MyParkspaceFragment.newInstance(mParkInfos.get(i), i, size));
                             }
+                            initDialog();
                             mFragmentAdater.notifyDataSetChanged();
                             findViewById(R.id.bottom_cl).setVisibility(View.VISIBLE);
                         }
@@ -268,25 +274,28 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
 
     }
 
-    private void showDialog() {
-        if (mOptionsPickerView == null) {
-            ArrayList<String> parkSpaceName = new ArrayList<>();
-            for (int i = 0; i < mFragments.size(); i++) {
-                parkSpaceName.add(mFragments.get(i).getParkInfo().getLocation_describe());
-            }
-            mOptionsPickerView = new OptionsPickerView<>(this);
-            mOptionsPickerView.setPicker(parkSpaceName);
-            mOptionsPickerView.setTextSize(16);
-            mOptionsPickerView.setCyclic(false);
-            mOptionsPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-                @Override
-                public void onOptionsSelect(int options1, int option2, int options3) {
-                    mViewPager.setCurrentItem(options1, true);
-                }
-            });
+    private void initDialog() {
+        ArrayList<String> parkSpaceName = new ArrayList<>();
+        for (int i = 0; i < mFragments.size(); i++) {
+            parkSpaceName.add(mParkInfos.get(i).getLocation_describe());
         }
-        mOptionsPickerView.setSelectOptions(mViewPager.getCurrentItem());
-        mOptionsPickerView.show();
+        mOptionsPickerView = new OptionsPickerView<>(this);
+        mOptionsPickerView.setPicker(parkSpaceName);
+        mOptionsPickerView.setTextSize(16);
+        mOptionsPickerView.setCyclic(false);
+        mOptionsPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                mViewPager.setCurrentItem(options1, true);
+            }
+        });
+    }
+
+    private void showDialog() {
+        if (mOptionsPickerView != null) {
+            mOptionsPickerView.setSelectOptions(mViewPager.getCurrentItem());
+            mOptionsPickerView.show();
+        }
     }
 
     @Override
