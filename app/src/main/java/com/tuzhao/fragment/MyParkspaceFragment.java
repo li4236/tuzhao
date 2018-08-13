@@ -94,10 +94,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         return fragment;
     }
 
-    public Park_Info getParkInfo() {
-        return mParkInfo;
-    }
-
     public void setParkInfo(Park_Info parkInfo) {
         mParkInfo = parkInfo;
         setParkspaceStatus();
@@ -229,10 +225,30 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                                 }).create();
                         dialog.show();
                     } else {
-                        controlParkLock(true);
+                        new TipeDialog.Builder(requireContext())
+                                .setTitle("提示")
+                                .setMessage("确定开锁吗？")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        controlParkLock(true);
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
                 } else {
-                    controlParkLock(false);
+                    new TipeDialog.Builder(requireContext())
+                            .setTitle("提示")
+                            .setMessage("确定关锁吗？")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    controlParkLock(false);
+                                }
+                            })
+                            .create()
+                            .show();
                 }
                 break;
             case R.id.parkspace_description:

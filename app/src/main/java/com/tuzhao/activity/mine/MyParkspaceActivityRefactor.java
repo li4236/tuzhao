@@ -130,7 +130,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             } else if (data.hasExtra(ConstansUtil.FOR_REQEUST_RESULT)) {
                 Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
                 for (int i = 0; i < mFragments.size(); i++) {
-                    if (mFragments.get(i).getParkInfo().getId().equals(parkInfo.getId())) {
+                    if (mParkInfos.get(i).getId().equals(parkInfo.getId())) {
                         mFragments.get(i).setParkInfo(parkInfo);
                         break;
                     }
@@ -239,7 +239,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                 break;
             case R.id.my_parkspace_setting:
                 Intent intent2 = new Intent(this, ParkSpaceSettingActivity.class);
-                intent2.putExtra(ConstansUtil.PARK_SPACE_INFO, mFragments.get(mViewPager.getCurrentItem()).getParkInfo());
+                intent2.putExtra(ConstansUtil.PARK_SPACE_INFO, mParkInfos.get(mViewPager.getCurrentItem()));
                 startActivityForResult(intent2, ConstansUtil.REQUSET_CODE);
                 break;
         }
