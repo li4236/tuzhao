@@ -265,6 +265,10 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
 
         mCustomDialog = new CustomDialog(this, view, true);
         ListView listView = view.findViewById(R.id.dialog_lv);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listView.getLayoutParams();
+        params.bottomMargin = dpToPx(10);
+        listView.setLayoutParams(params);
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.item_center_text_blue2_layout, new String[]{"高德地图", "腾讯地图", "百度地图"});
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
