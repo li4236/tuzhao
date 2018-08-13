@@ -191,6 +191,7 @@
         <activity android:name=".activity.mine.ConfirmAcceptInvoiceAddressActivity" />
         <activity android:name=".activity.mine.ChangeTetephoneNumberActivity" />
         <activity android:name=".activity.mine.WithdrawActivity" />
+        <activity android:name=".activity.mine.NavigationActivity" />
 
         <!--QQ分享-->
         <activity

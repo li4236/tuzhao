@@ -23,7 +23,6 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.others.ArrowView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
-import com.tuzhao.utils.ScreenUtils;
 
 import java.util.ArrayList;
 
@@ -41,18 +40,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     private LoginDialogFragment mLoginDialogFragment;
 
-    protected boolean mAdapterScreen;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mAdapterScreen) {
-            if (ScreenUtils.isPortrait(this)) {
-                ScreenUtils.adaptScreenForVerticalSlide(this, 1080);
-            } else {
-                ScreenUtils.adaptScreenForHorizontalSlide(this, 1080);
-            }
-        }
         setContentView(resourceId() == 0 ? R.layout.activity_base_refresh_layout : resourceId());
         ConstraintLayout toolbar = findViewById(R.id.base_tb);
         ArrowView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
@@ -119,9 +109,6 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkGo.getInstance().cancelTag(TAG);
-        if (mAdapterScreen) {
-            ScreenUtils.cancelAdaptScreen(this);
-        }
     }
 
     /**
@@ -304,11 +291,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * @param msg 显示的消息
      */
     protected void showFiveToast(String msg) {
-        if (mAdapterScreen) {
-            MyToast.showToast(this, msg);
-        } else {
-            MyToast.showToast(this, msg, 5);
-        }
+        MyToast.showToast(this, msg, 5);
     }
 
     /**
@@ -361,6 +344,11 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected int dpToPx(float dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    protected int spToPx(float sp) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (sp * scale + 0.5f);
     }
 
 }

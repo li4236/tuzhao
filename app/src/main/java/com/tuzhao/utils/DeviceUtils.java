@@ -145,4 +145,18 @@ public class DeviceUtils {
         context.startActivity(intent);
     }
 
+    /*
+     * check the app is installed
+     */
+    public static boolean isAppInstalled(Context context, String packagename) {
+        PackageInfo packageInfo;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(packagename, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        return packageInfo != null;
+    }
+
 }

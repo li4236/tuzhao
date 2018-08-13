@@ -24,7 +24,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.OrderParkActivity;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.activity.navi.RouteNaviActivity;
+import com.tuzhao.activity.mine.NavigationActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
@@ -41,6 +41,7 @@ import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
@@ -196,10 +197,12 @@ public class ParkspaceDetailFragment extends BaseFragment {
         linearlayout_daohang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyApplication.getInstance(), RouteNaviActivity.class);
+                Intent intent = new Intent(MyApplication.getInstance(), NavigationActivity.class);
                 intent.putExtra("gps", true);
                 intent.putExtra("start", new NaviLatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude()));
                 intent.putExtra("end", new NaviLatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()));
+                intent.putExtra(ConstansUtil.PARK_LOT_NAME, parkspace_info.getParkLotName());
+                intent.putExtra("address", parkspace_info.getPark_address());
                 startActivity(intent);
             }
         });
@@ -357,7 +360,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
                         .start();
             }
 
-            textview_parkspacename.setText(parkspace_info.getPark_space_name());
+            textview_parkspacename.setText(parkspace_info.getParkLotName());
             textview_parkspaceaddress.setText(parkspace_info.getPark_address());
             DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));
             textview_distance.setText(distanceAndDanwei.getDistance());

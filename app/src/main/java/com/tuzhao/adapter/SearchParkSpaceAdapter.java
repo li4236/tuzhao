@@ -64,7 +64,7 @@ public class SearchParkSpaceAdapter extends BaseAdapter implements Filterable {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.keyword.setText(mList.get(position).getPark_space_name());
+        holder.keyword.setText(mList.get(position).getParkLotName());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +124,7 @@ public class SearchParkSpaceAdapter extends BaseAdapter implements Filterable {
                 for (int i = 0; i < count; i++) {
                     Park_Space_Info value = mUnfilteredData.get(i);
                     if (value!= null){
-                        String valueText = value.getPark_space_name().toLowerCase();
+                        String valueText = value.getParkLotName().toLowerCase();
 
                         if (valueText.indexOf(prefixString) != -1) { //实现模糊查询
                             //    valueText.contains(prefixString) 源码 ,匹配开头

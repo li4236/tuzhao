@@ -116,7 +116,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         View view = getLayoutInflater().inflate(R.layout.dialog_list_layout, null);
         mCustomDialog = new CustomDialog(this, view, true);
         ListView listView = view.findViewById(R.id.dialog_lv);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.item_center_text_layout, mSpinnerString);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.item_center_text_b1_layout, mSpinnerString);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

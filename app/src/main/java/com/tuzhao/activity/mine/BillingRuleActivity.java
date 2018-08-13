@@ -77,7 +77,7 @@ public class BillingRuleActivity extends BaseStatusActivity {
                 .execute(new JsonCallback<Base_Class_Info<Park_Space_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Park_Space_Info> o, Call call, Response response) {
-                        mParkLotName.setText(o.data.getPark_space_name());
+                        mParkLotName.setText(o.data.getParkLotName());
 
                         String highTime = o.data.getHigh_time();
                         int position = highTime.indexOf(" - ");

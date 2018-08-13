@@ -6,9 +6,11 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import com.amap.api.maps.model.LatLng;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.publicmanager.UserManager;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -17,6 +19,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 
 /**
  * Created by juncoder on 2018/7/9.
@@ -472,7 +479,7 @@ public class DataUtil {
         city.add("川");
         cityWithLetter = new ArrayList<>();
         for (String string : letters) {
-            if (string.equals("N")||string.contains("P")) {
+            if (string.equals("N") || string.contains("P")) {
                 continue;
             }
             cityWithLetter.add(string);
@@ -520,12 +527,58 @@ public class DataUtil {
         letter.add(cityWithLetter);
     }
 
+    /**
+     * @return string是否包含小写字母
+     */
     public static boolean containLowerCase(String string) {
-        for(int i=0;i<string.length();i++) {
+        for (int i = 0; i < string.length(); i++) {
             if (Character.isLowerCase(string.charAt(i))) {
                 return true;
             }
         }
         return false;
     }
+
+    private static double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+
+    /**
+     * 对double类型数据保留小数点后多少位
+     * 高德地图转码返回的就是 小数点后6位，为了统一封装一下
+     *
+     * @param digit 位数
+     * @param in    输入
+     * @return 保留小数位后的数
+     */
+    static double dataDigit(int digit, double in) {
+        return new BigDecimal(in).setScale(6, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+    }
+
+    /**
+     * 将火星坐标转变成百度坐标
+     *
+     * @param lngLat_gd 火星坐标（高德、腾讯地图坐标等）
+     * @return 百度坐标
+     */
+
+    public static LatLng bd_encrypt(LatLng lngLat_gd) {
+        double x = lngLat_gd.longitude, y = lngLat_gd.latitude;
+        double z = sqrt(x * x + y * y) + 0.00002 * sin(y * x_pi);
+        double theta = atan2(y, x) + 0.000003 * cos(x * x_pi);
+        return new LatLng(dataDigit(6, z * cos(theta) + 0.0065), dataDigit(6, z * sin(theta) + 0.006));
+    }
+
+    /**
+     * 将百度坐标转变成火星坐标
+     *
+     * @param lngLat_bd 百度坐标（百度地图坐标）
+     * @return 火星坐标(高德 、 腾讯地图等)
+     */
+    static LatLng bd_decrypt(LatLng lngLat_bd) {
+        double x = lngLat_bd.longitude - 0.0065, y = lngLat_bd.latitude - 0.006;
+        double z = sqrt(x * x + y * y) - 0.00002 * sin(y * x_pi);
+        double theta = atan2(y, x) - 0.000003 * cos(x * x_pi);
+        return new LatLng(dataDigit(6, z * cos(theta)), dataDigit(6, z * sin(theta)));
+    }
+
 }

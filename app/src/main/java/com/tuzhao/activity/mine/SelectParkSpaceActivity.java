@@ -249,7 +249,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
         for (int i = 0; i < data.size(); i++) {
             ParkBean ParkBean = new ParkBean();
             ParkBean.setParkID(data.get(i).getId());
-            ParkBean.setparkStation(data.get(i).getPark_space_name());//设置停车场名称
+            ParkBean.setparkStation(data.get(i).getParkLotName());//设置停车场名称
             ParkBean.setCitycode(citycode);
             ParkBean.setProfit_ratio(data.get(i).getProfit_ratio());
             mDatas.add(ParkBean);

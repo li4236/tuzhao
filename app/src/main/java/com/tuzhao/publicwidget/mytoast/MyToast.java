@@ -45,29 +45,6 @@ public class MyToast {
         }
     }
 
-    public static void showToast(Context context, String str) {
-        //加载Toast布局
-        View toastRoot = LayoutInflater.from(context).inflate(R.layout.toast_adapter_layout, null);
-        //初始化布局控件
-        TextView mTextView = toastRoot.findViewById(R.id.message);
-        //为控件设置属性
-        mTextView.setText(str);
-        //Toast的初始化
-        Toast toastStart = new Toast(context);
-        //获取屏幕高度
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (wm != null) {
-            Point point = new Point();
-            wm.getDefaultDisplay().getSize(point);
-            int height = point.y;
-            //Toast的Y坐标是屏幕高度的1/3，不会出现不适配的问题
-            toastStart.setGravity(Gravity.BOTTOM, 0, height / 5);
-            toastStart.setDuration(Toast.LENGTH_LONG);
-            toastStart.setView(toastRoot);
-            toastStart.show();
-        }
-    }
-
     public static void showToast(Context context, String str, int sum) {
         //获取屏幕高度
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

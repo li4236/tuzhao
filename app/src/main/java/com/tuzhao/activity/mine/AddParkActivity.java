@@ -142,7 +142,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                     if (data.hasExtra("park")) {
                         Park_Space_Info park_space_info = (Park_Space_Info) data.getSerializableExtra("park");
                         mPark.setParkID(park_space_info.getId());
-                        mPark.setparkStation(park_space_info.getPark_space_name());
+                        mPark.setparkStation(park_space_info.getParkLotName());
                         mPark.setCitycode(park_space_info.getCity_code());
                         mPark.setProfit_ratio(park_space_info.getProfit_ratio());
                         mTt_parkSpace.setText(mPark.getparkStation());

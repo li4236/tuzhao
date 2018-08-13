@@ -138,7 +138,6 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
         animation.setDuration(500);
         marker.setAnimation(animation);
         marker.startAnimation();
-
     }
 
     @Override

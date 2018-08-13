@@ -53,7 +53,7 @@ public class Park_Space_Info extends BaseInfo {
         this.longitude = longitude;
     }
 
-    public String getPark_space_name() {
+    public String getParkLotName() {
         return park_space_name;
     }
 
