@@ -608,4 +608,9 @@ public class HttpConstants {
      */
     public static final String changeTelephoneNumber = ROOT_URL + "changeTelephoneNumber";
 
+    /**
+     * 提现余额
+     */
+    public static final String withdrawlBalance = ROOT_URL + "withdrawlBalance";
+
 }

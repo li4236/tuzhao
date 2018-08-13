@@ -160,7 +160,6 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
             view.findViewById(R.id.second_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("TAG", "onClick: "+ UserManager.getInstance().getUserInfo().getOpenId());
                     if (UserManager.getInstance().getUserInfo().getOpenId().equals("-1")) {
                         wechatLogin();
                     } else {
@@ -331,7 +330,7 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
      * @param withdrawType 0:支付宝，1:微信
      */
     private void startWithdraw(int withdrawType) {
-        Intent intent = new Intent(MyBalanceActivity.this, GetMoneyActivty.class);
+        Intent intent = new Intent(MyBalanceActivity.this, WithdrawActivity.class);
         intent.putExtra(ConstansUtil.INTENT_MESSAGE, withdrawType);
         startActivity(intent);
     }

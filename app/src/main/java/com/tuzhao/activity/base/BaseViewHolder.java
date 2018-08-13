@@ -1,5 +1,6 @@
 package com.tuzhao.activity.base;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
@@ -60,6 +61,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setBackgroundColor(@IdRes int id, @ColorInt int color) {
+        getView(id).setBackgroundColor(color);
+        return this;
+    }
+
     public BaseViewHolder setRadioCheck(@IdRes int id, boolean check) {
         ((RadioButton) getView(id)).setChecked(check);
         return this;
@@ -91,7 +97,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseViewHolder showPicWithNoAnimate(@IdRes int id, @DrawableRes int drawableId) {
-        ImageUtil.showPicWithNoAnimate((ImageView) getView(id),drawableId);
+        ImageUtil.showPicWithNoAnimate((ImageView) getView(id), drawableId);
         return this;
     }
 
@@ -112,6 +118,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         }
 
         ImageUtil.showPic((CircleImageView) getView(id), HttpConstants.ROOT_IMG_URL_USER + url, R.mipmap.ic_usericon);
+        return this;
+    }
+
+    public BaseViewHolder setOnClickListener(@IdRes int id, View.OnClickListener onClickListener) {
+        getView(id).setOnClickListener(onClickListener);
         return this;
     }
 

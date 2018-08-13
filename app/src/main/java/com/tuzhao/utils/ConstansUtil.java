@@ -354,4 +354,9 @@ public class ConstansUtil {
      */
     public static final String RIGHT = "Right";
 
+    /**
+     * 支付密码
+     */
+    public static final String PAYMENT_PASSWORD = "PaymentPassword";
+
 }

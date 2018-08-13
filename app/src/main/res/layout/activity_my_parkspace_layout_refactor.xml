@@ -65,10 +65,10 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/my_parkspace_vp"
         android:layout_width="match_parent"
-        android:layout_height="430dp"
-        android:layout_marginTop="18dp"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_cl"
         app:layout_constraintTop_toBottomOf="@+id/top_divider" />
 
     <!--<ImageView
@@ -96,13 +96,13 @@
         android:id="@+id/bottom_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
         android:visibility="gone"
         app:cardCornerRadius="10dp"
         app:cardElevation="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_parkspace_vp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="318dp"

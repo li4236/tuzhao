@@ -120,6 +120,12 @@
         <item name="android:background">@color/w5</item>
     </style>
 
+    <style name="dividerAdapterStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">3dp</item>
+        <item name="android:background">@color/w5</item>
+    </style>
+
     <style name="VerticalDividerStyle">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>

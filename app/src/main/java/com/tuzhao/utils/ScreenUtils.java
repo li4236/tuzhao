@@ -17,12 +17,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.tuzhao.application.MyApplication;
+
 import static android.Manifest.permission.WRITE_SETTINGS;
 
 /**
  * Created by juncoder on 2018/8/6.
  * <p>
+ * 屏幕适配的工具类
  * copy from:https://github.com/Blankj/AndroidUtilCode/blob/master/utilcode/src/main/java/com/blankj/utilcode/util/ScreenUtils.java
+ * blog:https://blankj.com/2018/07/30/easy-adapt-screen/
  * </p>
  */
 public class ScreenUtils {
@@ -286,25 +290,21 @@ public class ScreenUtils {
     /**
      * Adapt the screen for vertical slide.
      *
-     * @param designWidthInDp The size of design diagram's width, in dp,
-     *                        e.g. the design diagram width is 720px, in XHDPI device,
-     *                        the designWidthInDp = 720 / 2.
+     * @param designWidthInPx The size of design diagram's width, in pixel.
      */
-    public static void adaptScreen4VerticalSlide(final Activity activity,
-                                                 final int designWidthInDp) {
-        adaptScreen(activity, designWidthInDp, true);
+    public static void adaptScreenForVerticalSlide(final Activity activity,
+                                                   final int designWidthInPx) {
+        adaptScreen(activity, designWidthInPx, true);
     }
 
     /**
      * Adapt the screen for horizontal slide.
      *
-     * @param designHeightInDp The size of design diagram's height, in dp,
-     *                         e.g. the design diagram height is 1080px, in XXHDPI device,
-     *                         the designHeightInDp = 1080 / 3.
+     * @param designHeightInPx The size of design diagram's height, in pixel.
      */
-    public static void adaptScreen4HorizontalSlide(final Activity activity,
-                                                   final int designHeightInDp) {
-        adaptScreen(activity, designHeightInDp, false);
+    public static void adaptScreenForHorizontalSlide(final Activity activity,
+                                                     final int designHeightInPx) {
+        adaptScreen(activity, designHeightInPx, false);
     }
 
     /**
@@ -313,28 +313,119 @@ public class ScreenUtils {
      * @param activity The activity.
      */
     public static void cancelAdaptScreen(final Activity activity) {
-        final DisplayMetrics appDm = activity.getResources().getDisplayMetrics();
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = MyApplication.getInstance().getResources().getDisplayMetrics();
         final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
-        activityDm.density = appDm.density;
-        activityDm.scaledDensity = appDm.scaledDensity;
-        activityDm.densityDpi = appDm.densityDpi;
+        activityDm.density = systemDm.density;
+        activityDm.scaledDensity = systemDm.scaledDensity;
+        activityDm.densityDpi = systemDm.densityDpi;
+
+        appDm.density = systemDm.density;
+        appDm.scaledDensity = systemDm.scaledDensity;
+        appDm.densityDpi = systemDm.densityDpi;
     }
 
     /**
      * Reference from: https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
      */
     private static void adaptScreen(final Activity activity,
-                                    final float sizeInDp,
+                                    final float sizeInPx,
                                     final boolean isVerticalSlide) {
-        final DisplayMetrics appDm = activity.getResources().getDisplayMetrics();
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = MyApplication.getInstance().getResources().getDisplayMetrics();
         final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
         if (isVerticalSlide) {
-            activityDm.density = activityDm.widthPixels / sizeInDp;
+            activityDm.density = activityDm.widthPixels / sizeInPx;
         } else {
-            activityDm.density = activityDm.heightPixels / sizeInDp;
+            activityDm.density = activityDm.heightPixels / sizeInPx;
         }
-        activityDm.scaledDensity = activityDm.density * (appDm.scaledDensity / appDm.density);
+        activityDm.scaledDensity = activityDm.density * (systemDm.scaledDensity / systemDm.density);
         activityDm.densityDpi = (int) (160 * activityDm.density);
+
+        appDm.density = activityDm.density;
+        appDm.scaledDensity = activityDm.scaledDensity;
+        appDm.densityDpi = activityDm.densityDpi;
     }
 
+    /**
+     * Adapt the screen for vertical slide.
+     *
+     * @param designWidthInPx The size of design diagram's width, in pixel.
+     */
+    /*public static void adaptScreenForVerticalSlide(final Activity activity,
+                                                   final int designWidthInPx) {
+        adaptScreen(activity, designWidthInPx, true);
+    }*/
+
+    /**
+     * Adapt the screen for horizontal slide.
+     *
+     * @param designHeightInPx The size of design diagram's height, in pixel.
+     */
+    /*public static void adaptScreenForHorizontalSlide(final Activity activity,
+                                                     final int designHeightInPx) {
+        adaptScreen(activity, designHeightInPx, false);
+    }*/
+
+    /**
+     * Return whether adapt screen.
+     *
+     * @return {@code true}: yes<br>{@code false}: no
+     */
+   /* public static boolean isAdaptScreen() {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = MyApplication.getInstance().getResources().getDisplayMetrics();
+        return systemDm.density != appDm.density;
+    }*/
+
+    /**
+     * Reference from: https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
+     */
+    /*private static void adaptScreen(final Activity activity,
+                                    final float sizeInPx,
+                                    final boolean isVerticalSlide) {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = MyApplication.getInstance().getResources().getDisplayMetrics();
+        final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
+        if (isVerticalSlide) {
+            activityDm.density = activityDm.widthPixels / sizeInPx;
+        } else {
+            activityDm.density = activityDm.heightPixels / sizeInPx;
+        }
+        activityDm.scaledDensity = activityDm.density * (systemDm.scaledDensity / systemDm.density);
+        activityDm.densityDpi = (int) (160 * activityDm.density);
+
+        appDm.density = activityDm.density;
+        appDm.scaledDensity = activityDm.scaledDensity;
+        appDm.densityDpi = activityDm.densityDpi;
+    }*/
+
+    /**
+     * Return whether adapt screen.
+     *
+     * @return {@code true}: yes<br>{@code false}: no
+     */
+    /*public static boolean isAdaptScreen() {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = MyApplication.getInstance().getResources().getDisplayMetrics();
+        return systemDm.density != appDm.density;
+    }*/
+
+    /**
+     * Cancel adapt the screen.
+     *
+     * @param activity The activity.
+     */
+    /*public static void cancelAdaptScreen(final Activity activity) {
+        final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
+        final DisplayMetrics appDm = MyApplication.getInstance().getResources().getDisplayMetrics();
+        final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
+        activityDm.density = systemDm.density;
+        activityDm.scaledDensity = systemDm.scaledDensity;
+        activityDm.densityDpi = systemDm.densityDpi;
+
+        appDm.density = systemDm.density;
+        appDm.scaledDensity = systemDm.scaledDensity;
+        appDm.densityDpi = systemDm.densityDpi;
+    }*/
 }

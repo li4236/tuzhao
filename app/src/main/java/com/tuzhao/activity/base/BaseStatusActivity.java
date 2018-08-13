@@ -6,10 +6,9 @@ import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
@@ -21,8 +20,10 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.others.ArrowView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ScreenUtils;
 
 import java.util.ArrayList;
 
@@ -40,12 +41,21 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     private LoginDialogFragment mLoginDialogFragment;
 
+    protected boolean mAdapterScreen;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (mAdapterScreen) {
+            if (ScreenUtils.isPortrait(this)) {
+                ScreenUtils.adaptScreenForVerticalSlide(this, 1080);
+            } else {
+                ScreenUtils.adaptScreenForHorizontalSlide(this, 1080);
+            }
+        }
         setContentView(resourceId() == 0 ? R.layout.activity_base_refresh_layout : resourceId());
-        Toolbar toolbar = findViewById(R.id.base_tb);
-        final ImageView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
+        ConstraintLayout toolbar = findViewById(R.id.base_tb);
+        ArrowView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
         turnBackIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +119,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkGo.getInstance().cancelTag(TAG);
+        if (mAdapterScreen) {
+            ScreenUtils.cancelAdaptScreen(this);
+        }
     }
 
     /**
@@ -291,7 +304,11 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * @param msg 显示的消息
      */
     protected void showFiveToast(String msg) {
-        MyToast.showToast(this, msg, 5);
+        if (mAdapterScreen) {
+            MyToast.showToast(this, msg);
+        } else {
+            MyToast.showToast(this, msg, 5);
+        }
     }
 
     /**
@@ -315,7 +332,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         editText.setSelection(editText.getText().length());
     }
 
-    protected void customToolBar(Toolbar toolbar) {
+    protected void customToolBar(ConstraintLayout toolbar) {
 
     }
 

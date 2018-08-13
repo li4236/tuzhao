@@ -38,6 +38,8 @@ public class CustomDialog extends Dialog {
 
     private boolean mIsPolling;
 
+    private PaymentPasswordHelper mPasswordHelper;
+
     public CustomDialog(@NonNull Context context, View view) {
         super(context, R.style.ParkDialog);
         setContentView(view);
@@ -54,6 +56,27 @@ public class CustomDialog extends Dialog {
             window.setGravity(Gravity.BOTTOM);
             window.setWindowAnimations(R.style.ParkAnimationStyle);
         }
+    }
+
+    public CustomDialog(PaymentPasswordHelper helper) {
+        super(helper.getContext(), R.style.ParkDialog);
+        setContentView(helper.getView());
+        mPasswordHelper = helper;
+        mIsShowAnimation = true;
+
+        Window window = getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 1184);
+            window.setGravity(Gravity.BOTTOM);
+            window.setWindowAnimations(R.style.ParkAnimationStyle);
+        }
+
+        helper.setCloseListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public CustomDialog(@NonNull Context context, ParkOrderInfo parkOrderInfo, boolean showParkFee) {
@@ -306,6 +329,10 @@ public class CustomDialog extends Dialog {
         super.show();
         if (mIsPolling) {
             mPollingUtil.start();
+        }
+
+        if (mPasswordHelper != null) {
+            mPasswordHelper.clearPassword();
         }
 
         if (mIsShowAnimation) {

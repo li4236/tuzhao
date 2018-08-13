@@ -56,8 +56,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             return new BaseViewHolder(mHeaderView);
         } else if (viewType == FOOTER_VIEW) {
             return new BaseViewHolder(mFooterView);
+        } else if(viewType!=0){
+            return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId(viewType), parent, false));
         }
-        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId() == 0 ? itemViewId(viewType) : itemViewId(), parent, false));
+        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId(), parent, false));
     }
 
     @Override
