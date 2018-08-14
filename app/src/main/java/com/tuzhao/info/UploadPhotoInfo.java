@@ -5,11 +5,13 @@ package com.tuzhao.info;
  */
 public class UploadPhotoInfo {
 
+    private String name;
+
     private String path = "-1";
 
     private boolean showProgress;
 
-    private String progress;
+    private String progress = "0%";
 
     private boolean uploadSuccess;
 
@@ -20,7 +22,6 @@ public class UploadPhotoInfo {
     public UploadPhotoInfo(String path) {
         this.path = path;
         showProgress = true;
-        progress = "0%";
     }
 
     public String getPath() {
@@ -54,4 +55,14 @@ public class UploadPhotoInfo {
     public void setUploadSuccess(boolean uploadSuccess) {
         this.uploadSuccess = uploadSuccess;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public UploadPhotoInfo setName(String name) {
+        this.name = name;
+        return this;
+    }
+
 }

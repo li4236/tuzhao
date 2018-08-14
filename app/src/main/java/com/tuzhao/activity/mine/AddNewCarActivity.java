@@ -1,12 +1,22 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,14 +26,19 @@ import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
 import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
-import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -42,29 +57,23 @@ import okhttp3.Response;
 
 public class AddNewCarActivity extends BaseStatusActivity implements View.OnClickListener {
 
-    private TextView mLicensePlateAttribution;
+    //private TextView mLicensePlateAttribution;
 
     private EditText mCarNumber;
 
     private EditText mCarOwner;
 
-    private ImageView mDriveLicensePhoto;
-
-    private ImageView mDeleteDriveLicensePhoto;
-
-    private TextView mUploadProgress;
-
-    private String mDriveLicensePhotoPath;
-
-    private String mCityCode;
-
     private static final int REQUEST_CODE_PICKER = 0x111;
 
-    private ArrayList<String> mCitys;
+    private ImagePicker mImagePicker;
 
-    private ArrayList<ArrayList<String>> mLetters;
+    private CustomDialog mCustomDialog;
 
-    private OptionsPickerView<String> mPickerView;
+    private int mChoosePosition;
+
+    private IdentifyAdapter mAdapter;
+
+    private TextView mAgressProtocol;
 
     @Override
     protected int resourceId() {
@@ -73,21 +82,18 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        if ((mCityCode = getIntent().getStringExtra("cityCode")) == null) {
-            showFiveToast("获取当前位置失败，暂不能添加车辆");
-            finish();
-        }
-        mLicensePlateAttribution = findViewById(R.id.license_plate_attribution);
+        //mLicensePlateAttribution = findViewById(R.id.license_plate_attribution);
         mCarNumber = findViewById(R.id.car_number_et);
         mCarOwner = findViewById(R.id.car_owner_et);
-        mDriveLicensePhoto = findViewById(R.id.drive_license_photo);
-        mDeleteDriveLicensePhoto = findViewById(R.id.delete_drive_license_photo);
-        mUploadProgress = findViewById(R.id.upload_progress_tv);
+        mAgressProtocol = findViewById(R.id.agress_protocol_tv);
 
         findViewById(R.id.apply_add_new_car).setOnClickListener(this);
-        mLicensePlateAttribution.setOnClickListener(this);
-        mDriveLicensePhoto.setOnClickListener(this);
-        mDeleteDriveLicensePhoto.setOnClickListener(this);
+
+        RecyclerView recyclerView = findViewById(R.id.identify_information_rv);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setNestedScrollingEnabled(false);
+        mAdapter = new IdentifyAdapter(getAdapterData());
+        recyclerView.setAdapter(mAdapter);
 
         mCarNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -112,22 +118,26 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     @Override
     protected void initData() {
-        mCitys = new ArrayList<>(32);
-        mLetters = new ArrayList<>(32);
-        DataUtil.initLicensePlateAttribution(mCitys, mLetters);
-        mPickerView = new OptionsPickerView<>(this);
-        mPickerView.setPicker(mCitys, mLetters, true);
-        mPickerView.setTitle("车牌归属地");
-        mPickerView.setTextSize(18);
-        mPickerView.setCyclic(false);
-        int index = mCitys.indexOf("粤");
-        mPickerView.setSelectOptions(index, mLetters.get(index).indexOf("T"));
-        mPickerView.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder("我同意《途找信息平台用户协议》请仔细阅读并勾选确认");
+        stringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#ff0101")), 15, stringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
-            public void onOptionsSelect(int options1, int option2, int options3) {
-                mLicensePlateAttribution.setText(mCitys.get(options1) + mLetters.get(options1).get(option2));
+            public void onClick(View widget) {
+                Log.e(TAG, "onClick: " + widget.getId());
+                showFiveToast("哈哈");
             }
-        });
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setColor(ConstansUtil.Y3_COLOR);
+                ds.setUnderlineText(false);
+            }
+        };
+        stringBuilder.setSpan(clickableSpan, 3, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mAgressProtocol.setMovementMethod(LinkMovementMethod.getInstance());        //不设置点击事件没反应
+        mAgressProtocol.setText(stringBuilder);
+
+        initImagePicker();
     }
 
     @NonNull
@@ -139,34 +149,15 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.drive_license_photo:
-                new ImagePicker()
-                        .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                        .needCamera(true) //是否需要在界面中显示相机入口(类似微信那样)
-                        .pickType(ImagePickType.SINGLE) //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
-                        .doCrop(1, 1, 200, 200) //裁剪功能需要调用这个方法，多选模式下无效，参数：aspectX,aspectY,outputX,outputY
-                        .start(AddNewCarActivity.this, REQUEST_CODE_PICKER);
-                break;
-            case R.id.license_plate_attribution:
-                ViewUtil.closeInputMethod(mCarNumber);
-                mPickerView.show();
-                break;
-            case R.id.delete_drive_license_photo:
-                mDriveLicensePhotoPath = null;
-                ImageUtil.showPic(mDriveLicensePhoto, R.drawable.ic_addimg);
-                mDeleteDriveLicensePhoto.setVisibility(View.INVISIBLE);
-                break;
             case R.id.apply_add_new_car:
                 if (getTextLength(mCarNumber) == 0) {
                     showFiveToast("请输入车牌号码");
-                } else if (!DateUtil.isCarNumber(getText(mLicensePlateAttribution) + getText(mCarNumber))) {
+                } else if (!DateUtil.isCarNumber(getText(mCarNumber))) {
                     showFiveToast("你输入的车牌号不正确哦");
                 } else if (TextUtils.isEmpty(mCarOwner.getText().toString().trim())) {
                     showFiveToast("请输入车牌所有人");
-                } else if (mDriveLicensePhotoPath == null) {
-                    showFiveToast("请选择你的驾驶证照片");
                 } else {
-                    if (UserManager.getInstance().getUserInfo().getCar_number().contains(getText(mLicensePlateAttribution) + getText(mCarNumber))) {
+                    if (UserManager.getInstance().getUserInfo().getCar_number().contains(getText(mCarNumber))) {
                         showFiveToast("你已添加过该车辆了哦");
                     } else {
                         applyAddNewCar();
@@ -181,59 +172,118 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
             List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-            mDriveLicensePhotoPath = null;
             ImageUtil.compressPhoto(AddNewCarActivity.this, list.get(0).getImagePath(), new SuccessCallback<File>() {
                 @Override
                 public void onSuccess(File file) {
-                    ImageUtil.showPic(mDriveLicensePhoto, file.getAbsolutePath());
-                    mDeleteDriveLicensePhoto.setVisibility(View.VISIBLE);
-                    uploadPicture(file);
+                    UploadPhotoInfo uploadPhotoInfo = mAdapter.get(mChoosePosition);
+                    uploadPhotoInfo.setShowProgress(true);
+                    uploadPhotoInfo.setPath(file.getAbsolutePath());
+                    uploadPhotoInfo.setProgress("0%");
+                    mAdapter.notifyDataChange(mChoosePosition, uploadPhotoInfo);
+                    uploadPicture(file, mChoosePosition);
                 }
             });
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mPickerView.isShowing()) {
-            mPickerView.dismiss();
-        } else {
-            super.onBackPressed();
+    private List<UploadPhotoInfo> getAdapterData() {
+        List<UploadPhotoInfo> uploadPhotoInfos = new ArrayList<>();
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传身份证（人像面）"));
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传身份证（国徽面）"));
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传驾照主页"));
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传驾照副页"));
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传行驶证正面"));
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传行驶证反面"));
+        uploadPhotoInfos.add(new UploadPhotoInfo().setName("上传人车合影"));
+        return uploadPhotoInfos;
+    }
+
+    private void initImagePicker() {
+        mImagePicker = new ImagePicker()
+                .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
+                .needCamera(true)
+                .pickType(ImagePickType.MULTI)
+                .maxNum(1);
+    }
+
+    private void setUploadProgress(String filePath, float progress) {
+        String progressString = (int) (progress * 100) + "%";
+        for (int i = 0; i < mAdapter.getDataSize(); i++) {
+            if (mAdapter.get(i).getPath().equals(filePath)) {
+                UploadPhotoInfo firstProperty = mAdapter.getData().get(i);
+                firstProperty.setProgress(progressString);
+                if (progress == 1.0) {
+                    firstProperty.setShowProgress(false);
+                }
+                mAdapter.notifyDataChange(i, firstProperty, 1);
+                break;
+            }
         }
     }
 
-    private void uploadPicture(File file) {
-        mUploadProgress.setText("0%");
-        showView(mUploadProgress);
-        goneView(mDeleteDriveLicensePhoto);
+    private void setServerUrl(String filePath, String url) {
+        for (int i = 0; i < mAdapter.getDataSize(); i++) {
+            if (mAdapter.get(i).getPath().equals(filePath)) {
+                UploadPhotoInfo uploadPhotoInfo = mAdapter.get(i);
+                uploadPhotoInfo.setPath(url);
+                uploadPhotoInfo.setShowProgress(false);
+                uploadPhotoInfo.setUploadSuccess(true);
+                mAdapter.notifyDataChange(i, uploadPhotoInfo, 1);
+                break;
+            }
+        }
+    }
 
+    private void uploadPicture(final File file, final int choosePosition) {
+        int type = 0;
+        if (choosePosition == 2 || mChoosePosition == 3) {
+            type = 3;
+        } else if (mChoosePosition == 4 || mChoosePosition == 5) {
+            type = 5;
+        } else if (mChoosePosition == 6) {
+            type = 6;
+        }
         OkGo.post(HttpConstants.uploadPicture)
                 .retryCount(0)
                 .headers("token", com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getToken())
-                .params("type", 3)
+                .params("type", type)
                 .params("picture", file)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
 
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
-                        goneView(mUploadProgress);
-                        showView(mDeleteDriveLicensePhoto);
-                        mDriveLicensePhotoPath = stringBase_class_info.data;
+                        switch (choosePosition) {
+                            case 0:
+                            case 1:
+                                setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_ID_CARD + stringBase_class_info.data);
+                                break;
+                            case 2:
+                            case 3:
+                                setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_DRIVER_LICENSE + stringBase_class_info.data);
+                                break;
+                            case 4:
+                            case 5:
+                                setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_VEHICLE + stringBase_class_info.data);
+                                break;
+                            case 6:
+                                setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_GROUP_PHOTO + stringBase_class_info.data);
+                                break;
+                        }
+                        setUploadProgress(file.getAbsolutePath(), 1);
                     }
 
                     @Override
                     public void upProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
                         super.upProgress(currentSize, totalSize, progress, networkSpeed);
-                        mUploadProgress.setText((int) (progress * 100) + "%");
+                        if (progress != 1) {
+                            setUploadProgress(file.getAbsolutePath(), progress);
+                        }
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        goneView(mUploadProgress);
-                        mDriveLicensePhotoPath = null;
-                        ImageUtil.showPic(mDriveLicensePhoto, R.drawable.ic_addimg);
-                        mDeleteDriveLicensePhoto.setVisibility(View.INVISIBLE);
+                        deletePhoto(file.getAbsolutePath());
                         if (!handleException(e)) {
 
                         }
@@ -241,12 +291,25 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 });
     }
 
+    private void deletePhoto(String photoPath) {
+        for (int i = 0; i < 6; i++) {
+            if (mAdapter.get(i).getPath().equals(photoPath)) {
+                UploadPhotoInfo uploadPhotoInfo = mAdapter.get(i);
+                uploadPhotoInfo.setPath("-1");
+                uploadPhotoInfo.setProgress("0%");
+                uploadPhotoInfo.setShowProgress(false);
+                uploadPhotoInfo.setUploadSuccess(false);
+                mAdapter.getData().set(i, uploadPhotoInfo);
+                mAdapter.notifyDataChange(i, uploadPhotoInfo);
+                break;
+            }
+        }
+    }
+
     private void applyAddNewCar() {
         getOkGo(HttpConstants.applyAddNewCar)
-                .params("driverLicense", mDriveLicensePhotoPath.replace(HttpConstants.ROOT_IMG_URL_DRIVER_LICENSE, ""))
-                .params("carNumber", getText(mLicensePlateAttribution) + getText(mCarNumber))
+                .params("carNumber", getText(mCarNumber))
                 .params("carOwner", mCarOwner.getText().toString())
-                .params("cityCode", mCityCode)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
@@ -285,6 +348,55 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                         }
                     }
                 });
+
+    }
+
+    private class IdentifyAdapter extends BaseAdapter<UploadPhotoInfo> {
+
+        IdentifyAdapter(List<UploadPhotoInfo> data) {
+            super(data);
+        }
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, final UploadPhotoInfo uploadPhotoInfo, final int position) {
+            holder.setText(R.id.identify_tv, uploadPhotoInfo.getName());
+            ImageView imageView = holder.getView(R.id.upload_iv);
+            TextView textView = holder.getView(R.id.upload_tv);
+            if (uploadPhotoInfo.getPath().equals("-1")) {
+                imageView.setImageDrawable(null);
+                goneView(textView);
+                ViewUtil.showProgressStatus(textView, false);
+            } else {
+                ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath(), new LoadFailCallback() {
+                    @Override
+                    public void onLoadFail(Exception e) {
+                        deletePhoto(e.getMessage());
+                    }
+                });
+                ViewUtil.showProgressStatus(textView, uploadPhotoInfo.isShowProgress());
+                textView.setText(uploadPhotoInfo.getProgress());
+            }
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mChoosePosition = position;
+                    mImagePicker.start(AddNewCarActivity.this, REQUEST_CODE_PICKER);
+                }
+            });
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        @Override
+        protected int itemViewId() {
+            return R.layout.item_identify_information_layout;
+        }
 
     }
 

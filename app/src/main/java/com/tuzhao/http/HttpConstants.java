@@ -21,6 +21,8 @@ public class HttpConstants {
     public static final String ROOT_IMG_URL_PROPERTY = ROOT_BASE_IMG_URL + "property/";//产权照
     public static final String ROOT_IMG_URL_DRIVER_LICENSE = ROOT_BASE_IMG_URL + "driver/";//驾驶证照
     public static final String ROOT_IMG_URL_COMPLAINT = ROOT_BASE_IMG_URL + "complaint/";//投诉照
+    public static final String ROOT_IMG_URL_VEHICLE = ROOT_BASE_IMG_URL + "vehicle/";//行驶证
+    public static final String ROOT_IMG_URL_GROUP_PHOTO = ROOT_BASE_IMG_URL + "groupPhoto/";//合影
 
     /**
      * 请求主页地图页面停车位和充电桩的具体位置的经纬度

@@ -186,4 +186,8 @@
         <attr name="cross_width" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="PlusView" >
+        <attr name="plus_color" format="color" />
+        <attr name="plus_width" format="dimension" />
+    </declare-styleable>
 </resources>
