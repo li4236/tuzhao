@@ -83,16 +83,16 @@ public class OverFragment extends BaseFragment {
         slidingViewClickListener = new DiscountAdapter.IonSlidingViewClickListener() {
             @Override
             public void onDeleteBtnCilck(String discount_id, int pos) {
-                Log.e("点击了删除","哈哈哈");
+                Log.e("点击了删除", "哈哈哈");
                 initLoading("删除中...");
-                requestDeleteDiscount(discount_id,pos);
+                requestDeleteDiscount(discount_id, pos);
             }
         };
 
-        mAdapter = new DiscountAdapter(mContext, mDatas,slidingViewClickListener);
+        mAdapter = new DiscountAdapter(mContext, mDatas, slidingViewClickListener);
         mRecycleview.setAdapter(mAdapter);
         linearlayout_nodata = (LinearLayout) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata);
-        if (mDatas.size()<=0){
+        if (mDatas.size() <= 0) {
             linearlayout_nodata.setVisibility(View.VISIBLE);
         }
     }
@@ -147,9 +147,9 @@ public class OverFragment extends BaseFragment {
                             }
                         }
                         mAdapter.notifyDataSetChanged();
-                        if (mDatas.size()>0){
+                        if (mDatas.size() > 0) {
                             linearlayout_nodata.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             linearlayout_nodata.setVisibility(View.VISIBLE);
                         }
                         mRecycleview.setRefreshing(false);
@@ -187,7 +187,7 @@ public class OverFragment extends BaseFragment {
                 .tag(mContext)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("discount_id",discount_id)
+                .params("discount_id", discount_id)
                 .execute(new JsonCallback<Base_Class_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Discount_Info> datas, Call call, Response response) {

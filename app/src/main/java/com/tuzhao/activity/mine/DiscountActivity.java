@@ -164,9 +164,10 @@ public class DiscountActivity extends BaseActivity {
 
     private void handleDiscount(List<Discount_Info> list) {
         for (Discount_Info info : list) {
-            if (info.getIs_usable().equals("1")) {
-                //可用
-                if (info.getWhat_type().equals("1")) {
+            switch (info.getIs_usable()) {
+                case "1":
+                    //可用
+                    if (info.getWhat_type().equals("1")) {
                     /*if (mOrderFee >= Double.valueOf(info.getMin_fee())) {
                         //大于等于最低消费*/
                         if (DateUtil.isInUsefulDate(info.getEffective_time())) {
@@ -175,10 +176,15 @@ public class DiscountActivity extends BaseActivity {
                         } else {
                             mOldDiscount.add(info);
                         }
-                    //}
-                }
-            } else if (info.getIs_usable().equals("2")) {
-                mUsedDiscount.add(info);
+                        //}
+                    }
+                    break;
+                case "2":
+                    mUsedDiscount.add(info);
+                    break;
+                case "3":
+                    mOldDiscount.add(info);
+                    break;
             }
 
             /*if (info.getIs_usable().equals("1")) {

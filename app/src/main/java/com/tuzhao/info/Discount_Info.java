@@ -18,7 +18,7 @@ public class Discount_Info extends BaseInfo implements Parcelable {
     private String what_type;//充电桩或者停车场优惠
     private String effective_time;//有效时间
     private String min_fee;//订单最低消费金额，-1代表无门槛
-    private String is_usable;//是否是有效红包
+    private String is_usable;//是否是有效红包,1（可用），2（已使用），3（已过期）
 
     public String getId() {
         return id;
