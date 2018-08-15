@@ -175,9 +175,8 @@
         <activity android:name=".activity.mine.BuyMonthlyCardActivity" />
         <activity android:name=".activity.mine.PersonalMessageRefactorActivity" />
         <activity android:name=".activity.mine.ChangePasswordMethodActivity" />
-        <activity
-            android:name=".activity.mine.SMSVerificationActivity"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+        <activity android:name=".activity.mine.SMSVerificationActivity"
+           android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.ChangePasswordRefactoryActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />

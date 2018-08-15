@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.ClipboardManager;
 import android.content.pm.PackageManager;
@@ -12,30 +11,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.others.PasswordLinearLayout;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.CountdownUtil;
 import com.tuzhao.utils.SmsObserver;
-import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -47,19 +39,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     private TextView mInputSmsHint;
 
-    private ConstraintLayout mVerifyCodeCl;
-
-    private EditText mFirstVerifyCode;
-
-    private EditText mSecondVerifyCode;
-
-    private EditText mThirdVerifyCode;
-
-    private EditText mFourthVerifyCode;
-
-    private EditText[] mVerfifyCodes;
-
-    private TextWatcher[] mTextWatchers;
+    private PasswordLinearLayout mPasswordLinearLayout;
 
     private TextView mVerfiCodeError;
 
@@ -70,8 +50,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     private CountdownUtil mCountdownUtil;
 
     private ObjectAnimator mCycleAnimator;
-
-    private ValueAnimator mHideAnimator;
 
     private SmsObserver mSmsObserver;
 
@@ -91,78 +69,24 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mTextWatchers = new TextWatcher[4];
-        mVerfifyCodes = new EditText[4];
         mInputSmsHint = findViewById(R.id.input_sms_hint);
-        mVerifyCodeCl = findViewById(R.id.verify_code_cl);
-        mVerfifyCodes[0] = mFirstVerifyCode = findViewById(R.id.first_verify_code);
-        mVerfifyCodes[1] = mSecondVerifyCode = findViewById(R.id.second_verify_code);
-        mVerfifyCodes[2] = mThirdVerifyCode = findViewById(R.id.third_verify_code);
-        mVerfifyCodes[3] = mFourthVerifyCode = findViewById(R.id.fourth_verify_code);
+        mPasswordLinearLayout = findViewById(R.id.verify_code_cl);
         mVerfiCodeError = findViewById(R.id.verify_code_error);
         mSendAgain = findViewById(R.id.send_again);
 
-        initEditText();
+        mPasswordLinearLayout.setSuccessCallback(new SuccessCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                checkVerificationCode(s);
+            }
+        });
+
         mSendAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendVerificationCode();
             }
         });
-    }
-
-    private void initEditText() {
-        for (int i = 0; i < 4; i++) {
-            final int finalI = i;
-            mTextWatchers[finalI] = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (!TextUtils.isEmpty(getText(mVerfifyCodes[finalI]))) {
-                        setFocus(finalI);
-                    } else {
-                        deleteAll();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            };
-            mVerfifyCodes[finalI].addTextChangedListener(mTextWatchers[finalI]);
-
-            mVerfifyCodes[finalI].setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        for (EditText mVerfifyCode : mVerfifyCodes) {
-                            if (TextUtils.isEmpty(getText(mVerfifyCode))) {
-                                mVerfifyCodes[finalI].clearFocus();
-                                mVerfifyCode.requestFocus();
-                                ViewUtil.openInputMethod(mVerfifyCode);     //如果软键盘被用户关了，请求focus不会自己再弹出来
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-            });
-
-            mVerfifyCodes[finalI].setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        deleteAll();
-                    }
-                    return false;
-                }
-            });
-        }
     }
 
     @Override
@@ -178,10 +102,12 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         } else {
             registerSmsObserver();
         }
-        sendVerificationCode();
         registerClipEvents();
     }
 
+    /**
+     * 注册复制的监听事件
+     */
     private void registerClipEvents() {
         mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         if (mClipboardManager != null) {
@@ -204,11 +130,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
                         //短信来了直接在弹窗就复制了的，则直接输入
                         if (mClipData != null && mIsResume) {
-                            for (int i = 0; i < 4; i++) {
-                                mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
-                                mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
-                            }
-                            checkVerificationCode((String) mClipData);
+                            mPasswordLinearLayout.setText((String) mClipData);
                             mClipData = null;
                         }
                     }
@@ -223,11 +145,8 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         super.onResume();
         mIsResume = true;
         if (mClipData != null) {
-            for (int i = 0; i < 4; i++) {
-                mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
-                mVerfifyCodes[i].setText(String.valueOf(mClipData.charAt(i)));
-            }
-            checkVerificationCode((String) mClipData);
+            //如果是跳到短信复制验证码再返回的则自动输入
+            mPasswordLinearLayout.setText((String) mClipData);
             mClipData = null;
         }
     }
@@ -260,9 +179,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         if (mCycleAnimator != null) {
             mCycleAnimator.cancel();
         }
-        if (mHideAnimator != null) {
-            mHideAnimator.cancel();
-        }
         if (mCountdownUtil != null) {
             mCountdownUtil.cancel();
         }
@@ -276,64 +192,16 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     }
 
     /**
-     * 自动读取短信内容
+     * 注册自动读取短信内容监听事件
      */
     private void registerSmsObserver() {
         mSmsObserver = new SmsObserver(new Handler(), this, new SmsObserver.SmsListener() {
             @Override
             public void onResult(String smsContent) {
-                for (int i = 0; i < mVerfifyCodes.length; i++) {
-                    mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
-                    mVerfifyCodes[i].setText(String.valueOf(smsContent.charAt(i)));
-                }
-                checkVerificationCode(smsContent);
+                mPasswordLinearLayout.setText(smsContent);
             }
         });
         getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, mSmsObserver);
-    }
-
-    private void deleteAll() {
-        for (int i = 0; i < mVerfifyCodes.length; i++) {
-            mVerfifyCodes[i].removeTextChangedListener(mTextWatchers[i]);
-            mVerfifyCodes[i].setText("");
-            mVerfifyCodes[i].addTextChangedListener(mTextWatchers[i]);
-        }
-        mVerfifyCodes[0].requestFocus();
-    }
-
-    /**
-     * @param current 当前是第几个EditText，从0开始算
-     */
-    private void setFocus(int current) {
-        current++;
-        if (current <= 3) {
-            //下一个在有效范围内[0-3]
-            if (TextUtils.isEmpty(getText(mVerfifyCodes[current]))) {
-                //如果下一个EditText还没输入验证码则请求焦点
-                mVerfifyCodes[current].requestFocus();
-            } else {
-                //如果下一个EditText已经输入验证码了则递归看下下一个是否已经输入
-                setFocus(current);
-            }
-        } else {
-            //第3个EditText调用的则判断是否全部EditText都输入了验证码
-            if (allInput()) {
-                //如果都输入了验证码则请求看验证码是否正确
-                StringBuilder verifyCode = new StringBuilder();
-                for (EditText editText : mVerfifyCodes) {
-                    verifyCode.append(getText(editText));
-                }
-                checkVerificationCode(verifyCode.toString());
-            }
-        }
-    }
-
-    /**
-     * @return true(全部EditText都输入验证码)
-     */
-    private boolean allInput() {
-        return !TextUtils.isEmpty(getText(mFirstVerifyCode)) && !TextUtils.isEmpty(getText(mSecondVerifyCode))
-                && !TextUtils.isEmpty(getText(mThirdVerifyCode)) && !TextUtils.isEmpty(getText(mFourthVerifyCode));
     }
 
     /**
@@ -365,20 +233,25 @@ public class SMSVerificationActivity extends BaseStatusActivity {
      */
     private void sendVerificationCode() {
         mSendAgain.setClickable(false);
-        showLoadingDialog("正在发送...");
+        showNotInputLoadingDialog("正在发送...");
         getOkGo(HttpConstants.sendVerificationCode)
                 .params("telephone", UserManager.getInstance().getUserInfo().getUsername())
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        if (mTelephoneToken == null) {
+                            mPasswordLinearLayout.deleteAll();
+                        }
                         mTelephoneToken = o.data;
                         startCountdown();
+                        showFiveToast("验证码发送成功");
                         dismmisLoadingDialog();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        mSendAgain.setClickable(true);
                         if (!handleException(e)) {
                             showFiveToast("今日发送已达上限，请明天再试");
                         }
@@ -387,12 +260,15 @@ public class SMSVerificationActivity extends BaseStatusActivity {
 
     }
 
+    /**
+     * 检查验证码是否正确
+     */
     private void checkVerificationCode(String verifyCode) {
-        /*if (mTelephoneToken == null) {
-            showFiveToast("请先发送短信");
+        if (mTelephoneToken == null) {
+            showFiveToast("请先获取验证码");
             return;
-        }*/
-        showLoadingDialog("正在验证...");
+        }
+        showNotInputLoadingDialog("正在验证...");
         OkGo.post(HttpConstants.checkVerificationCode)
                 .tag(TAG)
                 .headers("telephoneToken", mTelephoneToken)
@@ -411,7 +287,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        deleteAll();
+                        mPasswordLinearLayout.deleteAll();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
@@ -426,58 +302,33 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                 });
     }
 
+    /**
+     * @param normal false(验证码错误则背景框变红，并且显示出“验证码错误”，同时mPasswordLinearLayout进行抖动)
+     *               true(密码框恢复原来的颜色)
+     */
     private void setVerifyCodeStatus(boolean normal) {
-        if (normal) {
-            //把验证码恢复到正常状态，并为第一个EditText请求焦点
-            for (EditText editText : mVerfifyCodes) {
-                editText.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
-            }
-            mFirstVerifyCode.requestFocus();
-            mFirstVerifyCode.setSelection(getText(mFourthVerifyCode).length());
-        } else {
-            //验证码错误则背景框变红，并且显示出“验证码错误”，同时EditText进行抖动
-            for (EditText editText : mVerfifyCodes) {
-                editText.clearFocus();
-                editText.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
-            }
-            if (!isVisible(mVerfiCodeError)) {
-                mVerfiCodeError.setVisibility(View.VISIBLE);
-            }
+        mPasswordLinearLayout.setShowError(!normal);
+        if (!normal) {
+            showView(mVerfiCodeError);
             startVerifyCodeErrorAnimator();
         }
     }
 
     private void startVerifyCodeErrorAnimator() {
         if (mCycleAnimator == null) {
-            //EditText的抖动效果，在500毫秒内左右移动EditText1/4的宽度3次，抖动完后显示正常输入状态
-            mCycleAnimator = ObjectAnimator.ofFloat(mVerifyCodeCl, "translationX", mFirstVerifyCode.getWidth() / 4);
+            //mPasswordLinearLayout的抖动效果，在500毫秒内左右移动mPasswordLinearLayout1/10的宽度3次，抖动完后显示正常输入状态
+            mCycleAnimator = ObjectAnimator.ofFloat(mPasswordLinearLayout, "translationX", mPasswordLinearLayout.getWidth() / 10);
             mCycleAnimator.setInterpolator(new CycleInterpolator(3));
             mCycleAnimator.setDuration(500);
             mCycleAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    Log.e(TAG, "onAnimationEnd: ");
                     setVerifyCodeStatus(true);
                 }
             });
         }
-        if (mHideAnimator == null) {
-            //3s后隐藏“验证码错误”的字
-            mHideAnimator = ValueAnimator.ofInt(1, 2);
-            mHideAnimator.setDuration(3000);
-            mHideAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    mVerfiCodeError.setVisibility(View.INVISIBLE);
-                }
-            });
-        } else if (mHideAnimator.isRunning()) {
-            mHideAnimator.cancel();
-        }
         mCycleAnimator.start();
-        mHideAnimator.start();
     }
 
 }

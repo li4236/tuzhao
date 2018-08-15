@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -33,13 +34,26 @@ public class LoadingDialog extends Dialog {
         initView();
     }
 
+    public LoadingDialog(Context context, String content, int type) {
+        super(context, R.style.CustomDialog);
+        this.content = content != null ? content : "加载中...";
+        if (type == 0) {
+            if (getWindow() != null) {
+                //如果设置了本flag而没有设置FLAG_NOT_FOCUSABLE, 则窗口表现为不需要同输入法交互, 同时会被至于输入法之上
+                //防止输入法的输入类型变为其他的
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            }
+        }
+        initView();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 if (LoadingDialog.this.isShowing() && mCancelable) {
                     LoadingDialog.this.dismiss();
-                    Log.e(TAG, "onKeyDown: " );
+                    Log.e(TAG, "onKeyDown: ");
                     return false;
                 }
                 break;

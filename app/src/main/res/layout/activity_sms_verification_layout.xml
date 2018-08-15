@@ -22,7 +22,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_divider" />
 
-    <android.support.constraint.ConstraintLayout
+    <com.tuzhao.publicwidget.others.PasswordLinearLayout
+        android:id="@+id/verify_code_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_sms_hint">
+
+
+    </com.tuzhao.publicwidget.others.PasswordLinearLayout>
+
+    <!--<android.support.constraint.ConstraintLayout
         android:id="@+id/verify_code_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,7 +90,7 @@
             android:maxLength="1"
             app:layout_constraintStart_toEndOf="@+id/third_verify_code" />
 
-    </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>-->
 
     <TextView
         android:id="@+id/verify_code_error"
@@ -93,7 +105,8 @@
     <TextView
         android:id="@+id/send_again"
         style="@style/FortyTextG7Style"
-        android:textColor="@color/g6"
+        android:text="获取验证码"
+        android:textColor="@color/y3"
         app:layout_constraintEnd_toEndOf="@+id/verify_code_cl"
         app:layout_constraintTop_toTopOf="@+id/verify_code_error" />
 

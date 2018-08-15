@@ -190,4 +190,11 @@
         <attr name="plus_color" format="color" />
         <attr name="plus_width" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="PasswordLinearLayout">
+        <attr name="child_count" format="integer" />
+        <attr name="child_margin" format="dimension" />
+        <attr name="child_width" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -132,6 +132,15 @@ public abstract class BaseStatusActivity extends BaseActivity {
     /**
      * 显示自定义加载提示的对话框
      */
+    protected void showNotInputLoadingDialog(String msg) {
+        dismmisLoadingDialog();
+        mLoadingDialog = new LoadingDialog(this, msg,0);
+        mLoadingDialog.show();
+    }
+
+    /**
+     * 显示自定义加载提示的对话框
+     */
     protected void showCantCancelLoadingDialog() {
         dismmisLoadingDialog();
         mLoadingDialog = new LoadingDialog(this, null, false);
