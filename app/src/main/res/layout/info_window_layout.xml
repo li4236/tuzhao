@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.tuzhao.publicwidget.others.ArcView
+    <com.tuzhao.publicwidget.customView.ArcView
         android:layout_width="16dp"
         android:layout_height="12dp"
         app:layout_constraintEnd_toEndOf="@id/info_window_title"

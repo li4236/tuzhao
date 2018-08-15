@@ -10,7 +10,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkSpaceInfo;
-import com.tuzhao.publicwidget.others.CircleView;
+import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.utils.ConstansUtil;
 
 /**

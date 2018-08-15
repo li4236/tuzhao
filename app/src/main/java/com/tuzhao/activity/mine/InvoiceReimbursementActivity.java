@@ -42,7 +42,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
     private DecimalFormat mDecimalFormat;
 
-    private com.tuzhao.publicwidget.others.CheckBox mAllChoose;
+    private com.tuzhao.publicwidget.customView.CheckBox mAllChoose;
 
     private static final int REQUEST_CODE = 0x372;
 
@@ -57,7 +57,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
 
         mAllChoose.setCheckDrawable(ContextCompat.getDrawable(this, R.drawable.ic_chose));
         mAllChoose.setNoCheckDrawble(ContextCompat.getDrawable(this, R.drawable.ic_nochose));
-        mAllChoose.setOnCheckChangeListener(new com.tuzhao.publicwidget.others.CheckBox.OnCheckChangeListener() {
+        mAllChoose.setOnCheckChangeListener(new com.tuzhao.publicwidget.customView.CheckBox.OnCheckChangeListener() {
             @Override
             public void onCheckChange(boolean isCheck) {
                 setAllCheck(isCheck);

@@ -28,7 +28,7 @@
             android:background="@drawable/bg_yellow"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.tuzhao.publicwidget.others.CircleImageView
+            <com.tuzhao.publicwidget.customView.CircleImageView
                 android:id="@+id/id_activity_main_layout_imageview_user"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

@@ -62,7 +62,7 @@
                     android:textColor="@color/b1"
                     android:textSize="13sp" />
 
-                    <com.tuzhao.publicwidget.others.CircleImageView
+                    <com.tuzhao.publicwidget.customView.CircleImageView
                         android:id="@+id/id_activity_personalmessage_layout_imageview_user"
                         android:layout_width="44dp"
                         android:layout_height="44dp"

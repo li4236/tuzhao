@@ -18,7 +18,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 

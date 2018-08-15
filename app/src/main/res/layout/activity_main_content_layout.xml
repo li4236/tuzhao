@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.tuzhao.publicwidget.others.CircleImageView
+        <com.tuzhao.publicwidget.customView.CircleImageView
             android:id="@+id/id_content_main_layout_imageview_huser"
             android:layout_width="33dp"
             android:layout_height="33dp"

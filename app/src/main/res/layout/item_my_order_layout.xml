@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/my_order_appoint_date" />
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/my_order_status_iv"
             android:layout_width="7dp"
             android:layout_height="7dp"

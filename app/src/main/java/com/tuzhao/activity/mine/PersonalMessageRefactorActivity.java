@@ -28,7 +28,7 @@ import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.others.CircleImageView;
+import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;

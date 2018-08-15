@@ -22,7 +22,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
-import com.tuzhao.publicwidget.others.CheckBox;
+import com.tuzhao.publicwidget.customView.CheckBox;
 import com.tuzhao.utils.ConstansUtil;
 
 import java.util.ArrayList;
@@ -316,7 +316,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             mDefalutAddressPosition = position;
         }
 
-        final com.tuzhao.publicwidget.others.CheckBox checkBox = holder.getView(R.id.accept_ticket_address_set_default);
+        final com.tuzhao.publicwidget.customView.CheckBox checkBox = holder.getView(R.id.accept_ticket_address_set_default);
         checkBox.setCheckDrawable(ContextCompat.getDrawable(this, R.drawable.ic_chose));
         checkBox.setNoCheckDrawble(ContextCompat.getDrawable(this, R.drawable.ic_nochose));
         checkBox.setChecked(acceptTicketAddressInfo.getIsDefault().equals("1"));

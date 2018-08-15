@@ -14,7 +14,7 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.RentalRecordItemInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
 
 import okhttp3.Call;
 import okhttp3.Response;

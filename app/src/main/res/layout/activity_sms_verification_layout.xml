@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_divider" />
 
-    <com.tuzhao.publicwidget.others.PasswordLinearLayout
+    <com.tuzhao.publicwidget.customView.PasswordLinearLayout
         android:id="@+id/verify_code_cl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/input_sms_hint">
 
 
-    </com.tuzhao.publicwidget.others.PasswordLinearLayout>
+    </com.tuzhao.publicwidget.customView.PasswordLinearLayout>
 
     <!--<android.support.constraint.ConstraintLayout
         android:id="@+id/verify_code_cl"
@@ -109,5 +109,56 @@
         android:textColor="@color/y3"
         app:layout_constraintEnd_toEndOf="@+id/verify_code_cl"
         app:layout_constraintTop_toTopOf="@+id/verify_code_error" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/sms_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/little_yuan_gray_10dp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="45dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                android:id="@+id/park_order_pb"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:indeterminateDrawable="@drawable/indeterminate_drawable"
+                android:indeterminateDuration="1800"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/loading_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="正在发送..."
+                android:textColor="#ffffff"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/park_order_pb" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

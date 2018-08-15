@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="@id/accept_ticket_address_name"
         app:layout_constraintTop_toBottomOf="@+id/accept_ticket_address_address" />
 
-    <com.tuzhao.publicwidget.others.CheckBox
+    <com.tuzhao.publicwidget.customView.CheckBox
         android:id="@+id/accept_ticket_address_set_default"
         style="@style/YellowCheckStyle"
         android:paddingBottom="24dp"

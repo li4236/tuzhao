@@ -1,4 +1,4 @@
-package com.tuzhao.publicwidget.others;
+package com.tuzhao.publicwidget.customView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
@@ -60,6 +59,9 @@ public class PasswordLinearLayout extends LinearLayout {
         typedArray.recycle();
 
         setOrientation(HORIZONTAL);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+
         mList = new ArrayList<>();
 
         initListener();
@@ -110,10 +112,8 @@ public class PasswordLinearLayout extends LinearLayout {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setFocusable(true);
-                setFocusableInTouchMode(true);
                 requestFocus();
-                ViewUtil.openInputMethod(PasswordLinearLayout.this);
+                ViewUtil.openInputMethod(v);
             }
         });
 
@@ -122,7 +122,6 @@ public class PasswordLinearLayout extends LinearLayout {
         setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.e("TAG", "onFocusChange: "+hasFocus );
                 PasswordView passwordView = (PasswordView) getChildAt(mIndex);
                 if (passwordView != null) {
                     passwordView.updateFocus(hasFocus);

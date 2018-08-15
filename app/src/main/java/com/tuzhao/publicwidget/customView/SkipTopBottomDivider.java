@@ -1,4 +1,4 @@
-package com.tuzhao.publicwidget.others;
+package com.tuzhao.publicwidget.customView;
 
 import android.content.Context;
 import android.content.res.TypedArray;

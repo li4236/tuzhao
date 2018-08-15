@@ -33,7 +33,7 @@ import com.tuzhao.publicwidget.callback.JsonCodeCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
-import com.tuzhao.publicwidget.others.CircularArcView;
+import com.tuzhao.publicwidget.customView.CircularArcView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;

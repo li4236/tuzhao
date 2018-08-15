@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
@@ -24,7 +25,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.others.PasswordLinearLayout;
+import com.tuzhao.publicwidget.customView.PasswordLinearLayout;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.CountdownUtil;
 import com.tuzhao.utils.SmsObserver;
@@ -36,6 +37,8 @@ import okhttp3.Response;
  * Created by juncoder on 2018/7/20.
  */
 public class SMSVerificationActivity extends BaseStatusActivity {
+
+    private ConstraintLayout mDialog;
 
     private TextView mInputSmsHint;
 
@@ -69,10 +72,18 @@ public class SMSVerificationActivity extends BaseStatusActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mDialog = findViewById(R.id.sms_dialog);
         mInputSmsHint = findViewById(R.id.input_sms_hint);
         mPasswordLinearLayout = findViewById(R.id.verify_code_cl);
         mVerfiCodeError = findViewById(R.id.verify_code_error);
         mSendAgain = findViewById(R.id.send_again);
+
+        mDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //当获取验证码的时候拦截触摸事件
+            }
+        });
 
         mPasswordLinearLayout.setSuccessCallback(new SuccessCallback<String>() {
             @Override
@@ -233,25 +244,30 @@ public class SMSVerificationActivity extends BaseStatusActivity {
      */
     private void sendVerificationCode() {
         mSendAgain.setClickable(false);
-        showNotInputLoadingDialog("正在发送...");
+        showView(mDialog);
         getOkGo(HttpConstants.sendVerificationCode)
                 .params("telephone", UserManager.getInstance().getUserInfo().getUsername())
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
                         if (mTelephoneToken == null) {
+                            //如果是第一次点获取验证码则把密码清空，让用户重新输入
                             mPasswordLinearLayout.deleteAll();
                         }
+                        //弹出软键盘
+                        mPasswordLinearLayout.performClick();
+
                         mTelephoneToken = o.data;
                         startCountdown();
                         showFiveToast("验证码发送成功");
-                        dismmisLoadingDialog();
+                        goneView(mDialog);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         mSendAgain.setClickable(true);
+                        goneView(mDialog);
                         if (!handleException(e)) {
                             showFiveToast("今日发送已达上限，请明天再试");
                         }

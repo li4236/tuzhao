@@ -118,7 +118,7 @@ public class ImageUtil {
                 });
     }
 
-    public static void showPicWithNoAnimate(final ImageView imageView, String url,int drawableRes) {
+    public static void showPicWithNoAnimate(final ImageView imageView, String url, int drawableRes) {
         GlideApp.with(imageView)
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

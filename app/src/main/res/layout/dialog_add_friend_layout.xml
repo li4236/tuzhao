@@ -49,7 +49,7 @@
         android:visibility="gone"
         android:layout_height="match_parent">
 
-        <com.tuzhao.publicwidget.others.CircleImageView
+        <com.tuzhao.publicwidget.customView.CircleImageView
             android:id="@+id/friend_portrait"
             android:layout_width="45dp"
             android:layout_height="45dp"

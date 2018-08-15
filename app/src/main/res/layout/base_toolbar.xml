@@ -5,7 +5,7 @@
     android:layout_height="45dp"
     android:background="@color/w0">
 
-    <com.tuzhao.publicwidget.others.ArrowView
+    <com.tuzhao.publicwidget.customView.ArrowView
         android:id="@+id/toolbar_back"
         android:layout_width="58dp"
         android:layout_height="match_parent"

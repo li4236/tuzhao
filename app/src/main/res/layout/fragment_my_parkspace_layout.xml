@@ -59,7 +59,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/number_of_park_space" />
 
-                <com.tuzhao.publicwidget.others.CircularArcView
+                <com.tuzhao.publicwidget.customView.CircularArcView
                     android:id="@+id/circle_arc"
                     android:layout_width="132dp"
                     android:layout_height="132dp"
@@ -93,7 +93,7 @@
                     style="@style/VerticalGuideLine"
                     app:layout_constraintGuide_percent="0.5" />
 
-                <com.tuzhao.publicwidget.others.VoltageView
+                <com.tuzhao.publicwidget.customView.VoltageView
                     android:id="@+id/voltage_view"
                     android:layout_width="15dp"
                     android:layout_height="25dp"
@@ -111,7 +111,7 @@
                     app:layout_constraintStart_toStartOf="@+id/voltage_view"
                     app:layout_constraintTop_toBottomOf="@+id/voltage_view" />
 
-                <com.tuzhao.publicwidget.others.CircleView
+                <com.tuzhao.publicwidget.customView.CircleView
                     android:id="@+id/parkspace_status_cv"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
@@ -147,7 +147,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/parkspace_status_tv" />
 
-                <com.tuzhao.publicwidget.others.ArrowView
+                <com.tuzhao.publicwidget.customView.ArrowView
                     android:id="@+id/left_park_space_iv"
                     android:layout_width="32dp"
                     android:layout_height="36dp"
@@ -160,7 +160,7 @@
                     app:layout_constraintStart_toStartOf="@+id/parkspace_description"
                     app:layout_constraintTop_toTopOf="@+id/parkspace_description" />
 
-                <com.tuzhao.publicwidget.others.ArrowView
+                <com.tuzhao.publicwidget.customView.ArrowView
                     android:id="@+id/right_park_space_iv"
                     android:layout_width="32dp"
                     android:layout_height="36dp"

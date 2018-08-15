@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:background="@color/w0">
 
-            <com.tuzhao.publicwidget.others.WaveImageView
+            <com.tuzhao.publicwidget.customView.WaveImageView
                 android:id="@+id/invoice_detail_status_bg"
                 android:layout_width="0dp"
                 android:layout_height="87dp"

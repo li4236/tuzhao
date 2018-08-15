@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.publicwidget.others.CircleImageView;
+import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.utils.ImageUtil;
 
 /**

@@ -35,7 +35,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.7" />
 
-        <com.tuzhao.publicwidget.others.CheckBox
+        <com.tuzhao.publicwidget.customView.CheckBox
             android:id="@+id/invoice_reimbursement_all_rb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

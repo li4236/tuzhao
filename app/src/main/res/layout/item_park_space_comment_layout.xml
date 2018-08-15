@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/w0">
 
-    <com.tuzhao.publicwidget.others.CircleImageView
+    <com.tuzhao.publicwidget.customView.CircleImageView
         android:id="@+id/comment_user_iv"
         android:layout_width="40dp"
         android:layout_height="40dp"

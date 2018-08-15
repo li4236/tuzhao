@@ -13,7 +13,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CreditRecordInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.others.SkipTopBottomDivider;
+import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
 
 import okhttp3.Call;
 import okhttp3.Response;

@@ -7,7 +7,7 @@
     android:layout_marginTop="7dp"
     android:background="@drawable/solid_w5_stroke_g10_all_2dp">
 
-    <com.tuzhao.publicwidget.others.PlusView
+    <com.tuzhao.publicwidget.customView.PlusView
         android:id="@+id/add_pv"
         android:layout_width="30dp"
         android:layout_height="30dp"

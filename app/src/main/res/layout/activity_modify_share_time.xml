@@ -107,7 +107,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_monday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"
@@ -121,7 +121,7 @@
                     app:layout_constraintStart_toEndOf="@id/modify_share_time_everyweek_share"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_tuesday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"
@@ -135,7 +135,7 @@
                     app:layout_constraintStart_toEndOf="@id/modify_share_time_monday"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_wednesday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"
@@ -149,7 +149,7 @@
                     app:layout_constraintStart_toEndOf="@+id/modify_share_time_tuesday"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_thursday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"
@@ -163,7 +163,7 @@
                     app:layout_constraintStart_toEndOf="@+id/modify_share_time_wednesday"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_friday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"
@@ -177,7 +177,7 @@
                     app:layout_constraintStart_toEndOf="@+id/modify_share_time_thursday"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_saturday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"
@@ -191,7 +191,7 @@
                     app:layout_constraintStart_toEndOf="@+id/modify_share_time_friday"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.tuzhao.publicwidget.others.CheckTextView
+                <com.tuzhao.publicwidget.customView.CheckTextView
                     android:id="@+id/modify_share_time_sunday"
                     style="@style/TwentyTextB1Style"
                     android:layout_width="24dp"

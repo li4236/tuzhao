@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tuzhao.publicwidget.others;
+package com.tuzhao.publicwidget.customView;
 
 import android.annotation.TargetApi;
 import android.content.Context;

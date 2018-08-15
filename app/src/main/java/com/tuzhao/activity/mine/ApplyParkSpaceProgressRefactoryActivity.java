@@ -17,7 +17,7 @@ import com.tuzhao.info.ParkSpaceInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
-import com.tuzhao.publicwidget.others.CircleView;
+import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;

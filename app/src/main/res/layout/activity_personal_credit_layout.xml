@@ -15,7 +15,7 @@
         style="@style/dividerStyle"
         app:layout_constraintTop_toBottomOf="@+id/base_tb" />
 
-    <com.tuzhao.publicwidget.others.OvalView
+    <com.tuzhao.publicwidget.customView.OvalView
         android:id="@+id/oval_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                 app:layout_constraintStart_toStartOf="@id/credit"
                 app:layout_constraintTop_toBottomOf="@id/current_credit" />
 
-            <com.tuzhao.publicwidget.others.CreditView
+            <com.tuzhao.publicwidget.customView.CreditView
                 android:id="@+id/credit_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -20,7 +20,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.others.ArrowView;
+import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 

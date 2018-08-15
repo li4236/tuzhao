@@ -42,7 +42,7 @@
             app:layout_constraintStart_toEndOf="@+id/invoice_reimbursement_park_time_iv"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/invoice_reimbursement_park_lot_iv"
             android:layout_width="8dp"
             android:layout_height="8dp"

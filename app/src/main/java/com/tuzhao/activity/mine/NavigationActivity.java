@@ -29,7 +29,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
-import com.tuzhao.publicwidget.others.CircleView;
+import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;

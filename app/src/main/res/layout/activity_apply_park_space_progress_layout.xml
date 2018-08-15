@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_divider">
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/under_review_cv"
             android:layout_width="10dp"
             android:layout_height="10dp"
@@ -71,7 +71,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/review_cv" />
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/review_cv"
             android:layout_width="10dp"
             android:layout_height="10dp"
@@ -119,7 +119,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/audited_cv" />
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/audited_cv"
             android:layout_width="10dp"
             android:layout_height="10dp"
@@ -168,7 +168,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ready_install_cv" />
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/ready_install_cv"
             android:layout_width="10dp"
             android:layout_height="10dp"
@@ -218,7 +218,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/install_finish_cv" />
 
-        <com.tuzhao.publicwidget.others.CircleView
+        <com.tuzhao.publicwidget.customView.CircleView
             android:id="@+id/install_finish_cv"
             android:layout_width="10dp"
             android:layout_height="10dp"

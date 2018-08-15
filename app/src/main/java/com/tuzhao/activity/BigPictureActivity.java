@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.adapter.PicturePagerAdapter;
-import com.tuzhao.publicwidget.others.FixViewPager;
+import com.tuzhao.publicwidget.customView.FixViewPager;
 
 import java.util.ArrayList;
 

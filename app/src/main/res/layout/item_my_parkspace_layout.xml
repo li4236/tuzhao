@@ -64,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="@+id/my_parkspace_status"
         app:layout_constraintTop_toTopOf="@+id/my_parkspace_description" />
 
-    <com.tuzhao.publicwidget.others.Voltage
+    <com.tuzhao.publicwidget.customView.Voltage
         android:id="@+id/my_parkspace_voltage"
         android:layout_width="20dp"
         android:layout_height="10dp"

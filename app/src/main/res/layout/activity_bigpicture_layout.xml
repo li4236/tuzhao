@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <com.tuzhao.publicwidget.others.FixViewPager
+    <com.tuzhao.publicwidget.customView.FixViewPager
         android:id="@+id/id_activity_bigpicture_layout_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.publicmanager.UserManager;
-import com.tuzhao.publicwidget.others.CreditView;
+import com.tuzhao.publicwidget.customView.CreditView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 

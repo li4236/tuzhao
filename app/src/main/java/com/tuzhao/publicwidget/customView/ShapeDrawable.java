@@ -1,4 +1,4 @@
-package com.tuzhao.publicwidget.others;
+package com.tuzhao.publicwidget.customView;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;

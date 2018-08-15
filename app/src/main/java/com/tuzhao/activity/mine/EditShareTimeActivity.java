@@ -23,7 +23,7 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.others.CheckTextView;
+import com.tuzhao.publicwidget.customView.CheckTextView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 
