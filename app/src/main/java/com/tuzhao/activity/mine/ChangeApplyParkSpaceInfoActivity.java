@@ -32,6 +32,7 @@ import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -274,9 +275,9 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             //选择的图片
             final List<ImageBean> imageBeans = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             if (imageBeans.size() == 1) {
-                ImageUtil.compressPhoto(this, imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                ImageUtil.compressPhoto(this, imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                     @Override
-                    public void onSuccess(File file) {
+                    public void onSuccess(MyFile file) {
                         handleCompressPhoto(file, mChoosePosition);
                     }
                 });
@@ -437,13 +438,13 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 2:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 2);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 3);
                                 }
                             });
@@ -451,13 +452,13 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     });
                     break;
                 case 3:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 3);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 4);
                                 }
                             });
@@ -466,17 +467,17 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                 @Override
-                public void onSuccess(File file) {
+                public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 2);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 3);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<File>() {
+                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 4);
                                 }
                             });
@@ -487,15 +488,15 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
         }
     }
 
-    private void compressFirstPhoto(String path, SuccessCallback<File> callback) {
+    private void compressFirstPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(this, path, callback);
     }
 
-    private void compressSecondPhoto(String path, SuccessCallback<File> callback) {
+    private void compressSecondPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(this, path, callback);
     }
 
-    private void compressThirdPhoto(String path, SuccessCallback<File> callback) {
+    private void compressThirdPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(this, path, callback);
     }
 

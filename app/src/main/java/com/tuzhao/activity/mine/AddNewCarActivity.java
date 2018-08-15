@@ -38,6 +38,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
@@ -172,9 +173,9 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
             List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-            ImageUtil.compressPhoto(AddNewCarActivity.this, list.get(0).getImagePath(), new SuccessCallback<File>() {
+            ImageUtil.compressPhoto(AddNewCarActivity.this, list.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                 @Override
-                public void onSuccess(File file) {
+                public void onSuccess(MyFile file) {
                     UploadPhotoInfo uploadPhotoInfo = mAdapter.get(mChoosePosition);
                     uploadPhotoInfo.setShowProgress(true);
                     uploadPhotoInfo.setPath(file.getAbsolutePath());

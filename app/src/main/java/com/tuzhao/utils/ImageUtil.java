@@ -28,6 +28,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
+import com.tuzhao.publicwidget.upload.MyFile;
 
 import java.io.File;
 
@@ -42,7 +43,7 @@ public class ImageUtil {
 
     private static final String TAG = "ImageUtil";
 
-    private static LruCache<SuccessCallback<File>, Long> sLruCache = new LruCache<>(3);
+    private static LruCache<SuccessCallback<MyFile>, Long> sLruCache = new LruCache<>(3);
 
     public static void showPic(ImageView imageView, String url) {
         GlideApp.with(imageView)
@@ -344,7 +345,7 @@ public class ImageUtil {
 
     }
 
-    public static void compressPhoto(final Context context, final String path, final SuccessCallback<File> callback) {
+    public static void compressPhoto(final Context context, final String path, final SuccessCallback<MyFile> callback) {
         //进行图片逐个压缩
         Luban.with(context)
                 .load(path)
@@ -369,7 +370,7 @@ public class ImageUtil {
                             sLruCache.put(callback, file.length());
                             compressPhoto(context, file.getAbsolutePath(), callback);
                         } else {
-                            callback.onSuccess(file);
+                            callback.onSuccess(new MyFile(file.getPath()).setUncompressName(path));
                             sLruCache.remove(callback);
                         }
                     }

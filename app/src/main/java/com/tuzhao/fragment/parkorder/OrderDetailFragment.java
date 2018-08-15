@@ -48,6 +48,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
+import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -524,13 +525,13 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 0:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 0);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 1);
                                 }
                             });
@@ -538,13 +539,13 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     });
                     break;
                 case 1:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
                                 }
                             });
@@ -553,17 +554,17 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                 @Override
-                public void onSuccess(File file) {
+                public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 0);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<File>() {
+                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
                                 }
                             });
@@ -574,15 +575,15 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         }
     }
 
-    private void compressFirstPhoto(String path, SuccessCallback<File> callback) {
+    private void compressFirstPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(requireContext(), path, callback);
     }
 
-    private void compressSecondPhoto(String path, SuccessCallback<File> callback) {
+    private void compressSecondPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(requireContext(), path, callback);
     }
 
-    private void compressThirdPhoto(String path, SuccessCallback<File> callback) {
+    private void compressThirdPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(requireContext(), path, callback);
     }
 
@@ -935,9 +936,9 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         //如果是订单投诉里面选择图片的也会传到这里，所以需要判断
                         final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
                         if (imageBeans.size() == 1) {
-                            ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                            ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, mChoosePosition);
                                 }
                             });

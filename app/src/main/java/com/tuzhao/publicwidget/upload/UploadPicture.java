@@ -155,13 +155,13 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 0:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 0);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 1);
                                 }
                             });
@@ -169,13 +169,13 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     });
                     break;
                 case 1:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
                                 }
                             });
@@ -184,17 +184,17 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                 @Override
-                public void onSuccess(File file) {
+                public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 0);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<File>() {
+                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
                         @Override
-                        public void onSuccess(File file) {
+                        public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<File>() {
+                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
                                 @Override
-                                public void onSuccess(File file) {
+                                public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
                                 }
                             });
@@ -205,15 +205,15 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         }
     }
 
-    private void compressFirstPhoto(String path, SuccessCallback<File> callback) {
+    private void compressFirstPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(mActivity, path, callback);
     }
 
-    private void compressSecondPhoto(String path, SuccessCallback<File> callback) {
+    private void compressSecondPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(mActivity, path, callback);
     }
 
-    private void compressThirdPhoto(String path, SuccessCallback<File> callback) {
+    private void compressThirdPhoto(String path, SuccessCallback<MyFile> callback) {
         ImageUtil.compressPhoto(mActivity, path, callback);
     }
 
@@ -420,9 +420,9 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         if (Objects.equals(intent.getAction(), ConstansUtil.PHOTO_IMAGE)) {
             final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
             if (imageBeans.size() == 1) {
-                ImageUtil.compressPhoto(mActivity, imageBeans.get(0).getImagePath(), new SuccessCallback<File>() {
+                ImageUtil.compressPhoto(mActivity, imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
                     @Override
-                    public void onSuccess(File file) {
+                    public void onSuccess(MyFile file) {
                         handleCompressPhoto(file, mChoosePosition);
                     }
                 });
