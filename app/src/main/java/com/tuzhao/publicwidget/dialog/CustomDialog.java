@@ -48,6 +48,11 @@ public class CustomDialog extends Dialog {
 
     public CustomDialog(@NonNull Context context, View view, boolean isShowAnimation) {
         super(context, R.style.ParkDialog);
+        ViewGroup viewGroup = (ViewGroup) view.getParent();
+        if (viewGroup != null) {
+            //防止复用出错，在添加车辆，上传图片时会复用
+            viewGroup.removeView(view);
+        }
         setContentView(view);
         mIsShowAnimation = isShowAnimation;
         Window window = getWindow();

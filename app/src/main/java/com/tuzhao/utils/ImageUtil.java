@@ -43,7 +43,7 @@ public class ImageUtil {
 
     private static final String TAG = "ImageUtil";
 
-    private static LruCache<SuccessCallback<MyFile>, Long> sLruCache = new LruCache<>(3);
+    private static LruCache<SuccessCallback<MyFile>, Long> sLruCache = new LruCache<>(6);
 
     public static void showPic(ImageView imageView, String url) {
         GlideApp.with(imageView)
@@ -347,9 +347,10 @@ public class ImageUtil {
 
     public static void compressPhoto(final Context context, final String path, final SuccessCallback<MyFile> callback) {
         //进行图片逐个压缩
+        String tempPath = path;
         Luban.with(context)
                 .load(path)
-                .ignoreBy(1)
+                .ignoreBy(32)
                 .setTargetDir(context.getApplicationContext().getFilesDir().getAbsolutePath())
                 .setCompressListener(new OnCompressListener() {
                     @Override

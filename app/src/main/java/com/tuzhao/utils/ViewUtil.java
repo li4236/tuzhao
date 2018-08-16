@@ -1,6 +1,10 @@
 package com.tuzhao.utils;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -25,6 +29,16 @@ public class ViewUtil {
 
     public static boolean isVisible(View view) {
         return view.getVisibility() == View.VISIBLE;
+    }
+
+    public static void addEndText(TextView textView, int placeholderCount) {
+        StringBuilder stringBuilder = new StringBuilder(textView.getText());
+        for (int i = 0; i < placeholderCount; i++) {
+            stringBuilder.append("哈");
+        }
+        SpannableString spannableString = new SpannableString(stringBuilder.toString());
+        spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), textView.getText().length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(spannableString);
     }
 
     /**

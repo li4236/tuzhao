@@ -3,7 +3,6 @@ package com.tuzhao.publicwidget.customView;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
@@ -23,8 +22,6 @@ import com.tuzhao.utils.ConstansUtil;
 public class PlusView extends View {
 
     private Paint mPaint;
-
-    private Paint mOtherPaint;
 
     public PlusView(Context context) {
         this(context, null);
@@ -47,13 +44,6 @@ public class PlusView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(strokeWidth);
         mPaint.setColor(color);
-
-        mOtherPaint = new Paint();
-        mOtherPaint.setAntiAlias(true);
-        mOtherPaint.setStyle(Paint.Style.STROKE);
-        mOtherPaint.setStrokeWidth(1);
-        mOtherPaint.setColor(Color.RED);
-
     }
 
     @Override

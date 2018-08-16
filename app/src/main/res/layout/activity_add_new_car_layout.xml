@@ -37,7 +37,7 @@
                     android:layout_marginStart="16dp"
                     android:paddingBottom="14dp"
                     android:paddingTop="14dp"
-                    android:text="车牌号码:"
+                    android:text="车牌号码："
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,17 +56,14 @@
                     android:id="@+id/car_number_et"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/w1"
+                    android:layout_marginStart="26dp"
+                    android:background="@null"
                     android:digits="京泸津渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤川青藏琼宁0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
                     android:gravity="center_vertical|start"
-                    android:hint="请输入您的五位车牌号码"
+                    android:hint="请输入车牌号码，如粤B88888"
                     android:inputType="textCapCharacters"
                     android:maxLength="8"
-                    android:paddingStart="6dp"
                     android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="@+id/car_number_tv"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -81,11 +78,11 @@
                 <TextView
                     android:id="@+id/car_owner_tv"
                     style="@style/ThirtyTextB1Style"
-                    android:layout_marginStart="14dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="1dp"
                     android:paddingBottom="14dp"
                     android:paddingTop="14dp"
-                    android:text="车辆所有人:"
+                    android:text="车辆所有人："
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/car_number_tv" />
 
@@ -93,83 +90,433 @@
                     android:id="@+id/car_owner_et"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="26dp"
                     android:background="@null"
                     android:gravity="center_vertical|start"
+                    android:hint="请输入该车车主姓名"
                     android:inputType="text"
                     android:labelFor="@+id/car_owner_et"
                     android:maxLength="12"
+                    android:textSize="13sp"
                     app:layout_constraintBottom_toBottomOf="@+id/car_owner_tv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/car_owner_tv"
                     app:layout_constraintTop_toTopOf="@+id/car_owner_tv" />
 
                 <View
-                    style="@style/dividerStyle"
+                    android:id="@+id/id_card_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@color/w5"
                     app:layout_constraintTop_toBottomOf="@+id/car_owner_tv" />
 
                 <TextView
-                    android:id="@+id/identify_information"
-                    style="@style/ThirtyTextB1Style"
+                    android:id="@+id/id_card_tv"
+                    style="@style/TenTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="1dp"
-                    android:paddingBottom="7dp"
-                    android:paddingTop="14dp"
-                    android:text="证件信息"
+                    android:layout_marginTop="14dp"
+                    android:text="身份证照"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/car_owner_et" />
+                    app:layout_constraintTop_toBottomOf="@+id/id_card_divider" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/identify_information_rv"
+                <com.tuzhao.publicwidget.customView.PlusView
+                    android:id="@+id/id_card_positive_pv"
+                    android:layout_width="162dp"
+                    android:layout_height="102dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6"
+                    android:paddingBottom="36dp"
+                    android:paddingEnd="66dp"
+                    android:paddingStart="66dp"
+                    android:paddingTop="36dp"
+                    app:layout_constraintStart_toStartOf="@id/car_owner_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/id_card_tv" />
+
+                <ImageView
+                    android:id="@+id/id_card_positive_iv"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/identify_information"
-                    app:layout_constraintTop_toBottomOf="@+id/identify_information" />
-
-                <CheckBox
-                    android:id="@+id/agress_protocol_cb"
-                    android:layout_width="48dp"
-                    android:layout_height="38dp"
-                    android:button="@null"
-                    android:drawableStart="@drawable/yellow_checkbox_bg"
-                    android:paddingBottom="11dp"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="16dp"
-                    android:paddingTop="11dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/identify_information_rv" />
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_positive_pv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_positive_pv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_pv" />
 
                 <TextView
-                    android:id="@+id/agress_protocol_tv"
-                    style="@style/TenTextB1Style"
+                    android:id="@+id/id_card_positive_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="28dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/agress_protocol_cb"
-                    app:layout_constraintStart_toStartOf="@+id/identify_information"
-                    app:layout_constraintTop_toTopOf="@+id/agress_protocol_cb" />
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_positive_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_positive_pv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_positive_pv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_positive_pv" />
+
+                <TextView
+                    android:id="@+id/id_card_positive_tv"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="上传身份证（人像面）"
+                    app:layout_constraintEnd_toEndOf="@id/id_card_positive_pv"
+                    app:layout_constraintStart_toStartOf="@id/id_card_positive_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/id_card_positive_pv" />
+
+
+                <com.tuzhao.publicwidget.customView.PlusView
+                    android:id="@+id/id_card_negative_pv"
+                    android:layout_width="162dp"
+                    android:layout_height="102dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6"
+                    android:paddingBottom="36dp"
+                    android:paddingEnd="66dp"
+                    android:paddingStart="66dp"
+                    android:paddingTop="36dp"
+                    app:layout_constraintStart_toEndOf="@+id/id_card_positive_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/id_card_tv" />
+
+                <ImageView
+                    android:id="@+id/id_card_negativie_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_negative_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_negative_pv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_negative_pv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_negative_pv" />
+
+                <TextView
+                    android:id="@+id/id_card_negative_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/id_card_negative_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/id_card_negative_pv"
+                    app:layout_constraintStart_toStartOf="@+id/id_card_negative_pv"
+                    app:layout_constraintTop_toTopOf="@+id/id_card_negative_pv" />
+
+                <TextView
+                    android:id="@+id/id_card_negativie_tv"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="上传身份证（国徽面）"
+                    app:layout_constraintEnd_toEndOf="@id/id_card_negative_pv"
+                    app:layout_constraintStart_toStartOf="@id/id_card_negative_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/id_card_negative_pv" />
+
+                <View
+                    android:id="@+id/driver_license_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@color/w5"
+                    app:layout_constraintTop_toBottomOf="@+id/id_card_positive_tv" />
+
+                <TextView
+                    android:id="@+id/driver_license_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="驾驶证照"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/driver_license_divider" />
+
+                <com.tuzhao.publicwidget.customView.PlusView
+                    android:id="@+id/driver_license_pv"
+                    android:layout_width="162dp"
+                    android:layout_height="102dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6"
+                    android:paddingBottom="36dp"
+                    android:paddingEnd="66dp"
+                    android:paddingStart="66dp"
+                    android:paddingTop="36dp"
+                    app:layout_constraintStart_toStartOf="@id/car_owner_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/driver_license_tv" />
+
+                <ImageView
+                    android:id="@+id/driver_license_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/driver_license_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/driver_license_pv"
+                    app:layout_constraintStart_toStartOf="@+id/driver_license_pv"
+                    app:layout_constraintTop_toTopOf="@+id/driver_license_pv" />
+
+                <TextView
+                    android:id="@+id/driver_license_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/driver_license_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/driver_license_pv"
+                    app:layout_constraintStart_toStartOf="@+id/driver_license_pv"
+                    app:layout_constraintTop_toTopOf="@+id/driver_license_pv" />
+
+                <TextView
+                    android:id="@+id/driver_license_hint_tv"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="上传驾驶证主页"
+                    app:layout_constraintEnd_toEndOf="@id/driver_license_pv"
+                    app:layout_constraintStart_toStartOf="@id/driver_license_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/driver_license_pv" />
+
+
+                <View
+                    android:id="@+id/vehicle_license_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@color/w5"
+                    app:layout_constraintTop_toBottomOf="@+id/driver_license_hint_tv" />
+
+                <TextView
+                    android:id="@+id/vehicle_license_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="行驶证照"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_license_divider" />
+
+                <com.tuzhao.publicwidget.customView.PlusView
+                    android:id="@+id/vehicle_license_positive_pv"
+                    android:layout_width="162dp"
+                    android:layout_height="102dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6"
+                    android:paddingBottom="36dp"
+                    android:paddingEnd="66dp"
+                    android:paddingStart="66dp"
+                    android:paddingTop="36dp"
+                    app:layout_constraintStart_toStartOf="@id/car_owner_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_license_tv" />
+
+                <ImageView
+                    android:id="@+id/vehicle_license_positive_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintStart_toStartOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintTop_toTopOf="@+id/vehicle_license_positive_pv" />
+
+                <TextView
+                    android:id="@+id/vehicle_license_positive_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintStart_toStartOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintTop_toTopOf="@+id/vehicle_license_positive_pv" />
+
+                <TextView
+                    android:id="@+id/vehicle_license_positive_tv"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="上传行驶证主页"
+                    app:layout_constraintEnd_toEndOf="@id/vehicle_license_positive_pv"
+                    app:layout_constraintStart_toStartOf="@id/vehicle_license_positive_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_license_positive_pv" />
+
+
+                <com.tuzhao.publicwidget.customView.PlusView
+                    android:id="@+id/vehicle_license_negativie_pv"
+                    android:layout_width="162dp"
+                    android:layout_height="102dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6"
+                    android:paddingBottom="36dp"
+                    android:paddingEnd="66dp"
+                    android:paddingStart="66dp"
+                    android:paddingTop="36dp"
+                    app:layout_constraintStart_toEndOf="@+id/vehicle_license_positive_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_license_tv" />
+
+                <ImageView
+                    android:id="@+id/vehicle_license_negativie_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/vehicle_license_negativie_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/vehicle_license_negativie_pv"
+                    app:layout_constraintStart_toStartOf="@+id/vehicle_license_negativie_pv"
+                    app:layout_constraintTop_toTopOf="@+id/vehicle_license_negativie_pv" />
+
+                <TextView
+                    android:id="@+id/vehicle_license_negativie_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/vehicle_license_negativie_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/vehicle_license_negativie_pv"
+                    app:layout_constraintStart_toStartOf="@+id/vehicle_license_negativie_pv"
+                    app:layout_constraintTop_toTopOf="@+id/vehicle_license_negativie_pv" />
+
+                <TextView
+                    android:id="@+id/vehicle_license_negativie_tv"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="上传行驶证副页"
+                    app:layout_constraintEnd_toEndOf="@id/vehicle_license_negativie_pv"
+                    app:layout_constraintStart_toStartOf="@id/vehicle_license_negativie_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_license_negativie_pv" />
+
+
+                <View
+                    android:id="@+id/group_photo_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@color/w5"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicle_license_positive_tv" />
+
+                <TextView
+                    android:id="@+id/group_photo_tv"
+                    style="@style/TenTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="14dp"
+                    android:text="人车合照"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/group_photo_divider" />
+
+                <com.tuzhao.publicwidget.customView.PlusView
+                    android:id="@+id/group_photo_pv"
+                    android:layout_width="162dp"
+                    android:layout_height="102dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6"
+                    android:paddingBottom="36dp"
+                    android:paddingEnd="66dp"
+                    android:paddingStart="66dp"
+                    android:paddingTop="36dp"
+                    app:layout_constraintStart_toStartOf="@id/car_owner_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/group_photo_tv" />
+
+                <ImageView
+                    android:id="@+id/group_photo_iv"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/group_photo_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/group_photo_pv"
+                    app:layout_constraintStart_toStartOf="@+id/group_photo_pv"
+                    app:layout_constraintTop_toTopOf="@+id/group_photo_pv" />
+
+                <TextView
+                    android:id="@+id/group_photo_upload_tv"
+                    style="@style/FortyTextB1Style"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#47000000"
+                    android:text="0%"
+                    android:textColor="@color/w0"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/group_photo_pv"
+                    app:layout_constraintEnd_toEndOf="@+id/group_photo_pv"
+                    app:layout_constraintStart_toStartOf="@+id/group_photo_pv"
+                    app:layout_constraintTop_toTopOf="@+id/group_photo_pv" />
+
+                <TextView
+                    android:id="@+id/group_photo_hint_tv"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="上传人车合照"
+                    app:layout_constraintEnd_toEndOf="@id/group_photo_pv"
+                    app:layout_constraintStart_toStartOf="@id/group_photo_pv"
+                    app:layout_constraintTop_toBottomOf="@+id/group_photo_pv" />
+
+                <View
+                    android:id="@+id/bottom_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/w5"
+                    app:layout_constraintTop_toBottomOf="@+id/group_photo_hint_tv" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    app:layout_constraintTop_toBottomOf="@+id/bottom_divider">
+
+                    <CheckBox
+                        android:id="@+id/agress_protocol_cb"
+                        android:layout_width="44dp"
+                        android:layout_height="40dp"
+                        android:button="@null"
+                        android:drawableStart="@drawable/yellow_checkbox_bg"
+                        android:paddingBottom="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/agress_protocol_tv"
+                        style="@style/TenTextB1Style"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/agress_protocol_cb"
+                        app:layout_constraintStart_toEndOf="@+id/agress_protocol_cb"
+                        app:layout_constraintTop_toTopOf="@+id/agress_protocol_cb" />
+
+                    <TextView
+                        android:id="@+id/apply_add_new_car"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/little_yuan_yellow_8dp"
+                        android:gravity="center"
+                        android:text="确认提交"
+                        android:textColor="@color/b1"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/agress_protocol_cb" />
+
+                </android.support.constraint.ConstraintLayout>
 
             </android.support.constraint.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/apply_add_new_car"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/little_yuan_yellow_8dp"
-                android:gravity="center"
-                android:text="确认提交"
-                android:textColor="@color/b1"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/top_cl" />
 
         </android.support.constraint.ConstraintLayout>
 

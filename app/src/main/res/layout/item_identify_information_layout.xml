@@ -5,13 +5,13 @@
     android:layout_height="102dp"
     android:layout_marginEnd="8dp"
     android:layout_marginTop="7dp"
-    android:background="@drawable/solid_w5_stroke_g10_all_2dp">
+    android:background="@drawable/corner_2dp_stroke_withd_1px_dash_8px_g6">
 
     <com.tuzhao.publicwidget.customView.PlusView
         android:id="@+id/add_pv"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="26dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
