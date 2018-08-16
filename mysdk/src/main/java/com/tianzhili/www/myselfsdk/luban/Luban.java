@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -89,18 +90,47 @@ public class Luban implements Handler.Callback {
     @Nullable
     private File getImageCacheDir(Context context, String cacheName) {
         File cacheDir = context.getExternalCacheDir();
+        File result;
         if (cacheDir != null) {
-            File result = new File(cacheDir, cacheName);
+            checkCache(cacheDir);
+            result = new File(cacheDir, cacheName);
             if (!result.mkdirs() && (!result.exists() || !result.isDirectory())) {
                 // File wasn't able to create a directory, or the result exists but not a directory
                 return null;
             }
             return result;
+        } else {
+            cacheDir = context.getCacheDir();
+            if (cacheDir != null) {
+                checkCache(cacheDir);
+                result = new File(cacheDir, cacheName);
+                return result;
+            }
         }
         if (Log.isLoggable(TAG, Log.ERROR)) {
             Log.e(TAG, "default disk cache dir is null");
         }
         return null;
+    }
+
+    /**
+     * 如果超过10M则清空除了当天的缓存图片
+     */
+    private void checkCache(File cacheFile) {
+        if (cacheFile.length() > 1024 * 1024 * 10) {
+            for (File file : cacheFile.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.getAbsolutePath().endsWith(".jpg") && moreThanOneDay(pathname.lastModified());
+                }
+            })) {
+                file.delete();
+            }
+        }
+    }
+
+    private boolean moreThanOneDay(long date) {
+        return (System.currentTimeMillis() - date) > (1000 / 60 / 60 / 24);
     }
 
     /**

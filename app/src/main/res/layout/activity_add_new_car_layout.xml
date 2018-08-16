@@ -59,7 +59,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="26dp"
                     android:background="@null"
-                    android:digits="京泸津渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤川青藏琼宁0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
+                    android:digits="京泸津渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤川青藏琼宁港澳0123456789qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
                     android:gravity="center_vertical|start"
                     android:hint="请输入车牌号码，如粤B88888"
                     android:inputType="textCapCharacters"

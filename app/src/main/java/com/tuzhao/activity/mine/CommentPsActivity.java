@@ -17,6 +17,8 @@ import com.cb.ratingbar.CBRatingBar;
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
 import com.lwkandroid.imagepicker.data.ImagePickType;
+import com.tianzhili.www.myselfsdk.luban.Luban;
+import com.tianzhili.www.myselfsdk.luban.OnCompressListener;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -37,8 +39,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 /**
  * Created by TZL12 on 2017/12/7.

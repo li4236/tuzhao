@@ -14,8 +14,8 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -75,6 +75,8 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     private String[] mPath;
 
+    private CheckBox mCheckBox;
+
     private TextView mAgressProtocol;
 
     @Override
@@ -104,6 +106,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         TextView vehicleLiensePositiveUploadTv = findViewById(R.id.vehicle_license_positive_upload_tv);
         TextView vehicleLienseNegativieUploadTv = findViewById(R.id.vehicle_license_negativie_upload_tv);
         TextView groupPhotoUploadTv = findViewById(R.id.group_photo_upload_tv);
+        mCheckBox = findViewById(R.id.agress_protocol_cb);
         mAgressProtocol = findViewById(R.id.agress_protocol_tv);
 
         mPlusViews = new PlusView[]{idCardPositivePv, idCardNegativePv, driveLicensePv, vehicleLicensePositivePv, vehicleLicenseNegativePv, groupPhotoPv};
@@ -134,6 +137,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 }
             }
         });
+
     }
 
     @Override
@@ -209,6 +213,8 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                     showFiveToast("请上传行驶证副页照片");
                 } else if (mPath[5].equals("-1")) {
                     showFiveToast("请上传人车合影");
+                } else if (!mCheckBox.isChecked()) {
+                    showFiveToast("请仔细阅读《途找信息平台用户协议》并勾选确认");
                 } else if (!mPath[0].startsWith(HttpConstants.ROOT_IMG_URL_ID_CARD)) {
                     showFiveToast("请等待身份证人像面上传完成");
                 } else if (!mPath[1].startsWith(HttpConstants.ROOT_IMG_URL_ID_CARD)) {
@@ -236,11 +242,9 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
             mPath[mChoosePosition] = list.get(0).getImagePath();
             ImageUtil.showPicWithNoAnimate(mImageViews[mChoosePosition], mPath[mChoosePosition]);
             hideView(mPlusViews[mChoosePosition]);
-            Log.e(TAG, "onActivityResult: " + mPath[mChoosePosition]);
             ImageUtil.compressPhoto(AddNewCarActivity.this, mPath[mChoosePosition], new SuccessCallback<MyFile>() {
                 @Override
                 public void onSuccess(MyFile file) {
-                    Log.e(TAG, "onSuccess: " + file.getUncompressName());
                     for (int i = 0; i < mPath.length; i++) {
                         if (mPath[i].equals(file.getUncompressName())) {
                             mPath[i] = file.getAbsolutePath();

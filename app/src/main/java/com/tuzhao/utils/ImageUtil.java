@@ -25,6 +25,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.tianzhili.www.myselfsdk.luban.Luban;
+import com.tianzhili.www.myselfsdk.luban.OnCompressListener;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
@@ -32,8 +34,6 @@ import com.tuzhao.publicwidget.upload.MyFile;
 
 import java.io.File;
 
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 /**
  * Created by juncoder on 2018/3/27.
@@ -44,6 +44,8 @@ public class ImageUtil {
     private static final String TAG = "ImageUtil";
 
     private static LruCache<SuccessCallback<MyFile>, Long> sLruCache = new LruCache<>(6);
+
+    private static LruCache<SuccessCallback<MyFile>, String> sPathLruCache = new LruCache<>(6);
 
     public static void showPic(ImageView imageView, String url) {
         GlideApp.with(imageView)
@@ -346,12 +348,14 @@ public class ImageUtil {
     }
 
     public static void compressPhoto(final Context context, final String path, final SuccessCallback<MyFile> callback) {
+        if (sPathLruCache.get(callback) == null) {
+            //保存第一次压缩的路径，否则如果经历了多次压缩回调的路径不正确
+            sPathLruCache.put(callback, path);
+        }
         //进行图片逐个压缩
-        String tempPath = path;
         Luban.with(context)
                 .load(path)
                 .ignoreBy(32)
-                .setTargetDir(context.getApplicationContext().getFilesDir().getAbsolutePath())
                 .setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {
@@ -371,8 +375,9 @@ public class ImageUtil {
                             sLruCache.put(callback, file.length());
                             compressPhoto(context, file.getAbsolutePath(), callback);
                         } else {
-                            callback.onSuccess(new MyFile(file.getPath()).setUncompressName(path));
+                            callback.onSuccess(new MyFile(file.getPath()).setUncompressName(sPathLruCache.get(callback)));
                             sLruCache.remove(callback);
+                            sPathLruCache.remove(callback);
                         }
                     }
 

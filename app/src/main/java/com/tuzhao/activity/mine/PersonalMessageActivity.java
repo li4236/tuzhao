@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.lwkandroid.imagepicker.ImagePicker;
 import com.lwkandroid.imagepicker.data.ImageBean;
 import com.lwkandroid.imagepicker.data.ImagePickType;
+import com.tianzhili.www.myselfsdk.luban.Luban;
+import com.tianzhili.www.myselfsdk.luban.OnCompressListener;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -25,9 +27,9 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 
@@ -36,8 +38,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
 
