@@ -155,7 +155,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        setTAG(TAG + " parkInfoId:" + mParkInfo.getId());
+        setTAG(this.getClass().getName() + " parkInfoId:" + mParkInfo.getId());
         setAutoCancelRequest(false);
         scanOrderTime();
         setParkspaceStatus();
@@ -542,7 +542,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     if (mScaleValues.size() >= 2) {
-                        //只保存两次的suofa缩放值，用于之后判断当前动画是正在缩小还是放大
+                        //只保存两次的缩放值，用于之后判断当前动画是正在缩小还是放大
                         mScaleValues.poll();
                     }
                     mScaleValues.add((float) animation.getAnimatedValue());

@@ -14,6 +14,7 @@ import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Discount_Info;
+import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
@@ -38,6 +39,9 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
 
     private int mIsUsable;
 
+    /**
+     * 停车订单的金额
+     */
     private double mOrderFee;
 
     public static DiscountFragment getInstance(int discountType, int isUsable) {
@@ -84,6 +88,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
                 showDialog();
                 loadData();
             } else if (mOrderFee != -1) {
+                //从停车订单跳过来的则显示不选择优惠券
                 showView(mView.findViewById(R.id.not_use_discount));
                 mView.findViewById(R.id.not_use_discount).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -155,10 +160,20 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
     private void deleteDiscount(final Discount_Info discount_info) {
         getOkGo(HttpConstants.deleteUserDiscount)
                 .params("discount_id", discount_info.getId())
-                .execute(new JsonCallback<Void>() {
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
-                    public void onSuccess(Void o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mCommonAdapter.notifyRemoveData(discount_info);
+                        if (mCommonAdapter.getData().isEmpty()) {
+                            mRecyclerView.showEmpty(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mStartItme = 0;
+                                    showLoadingDialog();
+                                    loadData();
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -215,6 +230,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
         }
 
         if (mOrderFee != -1 && discount_info.getWhat_type().equals("1") && discount_info.getIs_usable().equals("1")) {
+            //从停车订单跳转过来，并且是可用的停车优惠券则点击后把选择优惠券传回去
             holder.getView(R.id.discount_cl).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

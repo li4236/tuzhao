@@ -280,6 +280,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             parkSpaceName.add(mParkInfos.get(i).getLocation_describe());
         }
         mOptionsPickerView = new OptionsPickerView<>(this);
+        mOptionsPickerView.setTitle("我的车位");
         mOptionsPickerView.setPicker(parkSpaceName);
         mOptionsPickerView.setTextSize(16);
         mOptionsPickerView.setCyclic(false);

@@ -29,7 +29,7 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 
 public class SetActivity extends BaseActivity implements View.OnClickListener {
 
-    private LinearLayout linearlayout_safe, linearlayout_suggest, linearlayout_law, linearlayout_checkversion, linearlayout_loginout;
+    private LinearLayout linearlayout_suggest, linearlayout_law, linearlayout_checkversion, linearlayout_loginout;
 
     private DateUtil dateUtil = new DateUtil();
     private DatabaseImp databaseImp;
@@ -47,7 +47,6 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
     private void initView() {
 
         ((TextView) findViewById(R.id.id_activity_set_layout_textview_thisversion)).setText("当前版本：" + dateUtil.getVersion(this));
-        linearlayout_safe = findViewById(R.id.id_activity_set_layout_linearlayout_safe);
         linearlayout_suggest = findViewById(R.id.id_activity_set_layout_linearlayout_suggest);
         linearlayout_law = findViewById(R.id.id_activity_set_layout_linearlayout_law);
         linearlayout_checkversion = findViewById(R.id.id_activity_set_layout_linearlayout_checkversion);
@@ -59,7 +58,6 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
 
     private void initEvent() {
         findViewById(R.id.id_activity_set_imageview_back).setOnClickListener(this);
-        linearlayout_safe.setOnClickListener(this);
         linearlayout_suggest.setOnClickListener(this);
         linearlayout_law.setOnClickListener(this);
         linearlayout_checkversion.setOnClickListener(this);
@@ -72,10 +70,6 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.id_activity_set_imageview_back:
                 finish();
-                break;
-            case R.id.id_activity_set_layout_linearlayout_safe:
-                intent = new Intent(SetActivity.this, SetAccountAndSafeActivity.class);
-                startActivity(intent);
                 break;
             case R.id.id_activity_set_layout_linearlayout_suggest:
                 intent = new Intent(SetActivity.this, SuggestActivity.class);
