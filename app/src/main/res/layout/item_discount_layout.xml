@@ -59,7 +59,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="30sp"
-                                android:text="15.3"
+                                android:text="999.00"
                                 android:layout_centerInParent="true"
                                 android:textColor="@color/y3"/>
 
@@ -83,7 +83,7 @@
                             android:minWidth="80dp"
                             android:gravity="center"
                             android:textSize="11sp"
-                            android:text="满多少元可用"
+                            android:text="无门槛可用"
                             android:paddingLeft="28dp"
                             android:paddingRight="28dp"
                             android:textColor="@color/y3"/>

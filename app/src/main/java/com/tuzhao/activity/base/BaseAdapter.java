@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tuzhao.R;
+import com.tuzhao.utils.DensityUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +59,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             return new BaseViewHolder(mHeaderView);
         } else if (viewType == FOOTER_VIEW) {
             return new BaseViewHolder(mFooterView);
-        } else if(viewType!=0){
+        } else if (viewType != 0) {
             return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId(viewType), parent, false));
         }
         return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(itemViewId(), parent, false));
@@ -122,6 +125,17 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         mHeaderView = headerView;
     }
 
+    /**
+     * 添加一个空的头部，用于占位
+     * @param height    headerView的高度，单位dp
+     */
+    public void setPlaceholderHeaderView(int height) {
+        mHeaderView = LayoutInflater.from(mRecyclerView.getContext()).inflate(R.layout.layout_placeholder, mRecyclerView, false);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                DensityUtil.dp2px(mRecyclerView.getContext(), height));
+        mHeaderView.setLayoutParams(layoutParams);
+    }
+
     public View getFooterView() {
         return mFooterView;
     }
@@ -135,6 +149,13 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             footerView.setLayoutParams(mRecyclerView.getLayoutParams());
         }
         mFooterView = footerView;
+    }
+
+    public void setPlaceholderFooterView(int height) {
+        mFooterView = LayoutInflater.from(mRecyclerView.getContext()).inflate(R.layout.layout_placeholder, mRecyclerView, false);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                DensityUtil.dp2px(mRecyclerView.getContext(), height));
+        mFooterView.setLayoutParams(layoutParams);
     }
 
     public void notifyRemoveFooterView() {

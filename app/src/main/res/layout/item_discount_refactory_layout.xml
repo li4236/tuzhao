@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="83dp"
+    android:layout_marginBottom="18dp"
+    android:clipChildren="false"
+    app:ios="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/discount_cl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/w0_all_5dp">
+
+            <View
+                android:id="@+id/top_divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/solid_y3_tr_5dp_tr_5dp" />
+
+            <TextView
+                android:id="@+id/limit_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:minWidth="80dp"
+                android:paddingEnd="28dp"
+                android:paddingStart="28dp"
+                android:text="无门槛可用"
+                android:textColor="@color/y3"
+                android:textSize="11sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/discount_price" />
+
+            <TextView
+                android:id="@+id/discount_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/y3"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="@id/limit_amount"
+                app:layout_constraintStart_toStartOf="@id/limit_amount"
+                app:layout_constraintTop_toTopOf="@+id/yuan_tv" />
+
+            <TextView
+                android:id="@+id/yuan_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingTop="8dp"
+                android:text="￥"
+                android:textColor="@color/y3"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@id/discount_price"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/discount_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="停车券"
+                android:textColor="@color/b1"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@id/limit_amount"
+                app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+            <TextView
+                android:id="@+id/discount_time"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1.6"
+                android:gravity="center_vertical"
+                android:textColor="@color/g6"
+                android:textSize="11sp"
+                app:layout_constraintBottom_toBottomOf="@+id/limit_amount"
+                app:layout_constraintStart_toStartOf="@+id/discount_type"
+                app:layout_constraintTop_toTopOf="@+id/limit_amount" />
+
+            <ImageView
+                android:id="@+id/discount_iv"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginTop="12dp"
+                android:contentDescription="@string/picture_description"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/delete_discount"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/solid_r1_all_5dp"
+        android:gravity="center"
+        android:text="删除"
+        android:textColor="@color/w0"
+        app:layout_constraintStart_toEndOf="@id/discount_cl" />
+
+    <View
+        android:layout_width="16dp"
+        android:layout_height="match_parent" />
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

@@ -121,6 +121,41 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder showView(@IdRes int id) {
+        if (getView(id).getVisibility() != View.VISIBLE) {
+            getView(id).setVisibility(View.VISIBLE);
+        }
+        return this;
+    }
+
+    public BaseViewHolder hideView(@IdRes int id) {
+        if (getView(id).getVisibility() != View.INVISIBLE) {
+            getView(id).setVisibility(View.INVISIBLE);
+        }
+        return this;
+    }
+
+    public BaseViewHolder goneView(@IdRes int id) {
+        if (getView(id).getVisibility() != View.GONE) {
+            getView(id).setVisibility(View.GONE);
+        }
+        return this;
+    }
+
+    public BaseViewHolder showViewOrHide(@IdRes int id, boolean show) {
+        View view = getView(id);
+        if (show) {
+            if (view.getVisibility() != View.VISIBLE) {
+                view.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (view.getVisibility() != View.INVISIBLE) {
+                view.setVisibility(View.INVISIBLE);
+            }
+        }
+        return this;
+    }
+
     public BaseViewHolder setOnClickListener(@IdRes int id, View.OnClickListener onClickListener) {
         getView(id).setOnClickListener(onClickListener);
         return this;

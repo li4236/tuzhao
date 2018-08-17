@@ -77,8 +77,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
 
     private ArrayList<Discount_Info> mDiscountInfos;
 
-    private ArrayList<Discount_Info> mCanUseDiscounts;
-
     private ArrayList<MonthlyCardBean> mMonthlyCards;
 
     private ArrayList<String> mParkSpacePictures;
@@ -140,7 +138,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         mDiscountInfos = new ArrayList<>();
-        mCanUseDiscounts = new ArrayList<>();
         mMonthlyCards = new ArrayList<>();
         mDecimalFormat = new DecimalFormat("0.00");
 
@@ -234,11 +231,16 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 showParkDetail();
                 break;
             case R.id.park_discount_cl:
-                if (mCanUseDiscounts.isEmpty()) {
+                if (mDiscountInfos.size() <= 0) {
                     showFiveToast("暂无可用优惠券哦");
                 } else {
-                    startActivityForResult(DiscountActivity.class, ConstansUtil.DISOUNT_REQUEST_CODE,
-                            ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrder_fee(), ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
+                    if (getActivity() != null) {
+                        Intent dicountIntent = new Intent(getActivity(), DiscountActivity.class);
+                        dicountIntent.putParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
+                        dicountIntent.putExtra(ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrder_fee());
+                        dicountIntent.putExtra(ConstansUtil.TYPE, 1);
+                        getActivity().startActivityForResult(dicountIntent, ConstansUtil.DISOUNT_REQUEST_CODE);
+                    }
                 }
                 break;
             case R.id.order_complaint:
@@ -345,41 +347,14 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      */
     private void getDiscount() {
         getOkGo(HttpConstants.getUserDiscount)
+                .params("discountType", 1)
+                .params("isUsable", 1)
+                .params("startItem", 0)
+                .params("pageSize", 32)
                 .execute(new JsonCallback<Base_Class_List_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> o, Call call, Response response) {
                         mDiscountInfos.addAll(o.data);
-                        for (Discount_Info discount_info : mDiscountInfos) {
-                            if (discount_info.getIs_usable().equals("1")) {
-                                //可用
-                                if (discount_info.getWhat_type().equals("1")) {
-                                    //是停车券
-                                   /* if (Double.valueOf(mParkOrderInfo.getOrder_fee()) >= Double.valueOf(discount_info.getMin_fee())) {
-                                        //大于最低消费*/
-                                    if (DateUtil.isInUsefulDate(discount_info.getEffective_time())) {
-                                        //在可用范围内
-                                        mCanUseDiscounts.add(discount_info);
-                                    }
-                                    //}
-                                }
-                            }
-                        }
-
-                        /*//按照优惠金额从大到小排序
-                        Collections.sort(mCanUseDiscounts, new Comparator<Discount_Info>() {
-                            @Override
-                            public int compare(Discount_Info o1, Discount_Info o2) {
-                                return (int) (Double.valueOf(o2.getDiscount()) - Double.valueOf(o1.getDiscount()));
-                            }
-                        });
-
-                        for (Discount_Info discount_info : mCanUseDiscounts) {
-                            //找到低于消费金额的最大优惠券
-                            if (Double.valueOf(mParkOrderInfo.getOrder_fee()) >= Double.valueOf(discount_info.getDiscount())) {
-                                mChooseDiscount = discount_info;
-                                break;
-                            }
-                        }*/
                         calculateShouldPayFee();
                         dismmisLoadingDialog();
                     }
@@ -388,7 +363,13 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                    break;
+                                default:
+                                    showFiveToast("查询优惠券失败，请返回重试");
+                                    break;
+                            }
                         }
                     }
                 });
@@ -431,7 +412,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 SpannableString spannableString = new SpannableString(discount);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")),
                         discount.indexOf("—"), discount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                //mParkOrderDiscount.setText(spannableString);
 
                 String parkDiscount = "—￥" + discountFee;
                 mParkDiscount.setText(parkDiscount);
@@ -444,10 +424,9 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 shouldPay = "确认支付" + mShouldPay + "元";
             }
         } else {
-            //mParkDiscount.setText("（未用优惠券）");
             calculateParkFeeWithMonthlyCard();
             shouldPay = "确认支付" + mShouldPay + "元";
-            String discountCount = mCanUseDiscounts.size() + "张优惠券";
+            String discountCount = mDiscountInfos.size() + "张优惠券";
             mParkDiscount.setText(discountCount);
         }
         mShouldPayFee.setText(shouldPay);
@@ -458,8 +437,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      */
     private void calculateParkFeeWithMonthlyCard() {
         if (!mMonthlyCards.isEmpty()) {
-            // TODO: 2018/7/31
-            //mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
+            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
         }
         if (mShouldPay <= 0) {
             mShouldPay = 0.01;

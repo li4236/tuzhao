@@ -141,7 +141,7 @@ public class ParkReadPayOrderListFragment extends BaseFragment {
 
     private void initView() {
         linearLayoutManager = new LinearLayoutManager(mContext);
-        mRecycleview = mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
+        mRecycleview = mContentView.findViewById(R.id.base_srrv);
         mRecycleview.init(linearLayoutManager, new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);
         mRecycleview.setLoadingMoreEnable(true);

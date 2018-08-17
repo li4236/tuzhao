@@ -48,7 +48,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
     @Override
     protected int resourceId() {
-        return R.layout.fragment_park_order_layout;
+        return R.layout.base_loading_refresh_layout;
     }
 
     @Override
@@ -60,13 +60,13 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
             mCommonAdapter.setNewArrayData(list);
         }
         mStartItme = 0;
-        mConstraintLayout = view.findViewById(R.id.park_order_dialog);
+        mConstraintLayout = view.findViewById(R.id.loading_dialog);
     }
 
     @Override
     protected void initData() {
         //防止滑动到其他界面时把网络请求关闭了
-        setTAG(TAG + "status:" + mOrderStatus);
+        setTAG(this.getClass().getName() + "status:" + mOrderStatus);
         showDialog();
         loadData();
         IntentObserable.registerObserver(this);

@@ -71,7 +71,7 @@ public class UsedFragment extends BaseFragment {
     }
 
     private void initView() {
-        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.id_fragment_allorderlist_layout_recycleview);
+        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.base_srrv);
         linearLayoutManager = new LinearLayoutManager(mContext);
         mRecycleview.init(linearLayoutManager, new onMyRefresh(), new onMyLoadMore());
         mRecycleview.setRefreshEnabled(true);

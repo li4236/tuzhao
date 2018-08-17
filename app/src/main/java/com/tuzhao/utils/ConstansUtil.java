@@ -14,6 +14,8 @@ public class ConstansUtil {
 
     public static final int Y3_COLOR = Color.parseColor("#ffa830");
 
+    public static final int GREEN5_COLOR = Color.parseColor("#1fa72f");
+
     public static final int G6_COLOR = Color.parseColor("#808080");
 
     public static final int G10_COLOR = Color.parseColor("#cccccc");

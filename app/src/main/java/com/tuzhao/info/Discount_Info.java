@@ -6,6 +6,8 @@ import android.os.Parcelable;
 
 import com.tuzhao.info.base_info.BaseInfo;
 
+import java.util.Objects;
+
 /**
  * Created by TZL12 on 2017/6/17.
  */
@@ -76,6 +78,32 @@ public class Discount_Info extends BaseInfo implements Parcelable {
         this.is_usable = is_usable;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Discount_Info that = (Discount_Info) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(user_id, that.user_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user_id);
+    }
+
+    @Override
+    public String toString() {
+        return "Discount_Info{" +
+                "id='" + id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", discount='" + discount + '\'' +
+                ", what_type='" + what_type + '\'' +
+                ", effective_time='" + effective_time + '\'' +
+                ", min_fee='" + min_fee + '\'' +
+                ", is_usable='" + is_usable + '\'' +
+                '}';
+    }
 
     @Override
     public int describeContents() {

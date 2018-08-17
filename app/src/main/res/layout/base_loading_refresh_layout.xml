@@ -12,11 +12,13 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/park_order_dialog"
+        android:id="@+id/loading_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/little_yuan_gray_10dp"
         android:paddingBottom="8dp"
+        android:visibility="invisible"
+        android:layout_marginBottom="90dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
