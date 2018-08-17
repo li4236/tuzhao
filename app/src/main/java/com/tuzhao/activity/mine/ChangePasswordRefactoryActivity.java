@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -158,6 +159,7 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
         initHandle();
         initEditTextChange();
+        initDigits();
         //initEditTextFocusChange();
     }
 
@@ -231,7 +233,6 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -258,7 +259,6 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -275,6 +275,12 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
                 }
             }
         });
+    }
+
+    private void initDigits() {
+        mOriginalPassword.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^&*()~<>！￥？【】、《》，。-=+_"));
+        mNewPassword.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^*()~&<>！￥？【】、《》，。-=+_"));
+        mConfirmPassword.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^*()~&<>！￥？【】、《》，。-=+_"));
     }
 
     private void initEditTextFocusChange() {
