@@ -143,6 +143,9 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
     private void showDialog() {
         if (mCustomDialog == null) {
             View view = getLayoutInflater().inflate(R.layout.dialog_select_item_layout, null);
+            view.findViewById(R.id.dialog_title).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.top_divider).setVisibility(View.VISIBLE);
+
             mCustomDialog = new CustomDialog(this, view, true);
             view.findViewById(R.id.first_item).setOnClickListener(new View.OnClickListener() {
                 @Override
