@@ -3,9 +3,6 @@ package com.tuzhao.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -19,9 +16,8 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.activity.mine.CarNumberActivity;
+import com.tuzhao.activity.mine.MyCarActivity;
 import com.tuzhao.activity.mine.OrderActivity;
-import com.tuzhao.application.MyApplication;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
@@ -76,8 +72,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<String> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
-    //优惠券
-    private Handler mHandler;
 
     private ArrayList<String> mDays;
 
@@ -113,45 +107,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             finish();
         }
 
-        mHandler = new Handler(Looper.myLooper(), new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                String obj = (String) msg.obj;
-                textview_carnumble.setText(obj);
-                if (order_list.size() > 0) {
-                    for (ParkOrderInfo parkOrderInfo : order_list) {
-                        if (parkOrderInfo.getOrder_status().equals("2")) {
-                            if (parkOrderInfo.getCar_numble().equals(obj)) {
-                                MyToast.showToast(OrderParkActivity.this, "该车辆当前正在停车中，请重新选择哦", 5);
-                                textview_carnumble.setText("");
-                                return true;
-                            }
-                        }
-                    }
-                }
-                if (obj == null) {
-                    textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
-                    textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
-                } else {
-                    if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mCanParkInfo.size() > 0) {
-                        textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.little_yuan_yellow_8dp));
-                        textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
-                        try {
-                            setOrderFee();
-                          /*  DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
-                            textview_fee.setText("约￥" + parkFee.parkfee);*/
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Log.e("TAG", "handleMessage4: ");
-                        textview_fee.setText("约￥0.00");
-                    }
-                }
-                return false;
-            }
-        });
-
         mDecimalFormat = new DecimalFormat("0.00");
     }
 
@@ -184,12 +139,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.id_activity_orderpark_layout_linearlayout_carnumble:
                 if (UserManager.getInstance().hasLogined()) {
-                    MyApplication.getInstance().setHandler(mHandler);
-                    intent = new Intent(OrderParkActivity.this, CarNumberActivity.class);
-                    if (textview_carnumble.getText().length() > 0) {
-                        intent.putExtra("numberInTextview", textview_carnumble.getText().toString().trim());
-                    }
-                    startActivity(intent);
+                    intent = new Intent(OrderParkActivity.this, MyCarActivity.class);
+                    intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
+                    startActivityForResult(intent,ConstansUtil.REQUSET_CODE);
                 } else {
                     login();
                 }
@@ -213,6 +165,46 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     }
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
+            String carNumber = data.getStringExtra(ConstansUtil.INTENT_MESSAGE);
+            Log.e(TAG, "onActivityResult: " + carNumber);
+            textview_carnumble.setText(carNumber);
+            if (order_list.size() > 0) {
+                for (ParkOrderInfo parkOrderInfo : order_list) {
+                    if (parkOrderInfo.getOrder_status().equals("2")) {
+                        if (parkOrderInfo.getCar_numble().equals(carNumber)) {
+                            MyToast.showToast(OrderParkActivity.this, "该车辆当前正在停车中，请重新选择哦", 5);
+                            textview_carnumble.setText("");
+                            return;
+                        }
+                    }
+                }
+            }
+            if (carNumber == null) {
+                textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
+                textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
+            } else {
+                if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mCanParkInfo.size() > 0) {
+                    textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.little_yuan_yellow_8dp));
+                    textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
+                    try {
+                        setOrderFee();
+                          /*  DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
+                            textview_fee.setText("约￥" + parkFee.parkfee);*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.e("TAG", "handleMessage4: ");
+                    textview_fee.setText("约￥0.00");
+                }
+            }
         }
     }
 
@@ -1370,6 +1362,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
-        mHandler.removeCallbacksAndMessages(null);
     }
+
 }

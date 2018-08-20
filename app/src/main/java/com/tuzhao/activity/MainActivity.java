@@ -64,9 +64,9 @@ import com.tianzhili.www.myselfsdk.update.UpdateHelper;
 import com.tianzhili.www.myselfsdk.update.type.UpdateType;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.activity.mine.CarNumberActivity;
 import com.tuzhao.activity.mine.CollectionActivity;
 import com.tuzhao.activity.mine.CreditActivity;
+import com.tuzhao.activity.mine.MyCarActivity;
 import com.tuzhao.activity.mine.MyParkspaceActivityRefactor;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
@@ -89,6 +89,8 @@ import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.publicwidget.customView.CircleImageView;
+import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
@@ -98,8 +100,6 @@ import com.tuzhao.publicwidget.map.ClusterOverlay;
 import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.customView.CircleImageView;
-import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
@@ -466,8 +466,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_mycarnumble:
-                intent = new Intent(MainActivity.this, CarNumberActivity.class);
-                intent.putExtra("cityCode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
+                intent = new Intent(MainActivity.this, MyCarActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_mypark:

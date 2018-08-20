@@ -402,6 +402,9 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.INTENT_MESSAGE, getText(mCarNumber));
+                        setResult(RESULT_OK, intent);
                         showFiveToast("提交成功，我们会尽快为你审核");
                         finish();
                     }

@@ -302,16 +302,20 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
      * 将单个聚合元素添加至地图显示
      */
     private void addSingleClusterToMap(Cluster cluster) {
-        LatLng latlng = cluster.getCenterLatLng();
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.anchor(1.0f, 1.0f).icon(getBitmapDes(cluster)).position(latlng);
-        Marker marker = mAMap.addMarker(markerOptions);
-        marker.setAnimation(mADDAnimation);
-        marker.setObject(cluster);
-        marker.startAnimation();
+        if (cluster != null) {
+            LatLng latlng = cluster.getCenterLatLng();
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.anchor(1.0f, 1.0f).icon(getBitmapDes(cluster)).position(latlng);
+            Marker marker = mAMap.addMarker(markerOptions);
+            marker.setAnimation(mADDAnimation);
+            marker.setObject(cluster);
+            marker.startAnimation();
 
-        cluster.setMarker(marker);
-        mAddMarkers.add(marker);
+            cluster.setMarker(marker);
+            mAddMarkers.add(marker);
+        } else {
+            Log.e(TAG, "addSingleClusterToMap: cluseter is null!" );
+        }
     }
 
     /**
