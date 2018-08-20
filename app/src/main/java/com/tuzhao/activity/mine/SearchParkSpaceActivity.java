@@ -46,7 +46,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
     private ArrayList<Park_Space_Info> mData = new ArrayList<>();
     private ProgressBar progressbar;
     private ImageView imageview_clean;
-    private TextView textview_goback,textview_goapply;
+    private TextView textview_goback, textview_goapply;
     private LinearLayout linearlayout_has_no_search;
     private String citycode;
 
@@ -77,7 +77,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
     private void initView() {
 
         etextview_input = (AutoCompleteTextView) findViewById(R.id.id_activity_searchparkspace_layout_etextview_input);
-        adapter = new SearchParkSpaceAdapter(mData, SearchParkSpaceActivity.this,SearchParkSpaceActivity.this);
+        adapter = new SearchParkSpaceAdapter(mData, SearchParkSpaceActivity.this, SearchParkSpaceActivity.this);
         etextview_input.setAdapter(adapter);
         etextview_input.setDropDownVerticalOffset(DensityUtil.dp2px(this, 13));
         etextview_input.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,9 +140,9 @@ public class SearchParkSpaceActivity extends BaseActivity {
         adapter.setOnSearchStateChange(new SearchParkSpaceAdapter.OnSearchStateChange() {
             @Override
             public void showSearchState(boolean hasresult) {
-                if (hasresult){
+                if (hasresult) {
                     linearlayout_has_no_search.setVisibility(View.GONE);
-                }else {
+                } else {
                     linearlayout_has_no_search.setVisibility(View.VISIBLE);
                 }
             }
@@ -152,8 +152,8 @@ public class SearchParkSpaceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //跳转到申请停车场的页面
-                Intent intent = new Intent(SearchParkSpaceActivity.this,ApplyParkSpace.class);
-                intent.putExtra("citycode",citycode);
+                Intent intent = new Intent(SearchParkSpaceActivity.this, ApplyParkSpace.class);
+                intent.putExtra("citycode", citycode);
                 startActivity(intent);
             }
         });
@@ -163,7 +163,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
 
         OkGo.post(HttpConstants.getParkSpaceDatasForCity)//请求数据的接口地址
                 .tag(SearchParkSpaceActivity.this)//
-                .params("citycode", LocationManager.getInstance().getmAmapLocation().getAdCode()+LocationManager.getInstance().getmAmapLocation().getCityCode()+"")
+                .params("citycode", LocationManager.getInstance().getmAmapLocation().getAdCode() + LocationManager.getInstance().getmAmapLocation().getCityCode() + "")
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Space_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Park_Space_Info> responseData, Call call, Response response) {
@@ -192,13 +192,13 @@ public class SearchParkSpaceActivity extends BaseActivity {
                             switch (code) {
                                 case 102:
                                     //定位失败
-                                    MyToast.showToast(SearchParkSpaceActivity.this,"定位失败，退出应用打开定位开关再试试哦", 2);
+                                    MyToast.showToast(SearchParkSpaceActivity.this, "定位失败，退出应用打开定位开关再试试哦", 2);
                                     break;
                                 case 103:
                                     //本城市不存在停车场
                                     break;
                                 case 901:
-                                    MyToast.showToast(SearchParkSpaceActivity.this,"服务器正在维护中", 2);
+                                    MyToast.showToast(SearchParkSpaceActivity.this, "服务器正在维护中", 2);
                                     break;
                             }
                         }

@@ -349,8 +349,14 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                 break;
             case 101:
                 Intent intent = new Intent();
-                intent.putExtra("park", data.getSerializableExtra("park"));
-                setResult(102, intent);
+                Park_Space_Info parkSpaceInfo = (Park_Space_Info) data.getSerializableExtra("park");
+                ParkBean parkBean = new ParkBean();
+                parkBean.setParkStation(parkSpaceInfo.getParkLotName());
+                parkBean.setProfit_ratio(parkSpaceInfo.getProfit_ratio());
+                parkBean.setParkID(parkSpaceInfo.getId());
+                parkBean.setCitycode(parkSpaceInfo.getCity_code());
+                intent.putExtra("park", parkBean);
+                setResult(1, intent);
                 finish();
                 break;
         }
