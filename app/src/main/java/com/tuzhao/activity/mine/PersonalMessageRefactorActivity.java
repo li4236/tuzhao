@@ -26,9 +26,9 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -175,7 +175,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_protrait:
-
+                startActivity(PhotoActivity.class, ConstansUtil.PHOTO_IMAGE, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
                 break;
             case R.id.edit_personal_message:
 

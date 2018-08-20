@@ -208,7 +208,14 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
             Car car = new Car();
             car.setCarNumber(data.getStringExtra(ConstansUtil.INTENT_MESSAGE));
             car.setStatus("1");
-            mCommonAdapter.addFirstData(car);
+            int position = 0;
+            for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                if (!mCommonAdapter.get(i).getStatus().equals("2")) {
+                    position = i;
+                    break;
+                }
+            }
+            mCommonAdapter.addData(position, car);
             mRecyclerView.showData();
         }
     }
