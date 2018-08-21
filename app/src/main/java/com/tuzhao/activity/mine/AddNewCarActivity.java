@@ -261,7 +261,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         mImagePicker = new ImagePicker()
                 .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
                 .needCamera(true)
-                .pickType(ImagePickType.MULTI)
+                .pickType(ImagePickType.SINGLE)
                 .maxNum(1);
     }
 

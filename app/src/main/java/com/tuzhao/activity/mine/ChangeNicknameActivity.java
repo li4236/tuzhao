@@ -1,9 +1,7 @@
 package com.tuzhao.activity.mine;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,12 +21,12 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.editviewwatch.LimitInputTextWatcher;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.IntentObserable;
 
 import okhttp3.Call;
 import okhttp3.Response;
-
-import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
 
 /**
  * Created by TZL12 on 2017/12/1.
@@ -56,8 +54,9 @@ public class ChangeNicknameActivity extends BaseActivity {
     }
 
     private void initData() {
-        if (UserManager.getInstance().hasLogined()){
+        if (UserManager.getInstance().hasLogined()) {
             edittext_newnickname.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? "" : UserManager.getInstance().getUserInfo().getNickname());
+            edittext_newnickname.setSelection(edittext_newnickname.getText().length());
         }
     }
 
@@ -72,16 +71,16 @@ public class ChangeNicknameActivity extends BaseActivity {
         findViewById(R.id.id_activity_changenickname_layout_textview_go).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edittext_newnickname.getText().length()<1){
-                    MyToast.showToast(ChangeNicknameActivity.this,"需要填写昵称哦",5);
-                } else if (UserManager.getInstance().getUserInfo().getNickname().equals(edittext_newnickname.getText().toString().trim())){
-                    MyToast.showToast(ChangeNicknameActivity.this,"未作更改",5);
-                }else {
+                if (edittext_newnickname.getText().length() < 1) {
+                    MyToast.showToast(ChangeNicknameActivity.this, "需要填写昵称哦", 5);
+                } else if (UserManager.getInstance().getUserInfo().getNickname().equals(edittext_newnickname.getText().toString().trim())) {
+                    MyToast.showToast(ChangeNicknameActivity.this, "未作更改", 5);
+                } else {
                     initLoading();
                     OkGo.post(HttpConstants.changeUserNickname)
                             .tag(ChangeNicknameActivity.this)
                             .addInterceptor(new TokenInterceptor())
-                            .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                            .headers("token", UserManager.getInstance().getUserInfo().getToken())
                             .params("nickname", edittext_newnickname.getText().toString().trim())
                             .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                                 @Override
@@ -89,11 +88,9 @@ public class ChangeNicknameActivity extends BaseActivity {
                                     if (mLoadingDialog.isShowing()) {
                                         mLoadingDialog.dismiss();
                                     }
-                                    User_Info userInfo = UserManager.getInstance().getUserInfo();
-                                    userInfo.setNickname(edittext_newnickname.getText().toString().trim());
-                                    UserManager.getInstance().setUserInfo(userInfo);
-                                    sendLoginBroadcast();
-                                    MyToast.showToast(ChangeNicknameActivity.this,"更换成功",5);
+                                    UserManager.getInstance().getUserInfo().setNickname(edittext_newnickname.getText().toString().trim());
+                                    IntentObserable.dispatch(ConstansUtil.CHANGE_NICKNAME);
+                                    MyToast.showToast(ChangeNicknameActivity.this, "更换成功", 5);
                                     finish();
                                 }
 
@@ -103,7 +100,7 @@ public class ChangeNicknameActivity extends BaseActivity {
                                     if (mLoadingDialog.isShowing()) {
                                         mLoadingDialog.dismiss();
                                     }
-                                    if (!DensityUtil.isException(ChangeNicknameActivity.this, e)){
+                                    if (!DensityUtil.isException(ChangeNicknameActivity.this, e)) {
                                         Log.d("TAG", "请求失败， 信息为changeUserImage：" + e.getMessage());
                                         int code = Integer.parseInt(e.getMessage());
                                         switch (code) {
@@ -111,7 +108,7 @@ public class ChangeNicknameActivity extends BaseActivity {
                                                 MyToast.showToast(ChangeNicknameActivity.this, "更换失败", 5);
                                                 break;
                                             case 901:
-                                                MyToast.showToast(ChangeNicknameActivity.this,"服务器正在维护中", 5);
+                                                MyToast.showToast(ChangeNicknameActivity.this, "服务器正在维护中", 5);
                                                 break;
                                         }
                                     }
@@ -136,12 +133,12 @@ public class ChangeNicknameActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (count > 0 || start>0) {
-                    if (imageview_clean.getVisibility() == View.GONE){
+                if (count > 0 || start > 0) {
+                    if (imageview_clean.getVisibility() == View.GONE) {
                         imageview_clean.setVisibility(View.VISIBLE);
                     }
-                }else {
-                    if (imageview_clean.getVisibility() == View.VISIBLE){
+                } else {
+                    if (imageview_clean.getVisibility() == View.VISIBLE) {
                         imageview_clean.setVisibility(View.GONE);
                     }
                 }
@@ -154,13 +151,6 @@ public class ChangeNicknameActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 发送登录的局部广播
-     */
-    private void sendLoginBroadcast(){
-        LocalBroadcastManager.getInstance(ChangeNicknameActivity.this).sendBroadcast(new Intent(LOGIN_ACTION));
-    }
-
     private void initLoading() {
         mLoadingDialog = new LoadingDialog(this, "正在更换昵称...");
         mLoadingDialog.show();
@@ -170,7 +160,7 @@ public class ChangeNicknameActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkGo.getInstance().cancelTag(this);
-        if (mLoadingDialog !=null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
     }

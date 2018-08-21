@@ -17,10 +17,10 @@ import com.tuzhao.R;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.OnLoginListener;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 

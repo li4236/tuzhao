@@ -361,4 +361,14 @@ public class ConstansUtil {
      */
     public static final String PAYMENT_PASSWORD = "PaymentPassword";
 
+    /**
+     * 修改头像
+     */
+    public static final String CHANGE_PORTRAIT = "ChangePortrait";
+
+    /**
+     * 修改昵称
+     */
+    public static final String CHANGE_NICKNAME = "ChangeNickname";
+
 }

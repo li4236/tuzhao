@@ -46,7 +46,7 @@ import static com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0.SDK_AUTH_FLAG;
 /**
  * Created by juncoder on 2018/7/14.
  */
-public class PersonalMessageRefactorActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
+public class PersonalInformationActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private static final String UNBIND = "解绑";
 
@@ -82,7 +82,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
     @Override
     protected int resourceId() {
-        return R.layout.activity_personal_message_layout;
+        return R.layout.activity_personal_information_layout;
     }
 
     @Override
@@ -128,7 +128,12 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             mUserGender.setText("女");
             ImageUtil.showPic(mUserGenderIv, R.drawable.ic_woman);
         }
-        mBirthday.setText(userInfo.getBirthday());
+
+        if (userInfo.getBirthday().equals("0000-00-00")) {
+            mBirthday.setText("出生日期（未设置）");
+        } else {
+            mBirthday.setText(userInfo.getBirthday());
+        }
         if (userInfo.getNumberOfPark() != null && !userInfo.getNumberOfPark().equals("-1")) {
             int numberOfPark = Integer.parseInt(userInfo.getNumberOfPark());
             if (numberOfPark <= 20) {
@@ -178,7 +183,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                 startActivity(PhotoActivity.class, ConstansUtil.PHOTO_IMAGE, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
                 break;
             case R.id.edit_personal_message:
-
+                startActivity(ChangePersonalInformationActivity.class);
                 break;
             case R.id.telephone_number_cl:
                 startActivity(SMSVerificationActivity.class, ConstansUtil.INTENT_MESSAGE, ConstansUtil.TELEPHONE_NUMBER);
@@ -190,7 +195,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                 if (getText(mWechat).equals(UNBOUND)) {
                     wechatLogin();
                 } else {
-                    TipeDialog.Builder builder = new TipeDialog.Builder(PersonalMessageRefactorActivity.this);
+                    TipeDialog.Builder builder = new TipeDialog.Builder(PersonalInformationActivity.this);
                     builder.setTitle("解除绑定");
                     builder.setMessage("解除绑定后可重新绑定新的微信账号，是否解除绑定？");
                     builder.setNegativeButton("取消",
@@ -212,7 +217,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     initHandler();
                     reqeustAlipayLogin();
                 } else {
-                    TipeDialog.Builder builder = new TipeDialog.Builder(PersonalMessageRefactorActivity.this);
+                    TipeDialog.Builder builder = new TipeDialog.Builder(PersonalInformationActivity.this);
                     builder.setMessage("解除绑定后可重新绑定新的支付宝账号，是否解除绑定？");
                     builder.setTitle("解除绑定");
                     builder.setNegativeButton("取消",
@@ -259,7 +264,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
 
                             if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
                                 if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
-                                    MyToast.showToast(PersonalMessageRefactorActivity.this, "账号和之前一样，未作修改", 5);
+                                    MyToast.showToast(PersonalInformationActivity.this, "账号和之前一样，未作修改", 5);
                                     if (mLoadingDialog != null) {
                                         mLoadingDialog.dismiss();
                                     }
@@ -273,7 +278,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                             }
                         } else {
                             // 其他状态值则为授权失败
-                            MyToast.showToast(PersonalMessageRefactorActivity.this, "授权异常，绑定失败", 5);
+                            MyToast.showToast(PersonalInformationActivity.this, "授权异常，绑定失败", 5);
                         }
                     }
                 }
@@ -291,7 +296,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             @Override
             public void run() {
                 // 构造AuthTask 对象
-                AuthTask authTask = new AuthTask(PersonalMessageRefactorActivity.this);
+                AuthTask authTask = new AuthTask(PersonalInformationActivity.this);
                 // 调用授权接口，获取授权结果
                 Map<String, String> result = authTask.authV2(info, true);
                 Message msg = new Message();
@@ -315,7 +320,7 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     @Override
                     public void onSuccess(Base_Class_Info<String> class_info, Call call, Response response) {
                         dismmisLoadingDialog();
-                        MyToast.showToast(PersonalMessageRefactorActivity.this, "绑定成功", 5);
+                        MyToast.showToast(PersonalInformationActivity.this, "绑定成功", 5);
                         UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
                         UserManager.getInstance().getUserInfo().setAliNickname(class_info.data);
                         mAlipay.setText(UNBIND);
@@ -324,15 +329,15 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         dismmisLoadingDialog();
-                        if (!DensityUtil.isException(PersonalMessageRefactorActivity.this, e)) {
+                        if (!DensityUtil.isException(PersonalInformationActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为uploadUserAliNumber：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
                                 case 101:
-                                    MyToast.showToast(PersonalMessageRefactorActivity.this, "绑定失败", 5);
+                                    MyToast.showToast(PersonalInformationActivity.this, "绑定失败", 5);
                                     break;
                                 case 901:
-                                    MyToast.showToast(PersonalMessageRefactorActivity.this, "服务器正在维护中", 5);
+                                    MyToast.showToast(PersonalInformationActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         }
@@ -414,6 +419,12 @@ public class PersonalMessageRefactorActivity extends BaseStatusActivity implemen
             switch (intent.getAction()) {
                 case ConstansUtil.WECHAT_CODE:
                     requestWechatBinding(intent.getStringExtra(ConstansUtil.FOR_REQEUST_RESULT));
+                    break;
+                case ConstansUtil.CHANGE_PORTRAIT:
+                    ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+                    break;
+                case ConstansUtil.CHANGE_NICKNAME:
+                    mNickname.setText(UserManager.getInstance().getUserInfo().getNickname());
                     break;
             }
         }

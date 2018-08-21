@@ -70,7 +70,7 @@ import com.tuzhao.activity.mine.MyCarActivity;
 import com.tuzhao.activity.mine.MyParkspaceActivityRefactor;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
-import com.tuzhao.activity.mine.PersonalMessageRefactorActivity;
+import com.tuzhao.activity.mine.PersonalInformationActivity;
 import com.tuzhao.activity.mine.SetActivity;
 import com.tuzhao.activity.mine.ShareActivity;
 import com.tuzhao.activity.mine.ShareParkSpaceActivity;
@@ -436,7 +436,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.user_info:
                 //跳转个人页面
-                intent = new Intent(MainActivity.this, PersonalMessageRefactorActivity.class);
+                intent = new Intent(MainActivity.this, PersonalInformationActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_content_main_layout_imageview_search:
@@ -1330,6 +1330,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     })
                     .create();
             tipeDialog.show();
+        } else if (Objects.equals(intent.getAction(), ConstansUtil.CHANGE_NICKNAME)) {
+            textview_username.setText(UserManager.getInstance().getUserInfo().getNickname());
+        } else if (Objects.equals(intent.getAction(), ConstansUtil.CHANGE_PORTRAIT)) {
+            ImageUtil.showPic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+            ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
         }
     }
 

@@ -64,20 +64,20 @@ public class ArrowView extends View {
         super.onDraw(canvas);
         switch (mGravity) {
             case TOP:
-                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getPaddingTop(), getPaddingStart(), getMeasuredHeight() - getPaddingBottom(), mPaint);
-                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getPaddingTop(), getMeasuredWidth() - getPaddingEnd(), getMeasuredHeight() - getPaddingBottom(), mPaint);
+                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getPaddingTop() + mPaint.getStrokeWidth() / 2, getPaddingStart() + mPaint.getStrokeWidth() / 2, getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth() / 2, mPaint);
+                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getPaddingTop() + mPaint.getStrokeWidth() / 2, getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth() / 2, getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth() / 2, mPaint);
                 break;
             case BOTTOM:
-                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getMeasuredHeight() - getPaddingBottom(), getPaddingStart(), getPaddingTop(), mPaint);
-                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getMeasuredHeight() - getPaddingBottom(), getMeasuredWidth() - getPaddingEnd(), getPaddingTop(), mPaint);
+                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth() / 2, getPaddingStart() + mPaint.getStrokeWidth() / 2, getPaddingTop() + mPaint.getStrokeWidth() / 2, mPaint);
+                canvas.drawLine((getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2.0f + getPaddingStart(), getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth() / 2, getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth() / 2, getPaddingTop() + mPaint.getStrokeWidth() / 2, mPaint);
                 break;
             case LEFT:
-                canvas.drawLine(getPaddingStart(), (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getMeasuredWidth() - getPaddingEnd(), getPaddingTop(), mPaint);
-                canvas.drawLine(getPaddingStart(), (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getMeasuredWidth() - getPaddingEnd(), getMeasuredHeight() - getPaddingBottom(), mPaint);
+                canvas.drawLine(getPaddingStart() + mPaint.getStrokeWidth() / 2, (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth() / 2, getPaddingTop() + mPaint.getStrokeWidth() / 2, mPaint);
+                canvas.drawLine(getPaddingStart() + mPaint.getStrokeWidth() / 2, (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth() / 2, getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth() / 2, mPaint);
                 break;
             case RIGHT:
-                canvas.drawLine(getMeasuredWidth() - getPaddingEnd(), (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getPaddingStart(), getPaddingTop(), mPaint);
-                canvas.drawLine(getMeasuredWidth() - getPaddingEnd(), (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getPaddingStart(), getMeasuredHeight() - getPaddingBottom(), mPaint);
+                canvas.drawLine(getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth() / 2, (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getPaddingStart() + mPaint.getStrokeWidth() / 2, getPaddingTop() + mPaint.getStrokeWidth() / 2, mPaint);
+                canvas.drawLine(getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth() / 2, (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f + getPaddingTop(), getPaddingStart() + mPaint.getStrokeWidth() / 2, getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth() / 2, mPaint);
                 break;
         }
     }
