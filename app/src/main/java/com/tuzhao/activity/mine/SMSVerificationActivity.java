@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -305,7 +306,10 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                             setPaymentPassword(o.data);
                         } else if (Objects.equals(getIntent().getAction(), ConstansUtil.RESET_PAYMENT_PASSWORD)) {
                             //重设密码
-
+                            Intent intent = new Intent(SMSVerificationActivity.this, CertifyZhimaActivity.class);
+                            intent.putExtra(ConstansUtil.PASS_CODE, o.data);
+                            intent.putExtra(ConstansUtil.PAYMENT_PASSWORD, getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD));
+                            startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                         } else {
                             //修改密码
                             startActivity(ChangePasswordRefactoryActivity.class, ConstansUtil.PASS_CODE, o.data);
@@ -382,6 +386,16 @@ public class SMSVerificationActivity extends BaseStatusActivity {
             });
         }
         mCycleAnimator.start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            ViewUtil.closeInputMethod(mPasswordLinearLayout);
+            finish();
+        }
     }
 
 }

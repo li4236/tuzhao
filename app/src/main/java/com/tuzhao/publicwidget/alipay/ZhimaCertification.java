@@ -46,7 +46,7 @@ public class ZhimaCertification {
     }
 
     public void getCertifyZhimaUrl(String name,String idCardNumber,final LoadFailCallback loadFailCallback) {
-        OkGo.post(HttpConstants.GET_CERTIFY_ZHIMA_URL)
+        OkGo.post(HttpConstants.getCertifyZhimaUrl)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
@@ -98,7 +98,7 @@ public class ZhimaCertification {
     }
 
     public void getCertifyZhimaResult(final OnLoadCallback<User_Info, Exception> onLoadCallback) {
-        OkGo.post(HttpConstants.GET_CERTIFY_ZHIMA_RESULT)
+        OkGo.post(HttpConstants.getCertifyZhimaResult)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())

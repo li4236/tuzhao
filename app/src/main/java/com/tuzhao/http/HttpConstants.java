@@ -621,13 +621,18 @@ public class HttpConstants {
     public static final String setPaymentPassword = ROOT_URL + "setPaymentPassword";
 
     /**
+     * 重置支付密码
+     */
+    public static final String resetPaymentPassword = ROOT_URL + "ResetPaymentPassword";
+
+    /**
      * 获取调起支付宝进行芝麻认证的url
      */
-    public static final String GET_CERTIFY_ZHIMA_URL = ROOT_URL + "getCertifyZhimaUrl";
+    public static final String getCertifyZhimaUrl = ROOT_URL + "getCertifyZhimaUrl";
 
     /**
      * 获取芝麻认证结果
      */
-    public static final String GET_CERTIFY_ZHIMA_RESULT = ROOT_URL +"getCertifyZhimaResult";
+    public static final String getCertifyZhimaResult = ROOT_URL + "getCertifyZhimaResult";
 
 }

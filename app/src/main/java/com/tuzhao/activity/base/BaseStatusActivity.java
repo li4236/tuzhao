@@ -134,7 +134,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected void showNotInputLoadingDialog(String msg) {
         dismmisLoadingDialog();
-        mLoadingDialog = new LoadingDialog(this, msg,0);
+        mLoadingDialog = new LoadingDialog(this, msg, 0);
         mLoadingDialog.show();
     }
 
@@ -291,7 +291,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     }
 
     protected void showSecondToast(String msg) {
-        MyToast.showToast(this, msg, 2);
+        MyToast.showToast(getApplicationContext(), msg, 2);
     }
 
     /**
@@ -300,7 +300,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * @param msg 显示的消息
      */
     protected void showFiveToast(String msg) {
-        MyToast.showToast(this, msg, 5);
+        MyToast.showToast(getApplicationContext(), msg, 5);
     }
 
     /**
