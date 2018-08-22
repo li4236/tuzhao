@@ -39,8 +39,7 @@ public class Database extends SQLiteOpenHelper {
                 + "balance TEXT DEFAULT \"\","
                 + "nickname TEXT DEFAULT \"\","
                 + "img_url TEXT DEFAULT \"\","
-                + "autologin TEXT DEFAULT \"\","
-                + "car_number TEXT DEFAULT \"\")");
+                + "autologin TEXT DEFAULT \"\")");
 
         // 用户搜索地址表
         db.execSQL("CREATE TABLE tb_search_log("

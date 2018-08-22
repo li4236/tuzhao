@@ -74,7 +74,6 @@ public class DatabaseImp {
             user_info.setNickname(cursor.getString(cursor.getColumnIndex("nickname")));
             user_info.setImg_url(cursor.getString(cursor.getColumnIndex("img_url")));
             user_info.setAutologin(cursor.getString(cursor.getColumnIndex("autologin")));
-            user_info.setCar_number(cursor.getString(cursor.getColumnIndex("car_number")));
         }
 
         cursor.close();
@@ -91,7 +90,7 @@ public class DatabaseImp {
         SQLiteDatabase db = database.getWritableDatabase();
         db.delete("tb_user", null, null);//清空表中的内容
         String sql = "insert into tb_user(_id,username,password,balance,nickname,img_url,autologin,car_number)" + "values(?,?,?,?,?,?,?,?)";
-        db.execSQL(sql, new Object[]{user_info.getId(), user_info.getUsername(), user_info.getPassword(), user_info.getBalance(), user_info.getNickname(), user_info.getImg_url(), user_info.getAutologin(), user_info.getCar_number()});
+        db.execSQL(sql, new Object[]{user_info.getId(), user_info.getUsername(), user_info.getPassword(), user_info.getBalance(), user_info.getNickname(), user_info.getImg_url(), user_info.getAutologin()});
         db.close();
     }
 

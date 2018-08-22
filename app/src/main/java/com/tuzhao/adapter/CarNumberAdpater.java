@@ -91,18 +91,6 @@ public class CarNumberAdpater extends RecyclerView.Adapter<CarNumberAdpater.MyVi
 
     public void removeData(int position){
         mData.remove(position);
-        if (mData.isEmpty()){
-            mUserInfo.setCar_number("");
-        }else {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String string : mData) {
-                stringBuilder.append(string);
-                stringBuilder.append(",");
-            }
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            mUserInfo.setCar_number(stringBuilder.toString());
-        }
-
         notifyItemRemoved(position);
     }
 

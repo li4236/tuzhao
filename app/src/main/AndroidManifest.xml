@@ -87,7 +87,6 @@
 
         <activity android:name=".activity.SelectCityActivity" />
         <activity android:name=".activity.OrderParkActivity" />
-        <activity android:name=".activity.mine.CarNumberActivity" />
         <activity android:name=".activity.mine.AddNewCarActivity" />
         <!-- <activity android:name=".activity.mine.AddCarNumbleActivity" />-->
         <activity
@@ -173,7 +172,7 @@
         <activity android:name=".activity.mine.CreditRecordActivity" />
         <activity android:name=".activity.mine.MyMonthlyCardActivity" />
         <activity android:name=".activity.mine.BuyMonthlyCardActivity" />
-        <activity android:name=".activity.mine.PersonalInformationActivity" />
+        <activity android:name=".activity.mine.PersonalInformationActivity"/>
         <activity android:name=".activity.mine.ChangePasswordMethodActivity" />
         <activity
             android:name=".activity.mine.SMSVerificationActivity"
@@ -194,6 +193,17 @@
         <activity android:name=".activity.mine.NavigationActivity" />
         <activity android:name=".activity.mine.MyCarActivity" />
         <activity android:name=".activity.mine.ChangePersonalInformationActivity" />
+        <activity android:name=".activity.mine.CertifyZhimaActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <data
+                    android:host="certify.zhima.activity"
+                    android:scheme="tuzhao" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
 
         <!--QQ分享-->
         <activity

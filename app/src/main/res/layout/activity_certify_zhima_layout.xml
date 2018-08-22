@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <TextView
+        android:id="@+id/real_name_tv"
+        style="@style/TwentyTextB1Style"
+        android:background="@color/w0"
+        android:paddingBottom="14dp"
+        android:paddingEnd="26dp"
+        android:paddingStart="16dp"
+        android:paddingTop="14dp"
+        android:text="真实姓名："
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+    <EditText
+        android:id="@+id/real_name_et"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/w0"
+        android:gravity="center_vertical"
+        android:hint="请输入您的姓名"
+        android:inputType="text"
+        android:maxLength="18"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/real_name_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/real_name_tv"
+        app:layout_constraintTop_toTopOf="@+id/real_name_tv" />
+
+    <TextView
+        android:id="@+id/id_card_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="1dp"
+        android:background="@color/w0"
+        android:paddingBottom="14dp"
+        android:paddingEnd="26dp"
+        android:paddingStart="16dp"
+        android:paddingTop="14dp"
+        android:text="身份证号："
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/real_name_tv" />
+
+    <EditText
+        android:id="@+id/id_card_et"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/w0"
+        android:gravity="center_vertical"
+        android:hint="请输入您的身份证号"
+        android:inputType="text"
+        android:maxLength="18"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/id_card_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/id_card_tv"
+        app:layout_constraintTop_toTopOf="@+id/id_card_tv" />
+
+    <TextView
+        android:id="@+id/start_certify"
+        style="@style/SixtyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+        android:text="开始认证"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_card_tv" />
+
+</android.support.constraint.ConstraintLayout>

@@ -620,4 +620,14 @@ public class HttpConstants {
      */
     public static final String setPaymentPassword = ROOT_URL + "setPaymentPassword";
 
+    /**
+     * 获取调起支付宝进行芝麻认证的url
+     */
+    public static final String GET_CERTIFY_ZHIMA_URL = ROOT_URL + "getCertifyZhimaUrl";
+
+    /**
+     * 获取芝麻认证结果
+     */
+    public static final String GET_CERTIFY_ZHIMA_RESULT = ROOT_URL +"getCertifyZhimaResult";
+
 }

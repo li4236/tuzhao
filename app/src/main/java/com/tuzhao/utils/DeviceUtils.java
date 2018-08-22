@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
@@ -157,6 +159,17 @@ public class DeviceUtils {
             e.printStackTrace();
         }
         return packageInfo != null;
+    }
+
+    /**
+     * @return 是否安装了支付宝
+     */
+    public static boolean isInstallAlipay(Context context) {
+        PackageManager manager = context.getPackageManager();
+        Intent action = new Intent(Intent.ACTION_VIEW);
+        action.setData(Uri.parse("alipays://"));
+        List<ResolveInfo> list = manager.queryIntentActivities(action, PackageManager.GET_RESOLVED_FILTER);
+        return list != null && list.size() > 0;
     }
 
 }

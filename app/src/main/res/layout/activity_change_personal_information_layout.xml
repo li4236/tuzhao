@@ -133,6 +133,7 @@
     <TextView
         android:id="@+id/gender"
         style="@style/ThirtyTextB1Style"
+        android:textColor="@color/g6"
         app:layout_constraintBottom_toBottomOf="@+id/gender_tv"
         app:layout_constraintEnd_toEndOf="@id/portrait_av"
         app:layout_constraintTop_toBottomOf="@+id/gender_divider" />

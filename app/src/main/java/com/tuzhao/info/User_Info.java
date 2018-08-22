@@ -1,5 +1,6 @@
 package com.tuzhao.info;
 
+import com.google.gson.annotations.SerializedName;
 import com.tuzhao.info.base_info.BaseInfo;
 import com.tuzhao.utils.ConstansUtil;
 
@@ -16,11 +17,12 @@ public class User_Info extends BaseInfo {
     private String balance;//账户余额
     private String nickname = "-1";//用户昵称
     private String realName;//真实姓名
+
+    @SerializedName(value = "gender",alternate = {"sex"})
     private String gender;//性别
     private String birthday;//生日
     private String numberOfPark;//停车次数
     private String img_url;//用户头像
-    private String car_number;//车牌号
     private String create_time;//用户注册时间
     private String last_time;//用户最后一次登陆时的时间
     private String credit;//信用分
@@ -31,7 +33,6 @@ public class User_Info extends BaseInfo {
     private String aliNickname = "";//支付宝用户昵称
     private String openId;//微信的用户的openId
     private String wechatNickname;//微信昵称
-    private String sesameFraction;
 
     private String stage;//阶段分
     private String default_late_time;//默认晚退延时时间
@@ -57,14 +58,6 @@ public class User_Info extends BaseInfo {
     }
 
     private String autologin;//是否自动登录，用于本地数据库操作，默认值为1,1为可以自动登录，0为不
-
-    public String getCar_number() {
-        return car_number;
-    }
-
-    public void setCar_number(String car_number) {
-        this.car_number = car_number;
-    }
 
     public String getUsername() {
         return username;
@@ -346,14 +339,6 @@ public class User_Info extends BaseInfo {
         this.openId = openId;
     }
 
-    public String getSesameFraction() {
-        return sesameFraction;
-    }
-
-    public void setSesameFraction(String sesameFraction) {
-        this.sesameFraction = sesameFraction;
-    }
-
     public String getWechatNickname() {
         return wechatNickname;
     }
@@ -370,6 +355,13 @@ public class User_Info extends BaseInfo {
         this.paymentPassword = paymentPassword;
     }
 
+    /**
+     * @return 是否已实名认证
+     */
+    public boolean isCertification() {
+        return !realName.equals("") && !birthday.equals("0000-00-00");
+    }
+
     @Override
     public String toString() {
         return "User_Info{" +
@@ -384,7 +376,6 @@ public class User_Info extends BaseInfo {
                 ", birthday='" + birthday + '\'' +
                 ", numberOfPark='" + numberOfPark + '\'' +
                 ", img_url='" + img_url + '\'' +
-                ", car_number='" + car_number + '\'' +
                 ", create_time='" + create_time + '\'' +
                 ", last_time='" + last_time + '\'' +
                 ", credit='" + credit + '\'' +
@@ -395,7 +386,6 @@ public class User_Info extends BaseInfo {
                 ", aliNickname='" + aliNickname + '\'' +
                 ", openId='" + openId + '\'' +
                 ", wechatNickname='" + wechatNickname + '\'' +
-                ", sesameFraction='" + sesameFraction + '\'' +
                 ", stage='" + stage + '\'' +
                 ", default_late_time='" + default_late_time + '\'' +
                 ", add_late_time='" + add_late_time + '\'' +
@@ -413,4 +403,5 @@ public class User_Info extends BaseInfo {
                 ", paymentPassword='" + paymentPassword + '\'' +
                 '}';
     }
+
 }

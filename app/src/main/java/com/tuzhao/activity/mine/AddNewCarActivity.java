@@ -29,7 +29,6 @@ import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.PlusView;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
@@ -199,8 +198,6 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                     showFiveToast("你输入的车牌号不正确哦");
                 } else if (TextUtils.isEmpty(mCarOwner.getText().toString().trim())) {
                     showFiveToast("请输入车牌所有人");
-                } else if (UserManager.getInstance().getUserInfo().getCar_number().contains(getText(mCarNumber))) {
-                    showFiveToast("你已添加过该车辆了哦");
                 } else if (mPath[0].equals("-1")) {
                     showFiveToast("请上传身份证人像面照片");
                 } else if (mPath[1].equals("-1")) {
