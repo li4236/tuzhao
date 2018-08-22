@@ -48,9 +48,9 @@ public class ChangeNicknameActivity extends BaseActivity {
     }
 
     private void initView() {
-        edittext_newnickname = (EditText) findViewById(R.id.id_activity_changenickname_layout_edittext_newnickname);
+        edittext_newnickname = findViewById(R.id.id_activity_changenickname_layout_edittext_newnickname);
         edittext_newnickname.addTextChangedListener(new LimitInputTextWatcher(edittext_newnickname, "[^a-zA-Z0-9\\u4E00-\\u9FA5_,，.。?？:：;；￥$%@!~、！!“”（）()*·{}【】—+=]"));
-        imageview_clean = (ImageView) findViewById(R.id.id_activity_changenickname_layout_imageview_clean);
+        imageview_clean = findViewById(R.id.id_activity_changenickname_layout_imageview_clean);
     }
 
     private void initData() {
@@ -164,4 +164,5 @@ public class ChangeNicknameActivity extends BaseActivity {
             mLoadingDialog.cancel();
         }
     }
+
 }

@@ -616,13 +616,8 @@ public class HttpConstants {
     public static final String withdrawlBalance = ROOT_URL + "withdrawlBalance";
 
     /**
-     * 修改性别
+     * 设置支付密码
      */
-    public static final String changeGender = ROOT_URL + "changeGender";
-
-    /**
-     * 修改出生日期
-     */
-    public static final String changeBirthday = ROOT_URL + "birthday";
+    public static final String setPaymentPassword = ROOT_URL + "setPaymentPassword";
 
 }

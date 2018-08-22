@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,9 +21,11 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.publicwidget.customView.CrossView;
 import com.tuzhao.publicwidget.customView.GridDivider;
+import com.tuzhao.publicwidget.editviewwatch.RoundPasswordTransformationMethod;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,25 @@ public class PaymentPasswordHelper {
 
     private TextView[] mPasswordText;
 
+    /**
+     * 是否可以输入和删除，在网络请求期间不可以
+     */
     private boolean mCanControl = true;
+
+    /**
+     * 是否是设置支付密码,0（输入密码），1（设置密码），2（重置密码）
+     */
+    private int mPaymentPasswordType;
+
+    /**
+     * 按返回键是否可以关掉对话框
+     */
+    private boolean mBackPressedCanCancel = true;
+
+    /**
+     * 设置密码时第一次输入的密码
+     */
+    private String mOriginPassword;
 
     public PaymentPasswordHelper(Context context) {
         mContext = context;
@@ -79,7 +98,7 @@ public class PaymentPasswordHelper {
         mPasswordText[5] = mSixthPassword;
 
         for (int i = 0; i < 6; i++) {
-            mPasswordText[i].setTransformationMethod(PasswordTransformationMethod.getInstance());
+            mPasswordText[i].setTransformationMethod(new RoundPasswordTransformationMethod());
         }
 
         mSixthPassword.addTextChangedListener(new TextWatcher() {
@@ -91,14 +110,38 @@ public class PaymentPasswordHelper {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(mSixthPassword.getText())) {
-                    mCanControl = false;
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < 6; i++) {
                         stringBuilder.append(mPasswordText[i].getText().toString());
                     }
-                    Intent intent = new Intent(ConstansUtil.PAYMENT_PASSWORD);
-                    intent.putExtra(ConstansUtil.INTENT_MESSAGE, stringBuilder.toString());
-                    IntentObserable.dispatch(intent);
+
+                    if (mPaymentPasswordType != 0) {
+                        if (mOriginPassword == null) {
+                            //设置完第一次密码
+                            setPasswordAgain(stringBuilder.toString());
+                        } else {
+                            //设置密码的确认密码
+                            if (!mOriginPassword.equals(stringBuilder.toString())) {
+                                ViewUtil.setVisible(mPasswordError);
+                                mPasswordError.setText("两次输入的密码不一样");
+                            } else {
+                                if (mPaymentPasswordType == 1) {
+                                    //第一次设置支付密码
+                                    IntentObserable.dispatch(ConstansUtil.SET_PAYMENT_PASSWORD, ConstansUtil.PAYMENT_PASSWORD, mOriginPassword);
+                                } else if (mPaymentPasswordType == 2) {
+                                    //重新设置支付密码
+                                    IntentObserable.dispatch(ConstansUtil.RESET_PAYMENT_PASSWORD, ConstansUtil.PAYMENT_PASSWORD, mOriginPassword);
+                                }
+                                mCanControl = false;
+                            }
+                        }
+                    } else {
+                        //支付密码
+                        Intent intent = new Intent(ConstansUtil.PAYMENT_PASSWORD);
+                        intent.putExtra(ConstansUtil.INTENT_MESSAGE, stringBuilder.toString());
+                        IntentObserable.dispatch(intent);
+                        mCanControl = false;
+                    }
                 }
             }
 
@@ -115,12 +158,50 @@ public class PaymentPasswordHelper {
         adapter.setNewData(getData());
     }
 
+    public PaymentPasswordHelper(Context context, int paymentPasswordType) {
+        this(context);
+        mPaymentPasswordType = paymentPasswordType;
+        if (mPaymentPasswordType != 0) {
+            setPasswordFirst();
+            mForgetPassword.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
     public Context getContext() {
         return mContext;
     }
 
     public View getView() {
         return mView;
+    }
+
+    public boolean isBackPressedCanCancel() {
+        return mBackPressedCanCancel;
+    }
+
+    public void setBackPressedCanCancel(boolean backPressedCanCancel) {
+        mBackPressedCanCancel = backPressedCanCancel;
+    }
+
+    public void setPasswordFirst() {
+        if (mPaymentPasswordType == 1) {
+            mTitle.setText("设置支付密码");
+        } else if (mPaymentPasswordType == 2) {
+            mTitle.setText("重置支付密码");
+        }
+        mPleaseInputPasswordHint.setText("请设置您的6位支付密码");
+        mOriginPassword = null;
+        mBackPressedCanCancel = true;
+        clearPassword();
+        ViewUtil.setGone(mPasswordError);
+    }
+
+    private void setPasswordAgain(String originPassword) {
+        mOriginPassword = originPassword;
+        mPleaseInputPasswordHint.setText("请确认您的6位支付密码");
+        clearPassword();
+        mBackPressedCanCancel = false;
     }
 
     private List<String> getData() {
@@ -149,6 +230,9 @@ public class PaymentPasswordHelper {
                 mPasswordText[i].setText("");
                 break;
             }
+        }
+        if (mPaymentPasswordType != 0) {
+            ViewUtil.setGone(mPasswordError);
         }
     }
 
@@ -181,6 +265,10 @@ public class PaymentPasswordHelper {
 
     public void setCanControl(boolean canControl) {
         mCanControl = canControl;
+    }
+
+    public int getPaymentPasswordType() {
+        return mPaymentPasswordType;
     }
 
     private class PasswordAdapter extends BaseAdapter<String> {

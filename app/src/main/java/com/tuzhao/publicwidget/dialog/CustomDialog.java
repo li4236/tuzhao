@@ -71,7 +71,7 @@ public class CustomDialog extends Dialog {
 
         Window window = getWindow();
         if (window != null) {
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 1184);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
             window.setWindowAnimations(R.style.ParkAnimationStyle);
         }
@@ -329,6 +329,13 @@ public class CustomDialog extends Dialog {
         });
     }
 
+    public int getPasswordType() {
+        if (mPasswordHelper != null) {
+            return mPasswordHelper.getPaymentPasswordType();
+        }
+        return 0;
+    }
+
     @Override
     public void show() {
         super.show();
@@ -338,12 +345,22 @@ public class CustomDialog extends Dialog {
 
         if (mPasswordHelper != null) {
             mPasswordHelper.clearPassword();
+            mPasswordHelper.showPasswordError("");
         }
 
         if (mIsShowAnimation) {
             Intent intent = new Intent();
             intent.setAction(ConstansUtil.DIALOG_SHOW);
             IntentObserable.dispatch(intent);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mPasswordHelper != null && !mPasswordHelper.isBackPressedCanCancel()) {
+            mPasswordHelper.setPasswordFirst();
+        } else {
+            super.onBackPressed();
         }
     }
 

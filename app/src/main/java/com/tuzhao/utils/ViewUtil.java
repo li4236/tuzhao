@@ -31,6 +31,24 @@ public class ViewUtil {
         return view.getVisibility() == View.VISIBLE;
     }
 
+    public static void setVisible(View view) {
+        if (view.getVisibility() != View.VISIBLE) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void setInvisible(View view) {
+        if (view.getVisibility() != View.INVISIBLE) {
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public static void setGone(View view) {
+        if (view.getVisibility() != View.GONE) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
     public static void addEndText(TextView textView, int placeholderCount) {
         StringBuilder stringBuilder = new StringBuilder(textView.getText());
         for (int i = 0; i < placeholderCount; i++) {

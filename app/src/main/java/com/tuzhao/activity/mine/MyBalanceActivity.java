@@ -82,7 +82,11 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
         findViewById(R.id.id_activity_mybalance_layout_textview_tixian).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
+                if (UserManager.getInstance().getUserInfo().getBalance().equals("0.00")) {
+                    MyToast.showToast(MyBalanceActivity.this, "没有余额可以提现哦", 5);
+                } else {
+                    showDialog();
+                }
             }
         });
 
@@ -92,46 +96,6 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
                 finish();
             }
         });
-    }
-
-    private void requestUploadUserAliNumber(final String aliuser_id) {
-        OkGo.post(HttpConstants.uploadUserAliNumber)
-                .tag(MyBalanceActivity.this)
-                .addInterceptor(new TokenInterceptor())
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
-                .params("alinumber", aliuser_id + ",1")
-                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<User_Info> class_info, Call call, Response response) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        MyToast.showToast(MyBalanceActivity.this, "绑定成功", 5);
-                        UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
-                        Intent intent = new Intent(MyBalanceActivity.this, GetMoneyActivty.class);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        if (!DensityUtil.isException(MyBalanceActivity.this, e)) {
-                            Log.d("TAG", "请求失败， 信息为uploadUserAliNumber：" + e.getMessage());
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 101:
-                                    MyToast.showToast(MyBalanceActivity.this, "绑定失败", 5);
-                                    break;
-                                case 901:
-                                    MyToast.showToast(MyBalanceActivity.this, "服务器正在维护中", 5);
-                                    break;
-                            }
-                        }
-                    }
-                });
     }
 
     //初始化加载框控件
@@ -359,6 +323,9 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
             switch (intent.getAction()) {
                 case ConstansUtil.WECHAT_CODE:
                     requestWechatBinding(intent.getStringExtra(ConstansUtil.FOR_REQEUST_RESULT));
+                    break;
+                case ConstansUtil.WITHDRAWL_SUCCESS:
+                    ((TextView) findViewById(R.id.id_activity_mybalance_layout_textview_yue)).setText(UserManager.getInstance().getUserInfo().getBalance());
                     break;
             }
         }

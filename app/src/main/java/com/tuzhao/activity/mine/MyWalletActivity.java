@@ -10,12 +10,17 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.publicmanager.UserManager;
+import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
+
+import java.util.Objects;
 
 /**
  * Created by TZL12 on 2017/11/17.
  */
 
-public class MyWalletActivity extends BaseActivity {
+public class MyWalletActivity extends BaseActivity implements IntentObserver {
 
     private ImageView imageview_back;
 
@@ -25,18 +30,15 @@ public class MyWalletActivity extends BaseActivity {
         setContentView(R.layout.activity_mywallet_layout);
 
         initView();//初始化控件
-        initData();//初始化数据
         initEvent();//初始化事件
         setStyle(true);
+        IntentObserable.registerObserver(this);
     }
 
     private void initView() {
 
         imageview_back = findViewById(R.id.id_activity_mywallet_imageview_back);
         ((TextView) findViewById(R.id.id_activity_mywallet_layout_textview_yue)).setText(UserManager.getInstance().getUserInfo().getBalance());
-    }
-
-    private void initData() {
     }
 
     private void initEvent() {
@@ -91,6 +93,19 @@ public class MyWalletActivity extends BaseActivity {
                 startActivity(new Intent(MyWalletActivity.this, InvoiceReimbursementActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (Objects.equals(intent.getAction(), ConstansUtil.WITHDRAWL_SUCCESS)) {
+            ((TextView) findViewById(R.id.id_activity_mywallet_layout_textview_yue)).setText(UserManager.getInstance().getUserInfo().getBalance());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
 }

@@ -371,4 +371,19 @@ public class ConstansUtil {
      */
     public static final String CHANGE_NICKNAME = "ChangeNickname";
 
+    /**
+     * 设置支付密码
+     */
+    public static final String SET_PAYMENT_PASSWORD = "SetPaymentPassword";
+
+    /**
+     * 重设支付密码
+     */
+    public static final String RESET_PAYMENT_PASSWORD = "ResetPaymentPassword";
+
+    /**
+     * 提现成功
+     */
+    public static final String WITHDRAWL_SUCCESS = "WithdrawlSuccess";
+
 }

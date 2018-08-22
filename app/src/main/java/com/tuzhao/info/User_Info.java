@@ -14,7 +14,7 @@ public class User_Info extends BaseInfo {
     private String username;//用户名：手机号码
     private String password;//用户密码
     private String balance;//账户余额
-    private String nickname="-1";//用户昵称
+    private String nickname = "-1";//用户昵称
     private String realName;//真实姓名
     private String gender;//性别
     private String birthday;//生日
@@ -46,6 +46,7 @@ public class User_Info extends BaseInfo {
     private String max_early_time;//最高迟到延时时间
     private String add_credit;//信用分增长幅度
     private String reduce_credit;//信用分降低幅度
+    private String paymentPassword;//支付密码（设置了就返回-1，没设置就返回""）
 
     public String getId() {
         return id;
@@ -361,6 +362,14 @@ public class User_Info extends BaseInfo {
         this.wechatNickname = wechatNickname;
     }
 
+    public String getPaymentPassword() {
+        return paymentPassword;
+    }
+
+    public void setPaymentPassword(String paymentPassword) {
+        this.paymentPassword = paymentPassword;
+    }
+
     @Override
     public String toString() {
         return "User_Info{" +
@@ -401,6 +410,7 @@ public class User_Info extends BaseInfo {
                 ", add_credit='" + add_credit + '\'' +
                 ", reduce_credit='" + reduce_credit + '\'' +
                 ", autologin='" + autologin + '\'' +
+                ", paymentPassword='" + paymentPassword + '\'' +
                 '}';
     }
 }

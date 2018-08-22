@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -18,16 +17,19 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
-import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.callback.JsonCodeCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.PaymentPasswordHelper;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
-import com.tuzhao.utils.ScreenUtils;
+import com.tuzhao.utils.ViewUtil;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -38,6 +40,9 @@ import okhttp3.Response;
  */
 public class WithdrawActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
+    private static final int RESET_REQUEST_CODE = 0x123;
+
+
     private int mWithdrawAccountType;
 
     private EditText mWithdrawMoney;
@@ -46,20 +51,19 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
 
     private CustomDialog mCustomDialog;
 
+    private CustomDialog mSetPasswordDialog;
+
+    private User_Info mUserInfo;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_withdraw_layout;
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        //mAdapterScreen = true;
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     protected void initView(Bundle savedInstanceState) {
         mWithdrawAccountType = getIntent().getIntExtra(ConstansUtil.INTENT_MESSAGE, 0);
+        mUserInfo = UserManager.getInstance().getUserInfo();
 
         TextView withdrawToAccount = findViewById(R.id.withdrawl_to_account);
         TextView avaliableBalance = findViewById(R.id.available_banlance);
@@ -68,10 +72,10 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
         StringBuilder stringBuilder = new StringBuilder("将提现至");
         if (mWithdrawAccountType == 0) {
             stringBuilder.append("支付宝账号");
-            stringBuilder.append(UserManager.getInstance().getUserInfo().getAliNickname());
+            stringBuilder.append(mUserInfo.getAliNickname());
         } else if (mWithdrawAccountType == 1) {
             stringBuilder.append("微信账号");
-            stringBuilder.append(UserManager.getInstance().getUserInfo().getWechatNickname());
+            stringBuilder.append(mUserInfo.getWechatNickname());
         }
 
         SpannableString spannableString = new SpannableString(stringBuilder);
@@ -79,7 +83,8 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
         withdrawToAccount.setText(spannableString);
 
         avaliableBalance.setText("可用余额");
-        avaliableBalance.append(UserManager.getInstance().getUserInfo().getBalance());
+        avaliableBalance.append(mUserInfo.getBalance());
+        ViewUtil.openInputMethod(mWithdrawMoney);
 
         findViewById(R.id.full_withdraw).setOnClickListener(this);
         findViewById(R.id.withdraw).setOnClickListener(this);
@@ -118,6 +123,13 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
 
         mPasswordHelper = new PaymentPasswordHelper(this);
         mCustomDialog = new CustomDialog(mPasswordHelper);
+        mPasswordHelper.setForgetPasswordListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomDialog.dismiss();
+                showSetPasswordDialog(2);
+            }
+        });
 
         IntentObserable.registerObserver(this);
     }
@@ -132,7 +144,7 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.full_withdraw:
-                mWithdrawMoney.setText(UserManager.getInstance().getUserInfo().getBalance());
+                mWithdrawMoney.setText(mUserInfo.getBalance());
                 setSelection(mWithdrawMoney);
                 break;
             case R.id.withdraw:
@@ -142,8 +154,11 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                     float withdrawlMoney = Float.valueOf(getText(mWithdrawMoney));
                     if (withdrawlMoney == 0) {
                         showFiveToast("提现的金额不能为0哦");
-                    } else if (withdrawlMoney > Float.valueOf(UserManager.getInstance().getUserInfo().getBalance())) {
+                    } else if (withdrawlMoney > Float.valueOf(mUserInfo.getBalance())) {
                         showFiveToast("余额没有那么多哦");
+                    } else if (mUserInfo.getPaymentPassword().equals("")) {
+                        showFiveToast("请先设置您的支付密码");
+                        showSetPasswordDialog(1);
                     } else if (withdrawlMoney > 0) {
                         mCustomDialog.show();
                     }
@@ -152,36 +167,92 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
         }
     }
 
+    private void showSetPasswordDialog(int type) {
+        //设置支付密码
+        if (mSetPasswordDialog == null || mSetPasswordDialog.getPasswordType() != type) {
+            mSetPasswordDialog = new CustomDialog(new PaymentPasswordHelper(WithdrawActivity.this, type));
+        }
+        mSetPasswordDialog.show();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
-        ScreenUtils.cancelAdaptScreen(this);
     }
 
     private void withdrawlBalance(String paymentPassword) {
-        mCustomDialog.setCancelable(false);
         showLoadingDialog("加载中...");
         Log.e(TAG, "withdrawlBalance: " + paymentPassword);
         getOkGo(HttpConstants.withdrawlBalance)
                 .params("accountType", mWithdrawAccountType)
                 .params("amount", getText(mWithdrawMoney))
-                .params("paymentPassword", paymentPassword)
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                .params("paymentPassword", DensityUtil.MD5code(paymentPassword))
+                .params("passCode", DensityUtil.MD5code(mUserInfo.getSerect_code() + "*&*" +
+                        mUserInfo.getCreate_time() + "*&*" + mUserInfo.getId()))
+                .execute(new JsonCodeCallback<Base_Class_Info<Integer>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        mPasswordHelper.setCanControl(true);
-                        mCustomDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        mPasswordHelper.setCanControl(true);
-                        mPasswordHelper.clearPassword();
-                        mCustomDialog.setCancelable(true);
-                        if (!handleException(e)) {
-
+                    public void onSuccess(Base_Class_Info<Integer> o, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        switch (o.code) {
+                            case "0":
+                                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                                mUserInfo.setBalance(decimalFormat.format(Double.valueOf(mUserInfo.getBalance()) - Double.valueOf(getText(mWithdrawMoney))));
+                                mPasswordHelper.setCanControl(true);
+                                mCustomDialog.dismiss();
+                                IntentObserable.dispatch(ConstansUtil.WITHDRAWL_SUCCESS);
+                                showFiveToast("提现成功");
+                                finish();
+                                break;
+                            case "101":
+                            case "102":
+                            case "103":
+                            case "104":
+                            case "105":
+                                mCustomDialog.dismiss();
+                                userError();
+                                break;
+                            case "106":
+                                //未设置支付密码
+                                mCustomDialog.dismiss();
+                                showSetPasswordDialog(1);
+                                break;
+                            case "107":
+                                //密码错误超过三次
+                                showFiveToast("您已输错三次支付密码，请重置密码后再使用");
+                                mCustomDialog.dismiss();
+                                showSetPasswordDialog(2);
+                                break;
+                            case "108":
+                                //密码错误
+                                showFiveToast("支付密码错误，您还可以输入" + (4 - o.data) + "次");
+                                mPasswordHelper.showPasswordError("支付密码错误，请重新输入");
+                                mPasswordHelper.setCanControl(true);
+                                mPasswordHelper.clearPassword();
+                                break;
+                            case "109":
+                                showFiveToast("提现的金额异常，请重新输入");
+                                mCustomDialog.dismiss();
+                                mWithdrawMoney.setText("");
+                                break;
+                            case "110":
+                                showFiveToast("微信账号绑定异常,请重新绑定");
+                                break;
+                            case "111":
+                                showFiveToast("支付宝账号绑定异常，请重新绑定");
+                                break;
+                            case "112":
+                                showFiveToast("支付宝提现不可低于0.1元");
+                                mCustomDialog.dismiss();
+                                mWithdrawMoney.setText("");
+                                break;
+                            case "113":
+                                showFiveToast("提现失败，请稍后重试");
+                                mCustomDialog.dismiss();
+                                break;
+                            default:
+                                showFiveToast("服务器异常，请稍后重试");
+                                break;
                         }
                     }
                 });
@@ -191,6 +262,26 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.PAYMENT_PASSWORD)) {
             withdrawlBalance(intent.getStringExtra(ConstansUtil.INTENT_MESSAGE));
+        } else if (Objects.equals(intent.getAction(), ConstansUtil.SET_PAYMENT_PASSWORD)) {
+            Intent verifyIntent = new Intent(WithdrawActivity.this, SMSVerificationActivity.class);
+            verifyIntent.setAction(ConstansUtil.SET_PAYMENT_PASSWORD);
+            verifyIntent.putExtra(ConstansUtil.PAYMENT_PASSWORD, intent.getStringExtra(ConstansUtil.PAYMENT_PASSWORD));
+            startActivityForResult(verifyIntent, ConstansUtil.REQUSET_CODE);
+        } else if (Objects.equals(intent.getAction(), ConstansUtil.RESET_PAYMENT_PASSWORD)) {
+            Intent resetIntent = new Intent(WithdrawActivity.this, SMSVerificationActivity.class);
+            resetIntent.setAction(ConstansUtil.RESET_PAYMENT_PASSWORD);
+            resetIntent.putExtra(ConstansUtil.PAYMENT_PASSWORD, intent.getStringExtra(ConstansUtil.PAYMENT_PASSWORD));
+            startActivityForResult(resetIntent, RESET_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if ((requestCode == ConstansUtil.REQUSET_CODE || requestCode == RESET_REQUEST_CODE) && resultCode == RESULT_OK) {
+            //设置密码后弹出输入密码框继续输入
+            mSetPasswordDialog.dismiss();
+            mCustomDialog.show();
         }
     }
 
