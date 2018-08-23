@@ -24,6 +24,7 @@ import com.tuzhao.publicwidget.callback.JsonCodeCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.dialog.PaymentPasswordHelper;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -159,7 +160,9 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                     } else if (mUserInfo.getPaymentPassword().equals("")) {
                         showFiveToast("请先设置您的支付密码");
                         showSetPasswordDialog(1);
-                    } else if (withdrawlMoney > 0) {
+                    } else if (!DataUtil.numberLegal(getText(mWithdrawMoney))) {
+                        showFiveToast("金额格式不对哦");
+                    } else {
                         mCustomDialog.show();
                     }
                 }
@@ -251,6 +254,8 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                                 mCustomDialog.dismiss();
                                 break;
                             default:
+                                mPasswordHelper.setCanControl(true);
+                                mPasswordHelper.clearPassword();
                                 showFiveToast("服务器异常，请稍后重试");
                                 break;
                         }
@@ -281,6 +286,8 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
         if ((requestCode == ConstansUtil.REQUSET_CODE || requestCode == RESET_REQUEST_CODE) && resultCode == RESULT_OK) {
             //设置密码后弹出输入密码框继续输入
             mSetPasswordDialog.dismiss();
+            mPasswordHelper.setCanControl(true);
+            mPasswordHelper.clearPassword();
             mCustomDialog.show();
         }
     }

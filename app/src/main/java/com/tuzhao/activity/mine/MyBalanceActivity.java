@@ -130,7 +130,7 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
                     if (UserManager.getInstance().getUserInfo().getOpenId().equals("-1")) {
                         wechatLogin();
                     } else {
-                        startWithdraw(0);
+                        startWithdraw(1);
                     }
                     mCustomDialog.dismiss();
                 }

@@ -17,7 +17,9 @@ import com.tuzhao.publicwidget.alipay.ZhimaCertification;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.OnLoadCallback;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IDCard;
+import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -44,14 +46,14 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
     protected void initView(Bundle savedInstanceState) {
         mPassCode = getIntent().getStringExtra(ConstansUtil.PASS_CODE);
 
-        if (mPassCode != null) {
-            goneView(findViewById(R.id.real_name_tv));
-            ((TextView) findViewById(R.id.start_certify)).setText("确定重置");
-        }
-
         mRealNameEt = findViewById(R.id.real_name_et);
         mIdCardNumberEt = findViewById(R.id.id_card_et);
 
+        if (mPassCode != null) {
+            goneView(findViewById(R.id.real_name_tv));
+            ((TextView) findViewById(R.id.start_certify)).setText("确定重置");
+            mIdCardNumberEt.requestFocus();
+        }
 
         findViewById(R.id.start_certify).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +102,9 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mZhimaCertification.onDestroy();
+        if (mZhimaCertification != null) {
+            mZhimaCertification.onDestroy();
+        }
     }
 
     private void getCertifyZhimaUrl() {
@@ -152,7 +156,7 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
 
     private void resetPaymentPassword() {
         getOkGo(HttpConstants.resetPaymentPassword)
-                .params("paymentPassword", getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD))
+                .params("paymentPassword", DensityUtil.MD5code(getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD)))
                 .params("passCode", mPassCode)
                 .params("idCardNumber", getText(mIdCardNumberEt).trim())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -161,13 +165,32 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
                         setResult(RESULT_OK);
                         showFiveToast("设置支付密码成功");
                         UserManager.getInstance().getUserInfo().setPaymentPassword("1");
+                        ViewUtil.closeInputMethod(mIdCardNumberEt);
                         finish();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "106":
+                                    paramsError();
+                                    break;
+                                case "103":
+                                    showFiveToast("短信验证码失效，请重新获取");
+                                    finish();
+                                    break;
+                                case "104":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "105":
+                                    showFiveToast("身份证错误，请仔细核查");
+                                    break;
+                            }
+                        }
                     }
                 });
     }

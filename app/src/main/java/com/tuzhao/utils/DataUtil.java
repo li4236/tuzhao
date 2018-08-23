@@ -183,6 +183,16 @@ public class DataUtil {
     }
 
     /**
+     * @return 数字是否合法
+     */
+    public static boolean numberLegal(String number) {
+        String regex = "^(([1-9][0-9]*)|(([0]\\.\\d{1,2}|[1-9][0-9]*\\.\\d{1,2})))$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(number);
+        return m.matches();
+    }
+
+    /**
      * @return true:密码是由大于8位的字符组成，并且至少包含一个数字和字母
      */
     public static boolean passwordLegal(String password) {

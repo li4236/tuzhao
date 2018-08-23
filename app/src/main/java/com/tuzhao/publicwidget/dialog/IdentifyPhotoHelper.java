@@ -71,6 +71,7 @@ public class IdentifyPhotoHelper {
             case 5:
                 title = "人车合照";
                 hint = "请按示例图上传人车合照\n请保证人脸清晰，且全脸在画面中\n请将车门打开并确保车牌清晰可见";
+                ImageUtil.showImgPic(mImageView, R.drawable.ic_mancar);
                 break;
             default:
                 title = "";
