@@ -203,17 +203,6 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void showCircleImgPic(ImageView imageView, String url) {
-        GlideApp.with(imageView)
-                .load(url)
-                .circleCrop()
-                .centerCrop()
-                .placeholder(R.mipmap.ic_img)
-                .error(R.mipmap.ic_img)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView);
-    }
-
     public static void showCirclePic(ImageView imageView, String url, int placeholder) {
         GlideApp.with(imageView)
                 .load(url)
@@ -398,7 +387,7 @@ public class ImageUtil {
     public static void startTakeMultiPhoto(Activity activity, int maxSize) {
         new PhotoPickConfig
                 .Builder(activity)
-                .imageLoader(new GlideImageLoader())                //图片加载方式，支持任意第三方图片加载库
+                .imageLoader(new GlideImageLoader(false))                //图片加载方式，支持任意第三方图片加载库
                 .pickMode(PhotoPickConfig.MODE_PICK_MORE)         //设置照片选择模式为多选
                 .maxPickSize(maxSize)   //多选时可以选择的图片数量，默认为1张
                 .showCamera(true)           //是否展示相机icon，默认展示

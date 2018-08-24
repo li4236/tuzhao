@@ -19,9 +19,11 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Car;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +59,11 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
             findViewById(R.id.add_car_tv).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivityForResult(AddNewCarActivity.class, ConstansUtil.REQUSET_CODE);
+                    if (!UserManager.getInstance().getUserInfo().isCertification()) {
+                        ViewUtil.showCertificationDialog(MyCarActivity.this, "添加车辆");
+                    } else {
+                        startActivityForResult(AddNewCarActivity.class, ConstansUtil.REQUSET_CODE);
+                    }
                 }
             });
         }

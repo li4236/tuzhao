@@ -30,6 +30,7 @@ import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.square.SpaceItemDecoration;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
@@ -443,5 +444,6 @@ public class EditParkPicturesActivity extends BaseActivity {
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
+        GlideApp.get(getApplicationContext()).clearMemory();
     }
 }

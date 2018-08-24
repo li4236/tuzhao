@@ -32,6 +32,7 @@ import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/5/17.
  */
 
-public class MyParkspaceActivityRefactor extends BaseActivity implements View.OnClickListener, IntentObserver {
+public class MyParkspaceActivity extends BaseActivity implements View.OnClickListener, IntentObserver {
 
     private LoadingDialog mLoadingDialog;
 
@@ -170,7 +171,7 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                         if (mFragments.isEmpty()) {
                             showViewStub();
                         }
-                        if (!DensityUtil.isException(MyParkspaceActivityRefactor.this, e)) {
+                        if (!DensityUtil.isException(MyParkspaceActivity.this, e)) {
                             if (e instanceof IllegalStateException) {
                                 switch (e.getMessage()) {
                                     case "801":
@@ -234,8 +235,12 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
                 startActivity(intent);
                 break;
             case R.id.add_park_space_cl:
-                Intent intent1 = new Intent(this, AddParkSpaceActivity.class);
-                startActivity(intent1);
+                if (!UserManager.getInstance().getUserInfo().isCertification()) {
+                    ViewUtil.showCertificationDialog(MyParkspaceActivity.this, "添加车位");
+                } else {
+                    Intent intent1 = new Intent(MyParkspaceActivity.this, AddParkSpaceActivity.class);
+                    startActivity(intent1);
+                }
                 break;
             case R.id.my_parkspace_setting:
                 Intent intent2 = new Intent(this, ParkSpaceSettingActivity.class);
@@ -264,7 +269,12 @@ public class MyParkspaceActivityRefactor extends BaseActivity implements View.On
             addNow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MyParkspaceActivityRefactor.this, AddParkSpaceActivity.class));
+                    if (!UserManager.getInstance().getUserInfo().isCertification()) {
+                        ViewUtil.showCertificationDialog(MyParkspaceActivity.this, "添加车位");
+                    } else {
+                        Intent intent1 = new Intent(MyParkspaceActivity.this, AddParkSpaceActivity.class);
+                        startActivity(intent1);
+                    }
                 }
             });
         }

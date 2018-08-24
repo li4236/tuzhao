@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.info.Search_Address_Info;
@@ -23,7 +22,6 @@ public class DatabaseImp {
     }
 
     public void setRegistrationId(String registrationId) {
-        Log.e("TAG", "setRegistrationId: " + registrationId);
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(Database.REGISTRATION_ID, registrationId);
@@ -44,10 +42,9 @@ public class DatabaseImp {
         SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.query(Database.TB_JI_GUANG, null, null, null, null, null,
                 "_id desc");
-        String registrationId = "";
+        String registrationId;
         if (cursor.moveToFirst()) {
             registrationId = cursor.getString(cursor.getColumnIndex(Database.REGISTRATION_ID));
-            Log.e("TAG", "getRegistrationId: " + registrationId);
         } else {
             registrationId = JPushInterface.getRegistrationID(MyApplication.getInstance());
             setRegistrationId(registrationId);
@@ -83,21 +80,17 @@ public class DatabaseImp {
 
     /**
      * 向本地数据添加用户数据
-     *
-     * @param user_info
      */
     public void insertUserToDatabase(User_Info user_info) {
         SQLiteDatabase db = database.getWritableDatabase();
         db.delete("tb_user", null, null);//清空表中的内容
-        String sql = "insert into tb_user(_id,username,password,balance,nickname,img_url,autologin,car_number)" + "values(?,?,?,?,?,?,?,?)";
+        String sql = "insert into tb_user(_id,username,password,balance,nickname,img_url,autologin)" + "values(?,?,?,?,?,?,?)";
         db.execSQL(sql, new Object[]{user_info.getId(), user_info.getUsername(), user_info.getPassword(), user_info.getBalance(), user_info.getNickname(), user_info.getImg_url(), user_info.getAutologin()});
         db.close();
     }
 
     /**
      * 从本地读取搜索记录
-     *
-     * @return
      */
     public List<Search_Address_Info> getSearchLog() {
         SQLiteDatabase db = database.getReadableDatabase();
@@ -155,33 +148,4 @@ public class DatabaseImp {
 
     }
 
-    //	public synchronized void insertDownloadRecord(String file_id , String file_name, String file_houzhui,String userid , String down_time)
-//	{
-//		SQLiteDatabase db = database.getWritableDatabase();
-//		String sql = "insert into tb_down_list(file_id,file_name,file_houzhui,userid,down_time)" + "values(?,?,?,?,?)";
-//		db.execSQL(sql, new Object[]{file_id,file_name,file_houzhui,userid,down_time});
-//		db.close();
-//	}
-//
-//	public List<DownRecord_Bean> getDownRecord_List()
-//	{
-//		SQLiteDatabase db = database.getReadableDatabase();
-//		String sql = "select * from tb_down_list where userid = ?";
-//		Cursor cursor = db.rawQuery(sql, new String[]{"13068176960"});
-//		List<DownRecord_Bean> downRecord_list = new ArrayList<DownRecord_Bean>();
-//
-//		if(cursor.moveToLast())
-//		{
-//			do
-//			{
-//				DownRecord_Bean downRecord = new DownRecord_Bean(cursor.getString(cursor.getColumnIndex("file_id")), cursor.getString(cursor.getColumnIndex("file_name")),cursor.getString(cursor.getColumnIndex("file_houzhui")),cursor.getString(cursor.getColumnIndex("down_time")));
-//				downRecord_list.add(downRecord);
-//			}
-//			while(cursor.moveToPrevious());
-//		}
-//
-//		cursor.close();
-//		db.close();
-//		return downRecord_list;
-//	}
 }

@@ -28,6 +28,7 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
@@ -336,5 +337,6 @@ public class CommentPsActivity extends BaseActivity implements View.OnClickListe
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
+        GlideApp.get(getApplicationContext()).clearMemory();
     }
 }

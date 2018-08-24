@@ -67,7 +67,7 @@ import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.CollectionActivity;
 import com.tuzhao.activity.mine.CreditActivity;
 import com.tuzhao.activity.mine.MyCarActivity;
-import com.tuzhao.activity.mine.MyParkspaceActivityRefactor;
+import com.tuzhao.activity.mine.MyParkspaceActivity;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
 import com.tuzhao.activity.mine.PersonalInformationActivity;
@@ -219,14 +219,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         initVersion();
         initView(savedInstanceState);//初始化控件
         if (Build.VERSION.SDK_INT >= 23) {
-            /*checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, "需要开启读取存储信息权限以便提供更好的服务", WRITE_REQUEST_CODE);
-            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, "需要开启位置信息权限才可以使用地图服务功能", LOCATION_REQUEST_CODE);
-       */
-            if (havePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) || havePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            if (noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) || noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 //在某些手机不会弹出两个申请权限窗口，因此只能先申请一个，在申请结果回调了再申请另一个
-                if (havePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
                 } else {
+                    initMapStyle();//初始化地图样式文件
                     requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
                 }
             }
@@ -342,6 +340,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             public boolean onPreDraw() {
                 mapheight = mapView.getMeasuredHeight();
                 mapwidth = mapView.getMeasuredWidth();
+                Log.e(TAG, "onPreDraw: " + mapwidth);
                 //addMarkerInScreenCenter();//初始化地图中心图标
                 return true;
             }
@@ -372,7 +371,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getCameraPosition().target) / 1000 >= 10) {
                             mLastLatLng = aMap.getCameraPosition().target;
                             getAddressOrCitycode(mLastLatLng, true);
-                            Log.e(TAG, "onTouch: ");
                         }
                     }
                 }
@@ -463,7 +461,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_mypark:
-                intent = new Intent(MainActivity.this, MyParkspaceActivityRefactor.class);
+                intent = new Intent(MainActivity.this, MyParkspaceActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_friend_park:
@@ -1228,8 +1226,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
     }
 
+    /**
+     * 显示或隐藏车场或电站的详情fragment
+     */
     private void controlAnimfragment(final View ll_view) {
         if (mTranslationY == 0) {
+            //
             mTranslationY = ll_view.getY() + ll_view.getHeight();
         }
         show = !show;
@@ -1246,32 +1248,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();
-        /*ValueAnimator va;
-        int height = 73;
-        if (show) {
-            //显示view，高度从0变到height值
-            aMap.setPointToCenter(mapwidth / 2, (mapheight - DensityUtil.dp2px(MainActivity.this, height - 50)) / 2);
-            va = ValueAnimator.ofInt(0, DensityUtil.dp2px(this, height));
-        } else {
-            //隐藏view，高度从height变为0
-            va = ValueAnimator.ofInt(height, 0);
-            aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
-            if (showmarklal != null) {
-                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(showmarklal, 14));
-            }
-            screenMarker.setVisible(true);
-        }
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //获取当前的height值
-                //动态更新view的高度
-                ll_view.getLayoutParams().height = (Integer) valueAnimator.getAnimatedValue();
-                ll_view.requestLayout();
-            }
-        });
-        va.setDuration(700);
-        va.start();*/
     }
 
     private void controlAnim(boolean show) {
@@ -1289,26 +1265,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();
-        /*ValueAnimator va;
-        int height = 40;
-        if (show) {
-            //显示view，高度从0变到height值
-            va = ValueAnimator.ofInt(0, DensityUtil.dp2px(this, height));
-        } else {
-            //隐藏view，高度从height变为0
-            va = ValueAnimator.ofInt(height, 0);
-        }
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //获取当前的height值
-                //动态更新view的高度
-                textview_citynodata.getLayoutParams().height = (Integer) valueAnimator.getAnimatedValue();
-                textview_citynodata.requestLayout();
-            }
-        });
-        va.setDuration(150);
-        va.start();*/
     }
 
     @Override
@@ -1685,7 +1641,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 aMap.setMapCustomEnable(true);//开启允许地图自定义样式true 开启; false 关闭
                 aMap.setCustomMapStylePath(Environment.getExternalStorageDirectory() + DM_TARGET_FOLDER + "mystyle_sdk.data");
             }
-
         } else {
             OkGo.get(HttpConstants.ROOT_MAPSTYLE_URL)
                     .execute(new FileCallback() {
@@ -1717,37 +1672,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         MyToast.showToast(this, msg, 5);
     }
 
-    private void checkPermission(final String permission, String message, final int requestCode) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            /*if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                new TipeDialog.Builder(this)
-                        .setTitle("权限申请")
-                        .setMessage(message)
-                        .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestPermission(permission, requestCode);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-            }*/
-            requestPermission(permission, requestCode);
-        } else {
-            if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                initMapStyle();
-            }
-        }
-    }
-
-    private boolean havePermission(String permission) {
+    private boolean noHavePermission(String permission) {
         return ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
     }
 
@@ -1760,20 +1685,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initMapStyle();
-                Log.e(TAG, "onRequestPermissionsResult: ");
                 isFirstloc = true;
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
             }
-            if (havePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
             }
         } else if (requestCode == WRITE_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initMapStyle();
             }
-            if (havePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            if (noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
             }
         }

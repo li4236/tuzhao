@@ -18,6 +18,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -396,6 +397,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
     public void onDestroy() {
         mCustomDialog.cancel();
         IntentObserable.unregisterObserver(this);
+        GlideApp.get(mActivity.getApplicationContext()).clearMemory();
         mActivity = null;
     }
 

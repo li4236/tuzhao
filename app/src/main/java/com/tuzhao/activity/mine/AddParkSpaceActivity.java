@@ -35,7 +35,9 @@ import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.ViewUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -163,6 +165,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        GlideApp.get(getApplicationContext()).clearMemory();
     }
 
     @NonNull
@@ -892,6 +895,9 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                                     break;
                                 case "109":
                                     showFiveToast("添加审核失败，请稍后重试");
+                                    break;
+                                case "110":
+                                    ViewUtil.showCertificationDialog(AddParkSpaceActivity.this, "添加车位");
                                     break;
                             }
                         }

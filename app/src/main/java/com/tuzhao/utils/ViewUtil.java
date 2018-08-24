@@ -1,6 +1,8 @@
 package com.tuzhao.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -8,6 +10,9 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
+import com.tuzhao.activity.mine.CertifyZhimaActivity;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 
 /**
  * Created by juncoder on 2018/7/12.
@@ -81,6 +86,20 @@ public class ViewUtil {
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
+    }
+
+    public static void showCertificationDialog(final Context context, String msg) {
+        new TipeDialog.Builder(context)
+                .setTitle("提示")
+                .setMessage(msg + "前需要进行实名认证哦，马上实名认证吗？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.startActivity(new Intent(context, CertifyZhimaActivity.class));
+                    }
+                })
+                .create()
+                .show();
     }
 
 }

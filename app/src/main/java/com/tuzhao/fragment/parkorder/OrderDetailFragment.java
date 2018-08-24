@@ -48,6 +48,7 @@ import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -228,6 +229,9 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (getContext() != null) {
+            GlideApp.get(getContext().getApplicationContext()).clearMemory();
+        }
         IntentObserable.unregisterObserver(this);
         //mSoftKeyBroadManager.removeSoftKeyboardStateListener(mKeyboardStateListener);
     }

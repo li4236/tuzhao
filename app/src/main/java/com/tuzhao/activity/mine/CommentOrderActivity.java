@@ -24,6 +24,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
@@ -214,6 +215,12 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
                         }).launch();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlideApp.get(getApplicationContext()).clearMemory();
     }
 
     private void requestAddPsComment() {

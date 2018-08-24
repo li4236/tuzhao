@@ -33,6 +33,7 @@ import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 
@@ -280,6 +281,12 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                 handleImageBean(imageBeans);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlideApp.get(getApplicationContext()).clearMemory();
     }
 
     private void initAppointmentOption() {

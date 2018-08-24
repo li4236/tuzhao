@@ -35,6 +35,7 @@ import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.ViewUtil;
 
@@ -235,14 +236,16 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
             final File file = new File(resultUri.getPath());
             if (file.exists()) {
                 mPath[mChoosePosition] = file.getAbsolutePath();
-                ImageUtil.showPicWithNoAnimate(mImageViews[mChoosePosition], mPath[mChoosePosition]);
-                hideView(mPlusViews[mChoosePosition]);
+                showLoadingDialog("压缩中...");
                 ImageUtil.compressPhoto(AddNewCarActivity.this, file.getAbsolutePath(), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile myFile) {
                         for (int i = 0; i < mPath.length; i++) {
                             if (mPath[i].equals(myFile.getUncompressName())) {
                                 mPath[i] = myFile.getAbsolutePath();
+                                ImageUtil.showPic(mImageViews[i], mPath[i]);
+                                hideView(mPlusViews[mChoosePosition]);
+                                dismmisLoadingDialog();
                                 uploadPicture(myFile, i);
                                 break;
                             }
@@ -383,10 +386,10 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         getOkGo(HttpConstants.applyAddNewCar)
                 .params("carNumber", getText(mCarNumber))
                 .params("carOwner", mCarOwner.getText().toString())
-                .params("idCard", mPath[0].replaceAll(HttpConstants.ROOT_IMG_URL_ID_CARD, "") +
+                .params("idCard", mPath[0].replaceAll(HttpConstants.ROOT_IMG_URL_ID_CARD, "") + "," +
                         mPath[1].replaceAll(HttpConstants.ROOT_IMG_URL_ID_CARD, ""))
                 .params("driverLicense", mPath[2].replaceAll(HttpConstants.ROOT_IMG_URL_DRIVER_LICENSE, ""))
-                .params("vehicleLicense", mPath[3].replaceAll(HttpConstants.ROOT_IMG_URL_VEHICLE, "") +
+                .params("vehicleLicense", mPath[3].replaceAll(HttpConstants.ROOT_IMG_URL_VEHICLE, "") + "," +
                         mPath[4].replaceAll(HttpConstants.ROOT_IMG_URL_VEHICLE, ""))
                 .params("groupPhoto", mPath[5].replaceAll(HttpConstants.ROOT_IMG_URL_GROUP_PHOTO, ""))
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -405,25 +408,30 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
+                                    showFiveToast("请输入您的车牌号码");
+                                    break;
                                 case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
+                                    showFiveToast("请输入车辆所有人");
                                     break;
                                 case "103":
-                                    showFiveToast("该车牌号码已被删除");
+                                    ViewUtil.showCertificationDialog(AddNewCarActivity.this, "添加车辆");
                                     break;
                                 case "104":
-                                    showFiveToast("该车主已被删除");
+                                    showFiveToast("驾驶证照片异常，请重新选择");
                                     break;
                                 case "105":
-                                    showFiveToast("请选择你的驾驶证照片");
+                                    showFiveToast("身份证照片异常，请重新选择");
                                     break;
                                 case "106":
-                                    showFiveToast("该照片异常，请重新选择");
+                                    showFiveToast("行驶证照片异常，请重新选择");
                                     break;
                                 case "107":
-                                    showFiveToast("服务器异常，请稍后重试");
+                                    showFiveToast("人车合照异常，请重新选择");
                                     break;
                                 case "108":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "109":
                                     showFiveToast("你已添加过该车辆了哦");
                                     break;
                             }
@@ -433,53 +441,10 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     }
 
-/*    private class IdentifyAdapter extends BaseAdapter<UploadPhotoInfo> {
-
-        IdentifyAdapter(List<UploadPhotoInfo> data) {
-            super(data);
-        }
-
-        @Override
-        protected void conver(@NonNull BaseViewHolder holder, final UploadPhotoInfo uploadPhotoInfo, final int position) {
-            holder.setText(R.id.identify_tv, uploadPhotoInfo.getName());
-            ImageView imageView = holder.getView(R.id.upload_iv);
-            TextView textView = holder.getView(R.id.upload_tv);
-            if (uploadPhotoInfo.getPath().equals("-1")) {
-                imageView.setImageDrawable(null);
-                goneView(textView);
-                ViewUtil.showProgressStatus(textView, false);
-            } else {
-                ImageUtil.showPicWithNoAnimate(imageView, uploadPhotoInfo.getPath(), new LoadFailCallback() {
-                    @Override
-                    public void onLoadFail(Exception e) {
-                        deletePhoto(e.getMessage());
-                    }
-                });
-                ViewUtil.showProgressStatus(textView, uploadPhotoInfo.isShowProgress());
-                textView.setText(uploadPhotoInfo.getProgress());
-            }
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mChoosePosition = position;
-                    showDialog();
-                }
-            });
-
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-        }
-
-        @Override
-        protected int itemViewId() {
-            return R.layout.item_identify_information_layout;
-        }
-
-    }*/
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GlideApp.get(getApplicationContext()).clearMemory();
+    }
 
 }

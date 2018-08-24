@@ -150,12 +150,11 @@
         <activity android:name=".activity.mine.TextActivity" />
         <activity android:name=".activity.BigPictureActivity" />
         <activity android:name=".activity.ParkOrChargeListActivity" />
-        <activity android:name=".activity.mine.MyParkSpaceActivity" />
         <activity
             android:name=".activity.mine.AuditParkSpaceActivity"
             android:launchMode="singleTask" />
         <activity android:name=".activity.mine.CommentOrderActivity" />
-        <activity android:name=".activity.mine.MyParkspaceActivityRefactor" />
+        <activity android:name=".activity.mine.MyParkspaceActivity" />
         <activity
             android:name=".activity.mine.OrderActivity"
             android:windowSoftInputMode="adjustPan" />
