@@ -1,5 +1,6 @@
 package com.tuzhao.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,9 +28,12 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.tianzhili.www.myselfsdk.luban.Luban;
 import com.tianzhili.www.myselfsdk.luban.OnCompressListener;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
+import com.tuzhao.publicwidget.callback.OnLoadCallback;
+import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.upload.MyFile;
 
 import java.io.File;
@@ -104,6 +108,26 @@ public class ImageUtil {
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
                         callback.onLoadFail(new Exception(url));
+                    }
+                });
+    }
+
+    public static void showPicWithNoAnimate(final ImageView imageView, final String url, final OnLoadCallback<Drawable, Exception> callback) {
+        GlideApp.with(imageView)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .dontAnimate()
+                .placeholder(R.mipmap.ic_img)
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        callback.onSuccess(resource);
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        callback.onFail(new Exception(url));
                     }
                 });
     }
@@ -345,6 +369,41 @@ public class ImageUtil {
             }
         }
 
+    }
+
+    public static void startTakePhoto(Activity activity) {
+        new PhotoPickConfig
+                .Builder(activity)
+                .imageLoader(new GlideImageLoader())                //图片加载方式，支持任意第三方图片加载库
+                .spanCount(PhotoPickConfig.GRID_SPAN_COUNT)         //相册列表每列个数，默认为3
+                .pickMode(PhotoPickConfig.MODE_PICK_SINGLE)         //设置照片选择模式为单选，默认为单选
+                .showCamera(true)           //是否展示相机icon，默认展示
+                .clipPhoto(false)            //是否开启裁剪照片功能，默认关闭
+                .clipCircle(false)          //是否裁剪方式为圆形，默认为矩形
+                .build();
+    }
+
+    public static void startTakePhotoAndCrop(Activity activity) {
+        new PhotoPickConfig
+                .Builder(activity)
+                .imageLoader(new GlideImageLoader())                //图片加载方式，支持任意第三方图片加载库
+                .spanCount(PhotoPickConfig.GRID_SPAN_COUNT)         //相册列表每列个数，默认为3
+                .pickMode(PhotoPickConfig.MODE_PICK_SINGLE)         //设置照片选择模式为单选，默认为单选
+                .showCamera(true)           //是否展示相机icon，默认展示
+                .clipPhoto(true)            //是否开启裁剪照片功能，默认关闭
+                .clipCircle(false)          //是否裁剪方式为圆形，默认为矩形
+                .build();
+    }
+
+    public static void startTakeMultiPhoto(Activity activity, int maxSize) {
+        new PhotoPickConfig
+                .Builder(activity)
+                .imageLoader(new GlideImageLoader())                //图片加载方式，支持任意第三方图片加载库
+                .pickMode(PhotoPickConfig.MODE_PICK_MORE)         //设置照片选择模式为多选
+                .maxPickSize(maxSize)   //多选时可以选择的图片数量，默认为1张
+                .showCamera(true)           //是否展示相机icon，默认展示
+                .clipPhoto(false)            //是否开启裁剪照片功能，默认关闭
+                .build();
     }
 
     public static void compressPhoto(final Context context, final String path, final SuccessCallback<MyFile> callback) {

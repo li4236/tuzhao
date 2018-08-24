@@ -24,5 +24,9 @@
     <color name="filter_layout_btn_bg">#f7f7f7</color>
     <color name="black_p50">#7f000000</color>
 
-
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="fresco_wait_color">#D9D9D9</color>
+    <color name="fresco_image_press">#80ffffff</color>
 </resources>

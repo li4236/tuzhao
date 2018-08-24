@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,10 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cb.ratingbar.CBRatingBar;
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.base.BaseAdapter;
@@ -124,8 +121,6 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private ImageView mDeleteTwoIv;*/
 
     private TextView mApplyComment;
-
-    private ImagePicker mPropertyImagePicker;
 
     private PropertyAdapter mPropertyAdapter;
 
@@ -504,32 +499,24 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     }
 
     private void startTakePropertyPhoto() {
-        if (mPropertyImagePicker == null) {
-            mPropertyImagePicker = new ImagePicker()
-                    .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                    .needCamera(true)
-                    .pickType(ImagePickType.MULTI)
-                    .maxNum(3);
-        }
         int maxNum = 1;
         if (mPropertyAdapter.get(0).getPath().equals("-1")) {
             maxNum = 3;
         } else if (mPropertyAdapter.getDataSize() == 2 && mPropertyAdapter.get(1).getPath().equals("-1")) {
             maxNum = 2;
         }
-        mPropertyImagePicker.maxNum(maxNum);
-        mPropertyImagePicker.start(requireActivity(), ConstansUtil.PICTURE_REQUEST_CODE);
+        ImageUtil.startTakeMultiPhoto(getActivity(), maxNum);
     }
 
-    private void handleImageBean(final List<ImageBean> imageBeans) {
+    private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 0:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 0);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 1);
@@ -539,11 +526,11 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     });
                     break;
                 case 1:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
@@ -554,15 +541,15 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+            compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                 @Override
                 public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 0);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(2), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
@@ -932,18 +919,18 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.PHOTO_IMAGE:
-                    if (mCustomDialog != null && mCustomDialog.isShowing()) {
+                    if (mCommentOrderDialog != null && mCommentOrderDialog.isShowing()) {
                         //如果是订单投诉里面选择图片的也会传到这里，所以需要判断
-                        final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-                        if (imageBeans.size() == 1) {
-                            ImageUtil.compressPhoto(requireContext(), imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                        List<String> list = intent.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
+                        if (list.size() == 1) {
+                            ImageUtil.compressPhoto(requireContext(), list.get(0), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, mChoosePosition);
                                 }
                             });
                         } else {
-                            handleImageBean(imageBeans);
+                            handleImageBean(list);
                         }
                     }
                     break;

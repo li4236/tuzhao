@@ -99,7 +99,6 @@
         <activity android:name=".activity.ParkOrderDetailsActivity" />
         <activity android:name=".activity.ChargestationDetailActivity" />
         <activity android:name=".activity.mine.DiscountActivity" />
-        <activity android:name=".activity.mine.PersonalMessageActivity" />
         <activity android:name=".activity.mine.MyWalletActivity" />
         <activity android:name=".activity.mine.ParkOrderActivity" />
         <activity android:name=".activity.mine.MyParkActivity" />
@@ -204,6 +203,30 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.tianzhili.www.myselfsdk.photopicker.ui.PhotoPickActivity"
+            android:theme="@style/PhoAppTheme.AppTheme"/>
+
+        <activity
+            android:name="com.tianzhili.www.myselfsdk.photopicker.ui.PhotoPreviewActivity"
+            android:theme="@style/PhoAppTheme.AppTheme"/>
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <!--适配android7.0-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/file_provider_authorities"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths"/>
+        </provider>
 
         <!--QQ分享-->
         <activity

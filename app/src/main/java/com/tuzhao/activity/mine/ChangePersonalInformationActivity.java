@@ -1,16 +1,15 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.SuccessCallback;
@@ -19,6 +18,7 @@ import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.callback.OnLoadCallback;
 import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.publicwidget.upload.MyFile;
 import com.tuzhao.utils.ConstansUtil;
@@ -27,7 +27,6 @@ import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -47,8 +46,6 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     private TextView mGender;
 
     private TextView mBirthday;
-
-    private ImagePicker mImagePicker;
 
     private User_Info mUserInfo;
 
@@ -106,7 +103,8 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_portrait_tv:
-                showImagePicker();
+                ImageUtil.startTakePhotoAndCrop(ChangePersonalInformationActivity.this);
+                //showImagePicker();
                 break;
             case R.id.nickname_tv:
                 startActivity(ChangeNicknameActivity.class);
@@ -117,9 +115,9 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
-            List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-            final File file = new File(list.get(0).getImagePath());
+        if (requestCode == PhotoPickConfig.PICK_CLIP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri resultUri = Uri.parse(data.getStringExtra(PhotoPickConfig.EXTRA_CLIP_PHOTO));
+            final File file = new File(resultUri.getPath());
             if (file.exists()) {
                 //图片大小大于1M才压缩，否则看大图的时候会很模糊
                 if (file.length() > 1024 * 1024) {
@@ -134,6 +132,8 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
                 } else {
                     changeUserPortrait(file);
                 }
+            } else {
+                showFiveToast("获取图片失败，请更换图片");
             }
         }
     }
@@ -142,16 +142,6 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     protected void onDestroy() {
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
-    }
-
-    private void showImagePicker() {
-        if (mImagePicker == null) {
-            mImagePicker = new ImagePicker()
-                    .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                    .needCamera(true)
-                    .pickType(ImagePickType.SINGLE);
-        }
-        mImagePicker.start(this, ConstansUtil.REQUSET_CODE);
     }
 
     private void changeUserPortrait(File file) {
@@ -164,9 +154,20 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> stringBase_class_info, Call call, Response response) {
                         mUserInfo.setImg_url(stringBase_class_info.data.getImg_url());
-                        ImageUtil.showPicWithNoAnimate(mUserProtrait, HttpConstants.ROOT_IMG_URL_USER + stringBase_class_info.data.getImg_url(), R.mipmap.ic_usericon);
+                        ImageUtil.showPicWithNoAnimate(mUserProtrait, HttpConstants.ROOT_IMG_URL_USER + stringBase_class_info.data.getImg_url(), new OnLoadCallback<Drawable, Exception>() {
+                            @Override
+                            public void onSuccess(Drawable drawable) {
+                                mUserProtrait.setImageDrawable(drawable);
+                                dismmisLoadingDialog();
+                            }
+
+                            @Override
+                            public void onFail(Exception e) {
+                                showFiveToast("修改头像失败，请稍后重试");
+                                dismmisLoadingDialog();
+                            }
+                        });
                         IntentObserable.dispatch(ConstansUtil.CHANGE_PORTRAIT);
-                        dismmisLoadingDialog();
                     }
 
                     @Override

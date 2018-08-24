@@ -3,7 +3,6 @@ package com.tuzhao.activity.mine;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.luban.Luban;
 import com.tianzhili.www.myselfsdk.luban.OnCompressListener;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.adapter.ParkPicturesAdapter;
@@ -33,6 +30,7 @@ import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.square.SpaceItemDecoration;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,7 +58,7 @@ public class EditParkPicturesActivity extends BaseActivity {
     private ParkPicturesAdapter mAdapter;
     private ArrayList<PicBean> mData = new ArrayList<>();
     private List<String> mSignData = new ArrayList<>();
-    private String park_id,citycode;
+    private String park_id, citycode;
     private ArrayList<String> list;
 
     @Override
@@ -124,7 +122,7 @@ public class EditParkPicturesActivity extends BaseActivity {
 
         recycleview.setLayoutManager(mLayoutManager);
         recycleview.setAdapter(mAdapter);
-        recycleview.addItemDecoration(new SpaceItemDecoration(3,5,true));
+        recycleview.addItemDecoration(new SpaceItemDecoration(3, 5, true));
     }
 
     private void initEvent() {
@@ -147,7 +145,7 @@ public class EditParkPicturesActivity extends BaseActivity {
         textview_edit_or_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mData.size()>0){
+                if (mData.size() > 0) {
                     if (mData.get(0).isdelete()) {
                         ArrayList<PicBean> datalist = new ArrayList<>();
                         for (int i = 0; i < mData.size(); i++) {
@@ -173,8 +171,8 @@ public class EditParkPicturesActivity extends BaseActivity {
                         textview_edit_or_cancle.setText("取消");
                         linearlayout_uploadpic.setVisibility(View.GONE);
                     }
-                }else {
-                    MyToast.showToast(EditParkPicturesActivity.this,"先上传图片才能编辑哦",5);
+                } else {
+                    MyToast.showToast(EditParkPicturesActivity.this, "先上传图片才能编辑哦", 5);
                 }
             }
         });
@@ -194,12 +192,7 @@ public class EditParkPicturesActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //调用相册
-                new ImagePicker()
-                        .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                        .needCamera(true) //是否需要在界面中显示相机入口(类似微信那样)
-                        .pickType(ImagePickType.MULTI) //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
-                        .maxNum(3)  //设置最大选择数量(此选项只对多选生效，拍照和单选都是1，修改后也无效)
-                        .start(EditParkPicturesActivity.this, REQUEST_CODE_PICKER);
+                ImageUtil.startTakeMultiPhoto(EditParkPicturesActivity.this, 3);
             }
         });
     }
@@ -226,7 +219,7 @@ public class EditParkPicturesActivity extends BaseActivity {
 
     private void requestDeleteParkPicture() {
         String newparklist = "";
-        for (int j =0;j<mData.size();j++) {
+        for (int j = 0; j < mData.size(); j++) {
             for (int i = 0; i < mSignData.size(); i++) {
                 if (mData.get(j).getUrl().equals(mSignData.get(i))) {
                     newparklist = newparklist + j + ",";
@@ -234,15 +227,15 @@ public class EditParkPicturesActivity extends BaseActivity {
                 }
             }
         }
-        if (newparklist.split(",").length>0){
+        if (newparklist.split(",").length > 0) {
             newparklist = newparklist.substring(0, newparklist.length() - 1);
         }
         OkGo.post(HttpConstants.deleteParkPicture)
                 .tag(EditParkPicturesActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("park_id", park_id)
-                .params("citycode",citycode)
+                .params("citycode", citycode)
                 .params("park_img", newparklist)
                 .execute(new JsonCallback<Base_Class_Info<Park_Info>>() {
                     @Override
@@ -275,7 +268,7 @@ public class EditParkPicturesActivity extends BaseActivity {
                         if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(EditParkPicturesActivity.this,e)){
+                        if (!DensityUtil.isException(EditParkPicturesActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
@@ -302,14 +295,14 @@ public class EditParkPicturesActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PICKER && data!=null) {
-            final List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
+        if (requestCode == REQUEST_CODE_PICKER && data != null) {
+            final List<String> list = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
             final List<File> file_list = new ArrayList<>();
             initLoading("正在上传...");
-            for (ImageBean imageBean : list) {
+            for (String imageBean : list) {
                 //进行图片逐个压缩
                 Luban.with(EditParkPicturesActivity.this)
-                        .load(imageBean.getImagePath())
+                        .load(imageBean)
                         .ignoreBy(1)
                         .setTargetDir(getApplicationContext().getFilesDir().getAbsolutePath())
                         .setCompressListener(new OnCompressListener() {
@@ -343,9 +336,9 @@ public class EditParkPicturesActivity extends BaseActivity {
         OkGo.post(HttpConstants.uploadParkPicture)
                 .tag(EditParkPicturesActivity.this)
                 .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("park_id", park_id)
-                .params("citycode",citycode)
+                .params("citycode", citycode)
                 .addFileParams("park_pics[]", file_list)
                 .execute(new JsonCallback<Base_Class_Info<Park_Info>>() {
                     @Override
@@ -375,7 +368,7 @@ public class EditParkPicturesActivity extends BaseActivity {
                         if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.dismiss();
                         }
-                        if (!DensityUtil.isException(EditParkPicturesActivity.this,e)){
+                        if (!DensityUtil.isException(EditParkPicturesActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
@@ -383,7 +376,7 @@ public class EditParkPicturesActivity extends BaseActivity {
                                     MyToast.showToast(EditParkPicturesActivity.this, "图片上传失败", 5);
                                     break;
                                 case 901:
-                                    MyToast.showToast(EditParkPicturesActivity.this,"服务器正在维护中", 5);
+                                    MyToast.showToast(EditParkPicturesActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         }

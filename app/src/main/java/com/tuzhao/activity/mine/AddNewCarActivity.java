@@ -2,8 +2,8 @@ package com.tuzhao.activity.mine;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -20,10 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.SuccessCallback;
@@ -41,7 +39,6 @@ import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.ViewUtil;
 
 import java.io.File;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -61,10 +58,6 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
     private ImageView[] mImageViews;
 
     private TextView[] mTextViews;
-
-    private static final int REQUEST_CODE_PICKER = 0x111;
-
-    private ImagePicker mImagePicker;
 
     private CustomDialog mCustomDialog;
 
@@ -167,7 +160,11 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 @Override
                 public void onClick(View v) {
                     mChoosePosition = finalI;
-                    showDialog();
+                    if (mPath[finalI].equals("-1")) {
+                        showDialog();
+                    } else {
+                        ImageUtil.startTakePhotoAndCrop(AddNewCarActivity.this);
+                    }
                 }
             });
             mTextViews[i].setOnClickListener(new View.OnClickListener() {
@@ -178,7 +175,6 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
             });
         }
 
-        initImagePicker();
         initDialogHelper();
     }
 
@@ -234,32 +230,29 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
-            List<ImageBean> list = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-            mPath[mChoosePosition] = list.get(0).getImagePath();
-            ImageUtil.showPicWithNoAnimate(mImageViews[mChoosePosition], mPath[mChoosePosition]);
-            hideView(mPlusViews[mChoosePosition]);
-            ImageUtil.compressPhoto(AddNewCarActivity.this, mPath[mChoosePosition], new SuccessCallback<MyFile>() {
-                @Override
-                public void onSuccess(MyFile file) {
-                    for (int i = 0; i < mPath.length; i++) {
-                        if (mPath[i].equals(file.getUncompressName())) {
-                            mPath[i] = file.getAbsolutePath();
-                            uploadPicture(file, i);
-                            break;
+        if (requestCode == PhotoPickConfig.PICK_CLIP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri resultUri = Uri.parse(data.getStringExtra(PhotoPickConfig.EXTRA_CLIP_PHOTO));
+            final File file = new File(resultUri.getPath());
+            if (file.exists()) {
+                mPath[mChoosePosition] = file.getAbsolutePath();
+                ImageUtil.showPicWithNoAnimate(mImageViews[mChoosePosition], mPath[mChoosePosition]);
+                hideView(mPlusViews[mChoosePosition]);
+                ImageUtil.compressPhoto(AddNewCarActivity.this, file.getAbsolutePath(), new SuccessCallback<MyFile>() {
+                    @Override
+                    public void onSuccess(MyFile myFile) {
+                        for (int i = 0; i < mPath.length; i++) {
+                            if (mPath[i].equals(myFile.getUncompressName())) {
+                                mPath[i] = myFile.getAbsolutePath();
+                                uploadPicture(myFile, i);
+                                break;
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                showFiveToast("获取图片失败，请更换图片");
+            }
         }
-    }
-
-    private void initImagePicker() {
-        mImagePicker = new ImagePicker()
-                .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                .needCamera(true)
-                .pickType(ImagePickType.SINGLE)
-                .maxNum(1);
     }
 
     private void initDialogHelper() {
@@ -276,7 +269,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
             identifyPhotoHelper.setUploadListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mImagePicker.start(AddNewCarActivity.this, REQUEST_CODE_PICKER);
+                    ImageUtil.startTakePhotoAndCrop(AddNewCarActivity.this);
                     mCustomDialog.dismiss();
                 }
             });

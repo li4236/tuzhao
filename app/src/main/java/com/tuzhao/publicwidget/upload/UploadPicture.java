@@ -2,14 +2,10 @@ package com.tuzhao.publicwidget.upload;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
@@ -28,6 +24,7 @@ import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.ViewUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,8 +37,6 @@ import okhttp3.Response;
 public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements IntentObserver {
 
     private static final String TAG = "UploadPicture";
-
-    private ImagePicker mImagePicker;
 
     private CustomDialog mCustomDialog;
 
@@ -72,7 +67,6 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         mStartPadding = DensityUtil.dp2px(mActivity, 16);
         mTopPadding = DensityUtil.dp2px(mActivity, 18);
         initBasePictureUrl();
-        initImagePicker();
         initDialog();
         IntentObserable.registerObserver(this);
     }
@@ -98,26 +92,16 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         }
     }
 
-    private void initImagePicker() {
-        mImagePicker = new ImagePicker()
-                .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                .needCamera(true)
-                .pickType(ImagePickType.MULTI)
-                .maxNum(mMaxNum);
-    }
-
     public void startTakePropertyPhoto() {
         int maxNum = 1;
         if (mAdapter.get(mAdapter.getDataSize() - 1).getPath().equals("-1")) {
             maxNum = mMaxNum - mAdapter.getDataSize() + 1;
         }
-        mImagePicker.maxNum(maxNum);
-        mImagePicker.start(mActivity, ConstansUtil.PICTURE_REQUEST_CODE);
+        ImageUtil.startTakeMultiPhoto(mActivity, maxNum);
     }
 
     public void startTakePropertyPhoto(int maxNum) {
-        mImagePicker.maxNum(maxNum);
-        mImagePicker.start(mActivity, ConstansUtil.PICTURE_REQUEST_CODE);
+        ImageUtil.startTakeMultiPhoto(mActivity, maxNum);
     }
 
     private void initDialog() {
@@ -151,15 +135,15 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         mCustomDialog.show();
     }
 
-    private void handleImageBean(final List<ImageBean> imageBeans) {
+    private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 0:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 0);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 1);
@@ -169,11 +153,11 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     });
                     break;
                 case 1:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
@@ -184,15 +168,15 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+            compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                 @Override
                 public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 0);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(2), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
@@ -418,16 +402,16 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.PHOTO_IMAGE)) {
-            final List<ImageBean> imageBeans = intent.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-            if (imageBeans.size() == 1) {
-                ImageUtil.compressPhoto(mActivity, imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+            ArrayList<String> list = intent.getStringArrayListExtra(ConstansUtil.INTENT_MESSAGE);
+            if (list.size() == 1) {
+                ImageUtil.compressPhoto(mActivity, list.get(0), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
                         handleCompressPhoto(file, mChoosePosition);
                     }
                 });
             } else {
-                handleImageBean(imageBeans);
+                handleImageBean(list);
             }
         }
     }

@@ -2,8 +2,8 @@ package com.tuzhao.activity.mine;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,11 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.ParkBean;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.PayActivity;
@@ -50,7 +48,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/6/4.
  */
-public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener{
+public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener {
 
     private TextView mParkLotName;
 
@@ -81,10 +79,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     private ConstraintLayout mTakePropertyPhotoCl;
 
     private PropertyAdapter mPropertyAdapter;
-
-    private ImagePicker mImagePicker;
-
-    private ImagePicker mPropertyImagePicker;
 
     private CustomDialog mCustomDialog;
 
@@ -188,7 +182,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             case R.id.id_card_positive_photo_iv:
                 mChoosePosition = 0;
                 if (mParkSpaceInfo.getIdCardPositiveUrl().equals("-1")) {
-                    startTakePhoto();
+                    ImageUtil.startTakePhotoAndCrop(AddParkSpaceActivity.this);
                 } else {
                     showDialog();
                 }
@@ -197,7 +191,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             case R.id.id_card_negative_photo_iv:
                 mChoosePosition = 1;
                 if (mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
-                    startTakePhoto();
+                    ImageUtil.startTakePhotoAndCrop(AddParkSpaceActivity.this);
                 } else {
                     showDialog();
                 }
@@ -234,18 +228,35 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             mParkSpaceInfo.setCityCode(mPark.getCitycode());
             mParkSpaceInfo.setParkLotName(mPark.getParkStation());
             mParkSpaceInfo.setRevenueRatio(revenueRatio);
-        } else if (requestCode == ConstansUtil.PICTURE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            //选择的图片
-            final List<ImageBean> imageBeans = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
-            if (imageBeans.size() == 1) {
-                ImageUtil.compressPhoto(this, imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+        } else if (requestCode == PhotoPickConfig.PICK_CLIP_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            //身份证照
+            Uri resultUri = Uri.parse(data.getStringExtra(PhotoPickConfig.EXTRA_CLIP_PHOTO));
+            final File file = new File(resultUri.getPath());
+            if (file.exists()) {
+                if (mChoosePosition == 0) {
+                    mParkSpaceInfo.setIdCardPositiveUrl(file.getAbsolutePath());
+                    showIdCardPositivePhoto(mParkSpaceInfo.getIdCardPositiveUrl(), false);
+                } else {
+                    mParkSpaceInfo.setIdCardNegativeUrl(file.getAbsolutePath());
+                    showIdCardNegativePhoto(mParkSpaceInfo.getIdCardNegativeUrl(), false);
+                }
+                ImageUtil.compressPhoto(this, file.getAbsolutePath(), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
-                        handleCompressPhoto(file, mChoosePosition);
+                        handleCompressPhoto(file, file.getUncompressName().equals(mParkSpaceInfo.getIdCardPositiveUrl()) ? 0 : 1);
                     }
                 });
             } else {
-                handleImageBean(imageBeans);
+                showFiveToast("获取图片失败，请更换图片");
+            }
+        } else if (requestCode == PhotoPickConfig.PICK_MORE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            ArrayList<String> photoList = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
+            if (photoList != null) {
+                if (photoList.size() == 1) {
+                    handleCompressPhoto(new File(photoList.get(0)), mChoosePosition);
+                } else {
+                    handleImageBean(photoList);
+                }
             }
         }
     }
@@ -275,32 +286,14 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 });
     }
 
-    private void startTakePhoto() {
-        if (mImagePicker == null) {
-            mImagePicker = new ImagePicker()
-                    .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                    .needCamera(true) //是否需要在界面中显示相机入口(类似微信那样)
-                    .pickType(ImagePickType.SINGLE); //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
-        }
-        mImagePicker.start(this, ConstansUtil.PICTURE_REQUEST_CODE);
-    }
-
     private void startTakePropertyPhoto() {
-        if (mPropertyImagePicker == null) {
-            mPropertyImagePicker = new ImagePicker()
-                    .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                    .needCamera(true)
-                    .pickType(ImagePickType.MULTI)
-                    .maxNum(3);
-        }
         int maxNum = 1;
         if (mPropertyAdapter.get(0).getPath().equals("-1")) {
             maxNum = 3;
         } else if (mPropertyAdapter.getDataSize() == 2 && mPropertyAdapter.get(1).getPath().equals("-1")) {
             maxNum = 2;
         }
-        mPropertyImagePicker.maxNum(maxNum);
-        mPropertyImagePicker.start(this, ConstansUtil.PICTURE_REQUEST_CODE);
+        ImageUtil.startTakeMultiPhoto(this, maxNum);
     }
 
     private void handleCompressPhoto(File file, int position) {
@@ -363,15 +356,15 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         }
     }
 
-    private void handleImageBean(final List<ImageBean> imageBeans) {
+    private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 2:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 2);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 3);
@@ -381,11 +374,11 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     });
                     break;
                 case 3:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 3);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 4);
@@ -396,15 +389,15 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+            compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                 @Override
                 public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 2);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 3);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(2), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 4);
@@ -572,7 +565,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 @Override
                 public void onClick(View v) {
                     if (mChoosePosition == 0 || mChoosePosition == 1) {
-                        startTakePhoto();
+                        ImageUtil.startTakePhotoAndCrop(AddParkSpaceActivity.this);
                     } else {
                         startTakePropertyPhoto();
                     }

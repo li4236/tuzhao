@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
@@ -159,10 +159,10 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ConstansUtil.PICTURE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == PhotoPickConfig.PICK_MORE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             //选择的图片
             Intent intent = new Intent(ConstansUtil.PHOTO_IMAGE);
-            intent.putParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA, data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA));
+            intent.putStringArrayListExtra(ConstansUtil.INTENT_MESSAGE, data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST));
             IntentObserable.dispatch(intent);
         }
     }

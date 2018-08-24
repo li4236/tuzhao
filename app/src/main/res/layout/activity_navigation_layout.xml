@@ -35,8 +35,11 @@
         <TextView
             android:id="@+id/park_lot_address"
             style="@style/TwentyTextG6Style"
+            android:layout_width="0dp"
             android:layout_marginTop="12dp"
-            app:layout_constraintStart_toStartOf="@id/park_lot_name"
+            android:gravity="start"
+            app:layout_constraintEnd_toEndOf="@+id/start_navigate"
+            app:layout_constraintStart_toStartOf="@+id/start_navigate"
             app:layout_constraintTop_toBottomOf="@+id/park_lot_name" />
 
         <TextView
@@ -46,6 +49,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
             android:background="@drawable/y3_all_8dp"
             android:paddingBottom="12dp"
             android:paddingTop="12dp"
@@ -53,7 +57,7 @@
             android:textColor="@color/y3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/park_lot_name"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/park_lot_address" />
 
     </android.support.constraint.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.ScaleAnimation;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.fragment.parkorder.AppointmentDetailFragment;
@@ -55,7 +57,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mParkOrderInfo =  getIntent().getParcelableExtra(ConstansUtil.PARK_ORDER_INFO);
+        mParkOrderInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_ORDER_INFO);
         if (mParkOrderInfo == null) {
             showFiveToast("获取订单信息失败，请稍后重试");
             finish();
@@ -186,8 +188,9 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
-                case ConstansUtil.PICTURE_REQUEST_CODE:
+                case PhotoPickConfig.PICK_MORE_REQUEST_CODE:
                     data.setAction(ConstansUtil.PHOTO_IMAGE);
+                    Log.e(TAG, "onActivityResult: " + data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST));
                     IntentObserable.dispatch(data);
                     break;
                 case ConstansUtil.DISOUNT_REQUEST_CODE:

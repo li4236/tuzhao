@@ -2,7 +2,6 @@ package com.tuzhao.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,11 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lwkandroid.imagepicker.ImagePicker;
-import com.lwkandroid.imagepicker.data.ImageBean;
-import com.lwkandroid.imagepicker.data.ImagePickType;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.ParkBean;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
+import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseAdapter;
@@ -79,8 +76,6 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
     private TextView mParkSpaceHint;
 
     private PropertyAdapter mPropertyAdapter;
-
-    private ImagePicker mImagePicker;
 
     private CustomDialog mCustomDialog;
 
@@ -271,11 +266,11 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             mParkSpaceInfo.setParkLotId(mPark.getParkID());
             mParkSpaceInfo.setParkLotName(mPark.getParkStation());
             mParkSpaceInfo.setRevenueRatio(revenueRatio);
-        } else if (requestCode == ConstansUtil.PICTURE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+        } else if (requestCode == PhotoPickConfig.PICK_MORE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             //选择的图片
-            final List<ImageBean> imageBeans = data.getParcelableArrayListExtra(ImagePicker.INTENT_RESULT_DATA);
+            final List<String> imageBeans = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
             if (imageBeans.size() == 1) {
-                ImageUtil.compressPhoto(this, imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                ImageUtil.compressPhoto(this, imageBeans.get(0), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
                         handleCompressPhoto(file, mChoosePosition);
@@ -321,13 +316,6 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
     }
 
     private void startTakePhoto() {
-        if (mImagePicker == null) {
-            mImagePicker = new ImagePicker()
-                    .cachePath(Environment.getExternalStorageDirectory().getAbsolutePath())
-                    .needCamera(true) //是否需要在界面中显示相机入口(类似微信那样)
-                    .pickType(ImagePickType.MULTI)
-                    .maxNum(3); //设置选取类型(单选SINGLE、多选MUTIL、拍照ONLY_CAMERA)
-        }
         int maxNum = 1;
         if (mChoosePosition != 0 && mChoosePosition != 1) {
             if (mPropertyAdapter.get(0).getPath().equals("-1")) {
@@ -336,8 +324,7 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                 maxNum = 2;
             }
         }
-        mImagePicker.maxNum(maxNum);
-        mImagePicker.start(this, ConstansUtil.PICTURE_REQUEST_CODE);
+       ImageUtil.startTakeMultiPhoto(this,maxNum);
     }
 
     private void showPhoto(String url, int position) {
@@ -434,15 +421,15 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
         }
     }
 
-    private void handleImageBean(final List<ImageBean> imageBeans) {
+    private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 2:
-                    compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 2);
-                            compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 3);
@@ -452,11 +439,11 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     });
                     break;
                 case 3:
-                    compressSecondPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 3);
-                            compressThirdPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 4);
@@ -467,15 +454,15 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0).getImagePath(), new SuccessCallback<MyFile>() {
+            compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
                 @Override
                 public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 2);
-                    compressSecondPhoto(imageBeans.get(1).getImagePath(), new SuccessCallback<MyFile>() {
+                    compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 3);
-                            compressThirdPhoto(imageBeans.get(2).getImagePath(), new SuccessCallback<MyFile>() {
+                            compressThirdPhoto(imageBeans.get(2), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 4);

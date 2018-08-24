@@ -29,6 +29,8 @@
     <string name="look">查看</string>
     <string name="friend_park">好友车位</string>
 
+    <string name="file_provider_authorities">com.tuzhao.photopicker.provider</string>
+
     <string-array name="meter">
         <item>20</item>
         <item>185</item>
