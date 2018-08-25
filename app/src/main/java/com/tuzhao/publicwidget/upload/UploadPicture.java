@@ -16,6 +16,7 @@ import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.GlideApp;
@@ -36,8 +37,6 @@ import okhttp3.Response;
  * Created by juncoder on 2018/7/28.
  */
 public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements IntentObserver {
-
-    private static final String TAG = "UploadPicture";
 
     private CustomDialog mCustomDialog;
 
@@ -140,11 +139,11 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
                 case 0:
-                    compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
+                    ImageUtil.compressPhoto(mActivity, imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 0);
-                            compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
+                            ImageUtil.compressPhoto(mActivity, imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 1);
@@ -154,11 +153,11 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     });
                     break;
                 case 1:
-                    compressSecondPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
+                    ImageUtil.compressPhoto(mActivity, imageBeans.get(0), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
+                            ImageUtil.compressPhoto(mActivity, imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
@@ -169,15 +168,15 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     break;
             }
         } else {
-            compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
+            ImageUtil.compressPhoto(mActivity, imageBeans.get(0), new SuccessCallback<MyFile>() {
                 @Override
                 public void onSuccess(MyFile file) {
                     handleCompressPhoto(file, 0);
-                    compressSecondPhoto(imageBeans.get(1), new SuccessCallback<MyFile>() {
+                    ImageUtil.compressPhoto(mActivity, imageBeans.get(1), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile file) {
                             handleCompressPhoto(file, 1);
-                            compressThirdPhoto(imageBeans.get(2), new SuccessCallback<MyFile>() {
+                            ImageUtil.compressPhoto(mActivity, imageBeans.get(2), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
                                     handleCompressPhoto(file, 2);
@@ -189,19 +188,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
             });
         }
     }
-
-    private void compressFirstPhoto(String path, SuccessCallback<MyFile> callback) {
-        ImageUtil.compressPhoto(mActivity, path, callback);
-    }
-
-    private void compressSecondPhoto(String path, SuccessCallback<MyFile> callback) {
-        ImageUtil.compressPhoto(mActivity, path, callback);
-    }
-
-    private void compressThirdPhoto(String path, SuccessCallback<MyFile> callback) {
-        ImageUtil.compressPhoto(mActivity, path, callback);
-    }
-
+    
     private void handleCompressPhoto(File file, int position) {
         switch (position) {
             case 0:
@@ -406,6 +393,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         if (Objects.equals(intent.getAction(), ConstansUtil.PHOTO_IMAGE)) {
             ArrayList<String> list = intent.getStringArrayListExtra(ConstansUtil.INTENT_MESSAGE);
             if (list.size() == 1) {
+                MyToast.showToast(mActivity.getApplicationContext(), "压缩中...", 5);
                 ImageUtil.compressPhoto(mActivity, list.get(0), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
@@ -413,6 +401,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     }
                 });
             } else {
+                MyToast.showToast(mActivity.getApplicationContext(), "压缩中...", 5);
                 handleImageBean(list);
             }
         }

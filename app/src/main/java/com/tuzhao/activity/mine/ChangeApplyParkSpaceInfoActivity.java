@@ -271,6 +271,7 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             //选择的图片
             final List<String> imageBeans = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
             if (imageBeans.size() == 1) {
+                showLoadingDialog("压缩中...");
                 ImageUtil.compressPhoto(this, imageBeans.get(0), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
@@ -278,6 +279,7 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     }
                 });
             } else {
+                showLoadingDialog("压缩中...");
                 handleImageBean(imageBeans);
             }
         }
@@ -331,7 +333,7 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                 maxNum = 2;
             }
         }
-       ImageUtil.startTakeMultiPhoto(this,maxNum);
+        ImageUtil.startTakeMultiPhoto(this, maxNum);
     }
 
     private void showPhoto(String url, int position) {

@@ -236,12 +236,11 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             Uri resultUri = Uri.parse(data.getStringExtra(PhotoPickConfig.EXTRA_CLIP_PHOTO));
             final File file = new File(resultUri.getPath());
             if (file.exists()) {
+                showLoadingDialog("压缩中...");
                 if (mChoosePosition == 0) {
                     mParkSpaceInfo.setIdCardPositiveUrl(file.getAbsolutePath());
-                    showIdCardPositivePhoto(mParkSpaceInfo.getIdCardPositiveUrl(), false);
                 } else {
                     mParkSpaceInfo.setIdCardNegativeUrl(file.getAbsolutePath());
-                    showIdCardNegativePhoto(mParkSpaceInfo.getIdCardNegativeUrl(), false);
                 }
                 ImageUtil.compressPhoto(this, file.getAbsolutePath(), new SuccessCallback<MyFile>() {
                     @Override
@@ -255,9 +254,16 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         } else if (requestCode == PhotoPickConfig.PICK_MORE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             ArrayList<String> photoList = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
             if (photoList != null) {
+                showLoadingDialog("压缩中...");
                 if (photoList.size() == 1) {
-                    handleCompressPhoto(new File(photoList.get(0)), mChoosePosition);
+                    ImageUtil.compressPhoto(this, photoList.get(0), new SuccessCallback<MyFile>() {
+                        @Override
+                        public void onSuccess(MyFile myFile) {
+                            handleCompressPhoto(myFile, mChoosePosition);
+                        }
+                    });
                 } else {
+                    showLoadingDialog("压缩中...");
                     handleImageBean(photoList);
                 }
             }
@@ -300,6 +306,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     }
 
     private void handleCompressPhoto(File file, int position) {
+        dismmisLoadingDialog();
         switch (position) {
             case 0:
                 mParkSpaceInfo.setIdCardPositiveUrl(file.getAbsolutePath());

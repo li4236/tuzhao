@@ -384,14 +384,19 @@ public class ImageUtil {
                 .build();
     }
 
+    /**
+     * 启动多选图片,需要在onDestroy或者onDestroyView调用GlideApp.get(getApplicationContext()).clearMemory();
+     *
+     * @param maxSize 最多可选择的图片数量
+     */
     public static void startTakeMultiPhoto(Activity activity, int maxSize) {
         new PhotoPickConfig
                 .Builder(activity)
                 .imageLoader(new GlideImageLoader(false))                //图片加载方式，支持任意第三方图片加载库
                 .pickMode(PhotoPickConfig.MODE_PICK_MORE)         //设置照片选择模式为多选
-                .maxPickSize(maxSize)   //多选时可以选择的图片数量，默认为1张
+                .maxPickSize(maxSize)       //多选时可以选择的图片数量，默认为1张
                 .showCamera(true)           //是否展示相机icon，默认展示
-                .clipPhoto(false)            //是否开启裁剪照片功能，默认关闭
+                .clipPhoto(false)           //是否开启裁剪照片功能，默认关闭
                 .build();
     }
 
