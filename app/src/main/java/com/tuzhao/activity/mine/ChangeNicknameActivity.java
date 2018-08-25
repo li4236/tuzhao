@@ -19,7 +19,6 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.editviewwatch.LimitInputTextWatcher;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -49,7 +48,7 @@ public class ChangeNicknameActivity extends BaseActivity {
 
     private void initView() {
         edittext_newnickname = findViewById(R.id.id_activity_changenickname_layout_edittext_newnickname);
-        edittext_newnickname.addTextChangedListener(new LimitInputTextWatcher(edittext_newnickname, "[^a-zA-Z0-9\\u4E00-\\u9FA5_,，.。?？:：;；￥$%@!~、！!“”（）()*·{}【】—+=]"));
+        //edittext_newnickname.addTextChangedListener(new LimitInputTextWatcher(edittext_newnickname, "[^a-zA-Z0-9\\u4E00-\\u9FA5_,，.。?？:：;；￥$%@!~、！!“”（）()*·{}【】—+=]"));
         imageview_clean = findViewById(R.id.id_activity_changenickname_layout_imageview_clean);
     }
 
@@ -78,7 +77,7 @@ public class ChangeNicknameActivity extends BaseActivity {
                 } else {
                     initLoading();
                     OkGo.post(HttpConstants.changeUserNickname)
-                            .tag(ChangeNicknameActivity.this)
+                            .tag(ChangeNicknameActivity.this.getClass().getName())
                             .addInterceptor(new TokenInterceptor())
                             .headers("token", UserManager.getInstance().getUserInfo().getToken())
                             .params("nickname", edittext_newnickname.getText().toString().trim())
@@ -159,7 +158,7 @@ public class ChangeNicknameActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        OkGo.getInstance().cancelTag(this);
+        OkGo.getInstance().cancelTag(getClass().getName());
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }

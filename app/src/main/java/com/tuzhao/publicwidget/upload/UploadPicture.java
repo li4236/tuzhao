@@ -188,7 +188,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
             });
         }
     }
-    
+
     private void handleCompressPhoto(File file, int position) {
         switch (position) {
             case 0:

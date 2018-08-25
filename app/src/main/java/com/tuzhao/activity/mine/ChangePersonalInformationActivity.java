@@ -39,13 +39,7 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
 
     private CircleImageView mUserProtrait;
 
-    private TextView mUserName;
-
     private TextView mNickname;
-
-    private TextView mGender;
-
-    private TextView mBirthday;
 
     private User_Info mUserInfo;
 
@@ -57,10 +51,7 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     @Override
     protected void initView(Bundle savedInstanceState) {
         mUserProtrait = findViewById(R.id.user_protrait);
-        mUserName = findViewById(R.id.user_name);
         mNickname = findViewById(R.id.nickname);
-        mGender = findViewById(R.id.gender);
-        mBirthday = findViewById(R.id.birthday);
 
         findViewById(R.id.user_portrait_tv).setOnClickListener(this);
         findViewById(R.id.nickname_tv).setOnClickListener(this);
@@ -70,24 +61,11 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     protected void initData() {
         mUserInfo = UserManager.getInstance().getUserInfo();
         ImageUtil.showPic(mUserProtrait, HttpConstants.ROOT_IMG_URL_USER + mUserInfo.getImg_url(), R.mipmap.ic_usericon);
-        if (mUserInfo.getRealName().equals("") || mUserInfo.getRealName().equals("-1")) {
-            mUserName.setText("未认证");
-        } else {
-            mUserName.setText(mUserInfo.getRealName());
-        }
 
         if (mUserInfo.getNickname().equals("-1")) {
             mNickname.setText("昵称（未设置）");
         } else {
             mNickname.setText(mUserInfo.getNickname());
-        }
-
-        mGender.setText(mUserInfo.getGender().equals("1") ? "男" : "女");
-
-        if (mUserInfo.getBirthday().equals("0000-00-00")) {
-            mBirthday.setText("未认证");
-        } else {
-            mBirthday.setText(mUserInfo.getBirthday());
         }
 
         IntentObserable.registerObserver(this);
@@ -104,7 +82,6 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
         switch (v.getId()) {
             case R.id.user_portrait_tv:
                 ImageUtil.startTakePhotoAndCrop(ChangePersonalInformationActivity.this);
-                //showImagePicker();
                 break;
             case R.id.nickname_tv:
                 startActivity(ChangeNicknameActivity.class);
@@ -150,11 +127,11 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
                 .tag(TAG)
                 .headers("token", mUserInfo.getToken())
                 .params("img_file", file)
-                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<User_Info> stringBase_class_info, Call call, Response response) {
-                        mUserInfo.setImg_url(stringBase_class_info.data.getImg_url());
-                        ImageUtil.showPicWithNoAnimate(mUserProtrait, HttpConstants.ROOT_IMG_URL_USER + stringBase_class_info.data.getImg_url(), new OnLoadCallback<Drawable, Exception>() {
+                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        mUserInfo.setImg_url(stringBase_class_info.data);
+                        ImageUtil.showPicWithNoAnimate(mUserProtrait, HttpConstants.ROOT_IMG_URL_USER + stringBase_class_info.data, new OnLoadCallback<Drawable, Exception>() {
                             @Override
                             public void onSuccess(Drawable drawable) {
                                 mUserProtrait.setImageDrawable(drawable);
