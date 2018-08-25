@@ -142,14 +142,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private AMap aMap;
     private SensorEventHelper mSensorHelper;
     private SensorEventHelper mCircleSensorHelper;
-    private ImageView imageview_turnown, imageview_spark, imageview_scharge,
-            imageview_search;
-    private CircleImageView imageview_user, imageview_huser;
-    private TextView textview_username, textview_citynodata, textview_credit;
-    private TextView textview_mywallet, textview_parkorder, textview_share,
-            textview_mycarnumble, textview_mypark, textview_set, textview_mycollection, textview_find;
+    private ImageView mLocationIv, mParkLotIv, mChargePileIv,
+            mSearchIv;
+    private CircleImageView mHomeProtraitIv, mDrawerProtraitIv;
+    private TextView mUserName, mCityNotOpen, mCredit;
+    private TextView mMyWallet, mOrder, mShare,
+            mCar, mParkSpace, mSetting, mCollection, mFind;
     private TextView mParkNow;
-    private ConstraintLayout constraintLayout_openuser, constraintLayout_user;
+    private ConstraintLayout mHomeDrawerCl, mDrawerTopCl;
     private LoginDialogFragment loginDialogFragment;
     private LoadingDialog mLoadingDialog;
     /**
@@ -164,24 +164,20 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private boolean mHadShowGps;
     private boolean isFirstloc = true;
-    private LatLng mLastlocationLatlng = null, showmarklal = null, lastLatlng = null;
+    private LatLng mLastlocationLatlng = null;
     private float morenZoom = 14f;//地图的默认缩放等级
     private CameraPosition mLastPosition;//点击marker时地图的位置，用于点击地图后返回地图点击前的位置
     private LatLng mLastLatLng;//上次移动地图时的坐标
     private String mLastCity;//上次移动地图时未开放的城市名字
-    private List<ClusterItem> mMarkerData = new LinkedList<>();//当前全部的地图标点的数据
+    private List<ClusterItem> mAllMarkerData = new LinkedList<>();//当前全部的地图标点的数据
     private List<ClusterItem> mShowMarkerData = new ArrayList<>();//当前显示的城市地图标点的数据
-    private List<ClusterItem> mQMarkerData = new ArrayList<>();//其他城市地图标点的数据
-    private List<ClusterItem> mShowQMarkerData = new ArrayList<>();//其他城市地图标点的数据
-    private List<NearPointPCInfo> mYData = new ArrayList<>(), mQYData = new ArrayList<>();
     private ClusterOverlay mClusterOverlay;//标点的聚拢
     private FragmentManager mFragmentManager;
     private View mFragment_content;
     private float mTranslationY;
     private float mCityNoDataTranslationY;
     private boolean show = false, showClusters, show1 = false, isShowPark = true, isShowCharge = true, isFirstMove = true, isLcData = true;
-    private int mapwidth, mapheight;//地图控件的宽高，用来地图中心点
-    private int moveDistance = 2000;//移动再次请求的距离
+    private int mapwidth;//地图控件的宽高，用来地图中心点
     private GeocodeSearch geocoderSearch;//将经纬度转化为地址
     private String search_address = "";//搜索的地址
     private String moveCityCode = null;
@@ -259,39 +255,38 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         geocoderSearch = new GeocodeSearch(this);
         mFragmentManager = getSupportFragmentManager();
-        imageview_user = findViewById(R.id.id_activity_main_layout_imageview_user);
-        imageview_turnown = findViewById(R.id.id_content_main_layout_imageview_turnown);
-        imageview_search = findViewById(R.id.id_content_main_layout_imageview_search);
+        mHomeProtraitIv = findViewById(R.id.id_activity_main_layout_imageview_user);
+        mLocationIv = findViewById(R.id.id_content_main_layout_imageview_turnown);
+        mSearchIv = findViewById(R.id.id_content_main_layout_imageview_search);
         mFragment_content = findViewById(R.id.id_content_main_layout_linerlayout_fragment);
-        textview_username = findViewById(R.id.id_activity_main_layout_textview_username);
-        constraintLayout_user = findViewById(R.id.user_info);
-        textview_set = findViewById(R.id.id_activity_main_layout_linearlayout_set);
-        textview_mywallet = findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
-        textview_parkorder = findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
-        textview_mycarnumble = findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
-        textview_mypark = findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
-        textview_mycollection = findViewById(R.id.id_activity_main_layout_linearlayout_mycollection);
-        textview_find = findViewById(R.id.id_activity_main_layout_linearlayout_find);
-        textview_share = findViewById(R.id.id_activity_main_layout_linearlayout_share);
-        imageview_spark = findViewById(R.id.id_content_main_layout_imageview_spark);
-        imageview_huser = findViewById(R.id.id_content_main_layout_imageview_huser);
-        imageview_scharge = findViewById(R.id.id_content_main_layout_imageview_scharge);
-        textview_citynodata = findViewById(R.id.id_content_main_layout_textview_citynodata);
-        constraintLayout_openuser = findViewById(R.id.id_content_main_layout_relativelayout_openuser);
-        textview_credit = findViewById(R.id.id_activity_main_layout_textview_credit);
+        mUserName = findViewById(R.id.id_activity_main_layout_textview_username);
+        mDrawerTopCl = findViewById(R.id.user_info);
+        mSetting = findViewById(R.id.id_activity_main_layout_linearlayout_set);
+        mMyWallet = findViewById(R.id.id_activity_main_layout_linearlayout_mywallet);
+        mOrder = findViewById(R.id.id_activity_main_layout_linearlayout_parkorder);
+        mCar = findViewById(R.id.id_activity_main_layout_linearlayout_mycarnumble);
+        mParkSpace = findViewById(R.id.id_activity_main_layout_linearlayout_mypark);
+        mCollection = findViewById(R.id.id_activity_main_layout_linearlayout_mycollection);
+        mFind = findViewById(R.id.id_activity_main_layout_linearlayout_find);
+        mShare = findViewById(R.id.id_activity_main_layout_linearlayout_share);
+        mParkLotIv = findViewById(R.id.id_content_main_layout_imageview_spark);
+        mDrawerProtraitIv = findViewById(R.id.id_content_main_layout_imageview_huser);
+        mChargePileIv = findViewById(R.id.id_content_main_layout_imageview_scharge);
+        mCityNotOpen = findViewById(R.id.id_content_main_layout_textview_citynodata);
+        mHomeDrawerCl = findViewById(R.id.id_content_main_layout_relativelayout_openuser);
+        mCredit = findViewById(R.id.id_activity_main_layout_textview_credit);
         mParkNow = findViewById(R.id.id_content_main_layout_textview_parknow);
 
         int barHeight = setStyle(false);
         ConstraintSet userConstraintSet = new ConstraintSet();
-        userConstraintSet.clone(constraintLayout_user);
+        userConstraintSet.clone(mDrawerTopCl);
         userConstraintSet.setMargin(R.id.id_activity_main_layout_imageview_user, ConstraintSet.TOP, dp2px(this, 30) + barHeight);
-        userConstraintSet.applyTo(constraintLayout_user);
-        //showMarkers(mMarkerData);
+        userConstraintSet.applyTo(mDrawerTopCl);
 
         ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout_openuser);
+        constraintSet.clone(mHomeDrawerCl);
         constraintSet.setMargin(R.id.id_content_main_layout_imageview_huser, ConstraintSet.BOTTOM, dp2px(this, 1.5f));
-        constraintSet.applyTo(constraintLayout_openuser);
+        constraintSet.applyTo(mHomeDrawerCl);
     }
 
     private void initData() {
@@ -299,37 +294,37 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         registerLogout();//注册退出登录广播接收器
         IntentObserable.registerObserver(this);
         if (UserManager.getInstance().hasLogined()) {
-            ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showPic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
-            ImageUtil.showPic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showPic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
 
-            textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
+            mUserName.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
             String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
-            textview_credit.setText(credit);
+            mCredit.setText(credit);
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
         } else {
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-            ImageUtil.showCirclePic(imageview_huser, R.mipmap.ic_usericon);
+            ImageUtil.showCirclePic(mDrawerProtraitIv, R.mipmap.ic_usericon);
         }
     }
 
     private void initEvent() {
-        constraintLayout_openuser.setOnClickListener(this);
-        imageview_turnown.setOnClickListener(this);
-        textview_set.setOnClickListener(this);
-        constraintLayout_user.setOnClickListener(this);
-        imageview_search.setOnClickListener(this);
-        textview_mywallet.setOnClickListener(this);
-        textview_parkorder.setOnClickListener(this);
-        textview_mycarnumble.setOnClickListener(this);
-        textview_mycollection.setOnClickListener(this);
-        textview_mypark.setOnClickListener(this);
-        textview_find.setOnClickListener(this);
-        textview_share.setOnClickListener(this);
-        imageview_spark.setOnClickListener(this);
-        imageview_scharge.setOnClickListener(this);
-        textview_credit.setOnClickListener(this);
+        mHomeDrawerCl.setOnClickListener(this);
+        mLocationIv.setOnClickListener(this);
+        mSetting.setOnClickListener(this);
+        mDrawerTopCl.setOnClickListener(this);
+        mSearchIv.setOnClickListener(this);
+        mMyWallet.setOnClickListener(this);
+        mOrder.setOnClickListener(this);
+        mCar.setOnClickListener(this);
+        mCollection.setOnClickListener(this);
+        mParkSpace.setOnClickListener(this);
+        mFind.setOnClickListener(this);
+        mShare.setOnClickListener(this);
+        mParkLotIv.setOnClickListener(this);
+        mChargePileIv.setOnClickListener(this);
+        mCredit.setOnClickListener(this);
         mParkNow.setOnClickListener(this);
         mParkNow.setClickable(false);
         findViewById(R.id.id_activity_main_layout_linearlayout_friend_park).setOnClickListener(this);
@@ -338,7 +333,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mapView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mapheight = mapView.getMeasuredHeight();
                 mapwidth = mapView.getMeasuredWidth();
                 mapView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -348,11 +342,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             @Override
             public void onMapClick(LatLng latLng) {
                 if (show) {
-                    Log.e(TAG, "onMapClick: show");
                     //点击了地图时如果车场或电站详情的fragment正在显示则隐藏
                     controlAnimfragment(mFragment_content);
                 } else if (showClusters) {
-                    Log.e(TAG, "onMapClick: showClusters");
                     if (mLastPosition != null) {
                         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastPosition.target, mLastPosition.zoom));
                         showClusters = false;
@@ -367,14 +359,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             public void onTouch(MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if (mLastLatLng == null) {
-                        Log.e(TAG, "onTouch: null");
                         //记录当前点击marker的坐标
                         mLastLatLng = aMap.getCameraPosition().target;
                     } else {
                         //判断屏幕移动的位置是否超过10公里，如果超过则请求新的数据
-                        Log.e(TAG, "onTouch: notNull");
                         if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getCameraPosition().target) / 1000 >= 10) {
-                            Log.e(TAG, "onTouch: calculateLineDistance");
                             mLastLatLng = aMap.getCameraPosition().target;
                             getAddressOrCitycode(mLastLatLng, true);
                         }
@@ -399,11 +388,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         switch (v.getId()) {
             case R.id.id_content_main_layout_relativelayout_openuser:
                 if (UserManager.getInstance().hasLogined()) {
-                    ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    ImageUtil.showCirclePic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                             R.mipmap.ic_usericon);
-                    textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
+                    mUserName.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
                     String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
-                    textview_credit.setText(credit);
+                    mCredit.setText(credit);
                     mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
                     mDrawerlayout.openDrawer(GravityCompat.START); //侧边展出
                     // 关闭侧边  drawer.closeDrawer(GravityCompat.START);
@@ -421,14 +410,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     controlAnimfragment(mFragment_content);
                 }
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
-                if (mMarkerData.size() == 0 && LocationManager.getInstance().hasLocation()) {
+                if (mAllMarkerData.size() == 0 && LocationManager.getInstance().hasLocation()) {
                     initLoading("正在加载...");
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
                             LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
                             LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, "当前城市");
                 } else {
                     if (isShowPark && isShowCharge) {
-                        showMarkers(mMarkerData);
+                        showMarkers(mAllMarkerData);
                     } else {
                         showMarkers(mShowMarkerData);
                     }
@@ -444,9 +433,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.id_content_main_layout_imageview_search:
                 //跳转搜索页面
-                if (mClusterOverlay != null) {
-                    mClusterOverlay.onDestroy();
-                }
                 intent = new Intent(MainActivity.this, SearchAddressActivity.class);
                 intent.putExtra("whatPage", "2");
                 intent.putExtra("cityCode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
@@ -481,76 +467,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 intent = new Intent(MainActivity.this, TextActivity.class);
                 startActivity(intent);
                 MyToast.showToast(MainActivity.this, "功能开发中", 5);
-               /*OkGo.post(HttpConstants.zTest)
-                       .execute(new JsonCallback<Void>() {
-                           @Override
-                           public void onSuccess(Void aVoid, Call call, Response response) {
-                               MyToast.showToast(MainActivity.this,"success",5);
-                           }
-
-                           @Override
-                           public void onError(Call call, Response response, Exception e) {
-                               super.onError(call, response, e);
-                               MyToast.showToast(MainActivity.this,e.getMessage(),5);
-                           }
-                       });*/
                 break;
             case R.id.id_content_main_layout_imageview_spark:
                 //右上角的车场图标
-                if (show) {
-                    controlAnimfragment(mFragment_content);
-                }
-                if (isShowPark) {
-                    isShowPark = false;
-                    isShowCharge = true;
-                    imageview_spark.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_park6));
-                    imageview_scharge.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_chong7));
-                    if (isLcData) {
-                        mShowMarkerData.clear();
-                        for (ClusterItem item : mMarkerData) {
-                            if (!item.isparkspace()) {
-                                mShowMarkerData.add(item);
-                            }
-                        }
-                        showMarkers(mShowMarkerData);
-                    } else {
-                        mShowQMarkerData.clear();
-                        for (ClusterItem item : mQMarkerData) {
-                            if (!item.isparkspace()) {
-                                mShowQMarkerData.add(item);
-                            }
-                        }
-                        showMarkers(mShowQMarkerData);
-                    }
-                } else {
-                    imageview_spark.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_park5));
-                    isShowPark = true;
-                    if (isLcData) {
-                        mShowMarkerData.clear();
-                        if (isShowCharge) {
-                            showMarkers(mMarkerData);
-                        } else {
-                            for (ClusterItem item : mMarkerData) {
-                                if (item.isparkspace()) {
-                                    mShowMarkerData.add(item);
-                                }
-                            }
-                            showMarkers(mShowMarkerData);
-                        }
-                    } else {
-                        mShowQMarkerData.clear();
-                        if (isShowCharge) {
-                            showMarkers(mQMarkerData);
-                        } else {
-                            for (ClusterItem item : mQMarkerData) {
-                                if (item.isparkspace()) {
-                                    mShowQMarkerData.add(item);
-                                }
-                            }
-                            showMarkers(mShowQMarkerData);
-                        }
-                    }
-                }
+                onParkIconClick();
                 break;
             case R.id.id_content_main_layout_imageview_scharge:
                 //右上角的电站图标
@@ -560,35 +480,34 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 if (isShowCharge) {
                     isShowCharge = false;
                     isShowPark = true;
-                    imageview_scharge.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_chong8));
-                    imageview_spark.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_park5));
+                    ImageUtil.showPic(mParkLotIv, R.mipmap.ic_park5);
+                    ImageUtil.showPic(mChargePileIv, R.mipmap.ic_chong8);
                     if (isLcData) {
                         mShowMarkerData.clear();
-                        for (ClusterItem item : mMarkerData) {
+                        for (ClusterItem item : mAllMarkerData) {
                             if (item.isparkspace()) {
                                 mShowMarkerData.add(item);
                             }
                         }
                         showMarkers(mShowMarkerData);
                     } else {
-                        mShowQMarkerData.clear();
-                        for (ClusterItem item : mQMarkerData) {
+                        mShowMarkerData.clear();
+                        for (ClusterItem item : mAllMarkerData) {
                             if (item.isparkspace()) {
-                                mShowQMarkerData.add(item);
+                                mShowMarkerData.add(item);
                             }
                         }
-                        showMarkers(mShowQMarkerData);
+                        showMarkers(mShowMarkerData);
                     }
                 } else {
-                    imageview_scharge.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_chong7));
+                    mChargePileIv.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_chong7));
                     isShowCharge = true;
                     if (isLcData) {
                         mShowMarkerData.clear();
                         if (isShowPark) {
-                            mClusterOverlay.onDestroy();
-                            showMarkers(mMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else {
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
@@ -596,17 +515,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             showMarkers(mShowMarkerData);
                         }
                     } else {
-                        mShowQMarkerData.clear();
+                        mShowMarkerData.clear();
                         if (isShowPark) {
-                            mClusterOverlay.onDestroy();
-                            showMarkers(mQMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else {
-                            for (ClusterItem item : mQMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
-                                    mShowQMarkerData.add(item);
+                                    mShowMarkerData.add(item);
                                 }
                             }
-                            showMarkers(mShowQMarkerData);
+                            showMarkers(mShowMarkerData);
                         }
                     }
                 }
@@ -626,28 +544,71 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             case R.id.id_content_main_layout_textview_parknow:
                 intent = new Intent(MainActivity.this, ParkOrChargeListActivity.class);
                 intent.putExtra("citycode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
-                /*if (mLastlocationLatlng != null) {
-                    if (aMap.getCameraPosition().target.latitude != mLastlocationLatlng.latitude&&
-                            aMap.getCameraPosition().target.longitude!=mLastlocationLatlng.longitude) {
-                        if (isLcData) {
-                            intent.putExtra("lat", mLastlocationLatlng.latitude);
-                            intent.putExtra("lon", mLastlocationLatlng.longitude);
-                        } else {
-                            intent.putExtra("lat", aMap.getCameraPosition().target.latitude);
-                            intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
-                        }
-                    } else {
-                        intent.putExtra("lat", aMap.getCameraPosition().target.latitude);
-                        intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
-                    }
-                } else {
-                }*/
                 intent.putExtra("lat", aMap.getCameraPosition().target.latitude);
                 intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
                 startActivity(intent);
                 break;
         }
     }
+
+    private void onParkIconClick() {
+        if (show) {
+            controlAnimfragment(mFragment_content);
+        }
+        if (isShowPark) {
+            isShowPark = false;
+            isShowCharge = true;
+            ImageUtil.showPic(mParkLotIv, R.mipmap.ic_park6);
+            ImageUtil.showPic(mChargePileIv, R.mipmap.ic_chong7);
+
+            if (isLcData) {
+                mShowMarkerData.clear();
+                for (ClusterItem item : mAllMarkerData) {
+                    if (!item.isparkspace()) {
+                        mShowMarkerData.add(item);
+                    }
+                }
+                showMarkers(mShowMarkerData);
+            } else {
+                mShowMarkerData.clear();
+                for (ClusterItem item : mAllMarkerData) {
+                    if (!item.isparkspace()) {
+                        mShowMarkerData.add(item);
+                    }
+                }
+                showMarkers(mShowMarkerData);
+            }
+        } else {
+            mParkLotIv.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_park5));
+            isShowPark = true;
+            if (isLcData) {
+                mShowMarkerData.clear();
+                if (isShowCharge) {
+                    showMarkers(mAllMarkerData);
+                } else {
+                    for (ClusterItem item : mAllMarkerData) {
+                        if (item.isparkspace()) {
+                            mShowMarkerData.add(item);
+                        }
+                    }
+                    showMarkers(mShowMarkerData);
+                }
+            } else {
+                mShowMarkerData.clear();
+                if (isShowCharge) {
+                    showMarkers(mAllMarkerData);
+                } else {
+                    for (ClusterItem item : mAllMarkerData) {
+                        if (item.isparkspace()) {
+                            mShowMarkerData.add(item);
+                        }
+                    }
+                    showMarkers(mShowMarkerData);
+                }
+            }
+        }
+    }
+
 
     private void requestSaveBiaoji(String address) {
         OkGo.post(HttpConstants.addCollection)
@@ -710,54 +671,46 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (show1) {
                             controlAnim(false);
                         }
-                        /*if (mMarkerData.size() + homePC_info.data.size() > 80) {
-                            //最多显示80个marker
-                            for (int i = 0, moreDataSize = mMarkerData.size() + homePC_info.data.size() - 80; i <= moreDataSize; i++) {
-                                mMarkerData.remove(0);
-                            }
-                        }*/
 
                         for (NearPointPCInfo info : homePC_info.data) {
                             RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
                                     info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
                                     info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
-                            if (!mMarkerData.contains(item)) {
-                                mMarkerData.add(item);
+                            if (!mAllMarkerData.contains(item)) {
+                                mAllMarkerData.add(item);
                             }
                         }
 
-                        while (mMarkerData.size() > 80) {
-                            mMarkerData.remove(0);
+                        //最多显示80个marker
+                        while (mAllMarkerData.size() > 80) {
+                            mAllMarkerData.remove(0);
                         }
 
                         if (isShowPark && isShowCharge) {
-                            Log.e(TAG, "onSuccess one: " + mMarkerData.size());
-                            showMarkers(mMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else if (isShowPark) {
                             mShowMarkerData.clear();
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
                             }
-                            Log.e(TAG, "onSuccess two: " + mShowMarkerData.size());
                             showMarkers(mShowMarkerData);
                         } else {
                             mShowMarkerData.clear();
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
                             }
-                            Log.e(TAG, "onSuccess three: " + mShowMarkerData.size());
                             showMarkers(mShowMarkerData);
                         }
                         /*if (isLc) {
-                            //mMarkerData = new ArrayList<>();
+                            //mAllMarkerData = new ArrayList<>();
                             //mYData = homePC_info.data;
-                            if (mMarkerData.size() + homePC_info.data.size() > 80) {
-                                for (int i = 0, moreDataSize = mMarkerData.size() + homePC_info.data.size() - 80; i <= moreDataSize; i++) {
-                                    mMarkerData.remove(0);
+                            if (mAllMarkerData.size() + homePC_info.data.size() > 80) {
+                                for (int i = 0, moreDataSize = mAllMarkerData.size() + homePC_info.data.size() - 80; i <= moreDataSize; i++) {
+                                    mAllMarkerData.remove(0);
                                 }
                                 //最多显示80个marker
                             }
@@ -766,16 +719,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
                                         info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
                                         info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
-                                if (!mMarkerData.contains(item)) {
-                                    mMarkerData.add(item);
+                                if (!mAllMarkerData.contains(item)) {
+                                    mAllMarkerData.add(item);
                                 }
                             }
 
                             if (isShowPark && isShowCharge) {
-                                showMarkers(mMarkerData);
+                                showMarkers(mAllMarkerData);
                             } else if (isShowPark) {
                                 mShowMarkerData.clear();
-                                for (ClusterItem item : mMarkerData) {
+                                for (ClusterItem item : mAllMarkerData) {
                                     if (item.isparkspace()) {
                                         mShowMarkerData.add(item);
                                     }
@@ -783,7 +736,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 showMarkers(mShowMarkerData);
                             } else {
                                 mShowMarkerData.clear();
-                                for (ClusterItem item : mMarkerData) {
+                                for (ClusterItem item : mAllMarkerData) {
                                     if (!item.isparkspace()) {
                                         mShowMarkerData.add(item);
                                     }
@@ -791,32 +744,32 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 showMarkers(mShowMarkerData);
                             }
                         } else {
-                            mQMarkerData.clear();
+                            mAllMarkerData.clear();
                             //mQYData = homePC_info.data;
                             for (NearPointPCInfo info : homePC_info.data) {
                                 RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
                                         info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
                                         info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
-                                mQMarkerData.add(item);
+                                mAllMarkerData.add(item);
                             }
                             if (isShowPark && isShowCharge) {
-                                showMarkers(mQMarkerData);
+                                showMarkers(mAllMarkerData);
                             } else {
-                                mShowQMarkerData.clear();
+                                mShowMarkerData.clear();
                                 if (isShowPark) {
-                                    for (ClusterItem item : mQMarkerData) {
+                                    for (ClusterItem item : mAllMarkerData) {
                                         if (item.isparkspace()) {
-                                            mShowQMarkerData.add(item);
+                                            mShowMarkerData.add(item);
                                         }
                                     }
-                                    showMarkers(mShowQMarkerData);
+                                    showMarkers(mShowMarkerData);
                                 } else {
-                                    for (ClusterItem item : mQMarkerData) {
+                                    for (ClusterItem item : mAllMarkerData) {
                                         if (!item.isparkspace()) {
-                                            mShowQMarkerData.add(item);
+                                            mShowMarkerData.add(item);
                                         }
                                     }
-                                    showMarkers(mShowQMarkerData);
+                                    showMarkers(mShowMarkerData);
                                 }
                             }
                         }*/
@@ -844,7 +797,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 case 103:
                                     //城市未开放
                                     String noOpen = cityname + "暂未开放";
-                                    textview_citynodata.setText(noOpen);
+                                    mCityNotOpen.setText(noOpen);
                                     if (!show1 || !Objects.equals(mLastCity, cityname)) {
                                         mLastCity = cityname;
                                         controlAnim(true);
@@ -863,8 +816,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             }
 
                             if (isShowPark && isShowCharge) {
-                                Log.e(TAG, "onError four: " + mMarkerData.size());
-                                showMarkers(mMarkerData);
+                                Log.e(TAG, "onError four: " + mAllMarkerData.size());
+                                showMarkers(mAllMarkerData);
                             } else {
                                 Log.e(TAG, "onError five: " + mShowMarkerData.size());
                                 showMarkers(mShowMarkerData);
@@ -890,7 +843,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 LocationManager.getInstance().setmAmapLocation(amapLocation);
                 setViewClick();
                 mLastlocationLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
-                lastLatlng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 mLastLatLng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 if (isFirstloc) {
                     //第一次定位成功
@@ -914,7 +866,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             LocationManager.getInstance().getmAmapLocation().getLongitude() + "",
                             "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
                 } else {
-                    if (mMarkerData == null) {
+                    if (mAllMarkerData == null) {
                         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                         isLcData = true;
                         requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
@@ -1113,15 +1065,15 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mapView.onResume();
 
         if (UserManager.getInstance().hasLogined()) {
-            ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+            ImageUtil.showCirclePic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                     R.mipmap.ic_usericon);
-            textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ?
+            mUserName.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ?
                     UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length())
                     : UserManager.getInstance().getUserInfo().getNickname());
             String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
-            textview_credit.setText(crecdit);
+            mCredit.setText(crecdit);
         }
-        ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+        ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                 R.mipmap.ic_usericon);
     }
 
@@ -1184,6 +1136,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
      */
     @Override
     public void onClick(Marker marker, List<ClusterItem> clusterItems) {
+        Log.e(TAG, "onClick: " + clusterItems.size());
         if (clusterItems.size() > 1) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (ClusterItem clusterItem : clusterItems) {
@@ -1200,7 +1153,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             markerAnimation.setDuration(700);  //设置动画时间 单位毫秒
             marker.setAnimation(markerAnimation);
             marker.startAnimation();
-            showmarklal = clusterItems.get(0).getPosition();
+            LatLng markerLatLng = clusterItems.get(0).getPosition();
             NearPointPCInfo info = new NearPointPCInfo();
             info.setId(clusterItems.get(0).getId());
             info.setLatitude(clusterItems.get(0).getPosition().latitude);
@@ -1215,7 +1168,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             showUpWindowOnMap(info, clusterItems.get(0).isparkspace());
             Log.e(TAG, "onMarkerClick: ");
             //横坐标往右偏移一点以让图标居中
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(showmarklal.latitude, showmarklal.longitude - 0.000918), 15.5f));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(markerLatLng.latitude, markerLatLng.longitude - 0.000918), 15.5f));
         }
     }
 
@@ -1267,15 +1220,15 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private void controlAnim(boolean show) {
         show1 = show;
         if (mCityNoDataTranslationY == 0) {
-            mCityNoDataTranslationY = textview_citynodata.getY() + textview_citynodata.getHeight();
+            mCityNoDataTranslationY = mCityNotOpen.getY() + mCityNotOpen.getHeight();
         }
         ObjectAnimator objectAnimator;
         if (show) {
-            textview_citynodata.setVisibility(View.VISIBLE);
-            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", -mCityNoDataTranslationY, 0);
+            mCityNotOpen.setVisibility(View.VISIBLE);
+            objectAnimator = ObjectAnimator.ofFloat(mCityNotOpen, "translationY", -mCityNoDataTranslationY, 0);
         } else {
-            textview_citynodata.setVisibility(View.GONE);
-            objectAnimator = ObjectAnimator.ofFloat(textview_citynodata, "translationY", 0, -mCityNoDataTranslationY);
+            mCityNotOpen.setVisibility(View.GONE);
+            objectAnimator = ObjectAnimator.ofFloat(mCityNotOpen, "translationY", 0, -mCityNoDataTranslationY);
         }
         objectAnimator.setDuration(500);
         objectAnimator.start();
@@ -1286,7 +1239,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (Objects.equals(intent.getAction(), ConstansUtil.FORCE_LOGOUT)) {
             mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-            ImageUtil.showPic(imageview_huser, R.mipmap.ic_usericon);
+            ImageUtil.showPic(mDrawerProtraitIv, R.mipmap.ic_usericon);
 
             TipeDialog tipeDialog = new TipeDialog.Builder(this)
                     .setCancelable(false)
@@ -1301,10 +1254,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     .create();
             tipeDialog.show();
         } else if (Objects.equals(intent.getAction(), ConstansUtil.CHANGE_NICKNAME)) {
-            textview_username.setText(UserManager.getInstance().getUserInfo().getNickname());
+            mUserName.setText(UserManager.getInstance().getUserInfo().getNickname());
         } else if (Objects.equals(intent.getAction(), ConstansUtil.CHANGE_PORTRAIT)) {
-            ImageUtil.showPic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
-            ImageUtil.showPic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+            ImageUtil.showPic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+            ImageUtil.showPic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
         }
     }
 
@@ -1317,13 +1270,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         public void onReceive(Context context, Intent intent) {
             if (UserManager.getInstance().hasLogined()) {
                 Log.e(TAG, "onReceive: ");
-                ImageUtil.showCirclePic(imageview_user, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                ImageUtil.showCirclePic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
-                ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
-                textview_username.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
+                mUserName.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ? UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length()) : UserManager.getInstance().getUserInfo().getNickname());
                 String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
-                textview_credit.setText(credit);
+                mCredit.setText(credit);
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
             }
         }
@@ -1339,8 +1292,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             if (!UserManager.getInstance().hasLogined()) {
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
-                ImageUtil.showPic(imageview_huser, R.mipmap.ic_usericon);
-               /* ImageUtil.showCirclePic(imageview_huser, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                ImageUtil.showPic(mDrawerProtraitIv, R.mipmap.ic_usericon);
+               /* ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);*/
             }
         }
@@ -1422,10 +1375,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 } else {
                     if (isLcData) {
                         if (isShowPark && isShowCharge) {
-                            showMarkers(mMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else if (isShowPark) {
                             mShowMarkerData.clear();
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
@@ -1433,7 +1386,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             showMarkers(mShowMarkerData);
                         } else {
                             mShowMarkerData.clear();
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
@@ -1442,23 +1395,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         }
                     } else {
                         if (isShowPark && isShowCharge) {
-                            showMarkers(mQMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else if (isShowPark) {
-                            mShowQMarkerData.clear();
-                            for (ClusterItem item : mQMarkerData) {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (item.isparkspace()) {
-                                    mShowQMarkerData.add(item);
+                                    mShowMarkerData.add(item);
                                 }
                             }
-                            showMarkers(mShowQMarkerData);
+                            showMarkers(mShowMarkerData);
                         } else {
-                            mShowQMarkerData.clear();
-                            for (ClusterItem item : mQMarkerData) {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
-                                    mShowQMarkerData.add(item);
+                                    mShowMarkerData.add(item);
                                 }
                             }
-                            showMarkers(mShowQMarkerData);
+                            showMarkers(mShowMarkerData);
                         }
                     }
                 }
@@ -1495,10 +1448,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 } else {
                     if (isLcData) {
                         if (isShowPark && isShowCharge) {
-                            showMarkers(mMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else if (isShowPark) {
                             mShowMarkerData.clear();
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
@@ -1506,7 +1459,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             showMarkers(mShowMarkerData);
                         } else {
                             mShowMarkerData.clear();
-                            for (ClusterItem item : mMarkerData) {
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
                                     mShowMarkerData.add(item);
                                 }
@@ -1515,23 +1468,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         }
                     } else {
                         if (isShowPark && isShowCharge) {
-                            showMarkers(mQMarkerData);
+                            showMarkers(mAllMarkerData);
                         } else if (isShowPark) {
-                            mShowQMarkerData.clear();
-                            for (ClusterItem item : mQMarkerData) {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (item.isparkspace()) {
-                                    mShowQMarkerData.add(item);
+                                    mShowMarkerData.add(item);
                                 }
                             }
-                            showMarkers(mShowQMarkerData);
+                            showMarkers(mShowMarkerData);
                         } else {
-                            mShowQMarkerData.clear();
-                            for (ClusterItem item : mQMarkerData) {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mAllMarkerData) {
                                 if (!item.isparkspace()) {
-                                    mShowQMarkerData.add(item);
+                                    mShowMarkerData.add(item);
                                 }
                             }
-                            showMarkers(mShowQMarkerData);
+                            showMarkers(mShowMarkerData);
                         }
                     }
                 }
@@ -1584,7 +1537,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     } else {
                         Log.e(TAG, "onRegeocodeSearched: " + result.getRegeocodeAddress().getCityCode());
                         if (result.getRegeocodeAddress().getCityCode().equals("1900")) {
-                            textview_citynodata.setText("当前位置暂未开放");
+                            mCityNotOpen.setText("当前位置暂未开放");
                             if (!show1) {
                                 controlAnim(true);
                             }
@@ -1617,7 +1570,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void showMarkers(List<ClusterItem> markerdata) {
-        Log.e(TAG, "showMarkers: mClusterOverlay");
         /*if (mClusterOverlay != null) {
             mClusterOverlay.onDestroy();
         }
@@ -1648,25 +1600,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), 30), getApplicationContext());
             mClusterOverlay.setClusterRenderer(MainActivity.this);
             mClusterOverlay.setOnClusterClickListener(MainActivity.this);
-            mClusterOverlay.setOnCameraMoveRequestData(new ClusterOverlay.OnCameraMoveRequestData() {
-                @Override
-                public void OnCameraMoveRequestData() {
-                    if (!isFirstMove) {
-                        if (lastLatlng != null) {
-                            if (AMapUtils.calculateLineDistance(lastLatlng, aMap.getCameraPosition().target) > moveDistance) {
-                                lastLatlng = aMap.getCameraPosition().target;
-                                getAddressOrCitycode(aMap.getCameraPosition().target, true);
-                            }
-                        } else {
-                            lastLatlng = aMap.getCameraPosition().target;
-                            getAddressOrCitycode(aMap.getCameraPosition().target, true);
-                        }
-
-                    } else {
-                        isFirstMove = false;
-                    }
-                }
-            });
         } else {
             mClusterOverlay.assignClusters(markerdata);
         }

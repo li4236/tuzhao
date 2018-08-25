@@ -31,7 +31,6 @@ public class LocationManager {
     }
 
     public boolean hasLocation() {
-
         return mAmapLocation != null ;
     }
 
