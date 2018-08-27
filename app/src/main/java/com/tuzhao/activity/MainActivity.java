@@ -241,7 +241,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mapView.onCreate(savedInstanceState);
         if (aMap == null) {
             aMap = mapView.getMap();
-
             aMap.getUiSettings().setRotateGesturesEnabled(false);
             aMap.getUiSettings().setZoomControlsEnabled(false);
             aMap.animateCamera(CameraUpdateFactory.zoomTo(morenZoom));
@@ -1695,4 +1694,5 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     .show();
         }
     }
+
 }

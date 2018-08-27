@@ -43,6 +43,9 @@ import static com.tuzhao.utils.DensityUtil.dp2px;
 /**
  * Created by yiyi.qi on 16/10/10.
  * 整体设计采用了两个线程,一个线程用于计算组织聚合数据,一个线程负责处理Marker相关操作
+ * <p>
+ * optimization by juncoder
+ * </p>
  */
 public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarkerClickListener {
     private static final String TAG = "ClusterOverlay";
@@ -91,7 +94,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
      * @param clusterSize     聚合元素之间的距离为多少时开始聚合为一个聚合点
      */
     public ClusterOverlay(AMap amap, List<ClusterItem> allClusterItems, int clusterSize, Context context) {
-        //默认最多会缓存80张不同的图片作为聚合显示元素图片,根据自己显示需求和app使用内存情况,可以修改数量
+        //默认最多会缓存40张不同的图片作为聚合显示元素图片,根据自己显示需求和app使用内存情况,可以修改数量
         mLruCache = new LruCache<Integer, BitmapDescriptor>(40) {
             protected void entryRemoved(boolean evicted, Integer key, BitmapDescriptor oldValue, BitmapDescriptor newValue) {
                 oldValue.recycle();
@@ -126,7 +129,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         amap.setOnMarkerClickListener(this);
         initThreadHandler();
 
-        //有可能这时候已经调了onCameraChangeFinish方法，所以还是需要计算
+        //有可能这时候已经回调了onCameraChangeFinish方法，所以还是需要计算
         assignClusters();
     }
 

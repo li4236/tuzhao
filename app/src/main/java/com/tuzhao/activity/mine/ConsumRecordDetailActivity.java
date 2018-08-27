@@ -36,75 +36,56 @@ public class ConsumRecordDetailActivity extends BaseActivity {
         if (getIntent().hasExtra("consumrecord_info")) {
             consumrecord_info = (ConsumRecordInfo) getIntent().getSerializableExtra("consumrecord_info");
 
-            try {
-                switch (Integer.parseInt(consumrecord_info.getType())) {
-                    case 1:
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_fee)).setText("+"+consumrecord_info.getIncome_amount());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n1)).setText("出租车位");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n2)).setText("出租时间");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n3)).setText("到账时间");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n4)).setText("到账方式");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_place)).setText(consumrecord_info.getPark_name());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time1)).setText(consumrecord_info.getPark_time());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time2)).setText(consumrecord_info.getIncome_time());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_way)).setText("余额");
-                        break;
-                    case 2:
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_fee)).setText("-"+consumrecord_info.getActual_pay_fee());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n1)).setText("停车场");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n2)).setText("停车时间");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n3)).setText("付款时间");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n4)).setText("付款方式");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_place)).setText(consumrecord_info.getConsume_describe());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time1)).setText(consumrecord_info.getPark_time());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time2)).setText(consumrecord_info.getPay_time());
-                        String[] aaa = consumrecord_info.getPay_way().split(",");
-                        String way = "";
-                        if (aaa.length>1){
-                            for (int i = 0; i<aaa.length;i++){
-                                if (i==0){
-                                    switch (Integer.parseInt(aaa[0])){
-                                        case 1:
-                                            way = "支付宝";
-                                            break;
-                                        case 2:
-                                            way = "微信";
-                                            break;
-                                        case 3:
-                                            way = "余额";
-                                            break;
-                                    }
-                                }else if (i == 1){
-                                    switch (Integer.parseInt(aaa[0])){
-                                        case 1:
-                                            way = way + " + 支付宝";
-                                            break;
-                                        case 2:
-                                            way = " + 微信";
-                                            break;
-                                        case 3:
-                                            way = " + 余额";
-                                            break;
-                                    }
-                                }
-
+            switch (Integer.parseInt(consumrecord_info.getType())) {
+                case 1:
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_fee)).setText("+" + consumrecord_info.getTime());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n1)).setText("出租车位");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n2)).setText("出租时间");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n3)).setText("到账时间");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n4)).setText("到账方式");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_place)).setText(consumrecord_info.getParkName());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time1)).setText(consumrecord_info.getTimeSlot());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time2)).setText(consumrecord_info.getTime());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_way)).setText("余额");
+                    break;
+                case 2:
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_fee)).setText("-" + consumrecord_info.getAmount());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n1)).setText("停车场");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n2)).setText("停车时间");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n3)).setText("付款时间");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n4)).setText("付款方式");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_place)).setText(consumrecord_info.getParkName());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time1)).setText(consumrecord_info.getTimeSlot());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time2)).setText(consumrecord_info.getTime());
+                    String way = "";
+                    switch (consumrecord_info.getPaymentMethod()) {
+                        case "1":
+                            way = "支付宝";
+                            break;
+                        case "2":
+                            way = "微信";
+                            break;
+                        case "3":
+                            if (consumrecord_info.getPaymentMethod().contains(",")) {
+                                way = "支付宝,微信";
+                            } else {
+                                way = "余额";
                             }
-                        }
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_way)).setText(way);
-                        break;
-                    case 3:
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_fee)).setText("-"+consumrecord_info.getAmount());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n1)).setText("提现金额");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n2)).setText("提现时间");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n3)).setText("到账时间");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n4)).setText("到账账户");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_place)).setText(consumrecord_info.getAmount()+"元");
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time1)).setText(consumrecord_info.getApplymoney_time());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time2)).setText(consumrecord_info.getGetmoney_time());
-                        ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_way)).setText("支付宝");
-                        break;
-                }
-            } catch (Exception e) {
+                            break;
+                    }
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_way)).setText(way);
+                    break;
+                case 3:
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_fee)).setText("-" + consumrecord_info.getAmount());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n1)).setText("提现金额");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n2)).setText("提现时间");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n3)).setText("到账时间");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_n4)).setText("到账账户");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_place)).setText(consumrecord_info.getAmount() + "元");
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time1)).setText(consumrecord_info.getTime());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_time2)).setText(consumrecord_info.getTime());
+                    ((TextView) findViewById(R.id.id_activity_consumrecorddetail_layout_textview_way)).setText("支付宝");
+                    break;
             }
         } else {
             finish();
