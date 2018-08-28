@@ -52,6 +52,7 @@ public class ZhimaCertification {
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("name",name)
                 .params("idCardNumber",idCardNumber)
+                .params("returnUrl","tuzhao://certify.zhima.activity")
                 .execute(new JsonCallback<Base_Class_Info<ZhimaInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ZhimaInfo> o, Call call, Response response) {

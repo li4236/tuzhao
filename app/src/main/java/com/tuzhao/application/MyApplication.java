@@ -17,7 +17,6 @@ import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.cache.CacheMode;
 import com.tianzhili.www.myselfsdk.okgo.model.HttpParams;
-import com.tianzhili.www.myselfsdk.update.UpdateConfig;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.User_Info;
@@ -29,6 +28,7 @@ import com.tuzhao.publicmanager.WeChatManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.GlideApp;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.logging.Level;
@@ -84,11 +84,10 @@ public class MyApplication extends MultiDexApplication {
 
         /*开启网络广播监听*/
         NetStateReceiver.registerNetworkStateReceiver(this);
-
-        /**
-         * 检查版本更新
+        /*
+          检查版本更新
          */
-        UpdateConfig.init(this);
+        //UpdateConfig.init(this);
 
         OkGo.init(this);
 
@@ -141,7 +140,6 @@ public class MyApplication extends MultiDexApplication {
 
 
             autoLogin();//自动登录
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,7 +149,7 @@ public class MyApplication extends MultiDexApplication {
     public void onLowMemory() {
         super.onLowMemory();
         NetStateReceiver.unRegisterNetworkStateReceiver(this);
-        android.os.Process.killProcess(android.os.Process.myPid());
+        GlideApp.get(this).clearMemory();
     }
 
     public static MyApplication getInstance() {

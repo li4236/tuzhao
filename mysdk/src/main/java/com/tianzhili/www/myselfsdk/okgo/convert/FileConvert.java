@@ -51,13 +51,19 @@ public class FileConvert implements Converter<File> {
 
     @Override
     public File convertSuccess(Response value) throws Exception {
-        if (TextUtils.isEmpty(destFileDir)) destFileDir = Environment.getExternalStorageDirectory() + DM_TARGET_FOLDER;
-        if (TextUtils.isEmpty(destFileName)) destFileName = HttpUtils.getNetFileName(value, value.request().url().toString());
+        if (TextUtils.isEmpty(destFileDir))
+            destFileDir = Environment.getExternalStorageDirectory() + DM_TARGET_FOLDER;
+        if (TextUtils.isEmpty(destFileName))
+            destFileName = HttpUtils.getNetFileName(value, value.request().url().toString());
 
         File dir = new File(destFileDir);
-        if (!dir.exists()) dir.mkdirs();
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
         File file = new File(dir, destFileName);
-        if (file.exists()) file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
 
         long lastRefreshUiTime = 0;  //最后一次刷新的时间
         long lastWriteBytes = 0;     //最后一次写入字节数据

@@ -25,6 +25,11 @@ public class HttpConstants {
     public static final String ROOT_IMG_URL_GROUP_PHOTO = ROOT_BASE_IMG_URL + "groupPhoto/";//合影
 
     /**
+     * 检查更新
+     */
+    public static final String checkVersion = ROOT_URL + "checkVersion";
+
+    /**
      * 请求主页地图页面停车位和充电桩的具体位置的经纬度
      */
     public static final String getNearPointLocData = ROOT_URL + "getNearPointLocData";

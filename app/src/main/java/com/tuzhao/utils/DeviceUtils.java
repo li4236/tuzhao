@@ -10,7 +10,9 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 
 import java.net.NetworkInterface;
 import java.security.MessageDigest;
@@ -26,23 +28,12 @@ import java.util.Locale;
 
 public class DeviceUtils {
 
+    private static final String TAG = "DeviceUtils";
+
     private Context mContext;
 
     public DeviceUtils(Context context) {
         mContext = context;
-    }
-
-    /**
-     * Return the android id of device.
-     *
-     * @return the android id of device
-     */
-    @SuppressLint("HardwareIds")
-    public String getAndroidID() {
-        return Settings.Secure.getString(
-                mContext.getContentResolver(),
-                Settings.Secure.ANDROID_ID
-        );
     }
 
     /**
@@ -124,6 +115,20 @@ public class DeviceUtils {
     }
 
     /**
+     * @return 手机型号
+     */
+    public static String getSystemModel() {
+        return Build.MODEL;
+    }
+
+    /**
+     * @return 手机厂商
+     */
+    public static String getDeviceBrand() {
+        return Build.BRAND;
+    }
+
+    /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
      */
     public static boolean isGpsOpen(Context context) {
@@ -170,6 +175,57 @@ public class DeviceUtils {
         action.setData(Uri.parse("alipays://"));
         List<ResolveInfo> list = manager.queryIntentActivities(action, PackageManager.GET_RESOLVED_FILTER);
         return list != null && list.size() > 0;
+    }
+
+    /**
+     * 获取本地软件版本号
+     */
+    public static int getLocalVersion(Context ctx) {
+        int localVersion = 0;
+        try {
+            PackageInfo packageInfo = ctx.getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(ctx.getPackageName(), 0);
+            localVersion = packageInfo.versionCode;
+            Log.d(TAG, "本软件的版本号：" + localVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return localVersion;
+    }
+
+    /**
+     * 获取本地软件版本号名称
+     */
+    public static String getLocalVersionName(Context ctx) {
+        String localVersion = "";
+        try {
+            PackageInfo packageInfo = ctx.getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(ctx.getPackageName(), 0);
+            localVersion = packageInfo.versionName;
+            Log.e(TAG, "getLocalVersionName: " + "本软件的版本名：" + localVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return localVersion;
+    }
+
+    /*
+     * 跳转到开启通知栏的界面
+     */
+    public static void openNotification(Context context) {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+            intent.putExtra(Settings.EXTRA_CHANNEL_ID, 621);
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.fromParts("package", context.getPackageName(), null));
+        }
+        context.startActivity(intent);
     }
 
 }

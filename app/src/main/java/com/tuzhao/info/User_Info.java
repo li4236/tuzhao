@@ -359,7 +359,7 @@ public class User_Info extends BaseInfo {
      * @return 是否已实名认证
      */
     public boolean isCertification() {
-        return !realName.equals("") && !birthday.equals("0000-00-00");
+        return !realName.equals("-1") && !birthday.equals("0000-00-00");
     }
 
     @Override

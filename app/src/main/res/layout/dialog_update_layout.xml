@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:theme="@style/TransparentTheme">
+
+    <ImageView
+        android:id="@+id/dialog_iv"
+        android:layout_width="230dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/dialog_close"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/picture_description"
+        android:padding="6dp"
+        android:src="@mipmap/ic_delimg"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_iv"
+        app:layout_constraintStart_toEndOf="@+id/dialog_iv"
+        app:layout_constraintTop_toTopOf="@id/dialog_iv" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        android:id="@+id/bottom_cl"
+        app:layout_constraintEnd_toEndOf="@id/dialog_iv"
+        app:layout_constraintStart_toStartOf="@id/dialog_iv"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_iv">
+
+        <TextView
+            android:id="@+id/update_title"
+            style="@style/ThirtyTextB1Style"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:text="升级内容"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/update_content"
+            style="@style/TwentyTextB1Style"
+            android:layout_width="230dp"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:lineSpacingExtra="4dp"
+            android:paddingEnd="16dp"
+            android:maxHeight="100dp"
+            android:paddingStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_title" />
+
+        <CheckBox
+            android:id="@+id/ignore_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/yellow_checkbox_bg"
+            android:paddingBottom="12dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="16dp"
+            android:visibility="gone"
+            android:paddingTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_content" />
+
+        <TextView
+            android:id="@+id/ignore_tv"
+            style="@style/TwentyTextB1Style"
+            android:visibility="gone"
+            android:text="该版本不再提示更新"
+            app:layout_constraintBottom_toBottomOf="@id/ignore_cb"
+            app:layout_constraintStart_toEndOf="@id/ignore_cb"
+            app:layout_constraintTop_toTopOf="@+id/ignore_cb" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="@dimen/icon_size_40dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+            android:gravity="center"
+            android:text="马上升级"
+            android:id="@+id/update_now"
+            android:textColor="@color/b1"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ignore_cb" />
+
+        <com.tuzhao.publicwidget.customView.UpdateProgress
+            android:id="@+id/update_pb"
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_content" />
+
+        <TextView
+            android:id="@+id/update_hint"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="新版本正在努力更新中，请稍等"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_pb" />
+
+        <TextView
+            android:id="@+id/backgound_update_tv"
+            android:layout_width="120dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+            android:gravity="center"
+            android:text="后台更新"
+            android:textColor="@color/b1"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_pb" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

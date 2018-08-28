@@ -60,8 +60,6 @@ import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.netStateLib.NetUtils;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.callback.FileCallback;
-import com.tianzhili.www.myselfsdk.update.UpdateHelper;
-import com.tianzhili.www.myselfsdk.update.type.UpdateType;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.CollectionActivity;
@@ -99,12 +97,14 @@ import com.tuzhao.publicwidget.map.ClusterOverlay;
 import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.update.UpdateManager;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.SpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -191,16 +191,27 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private Timer mTimer;
 
+    private UpdateManager mUpdateManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout_refatory);
+        SpUtils.getInstance(this).putBoolean(SpUtils.ALREADY_UPDATE, false);
         // 网络改变的一个回掉类
         mNetChangeObserver = new NetChangeObserver() {
             @Override
             public void onNetConnected(NetUtils.NetType type) {
                 Log.e("唉唉唉", "网络连接上了" + type);
                 mlocationClient.startLocation();
+                if (!SpUtils.getInstance(MainActivity.this).getBoolean(SpUtils.ALREADY_UPDATE)) {
+                    if (mUpdateManager != null) {
+                        mUpdateManager.onDestroy();
+                        mUpdateManager = null;
+                    }
+                    mUpdateManager = new UpdateManager(MainActivity.this);
+                    mUpdateManager.checkUpdate();
+                }
             }
 
             @Override
@@ -232,7 +243,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void initVersion() {
-        UpdateHelper.getInstance().setUpdateType(UpdateType.autowifiupdate).check(MainActivity.this);
+        mUpdateManager = new UpdateManager(this);
+        mUpdateManager.checkUpdate();
+        //UpdateHelper.getInstance().setUpdateType(UpdateType.autowifiupdate).check(MainActivity.this);
     }
 
     private void initView(Bundle savedInstanceState) {
@@ -916,6 +929,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
+        mUpdateManager.onDestroy();
     }
 
     private void addLoactionMarker(LatLng latlng) {
@@ -1490,9 +1504,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
         }
 
-        if (requestCode == OPEN_GPS) {
+        if (requestCode == OPEN_GPS && resultCode == RESULT_OK) {
             isFirstloc = true;
             mlocationClient.startLocation();
+        } else {
+            mUpdateManager.onActivityResult(requestCode, resultCode);
         }
     }
 
@@ -1669,6 +1685,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             if (noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
             }
+        } else {
+            mUpdateManager.onRequestPermissionsResult(requestCode, grantResults);
         }
     }
 

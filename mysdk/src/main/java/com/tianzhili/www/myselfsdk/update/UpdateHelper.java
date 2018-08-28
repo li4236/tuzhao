@@ -77,7 +77,7 @@ public class UpdateHelper {
     }
 
     public static void init(Context appContext) {
-        instance = new UpdateHelper(appContext);
+        instance = new UpdateHelper(appContext.getApplicationContext());
     }
 
     public UpdateHelper(Context context) {

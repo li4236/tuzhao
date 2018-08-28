@@ -8,28 +8,16 @@ import com.tianzhili.www.myselfsdk.update.UpdateHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class UpdateSP {
 
-
-    public static final String KEY_DOWN_SIZE = "update_download_size";
+    private static final String KEY_DOWN_SIZE = "update_download_size";
 
     public static boolean isIgnore(String nversionandtime) {
         SharedPreferences sp = UpdateHelper.getInstance().getContext().getSharedPreferences(KEY_DOWN_SIZE, Context.MODE_PRIVATE);
         String versionandtime = sp.getString("_update_version_ignore", "");
-        if (versionandtime == "") {
-            return false;
-        }else {
-            if (versionandtime.substring(0, versionandtime.indexOf(",")).equals(nversionandtime.substring(0, nversionandtime.indexOf(",")))) {
-                if (getTimeDifferenceHour(versionandtime.substring(versionandtime.indexOf(",") + 1, versionandtime.length()), nversionandtime.substring(nversionandtime.indexOf(",") + 1, nversionandtime.length())) > 36) {
-                    return false;
-                } else {
-                    return true;
-                }
-            } else {
-                return false;
-            }
-        }
+        return !versionandtime.equals("") && versionandtime.substring(0, versionandtime.indexOf(",")).equals(nversionandtime.substring(0, nversionandtime.indexOf(","))) && !(getTimeDifferenceHour(versionandtime.substring(versionandtime.indexOf(",") + 1, versionandtime.length()), nversionandtime.substring(nversionandtime.indexOf(",") + 1, nversionandtime.length())) > 36);
     }
 
     public static boolean isForced() {
@@ -56,47 +44,43 @@ public class UpdateSP {
         SharedPreferences sp = UpdateHelper.getInstance().getContext().getSharedPreferences(KEY_DOWN_SIZE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("_update_version_ignore", versionandtime);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setForced(boolean def) {
         SharedPreferences sp = UpdateHelper.getInstance().getContext().getSharedPreferences(KEY_DOWN_SIZE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("_update_version_forced", def);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setDialogLayout(int def) {
         SharedPreferences sp = UpdateHelper.getInstance().getContext().getSharedPreferences(KEY_DOWN_SIZE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("_update_version_layout_id", def);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setStatusBarLayout(int def) {
         SharedPreferences sp = UpdateHelper.getInstance().getContext().getSharedPreferences(KEY_DOWN_SIZE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("_update_version_status_layout_id", def);
-        editor.commit();
+        editor.apply();
     }
 
     public static void setDialogDownloadLayout(int def) {
         SharedPreferences sp = UpdateHelper.getInstance().getContext().getSharedPreferences(KEY_DOWN_SIZE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("_update_version_download_layout_id", def);
-        editor.commit();
+        editor.apply();
     }
 
     /**
      * 计算相差的小时
-     *
-     * @param starTime
-     * @param endTime
-     * @return
      */
-    public static float getTimeDifferenceHour(String starTime, String endTime) {
+    private static float getTimeDifferenceHour(String starTime, String endTime) {
         float hour = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         try {
             Date parse = dateFormat.parse(starTime);
             Date parse1 = dateFormat.parse(endTime);
@@ -114,4 +98,5 @@ public class UpdateSP {
         }
         return hour;
     }
+
 }
