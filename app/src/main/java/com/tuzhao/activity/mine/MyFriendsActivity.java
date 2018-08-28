@@ -438,6 +438,9 @@ public class MyFriendsActivity extends BaseStatusActivity {
                                 case "108":
                                     showFiveToast("不能添加自己哦");
                                     break;
+                                case "109":
+                                    showFiveToast("你的亲友的共享车位已达到上限啦");
+                                    break;
                             }
                         }
                     }
