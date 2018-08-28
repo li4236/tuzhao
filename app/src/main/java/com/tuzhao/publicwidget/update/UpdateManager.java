@@ -41,6 +41,7 @@ import com.tuzhao.utils.SpUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -197,7 +198,16 @@ public class UpdateManager {
                         } else {
                             setDialogProgress(100);
                         }
-                        checkInstallPermission();
+                        if (Objects.equals(DeviceUtils.getFileMd5(file), updateInfo.getNewMd5())) {
+                            checkInstallPermission();
+                        } else {
+                            MyToast.showToast(mWeakReference.get(), "安装包异常，请下次再试", 5);
+                            if (!forceUpdate) {
+                                mCustomDialog.cancel();
+                            } else {
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                            }
+                        }
                     }
 
                     @Override
