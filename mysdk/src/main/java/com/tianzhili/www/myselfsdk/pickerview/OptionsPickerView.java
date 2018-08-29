@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class OptionsPickerView<T> extends BasePickerView implements View.OnClickListener {
     private WheelOptions<T> wheelOptions;
-    private Button btnSubmit, btnCancel;
+    private TextView btnSubmit, btnCancel;
     private TextView tvTitle;
     private OnOptionsSelectListener optionsSelectListener;
     private static final String TAG_SUBMIT = "submit";
@@ -59,8 +59,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置选中的item位置
-     *
-     * @param option1
      */
     public void setSelectOptions(int option1) {
         wheelOptions.setCurrentItems(option1, 0, 0);
@@ -68,9 +66,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置选中的item位置
-     *
-     * @param option1
-     * @param option2
      */
     public void setSelectOptions(int option1, int option2) {
         wheelOptions.setCurrentItems(option1, option2, 0);
@@ -78,10 +73,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置选中的item位置
-     *
-     * @param option1
-     * @param option2
-     * @param option3
      */
     public void setSelectOptions(int option1, int option2, int option3) {
         wheelOptions.setCurrentItems(option1, option2, option3);
@@ -89,8 +80,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置选项的单位
-     *
-     * @param label1
      */
     public void setLabels(String label1) {
         wheelOptions.setLabels(label1, null, null);
@@ -98,9 +87,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置选项的单位
-     *
-     * @param label1
-     * @param label2
      */
     public void setLabels(String label1, String label2) {
         wheelOptions.setLabels(label1, label2, null);
@@ -108,10 +94,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置选项的单位
-     *
-     * @param label1
-     * @param label2
-     * @param label3
      */
     public void setLabels(String label1, String label2, String label3) {
         wheelOptions.setLabels(label1, label2, label3);
@@ -119,8 +101,6 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置是否循环滚动
-     *
-     * @param cyclic
      */
     public void setCyclic(boolean cyclic) {
         wheelOptions.setCyclic(cyclic);
@@ -164,10 +144,9 @@ public class OptionsPickerView<T> extends BasePickerView implements View.OnClick
 
     /**
      * 设置文字大小
-     *
-     * @param textSize
      */
     public void setTextSize(float textSize) {
         wheelOptions.setTextSize(textSize);
     }
+
 }

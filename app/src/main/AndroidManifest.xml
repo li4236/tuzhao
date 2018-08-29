@@ -203,6 +203,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.mine.FriendParkSpaceActivity" />
 
         <activity
             android:name="com.tianzhili.www.myselfsdk.photopicker.ui.PhotoPickActivity"

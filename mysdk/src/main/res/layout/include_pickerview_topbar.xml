@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:background="@color/pickerview_bg_topbar">
 
-    <Button
+    <TextView
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -28,7 +28,7 @@
         android:textColor="@color/pickerview_topbar_title"
         android:textSize="@dimen/pickerview_topbar_title_textsize" />
 
-    <Button
+    <TextView
         android:id="@id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
