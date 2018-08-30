@@ -638,7 +638,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
         }
 
         getOkGo(HttpConstants.editShareTime)
-                .params("cityCode", mParkInfo.getCitycode())
+                .params("cityCode", mParkInfo.getCityCode())
                 .params("parkId", mParkInfo.getId())
                 .params("shareDate", shareDate)
                 .params("shareDay", shareDay.toString())

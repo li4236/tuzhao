@@ -178,7 +178,7 @@ public class BasePickerView {
         }
     };
 
-    public View findViewById(int id) {
+    public <T extends View> T findViewById(int id) {
         return contentContainer.findViewById(id);
     }
 

@@ -38,7 +38,6 @@
         style="@style/TenTextG6Stytle"
         android:layout_marginBottom="18dp"
         android:layout_marginEnd="16dp"
-        android:text="空闲中"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

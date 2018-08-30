@@ -13,6 +13,11 @@ public class Search_Address_Info extends BaseInfo {
     private double latitude;//搜索出来的地址
     private double longitude;//搜索出来的地址
     private String citycode;//搜索地址的城市码
+    private long time;
+
+    public Search_Address_Info() {
+        time = System.currentTimeMillis();
+    }
 
     public String get_id() {
         return id;
@@ -52,5 +57,13 @@ public class Search_Address_Info extends BaseInfo {
 
     public void setCitycode(String citycode) {
         this.citycode = citycode;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

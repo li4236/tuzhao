@@ -103,7 +103,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
         super.initData();
         getOkGo(HttpConstants.getBindingFriends)
                 .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .execute(new JsonCallback<Base_Class_List_Info<FriendInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<FriendInfo> o, Call call, Response response) {
@@ -268,7 +268,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
         showLoadingDialog("正在修改");
         getOkGo(HttpConstants.modifyFriendNickname)
                 .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .params("friendId", friendId)
                 .params("noteName", noteName)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -311,7 +311,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
         getOkGo(HttpConstants.deleteFriend)
                 .params("friendId", mAdapter.getData().get(position).getFriendId())
                 .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
@@ -324,7 +324,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            showFiveToast("删除失败，请稍后重试");
                         }
                     }
                 });
@@ -391,7 +391,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
         showLoadingDialog("正在添加");
         getOkGo(HttpConstants.addFriend)
                 .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .params("telephone", telephone)
                 .params("noteName", mFriendNotename.getText().toString())
                 .execute(new JsonCallback<Base_Class_Info<FriendInfo>>() {

@@ -419,7 +419,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                 .tag(this.getClass().getName())
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("cityCode", mParkInfo.getCitycode())
+                .params("cityCode", mParkInfo.getCityCode())
                 .params("parkSpaceId", mParkInfo.getId())
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
@@ -469,7 +469,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         mOpenLock.setClickable(false);
         startAnimation();
         getOkGo(HttpConstants.userControlParkLock)
-                .params("cityCode", mParkInfo.getCitycode())
+                .params("cityCode", mParkInfo.getCityCode())
                 .params("parkSpaceId", mParkInfo.getId())
                 .params("controlType", isOpen ? "1" : "2")
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {

@@ -899,7 +899,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         OkGo.post(HttpConstants.getDetailOfParkOrder)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getToken())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .params("order_number", orderNumber)
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override

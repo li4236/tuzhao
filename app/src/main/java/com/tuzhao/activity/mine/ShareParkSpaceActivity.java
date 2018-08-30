@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -7,6 +8,7 @@ import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +21,13 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
+
+import java.text.DecimalFormat;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -31,9 +38,12 @@ import okhttp3.Response;
 
 public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
+    private List<Park_Info> mParkInfos;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
+        mParkInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.REQUEST_FOR_RESULT);
         ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -42,9 +52,23 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         ImageView imageView = constraintLayout.findViewById(R.id.no_address_empty_iv);
         ImageUtil.showPic(imageView, R.drawable.ic_noshare2);
         TextView textView = constraintLayout.findViewById(R.id.no_address_empty_tv);
-        textView.setText("暂无好友给您分享车位哦...");
+        if (mParkInfos == null) {
+            textView.setText("暂无好友给您分享车位哦...");
+        } else {
+            textView.setText("没有适合你的停车位哦...");
+            mCommonAdapter.setNewData(mParkInfos);
+        }
         mRecyclerView.setEmptyView(constraintLayout);
+        mRecyclerView.setRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
+    }
+
+    @Override
+    protected void initData() {
+        if (mParkInfos == null) {
+            super.initData();
+        }
     }
 
     @Override
@@ -119,22 +143,75 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         return "空闲中";
     }
 
+    private void showAppointmentDialog(final Park_Info parkInfo) {
+        new TipeDialog.Builder(this)
+                .setTitle("预约车位")
+                .setMessage("确定预约" + parkInfo.getLocation_describe() + "车位吗")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reserveFriendParkSpace(parkInfo);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void reserveFriendParkSpace(final Park_Info parkInfo) {
+        getOkGo(HttpConstants.reserveFriendParkSpace)
+                .params("parkLotId", parkInfo.getParkLotId())
+                .params("parkSpaceId", parkInfo.getId())
+                .params("carNumber", parkInfo.getCarNumber())
+                .params("parkInterval", parkInfo.getParkInterval())
+                .params("cityCode", parkInfo.getCityCode())
+                .execute(new JsonCallback() {
+                    @Override
+                    public void onSuccess(Object o, Call call, Response response) {
+                        notifyRemoveData(parkInfo);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast(e.getMessage());
+                        }
+                    }
+                });
+    }
+
     @Override
     protected int itemViewResourceId() {
         return R.layout.item_share_park_space_layout;
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, Park_Info park_info, int position) {
+    protected void bindData(BaseViewHolder holder, final Park_Info park_info, int position) {
         holder.setText(R.id.share_park_space_space_name, park_info.getLocation_describe())
                 .setText(R.id.share_park_space_share_name, "车主：" + park_info.getUserName());
-        TextView status = holder.getView(R.id.share_park_space_status);
-        ImageView statusIv = holder.getView(R.id.share_park_space_status_iv);
-        status.setText(getParkspaceStatus(park_info));
-        if (status.getText().toString().equals("空闲中")) {
-            statusIv.setBackgroundResource(R.drawable.circle_green7);
+        if (mParkInfos == null) {
+            TextView status = holder.getView(R.id.share_park_space_status);
+            ImageView statusIv = holder.getView(R.id.share_park_space_status_iv);
+            status.setText(getParkspaceStatus(park_info));
+            if (status.getText().toString().equals("空闲中")) {
+                statusIv.setBackgroundResource(R.drawable.circle_green7);
+            } else {
+                statusIv.setBackgroundResource(R.drawable.circle_r5);
+            }
         } else {
-            statusIv.setBackgroundResource(R.drawable.circle_r5);
+            if (park_info.getDistance() != 0) {
+                holder.setText(R.id.share_park_space_status, new DecimalFormat("0.00").format(park_info.getDistance() / 1000));
+                holder.appendText(R.id.share_park_space_status, "km");
+            } else {
+                goneView(holder.getView(R.id.share_park_space_status));
+            }
+            goneView(holder.getView(R.id.share_park_space_status_iv));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showAppointmentDialog(park_info);
+                }
+            });
         }
     }
 

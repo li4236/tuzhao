@@ -101,7 +101,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @Override
     protected void loadData() {
         showLoadingDialog();
-        getOkgos(HttpConstants.getRentalRecord, "cityCode", mPark_info.getCitycode(), "parkSpaceId", mPark_info.getId())
+        getOkgos(HttpConstants.getRentalRecord, "cityCode", mPark_info.getCityCode(), "parkSpaceId", mPark_info.getId())
                 .execute(new JsonCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<RentalRecordItemInfo> o, Call call, Response response) {

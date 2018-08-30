@@ -45,10 +45,10 @@ public class FriendParkSpaceActivity extends BaseStatusActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.share_list:
-
+                startActivity(ShareParkSpaceActivity.class);
                 break;
             case R.id.appointment_park_space:
-
+                startActivity(AppointmentParkSpaceActivity.class);
                 break;
             case R.id.appointment_record:
 

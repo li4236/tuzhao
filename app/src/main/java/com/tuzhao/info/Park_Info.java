@@ -3,8 +3,11 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Created by TZL12 on 2017/5/19.
@@ -12,7 +15,8 @@ import java.util.Calendar;
 
 public class Park_Info implements Parcelable {
     private String id;
-    private String parkspace_id;//停车位所属停车场
+    @SerializedName(value = "parkLotId",alternate = {"parkspace_id"})
+    private String parkLotId;//停车位所属停车场
     private String user_id;//停车位所属用户
     private String userName;//停车位所属用户名称
     private String park_number;//停车位的编号
@@ -39,6 +43,14 @@ public class Park_Info implements Parcelable {
     private String installTime;//预计安装时间
     private String reason;//审核未通过原因
     private String type;//车位归属类型
+
+    private double latitude;    //经度
+    private double longitude;   //纬度
+    private float distance;     //距离目的地的距离
+    private String carNumber;   //预定人的车牌号码
+    private String parkInterval;//预定停车的开始和结束时间(yyyy-MM-dd HH:mm*yyyy-MM-dd HH:mm)
+
+    @SerializedName(value = "citycode", alternate = {"cityCode"})
     private String citycode;//城市码
     private String create_time;//创建时间，主要是提交为了删除车位
     private String update_time;//更新时间，主要是为了核验是否新增订单号
@@ -74,11 +86,11 @@ public class Park_Info implements Parcelable {
     }
 
     public String getBelong_parkspace() {
-        return parkspace_id;
+        return parkLotId;
     }
 
     public void setBelong_parkspace(String belong_parkspace) {
-        this.parkspace_id = belong_parkspace;
+        this.parkLotId = belong_parkspace;
     }
 
     public String getBelong_user() {
@@ -249,12 +261,12 @@ public class Park_Info implements Parcelable {
         this.voltage = voltage;
     }
 
-    public String getParkspace_id() {
-        return parkspace_id;
+    public String getParkLotId() {
+        return parkLotId;
     }
 
-    public void setParkspace_id(String parkspace_id) {
-        this.parkspace_id = parkspace_id;
+    public void setParkLotId(String parkLotId) {
+        this.parkLotId = parkLotId;
     }
 
     public String getUser_id() {
@@ -297,7 +309,7 @@ public class Park_Info implements Parcelable {
         this.parkspace_name = parkspace_name;
     }
 
-    public String getCitycode() {
+    public String getCityCode() {
         return citycode;
     }
 
@@ -369,11 +381,51 @@ public class Park_Info implements Parcelable {
         this.parkLockStatus = parkLockStatus;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public String getCarNumber() {
+        return carNumber;
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public String getParkInterval() {
+        return parkInterval;
+    }
+
+    public void setParkInterval(String parkInterval) {
+        this.parkInterval = parkInterval;
+    }
+
     @Override
     public String toString() {
         return "Park_Info{" +
                 "id='" + id + '\'' +
-                ", parkspace_id='" + parkspace_id + '\'' +
+                ", parkLotId='" + parkLotId + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", userName='" + userName + '\'' +
                 ", park_number='" + park_number + '\'' +
@@ -398,14 +450,23 @@ public class Park_Info implements Parcelable {
                 ", installTime='" + installTime + '\'' +
                 ", reason='" + reason + '\'' +
                 ", type='" + type + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", distance=" + distance +
+                ", carNumber='" + carNumber + '\'' +
+                ", parkInterval='" + parkInterval + '\'' +
                 ", citycode='" + citycode + '\'' +
                 ", create_time='" + create_time + '\'' +
                 ", update_time='" + update_time + '\'' +
                 ", parkLockId='" + parkLockId + '\'' +
+                ", parkLockStatus='" + parkLockStatus + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
                 ", shareTimeCalendar=" + Arrays.toString(shareTimeCalendar) +
                 '}';
+    }
+
+    public Park_Info() {
     }
 
     @Override
@@ -416,7 +477,7 @@ public class Park_Info implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
-        dest.writeString(this.parkspace_id);
+        dest.writeString(this.parkLotId);
         dest.writeString(this.user_id);
         dest.writeString(this.userName);
         dest.writeString(this.park_number);
@@ -441,6 +502,11 @@ public class Park_Info implements Parcelable {
         dest.writeString(this.installTime);
         dest.writeString(this.reason);
         dest.writeString(this.type);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeFloat(this.distance);
+        dest.writeString(this.carNumber);
+        dest.writeString(this.parkInterval);
         dest.writeString(this.citycode);
         dest.writeString(this.create_time);
         dest.writeString(this.update_time);
@@ -450,12 +516,9 @@ public class Park_Info implements Parcelable {
         dest.writeString(this.indicator);
     }
 
-    public Park_Info() {
-    }
-
     protected Park_Info(Parcel in) {
         this.id = in.readString();
-        this.parkspace_id = in.readString();
+        this.parkLotId = in.readString();
         this.user_id = in.readString();
         this.userName = in.readString();
         this.park_number = in.readString();
@@ -480,6 +543,11 @@ public class Park_Info implements Parcelable {
         this.installTime = in.readString();
         this.reason = in.readString();
         this.type = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.distance = in.readFloat();
+        this.carNumber = in.readString();
+        this.parkInterval = in.readString();
         this.citycode = in.readString();
         this.create_time = in.readString();
         this.update_time = in.readString();
@@ -500,4 +568,21 @@ public class Park_Info implements Parcelable {
             return new Park_Info[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Park_Info parkInfo = (Park_Info) o;
+        return Objects.equals(id, parkInfo.id) &&
+                Objects.equals(parkLotId, parkInfo.parkLotId) &&
+                Objects.equals(user_id, parkInfo.user_id) &&
+                Objects.equals(citycode, parkInfo.citycode);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, parkLotId, user_id, citycode);
+    }
 }

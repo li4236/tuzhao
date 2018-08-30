@@ -47,7 +47,8 @@ public class Database extends SQLiteOpenHelper {
                 + "keyword TEXT DEFAULT \"\","
                 + "lat TEXT DEFAULT \"\","
                 + "lon TEXT DEFAULT \"\","
-                + "citycode TEXT DEFAULT \"\")");
+                + "citycode TEXT DEFAULT \"\","
+                + "time TEXT DEFAULT \"\")");
 
         // 极光推送registrationId
         db.execSQL(CREATE_TB_JI_GUANG);

@@ -174,6 +174,11 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         }
     }
 
+    protected void notifyRemoveData(T t) {
+        mCommonAdapter.notifyRemoveData(t);
+        showEmpty();
+    }
+
     protected abstract void loadData();
 
     protected abstract int itemViewResourceId();

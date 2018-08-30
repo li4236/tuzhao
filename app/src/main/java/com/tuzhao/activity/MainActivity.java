@@ -1438,7 +1438,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     if (show) {
                         controlAnimfragment(mFragment_content);
                     }
-                    LatLng latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat")), Double.parseDouble(data.getStringExtra("lon")));
+                    LatLng latLng = new LatLng(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
                     search_address = data.getStringExtra("keyword");
                     MarkerOptions options = new MarkerOptions();
                     View view_ChargeStation = getLayoutInflater().inflate(R.layout.view_icon_chargestation_location, null);

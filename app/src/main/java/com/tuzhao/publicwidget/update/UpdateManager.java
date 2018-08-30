@@ -82,8 +82,10 @@ public class UpdateManager {
                         int localVersion = DeviceUtils.getLocalVersion(mWeakReference.get());
                         if (localVersion < Integer.valueOf(updateInfoBase_class_info.data.getForceUpdateVersion())) {
                             showUpdateDialog(updateInfoBase_class_info.data, localVersion < Integer.valueOf(updateInfoBase_class_info.data.getForceUpdateVersion()));
-                        } else if (!SpUtils.getInstance(mWeakReference.get()).getString(SpUtils.IGNORE_VERSION).equals(updateInfoBase_class_info.data.getVersionCode())) {
-                            showUpdateDialog(updateInfoBase_class_info.data, localVersion < Integer.valueOf(updateInfoBase_class_info.data.getForceUpdateVersion()));
+                        } else if (localVersion < Integer.valueOf(updateInfoBase_class_info.data.getVersionCode())) {
+                            if (!SpUtils.getInstance(mWeakReference.get()).getString(SpUtils.IGNORE_VERSION).equals(updateInfoBase_class_info.data.getVersionCode())) {
+                                showUpdateDialog(updateInfoBase_class_info.data, localVersion < Integer.valueOf(updateInfoBase_class_info.data.getForceUpdateVersion()));
+                            }
                         }
                         SpUtils.getInstance(mWeakReference.get()).putBoolean(SpUtils.ALREADY_UPDATE, true);
                     }

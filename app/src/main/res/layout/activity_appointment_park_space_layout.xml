@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <TextView
+        android:id="@+id/car_number_tv"
+        style="@style/ThirtyTextB1Style"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:background="@color/w0"
+        android:gravity="start"
+        android:paddingBottom="12dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:text="车牌号码"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider" />
+
+    <com.tuzhao.publicwidget.customView.ArrowView
+        android:id="@+id/car_number_av"
+        android:layout_width="6dp"
+        android:layout_height="11dp"
+        android:layout_marginEnd="16dp"
+        app:arrow_width="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/car_number_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/car_number_tv" />
+
+    <TextView
+        android:id="@+id/car_number"
+        style="@style/ThirtyTextB1Style"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/car_number_tv"
+        app:layout_constraintEnd_toStartOf="@id/car_number_av"
+        app:layout_constraintTop_toTopOf="@+id/car_number_tv" />
+
+    <View
+        android:id="@+id/car_number_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/car_number_tv" />
+
+    <TextView
+        android:id="@+id/appointment_income_time_tv"
+        style="@style/ThirtyTextB1Style"
+        android:layout_width="match_parent"
+        android:background="@color/w0"
+        android:gravity="start"
+        android:paddingBottom="12dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:text="入场时间"
+        app:layout_constraintTop_toBottomOf="@+id/car_number_divider" />
+
+    <com.tuzhao.publicwidget.customView.ArrowView
+        android:id="@+id/appointment_income_time_av"
+        android:layout_width="6dp"
+        android:layout_height="11dp"
+        android:layout_marginEnd="16dp"
+        app:arrow_width="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/appointment_income_time_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appointment_income_time_tv" />
+
+    <TextView
+        android:id="@+id/appointment_income_time"
+        style="@style/ThirtyTextB1Style"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/appointment_income_time_tv"
+        app:layout_constraintEnd_toStartOf="@id/appointment_income_time_av"
+        app:layout_constraintTop_toTopOf="@+id/appointment_income_time_tv" />
+
+    <View
+        android:id="@+id/appointment_income_time_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_tv" />
+
+    <TextView
+        android:id="@+id/park_duration_tv"
+        style="@style/ThirtyTextB1Style"
+        android:layout_width="match_parent"
+        android:background="@color/w0"
+        android:gravity="start"
+        android:paddingBottom="12dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:text="停车时长"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_divider" />
+
+    <com.tuzhao.publicwidget.customView.ArrowView
+        android:id="@+id/park_duration_av"
+        android:layout_width="6dp"
+        android:layout_height="11dp"
+        android:layout_marginEnd="16dp"
+        app:arrow_width="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/park_duration_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/park_duration_tv" />
+
+    <TextView
+        android:id="@+id/park_duration"
+        style="@style/ThirtyTextB1Style"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/park_duration_tv"
+        app:layout_constraintEnd_toStartOf="@id/park_duration_av"
+        app:layout_constraintTop_toTopOf="@+id/park_duration_tv" />
+
+    <TextView
+        android:id="@+id/destination_tv"
+        style="@style/ThirtyTextB1Style"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:background="@color/w0"
+        android:gravity="start"
+        android:paddingBottom="12dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:text="目的地"
+        app:layout_constraintTop_toBottomOf="@+id/park_duration_tv" />
+
+    <com.tuzhao.publicwidget.customView.ArrowView
+        android:id="@+id/destination_av"
+        android:layout_width="6dp"
+        android:layout_height="11dp"
+        android:layout_marginEnd="16dp"
+        app:arrow_width="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/destination_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/destination_tv" />
+
+    <TextView
+        android:id="@+id/destination"
+        style="@style/ThirtyTextB1Style"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/destination_tv"
+        app:layout_constraintEnd_toStartOf="@id/destination_av"
+        app:layout_constraintTop_toTopOf="@+id/destination_tv" />
+
+    <TextView
+        android:id="@+id/appointment_hint"
+        style="@style/TwentyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:gravity="start"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/destination_tv" />
+
+    <TextView
+        android:id="@+id/next_step_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/yuan_little_graynall_8dp"
+        android:gravity="center"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:text="下一步"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

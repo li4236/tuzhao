@@ -640,4 +640,9 @@ public class HttpConstants {
      */
     public static final String getCertifyZhimaResult = ROOT_URL + "getCertifyZhimaResult";
 
+    /**
+     * 预约亲友的车位
+     */
+    public static final String reserveFriendParkSpace = ROOT_URL + "reserveFriendParkSpace";
+
 }

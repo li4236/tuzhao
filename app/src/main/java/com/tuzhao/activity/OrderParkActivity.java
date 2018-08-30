@@ -68,7 +68,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private String start_time = "", end_time = "";//预定开始和结束的停车时间
     private int park_time = 0;//预定停车时长（分钟）
     //停车时长选择器
-    OptionsPickerView<String> pvOptions;
+    private OptionsPickerView<String> pvOptions;
     private ArrayList<String> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
@@ -141,7 +141,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 if (UserManager.getInstance().hasLogined()) {
                     intent = new Intent(OrderParkActivity.this, MyCarActivity.class);
                     intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
-                    startActivityForResult(intent,ConstansUtil.REQUSET_CODE);
+                    startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                 } else {
                     login();
                 }
@@ -212,7 +212,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
         textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
         if (mStartTimeOption == null) {
-            mDays = new ArrayList<>(10);
+            mDays = new ArrayList<>(7);
             mHours = new ArrayList<>(24);
             mMinutes = new ArrayList<>(60);
 
@@ -262,7 +262,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 addhourWithMinutes();
             }
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0, size = 7 - mDays.size(); i < size; i++) {
                 mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
                 nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -530,6 +530,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         for (Park_Info parkInfo : park_list) {
             Log.e("TAG", "scanPark parkInfo:" + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
+                mCanParkInfo.remove(parkInfo);
                 continue;
             }
 

@@ -386,4 +386,14 @@ public class ConstansUtil {
      */
     public static final String WITHDRAWL_SUCCESS = "WithdrawlSuccess";
 
+    /**
+     * 经度
+     */
+    public static final String LATITUDE = "Latitude";
+
+    /**
+     * 纬度
+     */
+    public static final String LONGITUDE = "Longitude";
+
 }

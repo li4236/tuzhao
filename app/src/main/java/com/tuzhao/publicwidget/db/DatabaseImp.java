@@ -94,24 +94,23 @@ public class DatabaseImp {
      */
     public List<Search_Address_Info> getSearchLog() {
         SQLiteDatabase db = database.getReadableDatabase();
-        String sql = "select * from tb_search_log";
-        Cursor cursor = db.rawQuery(sql, null);
+        Cursor cursor = db.query("tb_search_log", null, null, null, null, null, "time desc");
 
         List<Search_Address_Info> list = new ArrayList<Search_Address_Info>();
 
-        if (cursor.moveToLast()) {
-            do {
-                Search_Address_Info info = new Search_Address_Info();
-                info.set_id(cursor.getString(cursor.getColumnIndex("_id")));
-                info.setKeyword(cursor.getString(cursor.getColumnIndex("keyword")));
-                info.setLatitude(Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))));
-                info.setLongitude(Double.valueOf(cursor.getString(cursor.getColumnIndex("lon"))));
-                info.setCitycode(cursor.getString(cursor.getColumnIndex("citycode")));
-                list.add(info);
-            }
-            while (cursor.moveToPrevious());
+        boolean haveNext = cursor.moveToFirst();
+        Search_Address_Info info;
+        while (haveNext) {
+            info = new Search_Address_Info();
+            info.set_id(cursor.getString(cursor.getColumnIndex("_id")));
+            info.setKeyword(cursor.getString(cursor.getColumnIndex("keyword")));
+            info.setLatitude(Double.valueOf(cursor.getString(cursor.getColumnIndex("lat"))));
+            info.setLongitude(Double.valueOf(cursor.getString(cursor.getColumnIndex("lon"))));
+            info.setCitycode(cursor.getString(cursor.getColumnIndex("citycode")));
+            info.setTime(cursor.getLong(cursor.getColumnIndex("time")));
+            list.add(info);
+            haveNext = cursor.moveToNext();
         }
-
         cursor.close();
         db.close();
         return list;
@@ -119,33 +118,40 @@ public class DatabaseImp {
 
     /**
      * 向本地数据添加搜索记录
-     *
-     * @param search_address_info
      */
     public void insertSearchLog(Search_Address_Info search_address_info) {
         SQLiteDatabase db = database.getWritableDatabase();
-
-        String sql = "insert into tb_search_log(keyword,lat,lon,citycode)" + "values(?,?,?,?)";
-        db.execSQL(sql, new Object[]{search_address_info.getKeyword(), search_address_info.getLatitude(), search_address_info.getLongitude(), search_address_info.getCitycode()});
+        Cursor cursor = db.query("tb_search_log", null, "keyword = ?", new String[]{search_address_info.getKeyword()}, null, null, null);
+        if (cursor.getCount() > 0) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("time", search_address_info.getTime());
+            db.update("tb_search_log", contentValues, "keyword = ?", new String[]{search_address_info.getKeyword()});
+        } else {
+            String sql = "insert into tb_search_log(keyword,lat,lon,citycode,time)" + "values(?,?,?,?,?)";
+            db.execSQL(sql, new Object[]{search_address_info.getKeyword(), search_address_info.getLatitude(), search_address_info.getLongitude(),
+                    search_address_info.getCitycode(), search_address_info.getTime()});
+        }
+        cursor.close();
         db.close();
     }
 
     /**
      * 删除
-     *
-     * @param _id
      */
     public void deleteSearchLog(String _id) {
         SQLiteDatabase db = database.getWritableDatabase();
         if (_id.equals("-1")) {
             db.delete("tb_search_log", null, null);//清空表中的内容
         } else {
-            //删除某一条记录
-            String[] args = {_id};
-            db.delete("tb_search_log", "_id=?", args);
+            if (_id.equals("")) {
+                Cursor cursor = db.query("tb_search_log", null, null, null, null, null, "time asc", "1");
+                if (cursor.moveToFirst()) {
+                    db.delete("tb_search_log", "_id = ?", new String[]{cursor.getString(cursor.getColumnIndex("_id"))});
+                }
+                cursor.close();
+            }
         }
         db.close();
-
     }
 
 }

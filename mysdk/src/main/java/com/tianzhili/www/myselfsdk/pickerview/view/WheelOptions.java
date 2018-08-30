@@ -213,7 +213,14 @@ public class WheelOptions<T> {
         int[] currentItems = new int[3];
         currentItems[0] = wv_option1.getCurrentItem();
         currentItems[1] = wv_option2.getCurrentItem();
+        if (mOptions2Items != null && currentItems[1] > mOptions2Items.get(currentItems[0]).size() - 1) {
+            //防止在滚动的时候级联还没完成就点了确定导致数组越界
+            currentItems[1] = 0;
+        }
         currentItems[2] = wv_option3.getCurrentItem();
+        if (mOptions3Items != null && currentItems[2] > mOptions3Items.get(currentItems[0]).get(currentItems[1]).size() - 1) {
+            currentItems[2] = 0;
+        }
         return currentItems;
     }
 

@@ -36,10 +36,15 @@ public class UpdateNotification {
     public void createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             if (mNotificationManager != null) {
-                NotificationChannel notificationChannel = new NotificationChannel("621", "版本更新", NotificationManager.IMPORTANCE_LOW);
+                NotificationChannel notificationChannel = new NotificationChannel("621", "下载通知", NotificationManager.IMPORTANCE_LOW);
                 notificationChannel.setSound(null, null);
                 notificationChannel.enableVibration(false);
                 mNotificationManager.createNotificationChannel(notificationChannel);
+
+                if (notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+                    DeviceUtils.openNotificationChannel(mWeakReference.get());
+                }
+
             }
         }
     }
@@ -48,7 +53,7 @@ public class UpdateNotification {
         if (!NotificationManagerCompat.from(mWeakReference.get()).areNotificationsEnabled()) {
             String message;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                message = "为了在通知栏上显示下载进度，请开启通知并打开版本更新";
+                message = "为了在通知栏上显示下载进度，请开启下载通知";
             } else {
                 message = "为了在通知栏上显示下载进度，请开启通知";
             }
@@ -73,7 +78,7 @@ public class UpdateNotification {
         if (mNotificationManager != null) {
             Notification notification = new NotificationCompat.Builder(mWeakReference.get(), "621")
                     .setContentTitle("更新到" + versionName + "版本")
-                    .setContentText("已下载" + progress + "/" + 100)
+                    .setContentText("已下载" + progress + "%")
                     .setWhen(System.currentTimeMillis())
                     .setProgress(100, progress, false)
                     .setSmallIcon(R.drawable.logo)

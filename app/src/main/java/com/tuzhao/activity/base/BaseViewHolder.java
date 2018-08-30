@@ -51,6 +51,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder appendText(@IdRes int id, String text) {
+        ((TextView) getView(id)).append(text);
+        return this;
+    }
+
     public BaseViewHolder setTextColor(@IdRes int id, int color) {
         ((TextView) getView(id)).setTextColor(color);
         return this;

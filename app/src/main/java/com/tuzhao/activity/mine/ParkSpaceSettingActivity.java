@@ -183,7 +183,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     private void getShareTime() {
         getOkGo(HttpConstants.getShareTime)
                 .params("parkId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
@@ -357,7 +357,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         showLoadingDialog("正在删除车位");
         getOkGo(HttpConstants.deleteParkSpace)
                 .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
@@ -394,7 +394,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         showLoadingDialog("正在修改出租状态");
         getOkGo(HttpConstants.changeParkSpaceStatus)
                 .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCitycode())
+                .params("cityCode", mPark_info.getCityCode())
                 .params("parkSpaceStatus", open ? "2" : "3")
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override

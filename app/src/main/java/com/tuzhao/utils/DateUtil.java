@@ -787,6 +787,7 @@ public class DateUtil {
     /**
      * @param date      格式为yyyy-MM-dd HH:mm:ss
      * @param addSecond 添加的秒数
+     * @return yyyy-MM-dd HH:mm
      */
     public static String getYearToMinute(String date, int addSecond) {
         Calendar calendar = getYearToSecondCalendar(date);
@@ -1266,13 +1267,10 @@ public class DateUtil {
      * @return true(两个时间段有交集)
      */
     public static boolean isIntersection(Calendar startCalendar, Calendar endCalendar, Calendar otherStartCalendar, Calendar otherEndCalendar) {
-        if (startCalendar.compareTo(otherStartCalendar) >= 0 && startCalendar.compareTo(otherEndCalendar) < 0
+        return startCalendar.compareTo(otherStartCalendar) >= 0 && startCalendar.compareTo(otherEndCalendar) < 0
                 || endCalendar.compareTo(otherStartCalendar) > 0 && endCalendar.compareTo(otherEndCalendar) <= 0
                 || startCalendar.compareTo(otherStartCalendar) <= 0 && endCalendar.compareTo(otherEndCalendar) >= 0
-                || otherStartCalendar.compareTo(startCalendar) <= 0 && otherEndCalendar.compareTo(endCalendar) >= 0) {
-            return true;
-        }
-        return false;
+                || otherStartCalendar.compareTo(startCalendar) <= 0 && otherEndCalendar.compareTo(endCalendar) >= 0;
     }
 
     /**
@@ -1292,7 +1290,6 @@ public class DateUtil {
         Calendar nowCalendar = Calendar.getInstance();
         return startCalendar.compareTo(nowCalendar) <= 0 && nowCalendar.compareTo(endCalendar) < 0;
     }
-
 
     /**
      * @param yearToSecond yyyy-MM-dd HH:mm:ss
@@ -1388,7 +1385,7 @@ public class DateUtil {
     }
 
     /**
-     * @return yyyy-MM-dd HH:ss
+     * @return yyyy-MM-dd HH:mm
      */
     public static String getCalenarYearToMinutes(Calendar calendar) {
         return calendar.get(Calendar.YEAR) + "-" + thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH))

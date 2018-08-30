@@ -265,7 +265,7 @@ public class AddParkActivity extends BaseActivity implements View.OnClickListene
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("parkspace_id", mPark.getParkID())
-                .params("citycode",mPark.getCitycode())
+                .params("citycode",mPark.getCityCode())
                 .params("applicant_name",et_realname.getText().toString())
                 .params("address_memo", mEt_park.getText().toString())
                 .params("available_date", textview_begindate.getText().toString() + " - " + textview_enddate.getText().toString())

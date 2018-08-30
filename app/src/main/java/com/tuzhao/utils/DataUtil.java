@@ -97,8 +97,12 @@ public class DataUtil {
             }
         }
 
+        sortCanParkListByShareTime(canParkList, endTime);
+    }
+
+    public static void sortCanParkListByShareTime(List<Park_Info> canParkList, String parkEndTime) {
         //停车时间加上宽限时长
-        final Calendar mCanParkEndCalendar = DateUtil.getYearToMinuteCalendar(endTime);
+        final Calendar mCanParkEndCalendar = DateUtil.getYearToMinuteCalendar(parkEndTime);
         mCanParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
 
         Collections.sort(canParkList, new Comparator<Park_Info>() {

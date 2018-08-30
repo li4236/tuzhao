@@ -260,6 +260,16 @@ public class DeviceUtils {
         }
     }
 
+    public static void openNotificationChannel(Context context) {
+        // 通知栏权限没开启，可直接跳转到权限设置界面
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Intent intent= new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+            intent.putExtra(Settings.EXTRA_CHANNEL_ID, 621);
+            context.startActivity(intent);
+        }
+    }
+
     /*
      * 跳转到开启通知栏的界面
      */

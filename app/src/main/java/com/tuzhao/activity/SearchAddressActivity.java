@@ -50,6 +50,7 @@ import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.utils.ConstansUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,13 +134,14 @@ public class SearchAddressActivity extends BaseActivity {
             layout_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    databaseImp.insertSearchLog(historyDatas.get(position));
                     Intent intent;
                     switch (Integer.parseInt(whatPage)) {
                         case 1:
                             intent = new Intent(SearchAddressActivity.this, MainActivity.class);
                             intent.putExtra("keyword", historyDatas.get(position).getKeyword());
-                            intent.putExtra("lat", historyDatas.get(position).getLatitude() + "");
-                            intent.putExtra("lon", historyDatas.get(position).getLongitude() + "");
+                            intent.putExtra("lat", historyDatas.get(position).getLatitude());
+                            intent.putExtra("lon", historyDatas.get(position).getLongitude());
                             intent.putExtra("citycode", historyDatas.get(position).getCitycode());
                             setResult(1, intent);
                             finish();
@@ -147,14 +149,24 @@ public class SearchAddressActivity extends BaseActivity {
                         case 2:
                             intent = new Intent(SearchAddressActivity.this, MainActivity.class);
                             intent.putExtra("keyword", historyDatas.get(position).getKeyword());
-                            intent.putExtra("lat", historyDatas.get(position).getLatitude() + "");
-                            intent.putExtra("lon", historyDatas.get(position).getLongitude() + "");
+                            intent.putExtra("lat", historyDatas.get(position).getLatitude());
+                            intent.putExtra("lon", historyDatas.get(position).getLongitude());
                             intent.putExtra("citycode", historyDatas.get(position).getCitycode());
                             setResult(2, intent);
                             finish();
                             break;
+                        case 3:
+                            intent = new Intent();
+                            intent.putExtra("keyword", historyDatas.get(position).getKeyword());
+                            intent.putExtra(ConstansUtil.LATITUDE, historyDatas.get(position).getLatitude());
+                            intent.putExtra(ConstansUtil.LONGITUDE, historyDatas.get(position).getLongitude());
+                            intent.putExtra(ConstansUtil.CITY_CODE, historyDatas.get(position).getCitycode());
+                            setResult(RESULT_OK, intent);
+                            finish();
+                            break;
+                        default:
+                            break;
                     }
-                    finish();
                 }
             });
         } else {
@@ -173,28 +185,32 @@ public class SearchAddressActivity extends BaseActivity {
                     case 1:
                         intent = new Intent(SearchAddressActivity.this, MainActivity.class);
                         intent.putExtra("keyword", adapter.get(position).getKeyword());
-                        intent.putExtra("lat", adapter.get(position).getLatitude() + "");
-                        intent.putExtra("lon", adapter.get(position).getLongitude() + "");
+                        intent.putExtra("lat", adapter.get(position).getLatitude());
+                        intent.putExtra("lon", adapter.get(position).getLongitude());
                         intent.putExtra("citycode", adapter.get(position).getCitycode());
                         setResult(1, intent);
-                        finish();
                         break;
                     case 2:
                         intent = new Intent(SearchAddressActivity.this, MainActivity.class);
                         intent.putExtra("keyword", adapter.get(position).getKeyword());
-                        intent.putExtra("lat", adapter.get(position).getLatitude() + "");
-                        intent.putExtra("lon", adapter.get(position).getLongitude() + "");
+                        intent.putExtra("lat", adapter.get(position).getLatitude());
+                        intent.putExtra("lon", adapter.get(position).getLongitude());
                         intent.putExtra("citycode", adapter.get(position).getCitycode());
                         setResult(2, intent);
-                        finish();
+                        break;
+                    case 3:
+                        intent = new Intent();
+                        intent.putExtra("keyword", adapter.get(position).getKeyword());
+                        intent.putExtra(ConstansUtil.LATITUDE, adapter.get(position).getLatitude());
+                        intent.putExtra(ConstansUtil.LONGITUDE, adapter.get(position).getLongitude());
+                        intent.putExtra(ConstansUtil.CITY_CODE, adapter.get(position).getCitycode());
+                        setResult(RESULT_OK, intent);
                         break;
                 }
-                if (historyDatas.size() > 5) {
+                if (historyDatas.size() > 7) {
                     databaseImp.deleteSearchLog("");
-                    databaseImp.insertSearchLog(adapter.get(position));
-                } else {
-                    databaseImp.insertSearchLog(adapter.get(position));
                 }
+                databaseImp.insertSearchLog(adapter.get(position));
 
                 finish();
             }
