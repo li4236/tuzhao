@@ -51,7 +51,7 @@ public class FriendParkSpaceActivity extends BaseStatusActivity implements View.
                 startActivity(AppointmentParkSpaceActivity.class);
                 break;
             case R.id.appointment_record:
-
+                startActivity(UseFriendParkSpaceRecordActivity.class);
                 break;
         }
     }

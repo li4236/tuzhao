@@ -225,7 +225,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
             case R.id.appointment_calculate_rule_iv:
                 Bundle bundle = new Bundle();
                 bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
-                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
                 startActivity(BillingRuleActivity.class, bundle);
                 break;
             case R.id.car_pic_cl:
@@ -271,7 +271,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         showLoadingDialog("取消预约");
         getOkGo(HttpConstants.cancleAppointOrder)
                 .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
@@ -557,7 +557,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("orderId", mParkOrderInfo.getId())
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> aVoid, Call call, Response response) {
@@ -653,7 +653,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     private void getParkSpaceList() {
         getOkGo(HttpConstants.getParkList)
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .params("parkspace_id", mParkOrderInfo.getParkLotId())
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
                     @Override
@@ -753,7 +753,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .params("orderId", mParkOrderInfo.getId())
                 .params("parkSpaceId", mCanParkList.get(0).getId())
                 .params("alternateParkSpaceId", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCodeCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -786,7 +786,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                 break;
                             case "102":
                                 for (int i = 0; i < mCanParkList.size(); i++) {
-                                    if (mCanParkList.get(i).getId().equals(responseData.data.getParkSpaceid())) {
+                                    if (mCanParkList.get(i).getId().equals(responseData.data.getParkSpaceId())) {
                                         showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime()));
                                         break;
                                     }
@@ -851,7 +851,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         getOkGo(HttpConstants.reserveLockedParkSpaceForOrder)
                 .params("orderId", mParkOrderInfo.getId())
                 .params("parkSpaceId", park_info.getId())
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -879,10 +879,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
      * 重新分配车位给该订单
      */
     private void redistributionParkSpace(ParkOrderInfo parkOrderInfo) {
-        mParkOrderInfo.setPark_id(parkOrderInfo.getParkSpaceid());
+        mParkOrderInfo.setParkSpaceId(parkOrderInfo.getParkSpaceId());
         mParkOrderInfo.setExtensionTime(parkOrderInfo.getExtensionTime());
         for (int i = 0; i < mCanParkList.size(); i++) {
-            if (mCanParkList.get(i).getId().equals(parkOrderInfo.getParkSpaceid())) {
+            if (mCanParkList.get(i).getId().equals(parkOrderInfo.getParkSpaceId())) {
                 mCanParkList.remove(i);
                 break;
             }

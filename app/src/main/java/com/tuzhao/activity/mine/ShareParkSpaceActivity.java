@@ -1,6 +1,7 @@
 package com.tuzhao.activity.mine;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +21,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
@@ -38,12 +40,16 @@ import okhttp3.Response;
 
 public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
+    /**
+     * 不为空则是从预定好友车位跳转过来的
+     */
     private List<Park_Info> mParkInfos;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
         mParkInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.REQUEST_FOR_RESULT);
+
         ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -191,12 +197,12 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
                 .setText(R.id.share_park_space_share_name, "车主：" + park_info.getUserName());
         if (mParkInfos == null) {
             TextView status = holder.getView(R.id.share_park_space_status);
-            ImageView statusIv = holder.getView(R.id.share_park_space_status_iv);
+            CircleView statusIv = holder.getView(R.id.share_park_space_status_iv);
             status.setText(getParkspaceStatus(park_info));
             if (status.getText().toString().equals("空闲中")) {
-                statusIv.setBackgroundResource(R.drawable.circle_green7);
+                statusIv.setColor(Color.parseColor("#1dd0a1"));
             } else {
-                statusIv.setBackgroundResource(R.drawable.circle_r5);
+                statusIv.setColor(Color.parseColor("#fd5132"));
             }
         } else {
             if (park_info.getDistance() != 0) {

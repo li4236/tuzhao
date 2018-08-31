@@ -407,7 +407,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             for (ParkOrderInfo parkOrderInfo : mParkOrderInfos) {
                 orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_start_time());
                 orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time());
-                if (DateUtil.isIntersection(appointmentStartCalendar, appointmentEndCalendar, orderStartCalendar, orderEndCalendar) && getText(mCarNumber).equals(parkOrderInfo.getCar_numble())) {
+                if (DateUtil.isIntersection(appointmentStartCalendar, appointmentEndCalendar, orderStartCalendar, orderEndCalendar) && getText(mCarNumber).equals(parkOrderInfo.getCarNumber())) {
                     if (parkOrderInfo.getOrder_status().equals("1")) {
                         showFiveToast("在该时间您已有过预约，请重新选择哦");
                     } else {

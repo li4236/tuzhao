@@ -50,6 +50,7 @@
         android:layout_height="12dp"
         android:layout_marginBottom="6dp"
         android:contentDescription="@string/picture_description"
+        app:color="@color/green7"
         app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
         app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
         app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
@@ -58,6 +59,7 @@
         android:id="@+id/share_park_space_status"
         style="@style/TenTextG6Stytle"
         android:layout_marginEnd="16dp"
+        android:text="使用中"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />

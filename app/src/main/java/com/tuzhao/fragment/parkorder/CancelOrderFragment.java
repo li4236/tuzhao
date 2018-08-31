@@ -94,7 +94,7 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
             case R.id.appointment_calculate_rule_iv:
                 Bundle bundle = new Bundle();
                 bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
-                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
                 startActivity(BillingRuleActivity.class, bundle);
                 break;
             case R.id.car_pic_cl:
@@ -149,7 +149,7 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
         showLoadingDialog("正在删除");
         getOkGo(HttpConstants.deletelParkOrder)
                 .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {

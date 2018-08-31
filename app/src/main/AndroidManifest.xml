@@ -205,6 +205,7 @@
         </activity>
         <activity android:name=".activity.mine.FriendParkSpaceActivity" />
         <activity android:name=".activity.mine.AppointmentParkSpaceActivity" />
+        <activity android:name=".activity.mine.UseFriendParkSpaceRecordActivity" />
 
         <activity
             android:name="com.tianzhili.www.myselfsdk.photopicker.ui.PhotoPickActivity"

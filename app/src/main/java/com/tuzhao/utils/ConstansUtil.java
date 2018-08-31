@@ -150,7 +150,7 @@ public class ConstansUtil {
     /**
      * 订单状态
      */
-    public static final String ORDER_STATUS = "OrderStatus";
+    public static final String STATUS = "Status";
 
     /**
      * 订单列表

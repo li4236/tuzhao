@@ -14,19 +14,33 @@ import java.util.Objects;
 public class ParkOrderInfo implements Parcelable {
 
     private String id;//订单id
-    private String parkspace_id;//停车场id
 
-    @SerializedName(value = "park_id", alternate = {"parkSpaceId"})
-    private String park_id;//停车位id
-    private String parkspace_name;//停车场名字
-    private String ps_address;//停车场地址
-    private String location_describe;//停车位的位置描述
+    @SerializedName(value = "parkLotId", alternate = {"parkspace_id"})
+    private String parkLotId;//停车场id
+
+    @SerializedName(value = "parkSpaceId", alternate = {"park_id"})
+    private String parkSpaceId;//停车位id
+
+    @SerializedName(value = "parkLotName", alternate = {"parkspace_name"})
+    private String parkLotName;//停车场名字
+
+    @SerializedName(value = "parkLotAddress", alternate = {"ps_address"})
+    private String parkLotAddress;//停车场地址
+
+    @SerializedName(value = "parkSpaceLocation", alternate = {"location_describe"})
+    private String parkSpaceLocation;//停车位的位置描述
     private String parkNumber;//车位编号
-    private String open_time;//车位的开放时间
+
+    @SerializedName(value = "openTime", alternate = "open_time")
+    private String openTime;//车位的开放时间
     private String order_starttime;//预计开始停车时间(yyyy-MM-dd HH:mm:ss)
     private String order_endtime;//预计结束停车时间
     private String extensionTime;//顺延时长，单位:秒
-    private String car_numble;//停放车辆车牌号
+
+    @SerializedName(value = "carNumber", alternate = "car_numble")
+    private String carNumber;//停放车辆车牌号
+
+    @SerializedName(value = "username", alternate = {"userName"})
     private String username;//用户名=用户手机号码
     private String park_username;//该停车位主人的手机号码
     private String order_number;//订单编号
@@ -37,8 +51,12 @@ public class ParkOrderInfo implements Parcelable {
     private String actual_fee;//实际支付费用(优惠后的)
     private String fine_fee;//超时费用
     private Discount_Info discount;//优惠券
-    private String park_starttime;//真实开始停车的时间
-    private String park_endtime;//真实结束停车的时间
+
+    @SerializedName(value = "parkStartTime", alternate = "park_starttime")
+    private String parkStartTime;//真实开始停车的时间
+
+    @SerializedName(value = "parkEndTime", alternate = "park_endtime")
+    private String parkEndTime;//真实结束停车的时间
     private String high_time;//高峰时段
     private String low_time;//低峰时段
     private String high_fee;//高峰时段单价
@@ -46,7 +64,9 @@ public class ParkOrderInfo implements Parcelable {
     private String high_max_fee;//高峰时段封顶价格。0代表不封顶
     private String low_max_fee;//低峰时段封顶价格。0代表不封顶
     private String fine;//罚金：滞留金。每小时费用
-    private String citycode;//订单的城市码
+
+    @SerializedName(value = "cityCode", alternate = "citycode")
+    private String cityCode;//订单的城市码
     private double latitude;//停车场的纬度
     private double longitude;//停车场的经度
     private String parkingUserId;//正在停车的用户id
@@ -77,43 +97,43 @@ public class ParkOrderInfo implements Parcelable {
     }
 
     public String getParkLotId() {
-        return parkspace_id;
+        return parkLotId;
     }
 
     public void setBelong_park_space(String belong_park_space) {
-        this.parkspace_id = belong_park_space;
+        this.parkLotId = belong_park_space;
     }
 
-    public String getParkSpaceid() {
-        return park_id;
+    public String getParkSpaceId() {
+        return parkSpaceId;
     }
 
-    public void setPark_id(String park_id) {
-        this.park_id = park_id;
+    public void setParkSpaceId(String parkSpaceId) {
+        this.parkSpaceId = parkSpaceId;
     }
 
     public String getParkLotName() {
-        return parkspace_name;
+        return parkLotName;
     }
 
     public void setPark_space_name(String park_space_name) {
-        this.parkspace_name = park_space_name;
+        this.parkLotName = park_space_name;
     }
 
     public String getParkLotAddress() {
-        return ps_address;
+        return parkLotAddress;
     }
 
     public void setPark_space_address(String park_space_address) {
-        this.ps_address = park_space_address;
+        this.parkLotAddress = park_space_address;
     }
 
     public String getParkSpaceLocationDescribe() {
-        return location_describe;
+        return parkSpaceLocation;
     }
 
     public void setAddress_memo(String address_memo) {
-        this.location_describe = address_memo;
+        this.parkSpaceLocation = address_memo;
     }
 
     public String getOrder_starttime() {
@@ -124,20 +144,20 @@ public class ParkOrderInfo implements Parcelable {
         this.order_starttime = order_starttime;
     }
 
-    public String getCar_numble() {
-        return car_numble;
+    public String getCarNumber() {
+        return carNumber;
     }
 
-    public void setCar_numble(String car_numble) {
-        this.car_numble = car_numble;
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
     }
 
-    public String getOpen_time() {
-        return open_time;
+    public String getOpenTime() {
+        return openTime;
     }
 
-    public void setOpen_time(String open_time) {
-        this.open_time = open_time;
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
     }
 
     public String getUsername() {
@@ -189,11 +209,11 @@ public class ParkOrderInfo implements Parcelable {
     }
 
     public String getPark_start_time() {
-        return park_starttime;
+        return parkStartTime;
     }
 
     public void setPark_start_time(String park_start_time) {
-        this.park_starttime = park_start_time;
+        this.parkStartTime = park_start_time;
     }
 
     public String getOrder_fee() {
@@ -205,11 +225,11 @@ public class ParkOrderInfo implements Parcelable {
     }
 
     public String getPark_end_time() {
-        return park_endtime;
+        return parkEndTime;
     }
 
     public void setPark_end_time(String park_end_time) {
-        this.park_endtime = park_end_time;
+        this.parkEndTime = park_end_time;
     }
 
     public String getHigh_time() {
@@ -300,12 +320,12 @@ public class ParkOrderInfo implements Parcelable {
         this.order_endtime = order_endtime;
     }
 
-    public String getCitycode() {
-        return citycode;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setCitycode(String citycode) {
-        this.citycode = citycode;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
     public String getExtensionTime() {
@@ -362,17 +382,17 @@ public class ParkOrderInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
-        dest.writeString(this.parkspace_id);
-        dest.writeString(this.park_id);
-        dest.writeString(this.parkspace_name);
-        dest.writeString(this.ps_address);
-        dest.writeString(this.location_describe);
+        dest.writeString(this.parkLotId);
+        dest.writeString(this.parkSpaceId);
+        dest.writeString(this.parkLotName);
+        dest.writeString(this.parkLotAddress);
+        dest.writeString(this.parkSpaceLocation);
         dest.writeString(this.parkNumber);
-        dest.writeString(this.open_time);
+        dest.writeString(this.openTime);
         dest.writeString(this.order_starttime);
         dest.writeString(this.order_endtime);
         dest.writeString(this.extensionTime);
-        dest.writeString(this.car_numble);
+        dest.writeString(this.carNumber);
         dest.writeString(this.username);
         dest.writeString(this.park_username);
         dest.writeString(this.order_number);
@@ -383,8 +403,8 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.actual_fee);
         dest.writeString(this.fine_fee);
         dest.writeParcelable(this.discount, flags);
-        dest.writeString(this.park_starttime);
-        dest.writeString(this.park_endtime);
+        dest.writeString(this.parkStartTime);
+        dest.writeString(this.parkEndTime);
         dest.writeString(this.high_time);
         dest.writeString(this.low_time);
         dest.writeString(this.high_fee);
@@ -392,7 +412,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.high_max_fee);
         dest.writeString(this.low_max_fee);
         dest.writeString(this.fine);
-        dest.writeString(this.citycode);
+        dest.writeString(this.cityCode);
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeString(this.parkingUserId);
@@ -404,17 +424,17 @@ public class ParkOrderInfo implements Parcelable {
 
     protected ParkOrderInfo(Parcel in) {
         this.id = in.readString();
-        this.parkspace_id = in.readString();
-        this.park_id = in.readString();
-        this.parkspace_name = in.readString();
-        this.ps_address = in.readString();
-        this.location_describe = in.readString();
+        this.parkLotId = in.readString();
+        this.parkSpaceId = in.readString();
+        this.parkLotName = in.readString();
+        this.parkLotAddress = in.readString();
+        this.parkSpaceLocation = in.readString();
         this.parkNumber = in.readString();
-        this.open_time = in.readString();
+        this.openTime = in.readString();
         this.order_starttime = in.readString();
         this.order_endtime = in.readString();
         this.extensionTime = in.readString();
-        this.car_numble = in.readString();
+        this.carNumber = in.readString();
         this.username = in.readString();
         this.park_username = in.readString();
         this.order_number = in.readString();
@@ -425,8 +445,8 @@ public class ParkOrderInfo implements Parcelable {
         this.actual_fee = in.readString();
         this.fine_fee = in.readString();
         this.discount = in.readParcelable(Discount_Info.class.getClassLoader());
-        this.park_starttime = in.readString();
-        this.park_endtime = in.readString();
+        this.parkStartTime = in.readString();
+        this.parkEndTime = in.readString();
         this.high_time = in.readString();
         this.low_time = in.readString();
         this.high_fee = in.readString();
@@ -434,7 +454,7 @@ public class ParkOrderInfo implements Parcelable {
         this.high_max_fee = in.readString();
         this.low_max_fee = in.readString();
         this.fine = in.readString();
-        this.citycode = in.readString();
+        this.cityCode = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.parkingUserId = in.readString();
@@ -457,17 +477,17 @@ public class ParkOrderInfo implements Parcelable {
     public String toString() {
         return "ParkOrderInfo{" +
                 "id='" + id + '\'' +
-                ", parkspace_id='" + parkspace_id + '\'' +
-                ", park_id='" + park_id + '\'' +
-                ", parkspace_name='" + parkspace_name + '\'' +
-                ", ps_address='" + ps_address + '\'' +
-                ", location_describe='" + location_describe + '\'' +
+                ", parkLotId='" + parkLotId + '\'' +
+                ", parkSpaceId='" + parkSpaceId + '\'' +
+                ", parkLotName='" + parkLotName + '\'' +
+                ", parkLotAddress='" + parkLotAddress + '\'' +
+                ", parkSpaceLocation='" + parkSpaceLocation + '\'' +
                 ", parkNumber='" + parkNumber + '\'' +
-                ", open_time='" + open_time + '\'' +
+                ", openTime='" + openTime + '\'' +
                 ", order_starttime='" + order_starttime + '\'' +
                 ", order_endtime='" + order_endtime + '\'' +
                 ", extensionTime='" + extensionTime + '\'' +
-                ", car_numble='" + car_numble + '\'' +
+                ", carNumber='" + carNumber + '\'' +
                 ", username='" + username + '\'' +
                 ", park_username='" + park_username + '\'' +
                 ", order_number='" + order_number + '\'' +
@@ -478,8 +498,8 @@ public class ParkOrderInfo implements Parcelable {
                 ", actual_fee='" + actual_fee + '\'' +
                 ", fine_fee='" + fine_fee + '\'' +
                 ", discount=" + discount +
-                ", park_starttime='" + park_starttime + '\'' +
-                ", park_endtime='" + park_endtime + '\'' +
+                ", parkStartTime='" + parkStartTime + '\'' +
+                ", parkEndTime='" + parkEndTime + '\'' +
                 ", high_time='" + high_time + '\'' +
                 ", low_time='" + low_time + '\'' +
                 ", high_fee='" + high_fee + '\'' +
@@ -487,7 +507,7 @@ public class ParkOrderInfo implements Parcelable {
                 ", high_max_fee='" + high_max_fee + '\'' +
                 ", low_max_fee='" + low_max_fee + '\'' +
                 ", fine='" + fine + '\'' +
-                ", citycode='" + citycode + '\'' +
+                ", cityCode='" + cityCode + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", parkingUserId='" + parkingUserId + '\'' +

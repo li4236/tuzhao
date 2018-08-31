@@ -142,7 +142,7 @@ public class OpenParkLockActivity extends BaseActivity {
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("ctrl_type", "1")
                 .params("order_id", parkOrderInfo.getId())
-                .params("citycode", parkOrderInfo.getCitycode())
+                .params("citycode", parkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {

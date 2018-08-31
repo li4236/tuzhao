@@ -44,12 +44,13 @@
         app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
         app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
 
-    <com.tuzhao.publicwidget.customView.CircleView
+    <ImageView
         android:id="@+id/share_park_space_status_iv"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginBottom="6dp"
         android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_yes3"
         app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
         app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
         app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
@@ -58,6 +59,7 @@
         android:id="@+id/share_park_space_status"
         style="@style/TenTextG6Stytle"
         android:layout_marginEnd="16dp"
+        android:text="已预订"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />

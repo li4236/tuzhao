@@ -307,7 +307,7 @@ public class CustomDialog extends Dialog {
         TextView estimatedCost = findViewById(R.id.estimated_cost);
 
         parkSpaceNumber.setText(parkOrderInfo.getParkNumber());
-        carNumber.setText(parkOrderInfo.getCar_numble());
+        carNumber.setText(parkOrderInfo.getCarNumber());
         appointStartParkTime.setText(parkOrderInfo.getOrder_starttime().substring(0, parkOrderInfo.getOrder_starttime().lastIndexOf(":")));
         appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
         String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";

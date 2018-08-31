@@ -87,8 +87,9 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             return FOOTER_VIEW;
         }
 
-        if (converGetItemViewType(position - getHeadViewCount()) != -1) {
-            return converGetItemViewType(position - getHeadViewCount());
+        int temp = position - getHeadViewCount();
+        if ((temp = converGetItemViewType(mData.get(temp), temp)) != -1) {
+            return temp;
         }
 
         return super.getItemViewType(position);
@@ -127,7 +128,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     /**
      * 添加一个空的头部，用于占位
-     * @param height    headerView的高度，单位dp
+     *
+     * @param height headerView的高度，单位dp
      */
     public void setPlaceholderHeaderView(int height) {
         mHeaderView = LayoutInflater.from(mRecyclerView.getContext()).inflate(R.layout.layout_placeholder, mRecyclerView, false);
@@ -176,15 +178,19 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
      *
      * @param position 对应data的实际position
      */
-    protected int converGetItemViewType(int position) {
+    protected int converGetItemViewType(T t, int position) {
         return -1;
     }
 
     /**
      * 如果子类需要不同的布局则重写该方法
+     * 建议converGetItemViewType返回的是布局的id，否则重写该方法时不要调super
      */
     @LayoutRes
     protected int itemViewId(int viewType) {
+        if (viewType != 0) {
+            return viewType;
+        }
         return 0;
     }
 

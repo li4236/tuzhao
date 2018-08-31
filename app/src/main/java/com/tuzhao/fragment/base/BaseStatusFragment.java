@@ -87,8 +87,12 @@ public abstract class BaseStatusFragment extends Fragment {
         }
     }
 
-    protected void setTAG(String TAG) {
+    public void setTAG(String TAG) {
         this.TAG = TAG;
+    }
+
+    public String getTAG() {
+        return TAG;
     }
 
     /**

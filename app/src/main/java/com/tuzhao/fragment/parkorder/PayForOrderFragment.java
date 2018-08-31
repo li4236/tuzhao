@@ -205,7 +205,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
             case R.id.pay_for_order_question_tv:
                 Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
-                parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
                 startActivity(BillingRuleActivity.class, parkLotBundle);
                 break;
             case R.id.car_pic_cl:
@@ -252,7 +252,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     bundle.putString(ConstansUtil.PAY_TYPE, "0");
                     bundle.putString(ConstansUtil.PAY_MONEY, mShouldPay + "元");
                     bundle.putString(ConstansUtil.PARK_ORDER_ID, mParkOrderInfo.getId());
-                    bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                    bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
                     bundle.putString(ConstansUtil.CHOOSE_DISCOUNT, mChooseDiscount == null ? "-1" : mChooseDiscount.getId());
                     startActivity(PayActivity.class, bundle);
                 } else {
@@ -279,7 +279,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         getOkGo(HttpConstants.addCollection)
                 .params("belong_id", mParkOrderInfo.getParkLotId())
                 .params("type", 1)
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<CollectionInfo> o, Call call, Response response) {
@@ -332,7 +332,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     @Override
                     public void onSuccess(Base_Class_List_Info<MonthlyCardBean> o, Call call, Response response) {
                         for (MonthlyCardBean monthlyCardBean : o.data) {
-                            if (monthlyCardBean.getCityCode().equals(mParkOrderInfo.getCitycode()) ||
+                            if (monthlyCardBean.getCityCode().equals(mParkOrderInfo.getCityCode()) ||
                                     monthlyCardBean.getCityCode().equals("0000")) {
                                 mMonthlyCards.add(monthlyCardBean);
                             }
@@ -456,7 +456,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         showLoadingDialog("正在查询订单状态");
         mRequestCount++;
         getOkGo(HttpConstants.getParkOrder)
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .params("orderId", mParkOrderInfo.getId())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
@@ -500,7 +500,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         showLoadingDialog("正在完成订单...");
         getOkGo(HttpConstants.finishParkOrder)
                 .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override

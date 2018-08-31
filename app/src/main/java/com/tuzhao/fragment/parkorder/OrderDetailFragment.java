@@ -242,7 +242,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             case R.id.pay_for_order_question_tv:
                 Bundle parkLotBundle = new Bundle();
                 parkLotBundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
-                parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                parkLotBundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
                 startActivity(BillingRuleActivity.class, parkLotBundle);
                 break;
             case R.id.contact_service_cl:
@@ -306,7 +306,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         showLoadingDialog("正在删除");
         getOkGo(HttpConstants.deletelParkOrder)
                 .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -704,7 +704,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     private void getOrderComment(final boolean showDialog) {
         getOkGo(HttpConstants.getOrderComment)
                 .params("orderId", mParkOrderInfo.getId())
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ParkspaceCommentInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkspaceCommentInfo> o, Call call, Response response) {
@@ -826,7 +826,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("parkspace_id", mParkOrderInfo.getParkLotId())
-                .params("city_code", mParkOrderInfo.getCitycode())
+                .params("city_code", mParkOrderInfo.getCityCode())
                 .params("order_id", mParkOrderInfo.getId())
                 .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress() / 20.0))
                 .params("content", mCommentEt.getText().toString())

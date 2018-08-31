@@ -41,7 +41,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     public static ParkOrderFragment newInstance(int orderStatus) {
         ParkOrderFragment parkOrderFragment = new ParkOrderFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ConstansUtil.ORDER_STATUS, orderStatus);
+        bundle.putInt(ConstansUtil.STATUS, orderStatus);
         parkOrderFragment.setArguments(bundle);
         return parkOrderFragment;
     }
@@ -55,7 +55,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     protected void initView(View view, Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
         if (getArguments() != null) {
-            mOrderStatus = getArguments().getInt(ConstansUtil.ORDER_STATUS);
+            mOrderStatus = getArguments().getInt(ConstansUtil.STATUS);
             ArrayList<ParkOrderInfo> list = getArguments().getParcelableArrayList(ConstansUtil.PARK_ORDER_LIST);
             mCommonAdapter.setNewArrayData(list);
         }
@@ -216,7 +216,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
         holder.setText(R.id.my_order_appoint_date, parkOrderInfo.getOrder_time().substring(0, parkOrderInfo.getOrder_time().indexOf(" ")))
                 .setText(R.id.my_order_park_lot, parkOrderInfo.getParkLotName())
-                .setText(R.id.my_order_park_car_number, parkOrderInfo.getCar_numble())
+                .setText(R.id.my_order_park_car_number, parkOrderInfo.getCarNumber())
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

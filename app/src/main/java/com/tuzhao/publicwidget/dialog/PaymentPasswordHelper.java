@@ -324,11 +324,11 @@ public class PaymentPasswordHelper {
         }
 
         @Override
-        protected int converGetItemViewType(int position) {
+        protected int converGetItemViewType(String s, int position) {
             if (position == getDataSize() - 1) {
                 return R.layout.item_image_layout;
             }
-            return super.converGetItemViewType(position);
+            return super.converGetItemViewType(s, position);
         }
 
         @Override

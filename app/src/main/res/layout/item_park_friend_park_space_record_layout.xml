@@ -44,18 +44,16 @@
         app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
         app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
 
-    <com.tuzhao.publicwidget.customView.CircleView
-        android:id="@+id/share_park_space_status_iv"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+    <TextView
+        android:id="@+id/start_park_date_tv"
+        style="@style/TenTextB1Style"
         android:layout_marginBottom="6dp"
-        android:contentDescription="@string/picture_description"
-        app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
-        app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
-        app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/park_duration"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/share_park_space_status"
+        android:id="@+id/park_duration"
         style="@style/TenTextG6Stytle"
         android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"

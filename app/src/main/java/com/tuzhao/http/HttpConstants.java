@@ -645,4 +645,9 @@ public class HttpConstants {
      */
     public static final String reserveFriendParkSpace = ROOT_URL + "reserveFriendParkSpace";
 
+    /**
+     * 获取在好友车位停车的记录
+     */
+    public static final String getFriendParkSpaceRecord = ROOT_URL + "getFriendParkSpaceRecord";
+
 }

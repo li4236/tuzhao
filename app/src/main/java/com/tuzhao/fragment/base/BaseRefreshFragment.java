@@ -173,6 +173,17 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
 
     protected abstract void loadData();
 
+    protected int converItemViewId(int viewType) {
+        if (viewType != -1) {
+            return viewType;
+        }
+        return 0;
+    }
+
+    protected int converGetItmeViewType(T t, int position) {
+        return -1;
+    }
+
     protected abstract int itemViewResourceId();
 
     protected abstract void bindData(BaseViewHolder holder, T t, int position);
@@ -189,9 +200,20 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
         }
 
         @Override
+        protected int itemViewId(int viewType) {
+            return converItemViewId(viewType);
+        }
+
+        @Override
+        protected int converGetItemViewType(T t, int position) {
+            return converGetItmeViewType(t, position);
+        }
+
+        @Override
         protected int itemViewId() {
             return itemViewResourceId();
         }
+
     }
 
 }

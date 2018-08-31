@@ -178,7 +178,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             case R.id.appointment_calculate_rule_iv:
                 Bundle bundle = new Bundle();
                 bundle.putString(ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId());
-                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCitycode());
+                bundle.putString(ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
                 startActivity(BillingRuleActivity.class, bundle);
                 break;
             case R.id.car_pic_cl:
@@ -464,8 +464,8 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private void getParkSpaceTime() {
         getOkGo(HttpConstants.getParkSpaceTime)
-                .params("parkSpaceId", mParkOrderInfo.getParkSpaceid())
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("parkSpaceId", mParkOrderInfo.getParkSpaceId())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
@@ -488,7 +488,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         getOkGo(HttpConstants.extendParkingTime)
                 .params("orderId", mParkOrderInfo.getId())
                 .params("extendTime", DateUtil.getCalendarDistance(mStartExtendCalendar, parkEndCalendar))
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
@@ -569,7 +569,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     private void closeParkLock() {
         initLockListener();
         getOkGo(HttpConstants.controlParkLock)
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .params("order_id", mParkOrderInfo.getId())
                 .params("ctrl_type", 2)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -631,7 +631,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
     private void getOrderStatus() {
         getOkGo(HttpConstants.getDetailOfParkOrder)
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .params("order_number", mParkOrderInfo.getOrder_number())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
@@ -657,7 +657,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         //请求改变订单状态，完成订单
         getOkGo(HttpConstants.endParking)
                 .params("order_id", mParkOrderInfo.getId())
-                .params("citycode", mParkOrderInfo.getCitycode())
+                .params("citycode", mParkOrderInfo.getCityCode())
                 .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override

@@ -195,7 +195,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     private void orderComplaint() {
         showFiveToast("正在投诉...");
         getOkGo(HttpConstants.orderComplaint)
-                .params("cityCode", mParkOrderInfo.getCitycode())
+                .params("cityCode", mParkOrderInfo.getCityCode())
                 .params("orderId", mParkOrderInfo.getId())
                 .params("reason", mHaveChooseReason ? getText(mComplaintReason) : "")
                 .params("detailDescription", getText(mQuestionDescription))

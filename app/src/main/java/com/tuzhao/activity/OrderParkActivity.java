@@ -178,7 +178,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             if (order_list.size() > 0) {
                 for (ParkOrderInfo parkOrderInfo : order_list) {
                     if (parkOrderInfo.getOrder_status().equals("2")) {
-                        if (parkOrderInfo.getCar_numble().equals(carNumber)) {
+                        if (parkOrderInfo.getCarNumber().equals(carNumber)) {
                             MyToast.showToast(OrderParkActivity.this, "该车辆当前正在停车中，请重新选择哦", 5);
                             textview_carnumble.setText("");
                             return;
@@ -632,9 +632,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             if (park_time >= 1440) {
                 //日租模式
                 for (Park_Info info : park_list) {
-                    if (info.getOpen_time().equals("00:00 - 23:59")) {
-                        String opent1 = info.getOpen_date().substring(0, info.getOpen_date().indexOf(" - ")) + " " + info.getOpen_time().substring(0, info.getOpen_time().indexOf(" - ")),
-                                opent2 = info.getOpen_date().substring(info.getOpen_date().indexOf(" - ") + 3, info.getOpen_date().length()) + " " + info.getOpen_time().substring(info.getOpen_time().indexOf(" - ") + 3, info.getOpen_time().length());
+                    if (info.getOpenTime().equals("00:00 - 23:59")) {
+                        String opent1 = info.getOpen_date().substring(0, info.getOpen_date().indexOf(" - ")) + " " + info.getOpenTime().substring(0, info.getOpenTime().indexOf(" - ")),
+                                opent2 = info.getOpen_date().substring(info.getOpen_date().indexOf(" - ") + 3, info.getOpen_date().length()) + " " + info.getOpenTime().substring(info.getOpenTime().indexOf(" - ") + 3, info.getOpenTime().length());
                         if (dateUtil.isTheIntervalBeginorEnd(start_time, end_time, opent1, opent2)) {
                             //预定时间在开放时间范围
                             if (info.getOrder_times().equals("-1")) {
@@ -688,9 +688,9 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             } else {
                 //时租模式
                 for (Park_Info info : park_list) {
-                    if (info.getOpen_time().equals("00:00 - 23:59")) {
-                        String opent1 = info.getOpen_date().substring(0, info.getOpen_date().indexOf(" - ")) + " " + info.getOpen_time().substring(0, info.getOpen_time().indexOf(" - ")),
-                                opent2 = info.getOpen_date().substring(info.getOpen_date().indexOf(" - ") + 3, info.getOpen_date().length()) + " " + info.getOpen_time().substring(info.getOpen_time().indexOf(" - ") + 3, info.getOpen_time().length());
+                    if (info.getOpenTime().equals("00:00 - 23:59")) {
+                        String opent1 = info.getOpen_date().substring(0, info.getOpen_date().indexOf(" - ")) + " " + info.getOpenTime().substring(0, info.getOpenTime().indexOf(" - ")),
+                                opent2 = info.getOpen_date().substring(info.getOpen_date().indexOf(" - ") + 3, info.getOpen_date().length()) + " " + info.getOpenTime().substring(info.getOpenTime().indexOf(" - ") + 3, info.getOpenTime().length());
                         if (dateUtil.isTheIntervalBeginorEnd(start_time, end_time, opent1, opent2)) {
                             //预定时间在开放时间范围
                             if (info.getOrder_times().equals("-1")) {
@@ -738,12 +738,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                             }
                         }
                     } else {
-                        String opentime_hour1 = info.getOpen_time().substring(0, info.getOpen_time().indexOf(":")),//车位开放开始时间的小时
-                                opentime_hour2 = (info.getOpen_time().substring(info.getOpen_time().indexOf(" - ") + 3, info.getOpen_time().lastIndexOf(":"))); //车位开放结束时间的小时
-                        String opentime_min1 = info.getOpen_time().substring(info.getOpen_time().indexOf(":") + 1, info.getOpen_time().indexOf(" - ")),//车位开放开始时间的分钟
-                                opentime_min2 = (info.getOpen_time().substring(info.getOpen_time().lastIndexOf(":") + 1, info.getOpen_time().length())); //车位开放结束时间的分钟
-                        String tdaytime1 = start_time.substring(0, start_time.indexOf(" ")) + " " + info.getOpen_time().substring(0, info.getOpen_time().indexOf(" - ")),
-                                tdaytime2 = start_time.substring(0, start_time.indexOf(" ")) + " " + info.getOpen_time().substring(info.getOpen_time().indexOf(" - ") + 3, info.getOpen_time().length());
+                        String opentime_hour1 = info.getOpenTime().substring(0, info.getOpenTime().indexOf(":")),//车位开放开始时间的小时
+                                opentime_hour2 = (info.getOpenTime().substring(info.getOpenTime().indexOf(" - ") + 3, info.getOpenTime().lastIndexOf(":"))); //车位开放结束时间的小时
+                        String opentime_min1 = info.getOpenTime().substring(info.getOpenTime().indexOf(":") + 1, info.getOpenTime().indexOf(" - ")),//车位开放开始时间的分钟
+                                opentime_min2 = (info.getOpenTime().substring(info.getOpenTime().lastIndexOf(":") + 1, info.getOpenTime().length())); //车位开放结束时间的分钟
+                        String tdaytime1 = start_time.substring(0, start_time.indexOf(" ")) + " " + info.getOpenTime().substring(0, info.getOpenTime().indexOf(" - ")),
+                                tdaytime2 = start_time.substring(0, start_time.indexOf(" ")) + " " + info.getOpenTime().substring(info.getOpenTime().indexOf(" - ") + 3, info.getOpenTime().length());
                         String time_frame = "2125-01-01 00:00,2125-01-01 23:59";//确定预定当天时间范围
                         if (Integer.parseInt(opentime_hour1) > Integer.parseInt(opentime_hour2)) {
                             //是跨天
