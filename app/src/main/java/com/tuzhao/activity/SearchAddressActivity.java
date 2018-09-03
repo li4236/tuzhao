@@ -160,7 +160,7 @@ public class SearchAddressActivity extends BaseActivity {
                             intent.putExtra("keyword", historyDatas.get(position).getKeyword());
                             intent.putExtra(ConstansUtil.LATITUDE, historyDatas.get(position).getLatitude());
                             intent.putExtra(ConstansUtil.LONGITUDE, historyDatas.get(position).getLongitude());
-                            intent.putExtra(ConstansUtil.CITY_CODE, historyDatas.get(position).getCitycode());
+                            //intent.putExtra(ConstansUtil.CITY_CODE, historyDatas.get(position).getCitycode());
                             setResult(RESULT_OK, intent);
                             finish();
                             break;
@@ -203,7 +203,7 @@ public class SearchAddressActivity extends BaseActivity {
                         intent.putExtra("keyword", adapter.get(position).getKeyword());
                         intent.putExtra(ConstansUtil.LATITUDE, adapter.get(position).getLatitude());
                         intent.putExtra(ConstansUtil.LONGITUDE, adapter.get(position).getLongitude());
-                        intent.putExtra(ConstansUtil.CITY_CODE, adapter.get(position).getCitycode());
+                        //intent.putExtra(ConstansUtil.CITY_CODE, adapter.get(position).getCitycode());
                         setResult(RESULT_OK, intent);
                         break;
                 }
@@ -279,14 +279,10 @@ public class SearchAddressActivity extends BaseActivity {
         textview_goback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LocationManager.getInstance().hasLocation()) {
-                    //返回主页的城市选择
-                    Intent intent = new Intent(SearchAddressActivity.this, MainActivity.class);
-                    setResult(2, intent);
-                    finish();
-                } else {
-                    finish();
-                }
+                //返回主页的城市选择
+                Intent intent = new Intent();
+                setResult(2, intent);
+                finish();
             }
         });
 
@@ -328,7 +324,6 @@ public class SearchAddressActivity extends BaseActivity {
     }
 
     private void initLocation() {
-
         //初始化client
         locationClient = new AMapLocationClient(this.getApplicationContext());
         AMapLocationClientOption locationOption = getDefaultOption();

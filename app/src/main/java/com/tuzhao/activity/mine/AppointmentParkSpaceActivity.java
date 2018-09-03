@@ -86,8 +86,6 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     //停车时长选择器
     private OptionsPickerView<String> pvOptions;
 
-    private String mDestinationCityCode;
-
     private double mLatitude;
 
     private double mLongitude;
@@ -174,12 +172,16 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 mCarNumber.setText(carNumber);
                 performScanParkSpace(0);
             } else if (requestCode == SELECTE_DESTINATION_CODE) {
-                mDestinationCityCode = data.getStringExtra(ConstansUtil.CITY_CODE);
                 mLatitude = data.getDoubleExtra(ConstansUtil.LATITUDE, 0);
                 mLongitude = data.getDoubleExtra(ConstansUtil.LONGITUDE, 0);
                 mDestination.setText(data.getStringExtra("keyword"));
                 performScanParkSpace(3);
             }
+        } else if (resultCode == 2 && requestCode == SELECTE_DESTINATION_CODE) {
+            mLatitude = 0;
+            mLongitude = 0;
+            mDestination.setText("");
+            performScanParkSpace(3);
         }
     }
 
@@ -283,7 +285,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             for (int i = 0; i < 2; i++) {
                 addhourWithMinutes();
             }
-            
+
             for (int i = 0, size = 7 - mDays.size(); i < size; i++) {
                 mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
