@@ -232,13 +232,15 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
                 hours = new ArrayList<>();
                 hourWithMinute = new ArrayList<>();
-                minute = new ArrayList<>();
                 //添加现在的时分
-                hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
-                for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
-                    minute.add(String.valueOf(j));
+                if (nowCalendar.get(Calendar.MINUTE) != 59 && nowCalendar.get(Calendar.MINUTE) != 60) {
+                    minute = new ArrayList<>();
+                    hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
+                    for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
+                        minute.add(String.valueOf(j));
+                    }
+                    hourWithMinute.add(minute);
                 }
-                hourWithMinute.add(minute);
 
                 //添加往后一小时到23点的时分
                 for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
@@ -348,12 +350,12 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void addhourWithMinutes() {
-        ArrayList<String> hour = new ArrayList<>();
-        ArrayList<ArrayList<String>> hourWithMinute = new ArrayList<>();
+        ArrayList<String> hour = new ArrayList<>(24);
+        ArrayList<ArrayList<String>> hourWithMinute = new ArrayList<>(24);
         ArrayList<String> minutes;
         for (int i = 0; i < 24; i++) {
             hour.add(String.valueOf(i));
-            minutes = new ArrayList<>();
+            minutes = new ArrayList<>(60);
             for (int j = 0; j < 60; j++) {
                 minutes.add(String.valueOf(j));
             }

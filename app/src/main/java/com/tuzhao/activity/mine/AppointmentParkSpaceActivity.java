@@ -106,8 +106,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         mNextStep = findViewById(R.id.next_step_tv);
 
         TextView appointmentHint = findViewById(R.id.appointment_hint);
-        String hint = "温馨提示：\n请在规定时间前进场，在规定时间离场\n如不方便可延长停车时间，最迟不得超过选定车位的规定时间" +
-                "\n如果选择了目的地则只会筛选出在目的地2Km范围内的车位";
+        String hint = "温馨提示：\n请在规定时间前进场，在规定时间离场\n如不方便可延长停车时间，最迟不得超过选定车位的规定时间";
         appointmentHint.setText(hint);
 
         findViewById(R.id.car_number_tv).setOnClickListener(this);
@@ -253,13 +252,15 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
                 hours = new ArrayList<>();
                 hourWithMinute = new ArrayList<>();
-                minute = new ArrayList<>();
                 //添加现在的时分
-                hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
-                for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
-                    minute.add(String.valueOf(j));
+                if (nowCalendar.get(Calendar.MINUTE) != 59 && nowCalendar.get(Calendar.MINUTE) != 60) {
+                    minute = new ArrayList<>();
+                    hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
+                    for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
+                        minute.add(String.valueOf(j));
+                    }
+                    hourWithMinute.add(minute);
                 }
-                hourWithMinute.add(minute);
 
                 //添加往后一小时到23点的时分
                 for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
@@ -282,7 +283,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             for (int i = 0; i < 2; i++) {
                 addhourWithMinutes();
             }
-
+            
             for (int i = 0, size = 7 - mDays.size(); i < size; i++) {
                 mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
@@ -331,11 +332,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
     private void addhourWithMinutes() {
         ArrayList<String> hour = new ArrayList<>(24);
-        ArrayList<ArrayList<String>> hourWithMinute = new ArrayList<>(60);
+        ArrayList<ArrayList<String>> hourWithMinute = new ArrayList<>(24);
         ArrayList<String> minutes;
         for (int i = 0; i < 24; i++) {
             hour.add(String.valueOf(i));
-            minutes = new ArrayList<>();
+            minutes = new ArrayList<>(60);
             for (int j = 0; j < 60; j++) {
                 minutes.add(String.valueOf(j));
             }
@@ -450,7 +451,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 continue;
             }
 
-            //如果选了目的地，则只保留在目的地附近2km的车位
+            /*//如果选了目的地，则只保留在目的地附近2km的车位
             if (haveDestination) {
                 if (mDestinationCityCode.equals(parkInfo.getCityCode())) {
                     if ((distance = AMapUtils.calculateLineDistance(latLng, new LatLng(parkInfo.getLatitude(), parkInfo.getLongitude()))) > 2000) {
@@ -461,7 +462,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     mCanParkList.remove(parkInfo);
                     continue;
                 }
-            }
+            }*/
 
             int currentStatus;
             //排除不在共享日期之内的(根据共享日期)
@@ -512,6 +513,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 mCanParkList.set(position, parkInfo);
             } else {
                 mCanParkList.remove(parkInfo);
+            }
+
+            //如果选了目的地，则计算目的地和车位之间的距离
+            if (haveDestination) {
+                distance = AMapUtils.calculateLineDistance(latLng, new LatLng(parkInfo.getLatitude(), parkInfo.getLongitude()));
             }
 
             parkInfo.setDistance(distance);
