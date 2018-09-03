@@ -10,7 +10,7 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 /**
  * Created by juncoder on 2018/8/7.
  * <p>
- * 监听复制时间
+ * 监听复制事件
  * </p>
  */
 public class ClipboardObserver {

@@ -19,6 +19,7 @@ import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.CircleView;
@@ -170,9 +171,9 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
                 .params("carNumber", parkInfo.getCarNumber())
                 .params("parkInterval", parkInfo.getParkInterval())
                 .params("cityCode", parkInfo.getCityCode())
-                .execute(new JsonCallback() {
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
-                    public void onSuccess(Object o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         notifyRemoveData(parkInfo);
                     }
 

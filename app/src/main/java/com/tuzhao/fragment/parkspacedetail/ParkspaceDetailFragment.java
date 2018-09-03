@@ -22,8 +22,8 @@ import com.tianzhili.www.myselfsdk.banner.transformer.DefaultTransformer;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.activity.OrderParkActivity;
-import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.NavigationActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseFragment;
@@ -38,7 +38,6 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.loader.GlideImageLoader;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
@@ -65,7 +64,6 @@ public class ParkspaceDetailFragment extends BaseFragment {
     private ImageView mNoPictureIv;
     private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance, textview_distance_dw, textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime;
     private ConstraintLayout linearlayout_goorder, linearlayout_daohang;
-    private LoginDialogFragment loginDialogFragment;
     private CBRatingBar cbratingbar;
 
     /**
@@ -388,8 +386,7 @@ public class ParkspaceDetailFragment extends BaseFragment {
     }
 
     public void login() {
-        loginDialogFragment = new LoginDialogFragment();
-        loginDialogFragment.show(((BaseActivity) mContext).getSupportFragmentManager(), "hahah");
+        startActivity(new Intent(getActivity(), LoginActivity.class));
     }
 
     private void initLoading(String what) {

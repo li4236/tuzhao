@@ -3,6 +3,7 @@ package com.tuzhao.fragment.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +36,8 @@ public abstract class BaseStatusFragment extends Fragment {
 
     protected String TAG = this.getClass().getName();
 
+    private View mView;
+
     private LoadingDialog mLoadingDialog;
 
     private String mDialogString = "";
@@ -44,11 +47,11 @@ public abstract class BaseStatusFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(resourceId() == 0 ? R.layout.fragment_base_refresh_layout : resourceId(), container, false);
-        initView(view, savedInstanceState);
-        initView(view, container, savedInstanceState);
+        mView = inflater.inflate(resourceId() == 0 ? R.layout.fragment_base_refresh_layout : resourceId(), container, false);
+        initView(mView, savedInstanceState);
+        initView(mView, container, savedInstanceState);
         initData();
-        return view;
+        return mView;
     }
 
     /**
@@ -64,6 +67,10 @@ public abstract class BaseStatusFragment extends Fragment {
 
     protected void initView(View view, ViewGroup container, Bundle savedInstanceState) {
 
+    }
+
+    protected <T extends View> T findViewById(@IdRes int id) {
+        return mView.findViewById(id);
     }
 
     /**
@@ -246,7 +253,9 @@ public abstract class BaseStatusFragment extends Fragment {
      * @param msg 显示的消息
      */
     protected void showFiveToast(String msg) {
-        MyToast.showToast(getContext(), msg, 5);
+        if (getContext() != null) {
+            MyToast.showToast(getContext(), msg, 5);
+        }
     }
 
     /**
@@ -254,6 +263,16 @@ public abstract class BaseStatusFragment extends Fragment {
      */
     protected String getText(TextView textView) {
         return textView.getText().toString();
+    }
+
+    protected int getTextLength(TextView textView) {
+        return getText(textView).trim().length();
+    }
+
+    protected void setNewText(TextView text, String string) {
+        if (!text.getText().toString().equals(string)) {
+            text.setText(string);
+        }
     }
 
     /**

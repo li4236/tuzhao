@@ -148,7 +148,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 ds.setColor(ConstansUtil.Y3_COLOR);
                 ds.setUnderlineText(false);
             }
-        };
+        };// TODO: 2018/9/3
         stringBuilder.setSpan(clickableSpan, 3, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mAgressProtocol.setMovementMethod(LinkMovementMethod.getInstance());        //不设置点击事件没反应
         mAgressProtocol.setText(stringBuilder);

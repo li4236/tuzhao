@@ -1,14 +1,16 @@
 package com.tuzhao.info;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
-import com.tuzhao.info.base_info.BaseInfo;
 import com.tuzhao.utils.ConstansUtil;
 
 /**
  * Created by TZL12 on 2017/5/16.
  */
 
-public class User_Info extends BaseInfo {
+public class User_Info implements Parcelable {
 
     private String token;//用户登录标识
     private String id;//用户的唯一标识id
@@ -18,7 +20,7 @@ public class User_Info extends BaseInfo {
     private String nickname = "-1";//用户昵称
     private String realName;//真实姓名
 
-    @SerializedName(value = "gender",alternate = {"sex"})
+    @SerializedName(value = "gender", alternate = {"sex"})
     private String gender;//性别
     private String birthday;//生日
     private String numberOfPark;//停车次数
@@ -26,27 +28,13 @@ public class User_Info extends BaseInfo {
     private String create_time;//用户注册时间
     private String last_time;//用户最后一次登陆时的时间
     private String credit;//信用分
-    private int ride_time;//到达的弹性时间
     private int leave_time = -1;//离开的弹性时间
     private String serect_code;//用户通行码
     private String alinumber = "-1";//支付宝账号
     private String aliNickname = "";//支付宝用户昵称
     private String openId;//微信的用户的openId
+    private String unionId;//微信的unionId
     private String wechatNickname;//微信昵称
-
-    private String stage;//阶段分
-    private String default_late_time;//默认晚退延时时间
-    private String add_late_time;//完成订单加分
-    private String stage_add_late_time;//阶段增长时间（逗号隔开）
-    private String min_late_time;//最低离开延时时间
-    private String max_late_time;//最高离开延时时间
-    private String default_early_time;//默认迟到延时时间
-    private String add_early_time;//完成订单加分
-    private String stage_add_early_time;//阶段增长时间（逗号隔开）
-    private String min_early_time;//最低迟到延时时间
-    private String max_early_time;//最高迟到延时时间
-    private String add_credit;//信用分增长幅度
-    private String reduce_credit;//信用分降低幅度
     private String paymentPassword;//支付密码（设置了就返回-1，没设置就返回""）
 
     public String getId() {
@@ -131,124 +119,12 @@ public class User_Info extends BaseInfo {
         this.credit = credit;
     }
 
-    public String getStage() {
-        return stage;
-    }
-
-    public void setStage(String stage) {
-        this.stage = stage;
-    }
-
-    public String getDefault_late_time() {
-        return default_late_time;
-    }
-
-    public void setDefault_late_time(String default_late_time) {
-        this.default_late_time = default_late_time;
-    }
-
-    public String getAdd_late_time() {
-        return add_late_time;
-    }
-
-    public void setAdd_late_time(String add_late_time) {
-        this.add_late_time = add_late_time;
-    }
-
-    public String getStage_add_late_time() {
-        return stage_add_late_time;
-    }
-
-    public void setStage_add_late_time(String stage_add_late_time) {
-        this.stage_add_late_time = stage_add_late_time;
-    }
-
     public String getToken() {
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getMin_late_time() {
-        return min_late_time;
-    }
-
-    public void setMin_late_time(String min_late_time) {
-        this.min_late_time = min_late_time;
-    }
-
-    public String getMax_late_time() {
-        return max_late_time;
-    }
-
-    public void setMax_late_time(String max_late_time) {
-        this.max_late_time = max_late_time;
-    }
-
-    public String getDefault_early_time() {
-        return default_early_time;
-    }
-
-    public void setDefault_early_time(String default_early_time) {
-        this.default_early_time = default_early_time;
-    }
-
-    public String getAdd_early_time() {
-        return add_early_time;
-    }
-
-    public void setAdd_early_time(String add_early_time) {
-        this.add_early_time = add_early_time;
-    }
-
-    public String getStage_add_earlt_time() {
-        return stage_add_early_time;
-    }
-
-    public void setStage_add_earlt_time(String stage_add_earlt_time) {
-        this.stage_add_early_time = stage_add_earlt_time;
-    }
-
-    public String getMin_early_time() {
-        return min_early_time;
-    }
-
-    public void setMin_early_time(String min_early_time) {
-        this.min_early_time = min_early_time;
-    }
-
-    public String getMax_early_time() {
-        return max_early_time;
-    }
-
-    public void setMax_early_time(String max_early_time) {
-        this.max_early_time = max_early_time;
-    }
-
-    public String getAdd_credit() {
-        return add_credit;
-    }
-
-    public void setAdd_credit(String add_credit) {
-        this.add_credit = add_credit;
-    }
-
-    public String getReduce_credit() {
-        return reduce_credit;
-    }
-
-    public void setReduce_credit(String reduce_credit) {
-        this.reduce_credit = reduce_credit;
-    }
-
-    public int getRide_time() {
-        return ride_time;
-    }
-
-    public void setRide_time(int ride_time) {
-        this.ride_time = ride_time;
     }
 
     public int getLeave_time() {
@@ -339,6 +215,14 @@ public class User_Info extends BaseInfo {
         this.openId = openId;
     }
 
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
+
     public String getWechatNickname() {
         return wechatNickname;
     }
@@ -379,29 +263,88 @@ public class User_Info extends BaseInfo {
                 ", create_time='" + create_time + '\'' +
                 ", last_time='" + last_time + '\'' +
                 ", credit='" + credit + '\'' +
-                ", ride_time=" + ride_time +
                 ", leave_time=" + leave_time +
                 ", serect_code='" + serect_code + '\'' +
                 ", alinumber='" + alinumber + '\'' +
                 ", aliNickname='" + aliNickname + '\'' +
                 ", openId='" + openId + '\'' +
+                ", unionId='" + unionId + '\'' +
                 ", wechatNickname='" + wechatNickname + '\'' +
-                ", stage='" + stage + '\'' +
-                ", default_late_time='" + default_late_time + '\'' +
-                ", add_late_time='" + add_late_time + '\'' +
-                ", stage_add_late_time='" + stage_add_late_time + '\'' +
-                ", min_late_time='" + min_late_time + '\'' +
-                ", max_late_time='" + max_late_time + '\'' +
-                ", default_early_time='" + default_early_time + '\'' +
-                ", add_early_time='" + add_early_time + '\'' +
-                ", stage_add_early_time='" + stage_add_early_time + '\'' +
-                ", min_early_time='" + min_early_time + '\'' +
-                ", max_early_time='" + max_early_time + '\'' +
-                ", add_credit='" + add_credit + '\'' +
-                ", reduce_credit='" + reduce_credit + '\'' +
                 ", autologin='" + autologin + '\'' +
                 ", paymentPassword='" + paymentPassword + '\'' +
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.token);
+        dest.writeString(this.id);
+        dest.writeString(this.username);
+        dest.writeString(this.password);
+        dest.writeString(this.balance);
+        dest.writeString(this.nickname);
+        dest.writeString(this.realName);
+        dest.writeString(this.gender);
+        dest.writeString(this.birthday);
+        dest.writeString(this.numberOfPark);
+        dest.writeString(this.img_url);
+        dest.writeString(this.create_time);
+        dest.writeString(this.last_time);
+        dest.writeString(this.credit);
+        dest.writeInt(this.leave_time);
+        dest.writeString(this.serect_code);
+        dest.writeString(this.alinumber);
+        dest.writeString(this.aliNickname);
+        dest.writeString(this.openId);
+        dest.writeString(this.unionId);
+        dest.writeString(this.wechatNickname);
+        dest.writeString(this.paymentPassword);
+        dest.writeString(this.autologin);
+    }
+
+    public User_Info() {
+    }
+
+    protected User_Info(Parcel in) {
+        this.token = in.readString();
+        this.id = in.readString();
+        this.username = in.readString();
+        this.password = in.readString();
+        this.balance = in.readString();
+        this.nickname = in.readString();
+        this.realName = in.readString();
+        this.gender = in.readString();
+        this.birthday = in.readString();
+        this.numberOfPark = in.readString();
+        this.img_url = in.readString();
+        this.create_time = in.readString();
+        this.last_time = in.readString();
+        this.credit = in.readString();
+        this.leave_time = in.readInt();
+        this.serect_code = in.readString();
+        this.alinumber = in.readString();
+        this.aliNickname = in.readString();
+        this.openId = in.readString();
+        this.unionId = in.readString();
+        this.wechatNickname = in.readString();
+        this.paymentPassword = in.readString();
+        this.autologin = in.readString();
+    }
+
+    public static final Creator<User_Info> CREATOR = new Creator<User_Info>() {
+        @Override
+        public User_Info createFromParcel(Parcel source) {
+            return new User_Info(source);
+        }
+
+        @Override
+        public User_Info[] newArray(int size) {
+            return new User_Info[size];
+        }
+    };
 }

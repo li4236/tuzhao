@@ -75,7 +75,7 @@ public class LoginDialogFragment extends DialogFragment {
     private static final int CODE_ING = 1;   //已发送，倒计时
     private static final int CODE_REPEAT = 2;  //重新发送
     public static final String LOGIN_ACTION = "LOGIN_ACTION";//登录成功的动作
-    public static final String LOGOUT_ACTION = "LOGOUT_ACTION";//退出登录的动作
+    public static final String LOGOUT_ACTION = "LOGIN_SUCCESS";//退出登录的动作
     private int TIME = 60;//倒计时60s
     private String phone_token = null;
     private boolean isGetCode = false;

@@ -116,9 +116,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             mTotalSize = getArguments().getInt(ConstansUtil.SIZE);
         } else if (mParkInfo == null) {
             showFiveToast("打开失败，请稍后重试");
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
+            finish();
         }
 
         TextView numberOfParkSpace = view.findViewById(R.id.number_of_park_space);

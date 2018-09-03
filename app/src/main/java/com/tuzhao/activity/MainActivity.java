@@ -304,6 +304,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private void initData() {
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
+        if ("1".equals(getIntent().getStringExtra(ConstansUtil.REQUEST_COLLECTION_DATA))) {
+            requestCollectionData();
+        }
         IntentObserable.registerObserver(this);
         if (UserManager.getInstance().hasLogined()) {
             ImageUtil.showPic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
@@ -621,6 +624,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
     }
 
+    private void requestCollectionData() {
+        //登录成功之后请求用户的收藏记录
+        OkGo.post(HttpConstants.getCollectionDatas)
+                .tag(TAG)
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
+                        CollectionManager.getInstance().setCollection_datas(collection_infoBase_class_list_info.data);
+                    }
+                });
+    }
 
     private void requestSaveBiaoji(String address) {
         OkGo.post(HttpConstants.addCollection)
@@ -1001,10 +1016,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     public void login() {
-        if (loginDialogFragment == null) {
+        startActivity(new Intent(this, LoginActivity.class));
+      /*  if (loginDialogFragment == null) {
             loginDialogFragment = new LoginDialogFragment();
         }
-        loginDialogFragment.show(getSupportFragmentManager(), "hahah");
+        loginDialogFragment.show(getSupportFragmentManager(), "hahah");*/
     }
 
     @Override

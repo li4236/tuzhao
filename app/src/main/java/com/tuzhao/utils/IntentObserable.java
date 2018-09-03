@@ -1,6 +1,7 @@
 package com.tuzhao.utils;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
@@ -42,9 +43,26 @@ public class IntentObserable {
         }
     }
 
+    public static void dispatch(String action, String key, Bundle value) {
+        Intent intent = new Intent(action);
+        intent.putExtra(key, value);
+        for (IntentObserver observer : mIntentObservers) {
+            observer.onReceive(intent);
+        }
+    }
+
     public static void dispatch(String action, String key, ArrayList<? extends Parcelable> value) {
         Intent intent = new Intent(action);
         intent.putParcelableArrayListExtra(key, value);
+        for (IntentObserver observer : mIntentObservers) {
+            observer.onReceive(intent);
+        }
+    }
+
+    public static void dispatch(String action, String key, String value, String otherKey, boolean otherValue) {
+        Intent intent = new Intent(action);
+        intent.putExtra(key, value);
+        intent.putExtra(otherKey, otherValue);
         for (IntentObserver observer : mIntentObservers) {
             observer.onReceive(intent);
         }

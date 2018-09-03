@@ -23,9 +23,9 @@ public class ConstansUtil {
     public static final String SERVER_ERROR = "服务器异常，请稍后重试";
 
     /**
-     * 退出登录
+     * 登录成功
      */
-    public static final String LOGOUT_ACTION = "LOGOUT_ACTION";
+    public static final String LOGIN_SUCCESS = "LoginSuccess";
 
     /**
      * 强制退出登录
@@ -395,5 +395,45 @@ public class ConstansUtil {
      * 纬度
      */
     public static final String LONGITUDE = "Longitude";
+
+    /**
+     * 请求用户的收藏记录
+     */
+    public static final String REQUEST_COLLECTION_DATA = "RequestCollectionData";
+
+    /**
+     * 密码登录
+     */
+    public static final String PASSWORD_LOGIN = "PasswordLogin";
+
+    /**
+     * 短信登录
+     */
+    public static final String SMS_LOGIN = "SmsLogin";
+
+    /**
+     * 用户信息
+     */
+    public static final String USER_INFO = "UserInfo";
+
+    /**
+     * 弹出fragment
+     */
+    public static final String FINISH_FRAGMENT = "FinishFragment";
+
+    /**
+     * 微信登录绑定手机号
+     */
+    public static final String WECHAT_TELEPHONE_LOGIN = "WechatTelephoneLogin";
+
+    /**
+     * 微信初始输入密码登录
+     */
+    public static final String WECHAT_PASSWORD_LOGIN = "WechatPasswordLogin";
+
+    /**
+     * 忘记密码
+     */
+    public static final String FORGET_PASSWORD = "ForgetPassword";
 
 }

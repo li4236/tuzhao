@@ -56,7 +56,11 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler 
                 }
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
-                MyToast.showToast(WXEntryActivity.this, "分享已取消", 5);
+                if (resp.getType() == LOGIN) {
+                    MyToast.showToast(WXEntryActivity.this, "取消登录", 5);
+                } else {
+                    MyToast.showToast(WXEntryActivity.this, "分享已取消", 5);
+                }
                 //用户取消
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:

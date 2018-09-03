@@ -650,4 +650,34 @@ public class HttpConstants {
      */
     public static final String getFriendParkSpaceRecord = ROOT_URL + "getFriendParkSpaceRecord";
 
+    /**
+     * 登录判断手机号是否是新用户
+     */
+    public static final String phoneIsNewUser = ROOT_URL + "phoneIsNewUser";
+
+    /**
+     * 微信登录
+     */
+    public static final String wechatLogin = ROOT_URL + "wechatLogin";
+
+    /**
+     * 初始微信登录
+     */
+    public static final String initialWechatLogin = ROOT_URL + "initialWechatLogin";
+
+    /**
+     * 密码登录
+     */
+    public static final String requestPasswordLogin = ROOT_URL + "requestPasswordLogin";
+
+    /**
+     * 短信登录
+     */
+    public static final String requestSmsLogin = ROOT_URL + "requestSmsLogin";
+
+    /**
+     * 忘记密码登录
+     */
+    public static final String forgetPasswordLogin = ROOT_URL + "forgetPasswordLogin";
+
 }
