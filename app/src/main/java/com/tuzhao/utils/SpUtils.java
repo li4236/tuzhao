@@ -19,7 +19,7 @@ public class SpUtils {
     /**
      * 本次启动是否已检查更新
      */
-    public static final String ALREADY_UPDATE = "AlreadyUpdate";
+    public static final String ALREADY_CHECK_UPDATE = "AlreadyCheckUpdate";
 
     /**
      * 忽略更新的版本

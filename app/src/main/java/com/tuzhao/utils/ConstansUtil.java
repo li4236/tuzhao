@@ -436,4 +436,44 @@ public class ConstansUtil {
      */
     public static final String FORGET_PASSWORD = "ForgetPassword";
 
+    /**
+     * 显示更新对话框
+     */
+    public static final String SHOW_UPDATE_DIALOG = "ShowUpdateDialog";
+
+    /**
+     * 开始下载apk
+     */
+    public static final String DOWNLOAD_APK = "DownloadApk";
+
+    /**
+     * 显示下载进度的对话框
+     */
+    public static final String SHOW_UPDATE_NOTIFICATION = "ShowUpdateNotification";
+
+    /**
+     * 更新信息
+     */
+    public static final String UPDATE_INFO = "UpdateInfo";
+
+    /**
+     * 更新进度
+     */
+    public static final String UPDATE_PROGRESS = "UpdateProgress";
+
+    /**
+     * 请求安装未知来源应用权限
+     */
+    public static final String REQUEST_INSTALL_PERMISSION = "RequestInstallPermission";
+
+    /**
+     * 安装apk
+     */
+    public static final String INSTALL_APK = "InstallApk";
+
+    /**
+     * 更新的对话框关闭后返回主activity时定位到当前位置
+     */
+    public static final String UPDATE_ACTIVITY_FINISH = "UpdateActivityFinish";
+
 }

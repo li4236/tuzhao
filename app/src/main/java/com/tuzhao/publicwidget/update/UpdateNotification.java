@@ -1,19 +1,12 @@
 package com.tuzhao.publicwidget.update;
 
-import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
 import com.tuzhao.R;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
-import com.tuzhao.utils.DeviceUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -22,59 +15,16 @@ import java.lang.ref.WeakReference;
  */
 public class UpdateNotification {
 
-    private static final String TAG = "UpdateNotification";
-
-    private WeakReference<Activity> mWeakReference;
+    private WeakReference<Context> mWeakReference;
 
     private NotificationManager mNotificationManager;
 
-    UpdateNotification(Activity activity) {
-        mWeakReference = new WeakReference<>(activity);
+    UpdateNotification(Context context) {
+        mWeakReference = new WeakReference<>(context);
         mNotificationManager = (NotificationManager) mWeakReference.get().getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void createNotificationChannel() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if (mNotificationManager != null) {
-                NotificationChannel notificationChannel = new NotificationChannel("621", "下载通知", NotificationManager.IMPORTANCE_LOW);
-                notificationChannel.setSound(null, null);
-                notificationChannel.enableVibration(false);
-                mNotificationManager.createNotificationChannel(notificationChannel);
-
-                if (notificationChannel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
-                    DeviceUtils.openNotificationChannel(mWeakReference.get());
-                }
-
-            }
-        }
-    }
-
-    public void performShowNotification(int progress, String versionName) {
-        if (!NotificationManagerCompat.from(mWeakReference.get()).areNotificationsEnabled()) {
-            String message;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                message = "为了在通知栏上显示下载进度，请开启下载通知";
-            } else {
-                message = "为了在通知栏上显示下载进度，请开启通知";
-            }
-            new TipeDialog.Builder(mWeakReference.get())
-                    .setCancelable(false)
-                    .setTitle("权限申请")
-                    .setMessage(message)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            DeviceUtils.openNotification(mWeakReference.get());
-                        }
-                    })
-                    .create()
-                    .show();
-        } else {
-            showNotification(progress, versionName);
-        }
-    }
-
-    public void showNotification(int progress, String versionName) {
+    public Notification showNotification(int progress, String versionName) {
         if (mNotificationManager != null) {
             Notification notification = new NotificationCompat.Builder(mWeakReference.get(), "621")
                     .setContentTitle("更新到" + versionName + "版本")
@@ -86,17 +36,34 @@ public class UpdateNotification {
                     .setLargeIcon(BitmapFactory.decodeResource(mWeakReference.get().getResources(), R.drawable.logo))
                     .setAutoCancel(false)
                     .build();
-            mNotificationManager.notify(TAG, 621, notification);
+            /*if (progress == 100) {
+                File file = new File(mWeakReference.get().getExternalFilesDir("upgrade_apk") + File.separator,
+                        mWeakReference.get().getPackageName() + ".apk");
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    intent.setDataAndType(FileProvider.getUriForFile(mWeakReference.get(), "com.tuzhao.photopicker.provider", file),
+                            "application/vnd.android.package-archive");
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                } else {
+                    intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                }
+                notification.contentIntent = PendingIntent.getActivity(mWeakReference.get(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }*/
+            mNotificationManager.notify(621, notification);
+            return notification;
         }
+        return null;
     }
 
     public void cancelNotification() {
         if (mNotificationManager != null) {
-            mNotificationManager.cancel(TAG, 621);
+            mNotificationManager.cancel(621);
         }
     }
 
     public void onDestroy() {
+        cancelNotification();
         mNotificationManager = null;
         mWeakReference.clear();
     }

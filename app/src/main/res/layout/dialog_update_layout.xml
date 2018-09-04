@@ -8,6 +8,8 @@
     <ImageView
         android:id="@+id/dialog_iv"
         android:layout_width="230dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_height="100dp"
         android:contentDescription="@string/picture_description"
         android:scaleType="centerCrop"
@@ -17,7 +19,7 @@
         android:id="@+id/dialog_close"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/picture_description"
         android:padding="6dp"

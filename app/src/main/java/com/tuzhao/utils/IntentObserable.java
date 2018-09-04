@@ -35,6 +35,14 @@ public class IntentObserable {
         }
     }
 
+    public static void dispatch(String action, String key, int value) {
+        Intent intent = new Intent(action);
+        intent.putExtra(key, value);
+        for (IntentObserver observer : mIntentObservers) {
+            observer.onReceive(intent);
+        }
+    }
+
     public static void dispatch(String action, String key, Parcelable value) {
         Intent intent = new Intent(action);
         intent.putExtra(key, value);

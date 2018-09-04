@@ -97,7 +97,7 @@ import com.tuzhao.publicwidget.map.ClusterOverlay;
 import com.tuzhao.publicwidget.map.ClusterRender;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
 import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.publicwidget.update.UpdateManager;
+import com.tuzhao.publicwidget.update.UpdateService;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
@@ -131,6 +131,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private static final int LOCATION_REQUEST_CODE = 0x222;
 
     private static final int OPEN_GPS = 0x333;
+
+    /**
+     * 是否请求了写入存储权限
+     */
+    private boolean mRequestWriteExternal;
+
+    /**
+     * 是否请求了访问地理位置权限
+     */
+    private boolean mRequestAccessCoarseLocation;
 
     public static int ONLYPARK = 1, ONLYCHARGE = 2, PARKANDCHARGE = 3;
 
@@ -191,27 +201,22 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private Timer mTimer;
 
-    private UpdateManager mUpdateManager;
+    private boolean mStartUpdate;
+
+    private boolean mUpdateActivityFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout_refatory);
-        SpUtils.getInstance(this).putBoolean(SpUtils.ALREADY_UPDATE, false);
+        SpUtils.getInstance(this).putBoolean(SpUtils.ALREADY_CHECK_UPDATE, false);
         // 网络改变的一个回掉类
         mNetChangeObserver = new NetChangeObserver() {
             @Override
             public void onNetConnected(NetUtils.NetType type) {
                 Log.e("唉唉唉", "网络连接上了" + type);
                 mlocationClient.startLocation();
-                if (!SpUtils.getInstance(MainActivity.this).getBoolean(SpUtils.ALREADY_UPDATE)) {
-                    if (mUpdateManager != null) {
-                        mUpdateManager.onDestroy();
-                        mUpdateManager = null;
-                    }
-                    mUpdateManager = new UpdateManager(MainActivity.this);
-                    mUpdateManager.checkUpdate();
-                }
+                initVersion();
             }
 
             @Override
@@ -223,19 +228,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         //开启广播去监听 网络 改变事件
         NetStateReceiver.registerObserver(mNetChangeObserver);
 
-        initVersion();
         initView(savedInstanceState);//初始化控件
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) || noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 //在某些手机不会弹出两个申请权限窗口，因此只能先申请一个，在申请结果回调了再申请另一个
                 if (noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
+                    mRequestWriteExternal = true;
                 } else {
                     initMapStyle();//初始化地图样式文件
+                    mRequestAccessCoarseLocation = true;
                     requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
                 }
+            } else {
+                initVersion();
             }
         } else {
+            initVersion();
             initMapStyle();//初始化地图样式文件
         }
         initData();//初始化数据
@@ -243,9 +252,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void initVersion() {
-        mUpdateManager = new UpdateManager(this);
-        mUpdateManager.checkUpdate();
-        //UpdateHelper.getInstance().setUpdateType(UpdateType.autowifiupdate).check(MainActivity.this);
+        if (!SpUtils.getInstance(MainActivity.this).getBoolean(SpUtils.ALREADY_CHECK_UPDATE)) {
+            if (mStartUpdate) {
+                stopService(new Intent(MainActivity.this, UpdateService.class));
+            }
+            startService(new Intent(MainActivity.this, UpdateService.class));
+            mStartUpdate = true;
+        }
     }
 
     private void initView(Bundle savedInstanceState) {
@@ -318,10 +331,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
             mCredit.setText(credit);
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
+            ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                    R.mipmap.ic_usericon);
         } else {
             mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
             ImageUtil.showCirclePic(mDrawerProtraitIv, R.mipmap.ic_usericon);
         }
+
     }
 
     private void initEvent() {
@@ -901,7 +917,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     mLocationMarker.setPosition(mLastlocationLatlng);
                 }
             } else {
-                if (!mHadShowGps) {
+                if (!mHadShowGps && (!noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION) || mRequestAccessCoarseLocation)) {
                     openGps();
                     mHadShowGps = true;
                 }
@@ -944,7 +960,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mlocationClient.onDestroy();
         }
         mlocationClient = null;
-        mUpdateManager.onDestroy();
     }
 
     private void addLoactionMarker(LatLng latlng) {
@@ -1086,24 +1101,18 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
+        stopService(new Intent(this, UpdateService.class));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
-
-        if (UserManager.getInstance().hasLogined()) {
-            ImageUtil.showCirclePic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
-                    R.mipmap.ic_usericon);
-            mUserName.setText(UserManager.getInstance().getUserInfo().getNickname().equals("-1") ?
-                    UserManager.getInstance().getUserInfo().getUsername().substring(0, 3) + "*****" + UserManager.getInstance().getUserInfo().getUsername().substring(8, UserManager.getInstance().getUserInfo().getUsername().length())
-                    : UserManager.getInstance().getUserInfo().getNickname());
-            String crecdit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
-            mCredit.setText(crecdit);
+        if (mUpdateActivityFinish) {
+            //刚启动的时候如果检查到更新打开了UpdateActivity则会导致地图还没显示当前位置就中途停住，当UpdateActivity关闭时继续显示当前位置
+            mLocationIv.performClick();
+            mUpdateActivityFinish = false;
         }
-        ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
-                R.mipmap.ic_usericon);
     }
 
     @Override
@@ -1287,6 +1296,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         } else if (Objects.equals(intent.getAction(), ConstansUtil.CHANGE_PORTRAIT)) {
             ImageUtil.showPic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
             ImageUtil.showPic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+        } else if (Objects.equals(intent.getAction(), ConstansUtil.UPDATE_ACTIVITY_FINISH)) {
+            mUpdateActivityFinish = true;
         }
     }
 
@@ -1307,6 +1318,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 String credit = "信用分 " + UserManager.getInstance().getUserInfo().getCredit();
                 mCredit.setText(credit);
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);//允许侧边滑动
+                ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
+                        R.mipmap.ic_usericon);
             }
         }
     }
@@ -1523,8 +1536,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (requestCode == OPEN_GPS && resultCode == RESULT_OK) {
             isFirstloc = true;
             mlocationClient.startLocation();
-        } else {
-            mUpdateManager.onActivityResult(requestCode, resultCode);
         }
     }
 
@@ -1690,19 +1701,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 isFirstloc = true;
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
+            } else {
+                showFiveToast("没有权限，定位失败");
             }
-            if (noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (!mRequestWriteExternal && noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
+            } else {
+                initVersion();
             }
         } else if (requestCode == WRITE_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initMapStyle();
             }
-            if (noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            if (!mRequestAccessCoarseLocation && noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
+            } else {
+                initVersion();
             }
-        } else {
-            mUpdateManager.onRequestPermissionsResult(requestCode, grantResults);
         }
     }
 

@@ -44,11 +44,11 @@ public class UpdateDialog extends DialogFragment {
      * UI
      */
     private View mContentView;
-    private TextView textview_content,textview_update_now,textview_wifi_warm;
+    private TextView textview_content, textview_update_now, textview_wifi_warm;
     private ImageView imageview_colse;
 
     /**
-     *数据
+     * 数据
      */
     private Context mContext;
     private Update mUpdate;
@@ -59,7 +59,7 @@ public class UpdateDialog extends DialogFragment {
     //是否已经下载完成
     private boolean finshDown;
 
-    public UpdateDialog(Context context, Update info,int action,String path,boolean isactivityEnter) {
+    public UpdateDialog(Context context, Update info, int action, String path, boolean isactivityEnter) {
         super();
         mContext = context;
         mUpdate = info;
@@ -75,14 +75,14 @@ public class UpdateDialog extends DialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);//设置没有title
         getDialog().setCanceledOnTouchOutside(false);//设置阴影部分点击不可消失
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        if (UpdateSP.isForced()){
+        if (UpdateSP.isForced()) {
             getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
                 //监听返回键，不让返回键点击消失
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        if (UpdateHelper.getInstance().getUpdateType() == UpdateType.autowifiupdate){
-                            ((Activity)mContext).finish();
+                        if (UpdateHelper.getInstance().getUpdateType() == UpdateType.autowifiupdate) {
+                            ((Activity) mContext).finish();
                         }
                         if (UpdateHelper.getInstance().getForceListener() != null) {
                             UpdateHelper.getInstance().getForceListener().onUserCancel(UpdateSP.isForced());
@@ -111,7 +111,7 @@ public class UpdateDialog extends DialogFragment {
 
     private void initData() {
 
-        if (UpdateSP.isForced()){
+        if (UpdateSP.isForced()) {
             textview_update_now.setVisibility(View.VISIBLE);
             imageview_colse.setVisibility(View.GONE);
         }
@@ -171,7 +171,7 @@ public class UpdateDialog extends DialogFragment {
         imageview_colse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateSP.setIgnore(mUpdate.getVersionCode()+","+mUpdate.getTime());
+                UpdateSP.setIgnore(mUpdate.getVersionCode() + "," + mUpdate.getTime());
                 if (UpdateHelper.getInstance().getForceListener() != null) {
                     UpdateHelper.getInstance().getForceListener().onUserCancel(UpdateSP.isForced());
                 }
@@ -226,7 +226,7 @@ public class UpdateDialog extends DialogFragment {
                         dismiss();
                     }
                 } else {
-                    Toast.makeText(mContext,"后台下载中...",Toast.LENGTH_SHORT);
+                    Toast.makeText(mContext, "后台下载中...", Toast.LENGTH_SHORT);
                     Intent intent = new Intent(mContext, DownloadingService.class);
                     intent.putExtra(UpdateConstants.DATA_ACTION, UpdateConstants.START_DOWN);
                     intent.putExtra(UpdateConstants.DATA_UPDATE, mUpdate);
