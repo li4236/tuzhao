@@ -347,10 +347,8 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      */
     private void getDiscount() {
         getOkGo(HttpConstants.getUserDiscount)
-                .params("discountType", 1)
+                .params("discountType", 4)
                 .params("isUsable", 1)
-                .params("startItem", 0)
-                .params("pageSize", 32)
                 .execute(new JsonCallback<Base_Class_List_Info<Discount_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> o, Call call, Response response) {

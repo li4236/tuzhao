@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Park_Info implements Parcelable {
     private String id;
-    @SerializedName(value = "parkLotId",alternate = {"parkspace_id"})
+    @SerializedName(value = "parkLotId", alternate = {"parkspace_id"})
     private String parkLotId;//停车位所属停车场
     private String user_id;//停车位所属用户
     private String userName;//停车位所属用户名称
@@ -47,6 +47,7 @@ public class Park_Info implements Parcelable {
     private double latitude;    //经度
     private double longitude;   //纬度
     private float distance;     //距离目的地的距离
+    private boolean haveDistination;    //有目的地
     private String carNumber;   //预定人的车牌号码
     private String parkInterval;//预定停车的开始和结束时间(yyyy-MM-dd HH:mm*yyyy-MM-dd HH:mm)
 
@@ -75,7 +76,6 @@ public class Park_Info implements Parcelable {
     public void setPark_status(String park_status) {
         this.park_status = park_status;
     }
-
 
     public String getHandle_user() {
         return parking_user_id;
@@ -405,6 +405,14 @@ public class Park_Info implements Parcelable {
         this.distance = distance;
     }
 
+    public boolean isHaveDistination() {
+        return haveDistination;
+    }
+
+    public void setHaveDistination(boolean haveDistination) {
+        this.haveDistination = haveDistination;
+    }
+
     public String getCarNumber() {
         return carNumber;
     }
@@ -470,6 +478,23 @@ public class Park_Info implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Park_Info parkInfo = (Park_Info) o;
+        return Objects.equals(id, parkInfo.id) &&
+                Objects.equals(parkLotId, parkInfo.parkLotId) &&
+                Objects.equals(user_id, parkInfo.user_id) &&
+                Objects.equals(citycode, parkInfo.citycode);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, parkLotId, user_id, citycode);
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -505,6 +530,7 @@ public class Park_Info implements Parcelable {
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeFloat(this.distance);
+        dest.writeByte(this.haveDistination ? (byte) 1 : (byte) 0);
         dest.writeString(this.carNumber);
         dest.writeString(this.parkInterval);
         dest.writeString(this.citycode);
@@ -546,6 +572,7 @@ public class Park_Info implements Parcelable {
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.distance = in.readFloat();
+        this.haveDistination = in.readByte() != 0;
         this.carNumber = in.readString();
         this.parkInterval = in.readString();
         this.citycode = in.readString();
@@ -568,21 +595,4 @@ public class Park_Info implements Parcelable {
             return new Park_Info[size];
         }
     };
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Park_Info parkInfo = (Park_Info) o;
-        return Objects.equals(id, parkInfo.id) &&
-                Objects.equals(parkLotId, parkInfo.parkLotId) &&
-                Objects.equals(user_id, parkInfo.user_id) &&
-                Objects.equals(citycode, parkInfo.citycode);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, parkLotId, user_id, citycode);
-    }
 }

@@ -17,8 +17,6 @@ public class Car implements Parcelable {
 
     private String status;
 
-    private int sortStatus;
-
     public String getCarNumber() {
         return carNumber;
     }
@@ -87,7 +85,6 @@ public class Car implements Parcelable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(carNumber);
     }
 }

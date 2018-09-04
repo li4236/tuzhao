@@ -1188,7 +1188,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         } else {
             //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
-            markerAnimation.setDuration(700);  //设置动画时间 单位毫秒
+            markerAnimation.setDuration(500);  //设置动画时间 单位毫秒
             marker.setAnimation(markerAnimation);
             marker.startAnimation();
             LatLng markerLatLng = clusterItems.get(0).getPosition();

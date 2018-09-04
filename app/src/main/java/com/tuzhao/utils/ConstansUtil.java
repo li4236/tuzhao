@@ -476,4 +476,14 @@ public class ConstansUtil {
      */
     public static final String UPDATE_ACTIVITY_FINISH = "UpdateActivityFinish";
 
+    /**
+     * 车牌号
+     */
+    public static final String CAR_NUMBER = "CarNumber";
+
+    /**
+     * 预定车位成功
+     */
+    public static final String BOOK_PARK_SPACE = "BookParkSpace";
+
 }

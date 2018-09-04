@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/w0">
+
+    <ImageView
+        android:id="@+id/park_space_location_iv"
+        android:layout_width="11dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@mipmap/ic_gps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/share_park_space_space_name"
+        style="@style/FortyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="14dp"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/park_space_location_iv"
+        app:layout_constraintEnd_toStartOf="@+id/distance_to_distination_tv"
+        app:layout_constraintStart_toEndOf="@+id/park_space_location_iv"
+        app:layout_constraintTop_toTopOf="@+id/park_space_location_iv" />
+
+    <ImageView
+        android:id="@+id/park_space_owner_iv"
+        android:layout_width="11dp"
+        android:layout_height="14dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="26dp"
+        android:contentDescription="@string/picture_description"
+        android:src="@drawable/ic_carman"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/park_space_location_iv" />
+
+    <TextView
+        android:id="@+id/share_park_space_share_name"
+        style="@style/TwentyTextG6Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="14dp"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:maxLines="1"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/park_space_owner_iv"
+        app:layout_constraintEnd_toStartOf="@+id/book_park_space"
+        app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
+        app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
+
+    <TextView
+        android:id="@+id/distance_to_distination"
+        style="@style/TenTextY3Style"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/share_park_space_space_name"
+        app:layout_constraintEnd_toEndOf="@+id/book_park_space"
+        app:layout_constraintTop_toTopOf="@+id/share_park_space_space_name" />
+
+    <TextView
+        android:id="@+id/distance_to_distination_tv"
+        style="@style/TenTextG6Stytle"
+        android:paddingEnd="2dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/distance_to_distination"
+        app:layout_constraintEnd_toStartOf="@id/distance_to_distination" />
+
+    <TextView
+        android:id="@+id/book_park_space"
+        style="@style/TenTextG6Stytle"
+        android:layout_width="58dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/normal_y17_to_y15_press_y7_to_y16_all_12dp"
+        android:text="预定"
+        android:textColor="@color/b1"
+        app:layout_constraintBottom_toBottomOf="@+id/share_park_space_share_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />
+
+</android.support.constraint.ConstraintLayout>

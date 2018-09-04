@@ -3,6 +3,7 @@ package com.tuzhao.activity.mine;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,6 +73,15 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
     @Override
     protected RecyclerView.LayoutManager createLayouManager() {
         return new LinearLayoutManager(this);
+    }
+
+    @Override
+    protected void initData() {
+        if (mChooseCar && getIntent().hasExtra(ConstansUtil.CAR_NUMBER)) {
+            mCommonAdapter.setNewData(getIntent().<Car>getParcelableArrayListExtra(ConstansUtil.CAR_NUMBER));
+        } else {
+            super.initData();
+        }
     }
 
     @Override
@@ -183,6 +193,7 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
                         public void onClick(View v) {
                             Intent intent = new Intent();
                             intent.putExtra(ConstansUtil.INTENT_MESSAGE, car.getCarNumber());
+                            intent.putParcelableArrayListExtra(ConstansUtil.CAR_NUMBER, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
                             setResult(RESULT_OK, intent);
                             finish();
                         }

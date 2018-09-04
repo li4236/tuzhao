@@ -16,13 +16,17 @@ import com.tuzhao.R;
 import com.tuzhao.activity.SearchAddressActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Car;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -37,7 +42,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/8/29.
  */
-public class AppointmentParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener {
+public class AppointmentParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private static final int APPOINTMENT_PARK_SAPCE_CODE = 0x123;
 
@@ -52,6 +57,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     private TextView mDestination;
 
     private TextView mNextStep;
+
+    private ArrayList<Car> mCars;
 
     /**
      * 获得分享的车位
@@ -122,6 +129,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         mCanParkList = new LinkedList<>();
         getFriendShareParkspace();
         getUserParkOrderForAppoint();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -136,6 +144,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             case R.id.car_number_tv:
                 Intent intent = new Intent(AppointmentParkSpaceActivity.this, MyCarActivity.class);
                 intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
+                if (mCars != null) {
+                    intent.putExtra(ConstansUtil.CAR_NUMBER, mCars);
+                }
                 startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                 break;
             case R.id.appointment_income_time_tv:
@@ -157,7 +168,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 } else if (mCanParkList.isEmpty()) {
                     showFiveToast("在您选择的时间内没有适合的车位");
                 } else {
-                    startActivityForResult(ShareParkSpaceActivity.class, APPOINTMENT_PARK_SAPCE_CODE, ConstansUtil.REQUEST_FOR_RESULT, new ArrayList<>(mCanParkList));
+                    startActivityForResult(BookParkSpaceActivity.class, APPOINTMENT_PARK_SAPCE_CODE, ConstansUtil.REQUEST_FOR_RESULT, new ArrayList<>(mCanParkList));
                 }
                 break;
         }
@@ -168,21 +179,32 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == ConstansUtil.REQUSET_CODE) {
+                if (mCars == null) {
+                    mCars = data.getParcelableArrayListExtra(ConstansUtil.CAR_NUMBER);
+                }
                 String carNumber = data.getStringExtra(ConstansUtil.INTENT_MESSAGE);
                 mCarNumber.setText(carNumber);
                 performScanParkSpace(0);
             } else if (requestCode == SELECTE_DESTINATION_CODE) {
                 mLatitude = data.getDoubleExtra(ConstansUtil.LATITUDE, 0);
                 mLongitude = data.getDoubleExtra(ConstansUtil.LONGITUDE, 0);
+                mDestination.setTextColor(ConstansUtil.B1_COLOR);
                 mDestination.setText(data.getStringExtra("keyword"));
                 performScanParkSpace(3);
             }
         } else if (resultCode == 2 && requestCode == SELECTE_DESTINATION_CODE) {
             mLatitude = 0;
             mLongitude = 0;
-            mDestination.setText("");
+            mDestination.setTextColor(ConstansUtil.G6_COLOR);
+            mDestination.setText("可选");
             performScanParkSpace(3);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     private void getFriendShareParkspace() {
@@ -408,8 +430,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             Calendar orderStartCalendar;
             Calendar orderEndCalendar;
             for (ParkOrderInfo parkOrderInfo : mParkOrderInfos) {
-                orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_start_time());
-                orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time());
+                orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_starttime());
+                orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime());
                 if (DateUtil.isIntersection(appointmentStartCalendar, appointmentEndCalendar, orderStartCalendar, orderEndCalendar) && getText(mCarNumber).equals(parkOrderInfo.getCarNumber())) {
                     if (parkOrderInfo.getOrder_status().equals("1")) {
                         showFiveToast("在该时间您已有过预约，请重新选择哦");
@@ -443,9 +465,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         mCanParkList.addAll(mParkInfos);
         Calendar[] shareTimeCalendar;
         int status;
-        boolean haveDestination = !TextUtils.isEmpty(getText(mDestination));
+        boolean haveDestination = mLatitude != 0 && mLongitude != 0;
         final LatLng latLng = new LatLng(mLatitude, mLongitude);
-        float distance = 0;
+        LatLng currentLatLng = new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude());
+        float distance;
         for (Park_Info parkInfo : mParkInfos) {
             Log.e(TAG, "scanParkSpace: " + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
@@ -520,8 +543,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             //如果选了目的地，则计算目的地和车位之间的距离
             if (haveDestination) {
                 distance = AMapUtils.calculateLineDistance(latLng, new LatLng(parkInfo.getLatitude(), parkInfo.getLongitude()));
+            } else {
+                distance = AMapUtils.calculateLineDistance(currentLatLng, new LatLng(parkInfo.getLatitude(), parkInfo.getLongitude()));
             }
 
+            parkInfo.setHaveDistination(haveDestination);
             parkInfo.setDistance(distance);
             parkInfo.setCarNumber(getText(mCarNumber));
             parkInfo.setParkInterval(mAppointmentStartTime + "*" + mAppointmentEndTime);
@@ -543,6 +569,38 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
         }
 
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (Objects.equals(intent.getAction(), ConstansUtil.BOOK_PARK_SPACE)) {
+            Park_Info parkInfo = intent.getParcelableExtra(ConstansUtil.INTENT_MESSAGE);
+
+            //添加预约订单
+            ParkOrderInfo parkOrderInfo = new ParkOrderInfo();
+            parkOrderInfo.setOrder_starttime(mAppointmentStartTime + ":00");
+            parkOrderInfo.setOrder_endtime(mAppointmentEndTime + ":00");
+            parkOrderInfo.setCarNumber(parkInfo.getCarNumber());
+            parkOrderInfo.setOrder_status("1");
+            mParkOrderInfos.add(parkOrderInfo);
+
+            for (Park_Info park_info : mParkInfos) {
+                if (park_info.equals(parkInfo)) {
+                    //车位添加预约记录
+                    if (park_info.getOrder_times().equals("-1")) {
+                        park_info.setOrder_times(parkInfo.getParkInterval());
+                    } else {
+                        park_info.setOrder_times(park_info.getOrder_times() + "," + parkInfo.getParkInterval());
+                    }
+                    break;
+                }
+            }
+
+            mCanParkList.remove(parkInfo);
+            if (mCanParkList.isEmpty()) {
+                mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+            }
+        }
     }
 
 }

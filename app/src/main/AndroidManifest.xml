@@ -209,11 +209,11 @@
         <activity
             android:name=".activity.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activity.mine.BookParkSpaceActivity" />
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"
             android:theme="@style/TransparentTheme" />
-
         <service android:name=".publicwidget.update.UpdateService" />
 
         <activity
