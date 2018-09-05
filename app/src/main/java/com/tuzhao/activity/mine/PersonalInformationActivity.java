@@ -145,7 +145,9 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
             } else {
                 mUserLevel.setText("神级泊客");
             }
-            mNumberOfPark.setText("总停车次数" + numberOfPark + "次");
+            mNumberOfPark.setText("总停车次数");
+            mNumberOfPark.append(userInfo.getNumberOfPark());
+            mNumberOfPark.append("次");
         }
 
         if (!userInfo.getUsername().equals("-1")) {

@@ -43,7 +43,6 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
 
     private static final int RESET_REQUEST_CODE = 0x123;
 
-
     private int mWithdrawAccountType;
 
     private EditText mWithdrawMoney;

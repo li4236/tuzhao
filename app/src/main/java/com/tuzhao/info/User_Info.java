@@ -11,7 +11,6 @@ import com.tuzhao.utils.ConstansUtil;
  */
 
 public class User_Info implements Parcelable {
-
     private String token;//用户登录标识
     private String id;//用户的唯一标识id
     private String username;//用户名：手机号码

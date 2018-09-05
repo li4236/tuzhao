@@ -33,6 +33,7 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.Map;
 
@@ -84,6 +85,8 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
             public void onClick(View v) {
                 if (UserManager.getInstance().getUserInfo().getBalance().equals("0.00")) {
                     MyToast.showToast(MyBalanceActivity.this, "没有余额可以提现哦", 5);
+                } else if (!UserManager.getInstance().getUserInfo().isCertification()) {
+                    ViewUtil.showCertificationDialog(MyBalanceActivity.this, "提现");
                 } else {
                     showDialog();
                 }
