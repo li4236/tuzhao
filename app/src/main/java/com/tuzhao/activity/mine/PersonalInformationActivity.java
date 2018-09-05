@@ -419,11 +419,21 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            if (e.getMessage().equals("103")) {
-                                mWechat.setText(UNBIND);
-                                showFiveToast("绑定成功");
-                            } else {
-                                showFiveToast(ConstansUtil.SERVER_ERROR);
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("绑定微信超时，请重试绑定");
+                                    break;
+                                case "103":
+                                    mWechat.setText(UNBIND);
+                                    showFiveToast("绑定成功");
+                                    break;
+                                case "104":
+                                    showFiveToast("该微信已绑定别的账号");
+                                    break;
+                                case "102":
+                                default:
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
                             }
                         }
                     }

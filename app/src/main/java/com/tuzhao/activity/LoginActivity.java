@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
@@ -51,6 +52,20 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra(ConstansUtil.INTENT_MESSAGE)) {
+            for (int i = 0, size = getSupportFragmentManager().getBackStackEntryCount(); i < size; i++) {
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.login_container, new LoginFragment());
+            transaction.commit();
+        }
+        Log.e(TAG, "onNewIntent: " + intent.hasExtra(ConstansUtil.INTENT_MESSAGE));
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
@@ -81,11 +96,24 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
                     if (intent.hasExtra(ConstansUtil.USER_INFO)) {
                         smsLoginFragment = SmsLoginFragment.getInstance(2, (User_Info) intent.getParcelableExtra(ConstansUtil.USER_INFO));
                     } else {
-                        smsLoginFragment = SmsLoginFragment.getInstance(0, intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
+                        Bundle bundle = intent.getBundleExtra(ConstansUtil.INTENT_MESSAGE);
+                        if (bundle != null) {
+                            smsLoginFragment = SmsLoginFragment.getInstance(bundle.getInt(ConstansUtil.STATUS), bundle.getString(ConstansUtil.TELEPHONE_NUMBER));
+                        } else {
+                            smsLoginFragment = SmsLoginFragment.getInstance(0, intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
+                        }
                     }
                     smsTransaction.replace(R.id.login_container, smsLoginFragment);
                     smsTransaction.addToBackStack(smsLoginFragment.getTAG());
                     smsTransaction.commit();
+                    break;
+                case ConstansUtil.SET_NEW_USER_PASSWORD:
+                    FragmentTransaction setNewUserPasswordTransation = getSupportFragmentManager().beginTransaction();
+                    Bundle setNewUserPasswordBundle = intent.getBundleExtra(ConstansUtil.INTENT_MESSAGE);
+                    LoginInputFragment setNewUserPasswordFragment = LoginInputFragment.getInstance(setNewUserPasswordBundle.getString(ConstansUtil.TELEPHONE_NUMBER),
+                            setNewUserPasswordBundle.getString(ConstansUtil.PASS_CODE), 0);
+                    setNewUserPasswordTransation.replace(R.id.login_container, setNewUserPasswordFragment);
+                    setNewUserPasswordTransation.commit();
                     break;
                 case ConstansUtil.WECHAT_TELEPHONE_LOGIN:
                     FragmentTransaction wechatTelephoneTransaction = getSupportFragmentManager().beginTransaction();
@@ -108,10 +136,11 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
                     FragmentTransaction forgetPasswordTransaction = getSupportFragmentManager().beginTransaction();
                     Bundle forgetPasswordBundle = intent.getBundleExtra(ConstansUtil.INTENT_MESSAGE);
                     LoginInputFragment forgetPasswordFragment = LoginInputFragment.getInstance(
-                            forgetPasswordBundle.getString(ConstansUtil.TELEPHONE_NUMBER), forgetPasswordBundle.getString(ConstansUtil.PASS_CODE));
+                            forgetPasswordBundle.getString(ConstansUtil.TELEPHONE_NUMBER), forgetPasswordBundle.getString(ConstansUtil.PASS_CODE), 1);
                     forgetPasswordTransaction.replace(R.id.login_container, forgetPasswordFragment);
                     forgetPasswordTransaction.addToBackStack(forgetPasswordFragment.getTAG());
                     forgetPasswordTransaction.commit();
+                    break;
                 case ConstansUtil.LOGIN_SUCCESS:
                     loginSuccess((User_Info) intent.getParcelableExtra(ConstansUtil.INTENT_MESSAGE));
                     break;

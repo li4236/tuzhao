@@ -235,8 +235,18 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        showFiveToast("获取车位信息失败，请稍后再试");
-                        finish();
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("还没有好友给你分享车位哦");
+                                    finish();
+                                    break;
+                                default:
+                                    showFiveToast("获取车位信息失败，请稍后再试");
+                                    finish();
+                                    break;
+                            }
+                        }
                     }
                 });
     }

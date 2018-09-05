@@ -680,4 +680,9 @@ public class HttpConstants {
      */
     public static final String forgetPasswordLogin = ROOT_URL + "forgetPasswordLogin";
 
+    /**
+     * 新用户登录
+     */
+    public static final String newUserLogin = ROOT_URL + "newUserLogin";
+
 }

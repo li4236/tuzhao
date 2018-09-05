@@ -491,4 +491,9 @@ public class ConstansUtil {
      */
     public static final String BOOK_PARK_SPACE = "BookParkSpace";
 
+    /**
+     * 新用户设置密码
+     */
+    public static final String SET_NEW_USER_PASSWORD = "SetNewUserPassword";
+
 }

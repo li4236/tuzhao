@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.User_Info;
@@ -41,11 +42,17 @@ public class LoginInputFragment extends BaseStatusFragment {
 
     private TextView mNextStep;
 
-    public static LoginInputFragment getInstance(String telephone, String passCode) {
+    /**
+     * 0(新用户设置密码登录) 1(忘记密码登录)
+     */
+    private int mType;
+
+    public static LoginInputFragment getInstance(String telephone, String passCode, int type) {
         LoginInputFragment fragment = new LoginInputFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ConstansUtil.TELEPHONE_NUMBER, telephone);
         bundle.putString(ConstansUtil.PASS_CODE, passCode);
+        bundle.putInt(ConstansUtil.TYPE, type);
         fragment.setArguments(bundle);
         fragment.setTAG(ConstansUtil.CHANGE_PASSWORD);
         return fragment;
@@ -81,6 +88,7 @@ public class LoginInputFragment extends BaseStatusFragment {
             mUserInfo = getArguments().getParcelable(ConstansUtil.USER_INFO);
             mPassCode = getArguments().getString(ConstansUtil.PASS_CODE);
             mTelephone = getArguments().getString(ConstansUtil.TELEPHONE_NUMBER);
+            mType = getArguments().getInt(ConstansUtil.TYPE);
         }
 
         TextView title = findViewById(R.id.title);
@@ -130,7 +138,7 @@ public class LoginInputFragment extends BaseStatusFragment {
             showFiveToast("密码长度为8-20位哦");
         } else {
             if (mUserInfo == null) {
-                forgetPasswordLogin();
+                passwordLogin();
             } else {
                 initialWechatLogin();
             }
@@ -170,7 +178,7 @@ public class LoginInputFragment extends BaseStatusFragment {
                         super.onError(call, response, e);
                         mNextStep.setClickable(true);
                         if (!handleException(e)) {
-                            showFiveToast(e.getMessage());
+                            showFiveToast(ConstansUtil.SERVER_ERROR);
                         }
                     }
                 });
@@ -182,6 +190,7 @@ public class LoginInputFragment extends BaseStatusFragment {
                 .params("openId", mUserInfo.getOpenId())
                 .params("unionId", mUserInfo.getUnionId())
                 .params("wechatNickname", mUserInfo.getWechatNickname())
+                .params("telephoneNumber", mUserInfo.getUsername())
                 .params("password", DensityUtil.MD5code(getText(mInputEt)))
                 .params("registrationId", new DatabaseImp(getContext()).getRegistrationId())
                 .params("passCode", mPassCode)
@@ -196,15 +205,32 @@ public class LoginInputFragment extends BaseStatusFragment {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-                            showFiveToast("登录失败，请稍后重试");
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "103":
+                                case "104":
+                                case "105":
+                                case "106":
+                                case "107":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "108":
+                                    showFiveToast("微信登录已失效，请重新登录");
+                                    startActivity(LoginActivity.class, ConstansUtil.INTENT_MESSAGE, "");
+                                    break;
+                                case "109":
+                                    showFiveToast("该手机号已绑定别的微信了哦");
+                                    break;
+                            }
                         }
                     }
                 });
     }
 
-    private void forgetPasswordLogin() {
+    private void passwordLogin() {
         showLoadingDialog("登录中...");
-        getOkGo(HttpConstants.forgetPasswordLogin)
+        getOkGo(mType == 0 ? HttpConstants.newUserLogin : HttpConstants.forgetPasswordLogin)
                 .params("registrationId", new DatabaseImp(getContext()).getRegistrationId())
                 .params("telephoneNumber", mTelephone)
                 .params("password", DensityUtil.MD5code(getText(mInputEt)))
@@ -220,7 +246,24 @@ public class LoginInputFragment extends BaseStatusFragment {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "103":
+                                case "104":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "105":
+                                    showFiveToast("验证码失效，请重新验证");
+                                    break;
+                                case "106":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "107":
+                                    showFiveToast("该手机号已注册过了哦");
+                                    startActivity(LoginActivity.class, ConstansUtil.INTENT_MESSAGE, "");
+                                    break;
+                            }
                         }
                     }
                 });

@@ -47,7 +47,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
     private ClipboardObserver mClipboardObserver;
 
     /**
-     * 0(密码登录),1(忘记密码),2(初始微信登录)
+     * 0(短信登录),1(忘记密码),2(初始微信登录),3(新用户登录)
      */
     private int mStatus;
 
@@ -100,9 +100,11 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
         mSendSms = findViewById(R.id.send_sms);
         mUserLogin = findViewById(R.id.login_tv);
 
-        if (mStatus == 2) {
+        if (mStatus == 2 || mStatus == 3) {
             hideView(findViewById(R.id.password_login));
             mUserLogin.setText("下一步");
+            TextView title = findViewById(R.id.title);
+            title.setText("请先进行短信验证");
         } else {
             findViewById(R.id.password_login).setOnClickListener(this);
         }
@@ -235,6 +237,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
                 break;
             case 1:
             case 2:
+            case 3:
                 checkVerificationCode();
                 break;
         }
@@ -261,7 +264,20 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
                         super.onError(call, response, e);
                         mUserLogin.setClickable(true);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "103":
+                                case "106":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "104":
+                                    showFiveToast("验证码已过期，请重新发送");
+                                    break;
+                                case "105":
+                                    showFiveToast("验证码错误");
+                                    break;
+                            }
+                            showFiveToast("登录失败，请稍后重试");
                         }
                     }
                 });
@@ -279,13 +295,20 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         Bundle bundle = new Bundle();
                         bundle.putString(ConstansUtil.PASS_CODE, stringBase_class_info.data);
-                        if (mUserInfo == null) {
-                            bundle.putString(ConstansUtil.TELEPHONE_NUMBER, mTelephoneNumber);
-                            IntentObserable.dispatch(ConstansUtil.CHANGE_PASSWORD, ConstansUtil.INTENT_MESSAGE, bundle);
-                        } else {
-                            //微信初次登录设置密码
-                            bundle.putParcelable(ConstansUtil.USER_INFO, mUserInfo);
-                            IntentObserable.dispatch(ConstansUtil.WECHAT_PASSWORD_LOGIN, ConstansUtil.INTENT_MESSAGE, bundle);
+                        switch (mStatus) {
+                            case 1:
+                                bundle.putString(ConstansUtil.TELEPHONE_NUMBER, mTelephoneNumber);
+                                IntentObserable.dispatch(ConstansUtil.CHANGE_PASSWORD, ConstansUtil.INTENT_MESSAGE, bundle);
+                                break;
+                            case 2:
+                                //微信初次登录设置密码
+                                bundle.putParcelable(ConstansUtil.USER_INFO, mUserInfo);
+                                IntentObserable.dispatch(ConstansUtil.WECHAT_PASSWORD_LOGIN, ConstansUtil.INTENT_MESSAGE, bundle);
+                                break;
+                            case 3:
+                                bundle.putString(ConstansUtil.TELEPHONE_NUMBER, mTelephoneNumber);
+                                IntentObserable.dispatch(ConstansUtil.SET_NEW_USER_PASSWORD, ConstansUtil.INTENT_MESSAGE, bundle);
+                                break;
                         }
                         dismmisLoadingDialog();
                     }

@@ -124,7 +124,10 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
                         dismmisLoadingDialog();
                         mNextStep.setClickable(true);
                         if (o.data.equals("1")) {
-                            IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.TELEPHONE_NUMBER, getText(mTelephoneNumber));
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(ConstansUtil.STATUS, 3);
+                            bundle.putString(ConstansUtil.TELEPHONE_NUMBER, getText(mTelephoneNumber));
+                            IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.INTENT_MESSAGE, bundle);
                         } else {
                             IntentObserable.dispatch(ConstansUtil.PASSWORD_LOGIN, ConstansUtil.TELEPHONE_NUMBER, getText(mTelephoneNumber));
                         }
@@ -135,7 +138,7 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
                         super.onError(call, response, e);
                         mNextStep.setClickable(true);
                         if (!handleException(e)) {
-                            showFiveToast(e.getMessage());
+                            showFiveToast(ConstansUtil.SERVER_ERROR);
                         }
                     }
                 });

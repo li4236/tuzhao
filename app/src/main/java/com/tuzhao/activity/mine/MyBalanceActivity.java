@@ -277,10 +277,20 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
                         if (!DensityUtil.isException(MyBalanceActivity.this, e)) {
-                            if (e.getMessage().equals("103")) {
-                                startWithdraw(1);
-                            } else {
-                                MyToast.showToast(MyBalanceActivity.this, ConstansUtil.SERVER_ERROR, 5);
+                            switch (e.getMessage()) {
+                                case "101":
+                                    MyToast.showToast(MyBalanceActivity.this, "绑定微信超时，请重试绑定", 5);
+                                    break;
+                                case "103":
+                                    startWithdraw(1);
+                                    break;
+                                case "104":
+                                    MyToast.showToast(MyBalanceActivity.this, "该微信已绑定别的账号", 5);
+                                    break;
+                                case "102":
+                                default:
+                                    MyToast.showToast(MyBalanceActivity.this, ConstansUtil.SERVER_ERROR, 5);
+                                    break;
                             }
                         }
                     }

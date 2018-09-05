@@ -208,13 +208,14 @@
         <activity android:name=".activity.mine.UseFriendParkSpaceRecordActivity" />
         <activity
             android:name=".activity.LoginActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:launchMode="singleTask" />
         <activity android:name=".activity.mine.BookParkSpaceActivity" />
         <activity android:name=".activity.mine.ShareParkSpaceDetailActivity" />
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"
             android:theme="@style/TransparentTheme" />
+
         <service android:name=".publicwidget.update.UpdateService" />
 
         <activity
