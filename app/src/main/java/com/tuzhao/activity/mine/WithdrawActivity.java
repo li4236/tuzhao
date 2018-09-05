@@ -155,13 +155,13 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                     float withdrawlMoney = Float.valueOf(getText(mWithdrawMoney));
                     if (withdrawlMoney == 0) {
                         showFiveToast("提现的金额不能为0哦");
-                    } else if (withdrawlMoney > Float.valueOf(mUserInfo.getBalance())) {
-                        showFiveToast("余额没有那么多哦");
-                    } else if (mUserInfo.getPaymentPassword().equals("")) {
-                        showFiveToast("请先设置您的支付密码");
-                        showSetPasswordDialog(1);
                     } else if (!DataUtil.numberLegal(getText(mWithdrawMoney))) {
                         showFiveToast("金额格式不对哦");
+                    } else if (withdrawlMoney > Float.valueOf(mUserInfo.getBalance())) {
+                        showFiveToast("余额没有那么多哦");
+                    } else if (mUserInfo.getPaymentPassword().equals("-1")) {
+                        showFiveToast("请先设置您的支付密码");
+                        showSetPasswordDialog(1);
                     } else {
                         mCustomDialog.show();
                     }

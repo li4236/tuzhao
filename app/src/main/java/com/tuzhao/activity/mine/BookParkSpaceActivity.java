@@ -1,6 +1,5 @@
 package com.tuzhao.activity.mine;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -20,7 +19,6 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
@@ -71,20 +69,6 @@ public class BookParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 
     }
 
-    private void showAppointmentDialog(final Park_Info parkInfo) {
-        new TipeDialog.Builder(this)
-                .setTitle("预约车位")
-                .setMessage("确定预约" + parkInfo.getLocation_describe() + "车位吗")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reserveFriendParkSpace(parkInfo);
-                    }
-                })
-                .create()
-                .show();
-    }
-
     private void reserveFriendParkSpace(final Park_Info parkInfo) {
         showLoadingDialog("预定中...");
         getOkGo(HttpConstants.reserveFriendParkSpace)
@@ -98,7 +82,9 @@ public class BookParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         notifyRemoveData(parkInfo);
                         IntentObserable.dispatch(ConstansUtil.BOOK_PARK_SPACE, ConstansUtil.INTENT_MESSAGE, parkInfo);
+                        showFiveToast("预定成功");
                         dismmisLoadingDialog();
+                        finish();
                     }
 
                     @Override
@@ -130,7 +116,7 @@ public class BookParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         if (park_info.getDistance() >= 1000) {
             holder.setText(R.id.distance_to_distination, mDecimalFormat.format(park_info.getDistance() / 1000) + "km");
         } else {
-            holder.setText(R.id.distance_to_distination, (int)park_info.getDistance() + "m");
+            holder.setText(R.id.distance_to_distination, (int) park_info.getDistance() + "m");
         }
     }
 

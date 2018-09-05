@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,9 +20,11 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Car;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
@@ -97,6 +100,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
     private double mLongitude;
 
+    private boolean mIsBookSpecificParkSpace;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_appointment_park_space_layout;
@@ -104,6 +109,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        if (getIntent().hasExtra(ConstansUtil.PARK_SPACE_INFO)) {
+            mParkInfos = new ArrayList<>(1);
+            mParkInfos.add((Park_Info) getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO));
+            mIsBookSpecificParkSpace = true;
+        }
         mCarNumber = findViewById(R.id.car_number);
         mAppointmentIncomeTime = findViewById(R.id.appointment_income_time);
         mParkDurationTv = findViewById(R.id.park_duration);
@@ -124,10 +134,12 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     @Override
     protected void initData() {
         super.initData();
-        mParkInfos = new ArrayList<>();
+        if (!mIsBookSpecificParkSpace) {
+            mParkInfos = new ArrayList<>();
+            getFriendShareParkspace();
+        }
         mParkOrderInfos = new ArrayList<>();
         mCanParkList = new LinkedList<>();
-        getFriendShareParkspace();
         getUserParkOrderForAppoint();
         IntentObserable.registerObserver(this);
     }
@@ -168,7 +180,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 } else if (mCanParkList.isEmpty()) {
                     showFiveToast("在您选择的时间内没有适合的车位");
                 } else {
-                    startActivityForResult(BookParkSpaceActivity.class, APPOINTMENT_PARK_SAPCE_CODE, ConstansUtil.REQUEST_FOR_RESULT, new ArrayList<>(mCanParkList));
+                    if (mIsBookSpecificParkSpace) {
+                        showAppointmentDialog(mCanParkList.get(0));
+                    } else {
+                        startActivityForResult(BookParkSpaceActivity.class, APPOINTMENT_PARK_SAPCE_CODE, ConstansUtil.REQUEST_FOR_RESULT, new ArrayList<>(mCanParkList));
+                    }
                 }
                 break;
         }
@@ -403,7 +419,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     mParkDuration = Integer.valueOf(mDurationHours.get(options1)) * 60 + Integer.valueOf(mDurationMinutes.get(options1).get(option2));
-                    mParkDurationTv.setText("");
+                    if (!mAppointmentStartTime.equals("")) {
+                        mAppointmentEndTime = DateUtil.getYearToMinute(mAppointmentStartTime + ":00", mParkDuration * 60);
+                    }
+                    setNewText(mParkDurationTv, "");
                     if (!mDurationHours.get(options1).equals("0")) {
                         mParkDurationTv.append(mDurationHours.get(options1));
                         mParkDurationTv.append("小时");
@@ -469,6 +488,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         final LatLng latLng = new LatLng(mLatitude, mLongitude);
         LatLng currentLatLng = new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude());
         float distance;
+        Log.e(TAG, "scanParkSpace  mAppointmentStartTime:" + mAppointmentStartTime + "   mAppointmentEndTime:" + mAppointmentEndTime);
         for (Park_Info parkInfo : mParkInfos) {
             Log.e(TAG, "scanParkSpace: " + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
@@ -569,6 +589,47 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
         }
 
+    }
+
+    private void showAppointmentDialog(final Park_Info parkInfo) {
+        new TipeDialog.Builder(this)
+                .setTitle("预约车位")
+                .setMessage("确定预约" + parkInfo.getLocation_describe() + "车位吗")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reserveFriendParkSpace(parkInfo);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void reserveFriendParkSpace(final Park_Info parkInfo) {
+        showLoadingDialog("预定中...");
+        getOkGo(HttpConstants.reserveFriendParkSpace)
+                .params("parkLotId", parkInfo.getParkLotId())
+                .params("parkSpaceId", parkInfo.getId())
+                .params("carNumber", parkInfo.getCarNumber())
+                .params("parkInterval", parkInfo.getParkInterval())
+                .params("cityCode", parkInfo.getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        IntentObserable.dispatch(ConstansUtil.BOOK_PARK_SPACE, ConstansUtil.INTENT_MESSAGE, parkInfo);
+                        dismmisLoadingDialog();
+                        showFiveToast("预定成功");
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast(e.getMessage());
+                        }
+                    }
+                });
     }
 
     @Override

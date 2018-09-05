@@ -1,4 +1,4 @@
-package com.tuzhao.fragment.parkspacedetail;
+package com.tuzhao.fragment.parklotdetail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +53,7 @@ import okhttp3.Response;
  * Created by TZL12 on 2017/11/8.
  */
 
-public class ParkspaceDetailFragment extends BaseFragment {
+public class ParkLotDetailFragment extends BaseFragment {
 
     /**
      * UI

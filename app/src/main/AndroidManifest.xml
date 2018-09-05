@@ -210,6 +210,7 @@
             android:name=".activity.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.mine.BookParkSpaceActivity" />
+        <activity android:name=".activity.mine.ShareParkSpaceDetailActivity" />
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"

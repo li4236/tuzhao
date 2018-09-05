@@ -2,12 +2,14 @@ package com.tuzhao.activity.mine;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +23,11 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
+
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -135,7 +140,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     }
 
     @Override
-    protected void bindData(BaseViewHolder holder, final Park_Info park_info, int position) {
+    protected void bindData(BaseViewHolder holder, final Park_Info park_info, final int position) {
         holder.setText(R.id.share_park_space_space_name, park_info.getLocation_describe())
                 .setText(R.id.share_park_space_share_name, "车主：" + park_info.getUserName());
         TextView status = holder.getView(R.id.share_park_space_status);
@@ -146,6 +151,16 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         } else {
             statusIv.setColor(Color.parseColor("#fd5132"));
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(ConstansUtil.PARK_SPACE_INFO, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
+                bundle.putInt(ConstansUtil.POSITION, position);
+                startActivity(ShareParkSpaceDetailActivity.class, bundle);
+            }
+        });
     }
 
 }

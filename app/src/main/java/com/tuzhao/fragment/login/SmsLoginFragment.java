@@ -269,11 +269,11 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
 
     private void checkVerificationCode() {
         showLoadingDialog("验证中...");
-        OkGo.post(HttpConstants.checkVerificationCode)
+        OkGo.post(HttpConstants.checkCode)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
-                .headers("telephoneToken", mTelephoneToken)
-                .params("verifyCode", getText(mVerifyCodeEt))
+                .headers("phoneToken", mTelephoneToken)
+                .params("code", getText(mVerifyCodeEt))
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {

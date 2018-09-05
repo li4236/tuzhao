@@ -2,33 +2,23 @@ package com.tuzhao.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.fragment.parkspace.MyParkspaceFragment;
-import com.tuzhao.http.HttpConstants;
+import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.base.MyFragmentAdapter;
+import com.tuzhao.fragment.parkspace.ShareParkSpaceFragment;
 import com.tuzhao.info.Park_Info;
-import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
-import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
-import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -37,47 +27,47 @@ import com.tuzhao.utils.ViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Response;
-
 /**
- * Created by juncoder on 2018/5/17.
+ * Created by juncoder on 2018/9/5.
  */
-
-public class MyParkspaceActivity extends BaseActivity implements View.OnClickListener, IntentObserver {
-
-    private LoadingDialog mLoadingDialog;
+public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private ViewPager mViewPager;
 
-    private List<MyParkspaceFragment> mFragments;
+    private List<ShareParkSpaceFragment> mFragments;
 
     private List<Park_Info> mParkInfos;
 
     private TextView mApponitmentTv;
 
-    private FragmentAdater mFragmentAdater;
+    private MyFragmentAdapter<ShareParkSpaceFragment> mFragmentAdater;
 
     private ViewStub mViewStub;
 
     private OptionsPickerView<String> mOptionsPickerView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_parkspace_layout_refactor);
-        mFragments = new ArrayList<>();
-        mParkInfos = new ArrayList<>();
+    protected int resourceId() {
+        return R.layout.activity_share_park_space_detail_layout;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        mParkInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.PARK_SPACE_INFO);
+        mFragments = new ArrayList<>(mParkInfos.size());
+        for (int i = 0, size = mParkInfos.size(); i < size; i++) {
+            mFragments.add(ShareParkSpaceFragment.newInstance(mParkInfos.get(i), (i + 1), size, 0));
+        }
 
         mViewPager = findViewById(R.id.my_parkspace_vp);
         mApponitmentTv = findViewById(R.id.appointment_tv);
 
-        ImageUtil.showPic((ImageView) findViewById(R.id.appointment_iv), R.drawable.ic_time2);
-        ImageUtil.showPic((ImageView) findViewById(R.id.add_park_space_iv), R.drawable.ic_addposition);
-        ImageUtil.showPic((ImageView) findViewById(R.id.my_parkspace_setting_iv), R.drawable.ic_setting2);
+        ImageUtil.showPic((ImageView) findViewById(R.id.modify_friend_nickname_iv), R.drawable.ic_revisenotes);
+        ImageUtil.showPic((ImageView) findViewById(R.id.my_parkspace_setting_iv), R.drawable.ic_deleteposition);
 
-        mFragmentAdater = new FragmentAdater(getSupportFragmentManager());
+        mFragmentAdater = new MyFragmentAdapter<>(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mFragmentAdater);
+        mViewPager.setCurrentItem(getIntent().getIntExtra(ConstansUtil.POSITION, 0), false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -95,14 +85,17 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
-        findViewById(R.id.toolbar_back).setOnClickListener(this);
-        findViewById(R.id.audit_tv).setOnClickListener(this);
-        findViewById(R.id.appointment_cl).setOnClickListener(this);
-        findViewById(R.id.add_park_space_cl).setOnClickListener(this);
-        findViewById(R.id.my_parkspace_setting).setOnClickListener(this);
+        findViewById(R.id.modify_friend_nickname_iv).setOnClickListener(this);
+        findViewById(R.id.my_parkspace_setting_iv).setOnClickListener(this);
         loadData();
 
         IntentObserable.registerObserver(this);
+    }
+
+    @NonNull
+    @Override
+    protected String title() {
+        return "共享车位";
     }
 
     @Override
@@ -141,7 +134,7 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void loadData() {
-        showLoadingDialog();
+        /*showLoadingDialog();
         OkGo.post(HttpConstants.getParkFromUser)
                 .tag(this.getClass().getName())
                 .addInterceptor(new TokenInterceptor())
@@ -197,52 +190,17 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
                             showFiveToast(e.getMessage());
                         }
                     }
-                });
-    }
-
-    private void showLoadingDialog() {
-        dismmisLoadingDialog();
-        mLoadingDialog = new LoadingDialog(this, null);
-        mLoadingDialog.show();
-    }
-
-    /**
-     * 关闭加载对话框
-     */
-    private void dismmisLoadingDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
-        }
-    }
-
-    /**
-     * 显示位置在屏幕1/5的Toast
-     *
-     * @param msg 显示的消息
-     */
-    protected void showFiveToast(String msg) {
-        MyToast.showToast(this, msg, 5);
+                });*/
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.toolbar_back:
-                finish();
-                break;
-            case R.id.audit_tv:
+            case R.id.modify_friend_nickname_iv:
                 Intent intent = new Intent(this, AuditParkSpaceActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.add_park_space_cl:
-                if (!UserManager.getInstance().getUserInfo().isCertification()) {
-                    ViewUtil.showCertificationDialog(MyParkspaceActivity.this, "添加车位");
-                } else {
-                    Intent intent1 = new Intent(MyParkspaceActivity.this, AddParkSpaceActivity.class);
-                    startActivity(intent1);
-                }
-                break;
-            case R.id.my_parkspace_setting:
+            case R.id.my_parkspace_setting_iv:
                 Intent intent2 = new Intent(this, ParkSpaceSettingActivity.class);
                 intent2.putExtra(ConstansUtil.PARK_SPACE_INFO, mParkInfos.get(mViewPager.getCurrentItem()));
                 startActivityForResult(intent2, ConstansUtil.REQUSET_CODE);
@@ -270,9 +228,9 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
                 @Override
                 public void onClick(View v) {
                     if (!UserManager.getInstance().getUserInfo().isCertification()) {
-                        ViewUtil.showCertificationDialog(MyParkspaceActivity.this, "添加车位");
+                        ViewUtil.showCertificationDialog(ShareParkSpaceDetailActivity.this, "添加车位");
                     } else {
-                        Intent intent1 = new Intent(MyParkspaceActivity.this, AddParkSpaceActivity.class);
+                        Intent intent1 = new Intent(ShareParkSpaceDetailActivity.this, AddParkSpaceActivity.class);
                         startActivity(intent1);
                     }
                 }
@@ -327,23 +285,6 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
                     }
                     break;
             }
-        }
-    }
-
-    class FragmentAdater extends FragmentPagerAdapter {
-
-        FragmentAdater(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
         }
     }
 

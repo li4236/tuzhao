@@ -1,4 +1,4 @@
-package com.tuzhao.fragment;
+package com.tuzhao.fragment.parkspace;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -17,16 +17,17 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnLockListener;
+import com.tuzhao.activity.mine.AppointmentParkSpaceActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.customView.CircularArcView;
 import com.tuzhao.publicwidget.customView.VoltageView;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -43,10 +44,9 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 /**
- * Created by juncoder on 2018/5/17.
+ * Created by juncoder on 2018/9/5.
  */
-
-public class MyParkspaceFragment extends BaseStatusFragment implements View.OnClickListener {
+public class ShareParkSpaceFragment extends BaseStatusFragment implements View.OnClickListener {
 
     private Park_Info mParkInfo;
 
@@ -70,6 +70,11 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private int mPosition;
 
+    /**
+     * 0（从好友列表点进来的）
+     */
+    private int mType;
+
     private AnimatorSet mAnimatorSet;
 
     private AnimatorSet mResumeAnimatorSet;
@@ -84,12 +89,13 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     private String mExceptionMessage;
 
-    public static MyParkspaceFragment newInstance(Park_Info parkInfo, int position, int totalSize) {
-        MyParkspaceFragment fragment = new MyParkspaceFragment();
+    public static ShareParkSpaceFragment newInstance(Park_Info parkInfo, int position, int totalSize, int type) {
+        ShareParkSpaceFragment fragment = new ShareParkSpaceFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, parkInfo);
         bundle.putInt(ConstansUtil.POSITION, position);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
+        bundle.putInt(ConstansUtil.TYPE, type);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -114,6 +120,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             mParkInfo = getArguments().getParcelable(ConstansUtil.PARK_SPACE_INFO);
             mPosition = getArguments().getInt(ConstansUtil.POSITION);
             mTotalSize = getArguments().getInt(ConstansUtil.SIZE);
+            mType = getArguments().getInt(ConstansUtil.TYPE);
         } else if (mParkInfo == null) {
             showFiveToast("打开失败，请稍后重试");
             finish();
@@ -122,7 +129,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         TextView numberOfParkSpace = view.findViewById(R.id.number_of_park_space);
         TextView parkspaceDescription = view.findViewById(R.id.parkspace_description);
         TextView parkLot = view.findViewById(R.id.parking_lot);
-
 
         mCircularArcView = view.findViewById(R.id.circle_arc);
         mLock = view.findViewById(R.id.lock);
@@ -140,6 +146,10 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             parkspaceDescription.setOnClickListener(this);
         }
 
+        if (mType == 0) {
+            mOpenLock.setText("预订");
+        }
+
         mOpenLock.setOnClickListener(this);
 
         ImageUtil.showPic(mLock, R.drawable.lock);
@@ -153,9 +163,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        setTAG(this.getClass().getName() + " parkInfoId:" + mParkInfo.getId());
+        setTAG(this.getClass().getName() + " parkInfoId:" + mParkInfo.getId() + " cityCode:" + mParkInfo.getCityCode());
         setAutoCancelRequest(false);
-        scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
 
@@ -235,7 +244,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                                 .create()
                                 .show();
                     }
-                } else {
+                } else if (getText(mOpenLock).equals("关锁")) {
                     new TipeDialog.Builder(requireContext())
                             .setTitle("提示")
                             .setMessage("确定关锁吗？")
@@ -247,6 +256,8 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
                             })
                             .create()
                             .show();
+                } else if (getText(mOpenLock).equals("预定")) {
+                    startActivity(AppointmentParkSpaceActivity.class, ConstansUtil.PARK_SPACE_INFO, mParkInfo);
                 }
                 break;
             case R.id.parkspace_description:
@@ -269,34 +280,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         cancleAnimation();
         if (mResumeAnimatorSet != null) {
             mResumeAnimatorSet.cancel();
-        }
-    }
-
-    /**
-     * 排除掉那些已过期的订单
-     */
-    private void scanOrderTime() {
-        if (!mParkInfo.getOrder_times().equals("-1") && !mParkInfo.getOrder_times().equals("")) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            Calendar orderCalendar;
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String string : mParkInfo.getOrder_times().split(",")) {
-                orderCalendar = DateUtil.getYearToMinuteCalendar(string.substring(string.indexOf("*") + 1, string.length()));
-                if (orderCalendar.compareTo(calendar) >= 0) {
-                    stringBuilder.append(string);
-                    stringBuilder.append(",");
-                }
-            }
-
-            if (stringBuilder.length() > 0) {
-                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            } else {
-                stringBuilder.append("-1");
-            }
-
-            mParkInfo.setOrder_times(stringBuilder.toString());
         }
     }
 

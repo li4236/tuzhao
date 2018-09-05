@@ -15,8 +15,8 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.fragment.parkspacedetail.ParkspaceCommentFragment;
-import com.tuzhao.fragment.parkspacedetail.ParkspaceDetailFragment;
+import com.tuzhao.fragment.parklotdetail.ParkLotCommentFragment;
+import com.tuzhao.fragment.parklotdetail.ParkLotDetailFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.Park_Info;
@@ -49,8 +49,8 @@ public class ParkspaceDetailActivity extends BaseActivity {
     private ViewPager viewpager;
     private SmartTabLayout viewPagerTab;
     private ImageView imageView_back, imageview_collection;
-    private ParkspaceDetailFragment parkspaceDetailFragment;
-    private ParkspaceCommentFragment parkspaceCommentFragment;
+    private ParkLotDetailFragment mParkLotDetailFragment;
+    private ParkLotCommentFragment mParkLotCommentFragment;
 
     /**
      * 页面相关
@@ -101,11 +101,11 @@ public class ParkspaceDetailActivity extends BaseActivity {
         viewpager =  findViewById(R.id.id_activity_parkspacedetail_layout_viewpager);
         viewPagerTab = findViewById(R.id.id_activity_parkspacedetail_layout_pagetab);
 
-        parkspaceDetailFragment = new ParkspaceDetailFragment();
-        parkspaceCommentFragment = new ParkspaceCommentFragment();
+        mParkLotDetailFragment = new ParkLotDetailFragment();
+        mParkLotCommentFragment = new ParkLotCommentFragment();
         fragmentList = new ArrayList<>();
-        fragmentList.add(parkspaceDetailFragment);
-        fragmentList.add(parkspaceCommentFragment);
+        fragmentList.add(mParkLotDetailFragment);
+        fragmentList.add(mParkLotCommentFragment);
 
         viewpager.setAdapter(new MyFrageStatePagerAdapter(getSupportFragmentManager()));
         viewPagerTab.setViewPager(viewpager);
