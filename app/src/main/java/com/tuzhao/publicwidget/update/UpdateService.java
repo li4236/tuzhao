@@ -18,6 +18,7 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -46,6 +47,11 @@ public class UpdateService extends Service implements IntentObserver {
 
     private File mFile;
 
+    /**
+     * true(用户在设置那里检查更新)    false(启动时自动检查更新)
+     */
+    private boolean mUserUpdate;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -54,8 +60,16 @@ public class UpdateService extends Service implements IntentObserver {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        OkGo.getInstance().cancelTag(TAG);
-        checkUpdate();
+        if (intent.hasExtra(ConstansUtil.INTENT_MESSAGE)) {
+            mUserUpdate = true;
+        }
+        if (mUserUpdate && mCurrentProgress >= 0) {
+            MyToast.showToast(getApplicationContext(), "已经在下载更新了哦", 5);
+            IntentObserable.dispatch(ConstansUtil.DIALOG_DISMISS);
+        } else {
+            OkGo.getInstance().cancelTag(TAG);
+            checkUpdate();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -83,6 +97,9 @@ public class UpdateService extends Service implements IntentObserver {
                 .execute(new JsonCallback<Base_Class_Info<UpdateInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<UpdateInfo> updateInfoBase_class_info, Call call, Response response) {
+                        if (mUserUpdate) {
+                            IntentObserable.dispatch(ConstansUtil.DIALOG_DISMISS);
+                        }
                         mUpdateInfo = updateInfoBase_class_info.data;
                         int localVersion = DeviceUtils.getLocalVersion(getApplicationContext());
                         mIsForceUpdate = localVersion < Integer.valueOf(updateInfoBase_class_info.data.getForceUpdateVersion());
@@ -91,19 +108,23 @@ public class UpdateService extends Service implements IntentObserver {
                             Bundle bundle = new Bundle();
                             bundle.putParcelable(ConstansUtil.UPDATE_INFO, updateInfoBase_class_info.data);
                             bundle.putBoolean(ConstansUtil.INTENT_MESSAGE, true);
+                            bundle.putBoolean(ConstansUtil.USER_UPDATE, mUserUpdate);
                             Intent intent = new Intent(UpdateService.this, UpdateActivity.class);
                             intent.putExtra(ConstansUtil.SHOW_UPDATE_DIALOG, bundle);
                             startActivity(intent);
                         } else if (localVersion < Integer.valueOf(updateInfoBase_class_info.data.getVersionCode())) {
-                            if (!SpUtils.getInstance(getApplicationContext()).getString(SpUtils.IGNORE_VERSION).equals(updateInfoBase_class_info.data.getVersionCode())) {
-                                //不是强制更新
+                            if (mUserUpdate || !SpUtils.getInstance(getApplicationContext()).getString(SpUtils.IGNORE_VERSION).equals(updateInfoBase_class_info.data.getVersionCode())) {
+                                //不是强制更新并且没有忽略该版本或者是用户手动检查更新的
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable(ConstansUtil.UPDATE_INFO, updateInfoBase_class_info.data);
                                 bundle.putBoolean(ConstansUtil.INTENT_MESSAGE, false);
+                                bundle.putBoolean(ConstansUtil.USER_UPDATE, mUserUpdate);
                                 Intent intent = new Intent(UpdateService.this, UpdateActivity.class);
                                 intent.putExtra(ConstansUtil.SHOW_UPDATE_DIALOG, bundle);
                                 startActivity(intent);
                             }
+                        } else if (mUserUpdate) {
+                            MyToast.showToast(getApplicationContext(), "当前已是最新版本了哦", 5);
                         }
                         SpUtils.getInstance(getApplicationContext()).putBoolean(SpUtils.ALREADY_CHECK_UPDATE, true);
                     }
@@ -111,7 +132,12 @@ public class UpdateService extends Service implements IntentObserver {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-
+                        if (mUserUpdate) {
+                            IntentObserable.dispatch(ConstansUtil.DIALOG_DISMISS);
+                            if (!DensityUtil.isException(getApplicationContext(), e)) {
+                                MyToast.showToast(getApplicationContext(), "检查更新失败，请稍后重试", 5);
+                            }
+                        }
                     }
 
                 });
@@ -126,6 +152,7 @@ public class UpdateService extends Service implements IntentObserver {
                     @Override
                     public void onBefore(BaseRequest request) {
                         super.onBefore(request);
+                        mCurrentProgress = 0;
                     }
 
                     @Override
@@ -167,6 +194,7 @@ public class UpdateService extends Service implements IntentObserver {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
+                        mCurrentProgress = -2;
                         if (mUpdateNotification != null) {
                             mUpdateNotification.cancelNotification();
                         }

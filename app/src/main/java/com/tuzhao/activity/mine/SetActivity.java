@@ -9,17 +9,21 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tianzhili.www.myselfsdk.update.UpdateHelper;
-import com.tianzhili.www.myselfsdk.update.listener.UpdateListener;
-import com.tianzhili.www.myselfsdk.update.type.UpdateType;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.db.DatabaseImp;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.update.UpdateService;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
+
+import java.util.Objects;
 
 import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 
@@ -27,33 +31,30 @@ import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
  * Created by TZL12 on 2017/12/14.
  */
 
-public class SetActivity extends BaseActivity implements View.OnClickListener {
+public class SetActivity extends BaseActivity implements View.OnClickListener, IntentObserver {
 
     private LinearLayout linearlayout_suggest, linearlayout_law, linearlayout_checkversion, linearlayout_loginout;
 
     private DateUtil dateUtil = new DateUtil();
     private DatabaseImp databaseImp;
 
+    private LoadingDialog mLoadingDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_layout);
         initView();//初始化控件
-        initData();//初始化数据
         initEvent();//初始化事件
         setStyle(true);
     }
 
     private void initView() {
-
         ((TextView) findViewById(R.id.id_activity_set_layout_textview_thisversion)).setText("当前版本：" + dateUtil.getVersion(this));
         linearlayout_suggest = findViewById(R.id.id_activity_set_layout_linearlayout_suggest);
         linearlayout_law = findViewById(R.id.id_activity_set_layout_linearlayout_law);
         linearlayout_checkversion = findViewById(R.id.id_activity_set_layout_linearlayout_checkversion);
         linearlayout_loginout = findViewById(R.id.id_activity_set_layout_linearlayout_loginout);
-    }
-
-    private void initData() {
     }
 
     private void initEvent() {
@@ -62,6 +63,8 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
         linearlayout_law.setOnClickListener(this);
         linearlayout_checkversion.setOnClickListener(this);
         linearlayout_loginout.setOnClickListener(this);
+
+        IntentObserable.registerObserver(this);
     }
 
     @Override
@@ -81,20 +84,10 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
 //                break;
             case R.id.id_activity_set_layout_linearlayout_checkversion:
                 //检查版本更新
-                UpdateHelper.getInstance()
-                        .setUpdateType(UpdateType.checkupdate)
-                        .setUpdateListener(new UpdateListener() {
-                            @Override
-                            public void noUpdate() {
-                                MyToast.showToast(SetActivity.this, "已经是最新版本了哦", 5);
-                            }
-
-                            @Override
-                            public void onCheckError(int code, String errorMsg) {
-                                MyToast.showToast(SetActivity.this, "检测更新失败", 5);
-                            }
-                        })
-                        .check(SetActivity.this);
+                intent = new Intent(SetActivity.this, UpdateService.class);
+                intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
+                startService(intent);
+                showLoadingDialg();
                 break;
             case R.id.id_activity_set_layout_linearlayout_loginout:
                 TipeDialog.Builder builder = new TipeDialog.Builder(SetActivity.this);
@@ -126,10 +119,37 @@ public class SetActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
+    }
+
     /**
      * 发送退出登录的局部广播
      */
     private void sendLogoutBroadcast() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(LOGOUT_ACTION));
     }
+
+    private void showLoadingDialg() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(this, "检查中...");
+        }
+        mLoadingDialog.show();
+    }
+
+    private void dismissLoadingDialog() {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (Objects.equals(intent.getAction(), ConstansUtil.DIALOG_DISMISS)) {
+            dismissLoadingDialog();
+        }
+    }
+
 }

@@ -280,7 +280,7 @@ public class ConstansUtil {
     public static final String DIALOG_DISMISS = "DialogDismiss";
 
     /**
-     * 弹出对话框，我的车位fragment
+     * 弹出对话框，我的车位fragment,检查更新
      */
     public static final String SHOW_DIALOG = "ShowDialog";
 
@@ -450,6 +450,11 @@ public class ConstansUtil {
      * 显示下载进度的对话框
      */
     public static final String SHOW_UPDATE_NOTIFICATION = "ShowUpdateNotification";
+
+    /**
+     * 用户手动检查更新
+     */
+    public static final String USER_UPDATE = "UserUpdate";
 
     /**
      * 更新信息

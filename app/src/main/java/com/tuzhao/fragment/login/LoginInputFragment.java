@@ -115,7 +115,7 @@ public class LoginInputFragment extends BaseStatusFragment {
 
     private void onTelephoneClick() {
         if (TextUtils.isEmpty(getText(mInputEt))) {
-            showFiveToast("请输入新的手机号");
+            showFiveToast("请输入手机号");
         } else if (getTextLength(mInputEt) < 11) {
             showFiveToast("手机号格式不正确");
         } else if (!DateUtil.isPhoneNumble(getText(mInputEt))) {

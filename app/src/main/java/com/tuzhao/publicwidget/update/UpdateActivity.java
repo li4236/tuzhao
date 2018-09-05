@@ -57,6 +57,8 @@ public class UpdateActivity extends AppCompatActivity implements IntentObserver 
 
     private boolean mForceUpdate;
 
+    private boolean mUserUpdate;
+
     private static final int PERMISSION_REQUEST_CODE = 0x789;
 
     private static final int INSTALL_REQUEST_CODE = 0x987;
@@ -66,6 +68,7 @@ public class UpdateActivity extends AppCompatActivity implements IntentObserver 
         super.onCreate(savedInstanceState);
         if (getIntent().hasExtra(ConstansUtil.SHOW_UPDATE_DIALOG)) {
             Bundle bundle = getIntent().getBundleExtra(ConstansUtil.SHOW_UPDATE_DIALOG);
+            mUserUpdate = bundle.getBoolean(ConstansUtil.USER_UPDATE);
             showUpdateDialog((UpdateInfo) Objects.requireNonNull(bundle.getParcelable(ConstansUtil.UPDATE_INFO)), bundle.getBoolean(ConstansUtil.INTENT_MESSAGE, false));
         } else if (getIntent().hasExtra(ConstansUtil.REQUEST_INSTALL_PERMISSION)) {
             showInstallDialog(getIntent().getBooleanExtra(ConstansUtil.REQUEST_INSTALL_PERMISSION, true));
@@ -107,24 +110,26 @@ public class UpdateActivity extends AppCompatActivity implements IntentObserver 
                 }
             });
 
-            ignoreCb.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.ignore_tv).setVisibility(View.VISIBLE);
-            ignoreCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        SpUtils.getInstance(UpdateActivity.this).putString(SpUtils.IGNORE_VERSION, updateInfo.getVersionCode());
-                    } else {
-                        SpUtils.getInstance(UpdateActivity.this).putString(SpUtils.IGNORE_VERSION, "-1");
+            if (!mUserUpdate) {
+                ignoreCb.setVisibility(View.VISIBLE);
+                view.findViewById(R.id.ignore_tv).setVisibility(View.VISIBLE);
+                ignoreCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            SpUtils.getInstance(UpdateActivity.this).putString(SpUtils.IGNORE_VERSION, updateInfo.getVersionCode());
+                        } else {
+                            SpUtils.getInstance(UpdateActivity.this).putString(SpUtils.IGNORE_VERSION, "-1");
+                        }
                     }
-                }
-            });
+                });
 
-            ConstraintLayout constraintLayout = view.findViewById(R.id.bottom_cl);
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(constraintLayout);
-            constraintSet.setMargin(R.id.update_now, ConstraintSet.TOP, DensityUtil.dp2px(this, 4));
-            constraintSet.applyTo(constraintLayout);
+                ConstraintLayout constraintLayout = view.findViewById(R.id.bottom_cl);
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.setMargin(R.id.update_now, ConstraintSet.TOP, DensityUtil.dp2px(this, 4));
+                constraintSet.applyTo(constraintLayout);
+            }
         }
 
         updateNow.setOnClickListener(new View.OnClickListener() {
