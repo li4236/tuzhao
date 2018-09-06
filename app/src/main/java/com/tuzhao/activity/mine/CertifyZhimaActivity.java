@@ -37,6 +37,11 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
 
     private String mPassCode;
 
+    /**
+     * 0(设置支付密码)    1(重置支付密码)
+     */
+    private String mType;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_certify_zhima_layout;
@@ -45,13 +50,18 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         mPassCode = getIntent().getStringExtra(ConstansUtil.PASS_CODE);
+        mType = getIntent().getStringExtra(ConstansUtil.TYPE);
 
         mRealNameEt = findViewById(R.id.real_name_et);
         mIdCardNumberEt = findViewById(R.id.id_card_et);
 
         if (mPassCode != null) {
             goneView(findViewById(R.id.real_name_tv));
-            ((TextView) findViewById(R.id.start_certify)).setText("确定重置");
+            if ("0".equals(mType)) {
+                ((TextView) findViewById(R.id.start_certify)).setText("设置密码");
+            } else if ("1".equals(mType)) {
+                ((TextView) findViewById(R.id.start_certify)).setText("确定重置");
+            }
             mIdCardNumberEt.requestFocus();
         }
 
@@ -65,7 +75,9 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
                 } else {
                     String result = IDCard.IDCardValidate(getText(mIdCardNumberEt).trim().toUpperCase());
                     if (result.equals("")) {
-                        if (mPassCode != null) {
+                        if ("0".equals(mType)) {
+                            setPaymentPassword();
+                        } else if ("1".equals(mType)) {
                             resetPaymentPassword();
                         } else {
                             getCertifyZhimaUrl();
@@ -154,6 +166,47 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
         });
     }
 
+    private void setPaymentPassword() {
+        getOkGo(HttpConstants.setPaymentPassword)
+                .params("paymentPassword", DensityUtil.MD5code(getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD)))
+                .params("passCode", mPassCode)
+                .params("idCardNumber", getText(mIdCardNumberEt).trim())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        setResult(RESULT_OK);
+                        showFiveToast("设置支付密码成功");
+                        UserManager.getInstance().getUserInfo().setPaymentPassword("1");
+                        ViewUtil.closeInputMethod(mIdCardNumberEt);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "103":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "104":
+                                    showFiveToast("设置支付密码失败，请稍后重试");
+                                    break;
+                                case "105":
+                                    showFiveToast("请先进行实名认证");
+                                    startActivity(CertifyZhimaActivity.class);
+                                    break;
+                                case "106":
+                                    showFiveToast("身份证错误，请仔细核查");
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
     private void resetPaymentPassword() {
         getOkGo(HttpConstants.resetPaymentPassword)
                 .params("paymentPassword", DensityUtil.MD5code(getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD)))
@@ -163,7 +216,7 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         setResult(RESULT_OK);
-                        showFiveToast("设置支付密码成功");
+                        showFiveToast("重置支付密码成功");
                         UserManager.getInstance().getUserInfo().setPaymentPassword("1");
                         ViewUtil.closeInputMethod(mIdCardNumberEt);
                         finish();

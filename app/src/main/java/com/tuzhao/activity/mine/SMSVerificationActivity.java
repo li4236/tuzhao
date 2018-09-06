@@ -29,7 +29,6 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.PasswordLinearLayout;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.CountdownUtil;
-import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.SmsObserver;
 import com.tuzhao.utils.ViewUtil;
 
@@ -303,10 +302,15 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                             finish();
                         } else if (Objects.equals(getIntent().getAction(), ConstansUtil.SET_PAYMENT_PASSWORD)) {
                             //设置支付密码
-                            setPaymentPassword(o.data);
+                            Intent intent = new Intent(SMSVerificationActivity.this, CertifyZhimaActivity.class);
+                            intent.putExtra(ConstansUtil.TYPE, "0");
+                            intent.putExtra(ConstansUtil.PASS_CODE, o.data);
+                            intent.putExtra(ConstansUtil.PAYMENT_PASSWORD, getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD));
+                            startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                         } else if (Objects.equals(getIntent().getAction(), ConstansUtil.RESET_PAYMENT_PASSWORD)) {
                             //重设密码
                             Intent intent = new Intent(SMSVerificationActivity.this, CertifyZhimaActivity.class);
+                            intent.putExtra(ConstansUtil.TYPE, "1");
                             intent.putExtra(ConstansUtil.PASS_CODE, o.data);
                             intent.putExtra(ConstansUtil.PAYMENT_PASSWORD, getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD));
                             startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
@@ -330,30 +334,6 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                                     setVerifyCodeStatus(false);
                                     break;
                             }
-                        }
-                    }
-                });
-    }
-
-    private void setPaymentPassword(String passCode) {
-        getOkGo(HttpConstants.setPaymentPassword)
-                .params("paymentPassword", DensityUtil.MD5code(getIntent().getStringExtra(ConstansUtil.PAYMENT_PASSWORD)))
-                .params("passCode", passCode)
-                .execute(new JsonCallback<Base_Class_Info<Void>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        setResult(RESULT_OK);
-                        showFiveToast("设置支付密码成功");
-                        UserManager.getInstance().getUserInfo().setPaymentPassword("1");
-                        ViewUtil.closeInputMethod(mPasswordLinearLayout);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            showFiveToast("设置支付密码失败，请稍后重试");
                         }
                     }
                 });
