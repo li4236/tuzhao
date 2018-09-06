@@ -4,9 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
@@ -45,6 +49,10 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
 
     private OptionsPickerView<String> mOptionsPickerView;
 
+    private TipeDialog mModifyNameDialog;
+
+    private EditText mFirendName;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_share_park_space_detail_layout;
@@ -55,7 +63,10 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
         mParkInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.PARK_SPACE_INFO);
         mFragments = new ArrayList<>(mParkInfos.size());
         for (int i = 0, size = mParkInfos.size(); i < size; i++) {
-            mFragments.add(ShareParkSpaceFragment.newInstance(mParkInfos.get(i), i, size));
+            if ("".equals(mParkInfos.get(i).getParkSpaceNote())) {
+                mParkInfos.get(i).setParkSpaceNote((i + 1) + "号车位");
+            }
+            mFragments.add(ShareParkSpaceFragment.newInstance(mParkInfos.get(i), size));
         }
 
         mViewPager = findViewById(R.id.my_parkspace_vp);
@@ -112,39 +123,10 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
-            if (data.hasExtra(ConstansUtil.PARK_SPACE_ID)) {
-                String parkSpaceId = data.getStringExtra(ConstansUtil.PARK_SPACE_ID);
-                for (int i = 0; i < mParkInfos.size(); i++) {
-                    if (mParkInfos.get(i).getId().equals(parkSpaceId)) {
-                        mFragments.remove(i);
-                        initDialog();
-                        mFragmentAdater.notifyDataSetChanged();
-                        if (mFragments.isEmpty()) {
-                            // TODO: 2018/9/5
-                        }
-                        break;
-                    }
-                }
-            } else if (data.hasExtra(ConstansUtil.FOR_REQEUST_RESULT)) {
-                Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                for (int i = 0; i < mFragments.size(); i++) {
-                    if (mParkInfos.get(i).getId().equals(parkInfo.getId())) {
-                        mFragments.get(i).setParkInfo(parkInfo);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.modify_friend_nickname_cl:
-
+                showNameDialog(mViewPager.getCurrentItem());
                 break;
             case R.id.delete_friend_park_space_cl:
                 showDeleteParkSpaceDialog(mViewPager.getCurrentItem());
@@ -177,7 +159,43 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
         }
     }
 
-    private void changeParkSpaceNote(final int position, final String note, final TipeDialog tipeDialog) {
+    /**
+     * 显示修改亲友备注的对话框
+     */
+    private void showNameDialog(final int position) {
+        if (mModifyNameDialog == null) {
+            ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.dialog_edit_layout, null);
+            mFirendName = constraintLayout.findViewById(R.id.dialog_et);
+            mFirendName.setHint("请输入车位备注");
+
+            mModifyNameDialog = new TipeDialog.Builder(this)
+                    .setContentView(constraintLayout)
+                    .setTitle("修改备注")
+                    .autoDissmiss(false)
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mModifyNameDialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("修改", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (TextUtils.isEmpty(mFirendName.getText().toString().trim())) {
+                                showFiveToast("备注不能为空哦");
+                            } else {
+                                changeParkSpaceNote(position, getText(mFirendName));
+                            }
+                        }
+                    })
+                    .create();
+        }
+        mModifyNameDialog.show();
+        mFirendName.setText(mParkInfos.get(position).getParkSpaceNote());
+        mFirendName.setSelection(mFirendName.getText().toString().length());
+    }
+
+    private void changeParkSpaceNote(final int position, final String note) {
         showLoadingDialog("修改中...");
         getOkGo(HttpConstants.changeParkSpaceNote)
                 .params("parkSpaceId", mParkInfos.get(position).getId())
@@ -193,8 +211,9 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                         bundle.putString(ConstansUtil.CITY_CODE, mParkInfos.get(position).getCityCode());
                         bundle.putString(ConstansUtil.INTENT_MESSAGE, note);
                         IntentObserable.dispatch(ConstansUtil.CHANGE_PARK_SPACE_NOTE, bundle);
-                        tipeDialog.dismiss();
+
                         dismmisLoadingDialog();
+                        mModifyNameDialog.dismiss();
                     }
 
                     @Override
@@ -222,7 +241,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
     }
 
     private void deleteParkSpace(final int position) {
-        showFiveToast("移除中...");
+        showLoadingDialog("移除中...");
         getOkGo(HttpConstants.deleteFriendParkSpace)
                 .params("parkSpaceId", mParkInfos.get(position).getId())
                 .params("cityCode", mParkInfos.get(position).getCityCode())

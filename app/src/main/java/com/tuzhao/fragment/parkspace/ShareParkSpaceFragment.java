@@ -50,6 +50,8 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     private Park_Info mParkInfo;
 
+    private TextView mNumberOfParkSpace;
+
     private CircularArcView mCircularArcView;
 
     private ImageView mLock;
@@ -60,8 +62,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     private VoltageView mVoltageView;
 
-    TextView mParkspaceDescription;
-
     private TextView mOpenLock;
 
     private int mRecentOrderMinutes;
@@ -69,8 +69,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
     private StringBuilder mAppointmentTime = new StringBuilder("暂无预约");
 
     private int mTotalSize;
-
-    private int mPosition;
 
     private AnimatorSet mAnimatorSet;
 
@@ -86,24 +84,18 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     private String mExceptionMessage;
 
-    public static ShareParkSpaceFragment newInstance(Park_Info parkInfo, int position, int totalSize) {
+    public static ShareParkSpaceFragment newInstance(Park_Info parkInfo, int totalSize) {
         ShareParkSpaceFragment fragment = new ShareParkSpaceFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, parkInfo);
-        bundle.putInt(ConstansUtil.POSITION, position);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    public void setParkInfo(Park_Info parkInfo) {
-        mParkInfo = parkInfo;
-        setParkspaceStatus();
-    }
-
     public void setParkSpaceNote(String note) {
         mParkInfo.setParkSpaceNote(note);
-        mParkspaceDescription.setText(note);
+        mNumberOfParkSpace.setText(note);
     }
 
     @Override
@@ -115,15 +107,14 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
     protected void initView(View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
             mParkInfo = getArguments().getParcelable(ConstansUtil.PARK_SPACE_INFO);
-            mPosition = getArguments().getInt(ConstansUtil.POSITION);
             mTotalSize = getArguments().getInt(ConstansUtil.SIZE);
         } else if (mParkInfo == null) {
             showFiveToast("打开失败，请稍后重试");
             finish();
         }
 
-        TextView numberOfParkSpace = view.findViewById(R.id.number_of_park_space);
-        mParkspaceDescription = view.findViewById(R.id.parkspace_description);
+        mNumberOfParkSpace = view.findViewById(R.id.number_of_park_space);
+        TextView parkspaceDescription = view.findViewById(R.id.parkspace_description);
         TextView parkLot = view.findViewById(R.id.parking_lot);
 
         mCircularArcView = view.findViewById(R.id.circle_arc);
@@ -139,21 +130,14 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         } else {
             view.findViewById(R.id.right_park_space_iv).setOnClickListener(this);
             view.findViewById(R.id.left_park_space_iv).setOnClickListener(this);
-            mParkspaceDescription.setOnClickListener(this);
+            parkspaceDescription.setOnClickListener(this);
         }
 
         mOpenLock.setOnClickListener(this);
 
         ImageUtil.showPic(mLock, R.drawable.lock);
-
-        numberOfParkSpace.setText(String.valueOf(mPosition + 1));
-        numberOfParkSpace.append("号车位");
-
-        if (null != mParkInfo.getParkSpaceNote() && !"".equals(mParkInfo.getParkSpaceNote())) {
-            mParkspaceDescription.setText(mParkInfo.getParkSpaceNote());
-        } else {
-            mParkspaceDescription.setText(mParkInfo.getLocation_describe());
-        }
+        mNumberOfParkSpace.setText(mParkInfo.getParkSpaceNote());
+        parkspaceDescription.setText(mParkInfo.getLocation_describe());
         parkLot.setText(mParkInfo.getParkspace_name());
     }
 
