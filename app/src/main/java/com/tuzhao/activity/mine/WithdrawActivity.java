@@ -238,10 +238,16 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                                 break;
                             case "108":
                                 //密码错误
-                                showFiveToast("支付密码错误，您还可以输入" + (4 - o.data) + "次");
-                                mPasswordHelper.showPasswordError("支付密码错误，请重新输入");
-                                mPasswordHelper.setCanControl(true);
-                                mPasswordHelper.clearPassword();
+                                if (o.data >= 3) {
+                                    //密码错误超过三次
+                                    showFiveToast("您已输错三次支付密码，请重置密码后再使用");
+                                    mCustomDialog.dismiss();
+                                    showSetPasswordDialog(2);
+                                } else {
+                                    mPasswordHelper.showPasswordError("支付密码错误，您还可以输入" + (3 - o.data) + "次");
+                                    mPasswordHelper.setCanControl(true);
+                                    mPasswordHelper.clearPassword();
+                                }
                                 break;
                             case "109":
                                 showFiveToast("提现的金额异常，请重新输入");

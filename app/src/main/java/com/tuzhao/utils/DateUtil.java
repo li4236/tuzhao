@@ -1701,12 +1701,12 @@ public class DateUtil {
      * @return 返回停车的时长xx天xx小时xx分钟
      */
     public static String getParkTime(ParkOrderInfo parkOrderInfo) {
-        if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime()).compareTo(
+        if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            return DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getPark_end_time());
+            return DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getPark_end_time());
         } else {
-            return DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime());
+            return DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime());
         }
     }
 
@@ -2905,11 +2905,11 @@ public class DateUtil {
     }
 
     public static long getActualParkTime(ParkOrderInfo parkOrderInfo) {
-        Calendar orderStartCalendar = getYearToSecondCalendar(parkOrderInfo.getOrder_starttime());
-        Calendar orderEndCalendar = getYearToSecondCalendar(parkOrderInfo.getOrder_endtime());
+        Calendar orderStartCalendar = getYearToSecondCalendar(parkOrderInfo.getOrderStartTime());
+        Calendar orderEndCalendar = getYearToSecondCalendar(parkOrderInfo.getOrderEndTime());
         Calendar parkStartCalendar = getYearToSecondCalendar(parkOrderInfo.getPark_start_time());
         Calendar parkEndCalendar = getYearToSecondCalendar(parkOrderInfo.getPark_end_time());
-        Calendar orderExtendEndCalendar = getYearToSecondCalendar(parkOrderInfo.getOrder_endtime());
+        Calendar orderExtendEndCalendar = getYearToSecondCalendar(parkOrderInfo.getOrderEndTime());
         orderExtendEndCalendar.add(Calendar.SECOND, parkOrderInfo.getExtensionTime().equals("-1") ? 0 : Integer.valueOf(parkOrderInfo.getExtensionTime()));
 
         long parkDuration;

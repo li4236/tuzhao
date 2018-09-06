@@ -126,8 +126,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                                 if (e instanceof IllegalStateException) {
                                     switch (e.getMessage()) {
                                         case "101":
-                                            showFiveToast("账号异常，请重新登录");
-                                            startLogin();
+                                            userError();
                                             break;
                                         case "102":
                                             showFiveToast("你还没有收票地址哦");

@@ -257,7 +257,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     @Override
                     public void onSuccess(Base_Class_List_Info<ParkOrderInfo> o, Call call, Response response) {
                         for (ParkOrderInfo parkOrderInfo : o.data) {
-                            if (parkOrderInfo.getOrder_status().equals("1") || parkOrderInfo.getOrder_status().equals("2")) {
+                            if (parkOrderInfo.getOrderStatus().equals("1") || parkOrderInfo.getOrderStatus().equals("2")) {
                                 mParkOrderInfos.add(parkOrderInfo);
                             }
                         }
@@ -459,10 +459,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             Calendar orderStartCalendar;
             Calendar orderEndCalendar;
             for (ParkOrderInfo parkOrderInfo : mParkOrderInfos) {
-                orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_starttime());
-                orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime());
+                orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderStartTime());
+                orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime());
                 if (DateUtil.isIntersection(appointmentStartCalendar, appointmentEndCalendar, orderStartCalendar, orderEndCalendar) && getText(mCarNumber).equals(parkOrderInfo.getCarNumber())) {
-                    if (parkOrderInfo.getOrder_status().equals("1")) {
+                    if (parkOrderInfo.getOrderStatus().equals("1")) {
                         showFiveToast("在该时间您已有过预约，请重新选择哦");
                     } else {
                         showFiveToast("该车正在停车中哦");
@@ -649,10 +649,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
             //添加预约订单
             ParkOrderInfo parkOrderInfo = new ParkOrderInfo();
-            parkOrderInfo.setOrder_starttime(mAppointmentStartTime + ":00");
-            parkOrderInfo.setOrder_endtime(mAppointmentEndTime + ":00");
+            parkOrderInfo.setOrderStartTime(mAppointmentStartTime + ":00");
+            parkOrderInfo.setOrderEndTime(mAppointmentEndTime + ":00");
             parkOrderInfo.setCarNumber(parkInfo.getCarNumber());
-            parkOrderInfo.setOrder_status("1");
+            parkOrderInfo.setOrderStatus("1");
             mParkOrderInfos.add(parkOrderInfo);
 
             for (Park_Info park_info : mParkInfos) {

@@ -73,7 +73,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
         }
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        switch (mParkOrderInfo.getOrder_status()) {
+        switch (mParkOrderInfo.getOrderStatus()) {
             case "1":
                 transaction.replace(R.id.order_container, AppointmentDetailFragment.newInstance(mParkOrderInfo));
                 mLatLng = new LatLng(mParkOrderInfo.getLatitude() - 0.004, mParkOrderInfo.getLongitude());
@@ -150,7 +150,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
     @NonNull
     @Override
     protected String title() {
-        switch (mParkOrderInfo.getOrder_status()) {
+        switch (mParkOrderInfo.getOrderStatus()) {
             case "1":
             case "2":
                 return "订单详情";
@@ -216,7 +216,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
                     Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                     ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                     if (parkOrderInfo != null) {
-                        parkOrderInfo.setOrder_status("2");
+                        parkOrderInfo.setOrderStatus("2");
                         parkOrderInfo.setPark_start_time(DateUtil.getCurrentYearToSecond());
 
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

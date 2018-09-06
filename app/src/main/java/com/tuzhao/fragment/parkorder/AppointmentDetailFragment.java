@@ -143,10 +143,10 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
     @Override
     protected void initData() {
-        mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
-        mStartParkTime.setText(DateUtil.getPointToMinute(mParkOrderInfo.getOrder_starttime()));
+        mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrderStartTime()));
+        mStartParkTime.setText(DateUtil.getPointToMinute(mParkOrderInfo.getOrderStartTime()));
         mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
-        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
+        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
 
         OnLockListener lockListener = new OnLockListener() {
             @Override
@@ -579,7 +579,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                     break;
                                 case "103":
                                     Calendar calendar = Calendar.getInstance();
-                                    if (calendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_starttime())) < 0) {
+                                    if (calendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) < 0) {
                                         showFiveToast("该车位已有别人预约，请到您预约的时间再停车哦");
                                     } else {
                                         showFiveToast(ConstansUtil.SERVER_ERROR);
@@ -662,13 +662,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                         if (mCanParkList == null) {
                             mCanParkList = new LinkedList<>();
                         }
-                        DataUtil.findCanParkList(mCanParkList, mParkSpaceList, DateUtil.getYearToMinute(mParkOrderInfo.getOrder_starttime(), 0),
-                                DateUtil.deleteSecond(mParkOrderInfo.getOrder_endtime()));
+                        DataUtil.findCanParkList(mCanParkList, mParkSpaceList, DateUtil.getYearToMinute(mParkOrderInfo.getOrderStartTime(), 0),
+                                DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
                         if (mCanParkList.isEmpty()) {
                             showNoParkSpaceDialog();
                         } else {
                             if (mCanParkList.size() > 1) {
-                                DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrder_endtime());
+                                DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrderEndTime());
                             }
                             redistributionOrderParkSpace();
                             //startRedistributionOrderParkSpace();
@@ -704,7 +704,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
      * 开始重新分配给该订单，如果车位的顺延时长不足则提示
      */
     private void startRedistributionOrderParkSpace() {
-        Calendar canParkEndCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
+        Calendar canParkEndCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
         canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
         Log.e("TAG", "startRedistributionOrderParkSpace shareTime: " + DateUtil.getTwoYearToMinutesString(
                 mCanParkList.get(0).getShareTimeCalendar()[0], mCanParkList.get(0).getShareTimeCalendar()[1]));
@@ -772,7 +772,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
 
                                 if (mCanParkList.size() > 0) {
                                     if (mCanParkList.size() != 1) {
-                                        DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrder_endtime());
+                                        DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrderEndTime());
                                     }
                                     redistributionOrderParkSpace();
                                 } else {

@@ -142,12 +142,12 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
 
         mParkDate.setText(DateUtil.getDayPointMinute(mParkOrderInfo.getPark_start_time()));
         mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
-        String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
+        String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()) + "前离场";
         mLeaveTime.setText(leaveTime);
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";
         mOvertimeFee.setText(overtimeFee);
 
-        if (!mParkOrderInfo.getExtensionTime().equals("-1") && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+        if (!mParkOrderInfo.getExtensionTime().equals("-1") && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) > 0) {
             //未超时，获取车位共享时间
             getParkSpaceTime();
@@ -191,7 +191,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             case R.id.cancel_appoint_cl:
                 if (mParkOrderInfo.getExtensionTime().equals("-1")) {
                     showFiveToast("只能延长一次时间哦");
-                } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
                         DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) <= 0) {
                     showFiveToast("您已超时，不可延长时间");
                 } else if (!mCanExtendsionTime) {
@@ -241,9 +241,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
     }
 
     private void calculateDuration() {
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
-            mStartParkTime.setText(DateUtil.getDistanceForHourMinuteAddStart(mParkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
+            mStartParkTime.setText(DateUtil.getDistanceForHourMinuteAddStart(mParkOrderInfo.getOrderEndTime(), DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
             ImageUtil.showPic(mRemainTimeIv, R.drawable.ic_overtime);
             //超时了
           /*  if (!getText(mRemainTime).equals("（已超时）")) {
@@ -253,33 +253,33 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 mCanExtendsionTime = false;
             }
 
-            Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
+            Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
             calendar.add(Calendar.SECOND, Integer.valueOf(mParkOrderInfo.getExtensionTime()));
 
-            double parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.getCalenarYearToMinutes(calendar),
+            double parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.getCalenarYearToMinutes(calendar),
                     mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
 
             long overTimeMinutes = DateUtil.getCalendarDistance(calendar, Calendar.getInstance());
             parkFee += Double.valueOf(mParkOrderInfo.getFine()) / 60.0 * overTimeMinutes;
 
             mParkDuration.setText(String.valueOf(mDecimalFormat.format(parkFee)));
-        } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
+        } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0
-                && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                && DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) > 0) {
             //在顺延时间内
             mStartParkTime.setText(DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(),
-                    mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()));
+                    mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()));
             ImageUtil.showPic(mRemainTimeIv, R.drawable.ic_shunyan);
             /*if (!getText(mRemainTime).equals("（剩余宽限时长）")) {
                 mRemainTime.setText("（剩余宽限时长）");
             }*/
-            mParkDuration.setText(mDecimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.deleteSecond(DateUtil.getCurrentYearToSecond()),
+            mParkDuration.setText(mDecimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.deleteSecond(DateUtil.getCurrentYearToSecond()),
                     mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()))));
         } else {
             //未到顺延时间
-            mStartParkTime.setText(DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrder_endtime()));
-            mParkDuration.setText(mDecimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrder_starttime()), DateUtil.deleteSecond(DateUtil.getCurrentYearToSecond()),
+            mStartParkTime.setText(DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getOrderEndTime()));
+            mParkDuration.setText(mDecimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.deleteSecond(DateUtil.getCurrentYearToSecond()),
                     mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()))));
         }
 
@@ -289,7 +289,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         if (mShareTimeInfo != null) {
             if (!mShareTimeInfo.getOrderTime().equals("-1")) {
                 //根据该车位被预约的时间计算能延长的最大时间
-                mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceOfRecentOrder("0", mParkOrderInfo.getOrder_endtime(),
+                mMaxExtendMinutes = Math.min(mMaxExtendMinutes, DateUtil.getDistanceOfRecentOrder("0", mParkOrderInfo.getOrderEndTime(),
                         mShareTimeInfo.getOrderTime()));
             }
 
@@ -297,7 +297,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
             nowCalendar.set(Calendar.SECOND, 0);
             nowCalendar.set(Calendar.MILLISECOND, 0);
 
-            mStartExtendCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime());
+            mStartExtendCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
 
             //按共享日期的最后一天的最后时刻来计算延长的时间
             //现在是06-08 08:58，共享日期为2018-05-08 - 2018-06-08,则最大延长时间为现在到今天的最后一刻
@@ -492,9 +492,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        mParkOrderInfo.setOrder_endtime(DateUtil.getCalenarYearToSecond(parkEndCalendar));
+                        mParkOrderInfo.setOrderEndTime(DateUtil.getCalenarYearToSecond(parkEndCalendar));
                         mParkOrderInfo.setExtensionTime("-1");
-                        String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()) + "前离场";
+                        String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()) + "前离场";
                         mLeaveTime.setText(leaveTime);
                         mCanExtendsionTime = false;
                         calculateDuration();
@@ -636,9 +636,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
-                        if (o.data.getOrder_status().equals("2")) {
+                        if (o.data.getOrderStatus().equals("2")) {
                             closeParkLock();
-                        } else if (o.data.getOrder_status().equals("3")) {
+                        } else if (o.data.getOrderStatus().equals("3")) {
                             notifyFinishPark(o.data);
                         }
                     }
@@ -662,9 +662,9 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> info, Call call, Response response) {
-                        mParkOrderInfo.setOrder_status("3");
-                        mParkOrderInfo.setOrder_fee(info.data.getOrder_fee());
-                        mParkOrderInfo.setFine_fee(info.data.getFine_fee());
+                        mParkOrderInfo.setOrderStatus("3");
+                        mParkOrderInfo.setOrderFee(info.data.getOrderFee());
+                        mParkOrderInfo.setFineFee(info.data.getFineFee());
                         mParkOrderInfo.setPark_end_time(info.data.getPark_end_time());
                         notifyFinishPark(mParkOrderInfo);
                         showFiveToast("已结束停车");
@@ -692,7 +692,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         Intent intent = new Intent();
         intent.setAction(ConstansUtil.FINISH_PARK);
         Bundle bundle = new Bundle();
-        mParkOrderInfo.setOrder_status("3");
+        mParkOrderInfo.setOrderStatus("3");
         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);

@@ -166,11 +166,11 @@ public class ParkLotDetailFragment extends BaseFragment {
                         } else {
                             int aingcount = 0;
                             for (ParkOrderInfo parkOrderInfo : mOrderList) {
-                                if (parkOrderInfo.getOrder_status().equals("3")) {
+                                if (parkOrderInfo.getOrderStatus().equals("3")) {
                                     MyToast.showToast(mContext, "您当前还有未付款的订单", 5);
                                     return;
                                 } else {
-                                    if (parkOrderInfo.getOrder_status().equals("1") || parkOrderInfo.getOrder_status().equals("2")) {
+                                    if (parkOrderInfo.getOrderStatus().equals("1") || parkOrderInfo.getOrderStatus().equals("2")) {
                                         aingcount++;
                                     }
                                 }

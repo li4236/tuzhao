@@ -417,9 +417,8 @@ public class MyFriendsActivity extends BaseStatusActivity {
                                     showFiveToast("该手机号还没注册过哦");
                                     break;
                                 case "103":
-                                    showFiveToast("账号异常，请重新登录");
+                                    userError();
                                     mAddFriendPhoneDialog.dismiss();
-                                    startLogin();
                                     break;
                                 case "104":
                                     showFiveToast("最多只能有5个共享亲友哦");

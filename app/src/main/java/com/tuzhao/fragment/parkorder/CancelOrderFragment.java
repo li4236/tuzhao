@@ -81,10 +81,10 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrder_starttime()));
-        mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrder_starttime()));
+        mParkDate.setText(DateUtil.getMonthToDay(mParkOrderInfo.getOrderStartTime()));
+        mStartParkTime.setText(DateUtil.getHourToMinute(mParkOrderInfo.getOrderStartTime()));
         mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
-        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
+        mParkDuration.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
     }
 
     @Override

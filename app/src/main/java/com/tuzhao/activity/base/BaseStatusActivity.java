@@ -14,12 +14,12 @@ import android.widget.TextView;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.OnLoginListener;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -37,8 +37,6 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected String TAG = this.getClass().getName();
 
     protected LoadingDialog mLoadingDialog;
-
-    private LoginDialogFragment mLoginDialogFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,13 +93,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         dismmisLoadingDialog();
-
-        if (mLoginDialogFragment != null) {
-            mLoginDialogFragment.dismiss();
-        }
-
     }
 
     @Override
@@ -205,7 +197,8 @@ public abstract class BaseStatusActivity extends BaseActivity {
 
     protected void userError() {
         showFiveToast("账号异常，请重新登录");
-        startLogin();
+        dismmisLoadingDialog();
+        startActivity(LoginActivity.class);
     }
 
     protected void paramsError() {
@@ -220,14 +213,8 @@ public abstract class BaseStatusActivity extends BaseActivity {
         if (com.tuzhao.publicmanager.UserManager.getInstance().hasLogined()) {
             listener.onLogin();
         } else {
-            startLogin();
+            startActivity(LoginActivity.class);
         }
-    }
-
-    protected void startLogin() {
-        dismmisLoadingDialog();
-        mLoginDialogFragment = new LoginDialogFragment();
-        mLoginDialogFragment.show(getSupportFragmentManager(), this.getClass().getName());
     }
 
     protected void startActivity(Class<?> tClass) {

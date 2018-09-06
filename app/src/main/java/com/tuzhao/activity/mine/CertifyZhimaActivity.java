@@ -189,6 +189,13 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
                                 case "105":
                                     showFiveToast("身份证错误，请仔细核查");
                                     break;
+                                case "107":
+                                    setResult(RESULT_OK);
+                                    showFiveToast("设置支付密码成功");
+                                    UserManager.getInstance().getUserInfo().setPaymentPassword("1");
+                                    ViewUtil.closeInputMethod(mIdCardNumberEt);
+                                    finish();
+                                    break;
                             }
                         }
                     }

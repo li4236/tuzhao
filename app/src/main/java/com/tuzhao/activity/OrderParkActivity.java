@@ -177,7 +177,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             textview_carnumble.setText(carNumber);
             if (order_list.size() > 0) {
                 for (ParkOrderInfo parkOrderInfo : order_list) {
-                    if (parkOrderInfo.getOrder_status().equals("2")) {
+                    if (parkOrderInfo.getOrderStatus().equals("2")) {
                         if (parkOrderInfo.getCarNumber().equals(carNumber)) {
                             MyToast.showToast(OrderParkActivity.this, "该车辆当前正在停车中，请重新选择哦", 5);
                             textview_carnumble.setText("");
@@ -303,7 +303,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         end_time = dateUtil.addTime(start_time, park_time);
                         if (order_list.size() > 0) {
                             for (ParkOrderInfo parkOrderInfo : order_list) {
-                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                if (parkOrderInfo.getOrderStatus().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime())) {
                                     //预约订单
                                     MyToast.showToast(OrderParkActivity.this, "在该时间您已有过预约，请重新选择哦", 5);
                                     textview_starttime.setText("");
@@ -326,7 +326,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         end_time = dateUtil.addTime(start_time, park_time);
                         if (order_list.size() > 0) {
                             for (ParkOrderInfo parkOrderInfo : order_list) {
-                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                if (parkOrderInfo.getOrderStatus().equals("1") && dateUtil.betweenStartAndEnd(start_time, parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime())) {
                                     //预约订单
                                     MyToast.showToast(OrderParkActivity.this, "在该时间您已有过预约，请重新选择哦", 5);
                                     textview_starttime.setText("");
@@ -426,7 +426,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         end_time = dateUtil.addTime(start_time, park_time);
                         if (order_list.size() > 0) {
                             for (ParkOrderInfo parkOrderInfo : order_list) {
-                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                if (parkOrderInfo.getOrderStatus().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime())) {
                                     //预约订单
                                     MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
                                     end_time = "";
@@ -455,7 +455,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 end_time = dateUtil.addTime(start_time, park_time);
                                 if (order_list.size() > 0) {
                                     for (ParkOrderInfo parkOrderInfo : order_list) {
-                                        if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                        if (parkOrderInfo.getOrderStatus().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime())) {
                                             //预约订单
                                             MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
                                             end_time = "";
@@ -476,7 +476,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                             end_time = dateUtil.addTime(start_time, park_time);
                             if (order_list.size() > 0) {
                                 for (ParkOrderInfo parkOrderInfo : order_list) {
-                                    if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                    if (parkOrderInfo.getOrderStatus().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime())) {
                                         //预约订单
                                         MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
                                         end_time = "";
@@ -497,7 +497,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         end_time = dateUtil.addTime(start_time, park_time);
                         if (order_list.size() > 0) {
                             for (ParkOrderInfo parkOrderInfo : order_list) {
-                                if (parkOrderInfo.getOrder_status().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime())) {
+                                if (parkOrderInfo.getOrderStatus().equals("1") && dateUtil.betweenStartAndEnd(end_time, parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime())) {
                                     //预约订单
                                     MyToast.showToast(OrderParkActivity.this, "在该时段内您已有过预约，请重新选择哦", 5);
                                     end_time = "";

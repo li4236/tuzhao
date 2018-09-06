@@ -74,7 +74,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
 
     @Override
     protected int converGetItmeViewType(ParkOrderInfo parkOrderInfo, int position) {
-        switch (parkOrderInfo.getOrder_status()) {
+        switch (parkOrderInfo.getOrderStatus()) {
             case "1":
                 return R.layout.item_reserving_friend_park_space_layout;
             case "2":
@@ -89,7 +89,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
     protected void bindData(BaseViewHolder holder, ParkOrderInfo parkOrderInfo, int position) {
         holder.setText(R.id.share_park_space_space_name, parkOrderInfo.getParkSpaceLocationDescribe())
                 .setText(R.id.share_park_space_share_name, "车主：" + parkOrderInfo.getUsername());
-        if (parkOrderInfo.getOrder_status().equals("3")) {
+        if (parkOrderInfo.getOrderStatus().equals("3")) {
             holder.setText(R.id.start_park_date_tv, parkOrderInfo.getPark_start_time().substring(0, parkOrderInfo.getPark_start_time().indexOf(" ")));
             holder.setText(R.id.park_duration, DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
         }

@@ -144,37 +144,37 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         getDiscount();
         getMonthlyCard();
 
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
-            /*String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
+            /*String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
             mParkTimeDescription.setText(timeout);*/
 
             ImageUtil.showPic(mParkDurationIv, R.drawable.ic_overtime);
-            mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getPark_end_time()));
+            mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getPark_end_time()));
             mParkOrderCredit.setText("-5");
-        } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime()).compareTo(
+        } else if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
             //停车时间在顺延时长内
             mParkOrderCredit.setText("+3");
             mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getPark_start_time(), mParkOrderInfo.getPark_end_time()));
         } else {
             //停车时间不到预约的结束时间
-            int totalAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime());
-            int parkToAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getOrder_endtime());
+            int totalAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime());
+            int parkToAppointmentMinute = DateUtil.getDateMinutesDistance(mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getOrderEndTime());
             if (parkToAppointmentMinute >= totalAppointmentMinute / 5) {
                 //剩余时长大于总时长的1/5则减5分
                 mParkOrderCredit.setText("-5");
             }
-            mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
+            mParkTime.setText(DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
             mParkOrderCredit.setText("+3");
         }
 
-        mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrder_fee())));
+        mParkOrderFee.setText(DateUtil.decreseOneZero(Double.parseDouble(mParkOrderInfo.getOrderFee())));
         String startDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time());
         String endDate = DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time());
-        if (DateUtil.compareYearToSecond(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time()) > 0) {
-            endDate = DateUtil.deleteSecond(mParkOrderInfo.getOrder_endtime());
+        if (DateUtil.compareYearToSecond(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getPark_end_time()) > 0) {
+            endDate = DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime());
         }
 
         Log.e(TAG, "initData: " + new DecimalFormat("0.00").format(DateUtil.caculateParkFee(startDate, endDate, mParkOrderInfo.getHigh_time(),
@@ -237,7 +237,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                     if (getActivity() != null) {
                         Intent dicountIntent = new Intent(getActivity(), DiscountActivity.class);
                         dicountIntent.putParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
-                        dicountIntent.putExtra(ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrder_fee());
+                        dicountIntent.putExtra(ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrderFee());
                         dicountIntent.putExtra(ConstansUtil.TYPE, 1);
                         getActivity().startActivityForResult(dicountIntent, ConstansUtil.DISOUNT_REQUEST_CODE);
                     }
@@ -401,7 +401,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
      * 根据优惠券金额计算显示相应的优惠金额以及支付金额
      */
     private void calculateShouldPayFee() {
-        mShouldPay = Double.parseDouble(DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrder_fee())));
+        mShouldPay = Double.parseDouble(DateUtil.decreseOneZero(Double.valueOf(mParkOrderInfo.getOrderFee())));
         String shouldPay;
         if (mChooseDiscount != null) {
             double discountFee = Double.valueOf(mChooseDiscount.getDiscount());
@@ -414,7 +414,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 String parkDiscount = "—￥" + discountFee;
                 mParkDiscount.setText(parkDiscount);
 
-                mShouldPay = Double.parseDouble(mDecimalFormat.format(Double.valueOf(mParkOrderInfo.getOrder_fee()) - discountFee));
+                mShouldPay = Double.parseDouble(mDecimalFormat.format(Double.valueOf(mParkOrderInfo.getOrderFee()) - discountFee));
                 calculateParkFeeWithMonthlyCard();
                 shouldPay = "确认支付" + DateUtil.decreseOneZero(mShouldPay) + "元";
             } else {
@@ -459,17 +459,17 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
-                        if (o.data.getOrder_status().equals("4") || o.data.getOrder_status().equals("5")) {
+                        if (o.data.getOrderStatus().equals("4") || o.data.getOrderStatus().equals("5")) {
                             Intent intent = new Intent();
                             intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
                             Bundle bundle = new Bundle();
-                            mParkOrderInfo.setOrder_status(o.data.getOrder_status());
+                            mParkOrderInfo.setOrderStatus(o.data.getOrderStatus());
                             mParkOrderInfo.setActual_pay_fee(o.data.getActual_pay_fee());
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                             intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                             IntentObserable.dispatch(intent);
                             dismmisLoadingDialog();
-                        } else if (o.data.getOrder_status().equals("3")) {
+                        } else if (o.data.getOrderStatus().equals("3")) {
                             mPollingUtil = new PollingUtil(1000, new PollingUtil.OnTimeCallback() {
                                 @Override
                                 public void onTime() {
@@ -507,7 +507,7 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                             Intent intent = new Intent();
                             intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
                             Bundle bundle = new Bundle();
-                            mParkOrderInfo.setOrder_status("4");
+                            mParkOrderInfo.setOrderStatus("4");
                             mParkOrderInfo.setActual_pay_fee("0.0");
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                             intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);

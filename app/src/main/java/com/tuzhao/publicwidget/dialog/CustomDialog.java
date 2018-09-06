@@ -94,20 +94,20 @@ public class CustomDialog extends Dialog {
         TextView gracePeriodDuration = findViewById(R.id.grace_period);
         TextView overtimeDuration = findViewById(R.id.overtime_duration);
         TextView overtimeFee = findViewById(R.id.overtime_fee);
-        appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()));
+        appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrderStartTime()));
         actualStartParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
-        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()));
         actualParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getPark_start_time(), parkOrderInfo.getPark_end_time()));
 
         String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
         gracePeriodDuration.setText(gracePeriod);
 
-        if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
+        if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
             //停车时长超过预约时长
 
             int overtimeMinutes = 0;    //超时的分钟数
-            String string = DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
+            String string = DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
             SpannableString timeout = new SpannableString(string);
             int dayPosition = -1;
             int hourPosition = -1;
@@ -140,7 +140,7 @@ public class CustomDialog extends Dialog {
 
             if (showParkFee) {
                 //订单详情界面直接显示超时费用
-                String fineFee = DateUtil.decreseOneZero(parkOrderInfo.getFine_fee()) + "元";
+                String fineFee = DateUtil.decreseOneZero(parkOrderInfo.getFineFee()) + "元";
                 SpannableString spannableString = new SpannableString(fineFee);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff2020")), 0, fineFee.length() - 1,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -194,11 +194,11 @@ public class CustomDialog extends Dialog {
         TextView gracePeriodDuration = findViewById(R.id.grace_period);
         final TextView overtimeDuration = findViewById(R.id.overtime_duration);
         final TextView overtimeFee = findViewById(R.id.overtime_fee);
-        appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()));
+        appointmentParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getOrderStartTime()));
         actualParkTime.setText(DateUtil.deleteSecond(parkOrderInfo.getPark_start_time()));
-        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()));
         actualPark.setText("预计离场");
-        actualParkDuration.setText(DateUtil.deleteSecond(parkOrderInfo.getOrder_endtime()));
+        actualParkDuration.setText(DateUtil.deleteSecond(parkOrderInfo.getOrderEndTime()));
 
         String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
         gracePeriodDuration.setText(gracePeriod);
@@ -218,8 +218,8 @@ public class CustomDialog extends Dialog {
             }
         });
 
-        SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
-                DateUtil.deleteSecond(parkOrderInfo.getOrder_endtime()), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
+        SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrderStartTime()),
+                DateUtil.deleteSecond(parkOrderInfo.getOrderEndTime()), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                 Double.valueOf(parkOrderInfo.getLow_fee()))) + "元");
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         parkFee.setText(spannableString);
@@ -228,12 +228,12 @@ public class CustomDialog extends Dialog {
         mPollingUtil = new PollingUtil(1000 * 60, new PollingUtil.OnTimeCallback() {
             @Override
             public void onTime() {
-                if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrder_endtime(), parkOrderInfo.getExtensionTime()).compareTo(
+                if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime()).compareTo(
                         DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
                     //停车时长超过预约时长
 
                     int overtimeMinutes = 0;    //超时的分钟数
-                    String string = DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrder_endtime(), DateUtil.getCurrentYearToSecond(), parkOrderInfo.getExtensionTime());
+                    String string = DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrderEndTime(), DateUtil.getCurrentYearToSecond(), parkOrderInfo.getExtensionTime());
                     SpannableString timeout = new SpannableString(string);
                     int dayPosition = -1;
                     int hourPosition = -1;
@@ -276,8 +276,8 @@ public class CustomDialog extends Dialog {
 
                     /*//总费用为预约时间费用加超时费用
                     SpannableString spannable = new SpannableString("约" + DateUtil.decreseOneZero(decimalFormat.format(
-                            DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
-                                    DateUtil.getYearToMinute(parkOrderInfo.getOrder_endtime(),
+                            DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrderStartTime()),
+                                    DateUtil.getYearToMinute(parkOrderInfo.getOrderEndTime(),
                                             Integer.valueOf(parkOrderInfo.getExtensionTime())),
                                     parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                                     Double.valueOf(parkOrderInfo.getLow_fee())) + overFee)) + "元");
@@ -285,7 +285,7 @@ public class CustomDialog extends Dialog {
                     parkFee.setText(spannable);*/
                 } /*else {
                     //没有超时
-                    SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
+                    SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrderStartTime()),
                             DateUtil.getCurrentYearToMinutes(), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                             Double.valueOf(parkOrderInfo.getLow_fee()))) + "元");
                     spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -308,14 +308,14 @@ public class CustomDialog extends Dialog {
 
         parkSpaceNumber.setText(parkOrderInfo.getParkNumber());
         carNumber.setText(parkOrderInfo.getCarNumber());
-        appointStartParkTime.setText(parkOrderInfo.getOrder_starttime().substring(0, parkOrderInfo.getOrder_starttime().lastIndexOf(":")));
-        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrder_starttime(), parkOrderInfo.getOrder_endtime()));
+        appointStartParkTime.setText(parkOrderInfo.getOrderStartTime().substring(0, parkOrderInfo.getOrderStartTime().lastIndexOf(":")));
+        appointParkDuration.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()));
         String gracePeriod = Integer.valueOf(parkOrderInfo.getExtensionTime()) / 60 + "分钟";
         gracePeriodDuration.setText(gracePeriod);
 
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-        SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrder_starttime()),
-                DateUtil.deleteSecond(parkOrderInfo.getOrder_endtime()), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
+        SpannableString spannableString = new SpannableString("约" + decimalFormat.format(DateUtil.caculateParkFee(DateUtil.deleteSecond(parkOrderInfo.getOrderStartTime()),
+                DateUtil.deleteSecond(parkOrderInfo.getOrderEndTime()), parkOrderInfo.getHigh_time(), Double.valueOf(parkOrderInfo.getHigh_fee()),
                 Double.valueOf(parkOrderInfo.getLow_fee()))) + "元");
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#1dd0a1")), 1, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         estimatedCost.setText(spannableString);

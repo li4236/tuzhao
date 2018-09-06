@@ -178,7 +178,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
         view.findViewById(R.id.order_complaint).setOnClickListener(this);
         view.findViewById(R.id.park_comment_cl).setOnClickListener(this);
 
-        if (mParkOrderInfo.getOrder_status().equals("5")) {
+        if (mParkOrderInfo.getOrderStatus().equals("5")) {
             mParkComment.setText("已评价");
             //getOrderComment(false);
         }
@@ -208,10 +208,10 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
             //mOrderDiscount.setText(spannableString);
         }
 
-        mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrder_starttime(), mParkOrderInfo.getOrder_endtime()));
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getExtensionTime()).compareTo(
+        mParkTime.setText(DateUtil.getDistanceForDayTimeMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
+        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getPark_end_time())) < 0) {
-            //String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrder_endtime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
+            //String timeout = "超时" + DateUtil.getDateDistanceForHourWithMinute(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getPark_end_time(), mParkOrderInfo.getExtensionTime());
             //mParkTimeDescription.setText(timeout);
             mChangeCredit.setTextColor(Color.parseColor("#ff6c6c"));
             mChangeCredit.setText("-5");
@@ -278,7 +278,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                 startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.park_comment_cl:
-                if (mParkOrderInfo.getOrder_status().equals("4")) {
+                if (mParkOrderInfo.getOrderStatus().equals("4")) {
                     showComentDialog();
                 }/* else {
                     showOrderCommentDialog();
@@ -837,7 +837,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
                         Intent intent = new Intent();
                         intent.setAction(ConstansUtil.COMMENT_SUCCESS);
                         Bundle bundle = new Bundle();
-                        mParkOrderInfo.setOrder_status("5");
+                        mParkOrderInfo.setOrderStatus("5");
                         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                         IntentObserable.dispatch(intent);

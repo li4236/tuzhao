@@ -183,7 +183,7 @@ public class ParkFragment extends BaseFragment {
 //                                    MyToast.showToast(mContext, "您当前还有为付款订单", 5);
 //                                    return;
 //                                }else {
-//                                    if (parkOrderInfo.getOrder_status().equals("1")||parkOrderInfo.getOrder_status().equals("2")){
+//                                    if (parkOrderInfo.getOrderStatus().equals("1")||parkOrderInfo.getOrderStatus().equals("2")){
 //                                        aingcount++;
 //                                    }
 //                                }
