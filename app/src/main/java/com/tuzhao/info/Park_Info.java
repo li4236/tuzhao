@@ -438,13 +438,6 @@ public class Park_Info implements Parcelable {
         this.parkSpaceNote = parkSpaceNote;
     }
 
-    public String getParkSpaceNoteOrAddress() {
-        if (parkSpaceNote != null && !parkSpaceNote.equals("")) {
-            return parkSpaceNote;
-        }
-        return location_describe;
-    }
-
     @Override
     public String toString() {
         return "Park_Info{" +

@@ -211,7 +211,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                         bundle.putString(ConstansUtil.CITY_CODE, mParkInfos.get(position).getCityCode());
                         bundle.putString(ConstansUtil.INTENT_MESSAGE, note);
                         IntentObserable.dispatch(ConstansUtil.CHANGE_PARK_SPACE_NOTE, bundle);
-
+                        showFiveToast("修改成功");
                         dismmisLoadingDialog();
                         mModifyNameDialog.dismiss();
                     }
@@ -220,7 +220,18 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                                case "103":
+                                    showFiveToast("备注不能为空哦");
+                                    break;
+                                case "104":
+                                    showFiveToast("修改失败，请稍后重试");
+                                    break;
+                            }
                         }
                     }
                 });
@@ -229,7 +240,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
     private void showDeleteParkSpaceDialog(final int position) {
         new TipeDialog.Builder(this)
                 .setTitle("移除车位")
-                .setMessage("确定移除" + mParkInfos.get(position).getParkSpaceNoteOrAddress() + "吗")
+                .setMessage("确定移除" + mParkInfos.get(position).getParkSpaceNote() + "吗")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
