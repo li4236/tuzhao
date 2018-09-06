@@ -496,4 +496,14 @@ public class ConstansUtil {
      */
     public static final String SET_NEW_USER_PASSWORD = "SetNewUserPassword";
 
+    /**
+     * 修改好友车位备注
+     */
+    public static final String CHANGE_PARK_SPACE_NOTE = "ChangeParkSpaceNote";
+
+    /**
+     * 删除好友分享给我的车位
+     */
+    public static final String DELETE_FRIENT_PARK_SPACE = "DeleteFriendParkSpace";
+
 }

@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +14,11 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.MyFragmentAdapter;
 import com.tuzhao.fragment.parkspace.ShareParkSpaceFragment;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
@@ -21,6 +26,9 @@ import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/9/5.
@@ -73,8 +81,9 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
             }
         });
 
-        findViewById(R.id.modify_friend_nickname_iv).setOnClickListener(this);
-        findViewById(R.id.my_parkspace_setting_iv).setOnClickListener(this);
+        findViewById(R.id.delete_friend_park_space_cl).setOnClickListener(this);
+        findViewById(R.id.modify_friend_nickname_cl).setOnClickListener(this);
+
     }
 
     @Override
@@ -134,14 +143,11 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.modify_friend_nickname_iv:
-                Intent intent = new Intent(this, AuditParkSpaceActivity.class);
-                startActivity(intent);
+            case R.id.modify_friend_nickname_cl:
+
                 break;
-            case R.id.my_parkspace_setting_iv:
-                Intent intent2 = new Intent(this, ParkSpaceSettingActivity.class);
-                intent2.putExtra(ConstansUtil.PARK_SPACE_INFO, mParkInfos.get(mViewPager.getCurrentItem()));
-                startActivityForResult(intent2, ConstansUtil.REQUSET_CODE);
+            case R.id.delete_friend_park_space_cl:
+                showDeleteParkSpaceDialog(mViewPager.getCurrentItem());
                 break;
         }
     }
@@ -169,6 +175,79 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
             mOptionsPickerView.setSelectOptions(mViewPager.getCurrentItem());
             mOptionsPickerView.show();
         }
+    }
+
+    private void changeParkSpaceNote(final int position, final String note, final TipeDialog tipeDialog) {
+        showLoadingDialog("修改中...");
+        getOkGo(HttpConstants.changeParkSpaceNote)
+                .params("parkSpaceId", mParkInfos.get(position).getId())
+                .params("cityCode", mParkInfos.get(position).getCityCode())
+                .params("parkSpaceNote", note)
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        mParkInfos.get(position).setParkSpaceNote(note);
+                        mFragments.get(position).setParkSpaceNote(note);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ConstansUtil.PARK_SPACE_ID, mParkInfos.get(position).getId());
+                        bundle.putString(ConstansUtil.CITY_CODE, mParkInfos.get(position).getCityCode());
+                        bundle.putString(ConstansUtil.INTENT_MESSAGE, note);
+                        IntentObserable.dispatch(ConstansUtil.CHANGE_PARK_SPACE_NOTE, bundle);
+                        tipeDialog.dismiss();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
+    }
+
+    private void showDeleteParkSpaceDialog(final int position) {
+        new TipeDialog.Builder(this)
+                .setTitle("移除车位")
+                .setMessage("确定移除" + mParkInfos.get(position).getParkSpaceNoteOrAddress() + "吗")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteParkSpace(position);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteParkSpace(final int position) {
+        showFiveToast("移除中...");
+        getOkGo(HttpConstants.deleteFriendParkSpace)
+                .params("parkSpaceId", mParkInfos.get(position).getId())
+                .params("cityCode", mParkInfos.get(position).getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ConstansUtil.PARK_SPACE_ID, mParkInfos.get(position).getId());
+                        bundle.putString(ConstansUtil.CITY_CODE, mParkInfos.get(position).getCityCode());
+                        IntentObserable.dispatch(ConstansUtil.DELETE_FRIENT_PARK_SPACE, bundle);
+                        mFragments.remove(position);
+                        mParkInfos.remove(position);
+                        mFragmentAdater.notifyDataSetChanged();
+                        dismmisLoadingDialog();
+                        showFiveToast("移除车位成功");
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+
+                        }
+                    }
+                });
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -26,6 +27,8 @@ import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.util.ArrayList;
 
@@ -36,7 +39,7 @@ import okhttp3.Response;
  * Created by juncoder on 2018/4/9.
  */
 
-public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
+public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> implements IntentObserver {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
     @Override
     protected void initData() {
         super.initData();
+        IntentObserable.registerObserver(this);
     }
 
     @Override
@@ -98,6 +102,12 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
                         });
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     private String getParkspaceStatus(Park_Info park_info) {
@@ -161,6 +171,31 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
                 startActivity(ShareParkSpaceDetailActivity.class, bundle);
             }
         });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.DELETE_FRIENT_PARK_SPACE.equals(intent.getAction())) {
+            String parkSpaceId = intent.getStringExtra(ConstansUtil.PARK_SPACE_ID);
+            String cityCode = intent.getStringExtra(ConstansUtil.CITY_CODE);
+            for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                if (mCommonAdapter.get(i).getId().equals(parkSpaceId) && mCommonAdapter.get(i).getCityCode().equals(cityCode)) {
+                    mCommonAdapter.notifyRemoveData(i);
+                    break;
+                }
+            }
+        } else if (ConstansUtil.CHANGE_PARK_SPACE_NOTE.equals(intent.getAction())) {
+            String parkSpaceId = intent.getStringExtra(ConstansUtil.PARK_SPACE_ID);
+            String cityCode = intent.getStringExtra(ConstansUtil.CITY_CODE);
+            for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                if (mCommonAdapter.get(i).getId().equals(parkSpaceId) && mCommonAdapter.get(i).getCityCode().equals(cityCode)) {
+                    Park_Info parkInfo = mCommonAdapter.get(i);
+                    parkInfo.setParkSpaceNote(intent.getStringExtra(ConstansUtil.INTENT_MESSAGE));
+                    mCommonAdapter.notifyDataChange(parkInfo);
+                    break;
+                }
+            }
+        }
     }
 
 }

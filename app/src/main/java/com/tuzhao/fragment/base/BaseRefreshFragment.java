@@ -181,7 +181,7 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
     }
 
     protected int converGetItmeViewType(T t, int position) {
-        return -1;
+        return 0;
     }
 
     protected abstract int itemViewResourceId();

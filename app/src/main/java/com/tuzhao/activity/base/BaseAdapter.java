@@ -88,7 +88,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         }
 
         int temp = position - getHeadViewCount();
-        if ((temp = converGetItemViewType(mData.get(temp), temp)) != -1) {
+        if ((temp = converGetItemViewType(mData.get(temp), temp)) != 0) {
             return temp;
         }
 
@@ -179,7 +179,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
      * @param position 对应data的实际position
      */
     protected int converGetItemViewType(T t, int position) {
-        return -1;
+        return 0;
     }
 
     /**

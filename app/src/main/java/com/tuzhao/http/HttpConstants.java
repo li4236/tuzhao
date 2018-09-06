@@ -685,4 +685,14 @@ public class HttpConstants {
      */
     public static final String newUserLogin = ROOT_URL + "newUserLogin";
 
+    /**
+     * 修改好友分享给我的车位的备注
+     */
+    public static final String changeParkSpaceNote = ROOT_URL + "changeParkSpaceNote";
+
+    /**
+     * 删除好友分享给我的车位
+     */
+    public static final String deleteFriendParkSpace = ROOT_URL + "deleteFriendParkSpace";
+
 }

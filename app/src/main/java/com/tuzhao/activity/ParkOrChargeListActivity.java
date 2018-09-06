@@ -120,7 +120,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         });
         mAdapter = new ParkOrChargeListAdapter(ParkOrChargeListActivity.this, mData);
         textview_address = findViewById(R.id.id_activity_parkorcharge_layout_textview_address);
-        textview_nodata = findViewById(R.id.id_activity_parkorcharge_layout_textview_nodata);
+        textview_nodata = findViewById(R.id.empty_tv);
         linearlayout_nodata = findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_nodata);
         linearlayout_address = findViewById(R.id.id_activity_parkorcharge_layout_linearlayout_address);
 

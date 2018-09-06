@@ -27,6 +27,14 @@ public class IntentObserable {
         }
     }
 
+    public static void dispatch(String action, Bundle value) {
+        Intent intent = new Intent(action);
+        intent.putExtras(value);
+        for (IntentObserver observer : mIntentObservers) {
+            observer.onReceive(intent);
+        }
+    }
+
     public static void dispatch(String action, String key, String value) {
         Intent intent = new Intent(action);
         intent.putExtra(key, value);

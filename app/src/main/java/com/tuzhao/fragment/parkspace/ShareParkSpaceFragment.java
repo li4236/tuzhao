@@ -60,6 +60,8 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     private VoltageView mVoltageView;
 
+    TextView mParkspaceDescription;
+
     private TextView mOpenLock;
 
     private int mRecentOrderMinutes;
@@ -99,8 +101,9 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         setParkspaceStatus();
     }
 
-    public String getAppointmentTime() {
-        return mAppointmentTime.toString();
+    public void setParkSpaceNote(String note) {
+        mParkInfo.setParkSpaceNote(note);
+        mParkspaceDescription.setText(note);
     }
 
     @Override
@@ -120,7 +123,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         }
 
         TextView numberOfParkSpace = view.findViewById(R.id.number_of_park_space);
-        TextView parkspaceDescription = view.findViewById(R.id.parkspace_description);
+        mParkspaceDescription = view.findViewById(R.id.parkspace_description);
         TextView parkLot = view.findViewById(R.id.parking_lot);
 
         mCircularArcView = view.findViewById(R.id.circle_arc);
@@ -136,7 +139,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         } else {
             view.findViewById(R.id.right_park_space_iv).setOnClickListener(this);
             view.findViewById(R.id.left_park_space_iv).setOnClickListener(this);
-            parkspaceDescription.setOnClickListener(this);
+            mParkspaceDescription.setOnClickListener(this);
         }
 
         mOpenLock.setOnClickListener(this);
@@ -146,7 +149,11 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         numberOfParkSpace.setText(String.valueOf(mPosition + 1));
         numberOfParkSpace.append("号车位");
 
-        parkspaceDescription.setText(mParkInfo.getLocation_describe());
+        if (null != mParkInfo.getParkSpaceNote() && !"".equals(mParkInfo.getParkSpaceNote())) {
+            mParkspaceDescription.setText(mParkInfo.getParkSpaceNote());
+        } else {
+            mParkspaceDescription.setText(mParkInfo.getLocation_describe());
+        }
         parkLot.setText(mParkInfo.getParkspace_name());
     }
 

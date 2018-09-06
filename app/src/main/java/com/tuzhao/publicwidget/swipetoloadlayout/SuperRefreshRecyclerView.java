@@ -1,14 +1,18 @@
 package com.tuzhao.publicwidget.swipetoloadlayout;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.tuzhao.R;
 
@@ -114,6 +118,18 @@ public class SuperRefreshRecyclerView extends FrameLayout {
         if (view != null) {
             emptyView.addView(view);
         }
+    }
+
+    public void setEmptyView(@DrawableRes int drawableRes, String text) {
+        emptyView.removeAllViews();
+
+        ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(mContext).inflate(R.layout.layout_empty, recyclerView, false);
+        ImageView imageView = constraintLayout.findViewById(R.id.empty_iv);
+        imageView.setImageResource(drawableRes);
+        TextView textView = constraintLayout.findViewById(R.id.empty_tv);
+        textView.setText(text);
+
+        emptyView.addView(constraintLayout);
     }
 
     public boolean isRefreshing() {

@@ -149,7 +149,7 @@
                 android:src="@drawable/ic_noyoushuju" />
 
             <TextView
-                android:id="@+id/id_activity_parkorcharge_layout_textview_nodata"
+                android:id="@+id/empty_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="80dp"

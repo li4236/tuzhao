@@ -44,8 +44,8 @@ public class ParkOrderInfo implements Parcelable {
     @SerializedName(value = "carNumber", alternate = "car_numble")
     private String carNumber;//停放车辆车牌号
 
-    @SerializedName(value = "username", alternate = {"userName"})
-    private String username;//用户名=用户手机号码
+    @SerializedName(value = "userName", alternate = {"username"})
+    private String userName;//用户名=用户手机号码
     private String park_username;//该停车位主人的手机号码
     private String order_number;//订单编号
 
@@ -53,7 +53,7 @@ public class ParkOrderInfo implements Parcelable {
      * 订单状态:1-已预约、2-停车中、3-待付款、4，5-已完成（待评论、已完成）、6-已取消（超时取消、正常手动取消）
      */
     @SerializedName(value = "orderStatus", alternate = {"order_status", "status"})
-    private String orderStatus;//如果是好友车位的则是1：已预约，2：停车中，3：已完成
+    private String orderStatus;//如果是好友车位的则是0-已预约，1-停车中，3-已完成，4-已取消
 
     @SerializedName(value = "orderTime", alternate = "order_time")
     private String orderTime;//下单时间
@@ -178,12 +178,12 @@ public class ParkOrderInfo implements Parcelable {
         this.openTime = openTime;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPark_username() {
@@ -462,7 +462,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.orderEndTime);
         dest.writeString(this.extensionTime);
         dest.writeString(this.carNumber);
-        dest.writeString(this.username);
+        dest.writeString(this.userName);
         dest.writeString(this.park_username);
         dest.writeString(this.order_number);
         dest.writeString(this.orderStatus);
@@ -505,7 +505,7 @@ public class ParkOrderInfo implements Parcelable {
         this.orderEndTime = in.readString();
         this.extensionTime = in.readString();
         this.carNumber = in.readString();
-        this.username = in.readString();
+        this.userName = in.readString();
         this.park_username = in.readString();
         this.order_number = in.readString();
         this.orderStatus = in.readString();
@@ -559,7 +559,7 @@ public class ParkOrderInfo implements Parcelable {
                 ", orderEndTime='" + orderEndTime + '\'' +
                 ", extensionTime='" + extensionTime + '\'' +
                 ", carNumber='" + carNumber + '\'' +
-                ", username='" + username + '\'' +
+                ", userName='" + userName + '\'' +
                 ", park_username='" + park_username + '\'' +
                 ", order_number='" + order_number + '\'' +
                 ", orderStatus='" + orderStatus + '\'' +

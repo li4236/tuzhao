@@ -31,8 +31,8 @@ public class UseFriendParkSpaceRecordActivity extends BaseStatusActivity {
         ViewPager viewPager = findViewById(R.id.use_friend_park_space_record_vp);
 
         List<UseFriendParkSpaceRecordFragment> fragments = new ArrayList<>();
-        fragments.add(UseFriendParkSpaceRecordFragment.getInstance("1"));
         fragments.add(UseFriendParkSpaceRecordFragment.getInstance("0"));
+        fragments.add(UseFriendParkSpaceRecordFragment.getInstance("5"));
         viewPager.setAdapter(new MyFragmentAdapter<>(getSupportFragmentManager(), fragments));
         smartTabLayout.setViewPager(viewPager);
 
@@ -52,7 +52,7 @@ public class UseFriendParkSpaceRecordActivity extends BaseStatusActivity {
     @NonNull
     @Override
     protected String title() {
-        return "好友车位";
+        return "预定记录";
     }
 
 }

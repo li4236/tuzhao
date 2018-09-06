@@ -43,6 +43,7 @@ public class Park_Info implements Parcelable {
     private String installTime;//预计安装时间
     private String reason;//审核未通过原因
     private String type;//车位归属类型
+    private String parkSpaceNote;//好友对该车位的备注
 
     private double latitude;    //经度
     private double longitude;   //纬度
@@ -429,6 +430,21 @@ public class Park_Info implements Parcelable {
         this.parkInterval = parkInterval;
     }
 
+    public String getParkSpaceNote() {
+        return parkSpaceNote;
+    }
+
+    public void setParkSpaceNote(String parkSpaceNote) {
+        this.parkSpaceNote = parkSpaceNote;
+    }
+
+    public String getParkSpaceNoteOrAddress() {
+        if (parkSpaceNote != null && !parkSpaceNote.equals("")) {
+            return parkSpaceNote;
+        }
+        return location_describe;
+    }
+
     @Override
     public String toString() {
         return "Park_Info{" +
@@ -540,6 +556,7 @@ public class Park_Info implements Parcelable {
         dest.writeString(this.parkLockStatus);
         dest.writeString(this.voltage);
         dest.writeString(this.indicator);
+        dest.writeString(this.parkSpaceNote);
     }
 
     protected Park_Info(Parcel in) {
@@ -582,6 +599,7 @@ public class Park_Info implements Parcelable {
         this.parkLockStatus = in.readString();
         this.voltage = in.readString();
         this.indicator = in.readString();
+        this.parkSpaceNote = in.readString();
     }
 
     public static final Creator<Park_Info> CREATOR = new Creator<Park_Info>() {
