@@ -193,6 +193,7 @@ public class PaymentPasswordHelper {
         mPleaseInputPasswordHint.setText("请设置您的6位支付密码");
         mOriginPassword = null;
         mBackPressedCanCancel = true;
+        mCanControl = true;
         clearPassword();
         ViewUtil.setGone(mPasswordError);
     }
@@ -234,6 +235,21 @@ public class PaymentPasswordHelper {
         if (mPaymentPasswordType != 0) {
             ViewUtil.setGone(mPasswordError);
         }
+    }
+
+    public String getOriginPassword() {
+        return mOriginPassword;
+    }
+
+    public String getConfirmPassword() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            stringBuilder.append(mPasswordText[i].getText().toString());
+        }
+        if (mOriginPassword.length() == 6 && !mBackPressedCanCancel && stringBuilder.length() == 6) {
+            return stringBuilder.toString();
+        }
+        return "";
     }
 
     public void setTitle(String title) {

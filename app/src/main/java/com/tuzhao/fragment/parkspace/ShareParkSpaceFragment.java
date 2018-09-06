@@ -70,11 +70,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     private int mPosition;
 
-    /**
-     * 0（从好友列表点进来的）
-     */
-    private int mType;
-
     private AnimatorSet mAnimatorSet;
 
     private AnimatorSet mResumeAnimatorSet;
@@ -89,13 +84,12 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     private String mExceptionMessage;
 
-    public static ShareParkSpaceFragment newInstance(Park_Info parkInfo, int position, int totalSize, int type) {
+    public static ShareParkSpaceFragment newInstance(Park_Info parkInfo, int position, int totalSize) {
         ShareParkSpaceFragment fragment = new ShareParkSpaceFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, parkInfo);
         bundle.putInt(ConstansUtil.POSITION, position);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
-        bundle.putInt(ConstansUtil.TYPE, type);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -120,7 +114,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
             mParkInfo = getArguments().getParcelable(ConstansUtil.PARK_SPACE_INFO);
             mPosition = getArguments().getInt(ConstansUtil.POSITION);
             mTotalSize = getArguments().getInt(ConstansUtil.SIZE);
-            mType = getArguments().getInt(ConstansUtil.TYPE);
         } else if (mParkInfo == null) {
             showFiveToast("打开失败，请稍后重试");
             finish();
@@ -144,10 +137,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
             view.findViewById(R.id.right_park_space_iv).setOnClickListener(this);
             view.findViewById(R.id.left_park_space_iv).setOnClickListener(this);
             parkspaceDescription.setOnClickListener(this);
-        }
-
-        if (mType == 0) {
-            mOpenLock.setText("预订");
         }
 
         mOpenLock.setOnClickListener(this);

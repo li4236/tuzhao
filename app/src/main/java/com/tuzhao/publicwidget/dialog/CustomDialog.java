@@ -336,6 +336,10 @@ public class CustomDialog extends Dialog {
         return 0;
     }
 
+    public PaymentPasswordHelper getPasswordHelper() {
+        return mPasswordHelper;
+    }
+
     @Override
     public void show() {
         super.show();

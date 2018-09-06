@@ -193,9 +193,9 @@ public class MyApplication extends MultiDexApplication {
     }
 
     private void requestLogin(final String username, String password) {
-        OkGo.post(HttpConstants.requestLogin)//请求数据的接口地址
-                .tag(HttpConstants.requestLogin)//
-                .params("username", username)
+        OkGo.post(HttpConstants.requestPasswordLogin)//请求数据的接口地址
+                .tag(HttpConstants.requestPasswordLogin)//
+                .params("telephoneNumber", username)
                 .params("password", password)
                 .params("registrationId", databaseImp.getRegistrationId())
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {

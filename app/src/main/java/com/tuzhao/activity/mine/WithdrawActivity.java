@@ -169,18 +169,29 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
         }
     }
 
-    private void showSetPasswordDialog(int type) {
-        //设置支付密码
-        if (mSetPasswordDialog == null || mSetPasswordDialog.getPasswordType() != type) {
-            mSetPasswordDialog = new CustomDialog(new PaymentPasswordHelper(WithdrawActivity.this, type));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mSetPasswordDialog != null && mSetPasswordDialog.isShowing()) {
+            if (!mSetPasswordDialog.getPasswordHelper().isBackPressedCanCancel() && !mSetPasswordDialog.getPasswordHelper().getConfirmPassword().equals("")) {
+                mSetPasswordDialog.getPasswordHelper().setPasswordFirst();
+                showFiveToast("设置密码失败");
+            }
         }
-        mSetPasswordDialog.show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
+    }
+
+    private void showSetPasswordDialog(int type) {
+        //设置支付密码
+        if (mSetPasswordDialog == null || mSetPasswordDialog.getPasswordType() != type) {
+            mSetPasswordDialog = new CustomDialog(new PaymentPasswordHelper(WithdrawActivity.this, type));
+        }
+        mSetPasswordDialog.show();
     }
 
     private void withdrawlBalance(String paymentPassword) {
@@ -284,6 +295,7 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == ConstansUtil.REQUSET_CODE || requestCode == RESET_REQUEST_CODE) && resultCode == RESULT_OK) {
             //设置密码后弹出输入密码框继续输入
+            mSetPasswordDialog.getPasswordHelper().clearPassword();
             mSetPasswordDialog.dismiss();
             mPasswordHelper.setCanControl(true);
             mPasswordHelper.clearPassword();

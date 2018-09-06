@@ -65,9 +65,9 @@ public class TokenInterceptor implements Interceptor {
         // 通过一个特定的接口获取新的token，此处要用到同步的retrofit请求
         User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
         if (user_info != null) {
-            Response response = OkGo.post(HttpConstants.requestLogin)
+            Response response = OkGo.post(HttpConstants.requestPasswordLogin)
                     .tag(this)
-                    .params("username", user_info.getUsername())
+                    .params("telephoneNumber", user_info.getUsername())
                     .params("password", user_info.getPassword())
                     .params("registrationId", MyApplication.getInstance().getDatabaseImp().getRegistrationId())
                     .execute();
