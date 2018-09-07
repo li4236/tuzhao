@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -42,6 +43,8 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
      * true(从预订车位跳转过来，选择车来停车的)
      */
     private boolean mChooseCar;
+
+    private int REQUEST_CODE = 0x123;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -154,29 +157,31 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
     @Override
     protected void bindData(BaseViewHolder holder, final Car car, int position) {
         holder.setText(R.id.car_number, car.getCarNumber());
-        if (mChooseCar) {
+        if (mChooseCar || car.getStatus().equals("1")) {
             //如果是选择车辆的则禁止侧滑删除
             ((SwipeMenuLayout) holder.itemView).setSwipeEnable(false);
+            if (car.getStatus().equals("1")) {
+                holder.setOnClickListener(R.id.car_number_cv, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.e(TAG, "onClick: " + car.getCarNumber());
+                        startActivityForResult(AuditCarActivity.class, REQUEST_CODE, ConstansUtil.INTENT_MESSAGE, car);
+                    }
+                });
+            }
         } else {
             holder.setOnClickListener(R.id.delete_car_number, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TipeDialog.Builder builder = new TipeDialog.Builder(MyCarActivity.this);
-                    builder.setMessage("确定删除该车牌号吗？");
-                    builder.setTitle("提示");
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteCar(car);
-                        }
-                    });
-
-                    builder.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
+                    new TipeDialog.Builder(MyCarActivity.this)
+                            .setMessage("确定删除该车辆吗？")
+                            .setTitle("提示")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    deleteCar(car);
                                 }
-                            });
-
-                    builder.create().show();
+                            }).create()
+                            .show();
                 }
             });
         }
@@ -234,6 +239,12 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
             }
             mCommonAdapter.addData(position, car);
             mRecyclerView.showData();
+        } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            //取消申请添加车辆
+            mCommonAdapter.notifyRemoveData((Car) data.getParcelableExtra(ConstansUtil.INTENT_MESSAGE));
+            if (mCommonAdapter.getDataSize() == 0) {
+                mRecyclerView.showEmpty();
+            }
         }
     }
 

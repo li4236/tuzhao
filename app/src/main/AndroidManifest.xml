@@ -211,6 +211,7 @@
             android:launchMode="singleTask" />
         <activity android:name=".activity.mine.BookParkSpaceActivity" />
         <activity android:name=".activity.mine.ShareParkSpaceDetailActivity" />
+        <activity android:name=".activity.mine.AuditCarActivity" />
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"

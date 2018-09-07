@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.tianzhili.www.myselfsdk.okgo.exception.OkGoException;
 import com.tianzhili.www.myselfsdk.okgo.interceptor.TokenInvalideException;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.publicmanager.UserManager;
@@ -80,6 +81,9 @@ public class DensityUtil {
             UserManager.getInstance().setUserInfo(new User_Info());
             //发送退出登录的广播
             LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(LOGOUT_ACTION));
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
             MyToast.showToast(context, "账户异常，请重新登录", 5);
             return true;
         } else if (e instanceof OkGoException) {

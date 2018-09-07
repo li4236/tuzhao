@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -100,6 +101,11 @@ public class ViewUtil {
                 })
                 .create()
                 .show();
+    }
+
+    public static void contactService(Context context) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
+        context.startActivity(intent);
     }
 
 }

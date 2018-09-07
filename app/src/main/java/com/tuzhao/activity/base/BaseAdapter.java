@@ -4,6 +4,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -318,6 +319,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
             mData.remove(position);
             notifyItemRemoved(getHeadViewCount() + position);
             notifyItemRangeChanged(getHeadViewCount() + position, mData.size() - position);
+        } else {
+            Log.e(TAG, "notifyRemoveData: dont find" + t + " in the data!");
         }
     }
 
