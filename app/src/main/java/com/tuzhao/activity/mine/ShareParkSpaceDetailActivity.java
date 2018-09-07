@@ -153,10 +153,8 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
     }
 
     private void showDialog() {
-        if (mOptionsPickerView != null) {
-            mOptionsPickerView.setSelectOptions(mViewPager.getCurrentItem());
-            mOptionsPickerView.show();
-        }
+        mOptionsPickerView.setSelectOptions(mViewPager.getCurrentItem());
+        mOptionsPickerView.show();
     }
 
     /**
@@ -259,29 +257,46 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ConstansUtil.PARK_SPACE_ID, mParkInfos.get(position).getId());
-                        bundle.putString(ConstansUtil.CITY_CODE, mParkInfos.get(position).getCityCode());
-                        IntentObserable.dispatch(ConstansUtil.DELETE_FRIENT_PARK_SPACE, bundle);
-                        mFragments.remove(position);
-                        mParkInfos.remove(position);
-                        if (mFragments.isEmpty()) {
-                            finish();
-                        } else {
-                            mFragmentAdater.notifyDataSetChanged();
-                        }
-                        dismmisLoadingDialog();
-                        showFiveToast("移除车位成功");
+                        deleteParkSpaceSuccess(position);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         if (!handleException(e)) {
-
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                    userError();
+                                    break;
+                                case "103":
+                                    //该数据为空？？？
+                                    deleteParkSpaceSuccess(position);
+                                    break;
+                                case "104":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                            }
                         }
                     }
                 });
+    }
+
+    private void deleteParkSpaceSuccess(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ConstansUtil.PARK_SPACE_ID, mParkInfos.get(position).getId());
+        bundle.putString(ConstansUtil.CITY_CODE, mParkInfos.get(position).getCityCode());
+        IntentObserable.dispatch(ConstansUtil.DELETE_FRIENT_PARK_SPACE, bundle);
+        mFragments.remove(position);
+        mParkInfos.remove(position);
+        if (mFragments.isEmpty()) {
+            finish();
+        } else {
+            initDialog();
+            mFragmentAdater.notifyDataSetChanged();
+        }
+        dismmisLoadingDialog();
+        showFiveToast("移除车位成功");
     }
 
     @Override

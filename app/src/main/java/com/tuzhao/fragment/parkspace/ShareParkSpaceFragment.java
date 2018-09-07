@@ -79,6 +79,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         bundle.putParcelable(ConstansUtil.PARK_SPACE_INFO, parkInfo);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
         fragment.setArguments(bundle);
+        fragment.setTAG(fragment.getTag() + " parkInfoId:" + parkInfo.getId() + " cityCode:" + parkInfo.getCityCode());
         return fragment;
     }
 
@@ -132,7 +133,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     @Override
     protected void initData() {
-        setTAG(this.getClass().getName() + " parkInfoId:" + mParkInfo.getId() + " cityCode:" + mParkInfo.getCityCode());
         setAutoCancelRequest(false);
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));

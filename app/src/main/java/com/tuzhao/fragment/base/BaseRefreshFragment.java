@@ -151,11 +151,8 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
     }
 
     protected void stopLoadStatus() {
-        if (mStartItme == 0) {
-            stopRefresh();
-        } else {
-            stopLoadMore();
-        }
+        stopRefresh();
+        stopLoadMore();
     }
 
     protected void showEmpty() {

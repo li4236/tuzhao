@@ -50,6 +50,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
         bundle.putInt(ConstansUtil.TYPE, discountType);
         bundle.putInt(ConstansUtil.INTENT_MESSAGE, isUsable);
         discountFragment.setArguments(bundle);
+        discountFragment.setTAG(discountFragment.getTag() + " discountType:" + discountType + " isUsable" + isUsable);
         return discountFragment;
     }
 
@@ -61,6 +62,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
         bundle.putParcelableArrayList(ConstansUtil.DISCOUNT_LIST, discountInfos);
         bundle.putDouble(ConstansUtil.ORDER_FEE, orderFee);
         discountFragment.setArguments(bundle);
+        discountFragment.setTAG(discountFragment.getTag() + " discountType:" + discountType + " isUsable" + isUsable);
         return discountFragment;
     }
 
@@ -74,15 +76,13 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
 
     @Override
     protected void initData() {
-        mStartItme = 0;
         if (getArguments() != null) {
             mDiscountType = getArguments().getInt(ConstansUtil.TYPE, 3);
             mIsUsable = getArguments().getInt(ConstansUtil.INTENT_MESSAGE, 1);
             mOrderFee = getArguments().getDouble(ConstansUtil.ORDER_FEE, -1);
+            mStartItme = getArguments().getInt(ConstansUtil.START_ITME, 0);
             ArrayList<Discount_Info> list = getArguments().getParcelableArrayList(ConstansUtil.DISCOUNT_LIST);
             mCommonAdapter.setNewArrayData(list);
-
-            setTAG(this.getClass().getName() + mIsUsable);
 
             if (list == null) {
                 showDialog();
@@ -114,6 +114,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
             Bundle bundle = getArguments();
             if (bundle != null) {
                 bundle.putParcelableArrayList(ConstansUtil.DISCOUNT_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
+                bundle.putInt(ConstansUtil.START_ITME, mStartItme);
             }
         }
         dissmissDialog();
@@ -150,7 +151,9 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
-
+                                if (e.getMessage().equals("101")) {
+                                    showFiveToast("没有更多数据了哦");
+                                }
                             }
                         });
                     }

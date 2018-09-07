@@ -56,10 +56,10 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
         super.initView(view, savedInstanceState);
         if (getArguments() != null) {
             mOrderStatus = getArguments().getInt(ConstansUtil.STATUS);
+            mStartItme = getArguments().getInt(ConstansUtil.START_ITME,0);
             ArrayList<ParkOrderInfo> list = getArguments().getParcelableArrayList(ConstansUtil.PARK_ORDER_LIST);
             mCommonAdapter.setNewArrayData(list);
         }
-        mStartItme = 0;
         mConstraintLayout = view.findViewById(R.id.loading_dialog);
     }
 
@@ -79,6 +79,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
             Bundle bundle = getArguments();
             if (bundle != null) {
                 bundle.putParcelableArrayList(ConstansUtil.PARK_ORDER_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
+                bundle.putInt(ConstansUtil.START_ITME, mStartItme);
             }
         }
         IntentObserable.unregisterObserver(this);

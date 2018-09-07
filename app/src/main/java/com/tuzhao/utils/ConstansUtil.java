@@ -506,4 +506,9 @@ public class ConstansUtil {
      */
     public static final String DELETE_FRIENT_PARK_SPACE = "DeleteFriendParkSpace";
 
+    /**
+     * 请求数据的开始项
+     */
+    public static final String START_ITME = "StartItem";
+
 }
