@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -27,17 +26,11 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.customView.CircularArcView;
 import com.tuzhao.publicwidget.customView.VoltageView;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import okhttp3.Call;
@@ -63,10 +56,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
     private VoltageView mVoltageView;
 
     private TextView mOpenLock;
-
-    private int mRecentOrderMinutes;
-
-    private StringBuilder mAppointmentTime = new StringBuilder("暂无预约");
 
     private int mTotalSize;
 
@@ -196,46 +185,10 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
             case R.id.open_lock:
                 if (getText(mParkspaceStatus).equals("未开放")) {
                     showFiveToast("该车位未开放");
+                } else if (getText(mParkspaceStatus).equals("停租中")) {
+                    showFiveToast("该车位停租中，暂时不可预定哦");
                 } else if (getText(mParkspaceStatus).equals("离线中")) {
-                    showFiveToast("车锁离线中");
-                } else if (getText(mOpenLock).equals("开锁")) {
-                    if (getText(mParkspaceStatus).equals("已预约") && mRecentOrderMinutes <= 180) {
-                        TipeDialog dialog = new TipeDialog.Builder(getContext())
-                                .setTitle("开锁")
-                                .setMessage(mAppointmentTime.toString() + ",确定开锁吗?")
-                                .setNegativeButton("取消", null)
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        controlParkLock(true);
-                                    }
-                                }).create();
-                        dialog.show();
-                    } else {
-                        new TipeDialog.Builder(requireContext())
-                                .setTitle("提示")
-                                .setMessage("确定开锁吗？")
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        controlParkLock(true);
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
-                } else if (getText(mOpenLock).equals("关锁")) {
-                    new TipeDialog.Builder(requireContext())
-                            .setTitle("提示")
-                            .setMessage("确定关锁吗？")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    controlParkLock(false);
-                                }
-                            })
-                            .create()
-                            .show();
+                    showFiveToast("车锁离线中，暂时不可预定哦");
                 } else if (getText(mOpenLock).equals("预定")) {
                     startActivity(AppointmentParkSpaceActivity.class, ConstansUtil.PARK_SPACE_INFO, mParkInfo);
                 }
@@ -286,14 +239,6 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
                     default:
                         mCircleView.setColor(Color.parseColor("#6a6bd9"));
                         mParkspaceStatus.setText("已预约");
-                        mRecentOrderMinutes = Integer.valueOf(status.substring(3, status.length()));
-                        mAppointmentTime.delete(0, mAppointmentTime.length());
-                        if (mRecentOrderMinutes >= 60) {
-                            mAppointmentTime.append(mRecentOrderMinutes / 60);
-                            mAppointmentTime.append("小时");
-                        }
-                        mAppointmentTime.append(mRecentOrderMinutes % 60);
-                        mAppointmentTime.append("分钟后有预约");
                         break;
                 }
                 break;
@@ -345,34 +290,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
             return "停租中";
         }
 
-        String rencentOrder = getRecentOrder();
-        if (rencentOrder != null) {
-            return rencentOrder;
-        }
-
         return "空闲中";
-    }
-
-    private String getRecentOrder() {
-        if (!mParkInfo.getOrder_times().equals("-1") && mParkInfo.getOrder_times().equals("")) {
-            String[] orderDate = mParkInfo.getOrder_times().split(",");
-            List<Calendar> list = new ArrayList<>(orderDate.length);
-            for (String order : orderDate) {
-                list.add(DateUtil.getYearToMinuteCalendar(order.split("\\*")[0]));
-            }
-
-            Collections.sort(list, new Comparator<Calendar>() {
-                @Override
-                public int compare(Calendar o1, Calendar o2) {
-                    return o1.compareTo(o2);
-                }
-            });
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            return String.valueOf(DateUtil.getCalendarDistance(calendar, list.get(0)));
-        }
-        return null;
     }
 
     /*private void getParkLockStatus() {

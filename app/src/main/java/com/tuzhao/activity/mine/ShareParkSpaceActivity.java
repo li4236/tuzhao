@@ -79,7 +79,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     @NonNull
     @Override
     protected String title() {
-        return "分享车位";
+        return "亲友车位";
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
 
     private String getParkspaceStatus(Park_Info park_info) {
         switch (park_info.getPark_status()) {
-            case "0":
+            case "1":
                 return "未开放";
             case "3":
                 return "停租中";

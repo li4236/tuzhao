@@ -104,11 +104,6 @@ public class HttpConstants {
     public static final String deleteParkForUser = ROOT_URL + "deleteParkForUser";
 
     /**
-     * 修改停车位出租状态
-     */
-    public static final String changeParkSpaceStatus = ROOT_URL + "changeParkSpaceStatus";
-
-    /**
      * 删除停车位
      */
     public static final String deleteParkSpace = ROOT_URL + "deleteParkSpace";

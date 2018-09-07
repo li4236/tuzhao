@@ -391,10 +391,10 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     private void changeParkSpaceStatus(final boolean open) {
         showLoadingDialog("正在修改出租状态");
-        getOkGo(HttpConstants.changeParkSpaceStatus)
-                .params("parkSpaceId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCityCode())
-                .params("parkSpaceStatus", open ? "2" : "3")
+        getOkGo(HttpConstants.editPark)
+                .params("park_id", mPark_info.getId())
+                .params("citycode", mPark_info.getCityCode())
+                .params("park_status", open ? "2" : "3")
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
@@ -424,6 +424,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                                     finish();
                                     break;
                                 case "104":
+                                    showFiveToast("该车位已被预约，暂时不能修改状态哦");
                                     break;
                                 case "105":
                                     showFiveToast("修改失败，请稍后重试");

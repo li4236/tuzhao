@@ -188,7 +188,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/normal_y2_press_y9_all_8dp"
                     android:gravity="center"
-                    android:text="开锁"
+                    android:text="预定"
                     android:textColor="@color/b1"
                     android:textSize="16sp" />
 
