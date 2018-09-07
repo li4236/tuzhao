@@ -3,7 +3,6 @@ package com.tuzhao.activity.base;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
@@ -163,14 +162,15 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
 
     protected void showEmpty() {
         if (mCommonAdapter.getData().isEmpty()) {
-            mRecyclerView.showEmpty(new View.OnClickListener() {
+            /*mRecyclerView.showEmpty(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mStartItme = 0;
                     showLoadingDialog();
                     loadData();
                 }
-            });
+            });*/
+            mRecyclerView.showEmpty();
         }
     }
 

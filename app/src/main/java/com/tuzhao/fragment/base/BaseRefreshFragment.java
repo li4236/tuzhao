@@ -160,14 +160,15 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
 
     protected void showEmpty() {
         if (mCommonAdapter.getData().isEmpty()) {
-            mRecyclerView.showEmpty(new View.OnClickListener() {
+           /* mRecyclerView.showEmpty(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mStartItme = 0;
                     showLoadingDialog();
                     loadData();
                 }
-            });
+            });*/
+            mRecyclerView.showEmpty();
         }
     }
 
