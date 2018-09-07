@@ -7,7 +7,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -24,9 +23,9 @@ import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.publicwidget.customView.SkipTopBottomDivider;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -83,7 +82,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
         mBindindFriendNumber = findViewById(R.id.bluetooth_binding_bind_number);
         TextView bindingHint = findViewById(R.id.bluetooth_binding_hint);
-        String hint = "温馨提醒:\n1、蓝牙绑定后，当绑定蓝牙的手机靠近车位锁时，车位锁将自动放下";
+        String hint = "温馨提醒:\n添加亲友后，亲友预约后将免费使用该车位";
         bindingHint.setText(hint);
 
         findViewById(R.id.bluetooth_binding_add_device).setOnClickListener(new View.OnClickListener() {
@@ -157,7 +156,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
      */
     private void showNameDialog(final int position) {
         if (mModifyNameDialog == null) {
-            ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.dialog_edit_layout, null);
+            ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.dialog_edit_layout, null);
             mFirendName = constraintLayout.findViewById(R.id.dialog_et);
             mFirendName.setHint("请输入亲友备注");
 
@@ -196,7 +195,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
      */
     private void showAddFriendDialog() {
         if (mAddFriendPhoneDialog == null) {
-            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.dialog_add_friend_layout, null);
+            FrameLayout frameLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.dialog_add_friend_layout, null);
             mAddFriendCl = frameLayout.findViewById(R.id.add_friend_cl);
             mFriendPhone = frameLayout.findViewById(R.id.friend_telephone_et);
             mFriendNotename = frameLayout.findViewById(R.id.friend_notename);
@@ -304,6 +303,49 @@ public class MyFriendsActivity extends BaseStatusActivity {
                         }
                     }
                 });
+    }
+
+    private void getFriendFutureReserveRecord(final int position, final String friendName) {
+        showLoadingDialog();
+        getOkGo(HttpConstants.getFriendFutureReserveRecord)
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCityCode())
+                .params("friendId", mAdapter.getData().get(position).getFriendId())
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        showDeleteFriendDialog(position, friendName + "在" + o.data.replace("*", "至") + "预定了该车位，确定删除吗?");
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showDeleteFriendDialog(position, "确定删除" + friendName + "吗?");
+                        }
+                    }
+                });
+    }
+
+    private void showDeleteFriendDialog(final int position, String message) {
+        new TipeDialog.Builder(MyFriendsActivity.this)
+                .setTitle("删除亲友")
+                .setMessage(message)
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteFriendDevice(position);
+                    }
+                })
+                .create()
+                .show();
     }
 
     private void deleteFriendDevice(final int position) {
@@ -451,7 +493,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
         @Override
         protected void conver(@NonNull final BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
-            String noteName;
+            final String noteName;
             if (friendInfo.getNoteName() == null || friendInfo.getNoteName().equals("-1")) {
                 if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
                     if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
@@ -482,24 +524,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
             holder.getView(R.id.bluetooth_binding_delete_friend).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String message = "确认删除 " + ((TextView) holder.getView(R.id.bluetooth_binding_friend_name)).getText() + " 的手机?";
-                    new TipeDialog.Builder(MyFriendsActivity.this)
-                            .setTitle("删除手机")
-                            .setMessage(message)
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    deleteFriendDevice(position);
-                                }
-                            })
-                            .create()
-                            .show();
+                    getFriendFutureReserveRecord(position, noteName);
                 }
             });
         }

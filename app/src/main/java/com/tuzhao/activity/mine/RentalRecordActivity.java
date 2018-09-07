@@ -90,7 +90,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @NonNull
     @Override
     protected String title() {
-        return "共享记录";
+        return "出租记录";
     }
 
     @Override
@@ -100,7 +100,6 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
 
     @Override
     protected void loadData() {
-        showLoadingDialog();
         getOkgos(HttpConstants.getRentalRecord, "cityCode", mPark_info.getCityCode(), "parkSpaceId", mPark_info.getId())
                 .execute(new JsonCallback<Base_Class_List_Info<RentalRecordItemInfo>>() {
                     @Override

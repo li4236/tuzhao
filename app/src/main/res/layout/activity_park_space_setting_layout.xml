@@ -110,7 +110,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
-                    android:text="共享详情"
+                    android:text="出租详情"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -132,7 +132,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="18dp"
-                    android:text="共享日期:"
+                    android:text="出租日期:"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/share_detail" />
 
@@ -149,7 +149,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="25dp"
-                    android:text="每周共享"
+                    android:text="每周出租"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/park_space_space_setting_renten_date_tv" />
 
@@ -255,7 +255,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="注:灰色代表暂停共享"
+                    android:text="注:灰色代表暂停出租"
                     android:textColor="#ff0000"
                     android:textSize="10sp"
                     app:layout_constraintEnd_toEndOf="@+id/modify_share_time_sunday"
@@ -266,7 +266,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="28dp"
-                    android:text="共享时段:"
+                    android:text="出租时段:"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/modify_share_time_monday" />
 
@@ -284,7 +284,7 @@
                     android:id="@+id/park_space_setting_pause_date_tv"
                     style="@style/TwentyTextB1Style"
                     android:layout_marginTop="8dp"
-                    android:text="暂停共享:"
+                    android:text="暂停出租:"
                     app:layout_constraintStart_toStartOf="@id/park_space_space_setting_renten_time"
                     app:layout_constraintTop_toBottomOf="@id/park_space_setting_rv" />
 
@@ -314,7 +314,7 @@
                 style="@style/TwentyTextB1Style"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="车位共享"
+                android:text="车位出租"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
@@ -366,7 +366,7 @@
                 android:paddingBottom="16dp"
                 android:paddingStart="17dp"
                 android:paddingTop="16dp"
-                android:text="共享记录"
+                android:text="出租记录"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bluetooth_divider" />

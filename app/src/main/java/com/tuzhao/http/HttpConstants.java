@@ -695,4 +695,9 @@ public class HttpConstants {
      */
     public static final String deleteFriendParkSpace = ROOT_URL + "deleteFriendParkSpace";
 
+    /**
+     * 获取亲友今后的预定记录
+     */
+    public static final String getFriendFutureReserveRecord = ROOT_URL + "getFriendFutureReserveRecord";
+
 }

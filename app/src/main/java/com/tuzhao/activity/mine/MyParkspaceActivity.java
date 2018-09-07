@@ -131,7 +131,8 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
             } else if (data.hasExtra(ConstansUtil.FOR_REQEUST_RESULT)) {
                 Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
                 for (int i = 0; i < mFragments.size(); i++) {
-                    if (mParkInfos.get(i).getId().equals(parkInfo.getId())) {
+                    if (mParkInfos.get(i).getId().equals(parkInfo.getId()) && mParkInfos.get(i).getCityCode().equals(parkInfo.getCityCode())) {
+                        mParkInfos.set(i, parkInfo);
                         mFragments.get(i).setParkInfo(parkInfo);
                         break;
                     }

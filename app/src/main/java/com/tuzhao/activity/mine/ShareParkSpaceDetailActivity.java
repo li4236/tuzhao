@@ -265,7 +265,11 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                         IntentObserable.dispatch(ConstansUtil.DELETE_FRIENT_PARK_SPACE, bundle);
                         mFragments.remove(position);
                         mParkInfos.remove(position);
-                        mFragmentAdater.notifyDataSetChanged();
+                        if (mFragments.isEmpty()) {
+                            finish();
+                        } else {
+                            mFragmentAdater.notifyDataSetChanged();
+                        }
                         dismmisLoadingDialog();
                         showFiveToast("移除车位成功");
                     }

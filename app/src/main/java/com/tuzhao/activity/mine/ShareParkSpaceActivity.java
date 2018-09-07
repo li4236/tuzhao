@@ -180,7 +180,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
             String cityCode = intent.getStringExtra(ConstansUtil.CITY_CODE);
             for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
                 if (mCommonAdapter.get(i).getId().equals(parkSpaceId) && mCommonAdapter.get(i).getCityCode().equals(cityCode)) {
-                    mCommonAdapter.notifyRemoveData(i);
+                    notifyRemoveData(i);
                     break;
                 }
             }
