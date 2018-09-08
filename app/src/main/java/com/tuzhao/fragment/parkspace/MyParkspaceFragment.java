@@ -91,6 +91,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         bundle.putInt(ConstansUtil.POSITION, position);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
         fragment.setArguments(bundle);
+        fragment.setTAG(fragment.getTag() + " parkInfoId:" + parkInfo.getId() + " cityCode:" + parkInfo.getCityCode());
         return fragment;
     }
 
@@ -153,7 +154,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        setTAG(this.getClass().getName() + " parkInfoId:" + mParkInfo.getId() + " cityCode:" + mParkInfo.getCityCode());
         setAutoCancelRequest(false);
         scanOrderTime();
         setParkspaceStatus();

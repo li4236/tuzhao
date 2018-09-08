@@ -17,6 +17,8 @@ public class Car implements Parcelable {
 
     private String status;
 
+    private String resaon;
+
     public String getCarNumber() {
         return carNumber;
     }
@@ -44,6 +46,14 @@ public class Car implements Parcelable {
         }
     }
 
+    public String getResaon() {
+        return resaon;
+    }
+
+    public void setResaon(String resaon) {
+        this.resaon = resaon;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -53,6 +63,7 @@ public class Car implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.carNumber);
         dest.writeString(this.status);
+        dest.writeString(this.resaon);
     }
 
     public Car() {
@@ -61,6 +72,7 @@ public class Car implements Parcelable {
     protected Car(Parcel in) {
         this.carNumber = in.readString();
         this.status = in.readString();
+        this.resaon = in.readString();
     }
 
     public static final Parcelable.Creator<Car> CREATOR = new Parcelable.Creator<Car>() {

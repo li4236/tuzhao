@@ -117,6 +117,8 @@ public class ConstansUtil {
 
     public static final int REQUSET_CODE = 0x111;
 
+    public static final int RESULT_CODE = 0x222;
+
     /**
      * 调用相册获取图片的请求码
      */

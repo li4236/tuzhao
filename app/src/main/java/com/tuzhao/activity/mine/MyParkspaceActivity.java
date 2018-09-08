@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewStub;
@@ -18,6 +15,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
+import com.tuzhao.activity.base.MyFragmentAdapter;
 import com.tuzhao.fragment.parkspace.MyParkspaceFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
@@ -56,7 +54,7 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
 
     private TextView mApponitmentTv;
 
-    private FragmentAdater mFragmentAdater;
+    private MyFragmentAdapter mFragmentAdater;
 
     private ViewStub mViewStub;
 
@@ -76,7 +74,7 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
         ImageUtil.showPic((ImageView) findViewById(R.id.add_park_space_iv), R.drawable.ic_addposition);
         ImageUtil.showPic((ImageView) findViewById(R.id.my_parkspace_setting_iv), R.drawable.ic_setting2);
 
-        mFragmentAdater = new FragmentAdater(getSupportFragmentManager());
+        mFragmentAdater = new MyFragmentAdapter<>(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mFragmentAdater);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -114,26 +112,28 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
-            if (data.hasExtra(ConstansUtil.PARK_SPACE_ID)) {
-                String parkSpaceId = data.getStringExtra(ConstansUtil.PARK_SPACE_ID);
+        if (requestCode == ConstansUtil.REQUSET_CODE) {
+            if (resultCode == RESULT_OK) {
+                //修改了出租时间
+                Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                for (int i = 0; i < mFragments.size(); i++) {
+                    if (mParkInfos.get(i).getId().equals(parkInfo.getId()) && mParkInfos.get(i).getCityCode().equals(parkInfo.getCityCode())) {
+                        mParkInfos.set(i, parkInfo);
+                        mFragments.get(i).setParkInfo(parkInfo);
+                        break;
+                    }
+                }
+            } else if (resultCode == ConstansUtil.RESULT_CODE) {
+                //删除车位
+                Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
                 for (int i = 0; i < mParkInfos.size(); i++) {
-                    if (mParkInfos.get(i).getId().equals(parkSpaceId)) {
+                    if (mParkInfos.get(i).equals(parkInfo)) {
                         mFragments.remove(i);
                         initDialog();
                         mFragmentAdater.notifyDataSetChanged();
                         if (mFragments.isEmpty()) {
                             showViewStub();
                         }
-                        break;
-                    }
-                }
-            } else if (data.hasExtra(ConstansUtil.FOR_REQEUST_RESULT)) {
-                Park_Info parkInfo = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                for (int i = 0; i < mFragments.size(); i++) {
-                    if (mParkInfos.get(i).getId().equals(parkInfo.getId()) && mParkInfos.get(i).getCityCode().equals(parkInfo.getCityCode())) {
-                        mParkInfos.set(i, parkInfo);
-                        mFragments.get(i).setParkInfo(parkInfo);
                         break;
                     }
                 }
@@ -282,7 +282,7 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
         if (mViewStub.getVisibility() != View.VISIBLE) {
             mViewStub.setVisibility(View.VISIBLE);
         }
-
+        findViewById(R.id.bottom_cl).setVisibility(View.GONE);
     }
 
     private void initDialog() {
@@ -328,23 +328,6 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
                     }
                     break;
             }
-        }
-    }
-
-    class FragmentAdater extends FragmentPagerAdapter {
-
-        FragmentAdater(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
         }
     }
 

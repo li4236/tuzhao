@@ -3,9 +3,9 @@ package com.tuzhao.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
@@ -55,14 +55,14 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.hasExtra(ConstansUtil.INTENT_MESSAGE)) {
-            for (int i = 0, size = getSupportFragmentManager().getBackStackEntryCount(); i < size; i++) {
-                getSupportFragmentManager().popBackStackImmediate();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            for (int i = 0, size = fragmentManager.getBackStackEntryCount(); i < size; i++) {
+                fragmentManager.popBackStackImmediate();
             }
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.login_container, new LoginFragment());
             transaction.commit();
         }
-        Log.e(TAG, "onNewIntent: " + intent.hasExtra(ConstansUtil.INTENT_MESSAGE));
     }
 
     @Override
@@ -77,9 +77,9 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
             switch (intent.getAction()) {
                 case ConstansUtil.PASSWORD_LOGIN:
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    PasswordLoginFragment fragment = PasswordLoginFragment.getInstance(intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
-                    transaction.replace(R.id.login_container, fragment);
-                    transaction.addToBackStack(fragment.getTAG());
+                    PasswordLoginFragment passwordLoginFragment = PasswordLoginFragment.getInstance(intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
+                    transaction.replace(R.id.login_container, passwordLoginFragment);
+                    transaction.addToBackStack(passwordLoginFragment.getTAG());
                     transaction.commit();
                     break;
                 case ConstansUtil.FORGET_PASSWORD:

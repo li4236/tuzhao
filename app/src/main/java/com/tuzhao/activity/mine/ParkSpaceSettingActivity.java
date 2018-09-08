@@ -361,8 +361,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         Intent intent = new Intent();
-                        intent.putExtra(ConstansUtil.PARK_SPACE_ID, mPark_info.getId());
-                        setResult(RESULT_OK, intent);
+                        intent.putExtra(ConstansUtil.PARK_SPACE_INFO, mPark_info);
+                        setResult(ConstansUtil.RESULT_CODE, intent);
                         showFiveToast("删除成功");
                         finish();
                     }

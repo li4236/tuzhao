@@ -499,7 +499,6 @@ public class Park_Info implements Parcelable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, parkLotId, user_id, citycode);
     }
 
