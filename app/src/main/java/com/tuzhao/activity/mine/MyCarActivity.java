@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -160,15 +159,6 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
         if (mChooseCar || car.getStatus().equals("1")) {
             //如果是选择车辆的则禁止侧滑删除
             ((SwipeMenuLayout) holder.itemView).setSwipeEnable(false);
-            if (car.getStatus().equals("1")) {
-                holder.setOnClickListener(R.id.car_number_cv, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e(TAG, "onClick: " + car.getCarNumber());
-                        startActivityForResult(AuditCarActivity.class, REQUEST_CODE, ConstansUtil.INTENT_MESSAGE, car);
-                    }
-                });
-            }
         } else {
             holder.setOnClickListener(R.id.delete_car_number, new View.OnClickListener() {
                 @Override
@@ -189,6 +179,12 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
         switch (car.getStatus()) {
             case "1":
                 holder.showPic(R.id.car_status, R.drawable.ic_audit);
+                holder.setOnClickListener(R.id.car_number_cv, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivityForResult(AuditCarActivity.class, REQUEST_CODE, ConstansUtil.INTENT_MESSAGE, car);
+                    }
+                });
                 break;
             case "2":
                 holder.showPic(R.id.car_status, R.drawable.ic_adopt);
@@ -207,6 +203,12 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
                 break;
             case "3":
                 holder.showPic(R.id.car_status, R.drawable.ic_fail);
+                holder.setOnClickListener(R.id.car_number_cv, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivityForResult(AuditCarActivity.class, REQUEST_CODE, ConstansUtil.INTENT_MESSAGE, car);
+                    }
+                });
                 break;
         }
     }

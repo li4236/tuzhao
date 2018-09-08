@@ -4,9 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
@@ -40,8 +40,7 @@ public class AuditCarActivity extends BaseStatusActivity {
             showFiveToast("获取车辆信息失败，请稍后重试");
             finish();
         }
-        Log.e(TAG, "initView: "+mCar.getCarNumber() );
-        ImageUtil.showPic((ImageView) findViewById(R.id.audit_iv), R.drawable.ic_audit3);
+        ImageUtil.showPic((ImageView) findViewById(R.id.audit_iv), mCar.getStatus().equals("1") ? R.drawable.ic_audit3 : R.drawable.ic_auditfail);
         findViewById(R.id.cancel_apply_tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,12 +48,26 @@ public class AuditCarActivity extends BaseStatusActivity {
             }
         });
 
-        findViewById(R.id.contact_service).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewUtil.contactService(AuditCarActivity.this);
-            }
-        });
+        if (mCar.getStatus().equals("1")) {
+            findViewById(R.id.contact_service).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewUtil.contactService(AuditCarActivity.this);
+                }
+            });
+        } else {
+            ((TextView) findViewById(R.id.audit_tv)).setText("审核未通过");
+            ((TextView) findViewById(R.id.complete_audit_tv)).setText(mCar.getResaon());
+            ((TextView) findViewById(R.id.cancel_apply_tv)).setText("重新申请");
+            findViewById(R.id.contact_service).setVisibility(View.GONE);
+            findViewById(R.id.cancel_apply_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(AddNewCarActivity.class);
+                    finish();
+                }
+            });
+        }
     }
 
     @Override
