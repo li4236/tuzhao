@@ -65,8 +65,8 @@ public class SkipTopBottomDivider extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        super.onDrawOver(c, parent, state);
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        super.onDraw(c, parent, state);
         if (mOrientation == VERTICAL_LIST) {
             drawVertical(c, parent);
         } else {
