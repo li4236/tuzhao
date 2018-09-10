@@ -292,7 +292,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     /**
-     * 需要重写T的equals方法已便找到需要修改的是哪项
+     * 需要重写T的equals方法以便找到需要修改的是哪项
      */
     public void notifyDataChange(T newData) {
         int position = mData.indexOf(newData);

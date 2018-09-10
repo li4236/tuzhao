@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,8 +64,7 @@ public class AuditCarActivity extends BaseStatusActivity {
             findViewById(R.id.cancel_apply_tv).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(AddNewCarActivity.class);
-                    finish();
+                    startActivityForResult(AddNewCarActivity.class, ConstansUtil.REQUSET_CODE, ConstansUtil.INTENT_MESSAGE, mCar);
                 }
             });
         }
@@ -121,6 +121,15 @@ public class AuditCarActivity extends BaseStatusActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK) {
+            setResult(ConstansUtil.RESULT_CODE, data);
+            finish();
+        }
     }
 
 }

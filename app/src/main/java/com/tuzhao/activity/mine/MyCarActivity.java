@@ -241,13 +241,44 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
             }
             mCommonAdapter.addData(position, car);
             mRecyclerView.showData();
-        } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            //取消申请添加车辆
-            mCommonAdapter.notifyRemoveData((Car) data.getParcelableExtra(ConstansUtil.INTENT_MESSAGE));
-            if (mCommonAdapter.getDataSize() == 0) {
-                mRecyclerView.showEmpty();
+        } else if (requestCode == REQUEST_CODE && data != null) {
+            if (resultCode == RESULT_OK) {
+                //取消申请添加车辆
+                mCommonAdapter.notifyRemoveData((Car) data.getParcelableExtra(ConstansUtil.INTENT_MESSAGE));
+                if (mCommonAdapter.getDataSize() == 0) {
+                    mRecyclerView.showEmpty();
+                }
+            } else if (resultCode == ConstansUtil.RESULT_CODE) {
+                //重新申请车辆
+                handleReapplyCar(data.getStringExtra(ConstansUtil.CAR_NUMBER), data.getStringExtra(ConstansUtil.INTENT_MESSAGE));
+
             }
         }
+    }
+
+    private void handleReapplyCar(String originCarNumber, String newCarNumber) {
+        int originPosition = 0; //原来车辆的位置
+        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+            if (mCommonAdapter.get(i).getCarNumber().equals(originCarNumber)) {
+                originPosition = i;
+                break;
+            }
+        }
+
+        int position = 0;
+        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+            if (!mCommonAdapter.get(i).getStatus().equals("2")) {
+                position = i;   //第一个审核中的车辆位置
+                break;
+            }
+        }
+
+        Car car = new Car();
+        car.setCarNumber(newCarNumber);
+        car.setStatus("1");
+
+        mCommonAdapter.notifyRemoveData(originPosition);
+        mCommonAdapter.notifyAddData(position, car);
     }
 
 }

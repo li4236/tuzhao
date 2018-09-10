@@ -26,6 +26,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Car;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.PlusView;
@@ -49,6 +50,8 @@ import okhttp3.Response;
  */
 
 public class AddNewCarActivity extends BaseStatusActivity implements View.OnClickListener {
+
+    private Car mCar;
 
     private EditText mCarNumber;
 
@@ -79,6 +82,8 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mCar = getIntent().getParcelableExtra(ConstansUtil.INTENT_MESSAGE);
+
         mCarNumber = findViewById(R.id.car_number_et);
         mCarOwner = findViewById(R.id.car_owner_et);
         PlusView idCardPositivePv = findViewById(R.id.id_card_positive_pv);
@@ -176,6 +181,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
             });
         }
 
+        initCarData();
         initDialogHelper();
     }
 
@@ -254,6 +260,28 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 });
             } else {
                 showFiveToast("获取图片失败，请更换图片");
+            }
+        }
+    }
+
+    private void initCarData() {
+        if (mCar != null) {
+            mCarNumber.setText(mCar.getCarNumber());
+            setSelection(mCarNumber);
+            mCarOwner.setText(mCar.getCarOwner());
+            String[] photos = mCar.getIdCard().split(",");
+            mPath[0] = HttpConstants.ROOT_IMG_URL_ID_CARD + photos[0];
+            mPath[1] = HttpConstants.ROOT_IMG_URL_ID_CARD + photos[1];
+            mPath[2] = HttpConstants.ROOT_IMG_URL_DRIVER_LICENSE + mCar.getDriverLicense();
+
+            photos = mCar.getVehicleLicense().split(",");
+            mPath[3] = HttpConstants.ROOT_IMG_URL_VEHICLE + photos[0];
+            mPath[4] = HttpConstants.ROOT_IMG_URL_VEHICLE + photos[1];
+            mPath[5] = HttpConstants.ROOT_IMG_URL_GROUP_PHOTO + mCar.getGroupPhoto();
+
+            for (int i = 0; i < mPath.length; i++) {
+                ImageUtil.showPic(mImageViews[i], mPath[i]);
+                hideView(mPlusViews[i]);
             }
         }
     }
@@ -392,11 +420,15 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 .params("vehicleLicense", mPath[3].replaceAll(HttpConstants.ROOT_IMG_URL_VEHICLE, "") + "," +
                         mPath[4].replaceAll(HttpConstants.ROOT_IMG_URL_VEHICLE, ""))
                 .params("groupPhoto", mPath[5].replaceAll(HttpConstants.ROOT_IMG_URL_GROUP_PHOTO, ""))
+                .params("reapplyCarNumber", mCar == null ? "-1" : mCar.getCarNumber())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> voidBase_class_info, Call call, Response response) {
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.INTENT_MESSAGE, getText(mCarNumber));
+                        if (mCar != null) {
+                            intent.putExtra(ConstansUtil.CAR_NUMBER, mCar.getCarNumber());
+                        }
                         setResult(RESULT_OK, intent);
                         showFiveToast("提交成功，我们会尽快为你审核");
                         finish();
