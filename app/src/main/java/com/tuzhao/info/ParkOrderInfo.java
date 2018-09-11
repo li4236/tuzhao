@@ -15,26 +15,26 @@ public class ParkOrderInfo implements Parcelable {
 
     private String id;//订单id
 
-    @SerializedName(value = "parkLotId", alternate = {"parkspace_id"})
+    @SerializedName(value = "parkLotId", alternate = "parkspace_id")
     private String parkLotId;//停车场id
 
-    @SerializedName(value = "parkSpaceId", alternate = {"park_id"})
+    @SerializedName(value = "parkSpaceId", alternate = "park_id")
     private String parkSpaceId;//停车位id
 
-    @SerializedName(value = "parkLotName", alternate = {"parkspace_name"})
+    @SerializedName(value = "parkLotName", alternate = "parkspace_name")
     private String parkLotName;//停车场名字
 
-    @SerializedName(value = "parkLotAddress", alternate = {"ps_address"})
+    @SerializedName(value = "parkLotAddress", alternate = "ps_address")
     private String parkLotAddress;//停车场地址
 
-    @SerializedName(value = "parkSpaceLocation", alternate = {"location_describe"})
+    @SerializedName(value = "parkSpaceLocation", alternate = "location_describe")
     private String parkSpaceLocation;//停车位的位置描述
     private String parkNumber;//车位编号
 
     @SerializedName(value = "openTime", alternate = "open_time")
     private String openTime;//车位的开放时间
 
-    @SerializedName(value = "orderStartTime", alternate = {"order_starttime"})
+    @SerializedName(value = "orderStartTime", alternate = "order_starttime")
     private String orderStartTime;//预计开始停车时间(yyyy-MM-dd HH:mm:ss)
 
     @SerializedName(value = "orderEndTime", alternate = "order_endtime")
@@ -44,7 +44,7 @@ public class ParkOrderInfo implements Parcelable {
     @SerializedName(value = "carNumber", alternate = "car_numble")
     private String carNumber;//停放车辆车牌号
 
-    @SerializedName(value = "userName", alternate = {"username"})
+    @SerializedName(value = "userName", alternate = "username")
     private String userName;//用户名=用户手机号码
     private String park_username;//该停车位主人的手机号码
     private String order_number;//订单编号
@@ -89,6 +89,7 @@ public class ParkOrderInfo implements Parcelable {
     private String parkingUserId;//正在停车的用户id
     private String lockId;//车位锁的id
     private String parkLockStatus;//车位锁状态：1（打开）2（关闭）3（离线）
+    private String parkSpaceStatus;//车位状态
 
     public String getId() {
         return id;
@@ -430,6 +431,14 @@ public class ParkOrderInfo implements Parcelable {
         this.parkLockStatus = parkLockStatus;
     }
 
+    public String getParkSpaceStatus() {
+        return parkSpaceStatus;
+    }
+
+    public void setParkSpaceStatus(String parkSpaceStatus) {
+        this.parkSpaceStatus = parkSpaceStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -487,6 +496,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.parkingUserId);
         dest.writeString(this.lockId);
         dest.writeString(this.parkLockStatus);
+        dest.writeString(this.parkSpaceStatus);
     }
 
     public ParkOrderInfo() {
@@ -530,6 +540,7 @@ public class ParkOrderInfo implements Parcelable {
         this.parkingUserId = in.readString();
         this.lockId = in.readString();
         this.parkLockStatus = in.readString();
+        this.parkSpaceStatus = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

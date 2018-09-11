@@ -25,6 +25,7 @@
             android:layout_height="wrap_content">
 
         </com.tuzhao.publicwidget.swipetoloadlayout.SwipeLoadMoreFooterLayout>
+
     </com.tuzhao.publicwidget.swipetoloadlayout.SwipeToLoadLayout>
 
     <RelativeLayout

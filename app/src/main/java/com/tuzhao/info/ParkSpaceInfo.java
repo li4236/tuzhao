@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ParkSpaceInfo implements Parcelable {
 
-    @SerializedName(value = "id", alternate = {"parkAuditId"})
+    @SerializedName(value = "id", alternate = "parkAuditId")
     private String id;
 
     //车位状态(0:已提交,需要判断是否缴纳押金，1:审核中，2:待安装（拆卸），3：安装（拆卸）完成，4:审核失败，5:退款完成，6:已取消)
@@ -22,7 +22,7 @@ public class ParkSpaceInfo implements Parcelable {
 
     private String cityCode;
 
-    @SerializedName(value = "revenueRatio", alternate = {"profitRatio"})
+    @SerializedName(value = "revenueRatio", alternate = "profitRatio")
     private String revenueRatio;
 
     private String parkSpaceDescription;

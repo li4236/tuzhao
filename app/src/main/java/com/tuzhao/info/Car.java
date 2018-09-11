@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class Car implements Parcelable {
 
-    @SerializedName(value = "carNumber", alternate = {"car_num"})
+    @SerializedName(value = "carNumber", alternate = "car_num")
     private String carNumber;
 
     private String status;

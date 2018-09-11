@@ -44,7 +44,6 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-
         ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.no_address_empty_layout, mRecyclerView, false);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -113,9 +112,8 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     private String getParkspaceStatus(Park_Info park_info) {
         switch (park_info.getPark_status()) {
             case "1":
-                return "未开放";
             case "3":
-                return "停租中";
+                return "未开放";
             case "4":
                 return "已删除";
         }
@@ -123,25 +121,22 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
         String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60 * 2);
 
         if (DateUtil.isInShareDate(nowDate, afterTwoMinutesDate, park_info.getOpen_date()) == 0) {
-            return "停租中";
+            return "未开放";
         }
 
         if (0 == DateUtil.isInPauseDate(nowDate, afterTwoMinutesDate, park_info.getPauseShareDate())) {
-            return "停租中";
+            return "未开放";
         }
 
-        if (0 == DateUtil.isInShareDay(nowDate, afterTwoMinutesDate, park_info.getShareDay())) {
-            return "停租中";
+        if ("0,0,0,0,0,0,0".equals(park_info.getShareDay())) {
+            return "未开放";
         }
 
         if (null == DateUtil.isInShareTime(nowDate, afterTwoMinutesDate, park_info.getOpen_time(), false)) {
-            return "停租中";
+            return "未开放";
         }
 
-        if (DateUtil.isInOrderDate(nowDate, afterTwoMinutesDate, park_info.getOrder_times())) {
-            return "出租中";
-        }
-        return "空闲中";
+        return "开放中";
     }
 
     @Override
@@ -156,7 +151,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
         TextView status = holder.getView(R.id.share_park_space_status);
         CircleView statusIv = holder.getView(R.id.share_park_space_status_iv);
         status.setText(getParkspaceStatus(park_info));
-        if (status.getText().toString().equals("空闲中")) {
+        if (status.getText().toString().equals("开放中")) {
             statusIv.setColor(Color.parseColor("#1dd0a1"));
         } else {
             statusIv.setColor(Color.parseColor("#fd5132"));

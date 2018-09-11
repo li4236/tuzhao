@@ -141,13 +141,11 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
                     @Override
                     public void onSuccess(Base_Class_List_Info<Discount_Info> o, Call call, Response response) {
                         loadDataSuccess(o);
-                        dissmissDialog();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        dissmissDialog();
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {

@@ -2,9 +2,9 @@ package com.tuzhao.activity.mine;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -481,7 +481,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                             mParkDurationTv.setText("");
                             break;
                     }
-                    mNextStep.setBackground(ContextCompat.getDrawable(this, R.drawable.yuan_little_graynall_8dp));
+                    mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+                    mNextStep.setTextColor(Color.WHITE);
                     return;
                 }
             }
@@ -595,8 +596,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 DataUtil.sortCanParkListByShareTime(mCanParkList, mAppointmentEndTime);
             }
             mNextStep.setBackgroundResource(R.drawable.little_yuan_yellow_8dp);
+            mNextStep.setTextColor(ConstansUtil.B1_COLOR);
         } else {
             mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+            mNextStep.setTextColor(Color.WHITE);
         }
 
     }
@@ -670,6 +673,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             mCanParkList.remove(parkInfo);
             if (mCanParkList.isEmpty()) {
                 mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+                mNextStep.setTextColor(Color.WHITE);
             }
         }
     }

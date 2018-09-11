@@ -32,7 +32,7 @@ public class UseFriendParkSpaceRecordActivity extends BaseStatusActivity {
 
         List<UseFriendParkSpaceRecordFragment> fragments = new ArrayList<>();
         fragments.add(UseFriendParkSpaceRecordFragment.getInstance("0"));
-        fragments.add(UseFriendParkSpaceRecordFragment.getInstance("5"));
+        fragments.add(UseFriendParkSpaceRecordFragment.getInstance("4"));
         viewPager.setAdapter(new MyFragmentAdapter<>(getSupportFragmentManager(), fragments));
         smartTabLayout.setViewPager(viewPager);
 

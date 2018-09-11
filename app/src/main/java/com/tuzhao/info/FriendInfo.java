@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class FriendInfo {
 
-    @SerializedName(value = "friendId", alternate = {"userId"})
+    @SerializedName(value = "friendId", alternate = "userId")
     private String friendId;
 
     private String imgUrl = "";

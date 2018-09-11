@@ -1,5 +1,7 @@
 package com.tuzhao.publicwidget.callback;
 
+import android.util.Log;
+
 import com.google.gson.stream.JsonReader;
 import com.tianzhili.www.myselfsdk.okgo.callback.AbsCallback;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
@@ -35,6 +37,8 @@ import okhttp3.Response;
  */
 public abstract class JsonCallback<T> extends AbsCallback<T> {
 
+    private static final String TAG = "JsonCallback";
+
     @Override
     public void onBefore(BaseRequest request) {
         super.onBefore(request);
@@ -63,7 +67,6 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
      */
     @Override
     public T convertSuccess(Response response) throws Exception {
-
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
@@ -97,7 +100,6 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         //以下代码是根据泛型解析数据，返回对象，返回的对象自动以参数的形式传递到 onSuccess 中，可以直接使用
         JsonReader jsonReader = new JsonReader(response.body().charStream());
         if (rawType == Base_Class_List_Info.class) {
-
             //有数据类型，表示有data
             Base_Class_List_Info base_class_List_info = Convert.fromJson(jsonReader, type);
             response.close();

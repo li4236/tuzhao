@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Park_Info implements Parcelable {
     private String id;
-    @SerializedName(value = "parkLotId", alternate = {"parkspace_id"})
+    @SerializedName(value = "parkLotId", alternate = "parkspace_id")
     private String parkLotId;//停车位所属停车场
     private String user_id;//停车位所属用户
     private String userName;//停车位所属用户名称
@@ -52,8 +52,8 @@ public class Park_Info implements Parcelable {
     private String carNumber;   //预定人的车牌号码
     private String parkInterval;//预定停车的开始和结束时间(yyyy-MM-dd HH:mm*yyyy-MM-dd HH:mm)
 
-    @SerializedName(value = "citycode", alternate = {"cityCode"})
-    private String citycode;//城市码
+    @SerializedName(value = "cityCode", alternate = {"citycode"})
+    private String cityCode;//城市码
     private String create_time;//创建时间，主要是提交为了删除车位
     private String update_time;//更新时间，主要是为了核验是否新增订单号
     private String parkLockId;
@@ -215,11 +215,11 @@ public class Park_Info implements Parcelable {
     }
 
     public String getCity_code() {
-        return citycode;
+        return cityCode;
     }
 
     public void setCity_code(String city_code) {
-        this.citycode = city_code;
+        this.cityCode = city_code;
     }
 
     public String getProfit_ratio() {
@@ -311,11 +311,11 @@ public class Park_Info implements Parcelable {
     }
 
     public String getCityCode() {
-        return citycode;
+        return cityCode;
     }
 
-    public void setCitycode(String citycode) {
-        this.citycode = citycode;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
     public String getCreate_time() {
@@ -472,7 +472,7 @@ public class Park_Info implements Parcelable {
                 ", distance=" + distance +
                 ", carNumber='" + carNumber + '\'' +
                 ", parkInterval='" + parkInterval + '\'' +
-                ", citycode='" + citycode + '\'' +
+                ", cityCode='" + cityCode + '\'' +
                 ", create_time='" + create_time + '\'' +
                 ", update_time='" + update_time + '\'' +
                 ", parkLockId='" + parkLockId + '\'' +
@@ -494,12 +494,12 @@ public class Park_Info implements Parcelable {
         return Objects.equals(id, parkInfo.id) &&
                 Objects.equals(parkLotId, parkInfo.parkLotId) &&
                 Objects.equals(user_id, parkInfo.user_id) &&
-                Objects.equals(citycode, parkInfo.citycode);
+                Objects.equals(cityCode, parkInfo.cityCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parkLotId, user_id, citycode);
+        return Objects.hash(id, parkLotId, user_id, cityCode);
     }
 
     @Override
@@ -541,7 +541,7 @@ public class Park_Info implements Parcelable {
         dest.writeByte(this.haveDistination ? (byte) 1 : (byte) 0);
         dest.writeString(this.carNumber);
         dest.writeString(this.parkInterval);
-        dest.writeString(this.citycode);
+        dest.writeString(this.cityCode);
         dest.writeString(this.create_time);
         dest.writeString(this.update_time);
         dest.writeString(this.parkLockId);
@@ -584,7 +584,7 @@ public class Park_Info implements Parcelable {
         this.haveDistination = in.readByte() != 0;
         this.carNumber = in.readString();
         this.parkInterval = in.readString();
-        this.citycode = in.readString();
+        this.cityCode = in.readString();
         this.create_time = in.readString();
         this.update_time = in.readString();
         this.parkLockId = in.readString();

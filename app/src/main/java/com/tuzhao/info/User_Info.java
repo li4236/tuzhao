@@ -19,7 +19,7 @@ public class User_Info implements Parcelable {
     private String nickname = "-1";//用户昵称
     private String realName;//真实姓名
 
-    @SerializedName(value = "gender", alternate = {"sex"})
+    @SerializedName(value = "gender", alternate = "sex")
     private String gender;//性别
     private String birthday;//生日
     private String numberOfPark;//停车次数

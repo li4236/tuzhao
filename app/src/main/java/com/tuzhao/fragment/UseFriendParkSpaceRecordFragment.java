@@ -92,7 +92,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                 return R.layout.item_reserving_friend_park_space_layout;
             case "1":
                 return R.layout.item_parking_friend_park_space_layout;
-            case "2":
+            case "3":
                 return R.layout.item_park_friend_park_space_record_layout;
         }
         return super.converGetItmeViewType(parkOrderInfo, position);
