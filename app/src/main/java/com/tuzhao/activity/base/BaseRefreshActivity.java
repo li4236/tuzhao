@@ -138,6 +138,11 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         dismmisLoadingDialog();
     }
 
+    /**
+     * 请求数据返回异常时调用，如果原本没有数据会显示空布局，并且停止加载状态
+     *
+     * @param callback 当是后台返回的错误码时回调
+     */
     protected void loadDataFail(Exception e, LoadFailCallback callback) {
         if (mCommonAdapter.getData().size() == 0) {
             showEmpty();
@@ -148,10 +153,16 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         }
     }
 
+    /**
+     * 请求的开始条数+15
+     */
     protected void increateStartItem() {
         mStartItme += 15;
     }
 
+    /**
+     * 停止加载状态（包括下拉刷新和上拉加载）
+     */
     protected void stopLoadStatus() {
         if (mStartItme == 0) {
             stopRefresh();
@@ -160,6 +171,9 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         }
     }
 
+    /**
+     * 如果没有数据的话显示空布局
+     */
     protected void showEmpty() {
         if (mCommonAdapter.getData().isEmpty()) {
             /*mRecyclerView.showEmpty(new View.OnClickListener() {
@@ -174,20 +188,35 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         }
     }
 
+    /**
+     * 删除position位置的数据，如果删除后没有数据则显示空布局
+     */
     protected void notifyRemoveData(int position) {
         mCommonAdapter.notifyRemoveData(position);
         showEmpty();
     }
 
+    /**
+     * 删除指定的一个数据，需要重写T的equal方法，否则可能找不到该数据
+     */
     protected void notifyRemoveData(T t) {
         mCommonAdapter.notifyRemoveData(t);
         showEmpty();
     }
 
+    /**
+     * 加载数据的方法，在界面显示的时候会自动调用，下拉刷新和上拉加载默认调用
+     */
     protected abstract void loadData();
 
+    /**
+     * @return adapter中的itemViewId
+     */
     protected abstract int itemViewResourceId();
 
+    /**
+     * adapter绑定数据用
+     */
     protected abstract void bindData(BaseViewHolder holder, T t, int position);
 
     protected class CommonAdapter extends BaseAdapter<T> {

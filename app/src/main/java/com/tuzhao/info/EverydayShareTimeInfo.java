@@ -1,5 +1,7 @@
 package com.tuzhao.info;
 
+import java.util.Objects;
+
 /**
  * Created by juncoder on 2018/3/28.
  */
@@ -51,6 +53,21 @@ public class EverydayShareTimeInfo {
             endTime = endDate.substring(endDate.indexOf(" ") + 1, endDate.length());
         }
         return endTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EverydayShareTimeInfo that = (EverydayShareTimeInfo) o;
+        return Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(startDate, endDate);
     }
 
     @Override

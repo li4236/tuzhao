@@ -24,7 +24,6 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
-import com.tuzhao.utils.IntentObserable;
 
 import java.util.ArrayList;
 
@@ -34,14 +33,33 @@ import java.util.ArrayList;
 
 public abstract class BaseStatusFragment extends Fragment {
 
+    /**
+     * 打印日志的时候会显示具体是哪个类的日志
+     * <p>
+     * 如果是一个ViewPager中显示多个同样的Fragment则需要重写该属性，因为网络请求会以该TAG作为标识，如果有多个同样其中一个被destroyView了会根据这个
+     * TAG来取消请求，不重写则会导致其他Fragment的请求取消
+     * </p>
+     */
     protected String TAG = this.getClass().getName();
 
+    /**
+     * fragment所在的根view
+     */
     private View mView;
 
+    /**
+     * 加载对话框
+     */
     private LoadingDialog mLoadingDialog;
 
+    /**
+     * 加载对话框的文字
+     */
     private String mDialogString = "";
 
+    /**
+     * true(在onDestroyView中取消网络请求)  false(不取消，需要自行在类中取消)
+     */
     private boolean mAutoCancelRequest = true;
 
     @Nullable
@@ -75,6 +93,7 @@ public abstract class BaseStatusFragment extends Fragment {
 
     /**
      * 在此方法初始化数据，初始化完记得调用dismmisCustomDialog()
+     * 如果不需要一进界面就显示加载框则重写该方法，并且不要掉super方法
      */
     protected void initData() {
         showLoadingDialog();
@@ -103,10 +122,9 @@ public abstract class BaseStatusFragment extends Fragment {
     }
 
     /**
-     * @param autoCancelRequest 在onDestroyView的时候是否取消网络请求
      */
-    protected void setAutoCancelRequest(boolean autoCancelRequest) {
-        mAutoCancelRequest = autoCancelRequest;
+    protected void setAutoCancelRequest() {
+        mAutoCancelRequest = false;
     }
 
     /**
@@ -151,6 +169,10 @@ public abstract class BaseStatusFragment extends Fragment {
         }
     }
 
+    /**
+     * @param url 请求的路径
+     * @return     返回BaseRequest，并带有tag和token
+     */
     protected BaseRequest getOkGo(String url) {
         return OkGo.post(url)
                 .tag(TAG)
@@ -158,6 +180,10 @@ public abstract class BaseStatusFragment extends Fragment {
                 .headers("token", UserManager.getInstance().getUserInfo().getToken());
     }
 
+    /**
+     *
+     * @return  true(处理了该异常)    false(未处理该异常，一般为后台返回的错误响应码)
+     */
     protected boolean handleException(Exception e) {
         dismmisLoadingDialog();
         if (!DensityUtil.isException(getContext(), e)) {
@@ -180,7 +206,7 @@ public abstract class BaseStatusFragment extends Fragment {
                         return false;
                 }
             } else {
-                showFiveToast(e.getMessage());
+                //showFiveToast(e.getMessage());
                 return true;
             }
         } else {
@@ -240,17 +266,6 @@ public abstract class BaseStatusFragment extends Fragment {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putParcelableArrayListExtra(key, data);
         startActivity(intent);
-    }
-
-    protected void dispatchIntent(String action) {
-        Intent intent = new Intent(action);
-        IntentObserable.dispatch(intent);
-    }
-
-    protected void dispatchIntent(String action, String key, String value) {
-        Intent intent = new Intent(action);
-        intent.putExtra(key, value);
-        IntentObserable.dispatch(intent);
     }
 
     /**

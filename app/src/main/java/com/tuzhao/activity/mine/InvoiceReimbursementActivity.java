@@ -30,10 +30,16 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/3/28.
+ * <p>
+ * 发票报销
+ * </p>
  */
 
 public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInfo> {
 
+    /**
+     * 选择要开发票的订单集合
+     */
     private ArrayList<InvoiceInfo> mChooseInvoice;
 
     private TextView mTotalPrice;
@@ -70,10 +76,11 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
             public void onClick(View v) {
                 Intent intent = new Intent(InvoiceReimbursementActivity.this, ConfirmAcceptInvoiceAddressActivity.class);
                 intent.putParcelableArrayListExtra(ConstansUtil.INVOICE_LIST, mChooseInvoice);
-                intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, getText(mTotalPrice).substring(5, getTextLength(mTotalPrice) - 1));
+                intent.putExtra(ConstansUtil.INTENT_MESSAGE, getText(mTotalPrice).substring(5, getTextLength(mTotalPrice) - 1));
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+        mInvoceReimburesmentSubmit.setClickable(false);
 
         View headView = getLayoutInflater().inflate(R.layout.layout_placeholder, mRecyclerView, false);
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(mRecyclerView.getRecyclerView().getLayoutParams());
@@ -174,6 +181,7 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
                     mAllChoose.setChecked(false);
                     mChooseInvoice.remove(invoiceInfo);
                 }
+                //设置监听为null再重新设置是因为如果不这样调用setChecked之后，会回调OnCheckedChangeListener中的方法
                 checkBox.setOnCheckedChangeListener(null);
                 checkBox.setChecked(!checkBox.isChecked());
                 checkBox.setOnCheckedChangeListener(checkedChangeListener);
@@ -194,6 +202,9 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         return "发票报销";
     }
 
+    /**
+     * @return 计算出要开发票的订单总额
+     */
     private double calculateTotalPrice() {
         double totolPric = 0;
         for (InvoiceInfo invoiceInfo : mChooseInvoice) {
@@ -202,11 +213,15 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         return totolPric;
     }
 
+    /**
+     * 设置要开发票的订单总额
+     */
     private void setTotalPrice() {
         String totalPriceString = mDecimalFormat.format(calculateTotalPrice());
         String string = "开票总额:" + totalPriceString + "元";
         mTotalPrice.setText(string);
 
+        //总额大于100才可以开发票
         if (Double.valueOf(totalPriceString) >= 100) {
             mInvoceReimburesmentSubmit.setBackgroundResource(R.drawable.bg_yellow);
             if (!mInvoceReimburesmentSubmit.isClickable()) {
@@ -220,6 +235,9 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         }
     }
 
+    /**
+     * @param check true(全部订单都开发票)  false(全部订单都不开发票)
+     */
     private void setAllCheck(boolean check) {
         mChooseInvoice.clear();
         for (InvoiceInfo invoiceInfo : mCommonAdapter.getData()) {
@@ -237,12 +255,13 @@ public class InvoiceReimbursementActivity extends BaseRefreshActivity<InvoiceInf
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             ArrayList<InvoiceInfo> arrayList;
             if ((arrayList = data.getParcelableArrayListExtra(ConstansUtil.FOR_REQEUST_RESULT)) != null) {
+                //开了发票之后把发票删除
                 mCommonAdapter.removeData(arrayList);
                 mChooseInvoice.clear();
                 setTotalPrice();
+                mAllChoose.setChecked(false);
                 if (mCommonAdapter.getData().size() == 0) {
                     showEmpty();
-                    mAllChoose.setChecked(false);
                 }
             }
         }

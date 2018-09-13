@@ -55,6 +55,7 @@ public class DiscountActivity extends BaseActivity {
         if (UserManager.getInstance().hasLogined()) {
             int discountType = getIntent().getIntExtra(ConstansUtil.TYPE, 3);
             if (getIntent().hasExtra(ConstansUtil.DISCOUNT_LIST)) {
+                //从停车订单跳转过来的
                 double orderFee = Double.parseDouble(getIntent().getStringExtra(ConstansUtil.ORDER_FEE));
                 ArrayList<Discount_Info> list = getIntent().getParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST);
                 fragmentList.add(DiscountFragment.getInstance(discountType, 1, list, orderFee));

@@ -20,6 +20,9 @@
             android:labelFor="@+id/friend_telephone_et"
             android:maxLength="11"
             android:paddingStart="8dp"
+            android:textColor="@color/b1"
+            android:textColorHint="@color/g6"
+            android:textSize="16sp"
             android:theme="@style/MyEditText"
             app:layout_constraintBottom_toTopOf="@+id/friend_notename"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,8 +36,11 @@
             android:hint="请输入亲友备注(可不填)"
             android:inputType="text"
             android:labelFor="@+id/friend_notename"
-            android:paddingStart="8dp"
             android:maxLength="12"
+            android:paddingStart="8dp"
+            android:textColor="@color/b1"
+            android:textColorHint="@color/g6"
+            android:textSize="16sp"
             android:theme="@style/MyEditText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/friend_telephone_et"
@@ -46,8 +52,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/friend_info_cl"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <com.tuzhao.publicwidget.customView.CircleImageView
             android:id="@+id/friend_portrait"

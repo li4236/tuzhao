@@ -165,7 +165,6 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             if (!mParkSpaceInfo.getIdCardNegativeUrl().equals("-1")) {
                 showPhoto(HttpConstants.ROOT_IMG_URL_ID_CARD + mParkSpaceInfo.getIdCardNegativeUrl(), 1);
             }
-
             if (!mParkSpaceInfo.getPropertyFirstUrl().equals("-1")) {
                 showPhoto(HttpConstants.ROOT_IMG_URL_PROPERTY + mParkSpaceInfo.getPropertyFirstUrl(), 2);
             }
@@ -264,14 +263,14 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             String revenueRatio = ccc[0] + " : " + ccc[1] + " : " + ccc[2] + " （车位主 : 物业 : 平台）";
             mRevenueRatio.setText(revenueRatio);
 
-            mParkSpaceInfo.setParkLotId(mPark.getParkID());
+            mParkSpaceInfo.setParkLotId(mPark.getParkId());
             mParkSpaceInfo.setParkLotName(mPark.getParkStation());
             mParkSpaceInfo.setRevenueRatio(revenueRatio);
         } else if (requestCode == PhotoPickConfig.PICK_MORE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             //选择的图片
             final List<String> imageBeans = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
+            showLoadingDialog("压缩中...");
             if (imageBeans.size() == 1) {
-                showLoadingDialog("压缩中...");
                 ImageUtil.compressPhoto(this, imageBeans.get(0), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
@@ -279,7 +278,6 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     }
                 });
             } else {
-                showLoadingDialog("压缩中...");
                 handleImageBean(imageBeans);
             }
         }
@@ -371,6 +369,7 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
     }
 
     private void handleCompressPhoto(File file, int position) {
+        dismmisLoadingDialog();
         switch (position) {
             case 0:
                 mParkSpaceInfo.setIdCardPositiveUrl(file.getAbsolutePath());
@@ -506,12 +505,12 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
 
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        setUploadProgress(file.getAbsolutePath(), position, 1);
                         if (type == 0) {
                             setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_ID_CARD + stringBase_class_info.data, position);
                         } else {
                             setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_PROPERTY + stringBase_class_info.data, position);
                         }
-                        setUploadProgress(file.getAbsolutePath(), position, 1);
                     }
 
                     @Override
@@ -576,9 +575,6 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
                     if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
                         UploadPhotoInfo firstProperty = mPropertyAdapter.getData().get(i);
                         firstProperty.setProgress(progressString);
-                        if (progress == 1.0) {
-                            firstProperty.setShowProgress(false);
-                        }
                         mPropertyAdapter.notifyDataChange(i, firstProperty, 1);
                         break;
                     }
@@ -743,16 +739,15 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
             showFiveToast("请等待身份证照上传完成");
         } else {
             if (mPropertyAdapter.getDataSize() == 2) {
-                if (!mPropertyAdapter.get(0).isUploadSuccess() ||
-                        !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()) {
+                if (!mPropertyAdapter.get(0).isUploadSuccess()) {
                     showFiveToast("请等待产权照上传完成");
                 } else {
                     modifyAuditInfo();
                 }
             } else if (mPropertyAdapter.getDataSize() == 3) {
                 if (!mPropertyAdapter.get(0).isUploadSuccess() ||
-                        !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()
-                        || !mPropertyAdapter.get(2).getPath().equals("-1") && !mPropertyAdapter.get(2).isUploadSuccess()) {
+                        (!mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess())
+                        || (!mPropertyAdapter.get(2).getPath().equals("-1") && !mPropertyAdapter.get(2).isUploadSuccess())) {
                     showFiveToast("请等待产权照上传完成");
                 } else {
                     modifyAuditInfo();
@@ -774,13 +769,13 @@ public class ChangeApplyParkSpaceInfoActivity extends BaseStatusActivity impleme
 
         StringBuilder propertyPhoto = new StringBuilder(mPropertyAdapter.get(0).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
         propertyPhoto.append(",");
-        if (mPropertyAdapter.getDataSize() == 2 && !mPropertyAdapter.get(1).getPath().equals("-1")) {
+        if (mPropertyAdapter.getDataSize() == 3) {
             propertyPhoto.append(mPropertyAdapter.get(1).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
             propertyPhoto.append(",");
-        }
-        if (mPropertyAdapter.getDataSize() == 3 && !mPropertyAdapter.get(2).getPath().equals("-1")) {
-            propertyPhoto.append(mPropertyAdapter.get(2).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
-            propertyPhoto.append(",");
+            if (!mPropertyAdapter.get(2).getPath().equals("-1")) {
+                propertyPhoto.append(mPropertyAdapter.get(2).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
+                propertyPhoto.append(",");
+            }
         }
         propertyPhoto.deleteCharAt(propertyPhoto.length() - 1);
         mParkSpaceInfo.setPropertyPhoto(propertyPhoto.toString());

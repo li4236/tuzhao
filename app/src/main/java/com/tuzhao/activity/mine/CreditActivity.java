@@ -11,7 +11,6 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -23,10 +22,11 @@ import com.tuzhao.utils.ImageUtil;
 
 /**
  * Created by juncoder on 2018/6/26.
+ * <p>
+ * 途找信用
+ * </p>
  */
 public class CreditActivity extends BaseStatusActivity implements View.OnClickListener {
-
-    private ScrollView mScrollView;
 
     private TextView mCurrentCredit;
 
@@ -137,11 +137,17 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         if (mAnimatorSet == null) {
-            ObjectAnimator creditViewAnimator = ObjectAnimator.ofFloat(mCreditView, "currentCredit", 200, mCredit);
-            creditViewAnimator.setDuration(1500);
+            //第一次进入页面的时候显示过渡到当前信用分的动画
 
+            int duration = (mCredit - 200) * 2;
+
+            //信用分的进度条上面的三角形平移动画
+            ObjectAnimator creditViewAnimator = ObjectAnimator.ofFloat(mCreditView, "currentCredit", 200, mCredit);
+            creditViewAnimator.setDuration(duration);
+
+            //信用分的数字更新动画
             ValueAnimator valueAnimator = ValueAnimator.ofInt(0, mCredit);
-            valueAnimator.setDuration(1500);
+            valueAnimator.setDuration(duration);
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -176,7 +182,7 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
                 startActivity(CreditRecordActivity.class);
                 break;
             case R.id.no_deposit_cl:
-
+// TODO: 2018/9/12  
                 break;
             case R.id.leave_grace_cl:
 
@@ -187,6 +193,9 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * 隐藏前面的两个文字，用于占位的作用
+     */
     private void hideTwoWord(SpannableString spannableString) {
         spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }

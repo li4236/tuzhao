@@ -3,6 +3,7 @@ package com.tuzhao.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.IntRange;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -222,11 +223,11 @@ public class DateUtil {
         String[] pause = pauseDate.split(",");
         Calendar pauseCalendar;
         int inPauseDate = 2;
-        for (int i = 0; i < pause.length; i++) {
-            pauseCalendar = getYearToDayCalendar(pause[i], false);
+        for (String aPause : pause) {
+            pauseCalendar = getYearToDayCalendar(aPause, false);
             if (startCalendar.compareTo(pauseCalendar) <= 0 && endCalendar.compareTo(pauseCalendar) >= 0) {
                 //暂停时间在停车时间内
-                if (endDate.split(" ")[0].equals(pause[i]) && isInStartDay(endDate)) {
+                if (endDate.split(" ")[0].equals(aPause) && isInStartDay(endDate)) {
                     //判断最后一天是否是暂停时间的00:00，不直接返回是因为如果停车时间为2018-04-26 10:00 - 2018-04-29:00，如果暂停时间为2018-04-29,2018-04-28则不正确
                     inPauseDate = 1;
                 } else {
@@ -347,6 +348,52 @@ public class DateUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * @param orderDate 逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
+     * @return null(停车时间不在startDate - endDate时间内)   yyyy-MM-dd至yyyy-MM-dd订单的时间
+     */
+    public static String getOrderBetweenDate(String startDate, String endDate, String orderDate) {
+        if (orderDate.equals("-1") || orderDate.equals("")) {
+            return null;
+        }
+
+        //保存在现在时刻以后的预约时间（既是排除掉在现在以前那些被预约的时间）
+        String[] orderDates = orderDate.split(",");
+        List<String> usefulDates = new ArrayList<>(orderDates.length);
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.set(Calendar.SECOND, 0);
+        nowCalendar.set(Calendar.MILLISECOND, 0);
+
+        for (String date : orderDates) {
+            if (nowCalendar.compareTo(getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()))) < 0) {
+                usefulDates.add(date);
+            }
+        }
+
+        if (usefulDates.isEmpty()) {
+            return null;
+        }
+
+        //将已被预约的时间用Calendar保存
+        Calendar[] calendars = new Calendar[usefulDates.size() * 2];
+        for (int i = 0; i < usefulDates.size(); i++) {
+            calendars[i * 2] = getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*")));
+            calendars[i * 2 + 1] = getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()));
+        }
+
+        Calendar startCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endCalendar = getYearToMinuteCalendar(endDate);
+        for (int i = 0; i < calendars.length; i += 2) {
+            if (startCalendar.compareTo(calendars[i]) >= 0 && startCalendar.compareTo(calendars[i + 1]) < 0
+                    || endCalendar.compareTo(calendars[i]) > 0 && endCalendar.compareTo(calendars[i + 1]) <= 0
+                    || startCalendar.compareTo(calendars[i]) <= 0 && endCalendar.compareTo(calendars[i + 1]) >= 0
+                    || startCalendar.compareTo(calendars[i]) >= 0 && endCalendar.compareTo(calendars[i + 1]) <= 0) {
+                return getCalendarYearToDay(calendars[i]) + "至" + getCalendarYearToDay(calendars[i + 1]);
+            }
+        }
+        return null;
     }
 
     /**
@@ -849,6 +896,29 @@ public class DateUtil {
     }
 
     /**
+     * @param day 天数从1-7
+     * @return 一到日
+     */
+    public static String getDayOfNumber(@IntRange(from = 1, to = 7) int day) {
+        switch (day) {
+            case 1:
+                return "一";
+            case 2:
+                return "二";
+            case 3:
+                return "三";
+            case 4:
+                return "四";
+            case 5:
+                return "五";
+            case 6:
+                return "六";
+            default:
+                return "日";
+        }
+    }
+
+    /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00) 注：最多3个，用“,”隔开
@@ -1237,6 +1307,9 @@ public class DateUtil {
      * @return true(星期day在订单时间内)
      */
     public static boolean isInOrderDay(int day, String startDate, String endDate, String orderDate) {
+        if (orderDate.equals("-1")) {
+            return false;
+        }
         List<Calendar> list = getDayCalendar(day, startDate, endDate);
         if (!list.isEmpty()) {
             String[] order = orderDate.split(",");
@@ -1676,10 +1749,14 @@ public class DateUtil {
     }
 
     /**
-     * @return 两个日历相差的分钟数
+     * @return 两个日历相差的分钟数, 不足一分钟的按一分钟算
      */
     public static long getCalendarDistance(Calendar startCalendar, Calendar endCalendar) {
-        return (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60;
+        long second = (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000;
+        if (second % 60 > 0) {
+            return second / 60 + 1;
+        }
+        return second / 60;
     }
 
     /**
@@ -1773,6 +1850,16 @@ public class DateUtil {
         }
 
         number = number.substring(0, number.length() - count);
+        return number;
+    }
+
+    /**
+     * 删掉09前面的0
+     */
+    public static String deleteTen(String number) {
+        if (number.length() == 2 && number.charAt(0) == '0') {
+            return number.substring(1, 2);
+        }
         return number;
     }
 
@@ -1958,24 +2045,15 @@ public class DateUtil {
      * @param thetime   指定日期
      * @param starttime 开始日期
      * @param endtime   结束日期
-     * @return
      */
     public boolean betweenStartAndEnd(String thetime, String starttime, String endtime) {
-
         SimpleDateFormat dateFormat = getYearToMinutesFormat();
         try {
             Date time = dateFormat.parse(thetime);
             Date start = dateFormat.parse(starttime);
             Date end = dateFormat.parse(endtime);
-
-            if ((time.getTime() - start.getTime()) >= 0 && (end.getTime() - time.getTime()) > 0) {
-                return true;
-            } else {
-                return false;
-            }
-
+            return (time.getTime() - start.getTime()) >= 0 && (end.getTime() - time.getTime()) > 0;
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return false;
@@ -2633,12 +2711,8 @@ public class DateUtil {
 
     /**
      * 初始化停车时长选项卡数据。
-     *
-     * @param options1Items
-     * @param options2Items
      */
     public void initParktimeData(ArrayList<String> options1Items, ArrayList<ArrayList<String>> options2Items, ArrayList<ArrayList<ArrayList<String>>> options3Items) {
-
         //选项1
         options1Items.add("0");
         options1Items.add("1");

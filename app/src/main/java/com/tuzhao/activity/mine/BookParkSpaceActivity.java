@@ -30,6 +30,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/9/4.
+ * <p>
+ * 预约亲友分享给我的车位
+ * </p>
  */
 public class BookParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
 

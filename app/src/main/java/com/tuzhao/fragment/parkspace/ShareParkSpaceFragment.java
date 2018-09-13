@@ -29,6 +29,7 @@ import com.tuzhao.publicwidget.customView.VoltageView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -133,7 +134,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     @Override
     protected void initData() {
-        setAutoCancelRequest(false);
+        setAutoCancelRequest();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
 
@@ -194,13 +195,13 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
                 }
                 break;
             case R.id.parkspace_description:
-                dispatchIntent(ConstansUtil.SHOW_DIALOG);
+                IntentObserable.dispatch(ConstansUtil.SHOW_DIALOG);
                 break;
             case R.id.left_park_space_iv:
-                dispatchIntent(ConstansUtil.LEFT);
+                IntentObserable.dispatch(ConstansUtil.LEFT);
                 break;
             case R.id.right_park_space_iv:
-                dispatchIntent(ConstansUtil.RIGHT);
+                IntentObserable.dispatch(ConstansUtil.RIGHT);
                 break;
         }
     }

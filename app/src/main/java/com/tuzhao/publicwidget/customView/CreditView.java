@@ -17,27 +17,49 @@ import com.tuzhao.utils.DensityUtil;
 
 /**
  * Created by juncoder on 2018/6/27.
+ * <p>
+ * 信用分的进度条以及上面的倒三角形
+ * </p>
  */
 public class CreditView extends View {
 
-    private Paint mFlagPaint;
+    /**
+     * 倒三角形的画笔
+     */
+    private Paint mTrianglePaint;
 
-    //private RectF mFlagRectF;
+    /**
+     * 倒三角形的路径
+     */
+    private Path mTrianglePath;
 
-    private Path mFlagPath;
-
-    private int mFlagColor;
+    private int mTriangleColor;
 
     private Paint mCreditPaint;
 
+    /**
+     * 信用分极差对应的矩形
+     */
     private RectF mVeryPoorRectF;
 
+    /**
+     * 信用分差
+     */
     private RectF mPoorRectF;
 
+    /**
+     * 良好
+     */
     private RectF mFineRectF;
 
+    /**
+     * 优秀
+     */
     private RectF mGoodRect;
 
+    /**
+     * 极好
+     */
     private RectF mVeryGoodRect;
 
     private int mVeryPoorColor;
@@ -64,7 +86,7 @@ public class CreditView extends View {
 
     private float mCurrentCredit;
 
-    private String mZero = "0";
+    private String mZero;
 
     private String mThreeHundredAndFifty;
 
@@ -78,25 +100,17 @@ public class CreditView extends View {
 
     private int mHeight;
 
+    /**
+     * 倒三角形下面那个角所在的横坐标
+     */
     private float mTriangleCoodinate;
 
     public CreditView(Context context) {
-        super(context);
-        mFlagColor = Color.parseColor("#ffa830");
-        mVeryPoorColor = Color.parseColor("#ff3052");
-        mPoorColor = Color.parseColor("#ffcc30");
-        mFineColor = Color.parseColor("#ffa830");
-        mGoodColor = Color.parseColor("#3dd6fa");
-        mVeryPoorColor = Color.parseColor("#82D093");
-        mTextColor = Color.parseColor("#323232");
-        mTextSize = (int) DensityUtil.sp2px(context, 8);
-        init();
+        this(context, null);
     }
 
     public CreditView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        initAttribute(context, attrs, 0);
-        init();
+        this(context, attrs, 0);
     }
 
     public CreditView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -106,13 +120,12 @@ public class CreditView extends View {
     }
 
     private void init() {
-        mFlagPaint = new Paint();
-        mFlagPaint.setAntiAlias(true);
-        mFlagPaint.setStyle(Paint.Style.FILL);
-        mFlagPaint.setColor(mFlagColor);
+        mTrianglePaint = new Paint();
+        mTrianglePaint.setAntiAlias(true);
+        mTrianglePaint.setStyle(Paint.Style.FILL);
+        mTrianglePaint.setColor(mTriangleColor);
 
-        //mFlagRectF = new RectF();
-        mFlagPath = new Path();
+        mTrianglePath = new Path();
 
         mCreditPaint = new Paint();
         mCreditPaint.setAntiAlias(true);
@@ -137,7 +150,7 @@ public class CreditView extends View {
 
     private void initAttribute(Context context, @Nullable AttributeSet attributeSet, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CreditView, defStyleAttr, 0);
-        mFlagColor = typedArray.getColor(R.styleable.CreditView_flag_color, Color.parseColor("#ffa830"));
+        mTriangleColor = typedArray.getColor(R.styleable.CreditView_flag_color, Color.parseColor("#ffa830"));
         mVeryPoorColor = typedArray.getColor(R.styleable.CreditView_poor_color, Color.parseColor("#ff3052"));
         mPoorColor = typedArray.getColor(R.styleable.CreditView_poor_color, Color.parseColor("#ffcc30"));
         mFineColor = typedArray.getColor(R.styleable.CreditView_fine_color, Color.parseColor("#ffa830"));
@@ -155,12 +168,12 @@ public class CreditView extends View {
         mSixDp = dpToPx(6) * width / mTwoHundredAndSixtyDp;
         width = width - mSixDp * 4;
 
-        mVeryPoorRectF.left = mTextSize / 2;
-        mVeryPoorRectF.top = mSixDp;
+        mVeryPoorRectF.left = mTextSize / 2;                    //矩形的开始位置为文字的中点
+        mVeryPoorRectF.top = mSixDp;                            //倒三角形的高为6dp，所以矩形的top坐标为6dp
         mVeryPoorRectF.right = (ConstansUtil.POOR_CREDIT_SCORE - ConstansUtil.VERY_POOR_CREDIT_SCORE) / 750 * width + mVeryPoorRectF.left;
-        mVeryPoorRectF.bottom = mVeryPoorRectF.top + mFourDp;
+        mVeryPoorRectF.bottom = mVeryPoorRectF.top + mFourDp;   //矩形的高为4dp
 
-        mPoorRectF.left = mVeryPoorRectF.right + mSixDp;
+        mPoorRectF.left = mVeryPoorRectF.right + mSixDp;        //每个矩形之间相距6dp
         mPoorRectF.top = mVeryPoorRectF.top;
         mPoorRectF.right = (float) (mPoorRectF.left + (ConstansUtil.FINE_CREDIT_SCORE - ConstansUtil.POOR_CREDIT_SCORE) / 750.0 * width);
         mPoorRectF.bottom = mVeryPoorRectF.bottom;
@@ -186,9 +199,8 @@ public class CreditView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        caculateFlag();
-        //canvas.drawRect(mFlagRectF, mFlagPaint);
-        canvas.drawPath(mFlagPath, mFlagPaint);
+        caculateTriangle();
+        canvas.drawPath(mTrianglePath, mTrianglePaint);
 
         mCreditPaint.setStyle(Paint.Style.FILL);
         mCreditPaint.setColor(mVeryPoorColor);
@@ -217,7 +229,7 @@ public class CreditView extends View {
     }
 
     /**
-     * 用于动画更新
+     * 用于动画更新(不可删除！！！)
      */
     public void setCurrentCredit(float credit) {
         if (credit >= 0) {
@@ -226,48 +238,46 @@ public class CreditView extends View {
         invalidate();
     }
 
-    private void caculateFlag() {
-        mFlagPath.reset();
+    /**
+     * 计算当前倒三角形所在的坐标和颜色
+     */
+    private void caculateTriangle() {
+        mTrianglePath.reset();
         if (mCurrentCredit <= 350) {
             if (mCurrentCredit < 200) {
                 mCurrentCredit = 200;
             }
             mTriangleCoodinate = (mCurrentCredit - 200) / 150 * (mVeryPoorRectF.right - mVeryPoorRectF.left) + mVeryPoorRectF.left;
-            //mFlagRectF.left = (mCurrentCredit - 200) / 150 * (mVeryPoorRectF.right - mVeryPoorRectF.left) + mVeryPoorRectF.left;
-            if (mFlagPaint.getColor() != mVeryPoorColor) {
-                mFlagPaint.setColor(mVeryPoorColor);
+            if (mTrianglePaint.getColor() != mVeryPoorColor) {
+                mTrianglePaint.setColor(mVeryPoorColor);
             }
         } else if (mCurrentCredit <= 550) {
             mTriangleCoodinate = (mCurrentCredit - 350) / 200 * (mPoorRectF.right - mPoorRectF.left) + mPoorRectF.left;
-            //mFlagRectF.left = (mCurrentCredit - 350) / 200 * (mPoorRectF.right - mPoorRectF.left) + mPoorRectF.left;
-            if (mFlagPaint.getColor() != mPoorColor) {
-                mFlagPaint.setColor(mPoorColor);
+            if (mTrianglePaint.getColor() != mPoorColor) {
+                mTrianglePaint.setColor(mPoorColor);
             }
         } else if (mCurrentCredit <= 650) {
             mTriangleCoodinate = (mCurrentCredit - 550) / 100 * (mFineRectF.right - mFineRectF.left) + mFineRectF.left;
-            //mFlagRectF.left = (mCurrentCredit - 550) / 100 * (mFineRectF.right - mFineRectF.left) + mFineRectF.left;
-            if (mFlagPaint.getColor() != mFineColor) {
-                mFlagPaint.setColor(mFineColor);
+            if (mTrianglePaint.getColor() != mFineColor) {
+                mTrianglePaint.setColor(mFineColor);
             }
         } else if (mCurrentCredit <= 750) {
             mTriangleCoodinate = (mCurrentCredit - 650) / 100 * (mGoodRect.right - mGoodRect.left) + mGoodRect.left;
-            if (mFlagPaint.getColor() != mGoodColor) {
-                mFlagPaint.setColor(mGoodColor);
+            if (mTrianglePaint.getColor() != mGoodColor) {
+                mTrianglePaint.setColor(mGoodColor);
             }
         } else if (mCurrentCredit <= 950) {
             mTriangleCoodinate = (mCurrentCredit - 750) / 200 * (mVeryGoodRect.right - mVeryGoodRect.left) + mVeryGoodRect.left;
-            if (mFlagPaint.getColor() != mVeryGoodColor) {
-                mFlagPaint.setColor(mVeryGoodColor);
+            if (mTrianglePaint.getColor() != mVeryGoodColor) {
+                mTrianglePaint.setColor(mVeryGoodColor);
             }
         }
-       /* mFlagRectF.right = mFlagRectF.left + dpToPx(1);
-        mFlagRectF.bottom = dpToPx(8);*/
 
-        mFlagPath.reset();
-        mFlagPath.moveTo(mTriangleCoodinate - mSixDp / 2, 0);
-        mFlagPath.lineTo(mTriangleCoodinate, mSixDp);
-        mFlagPath.lineTo(mTriangleCoodinate + mSixDp / 2, 0);
-        mFlagPath.close();
+        mTrianglePath.reset();
+        mTrianglePath.moveTo(mTriangleCoodinate - mSixDp / 2, 0);
+        mTrianglePath.lineTo(mTriangleCoodinate, mSixDp);
+        mTrianglePath.lineTo(mTriangleCoodinate + mSixDp / 2, 0);
+        mTrianglePath.close();
     }
 
     private int dpToPx(float dp) {

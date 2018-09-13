@@ -11,6 +11,7 @@ import com.tuzhao.utils.ImageUtil;
 
 /**
  * Created by juncoder on 2018/8/28.
+ * <p>好友车位</p>
  */
 public class FriendParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener {
 

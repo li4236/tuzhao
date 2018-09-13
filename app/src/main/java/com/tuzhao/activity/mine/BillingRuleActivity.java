@@ -21,6 +21,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/6/12.
+ * <p>
+ * 停车订单的计费规则
+ * </p>
  */
 public class BillingRuleActivity extends BaseStatusActivity {
 
@@ -79,11 +82,13 @@ public class BillingRuleActivity extends BaseStatusActivity {
                     public void onSuccess(Base_Class_Info<Park_Space_Info> o, Call call, Response response) {
                         mParkLotName.setText(o.data.getParkLotName());
 
+                        //高峰时段的时间
                         String highTime = o.data.getHigh_time();
                         int position = highTime.indexOf(" - ");
                         Calendar startCalendar = DateUtil.getSpecialCalendar(highTime.substring(0, position));
                         Calendar endCalendar = DateUtil.getSpecialCalendar(highTime.substring(position + 3, highTime.length()));
                         if (startCalendar.compareTo(endCalendar) >= 0) {
+                            //如果开始时间比结束时间晚，则结束时间为第二天的xx时段
                             highTime = highTime.replace(highTime.substring(position + 3, highTime.length()),
                                     "次日" + highTime.substring(position + 3, highTime.length()));
                         }
@@ -97,8 +102,8 @@ public class BillingRuleActivity extends BaseStatusActivity {
                         startCalendar = DateUtil.getSpecialCalendar(lowTime.substring(0, position));
                         endCalendar = DateUtil.getSpecialCalendar(lowTime.substring(position + 3, lowTime.length()));
                         if (startCalendar.compareTo(endCalendar) >= 0) {
-                            Log.e(TAG, "onSuccess: startCalendar:"+DateUtil.getCalenarYearToMinutes(startCalendar) );
-                            Log.e(TAG, "onSuccess: endCalendar:"+DateUtil.getCalenarYearToMinutes(endCalendar) );
+                            Log.e(TAG, "onSuccess: startCalendar:" + DateUtil.getCalenarYearToMinutes(startCalendar));
+                            Log.e(TAG, "onSuccess: endCalendar:" + DateUtil.getCalenarYearToMinutes(endCalendar));
                             lowTime = lowTime.replace(lowTime.substring(position + 3, lowTime.length()),
                                     "次日" + lowTime.substring(position + 3, lowTime.length()));
                         }

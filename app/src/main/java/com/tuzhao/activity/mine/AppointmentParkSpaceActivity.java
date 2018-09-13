@@ -26,7 +26,6 @@ import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
-import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -44,6 +43,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/8/29.
+ * <p>
+ * 预约亲友分享给我的车位前的筛选车位
+ * </p>
  */
 public class AppointmentParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
@@ -110,6 +112,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     @Override
     protected void initView(Bundle savedInstanceState) {
         if (getIntent().hasExtra(ConstansUtil.PARK_SPACE_INFO)) {
+            //从指定的亲友车位跳过来的，只能预约这一个车位
             mParkInfos = new ArrayList<>(1);
             mParkInfos.add((Park_Info) getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO));
             mIsBookSpecificParkSpace = true;
@@ -154,6 +157,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.car_number_tv:
+                //选择车辆
                 Intent intent = new Intent(AppointmentParkSpaceActivity.this, MyCarActivity.class);
                 intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
                 if (mCars != null) {
@@ -195,6 +199,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == ConstansUtil.REQUSET_CODE) {
+                //选择车辆的结果
                 if (mCars == null) {
                     mCars = data.getParcelableArrayListExtra(ConstansUtil.CAR_NUMBER);
                 }
@@ -202,6 +207,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 mCarNumber.setText(carNumber);
                 performScanParkSpace(0);
             } else if (requestCode == SELECTE_DESTINATION_CODE) {
+                //选择的目的地
                 mLatitude = data.getDoubleExtra(ConstansUtil.LATITUDE, 0);
                 mLongitude = data.getDoubleExtra(ConstansUtil.LONGITUDE, 0);
                 mDestination.setTextColor(ConstansUtil.B1_COLOR);
@@ -209,6 +215,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 performScanParkSpace(3);
             }
         } else if (resultCode == 2 && requestCode == SELECTE_DESTINATION_CODE) {
+            //取消选择目的地
             mLatitude = 0;
             mLongitude = 0;
             mDestination.setTextColor(ConstansUtil.G6_COLOR);
@@ -223,6 +230,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         IntentObserable.unregisterObserver(this);
     }
 
+    /**
+     * 获取亲友分享给我的停车位
+     */
     private void getFriendShareParkspace() {
         getOkGo(HttpConstants.getFriendShareParkspace)
                 .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
@@ -251,6 +261,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 });
     }
 
+    /**
+     * 获取亲友的预定记录，包括预定不是亲友车位的订单
+     */
     private void getUserParkOrderForAppoint() {
         getOkGo(HttpConstants.getUserParkOrderForAppoint)
                 .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
@@ -258,6 +271,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     public void onSuccess(Base_Class_List_Info<ParkOrderInfo> o, Call call, Response response) {
                         for (ParkOrderInfo parkOrderInfo : o.data) {
                             if (parkOrderInfo.getOrderStatus().equals("1") || parkOrderInfo.getOrderStatus().equals("2")) {
+                                //添加已预约和停车中的
                                 mParkOrderInfos.add(parkOrderInfo);
                             }
                         }
@@ -280,6 +294,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 });
     }
 
+    /**
+     * 弹出选择入场时间的选择器
+     */
     private void showAppointmentIncomeTimeOptions() {
         if (mStartTimeOption == null) {
             mDays = new ArrayList<>(7);
@@ -302,7 +319,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
                 hours = new ArrayList<>();
                 hourWithMinute = new ArrayList<>();
-                //添加现在的时分
+
+                //添加现在的时分,如果现在是15:59分则不添加
                 if (nowCalendar.get(Calendar.MINUTE) != 59 && nowCalendar.get(Calendar.MINUTE) != 60) {
                     minute = new ArrayList<>();
                     hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
@@ -312,7 +330,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     hourWithMinute.add(minute);
                 }
 
-                //添加往后一小时到23点的时分
+                //添加往后一小时到23点的时分（即16点到23点）
                 for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
                     hours.add(String.valueOf(i));
                     minute = new ArrayList<>();
@@ -324,16 +342,16 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
                 mHours.add(hours);
                 mMinutes.add(hourWithMinute);
-                nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
 
             mDays.add("明天");
             mDays.add("后天");
-            nowCalendar.add(Calendar.DAY_OF_MONTH, 2);
+            nowCalendar.add(Calendar.DAY_OF_MONTH, 3);  //今天，明天，后天
             for (int i = 0; i < 2; i++) {
                 addhourWithMinutes();
             }
 
+            //添加往后几天的数据
             for (int i = 0, size = 7 - mDays.size(); i < size; i++) {
                 mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
@@ -351,8 +369,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     //返回的分别是三个级别的选中位置
                     String tx = mDays.get(options1) + " " + DateUtil.thanTen(mHours.get(options1).get(option2)) + " 点 " + DateUtil.thanTen(mMinutes.get(options1).get(option2).get(options3)) + " 分";
+
+                    //记录选中的开始入场时间
                     Calendar appointmentStartCalendar = Calendar.getInstance();
-                    appointmentStartCalendar.add(Calendar.DAY_OF_MONTH, options1);
+                    appointmentStartCalendar.add(Calendar.DAY_OF_MONTH, mDays.get(options1).equals("今天") ? options1 : options1 + 1);
                     appointmentStartCalendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
                     appointmentStartCalendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
                     appointmentStartCalendar.set(Calendar.SECOND, 0);
@@ -364,11 +384,13 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     nowCalendar.set(Calendar.MILLISECOND, 0);
 
                     if (appointmentStartCalendar.compareTo(nowCalendar) >= 0) {
+                        //入场时间比现在的时间晚则显示选择的入场时间
                         mAppointmentIncomeTime.setText(tx);
                         appointmentStartCalendar.add(Calendar.MINUTE, mParkDuration);
                         mAppointmentEndTime = DateUtil.getCalenarYearToMinutes(appointmentStartCalendar);
                         performScanParkSpace(1);
                     } else {
+                        //如果入场时间比现在的时间早则是无效时间
                         mAppointmentStartTime = "";
                         mAppointmentIncomeTime.setText("");
                         showFiveToast("请选择有效时间哦");
@@ -380,6 +402,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         mStartTimeOption.show();
     }
 
+    /**
+     * 为时间选择器添加小时和分钟
+     */
     private void addhourWithMinutes() {
         ArrayList<String> hour = new ArrayList<>(24);
         ArrayList<ArrayList<String>> hourWithMinute = new ArrayList<>(24);
@@ -396,8 +421,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         mMinutes.add(hourWithMinute);
     }
 
+    /**
+     * 停车时长选择器
+     */
     private void showParkDurationOptions() {
-        //选项选择器
         if (pvOptions == null) {
             pvOptions = new OptionsPickerView<>(this);
             mDurationHours = new ArrayList<>(3);
@@ -410,9 +437,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 if (i != 2) {
                     minutes = new ArrayList<>(23);
                     for (int j = i == 0 ? 5 : 0; j < 60; j += 5) {
+                        //0小时的时候不添加0分钟
                         minutes.add(String.valueOf(j));
                     }
                 } else {
+                    //最多只能停2个小时，所以两小时0分钟
                     minutes = new ArrayList<>(1);
                     minutes.add("0");
                 }
@@ -428,10 +457,14 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
                 @Override
                 public void onOptionsSelect(int options1, int option2, int options3) {
+                    //记录停车时长
                     mParkDuration = Integer.valueOf(mDurationHours.get(options1)) * 60 + Integer.valueOf(mDurationMinutes.get(options1).get(option2));
                     if (!mAppointmentStartTime.equals("")) {
+                        //如果选了入场时间的则算出停车的结束时间
                         mAppointmentEndTime = DateUtil.getYearToMinute(mAppointmentStartTime + ":00", mParkDuration * 60);
                     }
+
+                    //显示选择的停车时长是多少
                     setNewText(mParkDurationTv, "");
                     if (!mDurationHours.get(options1).equals("0")) {
                         mParkDurationTv.append(mDurationHours.get(options1));
@@ -461,25 +494,14 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             for (ParkOrderInfo parkOrderInfo : mParkOrderInfos) {
                 orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderStartTime());
                 orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime());
+
+                //判断选择的停车时间是否和已有的订单有冲突的
                 if (DateUtil.isIntersection(appointmentStartCalendar, appointmentEndCalendar, orderStartCalendar, orderEndCalendar) && getText(mCarNumber).equals(parkOrderInfo.getCarNumber())) {
                     if (parkOrderInfo.getOrderStatus().equals("1")) {
                         showFiveToast("在该时间您已有过预约，请重新选择哦");
                     } else {
                         showFiveToast("该车正在停车中哦");
-                    }
-                    switch (type) {
-                        case 0:
-                            mCarNumber.setText("");
-                            break;
-                        case 1:
-                            mAppointmentIncomeTime.setText("");
-                            mAppointmentStartTime = "";
-                            mAppointmentEndTime = "";
-                            break;
-                        case 2:
-                            mParkDuration = 0;
-                            mParkDurationTv.setText("");
-                            break;
+                        mCarNumber.setText("");
                     }
                     mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
                     mNextStep.setTextColor(Color.WHITE);
@@ -490,19 +512,24 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         }
     }
 
+    /**
+     * 筛选出符合要求的车位
+     */
     private void scanParkSpace() {
         mCanParkList.clear();
         mCanParkList.addAll(mParkInfos);
         Calendar[] shareTimeCalendar;
         int status;
-        boolean haveDestination = mLatitude != 0 && mLongitude != 0;
+        boolean haveDestination = mLatitude != 0 && mLongitude != 0;    //是否选择目的地
         final LatLng latLng = new LatLng(mLatitude, mLongitude);
         LatLng currentLatLng = new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude());
         float distance;
         Log.e(TAG, "scanParkSpace  mAppointmentStartTime:" + mAppointmentStartTime + "   mAppointmentEndTime:" + mAppointmentEndTime);
         for (Park_Info parkInfo : mParkInfos) {
             Log.e(TAG, "scanParkSpace: " + parkInfo);
+
             if (!parkInfo.getPark_status().equals("2")) {
+                //排除不是开放中的车位
                 mCanParkList.remove(parkInfo);
                 continue;
             }
@@ -571,10 +598,11 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 mCanParkList.remove(parkInfo);
             }
 
-            //如果选了目的地，则计算目的地和车位之间的距离
             if (haveDestination) {
+                //如果选了目的地，则计算目的地和车位之间的距离
                 distance = AMapUtils.calculateLineDistance(latLng, new LatLng(parkInfo.getLatitude(), parkInfo.getLongitude()));
             } else {
+                //没有目的地则计算用户所在当前位置和车位之间的距离
                 distance = AMapUtils.calculateLineDistance(currentLatLng, new LatLng(parkInfo.getLatitude(), parkInfo.getLongitude()));
             }
 
@@ -585,16 +613,13 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         }
 
         if (!mCanParkList.isEmpty()) {
-            if (haveDestination) {
-                Collections.sort(mCanParkList, new Comparator<Park_Info>() {
-                    @Override
-                    public int compare(Park_Info o1, Park_Info o2) {
-                        return (int) (o1.getDistance() - o2.getDistance());
-                    }
-                });
-            } else {
-                DataUtil.sortCanParkListByShareTime(mCanParkList, mAppointmentEndTime);
-            }
+            //根据距离排序
+            Collections.sort(mCanParkList, new Comparator<Park_Info>() {
+                @Override
+                public int compare(Park_Info o1, Park_Info o2) {
+                    return (int) (o1.getDistance() - o2.getDistance());
+                }
+            });
             mNextStep.setBackgroundResource(R.drawable.little_yuan_yellow_8dp);
             mNextStep.setTextColor(ConstansUtil.B1_COLOR);
         } else {
@@ -618,6 +643,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 .show();
     }
 
+    /**
+     * 预定亲友车位
+     */
     private void reserveFriendParkSpace(final Park_Info parkInfo) {
         showLoadingDialog("预定中...");
         getOkGo(HttpConstants.reserveFriendParkSpace)
@@ -648,6 +676,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.BOOK_PARK_SPACE)) {
+            //预定了之后添加预定记录到订单和车位，否则可以再次预定同样的车位，再次筛选的时候也会不准确
             Park_Info parkInfo = intent.getParcelableExtra(ConstansUtil.INTENT_MESSAGE);
 
             //添加预约订单

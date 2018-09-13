@@ -10,7 +10,6 @@
         android:layout_width="310dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        android:layout_marginStart="4dp"
         android:contentDescription="@string/picture_description"
         app:layout_constraintDimensionRatio="893:567"
         app:layout_constraintEnd_toEndOf="parent"

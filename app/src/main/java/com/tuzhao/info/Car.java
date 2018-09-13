@@ -15,18 +15,39 @@ public class Car implements Parcelable {
     @SerializedName(value = "carNumber", alternate = "car_num")
     private String carNumber;
 
+    /**
+     * 1：审核中，2：通过，3：不通过
+     */
     private String status;
 
+    /**
+     * 审核失败的原因
+     */
     private String resaon;
 
+    /**
+     * 车辆所有人（车主姓名）
+     */
     private String carOwner;
 
+    /**
+     * 身份证正反面，用“，”隔开
+     */
     private String idCard;
 
+    /**
+     * 驾驶证照（只有一张）
+     */
     private String driverLicense;
 
+    /**
+     * 行驶证，用“，”隔开
+     */
     private String vehicleLicense;
 
+    /**
+     * 人车合影（只有一张）
+     */
     private String groupPhoto;
 
     public String getCarNumber() {
@@ -37,6 +58,9 @@ public class Car implements Parcelable {
         this.carNumber = carNumber;
     }
 
+    /**
+     * @return 1：审核中，2：通过，3：不通过
+     */
     public String getStatus() {
         return status;
     }

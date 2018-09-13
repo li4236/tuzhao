@@ -11,6 +11,9 @@ import com.tuzhao.publicmanager.UserManager;
 
 /**
  * Created by juncoder on 2018/7/20.
+ * <p>
+ * 选择修改密码的方式（通过原密码还是短信验证码）
+ * </p>
  */
 public class ChangePasswordMethodActivity extends BaseStatusActivity {
 

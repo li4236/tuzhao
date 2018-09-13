@@ -1,6 +1,7 @@
 package com.tuzhao.activity.mine;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/6/4.
+ * <p>
+ * 添加车位
+ * </p>
  */
 public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnClickListener {
 
@@ -227,7 +231,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 mRevenueRatio.setVisibility(View.VISIBLE);
             }
 
-            mParkSpaceInfo.setParkLotId(mPark.getParkID());
+            mParkSpaceInfo.setParkLotId(mPark.getParkId());
             mParkSpaceInfo.setCityCode(mPark.getCitycode());
             mParkSpaceInfo.setParkLotName(mPark.getParkStation());
             mParkSpaceInfo.setRevenueRatio(revenueRatio);
@@ -263,13 +267,17 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                         }
                     });
                 } else {
-                    showLoadingDialog("压缩中...");
                     handleImageBean(photoList);
                 }
             }
         }
     }
 
+    /**
+     * 获取押金的金额
+     *
+     * @param startPay true(获取到押金的金额后开始提交添加车位申请)   false(仅仅获取押金金额)
+     */
     private void getDepositSum(final boolean startPay) {
         showCantCancelLoadingDialog();
 
@@ -305,17 +313,23 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         ImageUtil.startTakeMultiPhoto(this, maxNum);
     }
 
+    /**
+     * 处理压缩后的图片
+     *
+     * @param position 图片对应的位置
+     */
     private void handleCompressPhoto(File file, int position) {
         dismmisLoadingDialog();
         switch (position) {
             case 0:
+                //身份证人像面
                 mParkSpaceInfo.setIdCardPositiveUrl(file.getAbsolutePath());
-                showIdCardPositivePhoto(mParkSpaceInfo.getIdCardPositiveUrl(), true);
+                showIdCardPositivePhoto(mParkSpaceInfo.getIdCardPositiveUrl());
                 uploadPhoto(file, 0, position);
                 break;
             case 1:
                 mParkSpaceInfo.setIdCardNegativeUrl(file.getAbsolutePath());
-                showIdCardNegativePhoto(mParkSpaceInfo.getIdCardNegativeUrl(), true);
+                showIdCardNegativePhoto(mParkSpaceInfo.getIdCardNegativeUrl());
                 uploadPhoto(file, 0, position);
                 break;
             case 2:
@@ -368,6 +382,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
 
     private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
+            Log.e(TAG, "handleImageBean: " + mChoosePosition);
             switch (mChoosePosition) {
                 case 2:
                     compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
@@ -488,27 +503,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     }
                 }
                 break;
-            /*case 2:
-                mParkSpaceInfo.setPropertyFirstUrl(url);
-                UploadPhotoInfo firstProperty = mPropertyAdapter.get(0);
-                firstProperty.setPath(url);
-                firstProperty.setUploadSuccess(true);
-                mPropertyAdapter.notifyDataChange(0, firstProperty, 1);
-                break;
-            case 3:
-                mParkSpaceInfo.setPropertySecondUrl(url);
-                UploadPhotoInfo secondProperty = mPropertyAdapter.get(1);
-                secondProperty.setPath(url);
-                secondProperty.setUploadSuccess(true);
-                mPropertyAdapter.notifyDataChange(1, secondProperty, 1);
-                break;
-            case 4:
-                mParkSpaceInfo.setPropertyThirdUrl(url);
-                UploadPhotoInfo thirdProperty = mPropertyAdapter.get(2);
-                thirdProperty.setPath(url);
-                thirdProperty.setUploadSuccess(true);
-                mPropertyAdapter.notifyDataChange(2, thirdProperty, 1);
-                break;*/
         }
     }
 
@@ -606,44 +600,40 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         mCustomDialog.show();
     }
 
-    private void showIdCardPositivePhoto(String path, boolean showUpload) {
-        if (mIdCardPositivePhotoTv.getVisibility() == View.VISIBLE) {
-            mIdCardPositivePhotoTv.setVisibility(View.GONE);
-        }
-
+    /**
+     * 开始显示身份证人像面图片
+     *
+     * @param path 图片路径
+     */
+    private void showIdCardPositivePhoto(String path) {
+        goneView(mIdCardPositivePhotoTv);       //隐藏掉显示人像面文字的TextView
         ImageUtil.showPicWithNoAnimate(mIdCardPositivePhoto, path);
 
-        if (showUpload) {
-            if (!isVisible(mIdCardPositiveUploadTv)) {
-                mIdCardPositiveUploadTv.setVisibility(View.VISIBLE);
-                mIdCardPositiveUploadTv.setText("0%");
-            }
-        } else {
-            if (isVisible(mIdCardPositiveUploadTv)) {
-                mIdCardPositiveUploadTv.setVisibility(View.GONE);
-            }
+        //显示下载进度
+        if (!isVisible(mIdCardPositiveUploadTv)) {
+            mIdCardPositiveUploadTv.setVisibility(View.VISIBLE);
+            mIdCardPositiveUploadTv.setText("0%");
         }
     }
 
-    private void showIdCardNegativePhoto(String path, boolean showUpload) {
-        if (mIdCardNegativePhotoTv.getVisibility() == View.VISIBLE) {
-            mIdCardNegativePhotoTv.setVisibility(View.GONE);
-        }
-
+    /**
+     * 显示身份证国徽面图片
+     *
+     * @param path 图片路径
+     */
+    private void showIdCardNegativePhoto(String path) {
+        goneView(mIdCardNegativePhotoTv);       //隐藏掉显示国徽面文字的TextView
         ImageUtil.showPicWithNoAnimate(mIdCardNegativePhoto, path);
 
-        if (showUpload) {
-            if (!isVisible(mIdCardNegativeUploadTv)) {
-                mIdCardNegativeUploadTv.setVisibility(View.VISIBLE);
-                mIdCardNegativeUploadTv.setText("0%");
-            }
-        } else {
-            if (isVisible(mIdCardNegativeUploadTv)) {
-                mIdCardNegativeUploadTv.setVisibility(View.GONE);
-            }
+        if (!isVisible(mIdCardNegativeUploadTv)) {
+            mIdCardNegativeUploadTv.setVisibility(View.VISIBLE);
+            mIdCardNegativeUploadTv.setText("0%");
         }
     }
 
+    /**
+     * 显示选择拍照的图片
+     */
     private void setTakePhotoPic(ImageView imageView) {
         imageView.setPadding(mSixtyDp, mEightyDp, mSixtyDp, mEightyDp);
         imageView.setBackgroundResource(R.drawable.y3_all_1dp);
@@ -653,12 +643,14 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     private void deletePhoto(String filePath, int position) {
         switch (position) {
             case 0:
+                //删除身份证人像面图片
                 ImageUtil.showPic(mIdCardPositivePhoto, R.drawable.ic_idcard);
                 mIdCardPositivePhotoTv.setVisibility(View.VISIBLE);
                 showProgressStatus(mIdCardPositiveUploadTv, false);
                 mParkSpaceInfo.setIdCardPositiveUrl("-1");
                 break;
             case 1:
+                //删除身份证国徽面图片
                 ImageUtil.showPic(mIdCardNegativePhoto, R.drawable.ic_idcard2);
                 mIdCardNegativePhotoTv.setVisibility(View.VISIBLE);
                 showProgressStatus(mIdCardNegativeUploadTv, false);
@@ -667,6 +659,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             default:
                 for (int i = 0; i < mPropertyAdapter.getDataSize(); i++) {
                     if (mPropertyAdapter.get(i).getPath().equals(filePath)) {
+                        //找到对应的图片路径来删除
                         mPropertyAdapter.notifyRemoveData(i);
                         break;
                     }
@@ -683,50 +676,14 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                     mPropertyPhotoCl.setVisibility(View.GONE);
                 }
                 break;
-            /*case 2:
-                if (mPropertyAdapter.getDataSize() > 0) {
-                    mPropertyAdapter.notifyRemoveData(0);
-                }
-
-                if (mPropertyAdapter.getDataSize() == 0 || !mPropertyAdapter.get(mPropertyAdapter.getDataSize() - 1).getPath().equals("-1")) {
-                    //如果最后那张不是拍摄图，则添加拍摄图
-                    mPropertyAdapter.notifyAddData(new UploadPhotoInfo());
-                }
-                if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
-                    //如果没有图片则显示大的拍摄图
-                    mTakePropertyPhotoCl.setVisibility(View.VISIBLE);
-                    mPropertyPhotoCl.setVisibility(View.GONE);
-                }
-                break;
-            case 3:
-                if (mPropertyAdapter.getDataSize() > 1) {
-                    mPropertyAdapter.notifyRemoveData(mPropertyAdapter.getDataSize() - 2);
-                    if (mPropertyAdapter.getDataSize() == 0 || !mPropertyAdapter.getData().get(mPropertyAdapter.getDataSize() - 1).getPath().equals("-1")) {
-                        mPropertyAdapter.notifyAddData(new UploadPhotoInfo());
-                    }
-                    if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
-                        mTakePropertyPhotoCl.setVisibility(View.VISIBLE);
-                        mPropertyPhotoCl.setVisibility(View.GONE);
-                    }
-                } else if (mPropertyAdapter.getDataSize() == 1) {
-                    deletePhoto(4);
-                }
-                break;
-            case 4:
-                UploadPhotoInfo thirdProperty = mPropertyAdapter.getData().get(mPropertyAdapter.getDataSize() - 1);
-                thirdProperty.setPath("-1");
-                thirdProperty.setCourier("0%");
-                thirdProperty.setShowProgress(false);
-                thirdProperty.setUploadSuccess(false);
-                mPropertyAdapter.notifyDataChange(mPropertyAdapter.getDataSize() - 1, thirdProperty);
-                if (mPropertyAdapter.getDataSize() == 1 && mPropertyAdapter.get(0).getPath().equals("-1")) {
-                    mTakePropertyPhotoCl.setVisibility(View.VISIBLE);
-                    mPropertyPhotoCl.setVisibility(View.GONE);
-                }
-                break;*/
         }
     }
 
+    /**
+     * 显示图片上传进度的状态
+     *
+     * @param showProgress true（开始显示0%进度）  false（隐藏下载进度）
+     */
     private void showProgressStatus(TextView textView, boolean showProgress) {
         if (showProgress) {
             if (!isVisible(textView)) {
@@ -740,6 +697,9 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         }
     }
 
+    /**
+     * 初始化日期选择器
+     */
     private void initAppointmentOption() {
         mAppointmentDays = new ArrayList<>(7);
         mAppointmentTimeFramne = new ArrayList<>(7);
@@ -767,7 +727,9 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         mAppointmentOption.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
-                mChooseAppointmentTime.setTextColor(Color.parseColor("#323232"));
+                if (mChooseAppointmentTime.getTextColors() != ColorStateList.valueOf(ConstansUtil.B1_COLOR)) {
+                    mChooseAppointmentTime.setTextColor(Color.parseColor("#323232"));
+                }
                 String chooseTime = mAppointmentDays.get(options1) + " " + mAppointmentTimeFramne.get(options1).get(option2);
                 mChooseAppointmentTime.setText(chooseTime);
             }
@@ -796,16 +758,19 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             showFiveToast("请等待身份证照上传完成");
         } else {
             if (mPropertyAdapter.getDataSize() == 2) {
-                if (!mPropertyAdapter.get(0).isUploadSuccess() ||
-                        !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()) {
+                if (!mPropertyAdapter.get(0).getPath().startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
+                    //只有一张产权照
                     showFiveToast("请等待产权照上传完成");
                 } else {
                     addUserPark();
                 }
             } else if (mPropertyAdapter.getDataSize() == 3) {
-                if (!mPropertyAdapter.get(0).isUploadSuccess() ||
-                        !mPropertyAdapter.get(1).getPath().equals("-1") && !mPropertyAdapter.get(1).isUploadSuccess()
-                        || !mPropertyAdapter.get(2).getPath().equals("-1") && !mPropertyAdapter.get(2).isUploadSuccess()) {
+                if (!mPropertyAdapter.get(0).getPath().startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)
+                        || !mPropertyAdapter.get(1).getPath().startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
+                    //前两张产权照有还没上传完成的
+                    showFiveToast("请等待产权照上传完成");
+                } else if (!mPropertyAdapter.get(2).getPath().equals("-1") && !mPropertyAdapter.get(2).getPath().startsWith(HttpConstants.ROOT_IMG_URL_PROPERTY)) {
+                    //有三张产权照并且最后一张还没上传完成
                     showFiveToast("请等待产权照上传完成");
                 } else {
                     addUserPark();
@@ -814,27 +779,33 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         }
     }
 
+    /**
+     * 申请添加车位
+     */
     private void addUserPark() {
+        //如果刚开始没获取到押金的金额则再次获取
         if (!getText(mPayDeposit).contains("元")) {
             getDepositSum(true);
             return;
         }
 
         showLoadingDialog("正在提交");
-        Log.e(TAG, "addUserPark: " + mParkSpaceInfo);
+        //拼接产权照的网络url，并去掉前缀。因为前面已经检查过肯定至少有一张了的，所以先添加一张
         StringBuilder propertyPhoto = new StringBuilder(mPropertyAdapter.get(0).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
         propertyPhoto.append(",");
-        if (mPropertyAdapter.getDataSize() == 2 && !mPropertyAdapter.get(1).getPath().equals("-1")) {
+        if (mPropertyAdapter.getDataSize() == 3) {
+            //有两张产权照
             propertyPhoto.append(mPropertyAdapter.get(1).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
             propertyPhoto.append(",");
-        }
-        if (mPropertyAdapter.getDataSize() == 3 && !mPropertyAdapter.get(2).getPath().equals("-1")) {
-            propertyPhoto.append(mPropertyAdapter.get(2).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
-            propertyPhoto.append(",");
+            if (!mPropertyAdapter.get(2).getPath().equals("-1")) {
+                //有三张产权照
+                propertyPhoto.append(mPropertyAdapter.get(2).getPath().replace(HttpConstants.ROOT_IMG_URL_PROPERTY, ""));
+                propertyPhoto.append(",");
+            }
         }
         propertyPhoto.deleteCharAt(propertyPhoto.length() - 1);
-        Log.e(TAG, "addUserPark: " + propertyPhoto);
 
+        //根据用户选的日期算出具体日期(yyyy-MM-dd)
         final Calendar calendar = Calendar.getInstance();
         String appointmentDate = getText(mChooseAppointmentTime);
         if (appointmentDate.startsWith("明天")) {
@@ -861,6 +832,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        //提交申请成功后跳转到支付押金界面
                         String payMoney = getText(mPayDeposit);
                         payMoney = payMoney.substring(payMoney.indexOf("缴纳"), payMoney.indexOf("元") + 1);
 
@@ -919,13 +891,16 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             ImageView imageView = holder.getView(R.id.property_photo_iv);
             TextView textView = holder.getView(R.id.property_upload_tv);
             if (uploadPhotoInfo.getPath().equals("-1")) {
+                //路径为-1则显示选择拍照的图片
                 setTakePhotoPic(imageView);
                 if (isVisible(textView)) {
                     textView.setVisibility(View.GONE);
                 }
                 showProgressStatus(textView, false);
             } else {
+                //显示选择的图片
                 if (imageView.getPaddingTop() != 0) {
+                    //有可能之前是拍照图加了padding的，所以这里去掉padding和拍照图
                     imageView.setPadding(0, 0, 0, 0);
                     imageView.setBackgroundResource(0);
                 }
@@ -953,6 +928,7 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             });
         }
 
+        // TODO: 2018/9/11 显示上传进度的时候可以调该方法来局部刷新
        /* @Override
         public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
             if (payloads.isEmpty()) {

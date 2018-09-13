@@ -35,6 +35,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/4/8.
+ * <p>
+ * 我的亲友
+ * </p>
  */
 
 public class MyFriendsActivity extends BaseStatusActivity {
@@ -305,6 +308,9 @@ public class MyFriendsActivity extends BaseStatusActivity {
                 });
     }
 
+    /**
+     * 获取该车位被预定的订单
+     */
     private void getFriendFutureReserveRecord(final int position, final String friendName) {
         showLoadingDialog();
         getOkGo(HttpConstants.getFriendFutureReserveRecord)
@@ -372,6 +378,9 @@ public class MyFriendsActivity extends BaseStatusActivity {
                 });
     }
 
+    /**
+     * 获取亲友的信息
+     */
     private void getFriendInfo(String telephone) {
         showLoadingDialog("正在查询");
         getOkGo(HttpConstants.getUserInfo)
@@ -496,14 +505,10 @@ public class MyFriendsActivity extends BaseStatusActivity {
             final String noteName;
             if (friendInfo.getNoteName() == null || friendInfo.getNoteName().equals("-1")) {
                 if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
-                    if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
-                        if (friendInfo.getTelephone() == null || friendInfo.getTelephone().equals("-1")) {
-                            noteName = "亲友" + (++mNotNameNum);
-                        } else {
-                            noteName = friendInfo.getTelephone();
-                        }
+                    if (friendInfo.getTelephone() == null || friendInfo.getTelephone().equals("-1")) {
+                        noteName = "亲友" + (++mNotNameNum);
                     } else {
-                        noteName = friendInfo.getRealName();
+                        noteName = friendInfo.getTelephone();
                     }
                 } else {
                     noteName = friendInfo.getRealName();

@@ -40,6 +40,8 @@ public class BasePickerView {
 
     private boolean autoDismiss = true;
 
+    private boolean mIsShowing;
+
     public BasePickerView(Context context) {
         this.context = context;
 
@@ -78,6 +80,7 @@ public class BasePickerView {
                 Log.e("TAG", "onAnimationEnd: ");
                 //从activity根视图移除
                 decorView.removeView(rootView);
+                mIsShowing = false;
                 isDismissing = false;
                 if (onDismissListener != null) {
                     onDismissListener.onDismiss(BasePickerView.this);
@@ -115,6 +118,7 @@ public class BasePickerView {
             return;
         }
         onAttached(rootView);
+        mIsShowing = true;
     }
 
     /**
@@ -123,8 +127,10 @@ public class BasePickerView {
      * @return 如果视图已经存在该View返回true
      */
     public boolean isShowing() {
-        View view = decorView.findViewById(R.id.outmost_container);
-        return view != null;
+        //如果一个Activity使用了两个该控件，用下面的方法检测会不准确
+        /*View view = decorView.findViewById(R.id.outmost_container);
+        return view != null;*/
+        return mIsShowing;
     }
 
     public void dismiss() {
@@ -136,6 +142,16 @@ public class BasePickerView {
             return;
         }
 
+        contentContainer.startAnimation(outAnim);
+    }
+
+    /**
+     * 强制关闭
+     */
+    public void forceDismiss() {
+        if (isDismissing) {
+            return;
+        }
         contentContainer.startAnimation(outAnim);
     }
 

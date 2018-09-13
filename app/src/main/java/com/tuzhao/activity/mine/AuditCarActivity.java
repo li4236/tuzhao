@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +24,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/9/7.
+ * <p>
+ * 我的车辆审核进度(审核中/未通过)
+ * </p>
  */
 public class AuditCarActivity extends BaseStatusActivity {
 
@@ -41,6 +43,7 @@ public class AuditCarActivity extends BaseStatusActivity {
             showFiveToast("获取车辆信息失败，请稍后重试");
             finish();
         }
+
         ImageUtil.showPic((ImageView) findViewById(R.id.audit_iv), mCar.getStatus().equals("1") ? R.drawable.ic_audit3 : R.drawable.ic_auditfail);
         findViewById(R.id.cancel_apply_tv).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +102,9 @@ public class AuditCarActivity extends BaseStatusActivity {
         builder.create().show();
     }
 
+    /**
+     * 取消申请车辆（即删除车辆）
+     */
     private void cancelAddCar() {
         showLoadingDialog("取消中...");
         getOkGo(HttpConstants.deleteUserCarNumber)
@@ -127,6 +133,7 @@ public class AuditCarActivity extends BaseStatusActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK) {
+            //重新申请车辆成功后把结果返回给MyCarActivity
             setResult(ConstansUtil.RESULT_CODE, data);
             finish();
         }

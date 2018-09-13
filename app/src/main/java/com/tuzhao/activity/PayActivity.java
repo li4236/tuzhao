@@ -360,6 +360,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         payIntent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
                         IntentObserable.dispatch(payIntent);
                         startActivity(AuditParkSpaceActivity.class);
+                        finish();
                     }
                 })
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -370,6 +371,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         payIntent.putExtra(ConstansUtil.PARK_SPACE_ID, mParkSpaceId);
                         IntentObserable.dispatch(payIntent);
                         startActivity(AuditParkSpaceActivity.class);
+                        finish();
                     }
                 })
                 .create().show();

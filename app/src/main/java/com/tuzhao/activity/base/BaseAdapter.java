@@ -154,6 +154,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         mFooterView = footerView;
     }
 
+    /**
+     * 添加一个空白的占位footerView
+     *
+     * @param height view的高度，单位为dp
+     */
     public void setPlaceholderFooterView(int height) {
         mFooterView = LayoutInflater.from(mRecyclerView.getContext()).inflate(R.layout.layout_placeholder, mRecyclerView, false);
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

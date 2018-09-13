@@ -3,9 +3,7 @@ package com.tuzhao.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
@@ -15,7 +13,6 @@ import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
-import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
@@ -39,17 +36,14 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
         Bundle bundle = new Bundle();
         bundle.putInt(ConstansUtil.TYPE, type);
         monthlyCardFragment.setArguments(bundle);
+        monthlyCardFragment.setTAG(monthlyCardFragment.getTAG() + " type:" + type);
         return monthlyCardFragment;
     }
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        View footerView = getLayoutInflater().inflate(R.layout.layout_placeholder, mRecyclerView.getRecyclerView(), false);
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                DensityUtil.dp2px(mRecyclerView.getContext(), 8));
-        footerView.setLayoutParams(layoutParams);
-        mCommonAdapter.setFooterView(footerView);
+        mCommonAdapter.setPlaceholderHeaderView(8);
     }
 
     @Override
@@ -58,7 +52,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
             mType = getArguments().getInt(ConstansUtil.TYPE);
             ArrayList<MonthlyCardBean> list = getArguments().getParcelableArrayList(ConstansUtil.CARD_INFO_LIST);
             if (list == null) {
-                getUserExpiredCards();
+                getUserMonthlyCards();
             } else {
                 Base_Class_List_Info<MonthlyCardBean> cardInfoBaseClassListInfo = new Base_Class_List_Info<>();
                 cardInfoBaseClassListInfo.data = list;
@@ -74,7 +68,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
 
     @Override
     protected void loadData() {
-        getUserExpiredCards();
+        getUserMonthlyCards();
     }
 
     @Override
@@ -89,7 +83,7 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
         IntentObserable.unregisterObserver(this);
     }
 
-    private void getUserExpiredCards() {
+    private void getUserMonthlyCards() {
         if (mCommonAdapter.getData().size() == 0) {
             showLoadingDialog();
         }

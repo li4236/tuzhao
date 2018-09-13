@@ -22,6 +22,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/4/14.
+ * <p>
+ * 开票进度
+ * </p>
  */
 
 public class InvoiceSituationActivity extends BaseRefreshActivity<InvoiceSituation> {

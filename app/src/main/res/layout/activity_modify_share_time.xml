@@ -29,7 +29,7 @@
                     android:id="@+id/modify_share_time_share_time"
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:text="共享日期"
+                    android:text="出租日期"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -102,7 +102,7 @@
                     android:id="@+id/modify_share_time_everyweek_share"
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:text="每周共享"
+                    android:text="每周出租"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -224,7 +224,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="暂停共享日期"
+                    android:text="暂停出租日期"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -273,7 +273,7 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="共享时段"
+                    android:text="出租时段"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -310,7 +310,7 @@
                 style="@style/TwentyTextB1Style"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
-                android:text="提示:不设置时段则默认全天共享"
+                android:text="提示:不设置时段则默认全天出租"
                 android:textColor="@color/r1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/modify_share_time_everyday_share_date" />

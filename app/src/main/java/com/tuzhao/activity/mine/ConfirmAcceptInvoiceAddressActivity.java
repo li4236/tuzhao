@@ -33,6 +33,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/8/3.
+ * <p>
+ * 确认开发票的收票地址
+ * </p>
  */
 public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<AcceptTicketAddressInfo> {
 
@@ -42,6 +45,9 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
 
     private List<InvoiceInfo> mInvoiceInfos;
 
+    /**
+     * 开发票的订单总额
+     */
     private String mTotalPrice;
 
     /**
@@ -59,12 +65,12 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
     @Override
     protected void initView(Bundle savedInstanceState) {
         super.initView(savedInstanceState);
-        if ((mInvoiceInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.INVOICE_LIST)) == null) {
+        mInvoiceInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.INVOICE_LIST);
+        if (mInvoiceInfos == null) {
             showFiveToast("获取订单信息失败，请返回重试");
             finish();
-        } else {
-            mTotalPrice = getIntent().getStringExtra(ConstansUtil.FOR_REQEUST_RESULT);
         }
+        mTotalPrice = getIntent().getStringExtra(ConstansUtil.INTENT_MESSAGE);
 
         mTotalMoney = findViewById(R.id.confirm_ticket_order_total_money);
         findViewById(R.id.confirm_ticket_order_confirm).setOnClickListener(new View.OnClickListener() {
@@ -154,6 +160,9 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
         }
     }
 
+    /**
+     * 获取默认收票地址所在的位置
+     */
     private void findDefaultAddressPosition() {
         mDefalutAddressPosition = -1;
         for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
@@ -237,6 +246,9 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                 });
     }
 
+    /**
+     * 申请发票报销
+     */
     private void applyInvoiceReimbursement() {
         showLoadingDialog();
         StringBuilder orderId = new StringBuilder();
@@ -245,6 +257,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             orderId.append(",");
         }
         orderId.deleteCharAt(orderId.length() - 1);
+
         getOkGo(HttpConstants.applyInvoiceReimbursement)
                 .params("orderId", orderId.toString())
                 .params("ticketId", mCommonAdapter.get(mDefalutAddressPosition).getTicketId())
@@ -338,6 +351,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
                 if (mRecyclerView.getRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE
                         && !mRecyclerView.getRecyclerView().isComputingLayout()) {
                     if (!checkBox.isChecked() && isChecked) {
+                        //当没选的时候才设置为默认收票地址，如果原本就是的则不操作
                         setDefaultAddress(acceptTicketAddressInfo, position);
                         return true;
                     }

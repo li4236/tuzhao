@@ -26,6 +26,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/8/22.
+ * <p>
+ * 芝麻认证，设置支付密码和重置支付密码的身份证验证
+ * </p>
  */
 public class CertifyZhimaActivity extends BaseStatusActivity {
 
@@ -35,6 +38,9 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
 
     private ZhimaCertification mZhimaCertification;
 
+    /**
+     * 设置支付密码和重置支付密码时才有
+     */
     private String mPassCode;
 
     /**
@@ -98,7 +104,10 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
     @Override
     protected String title() {
         if (mPassCode != null) {
-            return "重置密码";
+            if ("0".equals(mType)) {
+                return "设置支付密码";
+            }
+            return "重置支付密码";
         }
         return "实名认证";
     }
@@ -107,6 +116,7 @@ public class CertifyZhimaActivity extends BaseStatusActivity {
     protected void onResume() {
         super.onResume();
         if (mZhimaCertification != null && mZhimaCertification.isCertifyZhima()) {
+            //如果是芝麻认证的，跳转到支付宝回来后请求认证结果
             getCertifyZhimaResult();
         }
     }

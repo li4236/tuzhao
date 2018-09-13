@@ -169,6 +169,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                     if (mPath[finalI].equals("-1")) {
                         showDialog();
                     } else {
+                        //如果已经选择过图片的则直接打开相册
                         ImageUtil.startTakePhotoAndCrop(AddNewCarActivity.this);
                     }
                 }
@@ -316,20 +317,28 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         mCustomDialog.show();
     }
 
+    /**
+     * 设置上传进度
+     *
+     * @param filePath 图片的本地路径
+     * @param progress 当前的上传进度
+     */
     private void setUploadProgress(String filePath, float progress) {
         String progressString = (int) (progress * 100) + "%";
         for (int i = 0; i < mPath.length; i++) {
             if (mPath[i].equals(filePath)) {
-                if (progress == 1.0) {
-                    goneView(mTextViews[i]);
-                } else {
-                    mTextViews[i].setText(progressString);
-                }
+                mTextViews[i].setText(progressString);
                 break;
             }
         }
     }
 
+    /**
+     * 上传图片完成后设置图片的地址
+     *
+     * @param filePath 上传图片的本地路径
+     * @param url      网络url地址
+     */
     private void setServerUrl(String filePath, String url) {
         for (int i = 0; i < mPath.length; i++) {
             if (mPath[i].equals(filePath)) {
@@ -340,6 +349,12 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         }
     }
 
+    /**
+     * 上传图片
+     *
+     * @param file           图片
+     * @param choosePosition 是哪个位置的，用来判断上传图片的类型
+     */
     private void uploadPicture(final File file, final int choosePosition) {
         int type = 0;
         if (choosePosition == 2) {
@@ -350,6 +365,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
             type = 6;
         }
         showView(mTextViews[mChoosePosition]);
+        mTextViews[mChoosePosition].setText("0%");
 
         OkGo.post(HttpConstants.uploadPicture)
                 .retryCount(0)
@@ -360,6 +376,8 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
 
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
+                        setUploadProgress(file.getAbsolutePath(), 1);
+                        //根据上传的图片类型添加url的起始地址
                         switch (choosePosition) {
                             case 0:
                             case 1:
@@ -376,7 +394,6 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                                 setServerUrl(file.getAbsolutePath(), HttpConstants.ROOT_IMG_URL_GROUP_PHOTO + stringBase_class_info.data);
                                 break;
                         }
-                        setUploadProgress(file.getAbsolutePath(), 1);
                     }
 
                     @Override
@@ -398,9 +415,14 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                 });
     }
 
-    private void deletePhoto(String photoPath) {
+    /**
+     * 删除图片,并显示背景和清除ImageView的图片，隐藏上传进度
+     *
+     * @param filePath 图片的本地路径
+     */
+    private void deletePhoto(String filePath) {
         for (int i = 0; i < mPath.length; i++) {
-            if (mPath[i].equals(photoPath)) {
+            if (mPath[i].equals(filePath)) {
                 mPath[i] = "-1";
                 showView(mPlusViews[i]);
                 mImageViews[i].setImageDrawable(null);
@@ -410,6 +432,9 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         }
     }
 
+    /**
+     * 申请添加车辆
+     */
     private void applyAddNewCar() {
         getOkGo(HttpConstants.applyAddNewCar)
                 .params("carNumber", getText(mCarNumber))
@@ -427,6 +452,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.INTENT_MESSAGE, getText(mCarNumber));
                         if (mCar != null) {
+                            //如果是重新申请的则把原来的车牌号传回去
                             intent.putExtra(ConstansUtil.CAR_NUMBER, mCar.getCarNumber());
                         }
                         setResult(RESULT_OK, intent);

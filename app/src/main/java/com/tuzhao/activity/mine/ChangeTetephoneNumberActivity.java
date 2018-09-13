@@ -36,6 +36,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/8/7.
+ * <p>
+ * 修改手机号
+ * </p>
  */
 public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements View.OnClickListener {
 
@@ -92,6 +95,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                 if (telephoneNumberLength > 0) {
                     showView(mClearTetephoneNumber);
                     if (telephoneNumberLength == 11 && DateUtil.isPhoneNumble(getText(mTelephoneNumber)) && mTelephoneToken != null) {
+                        //如果之前输入框显示了红色背景的，则手机号正确的时候显示为黄色背景
                         hideView(mTelephoneNumberError);
                         mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
                     }
@@ -145,6 +149,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
         mPassCode = getIntent().getStringExtra(ConstansUtil.PASS_CODE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+            //因为验证旧手机号的时候会发送验证码，那时候就已经申请获取权限了，如果用户拒绝了则不再申请
             mSmsObserver = new SmsObserver(new Handler(Looper.getMainLooper()), this, new SmsObserver.SmsListener() {
                 @Override
                 public void onResult(String smsContent) {
@@ -200,7 +205,11 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                 mVerificationCode.setText("");
                 break;
             case R.id.confirm_change:
-                if (mTelephoneToken == null) {
+                if (getTextLength(mTelephoneNumber) == 0) {
+                    showFiveToast("请输入新的手机号");
+                } else if (getTextLength(mTelephoneNumber) < 11) {
+                    showFiveToast("手机号格式不正确");
+                } else if (mTelephoneToken == null) {
                     showTelephoneError("请先获取验证码");
                 } else if (!getText(mTelephoneNumber).equals(mGetVerificationCodeTelephone)) {
                     showTelephoneError("手机号与获取验证码的不一致");

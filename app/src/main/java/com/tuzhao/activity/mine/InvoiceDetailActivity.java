@@ -11,6 +11,9 @@ import com.tuzhao.utils.ConstansUtil;
 
 /**
  * Created by juncoder on 2018/4/16.
+ * <p>
+ *     开票详情
+ * </p>
  */
 
 public class InvoiceDetailActivity extends BaseStatusActivity {
@@ -28,8 +31,6 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
     private TextView mTelephone;
 
     private TextView mAddress;
-
-    private TextView mTicketDetail;
 
     private TextView mTicketContent;
 
@@ -62,7 +63,6 @@ public class InvoiceDetailActivity extends BaseStatusActivity {
         mName = findViewById(R.id.invoice_detail_name);
         mTelephone = findViewById(R.id.invoice_detail_telephone);
         mAddress = findViewById(R.id.invoice_detail_address);
-        mTicketDetail = findViewById(R.id.invoice_detail_ticket_detail_tv);
         mTicketContent = findViewById(R.id.invoice_detail_ticket_content_tv);
         mTicketType = findViewById(R.id.invoice_detail_ticket_type_tv);
         mTicketRise = findViewById(R.id.invoice_detail_ticket_rise_tv);

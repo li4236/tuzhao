@@ -34,6 +34,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/8/20.
+ * <p>
+ * 修改个人信息（头像，昵称）
+ * </p>
  */
 public class ChangePersonalInformationActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
@@ -98,9 +101,11 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
             if (file.exists()) {
                 //图片大小大于1M才压缩，否则看大图的时候会很模糊
                 if (file.length() > 1024 * 1024) {
+                    showLoadingDialog("压缩中...");
                     ImageUtil.compressPhoto(ChangePersonalInformationActivity.this, file.getAbsolutePath(), new SuccessCallback<MyFile>() {
                         @Override
                         public void onSuccess(MyFile myFile) {
+                            dismmisLoadingDialog();
                             if (myFile.getUncompressName().equals(file.getAbsolutePath())) {
                                 changeUserPortrait(myFile);
                             }
@@ -121,6 +126,9 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
         IntentObserable.unregisterObserver(this);
     }
 
+    /**
+     * 修改用户头像
+     */
     private void changeUserPortrait(File file) {
         showLoadingDialog();
         OkGo.post(HttpConstants.changeUserImage)
@@ -129,11 +137,12 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
                 .params("img_file", file)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
-                        mUserInfo.setImg_url(stringBase_class_info.data);
+                    public void onSuccess(final Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         ImageUtil.showPicWithNoAnimate(mUserProtrait, HttpConstants.ROOT_IMG_URL_USER + stringBase_class_info.data, new OnLoadCallback<Drawable, Exception>() {
                             @Override
                             public void onSuccess(Drawable drawable) {
+                                mUserInfo.setImg_url(stringBase_class_info.data);
+                                IntentObserable.dispatch(ConstansUtil.CHANGE_PORTRAIT);
                                 mUserProtrait.setImageDrawable(drawable);
                                 dismmisLoadingDialog();
                             }
@@ -144,7 +153,6 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
                                 dismmisLoadingDialog();
                             }
                         });
-                        IntentObserable.dispatch(ConstansUtil.CHANGE_PORTRAIT);
                     }
 
                     @Override
@@ -160,6 +168,7 @@ public class ChangePersonalInformationActivity extends BaseStatusActivity implem
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.CHANGE_NICKNAME)) {
+            //修改用户昵称后更新
             mNickname.setText(UserManager.getInstance().getUserInfo().getNickname());
         }
     }

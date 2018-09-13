@@ -35,6 +35,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/7/10.
+ * <p>
+ * 购买月卡
+ * </p>
  */
 public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
@@ -55,8 +58,6 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
     private TextView mFirstIndicate;
 
     private TextView mSecondIndicate;
-
-    //private TextView mThirdIndicate;
 
     private List<MonthlyCard> mMonthlyCards;
 
@@ -97,7 +98,6 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         RecyclerView recyclerView = findViewById(R.id.monthly_card_price_rv);
         mFirstIndicate = findViewById(R.id.first_indicate);
         mSecondIndicate = findViewById(R.id.second_indicate);
-        //mThirdIndicate = findViewById(R.id.third_indicate);
 
         mAdapter = new CardPriceAdapter(recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -123,12 +123,11 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_grayallcity_shadow);
         mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受7折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
         mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("各地区停车费用均有差异，地区卡只能在选定的一个城市使用，全国卡则全国通用。"));
-        //mThirdIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("为方便多地停车经常出差用户，推出全国月卡，全国月卡在各地都能使用，收费采取统一收费。"));
 
         /*if (LocationManager.getInstance().hasLocation()) {
             //如果已经定位成功的则显示当前的城市
             mChooseCityCode = LocationManager.getInstance().getmAmapLocation().getCityCode();
-            setCurrenCityMonthlyCard();
+            setCurrenNationalMonthlyCard();
         } else {
             //没有定位成功则开始定位
             initLocation();
@@ -155,10 +154,11 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                     //如果之前没有定位成功的则让用户自己选城市
                     showPickerView(true);
                 } else {
-                    //显示之前的城市月卡
                     if (mChooseCityCode.equals("0000")) {
+                        //由全国月卡再点击地区月卡，则显示之前的地区月卡
                         setLastChooseCityMonthlyCard();
                     } else {
+                        //显示地区月卡选择器
                         showPickerView(true);
                     }
                 }
@@ -167,7 +167,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                 if (mNationalPosition != -1) {
                     //显示全国月卡
                     mChooseCityCode = "0000";
-                    setCurrenCityMonthlyCard();
+                    setCurrenNationalMonthlyCard();
                 } else {
                     if (mMonthlyCards == null) {
                         getOpenAreaMonthlyCard(false, true);
@@ -241,6 +241,12 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         mAdapter.setNewData(list);
     }
 
+    /**
+     * 请求开放地区的月卡
+     *
+     * @param showPickerView     true(请求成功后弹出选择月卡地区的对话框)
+     * @param seleteNationalCard true(请求成功后默认选择全国月卡)
+     */
     private void getOpenAreaMonthlyCard(final boolean showPickerView, final boolean seleteNationalCard) {
         if (showPickerView) {
             showLoadingDialog();
@@ -263,10 +269,10 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                                         //全国月卡的位置为最后一个
                                         mNationalPosition = mMonthlyCards.size() - 1;
                                         mChooseCityCode = "0000";
-                                        setCurrenCityMonthlyCard();
+                                        setCurrenNationalMonthlyCard();
                                     }
                                 }
-                                //setCurrenCityMonthlyCard();
+                                //setCurrenNationalMonthlyCard();
                             }
                         }
                         showPickerView(showPickerView);
@@ -285,8 +291,14 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                 });
     }
 
+    /**
+     * 显示省市地区月卡的选择器
+     *
+     * @param show true(显示地区月卡选择器)  false(只加载数据)
+     */
     private void showPickerView(boolean show) {
         if (mMonthlyCards != null && mProvinces == null) {
+            //保证只初始化一次数据
             mProvinces = new ArrayList<>();
             ArrayList<ArrayList<String>> citys = new ArrayList<>();
 
@@ -354,7 +366,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                         LocationManager.getInstance().setmAmapLocation(aMapLocation);
                         if (mChooseCityCode.equals("-1")) {
                             mChooseCityCode = aMapLocation.getCityCode();
-                            setCurrenCityMonthlyCard();
+                            setCurrenNationalMonthlyCard();
                         }
                     }
                 }
@@ -362,33 +374,21 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         }
     }*/
 
-    private void setCurrenCityMonthlyCard() {
+    /**
+     * 设置当前选择的全国月卡
+     */
+    private void setCurrenNationalMonthlyCard() {
         if (mMonthlyCards != null) {
-            if (mChooseCityCode.equals("0000")) {
-                MonthlyCard.City city = mMonthlyCards.get(mNationalPosition).getCitys().get(0);
-                mAdapter.setNewData(city.getCityMonthlyCards());
-                setCurrentChooseCard(false);
-                mChooseCardTv.setText("当前选择：全国月卡");
-            } else {
-                for (int i = 0, size = mMonthlyCards.size(); i < size; i++) {
-                    for (int j = 0, citySize = mMonthlyCards.get(i).getCitys().size(); j < citySize; j++) {
-                        if (mChooseCityCode.equals(mMonthlyCards.get(i).getCitys().get(j).getCityCode())) {
-                            mAdapter.setNewData(mMonthlyCards.get(i).getCitys().get(j).getCityMonthlyCards());
-                            String cityName = mMonthlyCards.get(i).getCitys().get(j).getCity();
-                            mLastChooseArea[0] = i;
-                            mLastChooseArea[1] = j;
-                            setCurrentChooseCard(true);
-                            cityName = cityName.replace("市", "");
-                            mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
-                            mMonthlyCardArea.setText(cityName + "卡");
-                            break;
-                        }
-                    }
-                }
-            }
+            MonthlyCard.City city = mMonthlyCards.get(mNationalPosition).getCitys().get(0);
+            mAdapter.setNewData(city.getCityMonthlyCards());
+            setCurrentChooseCard(false);
+            mChooseCardTv.setText("当前选择：全国月卡");
         }
     }
 
+    /**
+     * 设置当前选择的月卡为上次选择的地区月卡
+     */
     private void setLastChooseCityMonthlyCard() {
         MonthlyCard.City city = mMonthlyCards.get(mLastChooseArea[0]).getCitys().get(mLastChooseArea[1]);
         mChooseCityCode = city.getCityCode();

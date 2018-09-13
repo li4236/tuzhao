@@ -163,6 +163,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
                 .headers("token", UserManager.getInstance().getUserInfo().getToken());
     }
 
+    /**
+     * @return ture（后台返回的响应码异常）
+     */
     protected boolean handleException(Exception e) {
         dismmisLoadingDialog();
         if (!DensityUtil.isException(this, e)) {
@@ -286,7 +289,8 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * @param msg 显示的消息
      */
     protected void showFiveToast(String msg) {
-        MyToast.showToast(getApplicationContext(), msg, 5);
+        //如果用Application的Context的话会被软键盘挡住
+        MyToast.showToast(this, msg, 5);
     }
 
     /**
@@ -296,16 +300,25 @@ public abstract class BaseStatusActivity extends BaseActivity {
         return textView.getText().toString();
     }
 
+    /**
+     * @return TextView里面的文字长度（不包括前后空格)
+     */
     protected int getTextLength(TextView textView) {
         return getText(textView).trim().length();
     }
 
-    protected void setNewText(TextView text, String string) {
-        if (!text.getText().toString().equals(string)) {
-            text.setText(string);
+    /**
+     * 如果TextView里面的文字不是string才设置
+     */
+    protected void setNewText(TextView textView, String string) {
+        if (!textView.getText().toString().equals(string)) {
+            textView.setText(string);
         }
     }
 
+    /**
+     * 设置光标位置为文字的最后面
+     */
     protected void setSelection(EditText editText) {
         editText.setSelection(editText.getText().length());
     }
@@ -332,14 +345,12 @@ public abstract class BaseStatusActivity extends BaseActivity {
         }
     }
 
+    /**
+     * @return dp对应的px
+     */
     protected int dpToPx(float dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
-    }
-
-    protected int spToPx(float sp) {
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (sp * scale + 0.5f);
     }
 
 }

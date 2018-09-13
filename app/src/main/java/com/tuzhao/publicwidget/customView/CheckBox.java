@@ -37,13 +37,15 @@ public class CheckBox extends AppCompatTextView implements Checkable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        //如果只是ActionDown就触发的话很容易误触
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             if (mOnCheckHandeListener == null || mOnCheckHandeListener.onCheckChange(!mIsCheck)) {
                 setChecked(!mIsCheck);
                 setDrawableStart();
 
                 if (mOnCheckChangeListener != null) {
                     mOnCheckChangeListener.onCheckChange(mIsCheck);
+                    return true;
                 }
 
             }
@@ -51,6 +53,9 @@ public class CheckBox extends AppCompatTextView implements Checkable {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 设置选择的效果，并不会触发OnCheckChangeListener
+     */
     @Override
     public void setChecked(boolean checked) {
         if (mIsCheck != checked) {

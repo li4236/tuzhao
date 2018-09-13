@@ -30,7 +30,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
         Bundle bundle = new Bundle();
         bundle.putString(ConstansUtil.STATUS, status);
         fragment.setArguments(bundle);
-        if (status.equals("0")) {
+        if (status.equals("1")) {
             fragment.setTAG("预定中");
         } else {
             fragment.setTAG("历史记录");

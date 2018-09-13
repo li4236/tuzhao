@@ -298,19 +298,18 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                             Log.d("TAG", "请求失败，" + " 信息为：没有路由到主机" + e.toString());
                         } else {
                             Log.d("TAG", "请求失败， 信息为：" + "getCollectionDatas" + e.getMessage());
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 102:
+                            switch (e.getMessage()) {
+                                case "102":
                                     //定位失败
                                     MyToast.showToast(SelectParkSpaceActivity.this, "定位失败，退出应用打开定位开关再试试哦", 2);
                                     break;
-                                case 103:
+                                case "103":
                                     //本城市不存在停车场
                                     linearlayout_no_open.setVisibility(View.VISIBLE);
                                     info_list.clear();
                                     initDatas(null, null);
                                     break;
-                                case 901:
+                                case "901":
                                     MyToast.showToast(SelectParkSpaceActivity.this, "服务器正在维护中", 2);
                                     break;
                                 default:

@@ -13,7 +13,7 @@ public class ParkBean extends BaseIndexPinyinBean {
     private String citycode;//城市码
     private String profit_ratio;//收益比
 
-    public String getParkID() {
+    public String getParkId() {
         return parkID;
     }
 

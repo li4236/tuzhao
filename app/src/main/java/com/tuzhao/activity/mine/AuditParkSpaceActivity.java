@@ -216,7 +216,7 @@ public class AuditParkSpaceActivity extends BaseRefreshActivity<ParkSpaceInfo> i
                         payDepositSum(parkSpaceInfo);
                     }
                 } else {
-                    Intent intent = new Intent(AuditParkSpaceActivity.this, ApplyParkSpaceProgressRefactoryActivity.class);
+                    Intent intent = new Intent(AuditParkSpaceActivity.this, ApplyParkSpaceProgressActivity.class);
                     intent.putExtra(ConstansUtil.PARK_SPACE_INFO, parkSpaceInfo);
                     startActivity(intent);
                 }

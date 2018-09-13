@@ -37,6 +37,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/7/25.
+ * <p>
+ * 通过原密码修改密码，通过短信验证码修改密码（不需要输入原密码）
+ * </p>
  */
 public class ChangePasswordRefactoryActivity extends BaseStatusActivity implements View.OnClickListener {
 
@@ -202,14 +205,14 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (getTextLength(mOriginalPassword) == 0) {
+                    //输入框为空的时候不显示删除按钮
                     if (isVisible(mClearOriginalPassword)) {
                         mClearOriginalPassword.setVisibility(View.INVISIBLE);
                     }
                 } else {
-                    if (!isVisible(mClearOriginalPassword)) {
-                        mClearOriginalPassword.setVisibility(View.VISIBLE);
-                    }
+                    showView(mClearOriginalPassword);
                     if (mAlreadyClick) {
+                        //如果点击了确认修改按钮后，原密码错误的则显示错误信息
                         originPasswrodIsCorrect();
                     }
                     /*if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
@@ -238,13 +241,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
             @Override
             public void afterTextChanged(Editable s) {
                 if (getTextLength(mNewPassword) == 0) {
-                    if (isVisible(mClearNewPassword)) {
-                        mClearNewPassword.setVisibility(View.INVISIBLE);
-                    }
+                    hideView(mClearNewPassword);
                 } else {
-                    if (!isVisible(mClearNewPassword)) {
-                        mClearNewPassword.setVisibility(View.VISIBLE);
-                    }
+                    showView(mClearNewPassword);
                     newPasswordIsCorrect();
                     confirmPasswordIsCorrect();
                 }
@@ -356,6 +355,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         mHandler.removeCallbacksAndMessages(null);
     }
 
+    /**
+     * 原密码错误时，输入框左右移动300毫秒
+     */
     private void startOriginPasswordErrorAnimator() {
         if (mOriginPasswordErrorAnimator == null) {
             mOriginPasswordErrorAnimator = ObjectAnimator.ofFloat(mOriginalPassword, "translationX", DensityUtil.dp2px(this, 8));
@@ -373,6 +375,7 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
 
                     mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
                     //mOriginalPassword.requestFocus();
+                    //动画结束后原密码输入框获取焦点
                     mOriginalPassword.setSelection(getTextLength(mOriginalPassword));
                     setFocus();
                 }
@@ -386,6 +389,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         mOriginPasswordErrorAnimator.start();
     }
 
+    /**
+     * 开始新密码的错误提示动画
+     */
     private void startNewPasswrodErrorAnimator() {
         if (mNewPasswrodErrorAnimator == null) {
             mNewPasswrodErrorAnimator = ObjectAnimator.ofFloat(mNewPassword, "translationX", DensityUtil.dp2px(this, 8));
@@ -412,6 +418,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         mNewPasswrodErrorAnimator.start();
     }
 
+    /**
+     * 开启确认密码的错误提示动画
+     */
     private void startConfirmPasswordErrorAnimator() {
         if (mConfirmPasswordErrorAnimator == null) {
             mConfirmPasswordErrorAnimator = ObjectAnimator.ofFloat(mConfirmPassword, "translationX", DensityUtil.dp2px(this, 8));
@@ -441,6 +450,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         mConfirmPasswordErrorAnimator.start();
     }
 
+    /**
+     * 从上往下，如果有错误的则获取焦点
+     */
     private void setFocus() {
         if (isVisible(mOriginalPasswordError)) {
             mOriginalPassword.requestFocus();
@@ -456,9 +468,11 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         switch (v.getId()) {
             case R.id.original_password_status:
                 if (mOriginPasswrodShow) {
+                    //密码显示为圆点
                     mOriginalPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     ImageUtil.showPic(mOriginalPasswordStatus, R.drawable.ic_nosee);
                 } else {
+                    //显示出具体的密码
                     mOriginalPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     ImageUtil.showPic(mOriginalPasswordStatus, R.drawable.ic_see);
                 }
@@ -509,8 +523,12 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         }
     }
 
+    /**
+     * @return true(原密码正确) false(原密码错误)
+     */
     private boolean originPasswrodIsCorrect() {
         if (getTextLength(mOriginalPassword) == 0) {
+            //没有输入密码，输入框变红色，并在左下方显示请输入原密码
             mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
             if (!getText(mOriginalPasswordError).equals(INPUT_ORIGIN_PASSWORD)) {
                 mOriginalPasswordError.setText(INPUT_ORIGIN_PASSWORD);
@@ -518,6 +536,7 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
             showView(mOriginalPasswordError);
             return false;
         } else if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+            //密码错误
             mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
             if (!getText(mOriginalPasswordError).equals(ORIGIN_PASSWROD_INCORRECT)) {
                 mOriginalPasswordError.setText(ORIGIN_PASSWROD_INCORRECT);
@@ -531,6 +550,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         }
     }
 
+    /**
+     * @return 新密码是否正确
+     */
     private boolean newPasswordIsCorrect() {
         if (getTextLength(mNewPassword) == 0) {
             mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
@@ -560,6 +582,10 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         }
     }
 
+    /**
+     *
+     * @return  确认密码是否正确
+     */
     private boolean confirmPasswordIsCorrect() {
         if (mAlreadyClick) {
             if (getTextLength(mConfirmPassword) == 0) {
@@ -585,6 +611,10 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         return false;
     }
 
+    /**
+     *
+     * @return  全部密码是否都合法，如果有不正确的则会开启动画
+     */
     private boolean allPasswrodIsLegal() {
         boolean result = true;
         if (isVisible(mOriginalPassword)) {
@@ -604,6 +634,9 @@ public class ChangePasswordRefactoryActivity extends BaseStatusActivity implemen
         return result;
     }
 
+    /**
+     * 通过原密码修改密码
+     */
     private void changePasswordByOriginal() {
         showLoadingDialog("正在修改");
         BaseRequest baseRequest = getOkGo(HttpConstants.requestChangePassword)
