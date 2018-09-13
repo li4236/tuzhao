@@ -87,6 +87,10 @@ public class ArrowView extends View {
         invalidate();
     }
 
+    public int getGravity() {
+        return mGravity;
+    }
+
     public void setColor(int color) {
         mColor = color;
         invalidate();

@@ -184,6 +184,7 @@
     <declare-styleable name="CrossView">
         <attr name="cross_color" format="color" />
         <attr name="cross_width" format="dimension" />
+        <attr name="draw_circle" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="PlusView" >

@@ -1,65 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/w0"
-    android:paddingBottom="14dp">
+    android:layout_marginBottom="6dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginStart="5dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="1dp">
 
-    <ImageView
-        android:id="@+id/park_space_location_iv"
-        android:layout_width="10dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="14dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_graygps2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/share_park_space_space_name"
-        style="@style/TwentyTextB1Style"
-        android:layout_marginStart="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/park_space_location_iv"
-        app:layout_constraintStart_toEndOf="@id/park_space_location_iv"
-        app:layout_constraintTop_toTopOf="@+id/park_space_location_iv" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/top_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0">
 
-    <ImageView
-        android:id="@+id/park_space_owner_iv"
-        android:layout_width="10dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="14dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_carman"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_space_location_iv" />
+            <ImageView
+                android:id="@+id/park_space_location_iv"
+                android:layout_width="11dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@mipmap/ic_gps"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/share_park_space_share_name"
-        style="@style/TwentyTextG6Style"
-        android:layout_marginStart="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/park_space_owner_iv"
-        app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
-        app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
+            <TextView
+                android:id="@+id/share_park_space_space_name"
+                style="@style/FortyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="14dp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/park_space_location_iv"
+                app:layout_constraintEnd_toStartOf="@+id/distance_to_distination_tv"
+                app:layout_constraintStart_toEndOf="@+id/park_space_location_iv"
+                app:layout_constraintTop_toTopOf="@+id/park_space_location_iv" />
 
-    <com.tuzhao.publicwidget.customView.CircleView
-        android:id="@+id/share_park_space_status_iv"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginBottom="6dp"
-        android:contentDescription="@string/picture_description"
-        app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
-        app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
-        app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
+            <ImageView
+                android:id="@+id/park_space_owner_iv"
+                android:layout_width="11dp"
+                android:layout_height="14dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="26dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@drawable/ic_carman"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/park_space_location_iv" />
 
-    <TextView
-        android:id="@+id/share_park_space_status"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />
+            <TextView
+                android:id="@+id/share_park_space_share_name"
+                style="@style/TwentyTextG6Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="14dp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/park_space_owner_iv"
+                app:layout_constraintEnd_toStartOf="@+id/book_park_space"
+                app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
+                app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
 
-</android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/distance_to_distination"
+                style="@style/TenTextY3Style"
+                android:paddingStart="2dp"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/share_park_space_space_name"
+                app:layout_constraintEnd_toEndOf="@+id/book_park_space"
+                app:layout_constraintTop_toTopOf="@+id/share_park_space_space_name" />
+
+            <TextView
+                android:id="@+id/distance_to_distination_tv"
+                style="@style/TenTextG6Stytle"
+                android:text="距离"
+                app:layout_constraintBaseline_toBaselineOf="@+id/distance_to_distination"
+                app:layout_constraintEnd_toStartOf="@id/distance_to_distination" />
+
+            <TextView
+                android:id="@+id/book_park_space"
+                style="@style/TenTextG6Stytle"
+                android:layout_width="58dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/normal_y17_to_y15_press_y7_to_y16_all_12dp"
+                android:text="预定"
+                android:textColor="@color/b1"
+                app:layout_constraintBottom_toBottomOf="@+id/share_park_space_share_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#f9f9f9">
+
+            <TextView
+                android:id="@+id/more_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginEnd="36dp"
+                android:text="更多"
+                android:textSize="9sp"
+                app:layout_constraintBottom_toBottomOf="@+id/more_iv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/more_iv" />
+
+            <com.tuzhao.publicwidget.customView.ArrowView
+                android:id="@+id/more_iv"
+                android:layout_width="58dp"
+                android:layout_height="20dp"
+                android:paddingBottom="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="30dp"
+                android:paddingTop="8dp"
+                app:arrow_color="@color/b1"
+                app:arrow_gravity="bottom"
+                app:arrow_width="2px"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/center_gl"
+                style="@style/VerticalGuideLine"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <LinearLayout
+                android:id="@+id/modify_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="6dp"
+                android:paddingEnd="34dp"
+                android:paddingStart="34dp"
+                android:paddingTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@id/center_gl"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_remarks"
+                    app:layout_constraintTop_toBottomOf="@+id/more_iv" />
+
+                <TextView
+                    style="@style/TenTextB1Style"
+                    android:layout_marginTop="6dp"
+                    android:text="修改备注" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delete_park_space"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="6dp"
+                android:paddingEnd="34dp"
+                android:paddingStart="34dp"
+                android:paddingTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/center_gl"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.tuzhao.publicwidget.customView.CrossView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="4dp"
+                    app:cross_width="1dp"
+                    app:draw_circle="true"
+                    app:layout_constraintTop_toBottomOf="@+id/more_iv" />
+
+                <TextView
+                    style="@style/TenTextB1Style"
+                    android:layout_marginTop="6dp"
+                    android:text="移除车位" />
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

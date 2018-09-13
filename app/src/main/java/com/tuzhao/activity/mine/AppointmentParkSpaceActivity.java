@@ -140,6 +140,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         if (!mIsBookSpecificParkSpace) {
             mParkInfos = new ArrayList<>();
             getFriendShareParkspace();
+        } else {
+            mNextStep.setText("预定车位");
         }
         mParkOrderInfos = new ArrayList<>();
         mCanParkList = new LinkedList<>();
@@ -275,20 +277,20 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                                 mParkOrderInfos.add(parkOrderInfo);
                             }
                         }
+                        dismmisLoadingDialog();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "101":
-                                    break;
-                                default:
-                                    showFiveToast("获取订单信息失败，请稍后重试");
-                                    finish();
-                                    break;
-                            }
+                        dismmisLoadingDialog();
+                        switch (e.getMessage()) {
+                            case "101":
+                                break;
+                            default:
+                                showFiveToast("获取订单信息失败，请稍后重试");
+                                finish();
+                                break;
                         }
                     }
                 });

@@ -45,18 +45,18 @@
         app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
 
     <com.tuzhao.publicwidget.customView.CircleView
-        android:id="@+id/share_park_space_status_iv"
+        android:id="@+id/distance_to_park_space"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_marginBottom="6dp"
         android:contentDescription="@string/picture_description"
         app:color="@color/green7"
-        app:layout_constraintBottom_toTopOf="@+id/share_park_space_status"
-        app:layout_constraintEnd_toEndOf="@+id/share_park_space_status"
-        app:layout_constraintStart_toStartOf="@+id/share_park_space_status" />
+        app:layout_constraintBottom_toTopOf="@+id/book_park_space"
+        app:layout_constraintEnd_toEndOf="@+id/book_park_space"
+        app:layout_constraintStart_toStartOf="@+id/book_park_space" />
 
     <TextView
-        android:id="@+id/share_park_space_status"
+        android:id="@+id/book_park_space"
         style="@style/TenTextG6Stytle"
         android:layout_marginEnd="16dp"
         android:text="使用中"
