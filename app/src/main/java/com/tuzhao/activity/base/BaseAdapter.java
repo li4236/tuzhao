@@ -134,9 +134,11 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
      */
     public void setPlaceholderHeaderView(int height) {
         mHeaderView = LayoutInflater.from(mRecyclerView.getContext()).inflate(R.layout.layout_placeholder, mRecyclerView, false);
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                DensityUtil.dp2px(mRecyclerView.getContext(), height));
-        mHeaderView.setLayoutParams(layoutParams);
+        if (height != 5) {
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    DensityUtil.dp2px(mRecyclerView.getContext(), height));
+            mHeaderView.setLayoutParams(layoutParams);
+        }
     }
 
     public View getFooterView() {

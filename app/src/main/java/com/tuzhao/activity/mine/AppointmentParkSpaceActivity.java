@@ -141,6 +141,10 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             mParkInfos = new ArrayList<>();
             getFriendShareParkspace();
         } else {
+            mDestination.setVisibility(View.GONE);
+            findViewById(R.id.destination_tv).setVisibility(View.GONE);
+            findViewById(R.id.destination_copy_tv).setVisibility(View.GONE);
+            findViewById(R.id.destination_av).setVisibility(View.GONE);
             mNextStep.setText("预定车位");
         }
         mParkOrderInfos = new ArrayList<>();

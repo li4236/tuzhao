@@ -73,6 +73,8 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
         mRecyclerView.setRefreshEnabled(false);
         mRecyclerView.setLoadingMoreEnable(false);
         mRecyclerView.addItemDecoration(new SkipTopBottomDivider(this, true, true));
+
+        mCommonAdapter.setPlaceholderHeaderView(6);
     }
 
     @Override
@@ -221,10 +223,35 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                 });
     }
 
-    private void showDeleteParkSpaceDialog(final int position) {
+    /**
+     * 删除好友分享给我的车位之前获取我在该车位是否有预定记录，如果有的话提醒用户
+     */
+    private void getOneFriendParkSpaceRecord(final int position) {
+        showLoadingDialog();
+        getOkGo(HttpConstants.getOneFriendParkSpaceRecord)
+                .params("parkSpaceId", mCommonAdapter.get(position).getId())
+                .params("cityCode", mCommonAdapter.get(position).getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<String>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        showDeleteParkSpaceDialog(position, "你在" + o.data.replace("*", "至") + "预定了该车位，确定移除吗？");
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        String name = "".equals(mCommonAdapter.get(position).getParkSpaceNote()) ? mCommonAdapter.get(position).getUserName() : mCommonAdapter.get(position).getParkSpaceNote();
+                        showDeleteParkSpaceDialog(position, "确定移除" + name + "的车位吗？");
+                    }
+                });
+    }
+
+    private void showDeleteParkSpaceDialog(final int position, String msg) {
         new TipeDialog.Builder(this)
                 .setTitle("移除车位")
-                .setMessage("确定移除" + mCommonAdapter.get(position).getParkSpaceNote() + "吗")
+                .setMessage(msg)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -349,7 +376,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                 .setOnClickListener(R.id.delete_park_space, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showDeleteParkSpaceDialog(position);
+                        getOneFriendParkSpaceRecord(position);
                     }
                 });
 
