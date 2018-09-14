@@ -138,46 +138,56 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
         bean1.setId(0);
         bean1.setName("智能排序");
         sortListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(1);
         bean1.setName("均价最低");
         sortListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(2);
         bean1.setName("离我最近");
         sortListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(3);
         bean1.setName("评分最高");
         sortListData.add(bean1);
+
         //类别数据
         kindListData = new ArrayList<>();
         bean1 = new InstitutionPriceBean();
         bean1.setId(0);
         bean1.setName("停车场");
         kindListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(1);
         bean1.setName("充电站");
         kindListData.add(bean1);
+
         //距离数据
         distanceListData = new ArrayList<>();
         bean1 = new InstitutionPriceBean();
         bean1.setId(0);
         bean1.setName("2km内");
         distanceListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(1);
         bean1.setName("5km内");
         distanceListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(2);
         bean1.setName("10km内");
         distanceListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(3);
         bean1.setName("18km内");
         distanceListData.add(bean1);
+
         bean1 = new InstitutionPriceBean();
         bean1.setId(4);
         bean1.setName("25km内");

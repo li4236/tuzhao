@@ -19,16 +19,15 @@ import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.MyCarActivity;
 import com.tuzhao.activity.mine.OrderActivity;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
-import com.tuzhao.info.Park_Space_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.JsonCodeCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
@@ -58,9 +57,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private ImageView imageView_back;
     private LinearLayout linearlayout_carnumble, linearlayout_starttime, linearlayout_parktime;
     private TextView textview_carnumble, textview_starttime, textview_parktime, textview_fee, textview_ordernow;
-    private LoginDialogFragment loginDialogFragment;
 
-    private Park_Space_Info parkspace_info;
+    private ParkLotInfo parkspace_info;
     private ArrayList<Park_Info> park_list;
     private ArrayList<ParkOrderInfo> order_list;
     private List<Park_Info> mCanParkInfo;
@@ -100,7 +98,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
     private void initData() {
         if (getIntent().hasExtra("parkspace_info")) {
-            parkspace_info = (Park_Space_Info) getIntent().getSerializableExtra("parkspace_info");
+            parkspace_info = (ParkLotInfo) getIntent().getSerializableExtra("parkspace_info");
             park_list = (ArrayList<Park_Info>) getIntent().getSerializableExtra("park_list");
             order_list = (ArrayList<ParkOrderInfo>) getIntent().getSerializableExtra("order_list");
         } else {
@@ -591,8 +589,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void login() {
-        loginDialogFragment = new LoginDialogFragment();
-        loginDialogFragment.show(getSupportFragmentManager(), "hahah");
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     private void showAlertDialog(boolean showDialog) {

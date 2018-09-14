@@ -399,11 +399,6 @@ public class ConstansUtil {
     public static final String LONGITUDE = "Longitude";
 
     /**
-     * 请求用户的收藏记录
-     */
-    public static final String REQUEST_COLLECTION_DATA = "RequestCollectionData";
-
-    /**
      * 密码登录
      */
     public static final String PASSWORD_LOGIN = "PasswordLogin";

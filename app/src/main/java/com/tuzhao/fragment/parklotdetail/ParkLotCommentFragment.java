@@ -24,7 +24,7 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.Park_Space_Info;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkspaceCommentInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -61,7 +61,7 @@ public class ParkLotCommentFragment extends BaseFragment {
      * 页面相关
      */
     private String parkspace_id, city_code;
-    private Park_Space_Info parkspace_info = null;
+    private ParkLotInfo parkspace_info = null;
     private ArrayList<ParkspaceCommentInfo> mCommentData = new ArrayList<>();
     private boolean isFirstIn = true, isNoData = false, isNoInternet = false, needSeeImg = false;
     private int mLoadingtimes = 0, type = 1;
@@ -115,7 +115,7 @@ public class ParkLotCommentFragment extends BaseFragment {
 
     private void initData() {
         if (getArguments() != null) {
-            parkspace_info = (Park_Space_Info) getArguments().getSerializable("parkspace_info");
+            parkspace_info = (ParkLotInfo) getArguments().getSerializable("parkspace_info");
         }
 
         if (parkspace_info == null) {

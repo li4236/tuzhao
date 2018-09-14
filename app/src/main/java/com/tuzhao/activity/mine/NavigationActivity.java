@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +28,9 @@ import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.navi.model.NaviLatLng;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
-import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.DeviceUtils;
@@ -249,7 +250,7 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
     private void initDialog() {
         LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_list_layout, null);
         TextView textView = new TextView(this);
-        textView.setTextSize(12);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         textView.setPadding(0, dpToPx(16), 0, dpToPx(16));
         textView.setText("取消");
         textView.setGravity(Gravity.CENTER);

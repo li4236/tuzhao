@@ -308,9 +308,9 @@ public class ParkFragment extends BaseFragment {
 //                .params("parkspace_id", parkspace_id)
 //                .params("citycode", city_code)
 //                .params("ad_position", "2")
-//                .execute(new JsonCallback<Base_Class_Info<Park_Space_Info>>() {
+//                .execute(new JsonCallback<Base_Class_Info<ParkLotInfo>>() {
 //                    @Override
-//                    public void onSuccess(Base_Class_Info<Park_Space_Info> park_space_infoBase_class_info, Call call, Response response) {
+//                    public void onSuccess(Base_Class_Info<ParkLotInfo> park_space_infoBase_class_info, Call call, Response response) {
 //                        parkspace_issuccess = true;
 //                        if (park_issuccess) {
 //                            if (mCustomDialog.isShowing()) {
@@ -418,7 +418,7 @@ public class ParkFragment extends BaseFragment {
 //                });
 //    }
 //
-//    private void initViewData(Park_Space_Info parkspace_info) {
+//    private void initViewData(ParkLotInfo parkspace_info) {
 //        try {
 //            String img_Url[] = parkspace_info.getParkspace_img().split(",");
 //            if (img_Url.length > 0) {

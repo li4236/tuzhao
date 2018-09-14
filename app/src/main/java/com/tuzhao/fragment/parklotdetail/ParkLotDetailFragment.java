@@ -24,13 +24,14 @@ import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.activity.OrderParkActivity;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.NavigationActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
-import com.tuzhao.info.Park_Space_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
@@ -70,7 +71,7 @@ public class ParkLotDetailFragment extends BaseFragment {
      * 页面相关
      */
     private String parkspace_id, city_code;
-    private Park_Space_Info parkspace_info = null;
+    private ParkLotInfo parkLotInfo = null;
     private ArrayList<Park_Info> mData = null;
     private boolean parkspace_issuccess = false, park_issuccess = false;
     private ArrayList<String> imgData;
@@ -91,17 +92,17 @@ public class ParkLotDetailFragment extends BaseFragment {
 
     private void initData() {
 
-        parkspace_info = (Park_Space_Info) getArguments().getSerializable("parkspace_info");
+        parkLotInfo = (ParkLotInfo) getArguments().getSerializable("parkspace_info");
         mData = (ArrayList<Park_Info>) getArguments().getSerializable("park_info");
 
-        if (parkspace_info == null) {
+        if (parkLotInfo == null) {
             parkspace_id = getArguments().getString("parkspace_id");
             city_code = getArguments().getString("city_code");
             initLoading("加载中...");
             requestGetParkspaceData();
         } else {
             parkspace_issuccess = true;
-            initViewData(parkspace_info);
+            initViewData(parkLotInfo);
         }
 
         if (mData == null) {
@@ -179,7 +180,7 @@ public class ParkLotDetailFragment extends BaseFragment {
                                 MyToast.showToast(mContext, "预定订单数量已达上限哦", 5);
                             } else {
                                 Intent intent = new Intent(mContext, OrderParkActivity.class);
-                                intent.putExtra("parkspace_info", parkspace_info);
+                                intent.putExtra("parkLotInfo", parkLotInfo);
                                 intent.putExtra("park_list", mData);
                                 intent.putExtra("order_list", mOrderList);
                                 startActivity(intent);
@@ -195,35 +196,52 @@ public class ParkLotDetailFragment extends BaseFragment {
         linearlayout_daohang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyApplication.getInstance(), NavigationActivity.class);
-                intent.putExtra("gps", true);
-                intent.putExtra("start", new NaviLatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude()));
-                intent.putExtra("end", new NaviLatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()));
-                intent.putExtra(ConstansUtil.PARK_LOT_NAME, parkspace_info.getParkLotName());
-                intent.putExtra("address", parkspace_info.getPark_address());
-                startActivity(intent);
+                if (parkLotInfo != null && LocationManager.getInstance().hasLocation()) {
+                    Intent intent = new Intent(MyApplication.getInstance(), NavigationActivity.class);
+                    intent.putExtra("gps", true);
+                    intent.putExtra("start", new NaviLatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude()));
+                    intent.putExtra("end", new NaviLatLng(parkLotInfo.getLatitude(), parkLotInfo.getLongitude()));
+                    intent.putExtra(ConstansUtil.PARK_LOT_NAME, parkLotInfo.getParkLotName());
+                    intent.putExtra("address", parkLotInfo.getPark_address());
+                    startActivity(intent);
+                }
             }
         });
+    }
+
+    public ParkLotInfo getParkLot() {
+        return parkLotInfo;
+    }
+
+    public void setCollection(boolean isCollection) {
+        if (parkLotInfo != null) {
+            parkLotInfo.setIsCollection(isCollection ? "1" : "0");
+        }
     }
 
     private void requestGetParkspaceData() {
         OkGo.post(HttpConstants.getOneParkSpaceData)
                 .tag(HttpConstants.getOneParkSpaceData)
+                .headers("token", UserManager.getInstance().getToken())
                 .params("parkspace_id", parkspace_id)
                 .params("citycode", city_code)
                 .params("ad_position", "2")
-                .execute(new JsonCallback<Base_Class_Info<Park_Space_Info>>() {
+                .execute(new JsonCallback<Base_Class_Info<ParkLotInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Park_Space_Info> park_space_infoBase_class_info, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<ParkLotInfo> park_space_infoBase_class_info, Call call, Response response) {
                         parkspace_issuccess = true;
                         if (park_issuccess) {
                             if (mLoadingDialog.isShowing()) {
                                 mLoadingDialog.dismiss();
                             }
                         }
-                        parkspace_info = park_space_infoBase_class_info.data;
-                        parkspace_info.setCity_code(city_code);
-                        initViewData(parkspace_info);
+                        parkLotInfo = park_space_infoBase_class_info.data;
+                        parkLotInfo.setCity_code(city_code);
+                        initViewData(parkLotInfo);
+                        if (getActivity() != null && getActivity() instanceof SuccessCallback) {
+                            SuccessCallback<Boolean> successCallback = (SuccessCallback<Boolean>) getActivity();
+                            successCallback.onSuccess(parkLotInfo.isCollection());
+                        }
                     }
                 });
     }
@@ -309,7 +327,7 @@ public class ParkLotDetailFragment extends BaseFragment {
                 });
     }
 
-    private void initViewData(Park_Space_Info parkspace_info) {
+    private void initViewData(ParkLotInfo parkspace_info) {
         try {
             String imgUrl = parkspace_info.getParkspace_img();
             if (imgData == null) {

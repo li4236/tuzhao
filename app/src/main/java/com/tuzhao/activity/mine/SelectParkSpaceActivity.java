@@ -26,7 +26,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.SelectCityActivity;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.Park_Space_Info;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -53,7 +53,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
 
     private LinearLayout linearlayout_search, linearlayout_no_open;
     private TextView textview_goapply;
-    private ArrayList<Park_Space_Info> info_list = new ArrayList<>();
+    private ArrayList<ParkLotInfo> info_list = new ArrayList<>();
 
     /**
      * 定位相关
@@ -234,7 +234,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
      * @param data
      * @return
      */
-    private void initDatas(ArrayList<Park_Space_Info> data, String citycode) {
+    private void initDatas(ArrayList<ParkLotInfo> data, String citycode) {
         if (mDatas != null) {
             mDatas.clear();
         } else {
@@ -269,9 +269,9 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
         OkGo.post(HttpConstants.getParkSpaceDatasForCity)
                 .tag(HttpConstants.getParkSpaceDatasForCity)
                 .params("citycode", belong_citycode)
-                .execute(new JsonCallback<Base_Class_List_Info<Park_Space_Info>>() {
+                .execute(new JsonCallback<Base_Class_List_Info<ParkLotInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<Park_Space_Info> responseData, Call call, Response response) {
+                    public void onSuccess(Base_Class_List_Info<ParkLotInfo> responseData, Call call, Response response) {
                         //请求成功
                         linearlayout_no_open.setVisibility(View.GONE);
                         if (mLoadingDialog.isShowing()) {
@@ -348,7 +348,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                 break;
             case 101:
                 Intent intent = new Intent();
-                Park_Space_Info parkSpaceInfo = (Park_Space_Info) data.getSerializableExtra("park");
+                ParkLotInfo parkSpaceInfo = (ParkLotInfo) data.getSerializableExtra("park");
                 ParkBean parkBean = new ParkBean();
                 parkBean.setParkStation(parkSpaceInfo.getParkLotName());
                 parkBean.setProfit_ratio(parkSpaceInfo.getProfit_ratio());

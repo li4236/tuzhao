@@ -2,6 +2,7 @@ package com.tuzhao.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,16 +44,15 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mData == null || mData.isEmpty() ? 0 : mData.size();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_parkorcharge_layout, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         try {
             ((MyViewHolder) holder).textview_name.setText(mData.get(position).getName());
             ((MyViewHolder) holder).textview_grade.setText(String.valueOf(mData.get(position).getGrade()));

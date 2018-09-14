@@ -50,13 +50,13 @@
                 android:id="@+id/parkorcharge_search_iv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="1:1"
-                android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="6dp"
                 android:contentDescription="@string/picture_description"
                 android:src="@drawable/ic_scarch2"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,12 +65,12 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:ellipsize="end"
+                android:fadeScrollbars="false"
                 android:gravity="start|center_vertical"
                 android:maxLines="1"
                 android:paddingEnd="8dp"
-                android:fadeScrollbars="false"
-                android:scrollbars="none"
                 android:paddingStart="8dp"
+                android:scrollbars="none"
                 android:textColor="@color/b1"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -131,6 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/w3" />
+
         </com.tianzhili.www.myselfsdk.filter.DropDownMenu>
 
         <LinearLayout
@@ -157,5 +158,7 @@
                 android:textColor="@color/g1"
                 android:textSize="14sp" />
         </LinearLayout>
+
     </RelativeLayout>
+
 </LinearLayout>

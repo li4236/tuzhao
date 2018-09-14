@@ -156,7 +156,6 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
             ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.dialog_edit_layout, null);
             mFirendName = constraintLayout.findViewById(R.id.dialog_et);
             mFirendName.setHint("请输入车位备注");
-
             mModifyNameDialog = new TipeDialog.Builder(this)
                     .setContentView(constraintLayout)
                     .setTitle("修改备注")
@@ -367,7 +366,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.BOOK_PARK_SPACE)) {
-            //预定了之后添加预定记录到订单和车位，否则可以再次预定同样的车位，再次筛选的时候也会不准确
+            //预定了之后添加预定记录到车位，否则可以再次预定同样的车位，再次筛选的时候也会不准确
             Park_Info parkInfo = intent.getParcelableExtra(ConstansUtil.INTENT_MESSAGE);
 
             for (Park_Info park_info : mCommonAdapter.getData()) {

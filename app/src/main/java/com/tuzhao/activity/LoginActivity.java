@@ -159,11 +159,11 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
         //更新覆盖本地数据库的用户信息
         new DatabaseImp(this).insertUserToDatabase(userInfo);
 
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("LOGIN_ACTION"));
         JPushInterface.setAlias(this, 1, userInfo.getUsername());//登录成功后给该用户设置极光推送的别名
         MobclickAgent.onProfileSignIn(userInfo.getUsername());//友盟在用户登录操作统计
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("LOGIN_ACTION"));
 
-        startActivity(MainActivity.class, ConstansUtil.REQUEST_COLLECTION_DATA, "1");
+        startActivity(MainActivity.class);
     }
 
 }

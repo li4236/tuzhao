@@ -35,14 +35,11 @@ public class CollectionManager {
     }
 
     public boolean hasCollectionData() {
-
         return collection_datas != null;
     }
 
     /**
      * 获得用户收藏记录
-     *
-     * @return
      */
     public List<CollectionInfo> getCollection_datas() {
         return collection_datas;
@@ -50,8 +47,6 @@ public class CollectionManager {
 
     /**
      * 设置用户收藏记录
-     *
-     * @param collection_datas
      */
     public void setCollection_datas(List<CollectionInfo> collection_datas) {
         this.collection_datas = collection_datas;
@@ -59,7 +54,7 @@ public class CollectionManager {
 
     public void addCollectionData(CollectionInfo collectionInfo) {
         collection_datas.add(collectionInfo);
-        Log.e("TAG", "addCollectionData: "+collectionInfo );
+        Log.e("TAG", "addCollectionData: " + collectionInfo);
     }
 
     public CollectionInfo getCollection(String parkLotId) {
@@ -91,10 +86,6 @@ public class CollectionManager {
 
     /**
      * 在收藏记录中查找是否已存在一个收藏记录
-     *
-     * @param belong_id
-     * @param is_charge
-     * @return
      */
     public MessageHolder checkCollectionDatas(String belong_id, String is_charge) {
         boolean iSExist = false;
@@ -138,8 +129,6 @@ public class CollectionManager {
 
     /**
      * 取消一个收藏记录
-     *
-     * @param position
      */
     public void removeOneCollection(int position) {
         if (collection_datas != null) {
@@ -149,8 +138,6 @@ public class CollectionManager {
 
     /**
      * 根据提供的收藏id来取消一个收藏记录
-     *
-     * @param collection_id
      */
     public void removeOneCollectionByBelongId(String collection_id) {
         for (int i = 0; i < collection_datas.size(); i++) {

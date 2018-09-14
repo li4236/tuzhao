@@ -89,7 +89,6 @@ import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.customView.CircleImageView;
 import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.map.ClusterClickListener;
 import com.tuzhao.publicwidget.map.ClusterItem;
@@ -160,7 +159,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mCar, mParkSpace, mSetting, mCollection, mFind;
     private TextView mParkNow;
     private ConstraintLayout mHomeDrawerCl, mDrawerTopCl;
-    private LoginDialogFragment loginDialogFragment;
     private LoadingDialog mLoadingDialog;
     /**
      * 定位相关
@@ -317,9 +315,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private void initData() {
         registerLogin();//注册登录广播接收器
         registerLogout();//注册退出登录广播接收器
-        if ("1".equals(getIntent().getStringExtra(ConstansUtil.REQUEST_COLLECTION_DATA))) {
-            requestCollectionData();
-        }
         IntentObserable.registerObserver(this);
         if (UserManager.getInstance().hasLogined()) {
             ImageUtil.showPic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
@@ -638,19 +633,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 }
             }
         }
-    }
-
-    private void requestCollectionData() {
-        //登录成功之后请求用户的收藏记录
-        OkGo.post(HttpConstants.getCollectionDatas)
-                .tag(TAG)
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
-                        CollectionManager.getInstance().setCollection_datas(collection_infoBase_class_list_info.data);
-                    }
-                });
     }
 
     private void requestSaveBiaoji(String address) {

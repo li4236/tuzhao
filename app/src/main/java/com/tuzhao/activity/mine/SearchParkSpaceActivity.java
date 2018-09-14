@@ -19,7 +19,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.adapter.SearchParkSpaceAdapter;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.Park_Space_Info;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -43,7 +43,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
 
     private AutoCompleteTextView etextview_input;
     private SearchParkSpaceAdapter adapter;
-    private ArrayList<Park_Space_Info> mData = new ArrayList<>();
+    private ArrayList<ParkLotInfo> mData = new ArrayList<>();
     private ProgressBar progressbar;
     private ImageView imageview_clean;
     private TextView textview_goback, textview_goapply;
@@ -64,7 +64,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
     private void initData() {
 
         if (getIntent().hasExtra("info_list")) {
-            mData = (ArrayList<Park_Space_Info>) getIntent().getSerializableExtra("info_list");
+            mData = (ArrayList<ParkLotInfo>) getIntent().getSerializableExtra("info_list");
             citycode = getIntent().getStringExtra("citycode");
         } else {
             if (progressbar.getVisibility() == View.GONE) {
@@ -164,9 +164,9 @@ public class SearchParkSpaceActivity extends BaseActivity {
         OkGo.post(HttpConstants.getParkSpaceDatasForCity)//请求数据的接口地址
                 .tag(SearchParkSpaceActivity.this)//
                 .params("citycode", LocationManager.getInstance().getmAmapLocation().getAdCode() + LocationManager.getInstance().getmAmapLocation().getCityCode() + "")
-                .execute(new JsonCallback<Base_Class_List_Info<Park_Space_Info>>() {
+                .execute(new JsonCallback<Base_Class_List_Info<ParkLotInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<Park_Space_Info> responseData, Call call, Response response) {
+                    public void onSuccess(Base_Class_List_Info<ParkLotInfo> responseData, Call call, Response response) {
                         //请求成功
                         if (progressbar.getVisibility() == View.VISIBLE) {
                             progressbar.setVisibility(View.GONE);

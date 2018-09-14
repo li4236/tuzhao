@@ -7,7 +7,7 @@ import com.tuzhao.info.base_info.BaseInfo;
  * 停车场数据实体
  */
 
-public class Park_Space_Info extends BaseInfo {
+public class ParkLotInfo extends BaseInfo {
 
     private String id;//停车场id
     private double latitude;//经度
@@ -28,6 +28,7 @@ public class Park_Space_Info extends BaseInfo {
     private String ad_web;//广告页面地址
     private String city_code;//城市码
     private String profit_ratio;//收益比
+    private String isCollection;//是否收藏了该车场（0：未收藏，1：收藏了）
 
     public String getId() {
         return id;
@@ -181,9 +182,17 @@ public class Park_Space_Info extends BaseInfo {
         this.profit_ratio = profit_ratio;
     }
 
+    public boolean isCollection() {
+        return "1".equals(isCollection);
+    }
+
+    public void setIsCollection(String isCollection) {
+        this.isCollection = isCollection;
+    }
+
     @Override
     public String toString() {
-        return "Park_Space_Info{" +
+        return "ParkLotInfo{" +
                 "id='" + id + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
@@ -203,6 +212,7 @@ public class Park_Space_Info extends BaseInfo {
                 ", ad_web='" + ad_web + '\'' +
                 ", city_code='" + city_code + '\'' +
                 ", profit_ratio='" + profit_ratio + '\'' +
+                ", isCollection='" + isCollection + '\'' +
                 '}';
     }
 }

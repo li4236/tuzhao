@@ -12,7 +12,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.info.Park_Space_Info;
+import com.tuzhao.info.ParkLotInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +24,13 @@ import java.util.List;
 public class SearchParkSpaceAdapter extends BaseAdapter implements Filterable {
 
     private ArrayFilter mFilter;
-    private List<Park_Space_Info> mList;
+    private List<ParkLotInfo> mList;
     private Context context;
-    private ArrayList<Park_Space_Info> mUnfilteredData;
+    private ArrayList<ParkLotInfo> mUnfilteredData;
     private  Activity mActivity;
     private OnSearchStateChange stateChange;
 
-    public SearchParkSpaceAdapter(List<Park_Space_Info> mList, Context context, Activity activity) {
+    public SearchParkSpaceAdapter(List<ParkLotInfo> mList, Context context, Activity activity) {
         this.mList = mList;
         this.context = context;
         this.mActivity = activity;
@@ -105,24 +105,24 @@ public class SearchParkSpaceAdapter extends BaseAdapter implements Filterable {
             // 过滤后利用FilterResults将过滤结果返回
             FilterResults results = new FilterResults();
             if (mUnfilteredData == null) {
-                mUnfilteredData = new ArrayList<Park_Space_Info>(mList);
+                mUnfilteredData = new ArrayList<ParkLotInfo>(mList);
             }
 
             if (prefix == null || prefix.length() == 0) {
 
-                ArrayList<Park_Space_Info> list = mUnfilteredData;
+                ArrayList<ParkLotInfo> list = mUnfilteredData;
                 results.values = list; // list是上面的过滤结果
                 results.count = list.size();// 结果数量
 
             } else {
                 String prefixString = prefix.toString().toLowerCase();
-                ArrayList<Park_Space_Info> unfilteredValues = mUnfilteredData;
+                ArrayList<ParkLotInfo> unfilteredValues = mUnfilteredData;
                 int count = unfilteredValues.size();
 
-                ArrayList<Park_Space_Info> newValues = new ArrayList<Park_Space_Info>(count);
+                ArrayList<ParkLotInfo> newValues = new ArrayList<ParkLotInfo>(count);
 
                 for (int i = 0; i < count; i++) {
-                    Park_Space_Info value = mUnfilteredData.get(i);
+                    ParkLotInfo value = mUnfilteredData.get(i);
                     if (value!= null){
                         String valueText = value.getParkLotName().toLowerCase();
 
@@ -144,7 +144,7 @@ public class SearchParkSpaceAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint,FilterResults results) {
 
-            mList = (List<Park_Space_Info>) results.values;
+            mList = (List<ParkLotInfo>) results.values;
             if (results.count > 0 && results != null) {
                 stateChange.showSearchState(true);
                 notifyDataSetChanged();

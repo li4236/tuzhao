@@ -20,11 +20,8 @@ import com.tianzhili.www.myselfsdk.okgo.cache.CacheMode;
 import com.tianzhili.www.myselfsdk.okgo.model.HttpParams;
 import com.tuzhao.BuildConfig;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.info.base_info.Base_Class_List_Info;
-import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicmanager.WeChatManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -212,16 +209,6 @@ public class MyApplication extends MultiDexApplication {
                         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(new Intent("LOGIN_ACTION"));
                         JPushInterface.setAlias(MyApplication.this, 1, username);//登录成功后给该用户设置极光推送的别名
 
-                        //登录成功之后请求用户的收藏记录
-                        OkGo.post(HttpConstants.getCollectionDatas)
-                                .tag(this)
-                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                                .execute(new JsonCallback<Base_Class_List_Info<CollectionInfo>>() {
-                                    @Override
-                                    public void onSuccess(Base_Class_List_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
-                                        CollectionManager.getInstance().setCollection_datas(collection_infoBase_class_list_info.data);
-                                    }
-                                });
                         MobclickAgent.onProfileSignIn(username);//友盟在用户登录操作统计
                     }
 

@@ -88,7 +88,6 @@ public class CollectionActivity extends BaseActivity {
     }
 
     private void getCollectionData() {
-
         OkGo.post(getCollectionDatas)
                 .tag(CollectionActivity.this)
                 .addInterceptor(new TokenInterceptor())

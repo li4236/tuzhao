@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.Park_Space_Info;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
@@ -77,9 +77,9 @@ public class BillingRuleActivity extends BaseStatusActivity {
                 .params("parkspace_id", mParkLotId)
                 .params("citycode", mCityCode)
                 .params("ad_position", "2")
-                .execute(new JsonCallback<Base_Class_Info<Park_Space_Info>>() {
+                .execute(new JsonCallback<Base_Class_Info<ParkLotInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_Info<Park_Space_Info> o, Call call, Response response) {
+                    public void onSuccess(Base_Class_Info<ParkLotInfo> o, Call call, Response response) {
                         mParkLotName.setText(o.data.getParkLotName());
 
                         //高峰时段的时间

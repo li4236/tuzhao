@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by juncoder on 2018/6/14.
+ * <p>
+ * 车位的审核信息
+ * </p>
  */
 public class ParkSpaceInfo implements Parcelable {
 
