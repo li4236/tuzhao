@@ -25,11 +25,6 @@ import java.util.List;
 
 public class ParkOrderActivity extends BaseActivity {
 
-    /**
-     * UI
-     */
-    private ViewPager viewpager;
-    private SmartTabLayout viewPagerTab;
     private ImageView imageview_backbotton;
 
     /**
@@ -48,8 +43,11 @@ public class ParkOrderActivity extends BaseActivity {
     }
 
     private void initView() {
-        viewpager = findViewById(R.id.id_activity_parkorder_layout_viewpager);
-        viewPagerTab = findViewById(R.id.id_activity_parkorder_layout_pagetab);
+        /*
+      UI
+     */
+        ViewPager viewpager = findViewById(R.id.id_activity_parkorder_layout_viewpager);
+        SmartTabLayout viewPagerTab = findViewById(R.id.id_activity_parkorder_layout_pagetab);
         imageview_backbotton = findViewById(R.id.id_activity_parkorder_imageview_back);
 
         fragmentList = new ArrayList<>();

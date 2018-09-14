@@ -38,11 +38,14 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
     private int mOrderStatus;
 
+    private boolean mRequestSuccess;
+
     public static ParkOrderFragment newInstance(int orderStatus) {
         ParkOrderFragment parkOrderFragment = new ParkOrderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ConstansUtil.STATUS, orderStatus);
         parkOrderFragment.setArguments(bundle);
+        parkOrderFragment.setTAG(parkOrderFragment.getTAG() + "status:" + orderStatus);
         return parkOrderFragment;
     }
 
@@ -54,33 +57,36 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
-        if (getArguments() != null) {
-            mOrderStatus = getArguments().getInt(ConstansUtil.STATUS);
-            mStartItme = getArguments().getInt(ConstansUtil.START_ITME,0);
-            ArrayList<ParkOrderInfo> list = getArguments().getParcelableArrayList(ConstansUtil.PARK_ORDER_LIST);
-            mCommonAdapter.setNewArrayData(list);
-        }
         mConstraintLayout = view.findViewById(R.id.loading_dialog);
     }
 
     @Override
     protected void initData() {
-        //防止滑动到其他界面时把网络请求关闭了
-        setTAG(this.getClass().getName() + "status:" + mOrderStatus);
-        showDialog();
-        loadData();
+        if (getArguments() != null) {
+            mOrderStatus = getArguments().getInt(ConstansUtil.STATUS);
+            mStartItme = getArguments().getInt(ConstansUtil.START_ITME, 0);
+            if (getArguments().getBoolean(ConstansUtil.INTENT_MESSAGE)) {
+                //已经请求过了的
+                ArrayList<ParkOrderInfo> list = getArguments().getParcelableArrayList(ConstansUtil.PARK_ORDER_LIST);
+                //之前缓存好的，不用再次请求
+                mCommonAdapter.setNewArrayData(list);
+                showEmpty();
+            } else {
+                showDialog();
+                loadData();
+            }
+        }
         IntentObserable.registerObserver(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (!mCommonAdapter.getData().isEmpty()) {
-            Bundle bundle = getArguments();
-            if (bundle != null) {
-                bundle.putParcelableArrayList(ConstansUtil.PARK_ORDER_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
-                bundle.putInt(ConstansUtil.START_ITME, mStartItme);
-            }
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            bundle.putParcelableArrayList(ConstansUtil.PARK_ORDER_LIST, (ArrayList<? extends Parcelable>) mCommonAdapter.getData());
+            bundle.putInt(ConstansUtil.START_ITME, mCommonAdapter.getDataSize() == 0 ? 0 : mStartItme);
+            bundle.putBoolean(ConstansUtil.INTENT_MESSAGE, mRequestSuccess);
         }
         IntentObserable.unregisterObserver(this);
         dissmissDialog();
@@ -94,6 +100,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     @Override
                     public void onSuccess(Base_Class_List_Info<ParkOrderInfo> o, Call call, Response response) {
                         loadDataSuccess(o);
+                        mRequestSuccess = true;
                         dissmissDialog();
                     }
 
@@ -104,7 +111,10 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
-
+                                if (e.getMessage().equals("102")) {
+                                    //没有该类型的订单
+                                    mRequestSuccess = true;
+                                }
                             }
                         });
 
