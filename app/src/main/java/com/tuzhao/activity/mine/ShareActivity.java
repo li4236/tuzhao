@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -37,6 +38,7 @@ import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.application.MyApplication;
@@ -88,7 +90,7 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
         initView();//初始化控件
         initData();//初始化数据
         initEvent();//初始化事件
-        setStyle(true);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
     }
 
     private void initView() {

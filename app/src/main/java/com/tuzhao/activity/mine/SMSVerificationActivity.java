@@ -316,7 +316,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
                             startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                         } else {
                             //修改密码
-                            startActivity(ChangePasswordRefactoryActivity.class, ConstansUtil.PASS_CODE, o.data);
+                            startActivity(ChangePasswordActivity.class, ConstansUtil.PASS_CODE, o.data);
                             finish();
                         }
                     }

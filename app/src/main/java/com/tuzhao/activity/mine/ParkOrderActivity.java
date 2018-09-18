@@ -5,12 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.fragment.parkorder.ParkOrderFragment;
@@ -36,10 +38,10 @@ public class ParkOrderActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkorder_layout);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
         initView();//初始化控件
         initData();//初始化数据
         initEvent();//初始化事件
-        setStyle(true);
     }
 
     private void initView() {

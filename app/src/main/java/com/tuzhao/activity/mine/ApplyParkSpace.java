@@ -2,12 +2,14 @@ package com.tuzhao.activity.mine;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -34,7 +36,7 @@ public class ApplyParkSpace extends BaseActivity {
 
     private ImageView imageview_backbotton;
     private TextView textview_savebotton;
-    private EditText parkspace_name,parkspace_address;
+    private EditText parkspace_name, parkspace_address;
     private String mCityCode = "010";
     private LoadingDialog mLoadingDialog;
 
@@ -42,11 +44,10 @@ public class ApplyParkSpace extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_applyspace);
-
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
         initView();
         initData();
         initEvent();
-        setStyle(true);
     }
 
     private void initView() {
@@ -59,7 +60,7 @@ public class ApplyParkSpace extends BaseActivity {
 
     private void initData() {
 
-        if (getIntent().hasExtra("citycode")){
+        if (getIntent().hasExtra("citycode")) {
             mCityCode = getIntent().getStringExtra("citycode");
         }
     }
@@ -77,12 +78,12 @@ public class ApplyParkSpace extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if (parkspace_name.getText().length()>0 && parkspace_address.getText().length()>0){
+                if (parkspace_name.getText().length() > 0 && parkspace_address.getText().length() > 0) {
 
                     initLoading("请求中...");
                     requestApplyParkSpace();
-                }else {
-                    MyToast.showToast(ApplyParkSpace.this,"信息要填写完整哦",5);
+                } else {
+                    MyToast.showToast(ApplyParkSpace.this, "信息要填写完整哦", 5);
                 }
             }
         });
@@ -93,9 +94,9 @@ public class ApplyParkSpace extends BaseActivity {
         OkGo.post(HttpConstants.applyParkSpace)
                 .tag(HttpConstants.applyParkSpace)
                 .params("user_id", UserManager.getInstance().getUserInfo().getId())
-                .params("parkspace_name",parkspace_name.getText().toString())
-                .params("parkspace_address",parkspace_address.getText().toString())
-                .params("city_code",mCityCode)
+                .params("parkspace_name", parkspace_name.getText().toString())
+                .params("parkspace_address", parkspace_address.getText().toString())
+                .params("city_code", mCityCode)
                 .execute(new JsonCallback<Base_Class_Info<Park_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Park_Info> park_infoJsonCallback, Call call, Response response) {
@@ -103,7 +104,7 @@ public class ApplyParkSpace extends BaseActivity {
                         if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.hide();
                         }
-                        MyToast.showToast(ApplyParkSpace.this,"已成功申请"+parkspace_name.getText().toString(),5);
+                        MyToast.showToast(ApplyParkSpace.this, "已成功申请" + parkspace_name.getText().toString(), 5);
                         finish();
                     }
 
@@ -120,26 +121,26 @@ public class ApplyParkSpace extends BaseActivity {
                         } else if (e instanceof NoRouteToHostException) {
                             Log.d("TAG", "请求失败，" + " 信息为：没有路由到主机" + e.toString());
                         } else {
-                            Log.d("TAG", "请求失败， 信息为："+ e.getMessage());
+                            Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
                             int code = Integer.parseInt(e.getMessage());
                             switch (code) {
                                 case 102:
-                                    MyToast.showToast(ApplyParkSpace.this,"申请失败", 2);
+                                    MyToast.showToast(ApplyParkSpace.this, "申请失败", 2);
                                     break;
                                 case 103:
-                                    MyToast.showToast(ApplyParkSpace.this,"申请失败", 2);
+                                    MyToast.showToast(ApplyParkSpace.this, "申请失败", 2);
                                     break;
                                 case 104:
-                                    MyToast.showToast(ApplyParkSpace.this,"申请失败", 2);
+                                    MyToast.showToast(ApplyParkSpace.this, "申请失败", 2);
                                     break;
                                 case 105:
-                                    MyToast.showToast(ApplyParkSpace.this,"申请失败", 2);
+                                    MyToast.showToast(ApplyParkSpace.this, "申请失败", 2);
                                     break;
                                 case 901:
-                                    MyToast.showToast(ApplyParkSpace.this,"服务器正在维护中", 2);
+                                    MyToast.showToast(ApplyParkSpace.this, "服务器正在维护中", 2);
                                     break;
                                 default:
-                                    MyToast.showToast(ApplyParkSpace.this,"服务器繁忙，稍后再试", 2);
+                                    MyToast.showToast(ApplyParkSpace.this, "服务器繁忙，稍后再试", 2);
                                     break;
                             }
                         }
@@ -155,7 +156,7 @@ public class ApplyParkSpace extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mLoadingDialog !=null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
     }

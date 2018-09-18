@@ -164,10 +164,6 @@ public class XStatusBarHelper {
      */
     public static void tintStatusBar(Window window, @ColorInt int statusBarColor, @FloatRange(from = 0.0, to = 1.0)
             float alpha) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return;
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -216,10 +212,6 @@ public class XStatusBarHelper {
     public static void tintStatusBarForDrawer(Activity activity, DrawerLayout drawerLayout, @ColorInt int
             statusBarColor,
                                               @FloatRange(from = 0.0, to = 1.0) float alpha) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return;
-        }
-
         Window window = activity.getWindow();
         ViewGroup decorView = (ViewGroup) window.getDecorView();
         ViewGroup drawContent = (ViewGroup) drawerLayout.getChildAt(0);
@@ -483,4 +475,16 @@ public class XStatusBarHelper {
             }
         }
     }
+
+    public static void fullScreen(Activity activity) {
+        View decorView = activity.getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
 }

@@ -62,6 +62,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.callback.FileCallback;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.CollectionActivity;
 import com.tuzhao.activity.mine.CreditActivity;
 import com.tuzhao.activity.mine.FriendParkSpaceActivity;
@@ -310,6 +311,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         constraintSet.clone(mHomeDrawerCl);
         constraintSet.setMargin(R.id.id_content_main_layout_imageview_huser, ConstraintSet.BOTTOM, dp2px(this, 1.5f));
         constraintSet.applyTo(mHomeDrawerCl);
+
+        DeviceUtils.adpterNotchHeight(this, new SuccessCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                //抽屉栏下移刘海屏的高度，防止被挡住
+                ConstraintSet mainConstraintSet = new ConstraintSet();
+                mainConstraintSet.clone((ConstraintLayout) findViewById(R.id.content_main));
+                mainConstraintSet.setMargin(R.id.id_content_main_layout_relativelayout_openuser, ConstraintSet.TOP, dp2px(MainActivity.this, 80) + integer);
+                mainConstraintSet.applyTo((ConstraintLayout) findViewById(R.id.content_main));
+
+                //抽屉里面的头像下移
+                ConstraintSet drawerConstarintSet = new ConstraintSet();
+                drawerConstarintSet.clone(mDrawerTopCl);
+                drawerConstarintSet.setMargin(R.id.id_activity_main_layout_imageview_user, ConstraintSet.TOP, dp2px(MainActivity.this, 30) + integer);
+                drawerConstarintSet.applyTo(mDrawerTopCl);
+            }
+        });
     }
 
     private void initData() {
@@ -1679,7 +1697,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 isFirstloc = true;
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
@@ -1692,7 +1710,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 initVersion();
             }
         } else if (requestCode == WRITE_REQUEST_CODE) {
-            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initMapStyle();
             }
             if (!mRequestAccessCoarseLocation && noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {

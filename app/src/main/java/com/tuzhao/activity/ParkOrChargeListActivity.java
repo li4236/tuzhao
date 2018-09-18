@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.bumptech.glide.Glide;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.filter.DropDownMenu;
 import com.tianzhili.www.myselfsdk.filter.adapter.DropMenuAdapter;
 import com.tianzhili.www.myselfsdk.filter.demobean.InstitutionPriceBean;
@@ -87,12 +89,12 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkorcharge_layout);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
 
         initView();
         initData();
         initEvent();
         initFilterDropDownView();
-        setStyle(true);
     }
 
     private void initView() {

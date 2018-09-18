@@ -2,6 +2,7 @@ package com.tuzhao.activity.mine;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -39,10 +41,10 @@ public class SuggestActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_layout);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
         initView();//初始化控件
         initData();//初始化数据
         initEvent();//初始化事件
-        setStyle(true);
     }
 
     private void initView() {

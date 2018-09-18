@@ -7,10 +7,12 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
@@ -42,6 +44,9 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(resourceId() == 0 ? R.layout.activity_base_refresh_layout : resourceId());
+        if (tintStatusBar()) {
+            XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
+        }
         ConstraintLayout toolbar = findViewById(R.id.base_tb);
         ArrowView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
         turnBackIv.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +69,13 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     @LayoutRes
     protected abstract int resourceId();
+
+    /**
+     * @return 是否修改状态栏为纯白
+     */
+    protected boolean tintStatusBar() {
+        return true;
+    }
 
     /**
      * 在此方法初始化控件

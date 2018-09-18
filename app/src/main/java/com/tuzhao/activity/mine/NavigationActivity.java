@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.v7.widget.CardView;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -26,8 +29,10 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.navi.model.NaviLatLng;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.map.SensorEventHelper;
@@ -71,7 +76,8 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
     }
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    protected void initView(final Bundle savedInstanceState) {
+        setStyle(false);
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkLotAddress = findViewById(R.id.park_lot_address);
         mMapView = findViewById(R.id.navigation_mv);
@@ -80,7 +86,24 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
             mAMap = mMapView.getMap();
         }
 
-        findViewById(R.id.turn_back).setOnClickListener(this);
+        final ConstraintLayout constraintLayout = findViewById(R.id.top_cl);
+        CardView cardView = findViewById(R.id.turn_back);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.setMargin(R.id.turn_back, ConstraintSet.TOP, XStatusBarHelper.getStatusBarHeight(this) + dpToPx(16));
+        constraintSet.applyTo(constraintLayout);
+
+        DeviceUtils.adpterNotchHeight(this, new SuccessCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                ConstraintSet set = new ConstraintSet();
+                set.clone(constraintLayout);
+                set.setMargin(R.id.turn_back, ConstraintSet.TOP, dpToPx(16) + integer);
+                set.applyTo(constraintLayout);
+            }
+        });
+        
+        cardView.setOnClickListener(this);
         findViewById(R.id.my_location).setOnClickListener(this);
         findViewById(R.id.start_navigate).setOnClickListener(this);
     }
@@ -105,6 +128,11 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
         mSensorHelper.setCurrentMarker(mLocationMarker);
 
         initDialog();
+    }
+
+    @Override
+    protected boolean tintStatusBar() {
+        return false;
     }
 
     @Override

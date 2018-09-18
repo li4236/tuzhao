@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.alipay.sdk.app.AuthTask;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -60,11 +62,10 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mybalance_layout);
-
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
         initView();//初始化控件
         initData();//初始化数据
         initEvent();//初始化事件
-        setStyle(true);
 
         IntentObserable.registerObserver(this);
     }

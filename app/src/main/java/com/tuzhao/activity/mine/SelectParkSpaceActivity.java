@@ -2,6 +2,7 @@ package com.tuzhao.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.tianzhili.www.myselfsdk.SuspensionIndexBar.adpater.ParkSelectAdapter;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.CityBean;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.ParkBean;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.suspension.SuspensionDecoration;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.SelectCityActivity;
@@ -79,7 +81,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkspace_select);
-
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
         initLocation();//初始化定位
         initView();
         initData();

@@ -1,126 +1,202 @@
 package com.tuzhao.activity.mine;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.text.method.DigitsKeyListener;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tianzhili.www.myselfsdk.okgo.OkGo;
-import com.tianzhili.www.myselfsdk.okgo.callback.StringCallback;
+import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseActivity;
+import com.tuzhao.activity.MainActivity;
+import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.application.MyApplication;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.SMSInfo;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.callback.TokenInterceptor;
-import com.tuzhao.publicwidget.db.DatabaseImp;
-import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.editviewwatch.LimitInputTextWatcher;
-import com.tuzhao.publicwidget.mytoast.MyToast;
-import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.ImageUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.tianzhili.www.myselfsdk.okgo.OkGo.getContext;
-
 /**
- * Created by TZL12 on 2017/12/14.
+ * Created by juncoder on 2018/7/25.
+ * <p>
+ * 通过原密码修改密码，通过短信验证码修改密码（不需要输入原密码）
+ * </p>
  */
+public class ChangePasswordActivity extends BaseStatusActivity implements View.OnClickListener {
 
-public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener {
+    private String mLocalOriginalPassword;
 
-    private EditText edittext_oldconfirm, edittext_newpassword, edittext_oldpassword;
-    private TextView textview_oldgetconfirm;
-    private LinearLayout linearlayout_tell, linearlayout_oldpassword, linearlayout_newpassword;
-    private ImageView imageview_oldpassclean, imageview_newclean;
-    private LoadingDialog mLoadingDialog;
+    private EditText mOriginalPassword;
 
-    private static final int CODE_ING = 1;   //已发送，倒计时
-    private static final int CODE_REPEAT = 2;  //重新发送
-    private static final int SMSDDK_HANDLER = 3;  //短信回调
-    private int TIME = 60;//倒计时60s
-    private boolean isGetCode = false, isPassconfirm = false;
-    private DatabaseImp databaseImp;
-    private DateUtil dateUtil = new DateUtil();
+    private ImageView mOriginalPasswordStatus;
 
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CODE_ING://已发送,开始倒计时
-                    textview_oldgetconfirm.setText((--TIME) + "s");
-                    textview_oldgetconfirm.setBackground(ContextCompat.getDrawable(ChangePasswordActivity.this, R.drawable.little_yuan_moregray_5dp));
-                    textview_oldgetconfirm.setTextColor(ContextCompat.getColor(ChangePasswordActivity.this, R.color.g6));
-                    break;
-                case CODE_REPEAT://重新发送
-                    textview_oldgetconfirm.setText("重新获取");
-                    textview_oldgetconfirm.setBackground(ContextCompat.getDrawable(ChangePasswordActivity.this, R.drawable.little_yuan_yellow_5dp));
-                    textview_oldgetconfirm.setTextColor(ContextCompat.getColor(ChangePasswordActivity.this, R.color.b1));
-                    textview_oldgetconfirm.setClickable(true);
-                    break;
-            }
-        }
-    };
+    private ImageView mClearOriginalPassword;
 
-    Handler handlerChangge = new Handler() {
-        public void handleMessage(Message msg) {
-            linearlayout_tell.setVisibility(View.GONE);
-            linearlayout_newpassword.setVisibility(View.VISIBLE);
-        }
-    };
-    private String phone_token;
+    private TextView mOriginalPasswordError;
+
+    private EditText mNewPassword;
+
+    private ImageView mNewPassowrdStatus;
+
+    private ImageView mClearNewPassword;
+
+    private TextView mNewPasswordError;
+
+    private EditText mConfirmPassword;
+
+    private ImageView mConfirmPassowrdStatus;
+
+    private ImageView mClearConfirmPassowrd;
+
+    private TextView mConfirmPasswordError;
+
+    private TextView mChangePassword;
+
+    private ObjectAnimator mOriginPasswordErrorAnimator;
+
+    private ObjectAnimator mNewPasswrodErrorAnimator;
+
+    private ObjectAnimator mConfirmPasswordErrorAnimator;
+
+    private Handler mHandler;
+
+    private static final int ORIGIN_PASSWROD_ERROR = 0x111;
+
+    private static final int NEW_PASSWROD_ERROR = 0x222;
+
+    private static final int CONFIRM_PASSWROD_ERROR = 0x333;
+
+    private static final int HIDE_ORIGINAL_PASSWORD_ERROR = 0x444;
+
+    private static final int HIDE_NEW_PASSWORD_ERROR = 0x555;
+
+    private static final int HIDE_CONFIRM_PASSWORD_ERROR = 0x666;
+
+    private static final String INPUT_ORIGIN_PASSWORD = "请输入原密码";
+
+    private static final String ORIGIN_PASSWROD_INCORRECT = "原密码不正确";
+
+    private static final String INPUT_NEW_PASSWORD = "请输入新密码";
+
+    private static final String PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT = "密码长度不能少于8位";
+
+    private static final String SAME_OF_ORIGIN_PASSWORD = "新密码不能与原密码一样";
+
+    private static final String INPUT_NEW_PASSWORD_AGAIN = "请再次输入新密码";
+
+    private static final String PASSWORD_IS_DIFFERENT = "两次输入的密码不一样";
+
+    private boolean mOriginPasswrodShow;
+
+    private boolean mNewPasswordShow;
+
+    private boolean mConfirmPasswordShow;
+
+    private String mPassCode;
+
+    private User_Info mUserInfo;
+
+    private boolean mAlreadyClick;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_changepassword_layout);
-        initView();
-        initData();
-        initEvent();
-        setStyle(true);
+    protected int resourceId() {
+        return R.layout.activity_change_password_layout;
     }
 
-    private void initView() {
-        edittext_oldconfirm = (EditText) findViewById(R.id.id_activity_changepassword_layout_edittext_oldconfirm);
-        textview_oldgetconfirm = (TextView) findViewById(R.id.id_activity_changepassword_layout_textview_oldgetconfirm);
-        edittext_newpassword = (EditText) findViewById(R.id.id_activity_changepassword_layout_edittext_newpassword);
-        edittext_oldpassword = (EditText) findViewById(R.id.id_activity_changepassword_layout_edittext_oldpassword);
-        linearlayout_tell = (LinearLayout) findViewById(R.id.id_activity_changepassword_layout_linearlayout_tell);
-        linearlayout_oldpassword = (LinearLayout) findViewById(R.id.id_activity_changepassword_layout_linearlayout_oldpassword);
-        linearlayout_newpassword = (LinearLayout) findViewById(R.id.id_activity_changepassword_layout_linearlayout_newpassword);
-        imageview_oldpassclean = (ImageView) findViewById(R.id.id_activity_changepassword_layout_imageview_oldpassclean);
-        imageview_newclean = (ImageView) findViewById(R.id.id_activity_changepassword_layout_imageview_newclean);
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        mOriginalPassword = findViewById(R.id.original_password_et);
+        mOriginalPasswordStatus = findViewById(R.id.original_password_status);
+        mClearOriginalPassword = findViewById(R.id.clear_original_password);
+        mOriginalPasswordError = findViewById(R.id.original_password_error);
+        mNewPassword = findViewById(R.id.new_password_et);
+        mNewPassowrdStatus = findViewById(R.id.new_password_status);
+        mClearNewPassword = findViewById(R.id.clear_new_password);
+        mNewPasswordError = findViewById(R.id.new_password_error);
+        mConfirmPassword = findViewById(R.id.confirm_new_password_et);
+        mConfirmPassowrdStatus = findViewById(R.id.confirm_password_status);
+        mClearConfirmPassowrd = findViewById(R.id.clear_confirm_password);
+        mConfirmPasswordError = findViewById(R.id.confirm_password_error);
+        mChangePassword = findViewById(R.id.change_password);
+
+        mOriginalPassword.requestFocus();
+        mOriginalPasswordStatus.setOnClickListener(this);
+        mClearOriginalPassword.setOnClickListener(this);
+        mNewPassowrdStatus.setOnClickListener(this);
+        mClearNewPassword.setOnClickListener(this);
+        mConfirmPassowrdStatus.setOnClickListener(this);
+        mClearConfirmPassowrd.setOnClickListener(this);
+        mChangePassword.setOnClickListener(this);
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
+        mUserInfo = UserManager.getInstance().getUserInfo();
+        mLocalOriginalPassword = mUserInfo.getPassword();
+        mPassCode = getIntent().getStringExtra(ConstansUtil.PASS_CODE);
+        if (mPassCode != null) {
+            mOriginalPassword.setVisibility(View.GONE);
+            mOriginalPasswordStatus.setVisibility(View.GONE);
+            mOriginalPasswordError.setVisibility(View.GONE);
+            mClearOriginalPassword.setVisibility(View.GONE);
+        }
+
+        initHandle();
+        initEditTextChange();
+        initDigits();
+        //initEditTextFocusChange();
     }
 
-    private void initEvent() {
-        textview_oldgetconfirm.setOnClickListener(this);
-        imageview_oldpassclean.setOnClickListener(this);
-        imageview_newclean.setOnClickListener(this);
-        findViewById(R.id.id_activity_changepassword_layout_textview_oldgonext).setOnClickListener(this);
-        findViewById(R.id.id_activity_changepassword_layout_textview_gochange).setOnClickListener(this);
-        findViewById(R.id.id_activity_changepassword_layout_textview_turntopass).setOnClickListener(this);
-        findViewById(R.id.id_activity_changepassword_layout_textview_oldpassgonext).setOnClickListener(this);
-        findViewById(R.id.id_activity_changepassword_layout_imageview_back).setOnClickListener(this);
+    private void initHandle() {
+        mHandler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                switch (msg.what) {
+                    case ORIGIN_PASSWROD_ERROR:
+                        startOriginPasswordErrorAnimator();
+                        return true;
+                    case NEW_PASSWROD_ERROR:
+                        startNewPasswrodErrorAnimator();
+                        return true;
+                    case CONFIRM_PASSWROD_ERROR:
+                        startConfirmPasswordErrorAnimator();
+                        return true;
+                    case HIDE_ORIGINAL_PASSWORD_ERROR:
+                        mOriginalPasswordError.setVisibility(View.INVISIBLE);
+                        return true;
+                    case HIDE_NEW_PASSWORD_ERROR:
+                        mNewPasswordError.setVisibility(View.INVISIBLE);
+                        break;
+                    case HIDE_CONFIRM_PASSWORD_ERROR:
+                        mConfirmPasswordError.setVisibility(View.INVISIBLE);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
 
-        edittext_newpassword.addTextChangedListener(new LimitInputTextWatcher(edittext_newpassword, "[^a-zA-Z0-9,，.。?？:：;；￥$%@!~、！!“”（）()*·{}【】—+=]"));
-
-        edittext_oldpassword.addTextChangedListener(new TextWatcher() {
+    private void initEditTextChange() {
+        mOriginalPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -128,14 +204,21 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((count > 0 || start > 0) || s.toString().length() > 0) {
-                    if (imageview_oldpassclean.getVisibility() == View.GONE) {
-                        imageview_oldpassclean.setVisibility(View.VISIBLE);
+                if (getTextLength(mOriginalPassword) == 0) {
+                    //输入框为空的时候不显示删除按钮
+                    if (isVisible(mClearOriginalPassword)) {
+                        mClearOriginalPassword.setVisibility(View.INVISIBLE);
                     }
                 } else {
-                    if (imageview_oldpassclean.getVisibility() == View.VISIBLE) {
-                        imageview_oldpassclean.setVisibility(View.GONE);
+                    showView(mClearOriginalPassword);
+                    if (mAlreadyClick) {
+                        //如果点击了确认修改按钮后，原密码错误的则显示错误信息
+                        originPasswrodIsCorrect();
                     }
+                    /*if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                        mHandler.removeMessages(ORIGIN_PASSWROD_ERROR);
+                        mHandler.sendEmptyMessageDelayed(ORIGIN_PASSWROD_ERROR, 1000);
+                    }*/
                 }
             }
 
@@ -145,7 +228,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
             }
         });
 
-        edittext_newpassword.addTextChangedListener(new TextWatcher() {
+        mNewPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -153,255 +236,447 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ((count > 0 || start > 0) || s.toString().length() > 0) {
-                    if (imageview_newclean.getVisibility() == View.GONE) {
-                        imageview_newclean.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    if (imageview_newclean.getVisibility() == View.VISIBLE) {
-                        imageview_newclean.setVisibility(View.GONE);
-                    }
-                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (getTextLength(mNewPassword) == 0) {
+                    hideView(mClearNewPassword);
+                } else {
+                    showView(mClearNewPassword);
+                    newPasswordIsCorrect();
+                    confirmPasswordIsCorrect();
+                }
             }
         });
+
+        mConfirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (getTextLength(mConfirmPassword) == 0) {
+                    hideView(mClearConfirmPassowrd);
+                } else {
+                    showView(mClearConfirmPassowrd);
+                    confirmPasswordIsCorrect();
+                    /*if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
+                        mHandler.removeMessages(CONFIRM_PASSWROD_ERROR);
+                        mHandler.sendEmptyMessageDelayed(CONFIRM_PASSWROD_ERROR, 800);
+                    }*/
+                }
+            }
+        });
+    }
+
+    private void initDigits() {
+        mOriginalPassword.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^&*()~<>！￥？【】、《》，。-=+_"));
+        mNewPassword.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^*()~&<>！￥？【】、《》，。-=+_"));
+        mConfirmPassword.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^*()~&<>！￥？【】、《》，。-=+_"));
+    }
+
+    private void initEditTextFocusChange() {
+        if (isVisible(mOriginalPassword)) {
+            mOriginalPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        if (DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                            if (newPasswordIsCorrect()) {
+                                if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
+                                    mOriginalPassword.clearFocus();
+                                    startConfirmPasswordErrorAnimator();
+                                }
+                            } else {
+                                mOriginalPassword.clearFocus();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        mNewPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (isVisible(mOriginalPassword)) {
+                        if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                            mNewPassword.clearFocus();
+                            startOriginPasswordErrorAnimator();
+                        }
+                    }
+                }
+            }
+        });
+
+        mConfirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (isVisible(mOriginalPassword)) {
+                        if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+                            mConfirmPassword.clearFocus();
+                            startOriginPasswordErrorAnimator();
+                            return;
+                        }
+                    }
+                    newPasswordIsCorrect();
+                }
+            }
+        });
+    }
+
+    @NonNull
+    @Override
+    protected String title() {
+        return "修改密码";
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mOriginPasswordErrorAnimator != null) {
+            mOriginPasswordErrorAnimator.cancel();
+        }
+        if (mNewPasswrodErrorAnimator != null) {
+            mNewPasswrodErrorAnimator.cancel();
+        }
+        if (mConfirmPasswordErrorAnimator != null) {
+            mConfirmPasswordErrorAnimator.cancel();
+        }
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * 原密码错误时，输入框左右移动300毫秒
+     */
+    private void startOriginPasswordErrorAnimator() {
+        if (mOriginPasswordErrorAnimator == null) {
+            mOriginPasswordErrorAnimator = ObjectAnimator.ofFloat(mOriginalPassword, "translationX", DensityUtil.dp2px(this, 8));
+            mOriginPasswordErrorAnimator.setDuration(300);
+            mOriginPasswordErrorAnimator.setAutoCancel(true);
+
+            CycleInterpolator cycleInterpolator = new CycleInterpolator(3);
+            mOriginPasswordErrorAnimator.setInterpolator(cycleInterpolator);
+            mOriginPasswordErrorAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                   /* mHandler.removeMessages(HIDE_ORIGINAL_PASSWORD_ERROR);
+                    mHandler.sendEmptyMessageDelayed(HIDE_ORIGINAL_PASSWORD_ERROR, 1500);
+
+                    mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    //mOriginalPassword.requestFocus();
+                    //动画结束后原密码输入框获取焦点
+                    mOriginalPassword.setSelection(getTextLength(mOriginalPassword));
+                    setFocus();
+                }
+            });
+        }
+        /*if (!isVisible(mOriginalPasswordError)) {
+            mOriginalPasswordError.setVisibility(View.VISIBLE);
+        }
+        mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        //mOriginalPassword.clearFocus();
+        mOriginPasswordErrorAnimator.start();
+    }
+
+    /**
+     * 开始新密码的错误提示动画
+     */
+    private void startNewPasswrodErrorAnimator() {
+        if (mNewPasswrodErrorAnimator == null) {
+            mNewPasswrodErrorAnimator = ObjectAnimator.ofFloat(mNewPassword, "translationX", DensityUtil.dp2px(this, 8));
+            mNewPasswrodErrorAnimator.setDuration(300);
+            mNewPasswrodErrorAnimator.setAutoCancel(true);
+
+            CycleInterpolator cycleInterpolator = new CycleInterpolator(3);
+            mNewPasswrodErrorAnimator.setInterpolator(cycleInterpolator);
+            mNewPasswrodErrorAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    /*mHandler.sendEmptyMessageDelayed(HIDE_NEW_PASSWORD_ERROR, 1500);
+                    mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    //mNewPassword.requestFocus();
+                    mNewPassword.setSelection(getTextLength(mNewPassword));
+                    setFocus();
+                }
+            });
+        }
+        /*mNewPasswordError.setVisibility(View.VISIBLE);
+        mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        //mNewPassword.clearFocus();
+        mNewPasswrodErrorAnimator.start();
+    }
+
+    /**
+     * 开启确认密码的错误提示动画
+     */
+    private void startConfirmPasswordErrorAnimator() {
+        if (mConfirmPasswordErrorAnimator == null) {
+            mConfirmPasswordErrorAnimator = ObjectAnimator.ofFloat(mConfirmPassword, "translationX", DensityUtil.dp2px(this, 8));
+            mConfirmPasswordErrorAnimator.setDuration(300);
+            mConfirmPasswordErrorAnimator.setAutoCancel(true);
+
+            CycleInterpolator cycleInterpolator = new CycleInterpolator(3);
+            mConfirmPasswordErrorAnimator.setInterpolator(cycleInterpolator);
+            mConfirmPasswordErrorAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    /*mHandler.removeMessages(HIDE_CONFIRM_PASSWORD_ERROR);
+                    mHandler.sendEmptyMessageDelayed(HIDE_CONFIRM_PASSWORD_ERROR, 1500);
+                    mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    //mConfirmPassword.requestFocus();
+                    mConfirmPassword.setSelection(getTextLength(mConfirmPassword));
+                    setFocus();
+                }
+            });
+        }
+        /*if (!isVisible(mConfirmPasswordError)) {
+            mConfirmPasswordError.setVisibility(View.VISIBLE);
+        }
+        mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        //mConfirmPassword.clearFocus();
+        mConfirmPasswordErrorAnimator.start();
+    }
+
+    /**
+     * 从上往下，如果有错误的则获取焦点
+     */
+    private void setFocus() {
+        if (isVisible(mOriginalPasswordError)) {
+            mOriginalPassword.requestFocus();
+        } else if (isVisible(mNewPasswordError)) {
+            mNewPassword.requestFocus();
+        } else if (isVisible(mConfirmPasswordError)) {
+            mConfirmPassword.requestFocus();
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.id_activity_changepassword_layout_textview_oldgetconfirm:
-                //获取验证码,并进入60秒倒计时状态
-                isGetCode = true;
-                textview_oldgetconfirm.setText("发送中");
-                requestSendSMS();
-                textview_oldgetconfirm.setClickable(false);
-                break;
-            case R.id.id_activity_changepassword_layout_textview_oldgonext:
-                if (isGetCode) {
-                    if (edittext_oldconfirm.getText().length() > 0) {
-                        initLoading("正在验证...");
-                        requestCheckCode();
-                    } else {
-                        toast("输入收到的验证码哦");
-                    }
+            case R.id.original_password_status:
+                if (mOriginPasswrodShow) {
+                    //密码显示为圆点
+                    mOriginalPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    ImageUtil.showPic(mOriginalPasswordStatus, R.drawable.ic_nosee);
                 } else {
-                    MyToast.showToast(ChangePasswordActivity.this, "要获取验证码才能继续哦", 5);
+                    //显示出具体的密码
+                    mOriginalPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    ImageUtil.showPic(mOriginalPasswordStatus, R.drawable.ic_see);
                 }
+                setSelection(mOriginalPassword);
+                mOriginPasswrodShow = !mOriginPasswrodShow;
                 break;
-            case R.id.id_activity_changepassword_layout_textview_turntopass:
-                isPassconfirm = true;
-                linearlayout_tell.setVisibility(View.GONE);
-                linearlayout_oldpassword.setVisibility(View.VISIBLE);
+            case R.id.clear_original_password:
+                mOriginalPassword.setText("");
+                mClearOriginalPassword.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.id_activity_changepassword_layout_textview_oldpassgonext:
-                if (edittext_oldpassword.getText().length() > 0) {
-                    if (DensityUtil.MD5code(edittext_oldpassword.getText().toString()).equals(UserManager.getInstance().getUserInfo().getPassword())) {
-                        isPassconfirm = false;
-                        linearlayout_oldpassword.setVisibility(View.GONE);
-                        linearlayout_newpassword.setVisibility(View.VISIBLE);
-                    } else {
-                        MyToast.showToast(ChangePasswordActivity.this, "密码不正确哦", 5);
-                    }
+            case R.id.new_password_status:
+                if (mNewPasswordShow) {
+                    ImageUtil.showPic(mNewPassowrdStatus, R.drawable.ic_nosee);
+                    mNewPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 } else {
-                    MyToast.showToast(ChangePasswordActivity.this, "要先输入密码哦", 5);
+                    ImageUtil.showPic(mNewPassowrdStatus, R.drawable.ic_see);
+                    mNewPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
+                setSelection(mNewPassword);
+                mNewPasswordShow = !mNewPasswordShow;
                 break;
-            case R.id.id_activity_changepassword_layout_textview_gochange:
-                if (edittext_newpassword.getText().length() >= 8 && edittext_newpassword.getText().length() <= 20) {
-                    if (DensityUtil.MD5code(edittext_newpassword.getText().toString()).equals(UserManager.getInstance().getUserInfo().getPassword())){
-                        edittext_newpassword.setText("");
-                        MyToast.showToast(ChangePasswordActivity.this, "新旧密码不能一样哦", 5);
-                    }else {
-                        initLoading("正在修改...");
-                        requestChangePassword(edittext_newpassword.getText().toString());
-                    }
+            case R.id.clear_new_password:
+                mNewPassword.setText("");
+                mClearNewPassword.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.confirm_password_status:
+                if (mConfirmPasswordShow) {
+                    ImageUtil.showPic(mConfirmPassowrdStatus, R.drawable.ic_nosee);
+                    mConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 } else {
-                    MyToast.showToast(ChangePasswordActivity.this, "密码不符合规则哦", 5);
+                    ImageUtil.showPic(mConfirmPassowrdStatus, R.drawable.ic_see);
+                    mConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
+                setSelection(mConfirmPassword);
+                mConfirmPasswordShow = !mConfirmPasswordShow;
                 break;
-            case R.id.id_activity_changepassword_layout_imageview_back:
-                if (isPassconfirm) {
-                    isPassconfirm = false;
-                    linearlayout_oldpassword.setVisibility(View.GONE);
-                    linearlayout_tell.setVisibility(View.VISIBLE);
-                } else {
-                    finish();
+            case R.id.clear_confirm_password:
+                mConfirmPassword.setText("");
+                mClearConfirmPassowrd.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.change_password:
+                mAlreadyClick = true;
+                if (allPasswrodIsLegal()) {
+                    mChangePassword.setClickable(false);
+                    changePasswordByOriginal();
                 }
-                break;
-            case R.id.id_activity_changepassword_layout_imageview_oldpassclean:
-                edittext_oldpassword.setText("");
-                break;
-            case R.id.id_activity_changepassword_layout_imageview_newclean:
-                edittext_newpassword.setText("");
                 break;
         }
     }
 
-    private void requestCheckCode() {
-
-        OkGo.post(HttpConstants.checkCode)
-                .tag(getContext())
-                .headers("phoneToken",phone_token)
-                .params("code",edittext_oldconfirm.getText().toString())
-                .execute(new JsonCallback<Base_Class_Info<SMSInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<SMSInfo> responseData, Call call, Response response) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        linearlayout_tell.setVisibility(View.GONE);
-                        linearlayout_newpassword.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        if (!DensityUtil.isException(getContext(),e)){
-                            Log.d("TAG", "请求失败， 信息为：" + e.getMessage());
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code){
-                                case 101:
-                                    MyToast.showToast(getContext(),"验证码已过期，重新获取再试试哦",5);
-                                    break;
-                                case 102:
-                                    MyToast.showToast(getContext(),"验证码不匹配，核对后再重试哦",5);
-                                    break;
-                                case 901:
-                                    MyToast.showToast(getContext(),"服务器异常，再点击试试哦",5);
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void requestChangePassword(final String password) {
-        OkGo.post(HttpConstants.changePassword)
-                .tag(this)
-                .addInterceptor(new TokenInterceptor())
-                .headers("token",UserManager.getInstance().getUserInfo().getToken())
-                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
-                .params("newpassword", DensityUtil.MD5code(password))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        User_Info userInfo = UserManager.getInstance().getUserInfo();
-                        userInfo.setPassword(DensityUtil.MD5code(password));
-                        UserManager.getInstance().setUserInfo(userInfo);
-                        //更新覆盖本地数据库的用户信息
-                        DatabaseImp databaseImp = new DatabaseImp(ChangePasswordActivity.this);
-                        databaseImp.insertUserToDatabase(userInfo);
-
-                        MyToast.showToast(ChangePasswordActivity.this, "修改成功", 5);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        if (!DensityUtil.isException(ChangePasswordActivity.this, e)) {
-                            Log.d("TAG", "请求失败， 信息为changePassword：" + e.getMessage());
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 101:
-                                    MyToast.showToast(ChangePasswordActivity.this, "修改失败", 5);
-                                    break;
-                                case 102:
-                                    MyToast.showToast(ChangePasswordActivity.this, "修改失败", 5);
-                                    break;
-                                case 103:
-                                    MyToast.showToast(ChangePasswordActivity.this, "修改失败", 5);
-                                    break;
-                                case 901:
-                                    MyToast.showToast(ChangePasswordActivity.this, "服务器正在维护中", 5);
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void requestSendSMS(){
-        OkGo.post(HttpConstants.sendSms)
-                .tag(getContext())
-                .params("phone",UserManager.getInstance().getUserInfo().getUsername())
-                .execute(new JsonCallback<Base_Class_Info<SMSInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<SMSInfo> smsInfo, Call call, Response response) {
-                        phone_token = smsInfo.data.getPhone_token();
-                        textview_oldgetconfirm.setClickable(false);
-                        TIME = 60;
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int i = 60; i > 0; i--) {
-                                    handler.sendEmptyMessage(CODE_ING);
-                                    if (i <= 0) {
-                                        break;
-                                    }
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                handler.sendEmptyMessage(CODE_REPEAT);
-                            }
-                        }).start();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        textview_oldgetconfirm.setText("发送失败");
-                        textview_oldgetconfirm.setClickable(true);
-                        if (!DensityUtil.isException(getContext(),e)){
-                            MyToast.showToast(getContext(),"发送失败，请重试",5);
-                        }
-                    }
-                });
+    /**
+     * @return true(原密码正确) false(原密码错误)
+     */
+    private boolean originPasswrodIsCorrect() {
+        if (getTextLength(mOriginalPassword) == 0) {
+            //没有输入密码，输入框变红色，并在左下方显示请输入原密码
+            mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mOriginalPasswordError).equals(INPUT_ORIGIN_PASSWORD)) {
+                mOriginalPasswordError.setText(INPUT_ORIGIN_PASSWORD);
+            }
+            showView(mOriginalPasswordError);
+            return false;
+        } else if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
+            //密码错误
+            mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mOriginalPasswordError).equals(ORIGIN_PASSWROD_INCORRECT)) {
+                mOriginalPasswordError.setText(ORIGIN_PASSWROD_INCORRECT);
+            }
+            showView(mOriginalPasswordError);
+            return false;
+        } else {
+            mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+            hideView(mOriginalPasswordError);
+            return true;
+        }
     }
 
     /**
-     * 弹出toast
-     *
-     * @param str
+     * @return 新密码是否正确
      */
-    private void toast(final String str) {
-        runOnUiThread(new Runnable() {
+    private boolean newPasswordIsCorrect() {
+        if (getTextLength(mNewPassword) == 0) {
+            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mNewPasswordError).equals(INPUT_NEW_PASSWORD)) {
+                mNewPasswordError.setText(INPUT_NEW_PASSWORD);
+            }
+            showView(mNewPasswordError);
+            return false;
+        } else if (getTextLength(mNewPassword) < 8) {
+            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mNewPasswordError).equals(PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT)) {
+                mNewPasswordError.setText(PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT);
+            }
+            showView(mNewPasswordError);
+            return false;
+        } else if (DensityUtil.MD5code(getText(mNewPassword)).equals(mLocalOriginalPassword)) {
+            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            if (!getText(mNewPasswordError).equals(SAME_OF_ORIGIN_PASSWORD)) {
+                mNewPasswordError.setText(SAME_OF_ORIGIN_PASSWORD);
+            }
+            showView(mNewPasswordError);
+            return false;
+        } else {
+            mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+            hideView(mNewPasswordError);
+            return true;
+        }
+    }
+
+    /**
+     *
+     * @return  确认密码是否正确
+     */
+    private boolean confirmPasswordIsCorrect() {
+        if (mAlreadyClick) {
+            if (getTextLength(mConfirmPassword) == 0) {
+                mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+                if (!getText(mConfirmPasswordError).equals(INPUT_NEW_PASSWORD_AGAIN)) {
+                    mConfirmPasswordError.setText(INPUT_NEW_PASSWORD_AGAIN);
+                }
+                showView(mConfirmPasswordError);
+                return false;
+            } else if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
+                mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+                if (!getText(mConfirmPasswordError).equals(PASSWORD_IS_DIFFERENT)) {
+                    mConfirmPasswordError.setText(PASSWORD_IS_DIFFERENT);
+                }
+                showView(mConfirmPasswordError);
+                return false;
+            } else {
+                mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                hideView(mConfirmPasswordError);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @return  全部密码是否都合法，如果有不正确的则会开启动画
+     */
+    private boolean allPasswrodIsLegal() {
+        boolean result = true;
+        if (isVisible(mOriginalPassword)) {
+            if (!originPasswrodIsCorrect()) {
+                startOriginPasswordErrorAnimator();
+                result = false;
+            }
+        }
+        if (!newPasswordIsCorrect()) {
+            startNewPasswrodErrorAnimator();
+            result = false;
+        }
+        if (!confirmPasswordIsCorrect()) {
+            startConfirmPasswordErrorAnimator();
+            result = false;
+        }
+        return result;
+    }
+
+    /**
+     * 通过原密码修改密码
+     */
+    private void changePasswordByOriginal() {
+        showLoadingDialog("正在修改");
+        BaseRequest baseRequest = getOkGo(HttpConstants.requestChangePassword)
+                .params("passCode", mPassCode == null ? DensityUtil.MD5code(mUserInfo.getSerect_code() + "*&*" +
+                        mUserInfo.getCreate_time() + "*&*" + mUserInfo.getId()) : mPassCode)
+                .params("type", mPassCode == null ? "1" : "0")
+                .params("newPassword", DensityUtil.MD5code(getText(mNewPassword)));
+
+        if (mPassCode == null) {
+            baseRequest.params("originalPassword", DensityUtil.MD5code(getText(mOriginalPassword)));
+        }
+
+        baseRequest.execute(new JsonCallback<Base_Class_Info<Void>>() {
             @Override
-            public void run() {
-                MyToast.showToast(ChangePasswordActivity.this, str, 5);
+            public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                mUserInfo.setPassword(DensityUtil.MD5code(getText(mNewPassword)));
+                MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(mUserInfo);
+                dismmisLoadingDialog();
+                showFiveToast("密码修改成功");
+                startActivity(MainActivity.class, ConstansUtil.REQUEST_FOR_RESULT, ConstansUtil.CHANGE_PASSWORD);
+            }
+
+            @Override
+            public void onError(Call call, Response response, Exception e) {
+                super.onError(call, response, e);
+                mChangePassword.setClickable(true);
+                if (!handleException(e)) {
+                    switch (e.getMessage()) {
+                        case "101":
+                        case "104":
+                        case "105":
+                            showFiveToast("服务器异常，请稍后再试");
+                            break;
+                        case "103":
+                            startOriginPasswordErrorAnimator();
+                            break;
+                    }
+                }
             }
         });
     }
 
-    //初始化加载框控件
-    private void initLoading(String what) {
-        mLoadingDialog = new LoadingDialog(ChangePasswordActivity.this, what);
-        mLoadingDialog.show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mLoadingDialog != null) {
-            mLoadingDialog.cancel();
-        }
-    }
 }

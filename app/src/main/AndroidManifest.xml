@@ -141,20 +141,13 @@
         <activity android:name=".activity.mine.SearchParkSpaceActivity" />
         <activity android:name=".activity.mine.ApplyParkSpace" />
         <activity android:name=".activity.mine.ChangeNicknameActivity" />
-        <activity android:name=".activity.mine.ChangePhoneNumberActivity" />
         <activity android:name=".activity.mine.MyBalanceActivity" />
         <activity android:name=".activity.mine.GetMoneyActivty" />
-        <activity android:name=".activity.mine.MapPlanLineActivity" />
         <activity android:name=".activity.mine.SetActivity" />
-        <activity android:name=".activity.mine.SetAccountAndSafeActivity" />
-        <activity android:name=".activity.mine.ChangePasswordActivity" />
         <activity android:name=".activity.mine.SuggestActivity" />
         <activity android:name=".activity.mine.CollectionActivity" />
         <activity android:name=".activity.mine.BillActivity" />
         <activity android:name=".activity.mine.ConsumRecordDetailActivity" />
-        <activity android:name=".activity.mine.MyPassingParkActivity" />
-        <activity android:name=".activity.mine.PersonalCreditActivity" />
-        <activity android:name=".activity.mine.OpenParkLockActivity" />
         <activity android:name=".activity.mine.RentalRecordActivity" />
         <activity android:name=".activity.mine.EditShareTimeActivity" />
         <activity android:name=".activity.mine.ParkSpaceSettingActivity" />
@@ -203,7 +196,7 @@
             android:name=".activity.mine.SMSVerificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.mine.ChangePasswordRefactoryActivity"
+            android:name=".activity.mine.ChangePasswordActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".activity.mine.OrderComplaintActivity"

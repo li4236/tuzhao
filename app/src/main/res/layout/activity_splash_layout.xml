@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/w0">
+    android:background="@color/w0"
+    android:fitsSystemWindows="true">
 
     <TextView
         android:id="@+id/id_activity_splash_layout_textview_skip"

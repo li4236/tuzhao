@@ -38,6 +38,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.ui.RecognizerDialog;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.navi.Constant;
@@ -100,13 +101,13 @@ public class SearchAddressActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_address_layout_refactor);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
         initLocation();//初始化定位
         initData();//初始化数据
         initView();//初始化控件
         initEvent();//初始化事件
 
         initVoice();
-        setStyle(true);
     }
 
     private void initData() {

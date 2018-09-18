@@ -3,6 +3,7 @@ package com.tuzhao.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,7 @@ import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.CityBean;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.HeaderBean;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.bean.TopHeaderBean;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.suspension.SuspensionDecoration;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -94,12 +96,12 @@ public class SelectCityActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_city);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
 
         initLocation();//初始化定位
         initView();
         initData();
         initEvent();
-        setStyle(true);
     }
 
     private void initView() {

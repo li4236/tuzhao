@@ -82,10 +82,9 @@
         android:layout_width="37dp"
         android:layout_height="73dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="80dp"
         android:background="@drawable/ic_bigbutton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/id_content_main_layout_relativelayout_openuser">
 
         <ImageView
             android:id="@+id/id_content_main_layout_imageview_spark"

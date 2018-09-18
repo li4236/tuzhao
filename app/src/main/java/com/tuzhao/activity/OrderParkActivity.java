@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
@@ -89,11 +90,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orderpark_layout);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
 
         initView();
         initData();
         initEvent();
-        setStyle(true);
     }
 
     private void initData() {

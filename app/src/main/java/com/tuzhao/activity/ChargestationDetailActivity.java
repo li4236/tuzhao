@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
@@ -52,11 +53,11 @@ public class ChargestationDetailActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chargestationdetail_layout);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
         mBundle = new Bundle();
         initView();
         initData();
         initEvent();
-        setStyle(true);
     }
 
     private void initView() {
@@ -64,6 +65,7 @@ public class ChargestationDetailActivity extends BaseActivity {
         imageview_back = (ImageView) findViewById(R.id.id_activity_chargestationdetail_imageview_back);
         imageview_collection = (ImageView) findViewById(R.id.id_activity_chargestationdetail_imageview_collection);
     }
+
     private void initData() {
 
         if (getIntent().hasExtra("chargestation_info")) {
@@ -72,9 +74,9 @@ public class ChargestationDetailActivity extends BaseActivity {
             chargestation_id = getIntent().getStringExtra("chargestation_id");
             city_code = getIntent().getStringExtra("city_code");
         }
-        holder = (CollectionManager.getInstance().checkCollectionDatas(chargestation_info==null?chargestation_id:chargestation_info.getId(), "2"));
+        holder = (CollectionManager.getInstance().checkCollectionDatas(chargestation_info == null ? chargestation_id : chargestation_info.getId(), "2"));
         if (holder.isExist) {
-            imageview_collection.setImageDrawable(ContextCompat.getDrawable(ChargestationDetailActivity.this,R.mipmap.ic_scchenggong));
+            imageview_collection.setImageDrawable(ContextCompat.getDrawable(ChargestationDetailActivity.this, R.mipmap.ic_scchenggong));
         }
 
         if (chargestation_info == null) {
@@ -109,13 +111,13 @@ public class ChargestationDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (UserManager.getInstance().hasLogined()) {
-                    holder = (CollectionManager.getInstance().checkCollectionDatas(chargestation_info==null?chargestation_id:chargestation_info.getId(), "2"));
+                    holder = (CollectionManager.getInstance().checkCollectionDatas(chargestation_info == null ? chargestation_id : chargestation_info.getId(), "2"));
                     if (holder.isExist) {
                         initLoading("正在取消收藏...");
                         OkGo.post(HttpConstants.deleteCollection)
                                 .tag(ChargestationDetailActivity.this)
                                 .addInterceptor(new TokenInterceptor())
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
+                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
                                 .params("id", CollectionManager.getInstance().getCollection_datas().get(holder.position).getId())
                                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                                     @Override
@@ -124,7 +126,7 @@ public class ChargestationDetailActivity extends BaseActivity {
                                             mLoadingDialog.dismiss();
                                         }
                                         MyToast.showToast(ChargestationDetailActivity.this, "已取消收藏", 5);
-                                        imageview_collection.setImageDrawable(ContextCompat.getDrawable(ChargestationDetailActivity.this,R.mipmap.ic_shoucang2));
+                                        imageview_collection.setImageDrawable(ContextCompat.getDrawable(ChargestationDetailActivity.this, R.mipmap.ic_shoucang2));
                                         CollectionManager.getInstance().removeOneCollection(holder.position);
                                     }
 
@@ -142,10 +144,10 @@ public class ChargestationDetailActivity extends BaseActivity {
                         OkGo.post(HttpConstants.addCollection)
                                 .tag(ChargestationDetailActivity.this)
                                 .addInterceptor(new TokenInterceptor())
-                                .headers("token",UserManager.getInstance().getUserInfo().getToken())
-                                .params("belong_id", chargestation_info==null?chargestation_id:chargestation_info.getId())
+                                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                                .params("belong_id", chargestation_info == null ? chargestation_id : chargestation_info.getId())
                                 .params("type", "2")
-                                .params("citycode",chargestation_info==null?city_code:chargestation_info.getCity_code())
+                                .params("citycode", chargestation_info == null ? city_code : chargestation_info.getCity_code())
                                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                                     @Override
                                     public void onSuccess(Base_Class_Info<CollectionInfo> collection_infoBase_class_list_info, Call call, Response response) {
@@ -153,14 +155,14 @@ public class ChargestationDetailActivity extends BaseActivity {
                                             mLoadingDialog.dismiss();
                                         }
                                         List<CollectionInfo> collection_datas = CollectionManager.getInstance().getCollection_datas();
-                                        if (collection_datas == null){
+                                        if (collection_datas == null) {
                                             collection_datas = new ArrayList<>();
                                         }
-                                        collection_infoBase_class_list_info.data.setCitycode(chargestation_info==null?city_code:chargestation_info.getCity_code());
+                                        collection_infoBase_class_list_info.data.setCitycode(chargestation_info == null ? city_code : chargestation_info.getCity_code());
                                         collection_datas.add(collection_infoBase_class_list_info.data);
                                         CollectionManager.getInstance().setCollection_datas(collection_datas);
                                         MyToast.showToast(ChargestationDetailActivity.this, "收藏成功", 5);
-                                        imageview_collection.setImageDrawable(ContextCompat.getDrawable(ChargestationDetailActivity.this,R.mipmap.ic_scchenggong));
+                                        imageview_collection.setImageDrawable(ContextCompat.getDrawable(ChargestationDetailActivity.this, R.mipmap.ic_scchenggong));
                                     }
 
                                     @Override
@@ -194,7 +196,7 @@ public class ChargestationDetailActivity extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLoadingDialog != null){
+        if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
     }

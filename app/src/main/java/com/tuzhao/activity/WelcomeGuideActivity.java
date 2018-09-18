@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.base.BaseGuideFragment;
@@ -40,7 +41,7 @@ public class WelcomeGuideActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_layout);
-        setStyle(true);
+        XStatusBarHelper.fullScreen(this);
 
         mFragments = new ArrayList<>();
         mFragments.add(new GuideOneFragment());

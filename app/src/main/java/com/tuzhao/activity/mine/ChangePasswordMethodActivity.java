@@ -34,7 +34,7 @@ public class ChangePasswordMethodActivity extends BaseStatusActivity {
         findViewById(R.id.origin_password_cv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ChangePasswordRefactoryActivity.class);
+                startActivity(ChangePasswordActivity.class);
             }
         });
 

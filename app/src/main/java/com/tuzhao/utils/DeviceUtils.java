@@ -14,8 +14,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.DisplayCutout;
-import android.view.WindowManager;
 
 import com.tuzhao.activity.base.SuccessCallback;
 
@@ -415,10 +413,6 @@ public class DeviceUtils {
         return 0;
     }
 
-    public static boolean hasNotch(Context context) {
-        return hasNotchAtHuawei(context) || hasNotchAtVoio(context) || hasNotchInScreenAtOPPO(context) || hasNotchAtXiaomi();
-    }
-
     /**
      * 适配刘海屏
      *
@@ -445,7 +439,7 @@ public class DeviceUtils {
                     callback.onSuccess(notchHeight);
                 }
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        } /*else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             //androidP以上系统已支持刘海屏，厂商的方案改为和系统一致
             WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -460,7 +454,7 @@ public class DeviceUtils {
                     }
                 }
             });
-        }
+        }*/
     }
 
 }

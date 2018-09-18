@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
@@ -64,6 +66,8 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_parkspace_layout_refactor);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+
         mFragments = new ArrayList<>();
         mParkInfos = new ArrayList<>();
 

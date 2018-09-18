@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.info.User_Info;
@@ -46,7 +48,7 @@ public class SetActivity extends BaseActivity implements View.OnClickListener, I
         setContentView(R.layout.activity_set_layout);
         initView();//初始化控件
         initEvent();//初始化事件
-        setStyle(true);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
     }
 
     private void initView() {

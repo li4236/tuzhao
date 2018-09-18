@@ -21,6 +21,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
+import com.tuzhao.publicmanager.WeChatManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.DensityUtil;
@@ -85,7 +86,7 @@ public class MyApplication extends MultiDexApplication {
         JPushInterface.init(this);//整个应用初始化极光推送，一次就好
 
         //微信功能初始化
-        //WeChatManager.getInstance().registerWeChat(MyApplication.getInstance().getApplicationContext());
+        WeChatManager.getInstance().registerWeChat(MyApplication.getInstance().getApplicationContext());
 
         /**
          * 科大讯飞语音初始化
