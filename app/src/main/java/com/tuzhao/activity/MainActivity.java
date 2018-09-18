@@ -1679,7 +1679,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 isFirstloc = true;
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
@@ -1692,7 +1692,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 initVersion();
             }
         } else if (requestCode == WRITE_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length>0&&grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initMapStyle();
             }
             if (!mRequestAccessCoarseLocation && noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {

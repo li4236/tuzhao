@@ -68,6 +68,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+
         <activity
             android:name=".activity.SplashActivity"
             android:label="@string/app_name">
@@ -75,15 +82,42 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--android8支持小米的刘海屏-->
+            <meta-data
+                android:name="notch.config"
+                android:value="portrait" />
+
+            <!-- android8支持华为刘海屏-->
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+            <meta-data
+                android:name="android.max_aspect"
+                android:value="2.2" />
         </activity>
 
         <activity
             android:name=".activity.WelcomeGuideActivity"
-            android:theme="@style/AppTheme.Fullscreen" />
+            android:theme="@style/AppTheme.Fullscreen">
+            <!--android8支持小米的刘海屏-->
+            <meta-data
+                android:name="notch.config"
+                android:value="portrait" />
+
+            <!-- android8支持华为刘海屏-->
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+            <meta-data
+                android:name="android.max_aspect"
+                android:value="2.2" />
+        </activity>
 
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|screenSize"
+
             android:label="@string/app_name"
             android:launchMode="singleTask" />
 
@@ -102,7 +136,6 @@
         <activity android:name=".activity.mine.DiscountActivity" />
         <activity android:name=".activity.mine.MyWalletActivity" />
         <activity android:name=".activity.mine.ParkOrderActivity" />
-        <activity android:name=".activity.mine.EditParkActivity" />
         <activity android:name=".activity.mine.EditParkPicturesActivity" />
         <activity android:name=".activity.mine.SelectParkSpaceActivity" />
         <activity android:name=".activity.mine.SearchParkSpaceActivity" />

@@ -1,6 +1,7 @@
 package com.tuzhao.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -13,12 +14,17 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.DisplayCutout;
+import android.view.WindowManager;
+
+import com.tuzhao.activity.base.SuccessCallback;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.NetworkInterface;
 import java.security.MessageDigest;
@@ -263,7 +269,7 @@ public class DeviceUtils {
     public static void openNotificationChannel(Context context) {
         // 通知栏权限没开启，可直接跳转到权限设置界面
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            Intent intent= new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+            Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
             intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
             intent.putExtra(Settings.EXTRA_CHANNEL_ID, 621);
             context.startActivity(intent);
@@ -285,6 +291,176 @@ public class DeviceUtils {
             intent.setData(Uri.fromParts("package", context.getPackageName(), null));
         }
         context.startActivity(intent);
+    }
+
+    /**
+     * @return 华为手机是否有刘海屏
+     */
+    private static boolean hasNotchAtHuawei(Context context) {
+        try {
+            boolean ret;
+            ClassLoader classLoader = context.getClassLoader();
+            Class HwNotchSizeUtil = classLoader.loadClass("com.huawei.android.util.HwNotchSizeUtil");
+            Method get = HwNotchSizeUtil.getMethod("hasNotchInScreen");
+            ret = (boolean) get.invoke(HwNotchSizeUtil);
+            return ret;
+        } catch (ClassNotFoundException e) {
+            Log.e("Notch", "hasNotchAtHuawei ClassNotFoundException");
+            return false;
+        } catch (NoSuchMethodException e) {
+            Log.e("Notch", "hasNotchAtHuawei NoSuchMethodException");
+            return false;
+        } catch (Exception e) {
+            Log.e("Notch", "hasNotchAtHuawei Exception");
+            return false;
+        }
+    }
+
+    /**
+     * @return 返回华为手机的刘海尺寸，int[0]值为刘海宽度 int[1]值为刘海高度
+     */
+    public static int[] getNotchSizeAtHuawei(Context context) {
+        try {
+            int[] ret;
+            ClassLoader cl = context.getClassLoader();
+            Class HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil");
+            Method get = HwNotchSizeUtil.getMethod("getNotchSize");
+            ret = (int[]) get.invoke(HwNotchSizeUtil);
+            return ret;
+        } catch (ClassNotFoundException e) {
+            Log.e("Notch", "getNotchSizeAtHuawei ClassNotFoundException");
+            return new int[]{0, 0};
+        } catch (NoSuchMethodException e) {
+            Log.e("Notch", "getNotchSizeAtHuawei NoSuchMethodException");
+            return new int[]{0, 0};
+        } catch (Exception e) {
+            Log.e("Notch", "getNotchSizeAtHuawei Exception");
+            return new int[]{0, 0};
+        }
+    }
+
+    private static final int VIVO_NOTCH = 0x00000020;//是否有刘海
+    public static final int VIVO_FILLET = 0x00000008;//是否有圆角
+
+    /**
+     * vivo不提供接口获取刘海尺寸，目前vivo的刘海宽为100dp,高为27dp。
+     *
+     * @return Voio手机是否有刘海屏
+     */
+    private static boolean hasNotchAtVoio(Context context) {
+        try {
+            boolean ret;
+            ClassLoader classLoader = context.getClassLoader();
+            Class FtFeature = classLoader.loadClass("android.util.FtFeature");
+            Method method = FtFeature.getMethod("isFeatureSupport", int.class);
+            ret = (boolean) method.invoke(FtFeature, VIVO_NOTCH);
+            return ret;
+        } catch (ClassNotFoundException e) {
+            Log.e("Notch", "hasNotchAtVoio ClassNotFoundException");
+            return false;
+        } catch (NoSuchMethodException e) {
+            Log.e("Notch", "hasNotchAtVoio NoSuchMethodException");
+            return false;
+        } catch (Exception e) {
+            Log.e("Notch", "hasNotchAtVoio Exception");
+            return false;
+        }
+    }
+
+    /**
+     * 刘海区域则都是宽度为324px, 高度为80px。
+     *
+     * @return OPPO是否有刘海屏
+     */
+    private static boolean hasNotchInScreenAtOPPO(Context context) {
+        return context.getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
+    }
+
+    /**
+     * @return 状态栏的高度，OPPO的刘海屏高度就是这么高
+     */
+    public static int getStatusBarHeight(Context context) {
+        int statusBarHeight = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return statusBarHeight;
+    }
+
+    /**
+     * @return 小米手机是否是刘海屏
+     */
+    private static boolean hasNotchAtXiaomi() {
+        int value;
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("getInt", String.class, int.class);
+            value = (int) get.invoke(c, "ro.miui.notch", 0);
+            return value == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * @return 小米手机刘海屏高度
+     */
+    private static int getNotchHeightAtXiaoMi(Context context) {
+        int resourceId = context.getResources().getIdentifier("notch_height", "dimen", "android");
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
+
+    public static boolean hasNotch(Context context) {
+        return hasNotchAtHuawei(context) || hasNotchAtVoio(context) || hasNotchInScreenAtOPPO(context) || hasNotchAtXiaomi();
+    }
+
+    /**
+     * 适配刘海屏
+     *
+     * @param callback 回调刘海屏的高度
+     */
+    @SuppressLint("InlinedApi")
+    public static void adpterNotchHeight(final Activity activity, final SuccessCallback<Integer> callback) {
+        int notchHeight;
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1) {
+            //android8版本国内厂商自己实现了刘海屏
+            if (hasNotchAtHuawei(activity)) {
+                notchHeight = getNotchSizeAtHuawei(activity)[1];
+                if (notchHeight != 0) {
+                    callback.onSuccess(notchHeight);
+                }
+            } else if (hasNotchAtXiaomi()) {
+                notchHeight = getNotchHeightAtXiaoMi(activity);
+                if (notchHeight != 0) {
+                    callback.onSuccess(notchHeight);
+                }
+            } else if (hasNotchInScreenAtOPPO(activity) || hasNotchAtVoio(activity)) {
+                notchHeight = getStatusBarHeight(activity);
+                if (notchHeight > 0) {
+                    callback.onSuccess(notchHeight);
+                }
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            //androidP以上系统已支持刘海屏，厂商的方案改为和系统一致
+            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            activity.getWindow().setAttributes(lp);     //声明支持刘海屏
+            activity.getWindow().getDecorView().post(new Runnable() {
+                @Override
+                public void run() {
+                    //获取刘海屏的区域，需要在view attached之后才可以获取到
+                    DisplayCutout displayCutout = activity.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+                    if (displayCutout != null && !displayCutout.getBoundingRects().isEmpty()) {
+                        callback.onSuccess(displayCutout.getSafeInsetTop());
+                    }
+                }
+            });
+        }
     }
 
 }

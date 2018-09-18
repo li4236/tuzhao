@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/little_yuan_gray_10dp"
         android:gravity="center"
         android:paddingBottom="10dp"

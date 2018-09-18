@@ -5,7 +5,6 @@ package com.tuzhao.application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,12 +17,10 @@ import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.cache.CacheMode;
 import com.tianzhili.www.myselfsdk.okgo.model.HttpParams;
-import com.tuzhao.BuildConfig;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
-import com.tuzhao.publicmanager.WeChatManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.DensityUtil;
@@ -63,13 +60,12 @@ public class MyApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectCustomSlowCalls() //API等级11，使用StrictMode.noteSlowCode
                     .detectDiskReads()
                     .detectDiskWrites()
                     .detectNetwork()   // or .detectAll() for all detectable problems
-                    .penaltyDialog() //弹出违规提示对话框
                     .penaltyLog() //在Logcat 中打印违规异常信息
                     .penaltyFlashScreen() //API等级11
                     .build());
@@ -79,7 +75,7 @@ public class MyApplication extends MultiDexApplication {
                     .detectLeakedClosableObjects() //API等级11
                     .penaltyLog()
                     .build());
-        }
+        }*/
         mApplication = this;
         SKIP_WELCOME = false;//跳过启动欢迎见面
         /**
@@ -89,14 +85,14 @@ public class MyApplication extends MultiDexApplication {
         JPushInterface.init(this);//整个应用初始化极光推送，一次就好
 
         //微信功能初始化
-        WeChatManager.getInstance().registerWeChat(MyApplication.getInstance().getApplicationContext());
+        //WeChatManager.getInstance().registerWeChat(MyApplication.getInstance().getApplicationContext());
 
         /**
          * 科大讯飞语音初始化
          */
         SpeechUtility.createUtility(this.getApplicationContext(), SpeechConstant.APPID + "=" + appId);
 
-        mTencent = Tencent.createInstance("1106725796", this);
+        //mTencent = Tencent.createInstance("1106725796", this);
 
         /*开启网络广播监听*/
         NetStateReceiver.registerNetworkStateReceiver(this);

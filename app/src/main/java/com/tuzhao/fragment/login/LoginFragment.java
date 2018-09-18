@@ -2,6 +2,7 @@ package com.tuzhao.fragment.login;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -144,14 +145,22 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
                 });
     }
 
-    private void performWechatLogin() {
-        SendAuth.Req req = new SendAuth.Req();
-        req.scope = "snsapi_userinfo";
-        req.state = "tuzhao_login";
 
+    private void performWechatLogin() {
         IWXAPI iwxapi = WXAPIFactory.createWXAPI(getContext(), null);
-        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
-        iwxapi.sendReq(req);
+        if (iwxapi.isWXAppInstalled()) {
+            SendAuth.Req req = new SendAuth.Req();
+            req.scope = "snsapi_userinfo";
+            req.state = "tuzhao_login";
+            iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
+            iwxapi.sendReq(req);
+        } else {
+            Uri uri = Uri.parse("market://details?id=com.tencent.mm");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (getActivity()!=null&&intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        }
     }
 
     private void wechatLogin(String code) {

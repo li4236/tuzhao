@@ -1,16 +1,22 @@
 package com.tuzhao.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseActivity;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.application.MyApplication;
+import com.tuzhao.utils.DensityUtil;
+import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.ImageUtil;
 
 import java.util.Timer;
@@ -20,7 +26,7 @@ import java.util.TimerTask;
  * @desc 启动屏
  * Created by devilwwj on 16/1/23.
  */
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseActivity {
 
     private TextView textview_skip;
     private int recLen = 3;
@@ -50,7 +56,24 @@ public class SplashActivity extends Activity {
         textview_skip = findViewById(R.id.id_activity_splash_layout_textview_skip);
         ImageUtil.showPic((ImageView) findViewById(R.id.iv_splash), R.drawable.ic_splash);
 
-        final Timer timer=new Timer();
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
+        DeviceUtils.adpterNotchHeight(this, new SuccessCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) textview_skip.getLayoutParams();
+                layoutParams.topMargin = integer + DensityUtil.dp2px(SplashActivity.this, 10);
+                textview_skip.setLayoutParams(layoutParams);
+            }
+        });
+
+        final Timer timer = new Timer();
 
         TimerTask task = new TimerTask() {
             @Override
@@ -59,8 +82,8 @@ public class SplashActivity extends Activity {
                     @Override
                     public void run() {
                         recLen--;
-                        textview_skip.setText("跳过："+recLen+"s");
-                        if(recLen < 1){
+                        textview_skip.setText("跳过：" + recLen + "s");
+                        if (recLen < 1) {
                             timer.cancel();
                             enterHomeActivity();
                             textview_skip.setText("跳过：0s");
@@ -69,15 +92,13 @@ public class SplashActivity extends Activity {
                 });
             }
         };
-        timer.schedule(task,0,1000);//此处0秒后，每隔1秒执行一次
+        timer.schedule(task, 0, 1000);//此处0秒后，每隔1秒执行一次
 
         textview_skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (timer!=null){
-                    timer.cancel();
-                    enterHomeActivity();
-                }
+                timer.cancel();
+                enterHomeActivity();
             }
         });
 

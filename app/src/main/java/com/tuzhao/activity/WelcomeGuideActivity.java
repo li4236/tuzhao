@@ -9,11 +9,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.base.BaseGuideFragment;
 import com.tuzhao.fragment.welcome.GuideOneFragment;
 import com.tuzhao.fragment.welcome.GuideThreeFragment;
@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author wwj_748
  */
-public class WelcomeGuideActivity extends AppCompatActivity {
+public class WelcomeGuideActivity extends BaseActivity {
 
     private List<BaseGuideFragment> mFragments;
 
@@ -40,6 +40,8 @@ public class WelcomeGuideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide_layout);
+        setStyle(true);
+
         mFragments = new ArrayList<>();
         mFragments.add(new GuideOneFragment());
         mFragments.add(new GuideTwoFragment());
