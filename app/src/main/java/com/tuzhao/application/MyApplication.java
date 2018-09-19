@@ -93,7 +93,7 @@ public class MyApplication extends MultiDexApplication {
          */
         SpeechUtility.createUtility(this.getApplicationContext(), SpeechConstant.APPID + "=" + appId);
 
-        //mTencent = Tencent.createInstance("1106725796", this);
+        mTencent = Tencent.createInstance("1106725796", this);
 
         /*开启网络广播监听*/
         NetStateReceiver.registerNetworkStateReceiver(this);

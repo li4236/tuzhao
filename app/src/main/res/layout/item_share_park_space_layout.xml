@@ -107,7 +107,6 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:background="#f9f9f9">
 
             <TextView
@@ -123,11 +122,11 @@
             <com.tuzhao.publicwidget.customView.ArrowView
                 android:id="@+id/more_iv"
                 android:layout_width="58dp"
-                android:layout_height="20dp"
-                android:paddingBottom="8dp"
+                android:layout_height="28dp"
+                android:paddingBottom="12dp"
                 android:paddingEnd="20dp"
                 android:paddingStart="30dp"
-                android:paddingTop="8dp"
+                android:paddingTop="12dp"
                 app:arrow_color="@color/b1"
                 app:arrow_gravity="bottom"
                 app:arrow_width="2px"
@@ -144,10 +143,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="6dp"
+                android:paddingBottom="12dp"
                 android:paddingEnd="34dp"
                 android:paddingStart="34dp"
-                android:paddingTop="16dp"
+                android:paddingTop="12dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@id/center_gl"
                 app:layout_constraintTop_toTopOf="parent">
@@ -173,10 +172,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="6dp"
+                android:paddingBottom="12dp"
                 android:paddingEnd="34dp"
                 android:paddingStart="34dp"
-                android:paddingTop="16dp"
+                android:paddingTop="12dp"
                 android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/center_gl"
                 app:layout_constraintTop_toTopOf="parent">
