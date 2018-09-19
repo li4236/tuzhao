@@ -73,7 +73,7 @@ public class PasswordLoginFragment extends BaseStatusFragment implements View.On
             case R.id.sms_login:
                 Bundle bundle = new Bundle();
                 bundle.putString(ConstansUtil.TELEPHONE_NUMBER, mTelephone);
-                bundle.putInt(ConstansUtil.STATUS, 1);
+                bundle.putInt(ConstansUtil.STATUS, 0);
                 IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.INTENT_MESSAGE, bundle);
                 break;
             case R.id.login_tv:
