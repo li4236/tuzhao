@@ -11,6 +11,8 @@ import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
 
+import java.util.List;
+
 /**
  * Created by juncoder on 2018/3/27.
  * <p>
@@ -219,6 +221,12 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      */
     protected abstract void bindData(BaseViewHolder holder, T t, int position);
 
+    /**
+     * adapter局部刷新使用，使用的时候需要判断payloads，否则如果是第一次创建视图的时候会两个bindData方法都会调用
+     */
+    protected void bindData(BaseViewHolder holder, T t, int position, List<Object> payloads) {
+    }
+
     protected class CommonAdapter extends BaseAdapter<T> {
 
         CommonAdapter(RecyclerView recyclerView) {
@@ -231,9 +239,16 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         }
 
         @Override
+        protected void conver(@NonNull BaseViewHolder holder, T t, int position, @NonNull List<Object> payloads) {
+            super.conver(holder, t, position, payloads);
+            bindData(holder, t, position, payloads);
+        }
+
+        @Override
         protected int itemViewId() {
             return itemViewResourceId();
         }
+
     }
 
 }

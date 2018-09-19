@@ -74,6 +74,14 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (getItemViewType(position) != HEADER_VIEW && getItemViewType(position) != FOOTER_VIEW) {
+            conver(holder, mData.get(position - getHeadViewCount()), position - getHeadViewCount(), payloads);
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return mData.size() + getHeadViewCount() + getFooterViewCount();
     }
@@ -97,6 +105,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     protected abstract void conver(@NonNull BaseViewHolder holder, T t, int position);
+
+    protected void conver(@NonNull BaseViewHolder holder, T t, int position, @NonNull List<Object> payloads) {
+
+    }
 
     private int getHeadViewCount() {
         if (mHeaderView == null) {
@@ -295,7 +307,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void notifyDataChange(int changeDataPosition, T newData, Object payload) {
         mData.set(changeDataPosition, newData);
-        notifyItemChanged(changeDataPosition, payload);
+        notifyItemChanged(changeDataPosition+ getHeadViewCount(), payload);
     }
 
     /**
@@ -304,7 +316,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void notifyDataChange(T newData) {
         int position = mData.indexOf(newData);
         if (position != -1) {
-            notifyDataChange(position, newData);
+            notifyDataChange(position+ getHeadViewCount(), newData);
         }
     }
 

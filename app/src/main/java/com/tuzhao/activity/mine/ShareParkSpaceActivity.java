@@ -8,7 +8,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -40,6 +39,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -171,8 +171,8 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                     .setPositiveButton("修改", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (TextUtils.isEmpty(mFirendName.getText().toString().trim())) {
-                                showFiveToast("备注不能为空哦");
+                            if (getTextLength(mFirendName) > 20) {
+                                showFiveToast("备注名长度不能大于20");
                             } else {
                                 changeParkSpaceNote(position, getText(mFirendName));
                             }
@@ -181,7 +181,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                     .create();
         }
         mModifyNameDialog.show();
-        mFirendName.setText("".equals(mCommonAdapter.get(position).getParkSpaceNote()) ? mCommonAdapter.get(position).getUserName() : mCommonAdapter.get(position).getParkSpaceNote());
+        mFirendName.setText(mCommonAdapter.get(position).getUserNoteName());
         mFirendName.setSelection(mFirendName.getText().toString().length());
     }
 
@@ -195,8 +195,15 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         Park_Info parkInfo = mCommonAdapter.get(position);
-                        parkInfo.setParkSpaceNote(note);
-                        mCommonAdapter.notifyDataChange(position, parkInfo);
+                        Park_Info park_info;
+                        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                            park_info = mCommonAdapter.get(i);
+                            if (park_info.getUser_id().equals(parkInfo.getUser_id())) {
+                                //对该车主的全部车位都修改备注
+                                park_info.setUserNoteName(note);
+                                mCommonAdapter.notifyDataChange(i, park_info, 1);
+                            }
+                        }
                         showFiveToast("修改成功");
                         dismmisLoadingDialog();
                         mModifyNameDialog.dismiss();
@@ -242,7 +249,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         dismmisLoadingDialog();
-                        String name = "".equals(mCommonAdapter.get(position).getParkSpaceNote()) ? mCommonAdapter.get(position).getUserName() : mCommonAdapter.get(position).getParkSpaceNote();
+                        String name = "".equals(mCommonAdapter.get(position).getUserNoteName()) ? mCommonAdapter.get(position).getUserName() : mCommonAdapter.get(position).getUserNoteName();
                         showDeleteParkSpaceDialog(position, "确定移除" + name + "的车位吗？");
                     }
                 });
@@ -329,9 +336,8 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     @Override
     protected void bindData(final BaseViewHolder holder, final Park_Info park_info, final int position) {
         final ArrowView arrowView = holder.getView(R.id.more_iv);
-        String name = "".equals(park_info.getParkSpaceNote()) ? park_info.getUserName() : park_info.getParkSpaceNote();
         holder.setText(R.id.share_park_space_space_name, park_info.getLocation_describe())
-                .setText(R.id.share_park_space_share_name, "业主：" + name)
+                .setText(R.id.share_park_space_share_name, "业主：" + park_info.getUserNoteName())
                 .setText(R.id.distance_to_distination_tv, park_info.isHaveDistination() ? "距目的地" : "距当前位置")
                 .setOnClickListener(R.id.book_park_space, new View.OnClickListener() {
                     @Override
@@ -387,6 +393,14 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
             holder.setText(R.id.distance_to_distination, mDecimalFormat.format(park_info.getDistance() / 1000) + "km");
         } else {
             holder.setText(R.id.distance_to_distination, (int) park_info.getDistance() + "m");
+        }
+    }
+
+    @Override
+    protected void bindData(BaseViewHolder holder, Park_Info park_info, int position, List<Object> payloads) {
+        super.bindData(holder, park_info, position, payloads);
+        if (payloads.size() == 1) {
+            holder.setText(R.id.share_park_space_share_name, "业主：" + park_info.getUserNoteName());
         }
     }
 

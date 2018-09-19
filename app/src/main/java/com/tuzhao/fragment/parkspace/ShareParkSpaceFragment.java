@@ -85,7 +85,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
     }
 
     public void setParkSpaceNote(String note) {
-        mParkInfo.setParkSpaceNote(note);
+        mParkInfo.setUserNoteName(note);
         mNumberOfParkSpace.setText(note);
     }
 
@@ -127,7 +127,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         mOpenLock.setOnClickListener(this);
 
         ImageUtil.showPic(mLock, R.drawable.lock);
-        mNumberOfParkSpace.setText(mParkInfo.getParkSpaceNote());
+        mNumberOfParkSpace.setText(mParkInfo.getUserNoteName());
         parkspaceDescription.setText(mParkInfo.getLocation_describe());
         parkLot.setText(mParkInfo.getParkspace_name());
     }

@@ -63,8 +63,8 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
         mParkInfos = getIntent().getParcelableArrayListExtra(ConstansUtil.PARK_SPACE_INFO);
         mFragments = new ArrayList<>(mParkInfos.size());
         for (int i = 0, size = mParkInfos.size(); i < size; i++) {
-            if ("".equals(mParkInfos.get(i).getParkSpaceNote())) {
-                mParkInfos.get(i).setParkSpaceNote((i + 1) + "号车位");
+            if ("".equals(mParkInfos.get(i).getUserNoteName())) {
+                mParkInfos.get(i).setUserNoteName((i + 1) + "号车位");
             }
             mFragments.add(ShareParkSpaceFragment.newInstance(mParkInfos.get(i), size));
         }
@@ -189,7 +189,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                     .create();
         }
         mModifyNameDialog.show();
-        mFirendName.setText(mParkInfos.get(position).getParkSpaceNote());
+        mFirendName.setText(mParkInfos.get(position).getUserNoteName());
         mFirendName.setSelection(mFirendName.getText().toString().length());
     }
 
@@ -202,7 +202,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        mParkInfos.get(position).setParkSpaceNote(note);
+                        mParkInfos.get(position).setUserNoteName(note);
                         mFragments.get(position).setParkSpaceNote(note);
                         Bundle bundle = new Bundle();
                         bundle.putString(ConstansUtil.PARK_SPACE_ID, mParkInfos.get(position).getId());
@@ -238,7 +238,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
     private void showDeleteParkSpaceDialog(final int position) {
         new TipeDialog.Builder(this)
                 .setTitle("移除车位")
-                .setMessage("确定移除" + mParkInfos.get(position).getParkSpaceNote() + "吗")
+                .setMessage("确定移除" + mParkInfos.get(position).getUserNoteName() + "吗")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
