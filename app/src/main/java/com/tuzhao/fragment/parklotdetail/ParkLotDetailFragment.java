@@ -91,7 +91,6 @@ public class ParkLotDetailFragment extends BaseFragment {
     }
 
     private void initData() {
-
         parkLotInfo = (ParkLotInfo) getArguments().getSerializable("parkspace_info");
         mData = (ArrayList<Park_Info>) getArguments().getSerializable("park_info");
 
@@ -167,6 +166,7 @@ public class ParkLotDetailFragment extends BaseFragment {
                         } else {
                             int aingcount = 0;
                             for (ParkOrderInfo parkOrderInfo : mOrderList) {
+                                Log.e(this.getClass().getName(), "onClick: " + parkOrderInfo);
                                 if (parkOrderInfo.getOrderStatus().equals("3")) {
                                     MyToast.showToast(mContext, "您当前还有未付款的订单", 5);
                                     return;
@@ -179,7 +179,7 @@ public class ParkLotDetailFragment extends BaseFragment {
                             if (aingcount > 1) {
                                 MyToast.showToast(mContext, "预定订单数量已达上限哦", 5);
                             } else {
-                                Intent intent = new Intent(mContext, OrderParkActivity.class);
+                                Intent intent = new Intent(getActivity(), OrderParkActivity.class);
                                 intent.putExtra("parkLotInfo", parkLotInfo);
                                 intent.putExtra("park_list", mData);
                                 intent.putExtra("order_list", mOrderList);

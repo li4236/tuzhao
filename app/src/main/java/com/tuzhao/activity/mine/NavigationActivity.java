@@ -102,7 +102,7 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
                 set.applyTo(constraintLayout);
             }
         });
-        
+
         cardView.setOnClickListener(this);
         findViewById(R.id.my_location).setOnClickListener(this);
         findViewById(R.id.start_navigate).setOnClickListener(this);

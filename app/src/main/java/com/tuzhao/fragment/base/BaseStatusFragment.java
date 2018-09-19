@@ -171,7 +171,7 @@ public abstract class BaseStatusFragment extends Fragment {
 
     /**
      * @param url 请求的路径
-     * @return     返回BaseRequest，并带有tag和token
+     * @return 返回BaseRequest，并带有tag和token
      */
     protected BaseRequest getOkGo(String url) {
         return OkGo.post(url)
@@ -181,8 +181,7 @@ public abstract class BaseStatusFragment extends Fragment {
     }
 
     /**
-     *
-     * @return  true(处理了该异常)    false(未处理该异常，一般为后台返回的错误响应码)
+     * @return true(处理了该异常)    false(未处理该异常，一般为后台返回的错误响应码)
      */
     protected boolean handleException(Exception e) {
         dismmisLoadingDialog();
@@ -325,6 +324,13 @@ public abstract class BaseStatusFragment extends Fragment {
         if (view.getVisibility() != View.GONE) {
             view.setVisibility(View.GONE);
         }
+    }
+
+    protected int dpToPx(float dp) {
+        if (getContext() != null) {
+            return DensityUtil.dp2px(getContext(), dp);
+        }
+        return 0;
     }
 
     protected void finish() {

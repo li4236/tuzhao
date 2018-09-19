@@ -46,6 +46,7 @@ public class ParkOrderInfo implements Parcelable {
 
     @SerializedName(value = "userName", alternate = "username")
     private String userName;//用户名=用户手机号码
+    private String userNoteName;//对车位主人的备注
     private String park_username;//该停车位主人的手机号码
     private String order_number;//订单编号
 
@@ -439,6 +440,17 @@ public class ParkOrderInfo implements Parcelable {
         this.parkSpaceStatus = parkSpaceStatus;
     }
 
+    public String getUserNoteName() {
+        if (userNoteName == null) {
+            return userName;
+        }
+        return userNoteName;
+    }
+
+    public void setUserNoteName(String userNoteName) {
+        this.userNoteName = userNoteName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -497,6 +509,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.lockId);
         dest.writeString(this.parkLockStatus);
         dest.writeString(this.parkSpaceStatus);
+        dest.writeString(this.userNoteName);
     }
 
     public ParkOrderInfo() {
@@ -541,6 +554,7 @@ public class ParkOrderInfo implements Parcelable {
         this.lockId = in.readString();
         this.parkLockStatus = in.readString();
         this.parkSpaceStatus = in.readString();
+        this.userNoteName = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

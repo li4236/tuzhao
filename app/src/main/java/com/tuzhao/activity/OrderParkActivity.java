@@ -59,7 +59,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     private LinearLayout linearlayout_carnumble, linearlayout_starttime, linearlayout_parktime;
     private TextView textview_carnumble, textview_starttime, textview_parktime, textview_fee, textview_ordernow;
 
-    private ParkLotInfo parkspace_info;
+    private ParkLotInfo mParkLotInfo;
     private ArrayList<Park_Info> park_list;
     private ArrayList<ParkOrderInfo> order_list;
     private List<Park_Info> mCanParkInfo;
@@ -98,8 +98,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initData() {
-        if (getIntent().hasExtra("parkspace_info")) {
-            parkspace_info = (ParkLotInfo) getIntent().getSerializableExtra("parkspace_info");
+        if (getIntent().hasExtra("parkLotInfo")) {
+            mParkLotInfo = (ParkLotInfo) getIntent().getSerializableExtra("parkLotInfo");
             park_list = (ArrayList<Park_Info>) getIntent().getSerializableExtra("park_list");
             order_list = (ArrayList<ParkOrderInfo>) getIntent().getSerializableExtra("order_list");
         } else {
@@ -194,7 +194,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.b1));
                     try {
                         setOrderFee();
-                          /*  DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")), parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()), parkspace_info.getHigh_fee(), parkspace_info.getLow_fee(), parkspace_info.getFine());
+                          /*  DateUtil.ParkFee parkFee = dateUtil.countCost(start_time, end_time, mChooseData.get(0).parktime_qujian.substring(mChooseData.get(0).parktime_qujian.indexOf("*") + 1, mChooseData.get(0).parktime_qujian.length()), mParkLotInfo.getHigh_time().substring(0, mParkLotInfo.getHigh_time().indexOf(" - ")), mParkLotInfo.getHigh_time().substring(mParkLotInfo.getHigh_time().indexOf(" - ") + 3, mParkLotInfo.getHigh_time().length()), mParkLotInfo.getHigh_fee(), mParkLotInfo.getLow_fee(), mParkLotInfo.getFine());
                             textview_fee.setText("约￥" + parkFee.parkfee);*/
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -651,14 +651,14 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .tag(OrderParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", parkspace_info.getId())
+                .params("parkspace_id", mParkLotInfo.getId())
                 .params("park_id", mCanParkInfo.get(0).getId())
                 .params("car_number", textview_carnumble.getText().toString())
                 .params("park_interval", start_time + "*" + end_time)
                 .params("park_updatetime", mCanParkInfo.get(0).getUpdate_time())
                 .params("readypark_id", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
                 .params("readypark_updatetime", readyParkUpdateTime.toString().equals("") ? "-1" : readyParkUpdateTime.toString())
-                .params("citycode", parkspace_info.getCity_code())
+                .params("citycode", mParkLotInfo.getCity_code())
                 .execute(new JsonCodeCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> responseData, Call call, Response response) {
@@ -761,11 +761,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .tag(OrderParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", parkspace_info.getId())
+                .params("parkspace_id", mParkLotInfo.getId())
                 .params("car_number", textview_carnumble.getText().toString())
                 .params("park_id", park_info.getId())
                 .params("park_interval", start_time + "*" + end_time)
-                .params("citycode", parkspace_info.getCity_code())
+                .params("citycode", mParkLotInfo.getCity_code())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -794,7 +794,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         OkGo.post(HttpConstants.getDetailOfParkOrder)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getToken())
-                .params("citycode", parkspace_info.getCity_code())
+                .params("citycode", mParkLotInfo.getCity_code())
                 .params("order_number", orderNumber)
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
@@ -824,11 +824,11 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 .tag(OrderParkActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", parkspace_info.getId())
+                .params("parkspace_id", mParkLotInfo.getId())
                 .params("car_number", textview_carnumble.getText().toString())
                 .params("park_id", lockpark.park_id)
                 .params("park_interval", lockpark.parktime_qujian)
-                .params("citycode", parkspace_info.getCity_code())
+                .params("citycode", mParkLotInfo.getCity_code())
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
@@ -838,7 +838,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
                         intent.putExtra("parkorder_number", responseData.data.getOrder_number());
-                        intent.putExtra("citycode", parkspace_info.getCity_code());
+                        intent.putExtra("citycode", mParkLotInfo.getCity_code());
                         startActivity(intent);
                     }
 
