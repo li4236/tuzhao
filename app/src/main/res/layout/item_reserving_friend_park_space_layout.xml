@@ -145,7 +145,7 @@
                 android:paddingStart="30dp"
                 android:paddingTop="12dp"
                 app:arrow_color="@color/b1"
-                app:arrow_gravity="bottom"
+                app:arrow_gravity="top"
                 app:arrow_width="2px"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

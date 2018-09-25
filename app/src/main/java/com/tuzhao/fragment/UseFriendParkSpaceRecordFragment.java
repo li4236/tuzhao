@@ -488,22 +488,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                     public void onClick(View v) {
                         if (arrowView.getGravity() == ArrowView.BOTTOM) {
                             arrowView.setGravity(ArrowView.TOP);
-                            holder.goneView(R.id.more_tv)
-                                    .goneView(R.id.park_space_description_tv)
-                                    .goneView(R.id.park_space_description)
-                                    .goneView(R.id.start_park_date_tv)
-                                    .goneView(R.id.start_park_date)
-                                    .goneView(R.id.appointment_income_time_tv)
-                                    .goneView(R.id.appointment_income_time)
-                                    .goneView(R.id.appointment_leave_time_tv)
-                                    .goneView(R.id.appointment_leave_time)
-                                    .goneView(R.id.park_duration_tv)
-                                    .goneView(R.id.park_duration)
-                                    .goneView(R.id.navigation_cl);
-                        } else {
-                            arrowView.setGravity(ArrowView.BOTTOM);
-                            holder.showView(R.id.more_tv)
-                                    .showView(R.id.park_space_description_tv)
+                            holder.showView(R.id.park_space_description_tv)
                                     .showView(R.id.park_space_description)
                                     .showView(R.id.start_park_date_tv)
                                     .showView(R.id.start_park_date)
@@ -514,6 +499,19 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                                     .showView(R.id.park_duration_tv)
                                     .showView(R.id.park_duration)
                                     .showView(R.id.navigation_cl);
+                        } else {
+                            arrowView.setGravity(ArrowView.BOTTOM);
+                            holder.goneView(R.id.park_space_description_tv)
+                                    .goneView(R.id.park_space_description)
+                                    .goneView(R.id.start_park_date_tv)
+                                    .goneView(R.id.start_park_date)
+                                    .goneView(R.id.appointment_income_time_tv)
+                                    .goneView(R.id.appointment_income_time)
+                                    .goneView(R.id.appointment_leave_time_tv)
+                                    .goneView(R.id.appointment_leave_time)
+                                    .goneView(R.id.park_duration_tv)
+                                    .goneView(R.id.park_duration)
+                                    .goneView(R.id.navigation_cl);
                         }
                     }
                 })
