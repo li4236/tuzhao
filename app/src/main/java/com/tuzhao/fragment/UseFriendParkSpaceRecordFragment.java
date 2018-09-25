@@ -332,9 +332,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
      * 发送开锁请求
      */
     private void openLockByRecord(ParkOrderInfo parkOrderInfo) {
-        showOpenLockDialog();
-        mIsOpening = true;
-        /*showLoadingDialog();
+        showLoadingDialog();
         getOkGo(HttpConstants.openLockByRecord)
                 .params("id", parkOrderInfo.getId())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -372,7 +370,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                             }
                         }
                     }
-                });*/
+                });
     }
 
     @Override
