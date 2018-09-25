@@ -264,7 +264,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
      */
     private void openLockSuccess() {
         mOpenLockOrder.setOrderStatus("1");
-        mOpenLockOrder.setParkStartTime(DateUtil.getCurrentYearToMinutes());
+        mOpenLockOrder.setParkStartTime(DateUtil.getCurrentYearToSecond());
         mCommonAdapter.notifyDataChange(mOpenLockOrder);
         showFiveToast("开锁成功");
         mOpenLockOrder = null;
