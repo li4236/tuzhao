@@ -81,6 +81,19 @@ public class DateUtil {
         return sExceptSecondsFormat;
     }
 
+    /**
+     * @param yearToSecond yyyy-MM-dd HH:mm:ss
+     * @return 日期对应的时间戳
+     */
+    public static long getTimeMillis(String yearToSecond) {
+        try {
+            return getYearToSecondFormat().parse(yearToSecond).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     private static Date getDate() {
         if (sDate == null) {
             sDate = new Date();
@@ -142,6 +155,14 @@ public class DateUtil {
     }
 
     /**
+     * @return 当前的yyyy-MM-dd HH:mm:ss
+     */
+    public static String getSpecialtYearToSecond(long timeMillis) {
+        getDate().setTime(timeMillis);
+        return getYearToSecondFormat().format(getDate());
+    }
+
+    /**
      * @return 当前的yyyy-MM-dd HH:mm
      */
     public static String getCurrentYearToMinutes() {
@@ -158,15 +179,23 @@ public class DateUtil {
     }
 
     /**
-     * @param date 格式yyyy-MM-dd HH:ss
-     * @return HH:ss
+     * @param date 格式yyyy-MM-dd HH:mm
+     * @return HH:mm
      */
     public static String getHourWithMinutes(String date) {
         return date.substring(date.indexOf(" ") + 1, date.length());
     }
 
     /**
-     * @return HH:ss
+     * @param date 格式yyyy-MM-dd HH:mm:ss
+     * @return HH:mm
+     */
+    public static String getHourWithMinutesByYearToSecond(String date) {
+        return date.substring(date.indexOf(" ") + 1, date.lastIndexOf(":"));
+    }
+
+    /**
+     * @return HH:mm
      */
     public static String getHourWithMinutes(Calendar calendar) {
         return thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
@@ -1125,7 +1154,7 @@ public class DateUtil {
      * @param endDate   格式为yyyy-MM-dd HH:mm
      * @return true(两天是在同一天)
      */
-    private static boolean isInSameDay(String startDate, String endDate) {
+    public static boolean isInSameDay(String startDate, String endDate) {
         return startDate.split(" ")[0].endsWith(endDate.split(" ")[0]);
     }
 

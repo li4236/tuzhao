@@ -508,4 +508,9 @@ public class ConstansUtil {
      */
     public static final String START_ITME = "StartItem";
 
+    /**
+     * 取消记录
+     */
+    public static final String CANCEL_RECORD = "CancelRecord";
+
 }

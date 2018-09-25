@@ -87,6 +87,7 @@ public class BookParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
                         IntentObserable.dispatch(ConstansUtil.BOOK_PARK_SPACE, ConstansUtil.INTENT_MESSAGE, parkInfo);
                         showFiveToast("预定成功");
                         dismmisLoadingDialog();
+                        startActivity(UseFriendParkSpaceRecordActivity.class);
                         finish();
                     }
 
@@ -110,7 +111,7 @@ public class BookParkSpaceActivity extends BaseRefreshActivity<Park_Info> {
         holder.setText(R.id.share_park_space_space_name, park_info.getLocation_describe())
                 .setText(R.id.share_park_space_share_name, "车主：" + park_info.getUserName())
                 .setText(R.id.distance_to_distination_tv, park_info.isHaveDistination() ? "距目的地" : "距当前位置")
-                .setOnClickListener(R.id.book_park_space, new View.OnClickListener() {
+                .setOnClickListener(R.id.open_lock_tv, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         reserveFriendParkSpace(park_info);

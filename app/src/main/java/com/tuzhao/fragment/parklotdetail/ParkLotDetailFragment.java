@@ -26,7 +26,6 @@ import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.activity.OrderParkActivity;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.NavigationActivity;
-import com.tuzhao.application.MyApplication;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkLotInfo;
@@ -197,7 +196,7 @@ public class ParkLotDetailFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (parkLotInfo != null && LocationManager.getInstance().hasLocation()) {
-                    Intent intent = new Intent(MyApplication.getInstance(), NavigationActivity.class);
+                    Intent intent = new Intent(getActivity(), NavigationActivity.class);
                     intent.putExtra("gps", true);
                     intent.putExtra("start", new NaviLatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude()));
                     intent.putExtra("end", new NaviLatLng(parkLotInfo.getLatitude(), parkLotInfo.getLongitude()));

@@ -51,12 +51,12 @@
         android:layout_marginBottom="6dp"
         android:contentDescription="@string/picture_description"
         app:color="@color/green7"
-        app:layout_constraintBottom_toTopOf="@+id/book_park_space"
-        app:layout_constraintEnd_toEndOf="@+id/book_park_space"
-        app:layout_constraintStart_toStartOf="@+id/book_park_space" />
+        app:layout_constraintBottom_toTopOf="@+id/open_lock_tv"
+        app:layout_constraintEnd_toEndOf="@+id/open_lock_tv"
+        app:layout_constraintStart_toStartOf="@+id/open_lock_tv" />
 
     <TextView
-        android:id="@+id/book_park_space"
+        android:id="@+id/open_lock_tv"
         style="@style/TenTextG6Stytle"
         android:layout_marginEnd="16dp"
         android:text="使用中"

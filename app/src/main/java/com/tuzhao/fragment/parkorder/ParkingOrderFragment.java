@@ -141,7 +141,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         mDecimalFormat = new DecimalFormat("0.00");
 
         mParkDate.setText(DateUtil.getDayPointMinute(mParkOrderInfo.getPark_start_time()));
-        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
+        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocation());
         String leaveTime = "需在" + DateUtil.getYearToMinute(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()) + "前离场";
         mLeaveTime.setText(leaveTime);
         String overtimeFee = "超时按" + mParkOrderInfo.getFine() + "/小时收费";

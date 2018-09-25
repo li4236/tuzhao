@@ -105,7 +105,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
             finish();
         } else {
             ImageUtil.showImpPic(mParkSpaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkOrderInfo.getPictures().split(",")[0]);
-            mParkSpaceName.setText(mParkOrderInfo.getParkLotName() + mParkOrderInfo.getParkSpaceLocationDescribe());
+            mParkSpaceName.setText(mParkOrderInfo.getParkLotName() + mParkOrderInfo.getParkSpaceLocation());
             String parkDuration = "时长：" + DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getPark_start_time(),
                     mParkOrderInfo.getPark_end_time()) + "  日期：" + DateUtil.getYearToDayWithPointText(mParkOrderInfo.getPark_start_time());
             mParkDuration.setText(parkDuration);

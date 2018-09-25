@@ -77,7 +77,7 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
 
     @Override
     protected void initView(final Bundle savedInstanceState) {
-        setStyle(false);
+        XStatusBarHelper.immersiveStatusBar(this,0);
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkLotAddress = findViewById(R.id.park_lot_address);
         mMapView = findViewById(R.id.navigation_mv);

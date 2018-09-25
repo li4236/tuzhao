@@ -666,6 +666,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                         IntentObserable.dispatch(ConstansUtil.BOOK_PARK_SPACE, ConstansUtil.INTENT_MESSAGE, parkInfo);
                         dismmisLoadingDialog();
                         showFiveToast("预定成功");
+                        startActivity(UseFriendParkSpaceRecordActivity.class);
                         finish();
                     }
 

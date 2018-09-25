@@ -1,5 +1,6 @@
 package com.tuzhao.fragment.base;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -22,6 +23,7 @@ import com.tuzhao.R;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
 
@@ -278,6 +280,14 @@ public abstract class BaseStatusFragment extends Fragment {
         }
     }
 
+    protected void showDialog(String title, String message, Dialog.OnClickListener onClickListener) {
+        new TipeDialog.Builder(getContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("确定", onClickListener)
+                .create()
+                .show();
+    }
     /**
      * @return textView里面的字符串
      */

@@ -200,7 +200,7 @@ public class OrderDetailFragment extends BaseStatusFragment implements View.OnCl
     @Override
     protected void initData() {
         mOrderFee.setText(DateUtil.decreseOneZero(mParkOrderInfo.getActual_pay_fee()));
-        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocationDescribe());
+        mParkSpaceLocation.setText(mParkOrderInfo.getParkSpaceLocation());
         if (mParkOrderInfo.getDiscount() != null && !mParkOrderInfo.getDiscount().getId().equals("-1")) {
             String disount = "（优惠券—" + DateUtil.decreseOneZero(mParkOrderInfo.getDiscount().getDiscount()) + "）";
             SpannableString spannableString = new SpannableString(disount);

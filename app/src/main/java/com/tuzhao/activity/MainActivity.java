@@ -55,6 +55,7 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
+import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tianzhili.www.myselfsdk.netStateLib.NetChangeObserver;
 import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.netStateLib.NetUtils;
@@ -301,7 +302,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mCredit = findViewById(R.id.id_activity_main_layout_textview_credit);
         mParkNow = findViewById(R.id.id_content_main_layout_textview_parknow);
 
-        int barHeight = setStyle(false);
+        XStatusBarHelper.immersiveStatusBar(this,0);
+        int barHeight = XStatusBarHelper.getStatusBarHeight(this);
         ConstraintSet userConstraintSet = new ConstraintSet();
         userConstraintSet.clone(mDrawerTopCl);
         userConstraintSet.setMargin(R.id.id_activity_main_layout_imageview_user, ConstraintSet.TOP, dp2px(this, 30) + barHeight);

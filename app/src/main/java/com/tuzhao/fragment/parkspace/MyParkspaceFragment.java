@@ -551,6 +551,12 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             ratation.addListener(new AnimatorListenerAdapter() {
 
                 @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    mAnimatorDuration = System.currentTimeMillis();
+                }
+
+                @Override
                 public void onAnimationRepeat(Animator animation) {
                     super.onAnimationRepeat(animation);
                     //记录动画时长，用与判断开锁成功后动画距离重复开始执行的时间差
@@ -588,7 +594,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         float firstScale = mScaleValues.poll();
         float secondScale = mScaleValues.poll();
 
-        //因为动画不是每一秒都回调onAnimationUpdate方法的，所以会有点误差，当计算到动画正在放大并且快结束的时候很可能是已经开始缩小了的，所以要进行缩小动画
+        //因为动画不是每一毫秒都回调onAnimationUpdate方法的，所以会有点误差，当计算到动画正在放大并且快结束的时候很可能是已经开始缩小了的，所以要进行缩小动画
         boolean isSkip = secondScale > firstScale && currentRotation > 358;
 
         mResumeAnimatorSet = new AnimatorSet();

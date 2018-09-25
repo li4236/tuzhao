@@ -45,7 +45,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(resourceId() == 0 ? R.layout.activity_base_refresh_layout : resourceId());
         if (tintStatusBar()) {
-            XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
+            XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
         }
         ConstraintLayout toolbar = findViewById(R.id.base_tb);
         ArrowView turnBackIv = toolbar.findViewById(R.id.toolbar_back);

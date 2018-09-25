@@ -1,67 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/w0"
-    android:paddingBottom="14dp">
+    android:layout_marginBottom="6dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="6dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="1dp">
 
-    <ImageView
-        android:id="@+id/park_space_location_iv"
-        android:layout_width="10dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="14dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_graygps2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/share_park_space_space_name"
-        style="@style/TwentyTextB1Style"
-        android:layout_marginStart="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/park_space_location_iv"
-        app:layout_constraintStart_toEndOf="@id/park_space_location_iv"
-        app:layout_constraintTop_toTopOf="@+id/park_space_location_iv" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/top_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/w0">
 
-    <ImageView
-        android:id="@+id/park_space_owner_iv"
-        android:layout_width="10dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="14dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_carman"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_space_location_iv" />
+            <ImageView
+                android:id="@+id/park_space_location_iv"
+                android:layout_width="11dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@mipmap/ic_gps"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/share_park_space_share_name"
-        style="@style/TwentyTextG6Style"
-        android:layout_marginStart="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/park_space_owner_iv"
-        app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
-        app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
+            <TextView
+                android:id="@+id/share_park_space_space_name"
+                style="@style/FortyTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="14dp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                app:layout_constraintBottom_toBottomOf="@+id/park_space_location_iv"
+                app:layout_constraintEnd_toStartOf="@+id/distance_to_distination_tv"
+                app:layout_constraintStart_toEndOf="@+id/park_space_location_iv"
+                app:layout_constraintTop_toTopOf="@+id/park_space_location_iv" />
 
-    <ImageView
-        android:id="@+id/distance_to_park_space"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginBottom="6dp"
-        android:contentDescription="@string/picture_description"
-        android:src="@drawable/ic_yes3"
-        app:layout_constraintBottom_toTopOf="@+id/book_park_space"
-        app:layout_constraintEnd_toEndOf="@+id/book_park_space"
-        app:layout_constraintStart_toStartOf="@+id/book_park_space" />
+            <ImageView
+                android:id="@+id/park_space_owner_iv"
+                android:layout_width="11dp"
+                android:layout_height="14dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="26dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@drawable/ic_carman"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/park_space_location_iv" />
 
-    <TextView
-        android:id="@+id/book_park_space"
-        style="@style/TenTextG6Stytle"
-        android:layout_marginEnd="16dp"
-        android:text="已预订"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />
+            <TextView
+                android:id="@+id/share_park_space_share_name"
+                style="@style/TwentyTextG6Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="14dp"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/park_space_owner_iv"
+                app:layout_constraintEnd_toStartOf="@+id/open_lock_tv"
+                app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
+                app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
 
-</android.support.constraint.ConstraintLayout>
+            <ImageView
+                android:id="@+id/distance_to_distination"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@drawable/ic_yes3"
+                app:layout_constraintBottom_toBottomOf="@+id/share_park_space_space_name"
+                app:layout_constraintEnd_toEndOf="@+id/cancel_record_tv"
+                app:layout_constraintTop_toTopOf="@+id/share_park_space_space_name" />
+
+            <TextView
+                android:id="@+id/distance_to_distination_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginEnd="4dp"
+                android:text="已预订"
+                app:layout_constraintBottom_toBottomOf="@+id/distance_to_distination"
+                app:layout_constraintEnd_toStartOf="@id/distance_to_distination"
+                app:layout_constraintTop_toTopOf="@+id/distance_to_distination" />
+
+            <TextView
+                android:id="@+id/open_lock_tv"
+                style="@style/TenTextG6Stytle"
+                android:layout_width="58dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/normal_y17_to_y15_press_y7_to_y16_all_12dp"
+                android:text="开锁"
+                android:textColor="@color/b1"
+                app:layout_constraintBottom_toBottomOf="@+id/share_park_space_share_name"
+                app:layout_constraintEnd_toStartOf="@+id/cancel_record_tv"
+                app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />
+
+            <TextView
+                android:id="@+id/cancel_record_tv"
+                style="@style/TenTextG6Stytle"
+                android:layout_width="58dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/normal_g10_press_g8_all_12dp"
+                android:text="取消"
+                android:textColor="@color/b1"
+                app:layout_constraintBottom_toBottomOf="@+id/share_park_space_share_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/share_park_space_share_name" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f9f9f9">
+
+            <TextView
+                android:id="@+id/more_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginEnd="36dp"
+                android:text="详情"
+                android:textSize="9sp"
+                app:layout_constraintBottom_toBottomOf="@+id/more_iv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/more_iv" />
+
+            <com.tuzhao.publicwidget.customView.ArrowView
+                android:id="@+id/more_iv"
+                android:layout_width="58dp"
+                android:layout_height="28dp"
+                android:paddingBottom="12dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="30dp"
+                android:paddingTop="12dp"
+                app:arrow_color="@color/b1"
+                app:arrow_gravity="bottom"
+                app:arrow_width="2px"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/park_space_description_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="@dimen/layout_margin_22dp"
+                android:text="车位详情"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/park_space_description"
+                style="@style/TenTextB1Style"
+                android:layout_width="0dp"
+                android:layout_marginEnd="80dp"
+                android:layout_marginStart="16dp"
+                android:gravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/park_space_description_tv"
+                app:layout_constraintTop_toTopOf="@+id/park_space_description_tv" />
+
+            <TextView
+                android:id="@+id/start_park_date_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginTop="6dp"
+                android:text="停车日期"
+                app:layout_constraintStart_toStartOf="@id/park_space_description_tv"
+                app:layout_constraintTop_toBottomOf="@+id/park_space_description_tv" />
+
+            <TextView
+                android:id="@+id/start_park_date"
+                style="@style/TenTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/park_space_description"
+                app:layout_constraintTop_toTopOf="@+id/start_park_date_tv" />
+
+            <TextView
+                android:id="@+id/appointment_income_time_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginTop="6dp"
+                android:text="入场时间"
+                app:layout_constraintStart_toStartOf="@id/park_space_description_tv"
+                app:layout_constraintTop_toBottomOf="@+id/start_park_date_tv" />
+
+            <TextView
+                android:id="@+id/appointment_income_time"
+                style="@style/TenTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/park_space_description"
+                app:layout_constraintTop_toTopOf="@+id/appointment_income_time_tv" />
+
+            <TextView
+                android:id="@+id/appointment_leave_time_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginTop="6dp"
+                android:text="预计离场"
+                app:layout_constraintStart_toStartOf="@id/park_space_description_tv"
+                app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_tv" />
+
+            <TextView
+                android:id="@+id/appointment_leave_time"
+                style="@style/TenTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/park_space_description"
+                app:layout_constraintTop_toTopOf="@+id/appointment_leave_time_tv" />
+
+            <TextView
+                android:id="@+id/park_duration_tv"
+                style="@style/TenTextB1Style"
+                android:layout_marginTop="6dp"
+                android:text="停车时长"
+                app:layout_constraintStart_toStartOf="@id/park_space_description_tv"
+                app:layout_constraintTop_toBottomOf="@+id/appointment_leave_time_tv" />
+
+            <TextView
+                android:id="@+id/park_duration"
+                style="@style/TenTextB1Style"
+                app:layout_constraintEnd_toEndOf="@id/park_space_description"
+                app:layout_constraintTop_toTopOf="@+id/park_duration_tv" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/navigation_cl"
+                android:layout_width="228dp"
+                android:layout_height="28dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="@dimen/layout_margin_8dp"
+                android:background="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/park_duration_tv">
+
+                <ImageView
+                    android:layout_width="11dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/picture_description"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_letgo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="34:35"
+                    app:layout_constraintEnd_toStartOf="@+id/navigation_tv"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/navigation_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/layout_margin_16dp"
+                    android:text="导航"
+                    android:textColor="@color/b1"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

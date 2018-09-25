@@ -695,4 +695,14 @@ public class HttpConstants {
      */
     public static final String getOneFriendParkSpaceRecord = ROOT_URL + "getOneFriendParkSpaceRecord";
 
+    /**
+     * 取消在好友车位的预定记录
+     */
+    public static final String cancelRecordOnFriendParkSpace = ROOT_URL + "cancelRecordOnFriendParkSpace";
+
+    /**
+     * 好友车位预定记录开锁
+     */
+    public static final String openLockByRecord = ROOT_URL + "openLockByRecord";
+
 }

@@ -62,14 +62,14 @@
                 android:id="@+id/share_park_space_share_name"
                 style="@style/TwentyTextG6Style"
                 android:layout_width="0dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginStart="14dp"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
                 android:maxLines="1"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/park_space_owner_iv"
-                app:layout_constraintEnd_toStartOf="@+id/book_park_space"
+                app:layout_constraintEnd_toStartOf="@+id/open_lock_tv"
                 app:layout_constraintStart_toEndOf="@id/park_space_owner_iv"
                 app:layout_constraintTop_toTopOf="@+id/park_space_owner_iv" />
 
@@ -79,7 +79,7 @@
                 android:paddingStart="2dp"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/share_park_space_space_name"
-                app:layout_constraintEnd_toEndOf="@+id/book_park_space"
+                app:layout_constraintEnd_toEndOf="@+id/open_lock_tv"
                 app:layout_constraintTop_toTopOf="@+id/share_park_space_space_name" />
 
             <TextView
@@ -90,7 +90,7 @@
                 app:layout_constraintEnd_toStartOf="@id/distance_to_distination" />
 
             <TextView
-                android:id="@+id/book_park_space"
+                android:id="@+id/open_lock_tv"
                 style="@style/TenTextG6Stytle"
                 android:layout_width="58dp"
                 android:layout_height="24dp"

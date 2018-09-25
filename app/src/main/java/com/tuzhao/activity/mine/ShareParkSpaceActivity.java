@@ -97,7 +97,7 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     @NonNull
     @Override
     protected String title() {
-        return "亲友车位";
+        return "好友车位";
     }
 
     @Override
@@ -336,10 +336,10 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
     @Override
     protected void bindData(final BaseViewHolder holder, final Park_Info park_info, final int position) {
         final ArrowView arrowView = holder.getView(R.id.more_iv);
-        holder.setText(R.id.share_park_space_space_name, park_info.getLocation_describe())
+        holder.setText(R.id.share_park_space_space_name, park_info.getPark_space_name())
                 .setText(R.id.share_park_space_share_name, "业主：" + park_info.getUserNoteName())
                 .setText(R.id.distance_to_distination_tv, park_info.isHaveDistination() ? "距目的地" : "距当前位置")
-                .setOnClickListener(R.id.book_park_space, new View.OnClickListener() {
+                .setOnClickListener(R.id.open_lock_tv, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch (park_info.getPark_status()) {

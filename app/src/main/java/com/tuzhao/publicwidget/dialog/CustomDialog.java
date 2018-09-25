@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.PollingUtil;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 /**
  * Created by juncoder on 2018/5/31.
@@ -65,6 +67,8 @@ public class CustomDialog extends Dialog {
 
     public CustomDialog(PaymentPasswordHelper helper) {
         super(helper.getContext(), R.style.ParkDialog);
+        //设置安全flag，禁止截屏，防止密码泄露
+        Objects.requireNonNull(getWindow()).setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(helper.getView());
         mPasswordHelper = helper;
         mIsShowAnimation = true;

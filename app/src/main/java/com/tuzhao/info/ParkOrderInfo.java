@@ -148,7 +148,7 @@ public class ParkOrderInfo implements Parcelable {
         this.parkLotAddress = park_space_address;
     }
 
-    public String getParkSpaceLocationDescribe() {
+    public String getParkSpaceLocation() {
         return parkSpaceLocation;
     }
 
@@ -390,14 +390,6 @@ public class ParkOrderInfo implements Parcelable {
 
     public void setParkLotAddress(String parkLotAddress) {
         this.parkLotAddress = parkLotAddress;
-    }
-
-    public String getParkSpaceLocation() {
-        return parkSpaceLocation;
-    }
-
-    public void setParkSpaceLocation(String parkSpaceLocation) {
-        this.parkSpaceLocation = parkSpaceLocation;
     }
 
     public String getActualFee() {

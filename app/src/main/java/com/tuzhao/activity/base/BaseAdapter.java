@@ -110,6 +110,26 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     }
 
+/*    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        if (recyclerView.getLayoutManager() instanceof GridLayoutManager && (getHeadViewCount() != 0 || getFooterViewCount() != 0)) {
+            //如果使用的是GridLayoutManager，并且有headerView或者footerView的话把headerView或者footerView的宽度全屏
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+            final GridLayoutManager.SpanSizeLookup spanSizeLookup = gridLayoutManager.getSpanSizeLookup();
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    int viewType = getItemViewType(position);
+                    if (viewType == HEADER_VIEW || viewType == FOOTER_VIEW) {
+                        return gridLayoutManager.getSpanCount();
+                    }
+                    return spanSizeLookup.getSpanSize(position);
+                }
+            });
+        }
+    }*/
+
     private int getHeadViewCount() {
         if (mHeaderView == null) {
             return 0;
@@ -307,7 +327,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     public void notifyDataChange(int changeDataPosition, T newData, Object payload) {
         mData.set(changeDataPosition, newData);
-        notifyItemChanged(changeDataPosition+ getHeadViewCount(), payload);
+        notifyItemChanged(changeDataPosition + getHeadViewCount(), payload);
     }
 
     /**
@@ -316,7 +336,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     public void notifyDataChange(T newData) {
         int position = mData.indexOf(newData);
         if (position != -1) {
-            notifyDataChange(position+ getHeadViewCount(), newData);
+            notifyDataChange(position + getHeadViewCount(), newData);
         }
     }
 
