@@ -15,7 +15,6 @@ import com.iflytek.cloud.SpeechUtility;
 import com.tencent.tauth.Tencent;
 import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
-import com.tianzhili.www.myselfsdk.okgo.cache.CacheMode;
 import com.tianzhili.www.myselfsdk.okgo.model.HttpParams;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.User_Info;
@@ -112,16 +111,7 @@ public class MyApplication extends MultiDexApplication {
                     // 最后的true表示是否打印okgo的内部异常，一般打开方便调试错误
                     .debug("OKGO", Level.INFO, true)
                     .addCommonParams(new HttpParams("base_prove", "tuzhaoapp"))
-                    //如果使用默认的 10秒,以下三行也不需要传
-                    .setConnectTimeout(OkGo.DEFAULT_MILLISECONDS)  //全局的连接超时时间
-                    .setReadTimeOut(OkGo.DEFAULT_MILLISECONDS)     //全局的读取超时时间
-                    .setWriteTimeOut(OkGo.DEFAULT_MILLISECONDS)    //全局的写入超时时间
-
-                    //可以全局统一设置缓存模式,默认是不使用缓存,可以不传,具体其他模式看 github 介绍 https://github.com/jeasonlzy/
-                    .setCacheMode(CacheMode.NO_CACHE)
-
-                    //可以全局统一设置缓存时间,默认永不过期,具体使用方法看 github 介绍
-                    .setCacheTime(10)
+                    .setHostnameVerifier(new HostnameVertifier())
 
                     //可以全局统一设置超时重连次数,默认为三次,那么最差的情况会请求4次(一次原始请求,三次重连请求),不需要可以设置为0
 
@@ -130,7 +120,7 @@ public class MyApplication extends MultiDexApplication {
                     //                    .setCookieStore(new PersistentCookieStore())        //cookie持久化存储，如果cookie不过期，则一直有效
 
                     //可以设置https的证书,以下几种方案根据需要自己设置
-                    .setCertificates();                            //方法一：信任所有证书,不安全有风险
+                    .setCertificates(getAssets().open("1_toozhao.cn_bundle.crt"));                            //方法一：信任所有证书,不安全有风险
             //              .setCertificates(new SafeTrustManager())            //方法二：自定义信任规则，校验服务端证书
             //              .setCertificates(getAssets().open("srca.cer"))      //方法三：使用预埋证书，校验服务端证书（自签名证书）
             //              //方法四：使用bks证书和密码管理客户端证书（双向认证），使用预埋证书，校验服务端证书（自签名证书）

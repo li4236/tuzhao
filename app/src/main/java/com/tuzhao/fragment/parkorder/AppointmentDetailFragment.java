@@ -315,7 +315,8 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
     }
 
     private void requestOrderPark() {
-        showLoadingDialog();
+        showOpenLockDialog();
+        mIsOpening = true;
         OkGo.post(HttpConstants.requestOrderPark)
                 .tag(TAG)
                 .addInterceptor(new TokenInterceptor())
@@ -325,19 +326,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> aVoid, Call call, Response response) {
-                        dismmisLoadingDialog();
-                        showOpenLockDialog();
-                        mIsOpening = true;
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         mIsOpening = false;
-                        if (mOpenLockDialog != null) {
-                            mOpenLockDialog.setOpenLockStatus(2);
-                            mOpenLockDialog.cancelOpenLockAnimator();
-                        }
+                        mOpenLockDialog.dismiss();
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":

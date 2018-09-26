@@ -27,6 +27,8 @@ import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.SSLException;
+
 import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 
 public class DensityUtil {
@@ -70,6 +72,10 @@ public class DensityUtil {
         } else if (e instanceof UnknownHostException) {
             Log.d("TAG", "请求失败，" + " 信息为：设备未能上网" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
+            return true;
+        } else if (e instanceof SSLException) {
+            Log.d("TAG", "请求失败，" + " 信息为：域名被劫持" + e.toString());
+            MyToast.showToast(context, "域名异常", 5);
             return true;
         } else if (e instanceof TokenInvalideException) {
             Log.d("TAG", "请求失败，" + " 信息为：token异常" + e.toString());

@@ -34,6 +34,7 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,7 +46,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/8/30.
  */
-public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOrderInfo> {
+public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOrderInfo> implements IntentObserver {
 
     private static final int TIME_IN_MILLISS = 0x123;
 
@@ -116,7 +117,9 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                                 addLockListener(parkOrderInfo);
                             }
                         }
-                        initHandler();
+                        if (mStatus.equals("1")) {
+                            initHandler();
+                        }
                     }
 
                     @Override
@@ -307,7 +310,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                 });
     }
 
-    private void performOpenLock(ParkOrderInfo parkOrderInfo) {
+    private void performOpenLock(final ParkOrderInfo parkOrderInfo) {
         if (mIsOpening) {
             if (parkOrderInfo.getLockId().equals(mOpenLockOrder.getLockId())) {
                 //如果当前正在开锁，但是关闭了开锁对话框的，再次点击开锁则只显示对话框
@@ -318,13 +321,18 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             }
         } else {
             //没有正在开的锁的，则获取网络时间判断当前是否已到了预定开始停车前30分钟。
-            mOpenLockOrder = parkOrderInfo;
-            new Thread(new Runnable() {
+            showDialog("提示", "确定开锁吗？", new DialogInterface.OnClickListener() {
                 @Override
-                public void run() {
-                    getCurrentTimeInMillis();
+                public void onClick(DialogInterface dialog, int which) {
+                    mOpenLockOrder = parkOrderInfo;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getCurrentTimeInMillis();
+                        }
+                    }).start();
                 }
-            }).start();
+            });
         }
     }
 
@@ -332,25 +340,22 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
      * 发送开锁请求
      */
     private void openLockByRecord(ParkOrderInfo parkOrderInfo) {
-        showLoadingDialog();
+        showOpenLockDialog();
+        mIsOpening = true;
         getOkGo(HttpConstants.openLockByRecord)
                 .params("id", parkOrderInfo.getId())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
-                        dismmisLoadingDialog();
-                        showOpenLockDialog();
-                        mIsOpening = true;
+
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         mIsOpening = false;
-                        if (mOpenLockDialog != null) {
-                            mOpenLockDialog.setOpenLockStatus(2);
-                            mOpenLockDialog.cancelOpenLockAnimator();
-                        }
+                        mOpenLockDialog.setOpenLockStatus(2);
+                        mOpenLockDialog.dismiss();
                         mOpenLockOrder = null;
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
@@ -550,6 +555,15 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                         });
                     }
                 });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.CANCEL_RECORD.equals(intent.getAction())) {
+            if (mStatus.equals("2")) {
+                mCommonAdapter.notifyAddData(0,(ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
+            }
+        }
     }
 
 }
