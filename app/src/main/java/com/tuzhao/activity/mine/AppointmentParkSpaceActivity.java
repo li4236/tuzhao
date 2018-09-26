@@ -498,7 +498,6 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             Calendar orderStartCalendar;
             Calendar orderEndCalendar;
             for (ParkOrderInfo parkOrderInfo : mParkOrderInfos) {
-                Log.e(TAG, "performScanParkSpace: "+parkOrderInfo.getOrderStartTime() );
                 orderStartCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderStartTime());
                 orderEndCalendar = DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime());
 

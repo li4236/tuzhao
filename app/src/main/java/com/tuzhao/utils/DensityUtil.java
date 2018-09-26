@@ -75,7 +75,7 @@ public class DensityUtil {
             return true;
         } else if (e instanceof SSLException) {
             Log.d("TAG", "请求失败，" + " 信息为：域名被劫持" + e.toString());
-            MyToast.showToast(context, "域名异常", 5);
+            MyToast.showToast(context, "域名被篡改，请检查你的网络环境", 5);
             return true;
         } else if (e instanceof TokenInvalideException) {
             Log.d("TAG", "请求失败，" + " 信息为：token异常" + e.toString());

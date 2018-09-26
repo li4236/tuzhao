@@ -150,7 +150,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                     if ((Long) msg.obj >= DateUtil.getYearToSecondCalendar(mOpenLockOrder.getOrderStartTime(), "-1800").getTimeInMillis()) {
                         openLockByRecord(mOpenLockOrder);
                     } else {
-                        showFiveToast("预定开始停车前30分钟才可以开锁哦");
+                        showFiveToast("入场时间前30分钟才可以开锁哦");
                         mOpenLockOrder = null;
                     }
                 } else if (msg.what == GET_TIME_FAILE) {
@@ -158,7 +158,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                     if (((Long) msg.obj - System.currentTimeMillis()) / 1000 <= 30 * 60) {
                         openLockByRecord(mOpenLockOrder);
                     } else {
-                        showFiveToast("预定开始停车前30分钟才可以开锁哦");
+                        showFiveToast("入场时间前30分钟才可以开锁哦");
                         mOpenLockOrder = null;
                     }
                 }
@@ -561,7 +561,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
     public void onReceive(Intent intent) {
         if (ConstansUtil.CANCEL_RECORD.equals(intent.getAction())) {
             if (mStatus.equals("2")) {
-                mCommonAdapter.notifyAddData(0,(ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
+                mCommonAdapter.notifyAddData(0, (ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
             }
         }
     }

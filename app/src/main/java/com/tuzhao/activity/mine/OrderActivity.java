@@ -133,7 +133,7 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
 
         MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkOrderInfo.getLatitude(), mParkOrderInfo.getLongitude()))
                 .title(mParkOrderInfo.getParkLotName());
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.yellow_gps));
         Marker marker = mAMap.addMarker(markerOptions);
         marker.showInfoWindow();
         ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);

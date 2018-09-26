@@ -120,7 +120,7 @@ public class MyApplication extends MultiDexApplication {
                     //                    .setCookieStore(new PersistentCookieStore())        //cookie持久化存储，如果cookie不过期，则一直有效
 
                     //可以设置https的证书,以下几种方案根据需要自己设置
-                    .setCertificates(getAssets().open("1_toozhao.cn_bundle.crt"));                            //方法一：信任所有证书,不安全有风险
+                    .setCertificates(/*getAssets().open("1_toozhao.cn_bundle.crt")*/);                            //方法一：信任所有证书,不安全有风险
             //              .setCertificates(new SafeTrustManager())            //方法二：自定义信任规则，校验服务端证书
             //              .setCertificates(getAssets().open("srca.cer"))      //方法三：使用预埋证书，校验服务端证书（自签名证书）
             //              //方法四：使用bks证书和密码管理客户端证书（双向认证），使用预埋证书，校验服务端证书（自签名证书）

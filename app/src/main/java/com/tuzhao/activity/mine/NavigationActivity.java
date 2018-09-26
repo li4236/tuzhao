@@ -204,7 +204,7 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
 
     private void showParkLotMarker() {
         MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(mParkLotLocation.getLatitude(), mParkLotLocation.getLongitude()));
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_park8));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.mipmap.yellow_gps));
         Marker marker = mAMap.addMarker(markerOptions);
         marker.showInfoWindow();
         ScaleAnimation animation = new ScaleAnimation(0, 1, 0, 1);

@@ -157,7 +157,8 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
             }
             mTelephoneNumber.setText(telephone.toString());
         }
-        if (!Objects.equals(userInfo.getOpenId(), "-1")) {
+
+        if (userInfo.getOpenId() != null && !userInfo.getOpenId().equals("-1") && !userInfo.getOpenId().equals("")) {
             mWechat.setText(UNBIND);
         }
 
