@@ -112,7 +112,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                     public void onSuccess(Base_Class_List_Info<ParkOrderInfo> o, Call call, Response response) {
                         loadDataSuccess(o);
                         for (ParkOrderInfo parkOrderInfo : o.data) {
-                            if (parkOrderInfo.getOrderStatus().equals("0")) {
+                            if (parkOrderInfo.getOrderStatus().equals("0") || parkOrderInfo.getOrderStatus().equals("1")) {
                                 //预定中的添加开锁监听
                                 addLockListener(parkOrderInfo);
                             }
@@ -227,7 +227,11 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
 
             @Override
             public void closeSuccess() {
-
+                if (parkOrderInfo.getOrderStatus().equals("1")) {
+                    parkOrderInfo.setOrderStatus("2");
+                    parkOrderInfo.setParkEndTime(DateUtil.getCurrentYearToSecond());
+                    mCommonAdapter.notifyDataChange(parkOrderInfo);
+                }
             }
 
             @Override

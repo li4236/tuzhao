@@ -429,7 +429,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                             showNoParkSpaceDialog();
                         } else {
                             if (mCanParkList.size() > 1) {
-                                DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrderEndTime());
+                                DataUtil.sortCanParkByIndicator(mCanParkList, DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
                             }
                             redistributionOrderParkSpace();
                             //startRedistributionOrderParkSpace();
@@ -506,7 +506,7 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
         if (readyParkId.length() > 0) {
             readyParkId.deleteCharAt(readyParkId.length() - 1);
         }
-
+// TODO: 2018/9/26 参数和文档不一致
         showLoadingDialog("重新分配...");
         getOkGo(HttpConstants.redistributionOrderParkSpace)
                 .addInterceptor(new TokenInterceptor())
@@ -520,9 +520,13 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
                         switch (responseData.code) {
                             case "0":
+                                dismmisLoadingDialog();
                                 redistributionParkSpace(responseData.data);
                                 break;
                             case "101":
+                                dismmisLoadingDialog();
+
+                                //备选车位都不能用，则删掉
                                 mCanParkList.remove(0);
                                 String[] readyPark = readyParkId.toString().split(",");
                                 if (!readyPark[0].equals("")) {
@@ -537,15 +541,16 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                     }
                                     redistributionOrderParkSpace();
                                 } else {
-                                    showLoadingDialog();
                                     showFiveToast("未匹配到合适您时间的车位，请尝试更换时间");
                                 }
                                 break;
                             case "106":
+                                dismmisLoadingDialog();
                                 mCanParkList.remove(0);
                                 showRequestAppointOrderDialog(mCanParkList.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
                                 break;
                             case "102":
+                                dismmisLoadingDialog();
                                 for (int i = 0; i < mCanParkList.size(); i++) {
                                     if (mCanParkList.get(i).getId().equals(responseData.data.getParkSpaceId())) {
                                         showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime()));
@@ -558,14 +563,18 @@ public class AppointmentDetailFragment extends BaseStatusFragment implements Vie
                                 finish();
                                 break;
                             case "104":
+                                dismmisLoadingDialog();
                                 showFiveToast("您有效订单已达上限，暂不可预约车位哦");
                                 break;
                             case "105":
+                                dismmisLoadingDialog();
                                 showFiveToast("您当前车位在该时段内已有过预约，请尝试更换时间");
                                 break;
                             case "107":
+                                dismmisLoadingDialog();
                                 showFiveToast("您有订单需要前去付款，要先处理哦");
                             default:
+                                dismmisLoadingDialog();
                                 showFiveToast("服务器正在维护中");
                                 break;
                         }

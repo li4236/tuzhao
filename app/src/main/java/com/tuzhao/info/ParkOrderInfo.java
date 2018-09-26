@@ -448,7 +448,10 @@ public class ParkOrderInfo implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParkOrderInfo that = (ParkOrderInfo) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(parkLotId, that.parkLotId) &&
+                Objects.equals(parkSpaceId, that.parkSpaceId) &&
+                Objects.equals(cityCode, that.cityCode);
     }
 
     @Override
