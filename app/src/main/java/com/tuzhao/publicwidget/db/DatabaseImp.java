@@ -44,13 +44,19 @@ public class DatabaseImp {
                 "_id desc");
         String registrationId;
         if (cursor.moveToFirst()) {
+            //如果数据库有保存的则获取数据库的
             registrationId = cursor.getString(cursor.getColumnIndex(Database.REGISTRATION_ID));
         } else {
+            //数据库没有保存则通过极光推送获取
             registrationId = JPushInterface.getRegistrationID(MyApplication.getInstance());
             setRegistrationId(registrationId);
         }
         cursor.close();
         sqLiteDatabase.close();
+        if (null == registrationId || "".equals(registrationId)) {
+            //ios说它可能获取不到，则登录的时候传-1
+            return "-1";
+        }
         return registrationId;
     }
 

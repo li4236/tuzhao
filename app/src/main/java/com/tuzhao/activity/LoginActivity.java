@@ -21,6 +21,8 @@ import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.Objects;
+
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -76,38 +78,29 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.PASSWORD_LOGIN:
+                    //跳转到输入密码登录
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     PasswordLoginFragment passwordLoginFragment = PasswordLoginFragment.getInstance(intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
                     transaction.replace(R.id.login_container, passwordLoginFragment);
                     transaction.addToBackStack(passwordLoginFragment.getTAG());
                     transaction.commit();
                     break;
-                case ConstansUtil.FORGET_PASSWORD:
-                    FragmentTransaction forgetPasswordSmsTransaction = getSupportFragmentManager().beginTransaction();
-                    SmsLoginFragment forgetPasswordSmsFragment = SmsLoginFragment.getInstance(
-                            1, intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
-                    forgetPasswordSmsTransaction.replace(R.id.login_container, forgetPasswordSmsFragment);
-                    forgetPasswordSmsTransaction.addToBackStack(forgetPasswordSmsFragment.getTAG());
-                    forgetPasswordSmsTransaction.commit();
-                    break;
                 case ConstansUtil.SMS_LOGIN:
+                    //跳转到获取短信验证码界面
                     FragmentTransaction smsTransaction = getSupportFragmentManager().beginTransaction();
                     SmsLoginFragment smsLoginFragment;
-                    if (intent.hasExtra(ConstansUtil.USER_INFO)) {
-                        smsLoginFragment = SmsLoginFragment.getInstance(2, (User_Info) intent.getParcelableExtra(ConstansUtil.USER_INFO));
+                    Bundle smsBundle = intent.getBundleExtra(ConstansUtil.INTENT_MESSAGE);
+                    if (smsBundle.getString(ConstansUtil.TELEPHONE_NUMBER) != null) {
+                        smsLoginFragment = SmsLoginFragment.getInstance(smsBundle.getInt(ConstansUtil.STATUS), smsBundle.getString(ConstansUtil.TELEPHONE_NUMBER));
                     } else {
-                        Bundle bundle = intent.getBundleExtra(ConstansUtil.INTENT_MESSAGE);
-                        if (bundle != null) {
-                            smsLoginFragment = SmsLoginFragment.getInstance(bundle.getInt(ConstansUtil.STATUS), bundle.getString(ConstansUtil.TELEPHONE_NUMBER));
-                        } else {
-                            smsLoginFragment = SmsLoginFragment.getInstance(0, intent.getStringExtra(ConstansUtil.TELEPHONE_NUMBER));
-                        }
+                        smsLoginFragment = SmsLoginFragment.getInstance(smsBundle.getInt(ConstansUtil.STATUS), (User_Info) Objects.requireNonNull(smsBundle.getParcelable(ConstansUtil.USER_INFO)));
                     }
                     smsTransaction.replace(R.id.login_container, smsLoginFragment);
                     smsTransaction.addToBackStack(smsLoginFragment.getTAG());
                     smsTransaction.commit();
                     break;
                 case ConstansUtil.SET_NEW_USER_PASSWORD:
+                    //设置新用户密码
                     FragmentTransaction setNewUserPasswordTransation = getSupportFragmentManager().beginTransaction();
                     Bundle setNewUserPasswordBundle = intent.getBundleExtra(ConstansUtil.INTENT_MESSAGE);
                     LoginInputFragment setNewUserPasswordFragment = LoginInputFragment.getInstance(setNewUserPasswordBundle.getString(ConstansUtil.TELEPHONE_NUMBER),
@@ -144,9 +137,6 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
                 case ConstansUtil.LOGIN_SUCCESS:
                     loginSuccess((User_Info) intent.getParcelableExtra(ConstansUtil.INTENT_MESSAGE));
                     break;
-                case ConstansUtil.FINISH_FRAGMENT:
-                    getSupportFragmentManager().popBackStack();
-                    break;
             }
         }
     }
@@ -163,7 +153,12 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
         MobclickAgent.onProfileSignIn(userInfo.getUsername());//友盟在用户登录操作统计
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("LOGIN_ACTION"));
 
-        startActivity(MainActivity.class);
+        if (getIntent().hasExtra(ConstansUtil.INTENT_MESSAGE)) {
+            //如果是在其他界面需要登录的，则登录后返回其他界面
+            finish();
+        } else {
+            startActivity(MainActivity.class);
+        }
     }
 
 }

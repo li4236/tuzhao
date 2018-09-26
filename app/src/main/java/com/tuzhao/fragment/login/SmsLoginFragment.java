@@ -47,7 +47,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
     private ClipboardObserver mClipboardObserver;
 
     /**
-     * 0(短信登录),1(忘记密码),2(初始微信登录),3(新用户登录)
+     * 0(短信登录),1(忘记密码),2(初始微信登录),3(新用户登录),4(新用户绑定微信登录)
      */
     private int mStatus;
 
@@ -63,7 +63,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
         bundle.putInt(ConstansUtil.STATUS, status);
         bundle.putString(ConstansUtil.TELEPHONE_NUMBER, telephoneNumber);
         fragment.setArguments(bundle);
-        fragment.setTAG(fragment.getTag() + ",status:" + status);
+        fragment.setTAG(fragment.getTAG() + ",status:" + status);
         return fragment;
     }
 
@@ -73,7 +73,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
         bundle.putInt(ConstansUtil.STATUS, status);
         bundle.putParcelable(ConstansUtil.USER_INFO, userInfo);
         fragment.setArguments(bundle);
-        fragment.setTAG(fragment.getTag() + ",status:" + status);
+        fragment.setTAG(fragment.getTAG() + ",status:" + status);
         return fragment;
     }
 
@@ -86,10 +86,13 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
     protected void initView(View view, Bundle savedInstanceState) {
         if (getArguments() != null) {
             mStatus = getArguments().getInt(ConstansUtil.STATUS);
-            if (mStatus == 2) {
+            if (mStatus == 2 || mStatus == 4) {
                 mUserInfo = getArguments().getParcelable(ConstansUtil.USER_INFO);
                 if (mUserInfo != null) {
                     mTelephoneNumber = mUserInfo.getUsername();
+                } else {
+                    showFiveToast("参数异常，请重新登录");
+                    finish();
                 }
             } else {
                 mTelephoneNumber = getArguments().getString(ConstansUtil.TELEPHONE_NUMBER);
@@ -100,11 +103,11 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
         mSendSms = findViewById(R.id.send_sms);
         mUserLogin = findViewById(R.id.login_tv);
 
-        if (mStatus == 2 || mStatus == 3) {
+        if (mStatus == 2 || mStatus == 3 || mStatus == 4) {
             hideView(findViewById(R.id.password_login));
-            mUserLogin.setText("下一步");
+            mUserLogin.setText(mStatus == 4 ? "登录" : "下一步");
             TextView title = findViewById(R.id.title);
-            title.setText("请先进行短信验证");
+            title.setText(mStatus == 4 ? "请进行短信验证" : "请先进行短信验证");
         } else {
             findViewById(R.id.password_login).setOnClickListener(this);
         }
@@ -157,11 +160,13 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
     }
 
     private void sendSms() {
+        showLoadingDialog("发送中...");
         getOkGo(HttpConstants.sendSms)
                 .params("phone", mTelephoneNumber)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
+                        dismmisLoadingDialog();
                         mTelephoneToken = o.data;
                         startCountdown();
                         registerSmsObserver();
@@ -239,6 +244,9 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
             case 2:
             case 3:
                 checkVerificationCode();
+                break;
+            case 4:
+                bindingWechatLogin();
                 break;
         }
     }
@@ -323,6 +331,48 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
                                     break;
                                 case "102":
                                     showFiveToast("验证码错误");
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void bindingWechatLogin() {
+        showLoadingDialog("登录中...");
+        OkGo.post(HttpConstants.bindingWechatLogin)
+                .tag(TAG)
+                .addInterceptor(new TokenInterceptor())
+                .headers("telephoneToken", mTelephoneToken)
+                .params("openId", mUserInfo.getOpenId())
+                .params("unionId", mUserInfo.getUnionId())
+                .params("wechatNickname", mUserInfo.getWechatNickname())
+                .params("registrationId", new DatabaseImp(getContext()).getRegistrationId())
+                .params("verifyCode", getText(mVerifyCodeEt))
+                .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
+
+                    @Override
+                    public void onSuccess(Base_Class_Info<User_Info> user_infoBase_class_info, Call call, Response response) {
+                        dismmisLoadingDialog();
+                        IntentObserable.dispatch(ConstansUtil.LOGIN_SUCCESS, ConstansUtil.INTENT_MESSAGE, user_infoBase_class_info.data);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "106":
+                                    showFiveToast("验证码过期，请重新获取");
+                                    break;
+                                case "107":
+                                    showFiveToast("验证码错误");
+                                    break;
+                                case "108":
+                                    showFiveToast("该手机号已绑定微信");
+                                    break;
+                                case "109":
+                                    showFiveToast("该手机号未注册，不能绑定微信");
                                     break;
                             }
                         }

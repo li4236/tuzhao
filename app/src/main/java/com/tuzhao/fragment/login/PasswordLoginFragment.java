@@ -68,7 +68,10 @@ public class PasswordLoginFragment extends BaseStatusFragment implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.forget_password:
-                IntentObserable.dispatch(ConstansUtil.FORGET_PASSWORD, ConstansUtil.TELEPHONE_NUMBER, mTelephone);
+                Bundle forgetBundle = new Bundle();
+                forgetBundle.putInt(ConstansUtil.STATUS, 1);
+                forgetBundle.putString(ConstansUtil.TELEPHONE_NUMBER, mTelephone);
+                IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.INTENT_MESSAGE, forgetBundle);
                 break;
             case R.id.sms_login:
                 Bundle bundle = new Bundle();

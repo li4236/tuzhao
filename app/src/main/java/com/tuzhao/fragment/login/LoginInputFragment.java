@@ -1,9 +1,10 @@
 package com.tuzhao.fragment.login;
 
 import android.os.Bundle;
-import android.text.InputType;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class LoginInputFragment extends BaseStatusFragment {
     private TextView mNextStep;
 
     /**
-     * 0(新用户设置密码登录) 1(忘记密码登录)
+     * 0(新用户设置密码登录) 1(忘记密码,重置密码登录)
      */
     private int mType;
 
@@ -98,11 +99,11 @@ public class LoginInputFragment extends BaseStatusFragment {
         if (mPassCode != null) {
             title.setText("请设置登录密码");
             mNextStep.setText("完成");
-            mInputEt.setHint("请输入登录密码");
-            mInputEt.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
+            mInputEt.setHint("请输入登录密码");
             mInputEt.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^*()~&<>！￥？【】、《》，。-=+_"));
-            mInputEt.setMaxLines(20);
+            mInputEt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+            mInputEt.setTransformationMethod(PasswordTransformationMethod.getInstance());
         }
 
         mNextStep.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +130,7 @@ public class LoginInputFragment extends BaseStatusFragment {
         } else if (!DateUtil.isPhoneNumble(getText(mInputEt))) {
             showFiveToast("手机号不正确");
         } else {
-            phoneIsNewUser();
+            checkPhoneIsNewUser();
         }
     }
 
@@ -148,7 +149,7 @@ public class LoginInputFragment extends BaseStatusFragment {
     /**
      * 1(新用户)  2(老用户有openId)  3（老用户没有openId）
      */
-    private void phoneIsNewUser() {
+    private void checkPhoneIsNewUser() {
         showLoadingDialog();
         mNextStep.setClickable(false);
         getOkGo(HttpConstants.phoneIsNewUser)
@@ -161,14 +162,19 @@ public class LoginInputFragment extends BaseStatusFragment {
                         mUserInfo.setUsername(getText(mInputEt));
                         switch (o.data) {
                             case "1":
-                                IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.USER_INFO, mUserInfo);
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(ConstansUtil.STATUS, 2);
+                                bundle.putParcelable(ConstansUtil.USER_INFO, mUserInfo);
+                                IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.INTENT_MESSAGE, bundle);
                                 break;
                             case "2":
                                 showFiveToast("该手机号已绑定别的微信了哦");
                                 break;
                             case "3":
-                                showFiveToast("该手机已注册，如需绑定微信请登录后在个人信息界面绑定");
-                                IntentObserable.dispatch(ConstansUtil.FINISH_FRAGMENT);
+                                Bundle newBundle = new Bundle();
+                                newBundle.putInt(ConstansUtil.STATUS, 4);
+                                newBundle.putParcelable(ConstansUtil.USER_INFO, mUserInfo);
+                                IntentObserable.dispatch(ConstansUtil.SMS_LOGIN, ConstansUtil.INTENT_MESSAGE, newBundle);
                                 break;
                         }
                     }

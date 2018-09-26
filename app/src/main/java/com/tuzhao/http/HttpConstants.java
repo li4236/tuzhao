@@ -651,9 +651,14 @@ public class HttpConstants {
     public static final String wechatLogin = ROOT_URL + "wechatLogin";
 
     /**
-     * 初始微信登录
+     * 新用户微信登录
      */
     public static final String initialWechatLogin = ROOT_URL + "initialWechatLogin";
+
+    /**
+     * 老用户绑定微信并登录
+     */
+    public static final String bindingWechatLogin = ROOT_URL + "bindingWechatLogin";
 
     /**
      * 密码登录
