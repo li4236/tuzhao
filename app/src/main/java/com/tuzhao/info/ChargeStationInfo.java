@@ -24,6 +24,7 @@ public class ChargeStationInfo extends BaseInfo {
     private String ad_img;//广告图片地址
     private String ad_web;//广告页面地址
     private String city_code;//城市码
+    private String isCollection;
 
     public String getId() {
         return id;
@@ -143,5 +144,13 @@ public class ChargeStationInfo extends BaseInfo {
 
     public void setCity_code(String city_code) {
         this.city_code = city_code;
+    }
+
+    public boolean isCollection() {
+        return "1".equals(isCollection);
+    }
+
+    public void setIsCollection(String isCollection) {
+        this.isCollection = isCollection;
     }
 }

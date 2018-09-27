@@ -148,7 +148,7 @@
                     android:drawableTop="@mipmap/ic_park5xiangqing"
                     android:text="0车位"
                     android:textColor="@color/b1"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

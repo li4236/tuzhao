@@ -275,10 +275,20 @@ public class ParkLotDetailFragment extends BaseFragment {
                                         @Override
                                         public void onError(Call call, Response response, Exception e) {
                                             super.onError(call, response, e);
+                                            if (!DensityUtil.isException(getContext(), e)) {
+                                                if ("102".equals(e.getMessage())) {
+                                                    parkLotInfo.setIsCollection("1");
+                                                    mCollectIv.setImageResource(R.drawable.ic_collect);
+                                                    mCollectTv.setText("已收藏");
+                                                } else {
+                                                    MyToast.showToast(getContext(), "收藏失败", 5);
+                                                }
+                                            } else {
+                                                MyToast.showToast(getContext(), "收藏失败", 5);
+                                            }
                                             if (mLoadingDialog.isShowing()) {
                                                 mLoadingDialog.dismiss();
                                             }
-                                            MyToast.showToast(getContext(), "收藏失败", 5);
                                         }
                                     });
                         }
