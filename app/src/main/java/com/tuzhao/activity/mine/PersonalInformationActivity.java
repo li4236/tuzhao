@@ -376,7 +376,11 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         if (type == 1) {
                             mWechat.setText(UNBOUND);
+                            UserManager.getInstance().getUserInfo().setOpenId("-1");
+                            UserManager.getInstance().getUserInfo().setWechatNickname("");
                         } else {
+                            UserManager.getInstance().getUserInfo().setAlinumber("-1");
+                            UserManager.getInstance().getUserInfo().setAliNickname("");
                             mAlipay.setText(UNBOUND);
                         }
                         showFiveToast("解除绑定成功");
