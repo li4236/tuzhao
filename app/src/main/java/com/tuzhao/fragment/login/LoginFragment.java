@@ -157,7 +157,7 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
         } else {
             Uri uri = Uri.parse("market://details?id=com.tencent.mm");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            if (getActivity()!=null&&intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            if (getActivity() != null && intent.resolveActivity(getActivity().getPackageManager()) != null) {
                 startActivity(intent);
             }
         }

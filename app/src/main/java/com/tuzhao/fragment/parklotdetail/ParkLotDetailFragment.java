@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.ScrollingMovementMethod;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
@@ -28,6 +33,7 @@ import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.NavigationActivity;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.CollectionInfo;
 import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
@@ -55,15 +61,19 @@ import okhttp3.Response;
 
 public class ParkLotDetailFragment extends BaseFragment {
 
+    private static final String TAG = "ParkLotDetailFragment";
+
     /**
      * UI
      */
     private View mContentView;
     private LoadingDialog mLoadingDialog;
     private Banner banner_image;
-    private ImageView mNoPictureIv;
-    private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance, textview_distance_dw, textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime;
-    private ConstraintLayout linearlayout_goorder, linearlayout_daohang;
+    private ImageView mNoPictureIv, mCollectIv;
+    private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance,
+            textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime, mCollectTv;
+    private LinearLayout mNavigationToParkLot;
+    private ConstraintLayout linearlayout_goorder, mCollectParkLot;
     private CBRatingBar cbratingbar;
 
     /**
@@ -133,14 +143,15 @@ public class ParkLotDetailFragment extends BaseFragment {
         textview_finewarm = mContentView.findViewById(R.id.id_fragment_parkspacedatali_layout_textview_finewarm);
         textview_parkspacename = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkspacename);
         textview_distance = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_distance);
-        textview_distance_dw = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_distance_dw);
         textview_parkspaceaddress = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkspaceaddress);
         textview_parkcount = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkcount);
         textview_grade = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_grade);
+        mNavigationToParkLot = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
         linearlayout_goorder = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_goorder);
-        linearlayout_daohang = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
         cbratingbar = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_cbratingbar);
-
+        mCollectParkLot = mContentView.findViewById(R.id.collect_park_lot_cl);
+        mCollectIv = mContentView.findViewById(R.id.collect_park_lot_iv);
+        mCollectTv = mContentView.findViewById(R.id.collect_park_lot_tv);
         //ImageUtil.showNoCenterPic(mNoPictureIv, R.mipmap.ic_img);
 
         banner_image.setOnBannerListener(new OnBannerListener() {
@@ -192,7 +203,7 @@ public class ParkLotDetailFragment extends BaseFragment {
             }
         });
 
-        linearlayout_daohang.setOnClickListener(new View.OnClickListener() {
+        mNavigationToParkLot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (parkLotInfo != null && LocationManager.getInstance().hasLocation()) {
@@ -206,16 +217,80 @@ public class ParkLotDetailFragment extends BaseFragment {
                 }
             }
         });
-    }
 
-    public ParkLotInfo getParkLot() {
-        return parkLotInfo;
-    }
+        mCollectParkLot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UserManager.getInstance().hasLogined()) {
+                    if (parkLotInfo != null) {
+                        if (parkLotInfo.isCollection()) {
+                            initLoading("正在取消收藏...");
+                            OkGo.post(HttpConstants.deleteCollection)
+                                    .tag(TAG)
+                                    .addInterceptor(new TokenInterceptor())
+                                    .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                                    .params("belong_id", parkLotInfo.getId())
+                                    .params("type", "1")
+                                    .params("citycode", parkLotInfo.getCity_code())
+                                    .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
+                                        @Override
+                                        public void onSuccess(Base_Class_Info<CollectionInfo> collection_infoBase_class_info, Call call, Response response) {
+                                            if (mLoadingDialog.isShowing()) {
+                                                mLoadingDialog.dismiss();
+                                            }
+                                            parkLotInfo.setIsCollection("0");
+                                            mCollectIv.setImageResource(R.drawable.ic_nocollect);
+                                            mCollectTv.setText("未收藏");
+                                        }
 
-    public void setCollection(boolean isCollection) {
-        if (parkLotInfo != null) {
-            parkLotInfo.setIsCollection(isCollection ? "1" : "0");
-        }
+                                        @Override
+                                        public void onError(Call call, Response response, Exception e) {
+                                            super.onError(call, response, e);
+                                            if (mLoadingDialog.isShowing()) {
+                                                mLoadingDialog.dismiss();
+                                            }
+                                            MyToast.showToast(getContext(), "取消失败", 5);
+                                        }
+                                    });
+                        } else {
+                            initLoading("正在添加收藏...");
+                            OkGo.post(HttpConstants.addCollection)
+                                    .tag(getContext())
+                                    .addInterceptor(new TokenInterceptor())
+                                    .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                                    .params("belong_id", parkLotInfo.getId())
+                                    .params("type", "1")
+                                    .params("citycode", parkLotInfo.getCity_code())
+                                    .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                                        @Override
+                                        public void onSuccess(Base_Class_Info<Void> collection_infoBase_class_list_info, Call call, Response response) {
+                                            if (mLoadingDialog.isShowing()) {
+                                                mLoadingDialog.dismiss();
+                                            }
+                                            parkLotInfo.setIsCollection("1");
+                                            mCollectIv.setImageResource(R.drawable.ic_collect);
+                                            mCollectTv.setText("已收藏");
+                                        }
+
+                                        @Override
+                                        public void onError(Call call, Response response, Exception e) {
+                                            super.onError(call, response, e);
+                                            if (mLoadingDialog.isShowing()) {
+                                                mLoadingDialog.dismiss();
+                                            }
+                                            MyToast.showToast(getContext(), "收藏失败", 5);
+                                        }
+                                    });
+                        }
+                    } else {
+                        MyToast.showToast(getContext(), "获取车场信息失败，请稍后再试", 5);
+                    }
+                } else {
+                    MyToast.showToast(getContext(), "请先登录再操作哦", 5);
+                    login();
+                }
+            }
+        });
     }
 
     private void requestGetParkspaceData() {
@@ -327,83 +402,87 @@ public class ParkLotDetailFragment extends BaseFragment {
     }
 
     private void initViewData(ParkLotInfo parkspace_info) {
-        try {
-            String imgUrl = parkspace_info.getParkspace_img();
-            if (imgData == null) {
-                imgData = new ArrayList<>();
-            } else {
-                imgData.clear();
-            }
+        if (parkspace_info.isCollection()) {
+            mCollectIv.setImageResource(R.drawable.ic_collect);
+            mCollectTv.setText("已收藏");
+        }
 
-            if (imgUrl != null && !imgUrl.equals("-1") && !imgUrl.equals("")) {
-                final String img_Url[] = imgUrl.split(",");
-                for (int i = 0; i < img_Url.length; i++) {
-                    if (!img_Url[i].equals("-1")) {
-                        imgData.add(HttpConstants.ROOT_IMG_URL_PS + img_Url[i]);
+        String imgUrl = parkspace_info.getParkspace_img();
+        if (imgData == null) {
+            imgData = new ArrayList<>();
+        } else {
+            imgData.clear();
+        }
+
+        if (imgUrl != null && !imgUrl.equals("-1") && !imgUrl.equals("")) {
+            final String img_Url[] = imgUrl.split(",");
+            for (int i = 0; i < img_Url.length; i++) {
+                if (!img_Url[i].equals("-1")) {
+                    imgData.add(HttpConstants.ROOT_IMG_URL_PS + img_Url[i]);
+                }
+            }
+            banner_image.setImages(imgData)
+                    .setBannerStyle(BannerConfig.NUM_INDICATOR)
+                    .setBannerAnimation(DefaultTransformer.class)
+                    .setImageLoader(new GlideImageLoader())
+                    .setDelayTime(6000)
+                    .start();
+
+            banner_image.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                    if (imgData.size() == 0) {
+                        MyToast.showToast(mContext, "暂无图片哦", 5);
+                    } else {
+                        Intent intent = new Intent(mContext, BigPictureActivity.class);
+                        intent.putStringArrayListExtra("picture_list", imgData);
+                        intent.putExtra("position", position);
+                        startActivity(intent);
                     }
                 }
-                banner_image.setImages(imgData)
-                        .setBannerStyle(BannerConfig.NUM_INDICATOR)
-                        .setBannerAnimation(DefaultTransformer.class)
-                        .setImageLoader(new GlideImageLoader())
-                        .setDelayTime(6000)
-                        .start();
+            });
 
-                banner_image.setOnBannerListener(new OnBannerListener() {
-                    @Override
-                    public void OnBannerClick(int position) {
-                        if (imgData.size() == 0) {
-                            MyToast.showToast(mContext, "暂无图片哦", 5);
-                        } else {
-                            Intent intent = new Intent(mContext, BigPictureActivity.class);
-                            intent.putStringArrayListExtra("picture_list", imgData);
-                            intent.putExtra("position", position);
-                            startActivity(intent);
-                        }
-                    }
-                });
-
-                mNoPictureIv.setVisibility(View.GONE);
-            } else {
-                Log.e("TAG", "initViewData: no_pic");
-                imgData.add("place");
-                banner_image.setImages(imgData)
-                        .setBannerStyle(BannerConfig.NUM_INDICATOR)
-                        .setBannerAnimation(DefaultTransformer.class)
-                        .setImageLoader(new GlideImageLoader())
-                        .setDelayTime(6000)
-                        .start();
-            }
-
-            textview_parkspacename.setText(parkspace_info.getParkLotName());
-            textview_parkspaceaddress.setText(parkspace_info.getPark_address());
-            DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));
-            textview_distance.setText(distanceAndDanwei.getDistance());
-            textview_distance_dw.setText(distanceAndDanwei.getDanwei());
-            String start = parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")),
-                    end = parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()),
-                    hightime1 = parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")),
-                    hightime2 = parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length());
-            if (Integer.parseInt(start.substring(0, start.indexOf(":"))) < Integer.parseInt(end.substring(0, end.lastIndexOf(":")))) {
-                textview_hightime.setText(hightime1 + " - " + hightime2);
-                textview_lowtime.setText(hightime2 + " - 次日" + hightime1);
-            } else {
-                textview_hightime.setText(hightime1 + " - 次日" + hightime2);
-                textview_lowtime.setText("次日" + hightime2 + " - 次日" + hightime1);
-            }
-            textview_highfee.setText(parkspace_info.getHigh_fee());
-            textview_lowfee.setText(parkspace_info.getLow_fee());
-            textview_finewarm.setText("※ 停车超过顺延时间会按" + parkspace_info.getFine() + "元/小时收取额外超时费哦 ※");
-            cbratingbar.setStarProgress(parkspace_info.getGrade() == null ? 80 : (Float.valueOf(parkspace_info.getGrade()) * 100 / 5));
-            textview_grade.setText(parkspace_info.getGrade() + "分");
-            textview_opentime.setText("(" + parkspace_info.getOpentime() + ")");
-        } catch (Exception e) {
-            e.printStackTrace();
+            mNoPictureIv.setVisibility(View.GONE);
+        } else {
+            imgData.add("place");
+            banner_image.setImages(imgData)
+                    .setBannerStyle(BannerConfig.NUM_INDICATOR)
+                    .setBannerAnimation(DefaultTransformer.class)
+                    .setImageLoader(new GlideImageLoader())
+                    .setDelayTime(6000)
+                    .start();
         }
+
+        textview_parkspacename.setText(parkspace_info.getParkLotName());
+        textview_parkspaceaddress.setMovementMethod(ScrollingMovementMethod.getInstance());
+        textview_parkspaceaddress.setText(parkspace_info.getPark_address());
+        DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));
+        SpannableString spannableString = new SpannableString(distanceAndDanwei.getDistance() + distanceAndDanwei.getDanwei());
+        spannableString.setSpan(new AbsoluteSizeSpan((int) DensityUtil.sp2px(getContext(), 8)), distanceAndDanwei.getDistance().length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textview_distance.setText(spannableString);
+        String start = parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")),
+                end = parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length()),
+                hightime1 = parkspace_info.getHigh_time().substring(0, parkspace_info.getHigh_time().indexOf(" - ")),
+                hightime2 = parkspace_info.getHigh_time().substring(parkspace_info.getHigh_time().indexOf(" - ") + 3, parkspace_info.getHigh_time().length());
+        if (Integer.parseInt(start.substring(0, start.indexOf(":"))) < Integer.parseInt(end.substring(0, end.lastIndexOf(":")))) {
+            textview_hightime.setText(hightime1 + " - " + hightime2);
+            textview_lowtime.setText(hightime2 + " - 次日" + hightime1);
+        } else {
+            textview_hightime.setText(hightime1 + " - 次日" + hightime2);
+            textview_lowtime.setText("次日" + hightime2 + " - 次日" + hightime1);
+        }
+        textview_highfee.setText(parkspace_info.getHigh_fee());
+        textview_lowfee.setText(parkspace_info.getLow_fee());
+        textview_finewarm.setText("※ 停车超过顺延时间会按" + parkspace_info.getFine() + "元/小时收取额外超时费哦 ※");
+        cbratingbar.setStarProgress(parkspace_info.getGrade() == null ? 80 : (Float.valueOf(parkspace_info.getGrade()) * 100 / 5));
+        textview_grade.setText(parkspace_info.getGrade() + "分");
+        textview_opentime.setText("(" + parkspace_info.getOpentime() + ")");
     }
 
     public void login() {
-        startActivity(new Intent(getActivity(), LoginActivity.class));
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
+        startActivity(intent);
     }
 
     private void initLoading(String what) {
