@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,7 +70,8 @@ public class ParkLotDetailFragment extends BaseFragment {
     private Banner banner_image;
     private ImageView mNoPictureIv, mCollectIv;
     private TextView textview_hightime, textview_highfee, textview_lowtime, textview_lowfee, textview_finewarm, textview_distance,
-            textview_parkspacename, textview_parkspaceaddress, textview_parkcount, textview_grade, textview_opentime, mCollectTv;
+            textview_parkspacename, textview_parkcount, textview_grade, textview_opentime, mCollectTv;
+    private TextView textview_parkspaceaddress;
     private LinearLayout mNavigationToParkLot;
     private ConstraintLayout linearlayout_goorder, mCollectParkLot;
     private CBRatingBar cbratingbar;
@@ -454,7 +454,6 @@ public class ParkLotDetailFragment extends BaseFragment {
         }
 
         textview_parkspacename.setText(parkspace_info.getParkLotName());
-        textview_parkspaceaddress.setMovementMethod(ScrollingMovementMethod.getInstance());
         textview_parkspaceaddress.setText(parkspace_info.getPark_address());
         DateUtil.DistanceAndDanwei distanceAndDanwei = dateUtil.isMoreThan1000((int) AMapUtils.calculateLineDistance(new LatLng(parkspace_info.getLatitude(), parkspace_info.getLongitude()), new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude())));
         SpannableString spannableString = new SpannableString(distanceAndDanwei.getDistance() + distanceAndDanwei.getDanwei());

@@ -174,22 +174,27 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/id_fragment_parkspacedetail_layout_textview_parkspaceaddress"
+                <HorizontalScrollView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/layout_margin_8dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="start|center_vertical"
-                    android:maxLines="1"
                     android:paddingBottom="@dimen/icon_size_16dp"
                     android:paddingTop="@dimen/icon_size_16dp"
                     android:scrollbars="none"
-                    android:textColor="@color/b1"
-                    android:textSize="12sp"
                     app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
                     app:layout_constraintStart_toEndOf="@id/park_lot_address_iv"
-                    app:layout_constraintTop_toBottomOf="@+id/id_fragment_parkspacedetail_layout_charge" />
+                    app:layout_constraintTop_toBottomOf="@+id/id_fragment_parkspacedetail_layout_charge">
+
+                    <TextView
+                        android:id="@+id/id_fragment_parkspacedetail_layout_textview_parkspaceaddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:maxLines="1"
+                        android:textColor="@color/b1"
+                        android:textSize="12sp" />
+
+                </HorizontalScrollView>
 
                 <LinearLayout
                     android:id="@+id/id_fragment_parkspacedetail_layout_linearlayout_daohang"
