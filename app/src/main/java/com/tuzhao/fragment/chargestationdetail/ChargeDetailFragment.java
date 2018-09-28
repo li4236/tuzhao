@@ -1,5 +1,6 @@
 package com.tuzhao.fragment.chargestationdetail;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -235,12 +236,7 @@ public class ChargeDetailFragment extends BaseFragment {
                                     .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                                         @Override
                                         public void onSuccess(Base_Class_Info<CollectionInfo> collection_infoBase_class_info, Call call, Response response) {
-                                            if (mLoadingDialog.isShowing()) {
-                                                mLoadingDialog.dismiss();
-                                            }
-                                            chargestation_info.setIsCollection("0");
-                                            mChargeCollectIv.setImageResource(R.drawable.ic_nocollect);
-                                            mChargeCollecTv.setText("未收藏");
+                                            deleteCollectionSuccess();
                                         }
 
                                         @Override
@@ -270,6 +266,10 @@ public class ChargeDetailFragment extends BaseFragment {
                                             chargestation_info.setIsCollection("1");
                                             mChargeCollectIv.setImageResource(R.drawable.ic_collect);
                                             mChargeCollecTv.setText("已收藏");
+
+                                            if (getActivity() != null) {
+                                                getActivity().setResult(Activity.RESULT_OK, null);
+                                            }
                                         }
 
                                         @Override
@@ -322,6 +322,27 @@ public class ChargeDetailFragment extends BaseFragment {
     private void initLoading(String what) {
         mLoadingDialog = new LoadingDialog(mContext, what);
         mLoadingDialog.show();
+    }
+
+    private void deleteCollectionSuccess() {
+        if (mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
+        chargestation_info.setIsCollection("0");
+        mChargeCollectIv.setImageResource(R.drawable.ic_nocollect);
+        mChargeCollecTv.setText("未收藏");
+
+        if (getActivity() != null) {
+            CollectionInfo collectionInfo = new CollectionInfo();
+            collectionInfo.setType("2");
+            collectionInfo.setCitycode(chargestation_info.getCity_code());
+            collectionInfo.setChargestation_id(chargestation_info.getId());
+
+            Intent intent = new Intent();
+            intent.putExtra(ConstansUtil.INTENT_MESSAGE, collectionInfo);
+            getActivity().setResult(Activity.RESULT_OK, intent);
+        }
+
     }
 
     @Override

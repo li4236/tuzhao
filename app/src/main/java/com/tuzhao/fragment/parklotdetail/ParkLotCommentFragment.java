@@ -543,7 +543,7 @@ public class ParkLotCommentFragment extends BaseFragment {
                     showView(imageview_show1);
                     hideView(imageview_show2);
                     hideView(imageview_show3);
-                    ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                    ImageUtil.showImgPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                     imageview_show1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -554,14 +554,14 @@ public class ParkLotCommentFragment extends BaseFragment {
                     showView(imageview_show1);
                     showView(imageview_show2);
                     hideView(imageview_show3);
-                    ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                    ImageUtil.showImgPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                     imageview_show1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                         }
                     });
-                    ImageUtil.showImpPic(imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                    ImageUtil.showImgPic(imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                     imageview_show2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -572,21 +572,21 @@ public class ParkLotCommentFragment extends BaseFragment {
                     showView(imageview_show1);
                     showView(imageview_show2);
                     showView(imageview_show3);
-                    ImageUtil.showImpPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                    ImageUtil.showImgPic(imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                     imageview_show1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                         }
                     });
-                    ImageUtil.showImpPic(imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                    ImageUtil.showImgPic(imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                     imageview_show2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             startBigPictureActivity(HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                         }
                     });
-                    ImageUtil.showImpPic(imageview_show3, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
+                    ImageUtil.showImgPic(imageview_show3, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
                     imageview_show3.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

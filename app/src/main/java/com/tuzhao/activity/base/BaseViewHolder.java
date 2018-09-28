@@ -81,6 +81,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setCustomCheckboxCheck(@IdRes int id, boolean check) {
+        ((com.tuzhao.publicwidget.customView.CheckBox) getView(id)).setChecked(check);
+        return this;
+    }
+
     public BaseViewHolder showPic(@IdRes int id, @DrawableRes int drawableRes) {
         ImageUtil.showPic((ImageView) getView(id), drawableRes);
         return this;
@@ -98,6 +103,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public BaseViewHolder showPic(@IdRes int id, String url, int drawableId) {
         ImageUtil.showPic((ImageView) getView(id), url, drawableId);
+        return this;
+    }
+
+    public BaseViewHolder showImpPic(@IdRes int id, String url) {
+        ImageUtil.showImgPic((ImageView)getView(id), url);
         return this;
     }
 

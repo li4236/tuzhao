@@ -232,6 +232,14 @@ public abstract class BaseStatusFragment extends Fragment {
         startActivity(intent);
     }
 
+    protected void startActivity(Class<?> tClass, String... keyWithValue) {
+        Intent intent = new Intent(getActivity(), tClass);
+        for (int i = 0; i < keyWithValue.length; i += 2) {
+            intent.putExtra(keyWithValue[i], keyWithValue[i + 1]);
+        }
+        startActivity(intent);
+    }
+
     protected void startActivity(Class<?> tClass, String key, Parcelable data) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(key, data);
@@ -244,6 +252,17 @@ public abstract class BaseStatusFragment extends Fragment {
         if (getActivity() != null) {
             getActivity().startActivityForResult(intent, requestCode);
         }
+    }
+
+    /**
+     * 需要在fragment接受结果的不要调用activity的startActivityForResult方法，调用fragment的即可
+     */
+    protected void startActivityForResultByFragment(Class<?> tClass, int requestCode, String... keyWithValue) {
+        Intent intent = new Intent(getActivity(), tClass);
+        for (int i = 0; i < keyWithValue.length; i += 2) {
+            intent.putExtra(keyWithValue[i], keyWithValue[i + 1]);
+        }
+        startActivityForResult(intent, requestCode);
     }
 
     protected void startActivityForResult(Class<?> tClass, int requestCode, String key, ArrayList<? extends Parcelable> data) {
@@ -288,6 +307,7 @@ public abstract class BaseStatusFragment extends Fragment {
                 .create()
                 .show();
     }
+
     /**
      * @return textView里面的字符串
      */

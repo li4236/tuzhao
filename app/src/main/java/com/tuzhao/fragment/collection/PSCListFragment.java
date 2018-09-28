@@ -16,6 +16,7 @@ import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by TZL12 on 2017/6/26.
@@ -31,7 +32,7 @@ public class PSCListFragment extends BaseFragment {
     private LinearLayoutManager linearLayoutManager;
     private CollectionAdapter mAdapter;
 
-    private ArrayList<CollectionInfo> mDatas = new ArrayList<>();
+    private List<CollectionInfo> mDatas = new ArrayList<>();
     private boolean mIsEdit = false;
 
     /**
@@ -53,25 +54,20 @@ public class PSCListFragment extends BaseFragment {
     }
 
     private void initView() {
-        mRecycleview = (SuperRefreshRecyclerView) mContentView.findViewById(R.id.base_srrv);
+        mRecycleview =mContentView.findViewById(R.id.base_srrv);
         linearLayoutManager = new LinearLayoutManager(mContext);
         mRecycleview.init(linearLayoutManager, null, null);
         mRecycleview.setRefreshEnabled(false);
         mRecycleview.setLoadingMoreEnable(false);
 
-        if (CollectionManager.getInstance().hasCollectionData()){
-            for (CollectionInfo info:CollectionManager.getInstance().getCollection_datas()){
-                if (info.getType().equals("1")){
-                    mDatas.add(info);
-                }
-            }
-        }
-
-        if (!(mDatas.size()>0)){
-            mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata).setVisibility(View.VISIBLE);
-        }
         mAdapter = new CollectionAdapter(mContext, mDatas,false);
         mRecycleview.setAdapter(mAdapter);
+    }
+
+    public void setDatas(List<CollectionInfo> datas) {
+        mDatas = datas;
+        mAdapter.notifyDataSetChanged();
+        mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata).setVisibility(View.GONE);
     }
 
     private void initData() {

@@ -27,7 +27,6 @@ import com.tuzhao.utils.IntentObserver;
 
 import java.util.Objects;
 
-import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 
 /**
  * Created by TZL12 on 2017/12/14.
@@ -131,7 +130,7 @@ public class SetActivity extends BaseActivity implements View.OnClickListener, I
      * 发送退出登录的局部广播
      */
     private void sendLogoutBroadcast() {
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(LOGOUT_ACTION));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ConstansUtil.LOGOUT_ACTION));
     }
 
     private void showLoadingDialg() {

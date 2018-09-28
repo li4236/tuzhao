@@ -44,7 +44,7 @@ public class ParkPicturesAdapter extends RecyclerView.Adapter<ParkPicturesAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        ImageUtil.showImpPic(holder.image_content,HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getUrl() == null ? null : mData.get(position).getUrl()));
+        ImageUtil.showImgPic(holder.image_content,HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getUrl() == null ? null : mData.get(position).getUrl()));
 
         if (mData.get(position).isdelete()) {
             holder.image_delete.setVisibility(View.VISIBLE);

@@ -85,7 +85,7 @@
 
         <TextView
             android:layout_width="200dp"
-            android:layout_height="@dimen/icon_size_40dp"
+            android:layout_height="@dimen/icon_size_fourty"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"

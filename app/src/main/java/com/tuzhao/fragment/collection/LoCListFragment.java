@@ -18,6 +18,7 @@ import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by TZL12 on 2017/6/26.
@@ -33,7 +34,7 @@ public class LoCListFragment extends BaseFragment {
     private LinearLayoutManager linearLayoutManager;
     private CollectionAdapter mAdapter;
 
-    private ArrayList<CollectionInfo> mDatas = new ArrayList<>();
+    private List<CollectionInfo> mDatas = new ArrayList<>();
     private boolean mIsEdit = false;
 
     /**
@@ -76,18 +77,14 @@ public class LoCListFragment extends BaseFragment {
             }
         });
 
-        if (CollectionManager.getInstance().hasCollectionData()){
-            for (CollectionInfo info:CollectionManager.getInstance().getCollection_datas()){
-                if (info.getType().equals("3")){
-                    mDatas.add(info);
-                }
-            }
-        }
-        if (!(mDatas.size()>0)){
-            mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata).setVisibility(View.VISIBLE);
-        }
-        mAdapter = new CollectionAdapter(mContext, mDatas,false);
+        mAdapter = new CollectionAdapter(mContext, mDatas, false);
         mRecycleview.setAdapter(mAdapter);
+    }
+
+    public void setDatas(List<CollectionInfo> datas) {
+        mDatas = datas;
+        mAdapter.notifyDataSetChanged();
+        mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata).setVisibility(View.GONE);
     }
 
     private void initData() {
@@ -97,18 +94,18 @@ public class LoCListFragment extends BaseFragment {
     private void initEvent() {
     }
 
-    public void changeItem(boolean isEdit){
-        if (mIsEdit != isEdit){
+    public void changeItem(boolean isEdit) {
+        if (mIsEdit != isEdit) {
             mIsEdit = isEdit;
-            mAdapter = new CollectionAdapter(mContext, mDatas,isEdit);
+            mAdapter = new CollectionAdapter(mContext, mDatas, isEdit);
             mRecycleview.setAdapter(mAdapter);
         }
     }
 
-    public void dataSetChange(){
+    public void dataSetChange() {
         Iterator<CollectionInfo> it = mDatas.iterator();
-        while(it.hasNext()){
-            if (it.next().isSelect()){
+        while (it.hasNext()) {
+            if (it.next().isSelect()) {
                 it.remove();
             }
         }
@@ -116,10 +113,10 @@ public class LoCListFragment extends BaseFragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void uploadData(){
+    public void uploadData() {
         mDatas.clear();
-        for (CollectionInfo info:CollectionManager.getInstance().getCollection_datas()){
-            if (info.getType().equals("3")){
+        for (CollectionInfo info : CollectionManager.getInstance().getCollection_datas()) {
+            if (info.getType().equals("3")) {
                 mDatas.add(info);
             }
         }

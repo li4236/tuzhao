@@ -93,7 +93,7 @@ public class ParkOrChargeListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     break;
             }
             String[] urlList = mData.get(position).getPicture().split(",");
-            ImageUtil.showImpPic(((MyViewHolder) holder).imageview_bigshow,
+            ImageUtil.showImgPic(((MyViewHolder) holder).imageview_bigshow,
                     urlList.length > 0 ? HttpConstants.ROOT_IMG_URL_PS + urlList[0] : "");
         } catch (Exception e) {
             e.printStackTrace();

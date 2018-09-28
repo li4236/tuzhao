@@ -75,9 +75,13 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
+        //super.onBindViewHolder(holder, position, payloads);
         if (getItemViewType(position) != HEADER_VIEW && getItemViewType(position) != FOOTER_VIEW) {
-            conver(holder, mData.get(position - getHeadViewCount()), position - getHeadViewCount(), payloads);
+            if (payloads.isEmpty()) {
+                conver(holder, mData.get(position - getHeadViewCount()), position - getHeadViewCount());
+            } else {
+                conver(holder, mData.get(position - getHeadViewCount()), position - getHeadViewCount(), payloads);
+            }
         }
     }
 
@@ -338,6 +342,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         if (position != -1) {
             notifyDataChange(position + getHeadViewCount(), newData);
         }
+    }
+
+    public void notifyDataSetChanged(Object payload) {
+        notifyItemRangeChanged(getHeadViewCount(), mData.size(), payload);
     }
 
     /**

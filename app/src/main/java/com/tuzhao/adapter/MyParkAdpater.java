@@ -42,7 +42,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         try {
             if (mData.get(position).getPark_status().equals("3") || mData.get(position).getPark_status().equals("10")) {
-                ImageUtil.showImpPic(holder.mIv_icon,
+                ImageUtil.showImgPic(holder.mIv_icon,
                         HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPark_img() == null ? null : (mData.get(position).getPark_img().split(","))[0]));
                 holder.mTv_parkInfo.setText(mData.get(position).getLocation_describe());
                 holder.mTv_belongPark.setText(mData.get(position).getPark_space_name());
@@ -78,7 +78,7 @@ public class MyParkAdpater extends RecyclerView.Adapter<MyParkAdpater.MyViewHold
                     }
                 });
             } else {
-                ImageUtil.showImpPic(holder.mIv_icon,
+                ImageUtil.showImgPic(holder.mIv_icon,
                         HttpConstants.ROOT_IMG_URL_PS + (mData.get(position).getPark_img() == null ? null : (mData.get(position).getPark_img().split(","))[0]));
                 holder.mTv_parkInfo.setText(mData.get(position).getLocation_describe());
                 holder.mTv_belongPark.setText(mData.get(position).getPark_space_name());

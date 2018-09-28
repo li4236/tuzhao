@@ -6,10 +6,10 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/layout_padding_8dp"
-    android:paddingLeft="@dimen/layout_padding_16dp"
-    android:paddingRight="@dimen/layout_padding_16dp"
-    android:paddingTop="@dimen/layout_padding_8dp">
+    android:paddingBottom="@dimen/layout_padding_eight"
+    android:paddingLeft="@dimen/layout_padding_sixty"
+    android:paddingRight="@dimen/layout_padding_sixty"
+    android:paddingTop="@dimen/layout_padding_eight">
 
     <com.tianzhili.www.myselfsdk.photopicker.weidget.GalleryImageView
         android:id="@+id/imageView"
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/layout_margin_16dp"
+        android:layout_marginStart="@dimen/layout_margin_sisty"
         android:layout_toEndOf="@id/imageView"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -31,22 +31,22 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_16sp" />
+            android:textSize="@dimen/text_size_sixteen" />
 
         <TextView
             android:id="@+id/num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_margin_8dp"
-            android:textSize="@dimen/text_size_12sp" />
+            android:layout_marginTop="@dimen/layout_margin_eight"
+            android:textSize="@dimen/text_size_twelve" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/photo_gallery_select"
-        android:layout_width="@dimen/icon_size_20dp"
-        android:layout_height="@dimen/icon_size_20dp"
+        android:layout_width="@dimen/icon_size_twenty"
+        android:layout_height="@dimen/icon_size_twenty"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/layout_margin_16dp"
+        android:layout_marginEnd="@dimen/layout_margin_sisty"
         android:scaleType="centerCrop" />
 </RelativeLayout>

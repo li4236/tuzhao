@@ -22,6 +22,9 @@ public class ConstansUtil {
 
     public static final String SERVER_ERROR = "服务器异常，请稍后重试";
 
+    public static final String LOGIN_ACTION = "LOGIN_ACTION";//登录成功的动作
+    public static final String LOGOUT_ACTION = "LOGIN_SUCCESS";//退出登录的动作
+
     /**
      * 登录成功
      */
@@ -116,6 +119,8 @@ public class ConstansUtil {
     public static final String CHAGNE_ACCEPT_ADDRESS = "ChangeAcceptAddress";
 
     public static final int REQUSET_CODE = 0x111;
+
+    public static final int REQUEST_CODE_TWO = 0x123;
 
     public static final int RESULT_CODE = 0x222;
 
@@ -512,5 +517,15 @@ public class ConstansUtil {
      * 取消记录
      */
     public static final String CANCEL_RECORD = "CancelRecord";
+
+    /**
+     * 编辑的状态
+     */
+    public static final String EDIT_STATUS = "EditStatus";
+
+    /**
+     * 删除收藏记录
+     */
+    public static final String DELETE_COLLECTION = "DeleteCollection";
 
 }

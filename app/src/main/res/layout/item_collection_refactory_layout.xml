@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="@color/w0"
+    android:paddingBottom="12dp"
+    android:paddingEnd="6dp"
+    android:paddingStart="16dp"
+    android:paddingTop="12dp">
+
+    <ImageView
+        android:id="@+id/collection_iv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/collection_name_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/collection_cb"
+        app:layout_constraintStart_toEndOf="@+id/collection_iv"
+        app:layout_constraintTop_toTopOf="@+id/collection_iv" />
+
+    <TextView
+        android:id="@+id/collection_cout_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginTop="3dp"
+        app:layout_constraintStart_toStartOf="@id/collection_name_tv"
+        app:layout_constraintTop_toBottomOf="@+id/collection_name_tv" />
+
+    <TextView
+        android:id="@+id/collection_address_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/collection_cb"
+        app:layout_constraintStart_toStartOf="@id/collection_cout_tv"
+        app:layout_constraintTop_toBottomOf="@+id/collection_cout_tv" />
+
+    <CheckBox
+        android:id="@+id/collection_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:visibility="gone"
+        android:drawableStart="@drawable/yellow_checkbox_bg"
+        android:padding="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

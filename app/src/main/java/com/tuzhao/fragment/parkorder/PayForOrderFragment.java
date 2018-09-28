@@ -283,7 +283,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
                 .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<CollectionInfo> o, Call call, Response response) {
-                        CollectionManager.getInstance().addCollectionData(o.data);
                         setCollection(true);
                         dismmisLoadingDialog();
                     }

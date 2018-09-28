@@ -47,7 +47,7 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageUtil.showImpPic(holder.imageview_user, HttpConstants.ROOT_IMG_URL_USER + mCommentList.get(position).getUser_img_url());
+        ImageUtil.showImgPic(holder.imageview_user, HttpConstants.ROOT_IMG_URL_USER + mCommentList.get(position).getUser_img_url());
         if (mCommentList.get(position).getImg_url().equals("-1") || mCommentList.get(position).getImg_url().equals("")) {
             holder.linearlayout_show.setVisibility(View.GONE);
         } else {
@@ -55,7 +55,7 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
             if (!(img_Url.length > 0)) {
                 holder.linearlayout_show.setVisibility(View.GONE);
             } else if (img_Url.length == 1) {
-                ImageUtil.showImpPic(holder.imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                ImageUtil.showImgPic(holder.imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                 holder.imageview_show1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -63,14 +63,14 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
                 });
                 holder.linearlayout_show.setVisibility(View.VISIBLE);
             } else if (img_Url.length == 2) {
-                ImageUtil.showImpPic(holder.imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                ImageUtil.showImgPic(holder.imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                 holder.imageview_show1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                ImageUtil.showImpPic(holder.imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                ImageUtil.showImgPic(holder.imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                 holder.imageview_show2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -79,21 +79,21 @@ public class ParkspaceCommentAdapter extends RecyclerView.Adapter<ParkspaceComme
                 });
                 holder.linearlayout_show.setVisibility(View.VISIBLE);
             } else if (img_Url.length == 3) {
-                ImageUtil.showImpPic(holder.imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
+                ImageUtil.showImgPic(holder.imageview_show1, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[0]);
                 holder.imageview_show1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                ImageUtil.showImpPic(holder.imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
+                ImageUtil.showImgPic(holder.imageview_show2, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[1]);
                 holder.imageview_show2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                ImageUtil.showImpPic(holder.imageview_show3, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
+                ImageUtil.showImgPic(holder.imageview_show3, HttpConstants.ROOT_IMG_URL_PSCOM + img_Url[2]);
                 holder.imageview_show3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

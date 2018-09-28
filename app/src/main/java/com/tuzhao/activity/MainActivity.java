@@ -83,7 +83,6 @@ import com.tuzhao.info.NearPointPCInfo;
 import com.tuzhao.info.RegionItem;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
-import com.tuzhao.publicmanager.CollectionManager;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -119,8 +118,6 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.tianzhili.www.myselfsdk.okgo.convert.FileConvert.DM_TARGET_FOLDER;
-import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGIN_ACTION;
-import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
 import static com.tuzhao.utils.DensityUtil.dp2px;
 
 public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender, ClusterClickListener, IntentObserver {
@@ -302,7 +299,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mCredit = findViewById(R.id.id_activity_main_layout_textview_credit);
         mParkNow = findViewById(R.id.id_content_main_layout_textview_parknow);
 
-        XStatusBarHelper.immersiveStatusBar(this,0);
+        XStatusBarHelper.immersiveStatusBar(this, 0);
         int barHeight = XStatusBarHelper.getStatusBarHeight(this);
         ConstraintSet userConstraintSet = new ConstraintSet();
         userConstraintSet.clone(mDrawerTopCl);
@@ -668,12 +665,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         if (mLoadingDialog.isShowing()) {
                             mLoadingDialog.dismiss();
                         }
-                        List<CollectionInfo> collection_datas = CollectionManager.getInstance().getCollection_datas();
-                        if (collection_datas == null) {
-                            collection_datas = new ArrayList<>();
-                        }
-                        collection_datas.add(collectionInfoBase_class_info.data);
-                        CollectionManager.getInstance().setCollection_datas(collection_datas);
                         MyToast.showToast(MainActivity.this, "标记点收藏成功", 5);
                     }
 
@@ -1034,10 +1025,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     public void login() {
         startActivity(new Intent(this, LoginActivity.class));
-      /*  if (loginDialogFragment == null) {
-            loginDialogFragment = new LoginDialogFragment();
-        }
-        loginDialogFragment.show(getSupportFragmentManager(), "hahah");*/
     }
 
     @Override
@@ -1345,13 +1332,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     //注册登录广播接收器的方法
     private void registerLogin() {
-        IntentFilter filter = new IntentFilter(LOGIN_ACTION);
+        IntentFilter filter = new IntentFilter(ConstansUtil.LOGIN_ACTION);
         LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(loginBroadcastReceiver, filter);
     }
 
     //注册退出登录广播接收器的方法
     private void registerLogout() {
-        IntentFilter filter = new IntentFilter(LOGOUT_ACTION);
+        IntentFilter filter = new IntentFilter(ConstansUtil.LOGOUT_ACTION);
         LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(logoutBroadcastReceiver, filter);
     }
 

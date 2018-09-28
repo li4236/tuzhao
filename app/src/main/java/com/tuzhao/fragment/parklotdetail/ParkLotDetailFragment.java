@@ -1,5 +1,6 @@
 package com.tuzhao.fragment.parklotdetail;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -224,73 +225,9 @@ public class ParkLotDetailFragment extends BaseFragment {
                 if (UserManager.getInstance().hasLogined()) {
                     if (parkLotInfo != null) {
                         if (parkLotInfo.isCollection()) {
-                            initLoading("正在取消收藏...");
-                            OkGo.post(HttpConstants.deleteCollection)
-                                    .tag(TAG)
-                                    .addInterceptor(new TokenInterceptor())
-                                    .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                                    .params("belong_id", parkLotInfo.getId())
-                                    .params("type", "1")
-                                    .params("citycode", parkLotInfo.getCity_code())
-                                    .execute(new JsonCallback<Base_Class_Info<CollectionInfo>>() {
-                                        @Override
-                                        public void onSuccess(Base_Class_Info<CollectionInfo> collection_infoBase_class_info, Call call, Response response) {
-                                            if (mLoadingDialog.isShowing()) {
-                                                mLoadingDialog.dismiss();
-                                            }
-                                            parkLotInfo.setIsCollection("0");
-                                            mCollectIv.setImageResource(R.drawable.ic_nocollect);
-                                            mCollectTv.setText("未收藏");
-                                        }
-
-                                        @Override
-                                        public void onError(Call call, Response response, Exception e) {
-                                            super.onError(call, response, e);
-                                            if (mLoadingDialog.isShowing()) {
-                                                mLoadingDialog.dismiss();
-                                            }
-                                            MyToast.showToast(getContext(), "取消失败", 5);
-                                        }
-                                    });
+                            deleteCollection();
                         } else {
-                            initLoading("正在添加收藏...");
-                            OkGo.post(HttpConstants.addCollection)
-                                    .tag(getContext())
-                                    .addInterceptor(new TokenInterceptor())
-                                    .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                                    .params("belong_id", parkLotInfo.getId())
-                                    .params("type", "1")
-                                    .params("citycode", parkLotInfo.getCity_code())
-                                    .execute(new JsonCallback<Base_Class_Info<Void>>() {
-                                        @Override
-                                        public void onSuccess(Base_Class_Info<Void> collection_infoBase_class_list_info, Call call, Response response) {
-                                            if (mLoadingDialog.isShowing()) {
-                                                mLoadingDialog.dismiss();
-                                            }
-                                            parkLotInfo.setIsCollection("1");
-                                            mCollectIv.setImageResource(R.drawable.ic_collect);
-                                            mCollectTv.setText("已收藏");
-                                        }
-
-                                        @Override
-                                        public void onError(Call call, Response response, Exception e) {
-                                            super.onError(call, response, e);
-                                            if (!DensityUtil.isException(getContext(), e)) {
-                                                if ("102".equals(e.getMessage())) {
-                                                    parkLotInfo.setIsCollection("1");
-                                                    mCollectIv.setImageResource(R.drawable.ic_collect);
-                                                    mCollectTv.setText("已收藏");
-                                                } else {
-                                                    MyToast.showToast(getContext(), "收藏失败", 5);
-                                                }
-                                            } else {
-                                                MyToast.showToast(getContext(), "收藏失败", 5);
-                                            }
-                                            if (mLoadingDialog.isShowing()) {
-                                                mLoadingDialog.dismiss();
-                                            }
-                                        }
-                                    });
+                            addCollection();
                         }
                     } else {
                         MyToast.showToast(getContext(), "获取车场信息失败，请稍后再试", 5);
@@ -301,6 +238,98 @@ public class ParkLotDetailFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void deleteCollection() {
+        initLoading("正在取消收藏...");
+        OkGo.post(HttpConstants.deleteCollection)
+                .tag(TAG)
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("belong_id", parkLotInfo.getId())
+                .params("type", "1")
+                .params("citycode", parkLotInfo.getCity_code())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> collection_infoBase_class_info, Call call, Response response) {
+                        deleteCollectionSuccess();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
+                        }
+                        MyToast.showToast(getContext(), "取消失败", 5);
+                    }
+                });
+    }
+
+    private void addCollection() {
+        initLoading("正在添加收藏...");
+        OkGo.post(HttpConstants.addCollection)
+                .tag(getContext())
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("belong_id", parkLotInfo.getId())
+                .params("type", "1")
+                .params("citycode", parkLotInfo.getCity_code())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> collection_infoBase_class_list_info, Call call, Response response) {
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
+                        }
+                        parkLotInfo.setIsCollection("1");
+                        mCollectIv.setImageResource(R.drawable.ic_collect);
+                        mCollectTv.setText("已收藏");
+
+                        if (getActivity() != null) {
+                            getActivity().setResult(Activity.RESULT_OK, null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!DensityUtil.isException(getContext(), e)) {
+                            if ("102".equals(e.getMessage())) {
+                                parkLotInfo.setIsCollection("1");
+                                mCollectIv.setImageResource(R.drawable.ic_collect);
+                                mCollectTv.setText("已收藏");
+                            } else {
+                                MyToast.showToast(getContext(), "收藏失败", 5);
+                            }
+                        } else {
+                            MyToast.showToast(getContext(), "收藏失败", 5);
+                        }
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
+                        }
+                    }
+                });
+    }
+
+    private void deleteCollectionSuccess() {
+        if (mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
+        parkLotInfo.setIsCollection("0");
+        mCollectIv.setImageResource(R.drawable.ic_nocollect);
+        mCollectTv.setText("未收藏");
+
+        if (getActivity() != null) {
+            CollectionInfo collectionInfo = new CollectionInfo();
+            collectionInfo.setType("1");
+            collectionInfo.setCitycode(parkLotInfo.getCity_code());
+            collectionInfo.setParkspace_id(parkLotInfo.getId());
+
+            Intent intent = new Intent();
+            intent.putExtra(ConstansUtil.INTENT_MESSAGE, collectionInfo);
+            Log.e(TAG, "deleteCollectionSuccess: "+collectionInfo );
+            getActivity().setResult(Activity.RESULT_OK, intent);
+        }
     }
 
     private void requestGetParkspaceData() {

@@ -167,7 +167,7 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void showImpPic(ImageView imageView, String url) {
+    public static void showImgPic(ImageView imageView, String url) {
         GlideApp.with(imageView)
                 .load(url)
                 .centerCrop()

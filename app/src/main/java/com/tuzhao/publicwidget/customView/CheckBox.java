@@ -2,10 +2,13 @@ package com.tuzhao.publicwidget.customView;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Checkable;
+
+import com.tuzhao.R;
 
 /**
  * Created by juncoder on 2018/4/13.
@@ -24,15 +27,17 @@ public class CheckBox extends AppCompatTextView implements Checkable {
     private OnCheckHandeListener mOnCheckHandeListener;
 
     public CheckBox(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public CheckBox(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public CheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mCheckDrawable = ContextCompat.getDrawable(context, R.drawable.ic_chose);
+        mNoCheckDrawble = ContextCompat.getDrawable(context, R.drawable.ic_nochose);
     }
 
     @Override

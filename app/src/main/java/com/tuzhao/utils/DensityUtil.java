@@ -29,8 +29,6 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLException;
 
-import static com.tuzhao.publicwidget.dialog.LoginDialogFragment.LOGOUT_ACTION;
-
 public class DensityUtil {
 
     private static Toast mToast;
@@ -86,7 +84,7 @@ public class DensityUtil {
             //清空缓存的登录信息
             UserManager.getInstance().setUserInfo(new User_Info());
             //发送退出登录的广播
-            LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(LOGOUT_ACTION));
+            LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(ConstansUtil.LOGOUT_ACTION));
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);

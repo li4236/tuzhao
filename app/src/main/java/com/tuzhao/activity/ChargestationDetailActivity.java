@@ -11,8 +11,6 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.fragment.chargestationdetail.ChargeDetailFragment;
 import com.tuzhao.info.ChargeStationInfo;
-import com.tuzhao.publicwidget.dialog.LoadingDialog;
-import com.tuzhao.publicwidget.dialog.LoginDialogFragment;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -23,15 +21,9 @@ import org.jetbrains.annotations.Nullable;
 public class ChargestationDetailActivity extends BaseActivity {
     private ChargeDetailFragment chargeDetailFragment;
     private Bundle mBundle = new Bundle();
-    private FragmentTransaction mFt;
     private ChargeStationInfo chargestation_info = null;
     private String chargestation_id, city_code;
     private ImageView imageview_back;
-    /**
-     * 收藏
-     */
-    private LoadingDialog mLoadingDialog;
-    private LoginDialogFragment loginDialogFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,16 +56,15 @@ public class ChargestationDetailActivity extends BaseActivity {
         } else {
             mBundle.putSerializable("chargestation_info", chargestation_info);
         }
-        mFt = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (chargeDetailFragment == null) {
             chargeDetailFragment = new ChargeDetailFragment();
             chargeDetailFragment.setArguments(mBundle);
-            mFt.add(R.id.id_activity_chargestationdetail_layout_linerlayout_content, chargeDetailFragment);
+            ft.add(R.id.id_activity_chargestationdetail_layout_linerlayout_content, chargeDetailFragment);
         } else {
-            mFt.show(chargeDetailFragment);
+            ft.show(chargeDetailFragment);
         }
-        mFt.commit();
-        mFt = getSupportFragmentManager().beginTransaction();
+        ft.commit();
     }
 
     private void initEvent() {
@@ -86,21 +77,9 @@ public class ChargestationDetailActivity extends BaseActivity {
         });
     }
 
-    public void login() {
-        loginDialogFragment = new LoginDialogFragment();
-        loginDialogFragment.show(getSupportFragmentManager(), "hahah");
-    }
-
-    private void initLoading(String what) {
-        mLoadingDialog = new LoadingDialog(ChargestationDetailActivity.this, what);
-        mLoadingDialog.show();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLoadingDialog != null) {
-            mLoadingDialog.cancel();
-        }
     }
+
 }

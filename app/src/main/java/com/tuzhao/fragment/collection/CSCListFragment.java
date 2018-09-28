@@ -18,6 +18,7 @@ import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by TZL12 on 2017/6/26.
@@ -33,7 +34,7 @@ public class CSCListFragment extends BaseFragment {
     private LinearLayoutManager linearLayoutManager;
     private CollectionAdapter mAdapter;
 
-    private ArrayList<CollectionInfo> mDatas = new ArrayList<>();
+    private List<CollectionInfo> mDatas = new ArrayList<>();
     private boolean mIsEdit = false;
 
     /**
@@ -76,18 +77,14 @@ public class CSCListFragment extends BaseFragment {
             }
         });
 
-        if (CollectionManager.getInstance().hasCollectionData()){
-            for (CollectionInfo info:CollectionManager.getInstance().getCollection_datas()){
-                if (info.getType().equals("2")){
-                    mDatas.add(info);
-                }
-            }
-        }
-        if (!(mDatas.size()>0)){
-            mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata).setVisibility(View.VISIBLE);
-        }
         mAdapter = new CollectionAdapter(mContext, mDatas,false);
         mRecycleview.setAdapter(mAdapter);
+    }
+
+    public void setDatas(List<CollectionInfo> datas) {
+        mDatas = datas;
+        mAdapter.notifyDataSetChanged();
+        mContentView.findViewById(R.id.id_fragment_allorderlist_layout_linearlayout_nodata).setVisibility(View.GONE);
     }
 
     private void initData() {
