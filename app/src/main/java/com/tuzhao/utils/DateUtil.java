@@ -1162,6 +1162,16 @@ public class DateUtil {
         return getCalendarYearToDay(startCalendar).equals(getCalendarYearToDay(endCalendar));
     }
 
+    public static String getParkOvertime(ParkOrderInfo parkOrderInfo) {
+        if (getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime()).compareTo(
+                getYearToSecondCalendar(parkOrderInfo.getParkEndTime())) < 0) {
+            //停车时长超过预约时长
+            return DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
+        } else {
+            return "未超时";
+        }
+    }
+
     /**
      * @param startTime 格式为yyyy-MM-dd HH:mm
      * @param endTime   格式为yyyy-MM-dd HH:mm
@@ -3065,19 +3075,4 @@ public class DateUtil {
         return parkDuration;
     }
 
-    public interface StartParkCallback {
-
-        void beforeStartTimeOfAppointment();
-
-        void afterStartTimeOfAppointment();
-
-    }
-
-    public interface EndParkCallPark {
-
-        void onAppointmentTime();
-
-        void onOverTime();
-
-    }
 }

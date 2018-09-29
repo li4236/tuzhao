@@ -1,5 +1,6 @@
 package com.tuzhao.activity.base;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -22,6 +23,7 @@ import com.tuzhao.publicwidget.callback.OnLoginListener;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
 import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.publicwidget.dialog.LoadingDialog;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -45,7 +47,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(resourceId() == 0 ? R.layout.activity_base_refresh_layout : resourceId());
         if (tintStatusBar()) {
-            XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+            XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
         }
         ConstraintLayout toolbar = findViewById(R.id.base_tb);
         ArrowView turnBackIv = toolbar.findViewById(R.id.toolbar_back);
@@ -303,6 +305,37 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void showFiveToast(String msg) {
         //如果用Application的Context的话会被软键盘挡住
         MyToast.showToast(this, msg, 5);
+    }
+
+    /**
+     * 显示对话框
+     *
+     * @param message         对话框里面的文字
+     * @param onClickListener 点击确定按钮后的回调
+     */
+    protected void showDialog(String message, Dialog.OnClickListener onClickListener) {
+        new TipeDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage(message)
+                .setPositiveButton("确定", onClickListener)
+                .create()
+                .show();
+    }
+
+    /**
+     * 显示对话框
+     *
+     * @param title           对话框的标题
+     * @param message         对话框里面的文字
+     * @param onClickListener 点击确定按钮后的回调
+     */
+    protected void showDialog(String title, String message, Dialog.OnClickListener onClickListener) {
+        new TipeDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("确定", onClickListener)
+                .create()
+                .show();
     }
 
     /**

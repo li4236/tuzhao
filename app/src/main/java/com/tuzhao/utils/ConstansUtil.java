@@ -48,6 +48,11 @@ public class ConstansUtil {
     public static final float VERY_POOR_CREDIT_SCORE = 200;
 
     /**
+     * 最小开票金额
+     */
+    public static final int MINIMUN_INVOICE_AMOUNT = 100;
+
+    /**
      * 微信的AppId
      */
     public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";
@@ -527,5 +532,10 @@ public class ConstansUtil {
      * 删除收藏记录
      */
     public static final String DELETE_COLLECTION = "DeleteCollection";
+
+    /**
+     * 开发票成功
+     */
+    public static final String INVOICE_SUCCESS = "InvoiceSuccess";
 
 }

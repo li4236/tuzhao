@@ -27,7 +27,7 @@
     <dimen name="layout_margin_twenty_eight">28dp</dimen>
     <dimen name="layout_margin_thirty_two">32dp</dimen>
     <dimen name="layout_margin_sixty_four">64dp</dimen>
-    <dimen name="layout_margin_70dp">70dp</dimen>
+    <dimen name="layout_margin_seventy">70dp</dimen>
     <dimen name="layout_padding_one">1dp</dimen>
     <dimen name="layout_padding_two">2dp</dimen>
     <dimen name="layout_padding_four">4dp</dimen>

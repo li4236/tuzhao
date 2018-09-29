@@ -254,6 +254,12 @@ public abstract class BaseStatusFragment extends Fragment {
         }
     }
 
+    protected void startActivityForResultByFragment(Class<?> tClass, int requestCode, String key, Parcelable value) {
+        Intent intent = new Intent(getActivity(), tClass);
+        intent.putExtra(key, value);
+        startActivityForResult(intent, requestCode);
+    }
+
     /**
      * 需要在fragment接受结果的不要调用activity的startActivityForResult方法，调用fragment的即可
      */

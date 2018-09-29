@@ -91,6 +91,8 @@ public class ParkOrderInfo implements Parcelable {
     private String lockId;//车位锁的id
     private String parkLockStatus;//车位锁状态：1（打开）2（关闭）3（离线）
     private String parkSpaceStatus;//车位状态
+    private String isInvoiced;//0(未开发票)，1(已开发票)
+    private String ordersId;//订单对应总表的id
 
     public String getId() {
         return id;
@@ -432,6 +434,22 @@ public class ParkOrderInfo implements Parcelable {
         this.parkSpaceStatus = parkSpaceStatus;
     }
 
+    public boolean isInvoiced() {
+        return "1".equals(isInvoiced);
+    }
+
+    public void setIsInvoiced(String isInvoiced) {
+        this.isInvoiced = isInvoiced;
+    }
+
+    public String getOrdersId() {
+        return ordersId;
+    }
+
+    public void setOrdersId(String ordersId) {
+        this.ordersId = ordersId;
+    }
+
     public String getUserNoteName() {
         if (userNoteName == null) {
             return userName;
@@ -456,7 +474,7 @@ public class ParkOrderInfo implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, parkLotId, parkSpaceId, cityCode);
     }
 
     @Override
@@ -505,6 +523,8 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.parkLockStatus);
         dest.writeString(this.parkSpaceStatus);
         dest.writeString(this.userNoteName);
+        dest.writeString(this.isInvoiced);
+        dest.writeString(this.ordersId);
     }
 
     public ParkOrderInfo() {
@@ -550,6 +570,8 @@ public class ParkOrderInfo implements Parcelable {
         this.parkLockStatus = in.readString();
         this.parkSpaceStatus = in.readString();
         this.userNoteName = in.readString();
+        this.isInvoiced = in.readString();
+        this.ordersId = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

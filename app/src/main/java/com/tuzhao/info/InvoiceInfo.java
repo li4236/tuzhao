@@ -93,7 +93,6 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.actualFee = actualFee;
     }
 
-
     @Override
     public String toString() {
         return "InvoiceInfo{" +
@@ -101,7 +100,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
                 ", parkspaceName='" + parkspaceName + '\'' +
                 ", parkStarttime='" + parkStarttime + '\'' +
                 ", pictures='" + pictures + '\'' +
-                ", check='" + check + '\'' +
+                ", check=" + check +
                 ", locationDescribe='" + locationDescribe + '\'' +
                 ", parkDuration='" + parkDuration + '\'' +
                 ", actualFee='" + actualFee + '\'' +
@@ -161,7 +160,7 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(orderId);
     }
+
 }

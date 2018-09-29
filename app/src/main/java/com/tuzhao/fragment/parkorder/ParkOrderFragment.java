@@ -12,6 +12,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.mine.OrderActivity;
+import com.tuzhao.activity.mine.ParkOrderDetailActivity;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
@@ -231,7 +232,11 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                if (parkOrderInfo.getOrderStatus().equals("4") || parkOrderInfo.getOrderStatus().equals("5")) {
+                    startActivity(ParkOrderDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                } else {
+                    startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                }
             }
         });
 
@@ -316,6 +321,18 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         Bundle orderBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo orderInfo = orderBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         mCommonAdapter.removeData(orderInfo);
+                    }
+                    break;
+                case ConstansUtil.INVOICE_SUCCESS:
+                    if (mOrderStatus == 4 || mOrderStatus == 5) {
+                        String ordersId = intent.getStringExtra(ConstansUtil.INTENT_MESSAGE);
+                        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                            if (mCommonAdapter.get(i).getOrdersId().equals(ordersId)) {
+                                mCommonAdapter.get(i).setIsInvoiced("1");
+                                mCommonAdapter.notifyDataChange(i);
+                                break;
+                            }
+                        }
                     }
                     break;
             }
