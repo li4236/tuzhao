@@ -1445,17 +1445,28 @@ public class DateUtil {
     }
 
     /**
-     * @param date xxxx-MM-dd HH:mm:ss(xxxx-MM-dd也行)
-     * @return date对应的年月日，格式2018年05月07日
+     * @param date yyyy-MM-dd HH:mm:ss
+     * @return date对应的年月日，格式2018年05月07日 15时12分
      */
-    public static String getYearToDayWithText(String date) {
-        return date.substring(0, date.indexOf("-")) + "年" + date.substring(6, date.lastIndexOf("-")) + "月"
-                + date.substring(date.lastIndexOf("-") + 1, date.indexOf(" ")) + "日";
+    public static String getYearToMinuteWithText(String date) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int index = date.indexOf("-");
+        stringBuilder.append(date.substring(0, index));
+        stringBuilder.append("年");
+        stringBuilder.append(date.substring(index + 1, index = date.lastIndexOf("-")));
+        stringBuilder.append("月");
+        stringBuilder.append(date.substring(index + 1, index = date.indexOf(" ")));
+        stringBuilder.append("日 ");
+        stringBuilder.append(date.substring(index + 1, index = date.indexOf(":")));
+        stringBuilder.append("时");
+        stringBuilder.append(date.substring(index + 1, date.lastIndexOf(":")));
+        stringBuilder.append("分");
+        return stringBuilder.toString();
     }
 
     /**
-     * @param date xxxx-MM-dd HH:mm:ss(xxxx-MM-dd也行)
-     * @return date对应的年月日，格式2018年05月07日
+     * @param date yyyy-MM-dd HH:mm:ss(yyyy-MM-dd也行)
+     * @return date对应的年月日，格式2018.05.07
      */
     public static String getYearToDayWithPointText(String date) {
         return date.substring(0, date.indexOf("-")) + "." + date.substring(6, date.lastIndexOf("-")) + "."

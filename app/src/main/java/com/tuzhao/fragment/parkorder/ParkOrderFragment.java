@@ -12,6 +12,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.mine.OrderActivity;
+import com.tuzhao.activity.mine.ParkOrderAppointmentActivity;
 import com.tuzhao.activity.mine.ParkOrderDetailActivity;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
@@ -89,8 +90,14 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
             bundle.putInt(ConstansUtil.START_ITME, mCommonAdapter.getDataSize() == 0 ? 0 : mStartItme);
             bundle.putBoolean(ConstansUtil.INTENT_MESSAGE, mRequestSuccess);
         }
-        IntentObserable.unregisterObserver(this);
         dissmissDialog();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //如果放在onDestroyView取消注册，则当滑到别的界面而销毁布局的时候会收不到通知，导致数据没更新
+        IntentObserable.unregisterObserver(this);
     }
 
     @Override
@@ -232,10 +239,17 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 .itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (parkOrderInfo.getOrderStatus().equals("4") || parkOrderInfo.getOrderStatus().equals("5")) {
-                    startActivity(ParkOrderDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
-                } else {
-                    startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                switch (parkOrderInfo.getOrderStatus()) {
+                    case "1":
+                        startActivity(ParkOrderAppointmentActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                        break;
+                    case "4":
+                    case "5":
+                        startActivity(ParkOrderDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                        break;
+                    default:
+                        startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                        break;
                 }
             }
         });
@@ -247,21 +261,21 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.FINISH_APPOINTMENT:
-                    Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                    ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                    if (parkOrderInfo != null) {
-                        parkOrderInfo.setOrderStatus("2");
-                        if (mOrderStatus == 0) {
-                            //全部订单则把预约的改为停车中
-                            int position = mCommonAdapter.getData().indexOf(parkOrderInfo);
-                            if (position != -1) {
-                                mCommonAdapter.notifyDataChange(position, parkOrderInfo);
+                    if (mOrderStatus == 0 || mOrderStatus == 1 || mOrderStatus == 2) {
+                        Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                        ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        if (parkOrderInfo != null) {
+                            parkOrderInfo.setOrderStatus("2");
+                            if (mOrderStatus == 0) {
+                                //全部订单则把预约的改为停车中
+                                mCommonAdapter.notifyDataChange(parkOrderInfo);
+                            } else if (mOrderStatus == 1) {
+                                //预约订单则把它删掉
+                                notifyRemoveData(parkOrderInfo);
+                            } else if (mOrderStatus == 2) {
+                                //添加到正在停车中的订单
+                                mCommonAdapter.addFirstData(parkOrderInfo);
                             }
-                        } else if (mOrderStatus == 1) {
-                            //预约订单则把它删掉
-                            mCommonAdapter.notifyRemoveData(parkOrderInfo);
-                        } else if (mOrderStatus == 2) {
-                            mCommonAdapter.addFirstData(parkOrderInfo);
                         }
                     }
                     break;
@@ -273,12 +287,12 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.CANCEL_ORDER:
-                    Bundle cancelBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                    ParkOrderInfo cancelParkOrderInfo = cancelBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                    if (cancelParkOrderInfo != null) {
-                        cancelParkOrderInfo.setOrderStatus("6");
-                        if (mOrderStatus == 0 || mOrderStatus == 1) {
-                            mCommonAdapter.removeData(cancelParkOrderInfo);
+                    if (mOrderStatus == 0 || mOrderStatus == 1) {
+                        Bundle cancelBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                        ParkOrderInfo cancelParkOrderInfo = cancelBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        if (cancelParkOrderInfo != null) {
+                            cancelParkOrderInfo.setOrderStatus("6");
+                            notifyRemoveData(cancelParkOrderInfo);
                         }
                     }
                     break;
@@ -298,7 +312,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                             if (mOrderStatus == 0) {
                                 mCommonAdapter.notifyDataChange(parkingOrderInfo);
                             } else if (mOrderStatus == 2) {
-                                mCommonAdapter.removeData(parkingOrderInfo);
+                                notifyRemoveData(parkingOrderInfo);
                             }
                         }
                     }
@@ -320,11 +334,11 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5 || mOrderStatus == 6) {
                         Bundle orderBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo orderInfo = orderBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                        mCommonAdapter.removeData(orderInfo);
+                        notifyRemoveData(orderInfo);
                     }
                     break;
                 case ConstansUtil.INVOICE_SUCCESS:
-                    if (mOrderStatus == 4 || mOrderStatus == 5) {
+                    if (mOrderStatus==0||mOrderStatus == 4 || mOrderStatus == 5) {
                         String ordersId = intent.getStringExtra(ConstansUtil.INTENT_MESSAGE);
                         for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
                             if (mCommonAdapter.get(i).getOrdersId().equals(ordersId)) {

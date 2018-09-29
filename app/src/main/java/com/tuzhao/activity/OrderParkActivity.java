@@ -18,7 +18,7 @@ import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.mine.MyCarActivity;
-import com.tuzhao.activity.mine.OrderActivity;
+import com.tuzhao.activity.mine.ParkOrderAppointmentActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
@@ -801,7 +801,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> parkOrderInfoBase_class_info, Call call, Response response) {
                         dissmissLoading();
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
-                        Intent intent = new Intent(OrderParkActivity.this, OrderActivity.class);
+                        Intent intent = new Intent(OrderParkActivity.this, ParkOrderAppointmentActivity.class);
                         intent.putExtra(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
                         startActivity(intent);
                         finish();

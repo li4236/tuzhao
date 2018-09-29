@@ -5,7 +5,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -190,7 +189,6 @@ public class OrderActivity extends BaseStatusActivity implements IntentObserver 
             switch (requestCode) {
                 case PhotoPickConfig.PICK_MORE_REQUEST_CODE:
                     data.setAction(ConstansUtil.PHOTO_IMAGE);
-                    Log.e(TAG, "onActivityResult: " + data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST));
                     IntentObserable.dispatch(data);
                     break;
                 case ConstansUtil.DISOUNT_REQUEST_CODE:
