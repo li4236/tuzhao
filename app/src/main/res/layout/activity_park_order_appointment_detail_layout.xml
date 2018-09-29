@@ -63,8 +63,8 @@
                         style="@style/TwentyTextB1Style"
                         android:layout_width="76dp"
                         android:layout_height="26dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="3dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/normal_transparent_stroke_g6_press_g16_all_5dp"
                         android:text="取消预约"
                         app:layout_constraintEnd_toStartOf="@id/center_gl"
@@ -110,25 +110,30 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
+                    <com.tuzhao.publicwidget.customView.MarqueeTextView
                         android:id="@+id/park_lot_name"
                         style="@style/ThirtyTextB1Style"
                         android:layout_width="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:maxLines="1"
-                        android:maxWidth="266dp"
-                        android:paddingEnd="6dp"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:minWidth="300dp"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
                         app:layout_constraintBottom_toBottomOf="@+id/order_info_iv"
-                        app:layout_constraintStart_toEndOf="@id/order_info_iv"
+                        app:layout_constraintStart_toEndOf="@+id/order_info_iv"
                         app:layout_constraintTop_toTopOf="@+id/order_info_iv" />
 
                     <com.tuzhao.publicwidget.customView.ArrowView
                         android:id="@+id/park_lot_name_av"
                         android:layout_width="8dp"
                         android:layout_height="0dp"
+                        android:layout_marginStart="6dp"
                         android:paddingBottom="3dp"
-                        app:arrow_width="2px"
                         android:paddingTop="3dp"
+                        app:arrow_width="2px"
                         app:layout_constraintBottom_toBottomOf="@id/park_lot_name"
                         app:layout_constraintStart_toEndOf="@id/park_lot_name"
                         app:layout_constraintTop_toTopOf="@+id/park_lot_name" />
@@ -210,7 +215,7 @@
                         android:layout_marginStart="10dp"
                         android:text="详细信息"
                         app:layout_constraintBottom_toBottomOf="@+id/detail_info_iv"
-                        app:layout_constraintStart_toEndOf="@id/detail_info_iv"
+                        app:layout_constraintStart_toEndOf="@+id/detail_info_iv"
                         app:layout_constraintTop_toTopOf="@+id/detail_info_iv" />
 
                     <TextView
@@ -237,15 +242,19 @@
                         app:layout_constraintStart_toStartOf="@id/car_number_tv"
                         app:layout_constraintTop_toBottomOf="@+id/car_number_tv" />
 
-                    <TextView
+                    <com.tuzhao.publicwidget.customView.MarqueeTextView
                         android:id="@+id/park_space_description"
                         style="@style/TwentyTextB1Style"
                         android:layout_width="0dp"
                         android:layout_marginEnd="14dp"
                         android:layout_marginStart="16dp"
-                        android:ellipsize="end"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:gravity="end"
-                        android:maxLines="1"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/park_space_description_tv"
                         app:layout_constraintTop_toTopOf="@+id/park_space_description_tv" />
@@ -339,7 +348,7 @@
                             style="@style/TwentyTextB1Style"
                             android:layout_marginStart="10dp"
                             android:text="订单投诉"
-                            app:layout_constraintStart_toEndOf="@id/order_complaint_iv" />
+                            app:layout_constraintStart_toEndOf="@+id/order_complaint_iv" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -369,7 +378,7 @@
                             style="@style/TwentyTextB1Style"
                             android:layout_marginStart="10dp"
                             android:text="联系客服"
-                            app:layout_constraintStart_toEndOf="@id/contact_service_iv" />
+                            app:layout_constraintStart_toEndOf="@+id/contact_service_iv" />
 
                     </android.support.constraint.ConstraintLayout>
 

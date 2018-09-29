@@ -174,15 +174,19 @@
                         app:layout_constraintStart_toStartOf="@id/car_number_tv"
                         app:layout_constraintTop_toBottomOf="@+id/car_number_tv" />
 
-                    <TextView
+                    <com.tuzhao.publicwidget.customView.MarqueeTextView
                         android:id="@+id/park_lot_name"
                         style="@style/TwentyTextB1Style"
                         android:layout_width="0dp"
                         android:layout_marginEnd="14dp"
                         android:layout_marginStart="16dp"
-                        android:ellipsize="end"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
                         android:gravity="end"
-                        android:maxLines="1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/park_lot_name_tv"
                         app:layout_constraintTop_toTopOf="@+id/park_lot_name_tv" />
@@ -195,15 +199,19 @@
                         app:layout_constraintStart_toStartOf="@id/car_number_tv"
                         app:layout_constraintTop_toBottomOf="@+id/park_lot_name_tv" />
 
-                    <TextView
+                    <com.tuzhao.publicwidget.customView.MarqueeTextView
                         android:id="@+id/park_space_description"
                         style="@style/TwentyTextB1Style"
                         android:layout_width="0dp"
                         android:layout_marginEnd="14dp"
                         android:layout_marginStart="16dp"
-                        android:ellipsize="end"
+                        android:ellipsize="marquee"
+                        android:singleLine="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
                         android:gravity="end"
-                        android:maxLines="1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/park_space_description_tv"
                         app:layout_constraintTop_toTopOf="@+id/park_space_description_tv" />
