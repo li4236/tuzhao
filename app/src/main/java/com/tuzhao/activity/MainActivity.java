@@ -1293,7 +1293,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UserManager.getInstance().hasLogined()) {
-                Log.e(TAG, "onReceive: ");
                 ImageUtil.showCirclePic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
                         R.mipmap.ic_usericon);
                 ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
