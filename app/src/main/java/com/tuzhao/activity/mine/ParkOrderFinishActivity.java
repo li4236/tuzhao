@@ -11,9 +11,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.OrderParkActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceInfo;
+import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -30,7 +32,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/9/28.
  */
-public class ParkOrderDetailActivity extends BaseStatusActivity implements View.OnClickListener {
+public class ParkOrderFinishActivity extends BaseStatusActivity implements View.OnClickListener {
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -56,7 +58,7 @@ public class ParkOrderDetailActivity extends BaseStatusActivity implements View.
 
     @Override
     protected int resourceId() {
-        return R.layout.activity_park_order_detail_layout;
+        return R.layout.activity_park_order_finish_layout;
     }
 
     @Override
@@ -127,19 +129,19 @@ public class ParkOrderDetailActivity extends BaseStatusActivity implements View.
                 startActivity(BuyMonthlyCardActivity.class);
                 break;
             case R.id.order_comment:
-
+                startActivity(CommentOrderActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.order_complaint_cl:
                 startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.contact_service_cl:
-                ViewUtil.contactService(ParkOrderDetailActivity.this);
+                ViewUtil.contactService(ParkOrderFinishActivity.this);
                 break;
             case R.id.apply_invoice_cl:
                 if (mParkOrderInfo.isInvoiced()) {
                     showFiveToast("该订单已经开过发票了哦");
                 } else if (Double.valueOf(mParkOrderInfo.getActualFee()) >= ConstansUtil.MINIMUN_INVOICE_AMOUNT) {
-                    startInvoiceReimbrusement();
+                    startInvoiceReimbursement();
                 } else {
                     startActivity(InvoiceReimbursementActivity.class);
                 }
@@ -148,13 +150,13 @@ public class ParkOrderDetailActivity extends BaseStatusActivity implements View.
                 copyOrderNumber();
                 break;
             case R.id.appointment_again:
-
+                appointmentAgain();
                 break;
             case R.id.delete_order:
                 showDialog("确定删除订单吗", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deletelOrder();
+                        deleteOrder();
                     }
                 });
                 break;
@@ -176,7 +178,7 @@ public class ParkOrderDetailActivity extends BaseStatusActivity implements View.
         }
     }
 
-    private void startInvoiceReimbrusement() {
+    private void startInvoiceReimbursement() {
         InvoiceInfo invoiceInfo = new InvoiceInfo();
         invoiceInfo.setActualFee(mParkOrderInfo.getActualFee());
         invoiceInfo.setLocationDescribe(mParkOrderInfo.getParkSpaceLocation());
@@ -205,7 +207,14 @@ public class ParkOrderDetailActivity extends BaseStatusActivity implements View.
         }
     }
 
-    private void deletelOrder() {
+    private void appointmentAgain() {
+        ParkLotInfo parkLotInfo = new ParkLotInfo();
+        parkLotInfo.setId(mParkOrderInfo.getParkLotId());
+        parkLotInfo.setCity_code(mParkOrderInfo.getCityCode());
+        startActivity(OrderParkActivity.class, "parkLotInfo", parkLotInfo);
+    }
+
+    private void deleteOrder() {
         showLoadingDialog("正在删除");
         getOkGo(HttpConstants.deletelParkOrder)
                 .params("order_id", mParkOrderInfo.getId())
@@ -213,6 +222,7 @@ public class ParkOrderDetailActivity extends BaseStatusActivity implements View.
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        dismmisLoadingDialog();
                         Intent intent = new Intent();
                         intent.setAction(ConstansUtil.DELETE_PARK_ORDER);
                         Bundle bundle = new Bundle();

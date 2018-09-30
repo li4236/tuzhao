@@ -19,7 +19,6 @@ import com.tuzhao.fragment.parklotdetail.ParkLotCommentFragment;
 import com.tuzhao.fragment.parklotdetail.ParkLotDetailFragment;
 import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.Park_Info;
-import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ public class ParkspaceDetailActivity extends BaseActivity {
     private String parkspace_id, city_code;
     private ParkLotInfo mParkLotInfo = null;
     private ArrayList<Park_Info> mParkInfos = null;
-    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,18 +131,18 @@ public class ParkspaceDetailActivity extends BaseActivity {
                 if (mParkLotInfo == null) {
                     bundle.putString("parkspace_id", parkspace_id);
                     bundle.putString("city_code", city_code);
-                    bundle.putSerializable("mParkLotInfo", mParkLotInfo);
+                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
                 } else {
-                    bundle.putSerializable("mParkLotInfo", mParkLotInfo);
+                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
                 }
-                bundle.putSerializable("mParkInfos", mParkInfos);
+                bundle.putParcelableArrayList("mParkInfos", mParkInfos);
             } else {
                 if (mParkLotInfo == null) {
                     bundle.putString("parkspace_id", parkspace_id);
                     bundle.putString("city_code", city_code);
-                    bundle.putSerializable("mParkLotInfo", mParkLotInfo);
+                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
                 } else {
-                    bundle.putSerializable("mParkLotInfo", mParkLotInfo);
+                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
                 }
             }
             fragment.setArguments(bundle);
@@ -157,16 +155,4 @@ public class ParkspaceDetailActivity extends BaseActivity {
         }
     }
 
-    private void initLoading(String what) {
-        mLoadingDialog = new LoadingDialog(ParkspaceDetailActivity.this, what);
-        mLoadingDialog.show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mLoadingDialog != null) {
-            mLoadingDialog.cancel();
-        }
-    }
 }

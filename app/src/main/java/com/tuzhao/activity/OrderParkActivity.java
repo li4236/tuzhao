@@ -24,6 +24,7 @@ import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.JsonCodeCallback;
@@ -90,7 +91,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orderpark_layout);
-        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
 
         initView();
         initData();
@@ -99,9 +100,14 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
     private void initData() {
         if (getIntent().hasExtra("parkLotInfo")) {
-            mParkLotInfo = (ParkLotInfo) getIntent().getSerializableExtra("parkLotInfo");
-            park_list = (ArrayList<Park_Info>) getIntent().getSerializableExtra("park_list");
-            order_list = (ArrayList<ParkOrderInfo>) getIntent().getSerializableExtra("order_list");
+            mParkLotInfo = getIntent().getParcelableExtra("parkLotInfo");
+            if (getIntent().hasExtra("park_list")) {
+                park_list = getIntent().getParcelableArrayListExtra("park_list");
+                order_list = getIntent().getParcelableArrayListExtra("order_list");
+            } else {
+                requestGetParkListData();
+                requestGetUserParkOrderForAppoint();
+            }
         } else {
             finish();
         }
@@ -205,6 +211,66 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         }
+    }
+
+    private void requestGetParkListData() {
+        OkGo.post(HttpConstants.getParkList)//请求数据的接口地址
+                .tag(OrderParkActivity.this.getClass().getName())
+                .params("parkspace_id", mParkLotInfo.getId())
+                .params("citycode", mParkLotInfo.getCity_code())
+                .execute(new JsonCallback<Base_Class_List_Info<Park_Info>>() {
+                    @Override
+                    public void onSuccess(final Base_Class_List_Info<Park_Info> responseData, Call call, Response response) {
+                        //请求成功
+                        Log.e("TAG", "onSuccess: " + responseData.data);
+                        dissmissLoading();
+                        park_list = responseData.data;
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dissmissLoading();
+                        if ("102".equals(e.getMessage())) {
+                            MyToast.showToast(OrderParkActivity.this, "该车场暂无停车位，无法预约", 5);
+                        } else {
+                            MyToast.showToast(OrderParkActivity.this, "获取停车位信息失败，请稍后重试", 5);
+                        }
+                        finish();
+                    }
+                });
+    }
+
+    private void requestGetUserParkOrderForAppoint() {
+        initLoading("加载中...");
+        OkGo.post(HttpConstants.getUserParkOrderForAppoint)
+                .tag(OrderParkActivity.this.getClass().getName())
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .execute(new JsonCallback<Base_Class_List_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(final Base_Class_List_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        if (mLoadingDialog != null) {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
+                            }
+                        }
+                        order_list = responseData.data;
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dissmissLoading();
+                        if ("101".equals(e.getMessage())) {
+                            //还没有订单
+                            order_list = new ArrayList<>();
+                        } else {
+                            MyToast.showToast(OrderParkActivity.this, "获取订单信息失败，请稍后重试", 5);
+                            finish();
+                        }
+                    }
+                });
     }
 
     private void showStartTimeOptions() {
@@ -388,8 +454,10 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         }
 
                         parkMuintes -= 60 * option2;
-                        stringBuilder.append(parkMuintes);
-                        stringBuilder.append("分钟");
+                        if (parkMuintes > 0) {
+                            stringBuilder.append(parkMuintes);
+                            stringBuilder.append("分钟");
+                        }
                         textview_parktime.setText(stringBuilder.toString());
 
                         park_time = Integer.parseInt(options1Items.get(options1)) * 60 * 24 + Integer.parseInt(options2Items.get(options1).get(option2)) * 60 + Integer.parseInt(options3Items.get(options1).get(option2).get(options3));
@@ -818,52 +886,13 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 });
     }
 
-    /*private void requestAppointOrderLockPark(Holder lockpark) {
-
-        OkGo.post(HttpConstants.appointOrderLockPark)
-                .tag(OrderParkActivity.this)
-                .addInterceptor(new TokenInterceptor())
-                .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", mParkLotInfo.getId())
-                .params("car_number", textview_carnumble.getText().toString())
-                .params("park_id", lockpark.park_id)
-                .params("park_interval", lockpark.parktime_qujian)
-                .params("citycode", mParkLotInfo.getCity_code())
-                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
-                        Intent intent = new Intent(OrderParkActivity.this, ParkOrderDetailsActivity.class);
-                        intent.putExtra("parkorder_number", responseData.data.getOrder_number());
-                        intent.putExtra("citycode", mParkLotInfo.getCity_code());
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        if (mLoadingDialog.isShowing()) {
-                            mLoadingDialog.dismiss();
-                        }
-                        if (!DensityUtil.isException(OrderParkActivity.this, e)) {
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 102:
-                                    MyToast.showToast(OrderParkActivity.this, "请求已超时，请重新预定", 5);
-                                    break;
-                                case 901:
-                                    MyToast.showToast(OrderParkActivity.this, "服务器正在维护中", 5);
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }*/
-
     private void initLoading(String what) {
-        mLoadingDialog = new LoadingDialog(this, what);
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(this, what);
+        } else if (!mLoadingDialog.getContent().equals(what) && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = new LoadingDialog(this, what);
+        }
         mLoadingDialog.show();
     }
 
@@ -879,6 +908,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
+        OkGo.getInstance().cancelTag(OrderParkActivity.this.getClass().getName());
     }
 
 }

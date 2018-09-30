@@ -29,7 +29,6 @@ import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.activity.OrderParkActivity;
-import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.mine.NavigationActivity;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.http.HttpConstants;
@@ -192,8 +191,8 @@ public class ParkLotDetailFragment extends BaseFragment {
                             } else {
                                 Intent intent = new Intent(getActivity(), OrderParkActivity.class);
                                 intent.putExtra("parkLotInfo", parkLotInfo);
-                                intent.putExtra("park_list", mData);
-                                intent.putExtra("order_list", mOrderList);
+                                intent.putParcelableArrayListExtra("park_list", mData);
+                                intent.putParcelableArrayListExtra("order_list", mOrderList);
                                 startActivity(intent);
                             }
                         }
@@ -351,10 +350,6 @@ public class ParkLotDetailFragment extends BaseFragment {
                         parkLotInfo = park_space_infoBase_class_info.data;
                         parkLotInfo.setCity_code(city_code);
                         initViewData(parkLotInfo);
-                        if (getActivity() != null && getActivity() instanceof SuccessCallback) {
-                            SuccessCallback<Boolean> successCallback = (SuccessCallback<Boolean>) getActivity();
-                            successCallback.onSuccess(parkLotInfo.isCollection());
-                        }
                     }
                 });
     }

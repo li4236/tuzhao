@@ -19,14 +19,17 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.NearPointPCInfo;
+import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.TokenInterceptor;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,15 +66,11 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
 
     private TextView mApplyComment;
 
-    private String mParkspaceId;
-
-    private String mParkspacePic;
-
-    private String mCityCode;
-
-    private String mOrderId;
+    private ParkOrderInfo mParkOrderInfo;
 
     private List<File> mCommentPicFiles;
+
+    private DecimalFormat mDecimalFormat;
 
     @Override
     protected int resourceId() {
@@ -80,6 +79,12 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mParkOrderInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_ORDER_INFO);
+        if (mParkOrderInfo == null) {
+            showFiveToast("获取订单信息失败，请稍后重试");
+            finish();
+        }
+
         mParkspaceIv = findViewById(R.id.comment_order_parkspace_iv);
         mCBRatingBar = findViewById(R.id.comment_order_crb);
         mCommentEt = findViewById(R.id.comment_order_et);
@@ -95,19 +100,8 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
 
     @Override
     protected void initData() {
-        super.initData();
-        if (UserManager.getInstance().hasLogined() && getIntent().hasExtra("parkspace_id")) {
-            Intent intent = getIntent();
-            mParkspaceId = intent.getStringExtra("parkspace_id");
-            mParkspacePic = intent.getStringExtra("parkspace_img");
-            mOrderId = intent.getStringExtra("order_id");
-            mCityCode = intent.getStringExtra("city_code");
-        } else {
-            finish();
-        }
-
         mCommentPicFiles = new ArrayList<>(3);
-        ImageUtil.showRoundPic(mParkspaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkspacePic, R.mipmap.ic_img);
+        ImageUtil.showRoundPic(mParkspaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkOrderInfo.getPictures().split(",")[0], R.mipmap.ic_img);
 
         mAddIv.setOnClickListener(this);
         mDeleteAddIv.setOnClickListener(this);
@@ -130,7 +124,8 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
             public void afterTextChanged(Editable s) {
             }
         });
-        dismmisLoadingDialog();
+
+        mDecimalFormat = new DecimalFormat("0.0");
     }
 
     @NonNull
@@ -221,13 +216,58 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
     }
 
     private void requestAddPsComment() {
+       /* showLoadingDialog("评价中");
+        OkGo.post(HttpConstants.addPsComment)
+                .tag(TAG)
+                .addInterceptor(new TokenInterceptor())
+                .headers("token", UserManager.getInstance().getUserInfo().getToken())
+                .params("parkspace_id", mParkOrderInfo.getParkLotId())
+                .params("city_code", mParkOrderInfo.getCityCode())
+                .params("order_id", mParkOrderInfo.getId())
+                .params("grade", mDecimalFormat.format(mCBRatingBar.getStarProgress() / 20.0))
+                .params("content", mCommentEt.getText().toString())
+                .params("imgs", stringBuilder.toString())
+                .execute(new JsonCallback<Base_Class_Info<NearPointPCInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<NearPointPCInfo> homePCInfoBase_class_info, Call call, Response response) {
+                        Intent intent = new Intent();
+                        intent.setAction(ConstansUtil.COMMENT_SUCCESS);
+                        Bundle bundle = new Bundle();
+                        mParkOrderInfo.setOrderStatus("5");
+                        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
+                        IntentObserable.dispatch(intent);
+
+                        mParkComment.setText("已评价");
+                        showFiveToast("评价成功");
+                        dismmisLoadingDialog();
+                        mCommentOrderDialog.dismiss();
+                        //getOrderComment(false);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "104":
+                                    showFiveToast("抱歉，已评论过了哦");
+                                    break;
+                                default:
+                                    showFiveToast("评论失败，请稍后重试");
+                                    break;
+                            }
+                        }
+                    }
+                });*/
+
         OkGo.post(HttpConstants.addPsComment)
                 .tag(CommentOrderActivity.this)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
-                .params("parkspace_id", mParkspaceId)
-                .params("city_code", mCityCode)
-                .params("order_id", mOrderId)
+                .params("parkspace_id", mParkOrderInfo.getParkLotId())
+                .params("city_code", mParkOrderInfo.getCityCode())
+                .params("order_id", mParkOrderInfo.getId())
                 .params("grade", mCBRatingBar.getTouchCount() == -1 ? "1" : (mCBRatingBar.getTouchCount() + ""))
                 .params("content", mCommentEt.getText().toString())
                 .addFileParams("imgs[]", mCommentPicFiles)

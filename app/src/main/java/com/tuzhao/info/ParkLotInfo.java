@@ -1,13 +1,14 @@
 package com.tuzhao.info;
 
-import com.tuzhao.info.base_info.BaseInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by TZL12 on 2017/4/29.
  * 停车场数据实体
  */
 
-public class ParkLotInfo extends BaseInfo {
+public class ParkLotInfo implements Parcelable {
 
     private String id;//停车场id
     private double latitude;//经度
@@ -215,4 +216,72 @@ public class ParkLotInfo extends BaseInfo {
                 ", isCollection='" + isCollection + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeString(this.park_space_name);
+        dest.writeString(this.park_address);
+        dest.writeString(this.grade);
+        dest.writeString(this.opentime);
+        dest.writeString(this.parkspace_img);
+        dest.writeString(this.high_time);
+        dest.writeString(this.low_time);
+        dest.writeString(this.high_fee);
+        dest.writeString(this.low_fee);
+        dest.writeString(this.high_max_fee);
+        dest.writeString(this.low_max_fee);
+        dest.writeString(this.fine);
+        dest.writeString(this.ad_img);
+        dest.writeString(this.ad_web);
+        dest.writeString(this.city_code);
+        dest.writeString(this.profit_ratio);
+        dest.writeString(this.isCollection);
+    }
+
+    public ParkLotInfo() {
+    }
+
+    protected ParkLotInfo(Parcel in) {
+        this.id = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.park_space_name = in.readString();
+        this.park_address = in.readString();
+        this.grade = in.readString();
+        this.opentime = in.readString();
+        this.parkspace_img = in.readString();
+        this.high_time = in.readString();
+        this.low_time = in.readString();
+        this.high_fee = in.readString();
+        this.low_fee = in.readString();
+        this.high_max_fee = in.readString();
+        this.low_max_fee = in.readString();
+        this.fine = in.readString();
+        this.ad_img = in.readString();
+        this.ad_web = in.readString();
+        this.city_code = in.readString();
+        this.profit_ratio = in.readString();
+        this.isCollection = in.readString();
+    }
+
+    public static final Creator<ParkLotInfo> CREATOR = new Creator<ParkLotInfo>() {
+        @Override
+        public ParkLotInfo createFromParcel(Parcel source) {
+            return new ParkLotInfo(source);
+        }
+
+        @Override
+        public ParkLotInfo[] newArray(int size) {
+            return new ParkLotInfo[size];
+        }
+    };
+
 }

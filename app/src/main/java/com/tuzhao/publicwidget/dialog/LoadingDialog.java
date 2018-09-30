@@ -68,9 +68,8 @@ public class LoadingDialog extends Dialog {
         setCancelable(false);
     }
 
-    @Override
-    public void dismiss() {
-        super.dismiss();
+    public String getContent() {
+        return content;
     }
 
 }

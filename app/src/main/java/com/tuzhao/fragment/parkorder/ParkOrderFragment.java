@@ -13,7 +13,7 @@ import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.mine.OrderActivity;
 import com.tuzhao.activity.mine.ParkOrderAppointmentActivity;
-import com.tuzhao.activity.mine.ParkOrderDetailActivity;
+import com.tuzhao.activity.mine.ParkOrderFinishActivity;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
@@ -245,7 +245,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         break;
                     case "4":
                     case "5":
-                        startActivity(ParkOrderDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                        startActivity(ParkOrderFinishActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
                         break;
                     default:
                         startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);

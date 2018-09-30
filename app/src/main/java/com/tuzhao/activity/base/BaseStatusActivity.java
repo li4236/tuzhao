@@ -120,8 +120,11 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * 显示加载对话框，一打开界面默认显示
      */
     protected void showLoadingDialog() {
-        dismmisLoadingDialog();
-        mLoadingDialog = new LoadingDialog(this, null);
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(this, null);
+        } else if (!mLoadingDialog.getContent().equals("加载中...") && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
         mLoadingDialog.show();
     }
 
@@ -129,8 +132,12 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * 显示自定义加载提示的对话框
      */
     protected void showLoadingDialog(String msg) {
-        dismmisLoadingDialog();
-        mLoadingDialog = new LoadingDialog(this, msg);
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(this, msg);
+        } else if (!mLoadingDialog.getContent().equals(msg) && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+            mLoadingDialog = new LoadingDialog(this, msg);
+        }
         mLoadingDialog.show();
     }
 
@@ -215,7 +222,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected void userError() {
         showFiveToast("账号异常，请重新登录");
         dismmisLoadingDialog();
-        startActivity(LoginActivity.class,ConstansUtil.INTENT_MESSAGE,true);
+        startActivity(LoginActivity.class, ConstansUtil.INTENT_MESSAGE, true);
     }
 
     protected void paramsError() {
@@ -230,7 +237,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
         if (com.tuzhao.publicmanager.UserManager.getInstance().hasLogined()) {
             listener.onLogin();
         } else {
-            startActivity(LoginActivity.class,ConstansUtil.INTENT_MESSAGE,true);
+            startActivity(LoginActivity.class, ConstansUtil.INTENT_MESSAGE, true);
         }
     }
 
