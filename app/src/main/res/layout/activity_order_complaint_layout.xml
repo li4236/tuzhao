@@ -112,7 +112,7 @@
                 app:layout_constraintTop_toTopOf="@id/park_space_iv" />
 
             <TextView
-                android:id="@+id/park_duration"
+                android:id="@+id/grace_time"
                 style="@style/TwentyTextG6Style"
                 android:layout_width="0dp"
                 android:layout_marginTop="8dp"

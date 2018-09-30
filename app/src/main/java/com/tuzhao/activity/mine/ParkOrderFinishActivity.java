@@ -42,6 +42,8 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
 
     private TextView mParkLotName;
 
+    private TextView mParkSpaceNumber;
+
     private TextView mParkSpaceDescription;
 
     private TextView mActualStartParkTime;
@@ -72,11 +74,12 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         mOrderAmount = findViewById(R.id.order_amount);
         mCarNumber = findViewById(R.id.car_number);
         mParkLotName = findViewById(R.id.park_lot_name);
+        mParkSpaceNumber = findViewById(R.id.park_space_number);
         mParkSpaceDescription = findViewById(R.id.park_space_description);
         mActualStartParkTime = findViewById(R.id.actual_start_park_time);
         mAcutalEndParkTime = findViewById(R.id.actual_end_park_time);
         mOvertimeDuration = findViewById(R.id.overtime_duration);
-        mParkDuration = findViewById(R.id.park_duration);
+        mParkDuration = findViewById(R.id.grace_time);
         mOrderNumber = findViewById(R.id.order_number);
         mOrderDate = findViewById(R.id.order_date_tv);
 
@@ -97,6 +100,7 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         mOrderAmount.setText(mParkOrderInfo.getActual_pay_fee());
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
         mParkLotName.setText(mParkOrderInfo.getParkLotName());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
         mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
         mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
         mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));

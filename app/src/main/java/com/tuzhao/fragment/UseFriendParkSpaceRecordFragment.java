@@ -489,7 +489,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                 .setText(R.id.appointment_income_time, DateUtil.getHourWithMinutesByYearToSecond(parkOrderInfo.getOrderStartTime()))
                 .setText(R.id.appointment_leave_time, DateUtil.isInSameDay(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()) ?
                         DateUtil.getHourWithMinutesByYearToSecond(parkOrderInfo.getOrderEndTime()) : parkOrderInfo.getOrderEndTime().substring(0, parkOrderInfo.getOrderEndTime().lastIndexOf(":")))
-                .setText(R.id.park_duration, DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()))
+                .setText(R.id.grace_time, DateUtil.getDateDistanceForHourWithMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()))
                 .setOnClickListener(R.id.more_iv, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -503,8 +503,8 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                                     .showView(R.id.appointment_income_time)
                                     .showView(R.id.appointment_leave_time_tv)
                                     .showView(R.id.appointment_leave_time)
-                                    .showView(R.id.park_duration_tv)
-                                    .showView(R.id.park_duration)
+                                    .showView(R.id.grace_time_tv)
+                                    .showView(R.id.grace_time)
                                     .showView(R.id.navigation_cl);
                         } else {
                             arrowView.setGravity(ArrowView.BOTTOM);
@@ -516,8 +516,8 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                                     .goneView(R.id.appointment_income_time)
                                     .goneView(R.id.appointment_leave_time_tv)
                                     .goneView(R.id.appointment_leave_time)
-                                    .goneView(R.id.park_duration_tv)
-                                    .goneView(R.id.park_duration)
+                                    .goneView(R.id.grace_time_tv)
+                                    .goneView(R.id.grace_time)
                                     .goneView(R.id.navigation_cl);
                         }
                     }

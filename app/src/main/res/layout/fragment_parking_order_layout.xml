@@ -91,7 +91,7 @@
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
     <TextView
-        android:id="@+id/park_duration"
+        android:id="@+id/grace_time"
         style="@style/FortyTextB1Style"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/park_duration_iv"
@@ -114,7 +114,7 @@
         android:textColor="#ff0101"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_duration" />
+        app:layout_constraintTop_toBottomOf="@+id/grace_time" />
 
     <TextView
         android:id="@+id/overtime_fee"

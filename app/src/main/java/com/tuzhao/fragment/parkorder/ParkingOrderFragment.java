@@ -122,7 +122,7 @@ public class ParkingOrderFragment extends BaseStatusFragment implements View.OnC
         mLeaveTime = view.findViewById(R.id.leave_time);
         mOvertimeFee = view.findViewById(R.id.overtime_fee);
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
-        mParkDuration = view.findViewById(R.id.park_duration);
+        mParkDuration = view.findViewById(R.id.grace_time);
         mFinishPark = view.findViewById(R.id.finish_park);
 
         view.setOnClickListener(this);

@@ -1,5 +1,8 @@
 package com.tuzhao.activity.mine;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +63,8 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
 
     private TextView mCarNumber;
 
+    private TextView mParkSpaceNumber;
+
     private TextView mParkLotName;
 
     private TextView mParkSpaceDescription;
@@ -68,7 +73,11 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
 
     private TextView mAcutalEndParkTime;
 
-    private TextView mParkDuration;
+    private TextView mGraceTime;
+
+    private TextView mOrderNumber;
+
+    private TextView mOrderDate;
 
     private MapView mMapView;
 
@@ -97,11 +106,14 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
 
         mStartParkDate = findViewById(R.id.start_park_date);
         mCarNumber = findViewById(R.id.car_number);
+        mParkSpaceNumber = findViewById(R.id.park_space_number);
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkSpaceDescription = findViewById(R.id.park_space_description);
         mActualStartParkTime = findViewById(R.id.actual_start_park_time);
         mAcutalEndParkTime = findViewById(R.id.actual_end_park_time);
-        mParkDuration = findViewById(R.id.park_duration);
+        mGraceTime = findViewById(R.id.grace_time);
+        mOrderNumber = findViewById(R.id.order_number);
+        mOrderDate = findViewById(R.id.order_date_tv);
 
         mMapView = findViewById(R.id.order_mv);
         mMapView.onCreate(savedInstanceState);
@@ -115,17 +127,22 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         findViewById(R.id.navigation_cl).setOnClickListener(this);
         findViewById(R.id.order_complaint_cl).setOnClickListener(this);
         findViewById(R.id.contact_service_cl).setOnClickListener(this);
+        findViewById(R.id.copy_order_number).setOnClickListener(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
         mStartParkDate.setText("入场时间：" + DateUtil.getYearToMinuteWithText(mParkOrderInfo.getOrderStartTime()));
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
         mParkLotName.setText(mParkOrderInfo.getParkLotName());
         mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
         mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
         mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
-        mParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
+        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
+        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
+        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
 
         registerLockListener();
     }
@@ -167,6 +184,9 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 break;
             case R.id.contact_service_cl:
                 ViewUtil.contactService(ParkOrderAppointmentActivity.this);
+                break;
+            case R.id.copy_order_number:
+                copyOrderNumber();
                 break;
         }
     }
@@ -605,6 +625,17 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
             } else {
                 showFiveToast("定位失败，请开启GPS后重试");
             }
+        }
+    }
+
+    private void copyOrderNumber() {
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (clipboardManager != null) {
+            ClipData clipData = ClipData.newPlainText("订单编号", getText(mOrderNumber));
+            clipboardManager.setPrimaryClip(clipData);
+            showFiveToast("已复制");
+        } else {
+            showFiveToast("复制失败");
         }
     }
 

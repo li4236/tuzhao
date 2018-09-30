@@ -67,7 +67,7 @@ public class CancelOrderFragment extends BaseStatusFragment implements View.OnCl
         mParkDate = view.findViewById(R.id.appointment_park_date);
         mStartParkTime = view.findViewById(R.id.appointment_income_time);
         mParkSpaceLocation = view.findViewById(R.id.appointment_park_location);
-        mParkDuration = view.findViewById(R.id.park_duration);
+        mParkDuration = view.findViewById(R.id.grace_time);
 
         view.setOnClickListener(this);
         view.findViewById(R.id.appointment_calculate_rule).setOnClickListener(this);

@@ -76,7 +76,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         mComplaintReason = findViewById(R.id.complaint_reason);
         mParkSpaceIv = findViewById(R.id.park_space_iv);
         mParkSpaceName = findViewById(R.id.park_space_name);
-        mParkDuration = findViewById(R.id.park_duration);
+        mParkDuration = findViewById(R.id.grace_time);
         mQuestionDescription = findViewById(R.id.question_descrption_et);
         mQeustionTextNumber = findViewById(R.id.input_text_number);
         mConfirmSubmit = findViewById(R.id.confirm_submit);

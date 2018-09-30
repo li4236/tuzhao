@@ -119,7 +119,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
         }
         mCarNumber = findViewById(R.id.car_number);
         mAppointmentIncomeTime = findViewById(R.id.appointment_income_time);
-        mParkDurationTv = findViewById(R.id.park_duration);
+        mParkDurationTv = findViewById(R.id.grace_time);
         mDestination = findViewById(R.id.destination);
         mNextStep = findViewById(R.id.next_step_tv);
 
@@ -129,7 +129,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
         findViewById(R.id.car_number_tv).setOnClickListener(this);
         findViewById(R.id.appointment_income_time_tv).setOnClickListener(this);
-        findViewById(R.id.park_duration_tv).setOnClickListener(this);
+        findViewById(R.id.grace_time_tv).setOnClickListener(this);
         findViewById(R.id.destination_tv).setOnClickListener(this);
         mNextStep.setOnClickListener(this);
     }
@@ -174,7 +174,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             case R.id.appointment_income_time_tv:
                 showAppointmentIncomeTimeOptions();
                 break;
-            case R.id.park_duration_tv:
+            case R.id.grace_time_tv:
                 showParkDurationOptions();
                 break;
             case R.id.destination_tv:

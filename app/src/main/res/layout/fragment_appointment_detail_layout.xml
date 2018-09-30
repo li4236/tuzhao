@@ -93,7 +93,7 @@
         app:layout_constraintTop_toTopOf="@+id/appointment_income_time_iv" />
 
     <TextView
-        android:id="@+id/park_duration"
+        android:id="@+id/grace_time"
         style="@style/FortyTextB1Style"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/park_duration_iv"

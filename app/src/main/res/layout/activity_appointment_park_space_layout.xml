@@ -88,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appointment_income_time_tv" />
 
     <TextView
-        android:id="@+id/park_duration_tv"
+        android:id="@+id/grace_time_tv"
         style="@style/ThirtyTextB1Style"
         android:layout_width="match_parent"
         android:background="@color/w0"
@@ -106,17 +106,17 @@
         android:layout_height="11dp"
         android:layout_marginEnd="16dp"
         app:arrow_width="1dp"
-        app:layout_constraintBottom_toBottomOf="@id/park_duration_tv"
+        app:layout_constraintBottom_toBottomOf="@id/grace_time_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/park_duration_tv" />
+        app:layout_constraintTop_toTopOf="@+id/grace_time_tv" />
 
     <TextView
-        android:id="@+id/park_duration"
+        android:id="@+id/grace_time"
         style="@style/ThirtyTextB1Style"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/park_duration_tv"
+        app:layout_constraintBottom_toBottomOf="@id/grace_time_tv"
         app:layout_constraintEnd_toStartOf="@id/park_duration_av"
-        app:layout_constraintTop_toTopOf="@+id/park_duration_tv" />
+        app:layout_constraintTop_toTopOf="@+id/grace_time_tv" />
 
     <TextView
         android:id="@+id/destination_tv"
@@ -130,7 +130,7 @@
         android:paddingStart="16dp"
         android:paddingTop="12dp"
         android:text="目的地"
-        app:layout_constraintTop_toBottomOf="@+id/park_duration_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/grace_time_tv" />
 
     <TextView
         android:id="@+id/destination_copy_tv"
@@ -144,7 +144,7 @@
         android:paddingTop="12dp"
         android:text="目的地"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/park_duration_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/grace_time_tv" />
 
     <com.tuzhao.publicwidget.customView.ArrowView
         android:id="@+id/destination_av"
