@@ -115,13 +115,16 @@ public class NearPointPCInfo extends BaseInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NearPointPCInfo that = (NearPointPCInfo) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(cancharge, that.cancharge);
+        return Double.compare(that.longitude, longitude) == 0 &&
+                Double.compare(that.latitude, latitude) == 0 &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(isparkspace, that.isparkspace) &&
+                Objects.equals(citycode, that.citycode);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, cancharge);
+        return Objects.hash(id, longitude, latitude, isparkspace, citycode);
     }
+
 }

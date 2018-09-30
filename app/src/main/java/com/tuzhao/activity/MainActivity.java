@@ -1163,7 +1163,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
      */
     @Override
     public void onClick(Marker marker, List<ClusterItem> clusterItems) {
-        Log.e(TAG, "onClick: " + clusterItems.size());
         if (clusterItems.size() > 1) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (ClusterItem clusterItem : clusterItems) {
@@ -1172,10 +1171,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             LatLngBounds latLngBounds = builder.build();
             showClusters = true;
             mLastPosition = aMap.getCameraPosition();
-            //aMap.setPointToCenter(mapwidth / 2, mapheight / 2);
             aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, clusterItems.size() > 5 ? (int) (mapwidth / 5.0) : (int) (mapwidth * 1.0 / (clusterItems.size() + 1))));
         } else {
-            //screenMarker.setVisible(false);
             Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
             markerAnimation.setDuration(500);  //设置动画时间 单位毫秒
             marker.setAnimation(markerAnimation);
@@ -1193,9 +1190,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             info.setPrice(clusterItems.get(0).getPrice());
             info.setGrade(clusterItems.get(0).getGrade());
             showUpWindowOnMap(info, clusterItems.get(0).isparkspace());
-            Log.e(TAG, "onMarkerClick: ");
-            //横坐标往右偏移一点以让图标居中
-            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(markerLatLng.latitude, markerLatLng.longitude - 0.000918), 15.5f));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(markerLatLng.latitude, markerLatLng.longitude), 15.5f));
         }
     }
 
@@ -1474,8 +1469,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
                     String citycode = data.getStringExtra("citycode");
                     isLcData = false;
-                    Log.e(TAG, "onActivityResult: 4");
-                    requestHomePCLocData(citycode, data.getStringExtra("lat"), data.getStringExtra("lon"), "10", isLcData, "当前城市");
+                    requestHomePCLocData(citycode, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude),
+                            "10", isLcData, "当前城市");
                 } else {
                     if (isLcData) {
                         if (isShowPark && isShowCharge) {

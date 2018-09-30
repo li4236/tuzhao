@@ -56,7 +56,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchparkspace_layout);
-        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
         initData();//初始化数据
         initView();//初始化控件
         initEvent();//初始化事件
@@ -64,9 +64,8 @@ public class SearchParkSpaceActivity extends BaseActivity {
     }
 
     private void initData() {
-
         if (getIntent().hasExtra("info_list")) {
-            mData = (ArrayList<ParkLotInfo>) getIntent().getSerializableExtra("info_list");
+            mData = getIntent().getParcelableArrayListExtra("info_list");
             citycode = getIntent().getStringExtra("citycode");
         } else {
             if (progressbar.getVisibility() == View.GONE) {
@@ -78,7 +77,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
 
     private void initView() {
 
-        etextview_input = (AutoCompleteTextView) findViewById(R.id.id_activity_searchparkspace_layout_etextview_input);
+        etextview_input = findViewById(R.id.id_activity_searchparkspace_layout_etextview_input);
         adapter = new SearchParkSpaceAdapter(mData, SearchParkSpaceActivity.this, SearchParkSpaceActivity.this);
         etextview_input.setAdapter(adapter);
         etextview_input.setDropDownVerticalOffset(DensityUtil.dp2px(this, 13));
@@ -89,12 +88,12 @@ public class SearchParkSpaceActivity extends BaseActivity {
             }
         });
 
-        progressbar = (ProgressBar) findViewById(R.id.id_activity_searchparkspace_layout_progressbar);
+        progressbar = findViewById(R.id.id_activity_searchparkspace_layout_progressbar);
 
-        textview_goback = (TextView) findViewById(R.id.id_activity_searchparkspace_layout_textview_goback);
-        textview_goapply = (TextView) findViewById(R.id.id_activity_searchparkspace_layout_textview_goapply);
-        imageview_clean = (ImageView) findViewById(R.id.id_activity_searchparkspace_layout_imageview_clean);
-        linearlayout_has_no_search = (LinearLayout) findViewById(R.id.id_activity_searchparkspace_layout_linearlayout_has_no_search);
+        textview_goback = findViewById(R.id.id_activity_searchparkspace_layout_textview_goback);
+        textview_goapply = findViewById(R.id.id_activity_searchparkspace_layout_textview_goapply);
+        imageview_clean = findViewById(R.id.id_activity_searchparkspace_layout_imageview_clean);
+        linearlayout_has_no_search = findViewById(R.id.id_activity_searchparkspace_layout_linearlayout_has_no_search);
     }
 
     private void initEvent() {
@@ -162,7 +161,6 @@ public class SearchParkSpaceActivity extends BaseActivity {
     }
 
     private void requestParkData() {
-
         OkGo.post(HttpConstants.getParkSpaceDatasForCity)//请求数据的接口地址
                 .tag(SearchParkSpaceActivity.this)//
                 .params("citycode", LocationManager.getInstance().getmAmapLocation().getAdCode() + LocationManager.getInstance().getmAmapLocation().getCityCode() + "")
