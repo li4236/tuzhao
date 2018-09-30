@@ -100,12 +100,12 @@ public class ParkLotDetailFragment extends BaseFragment {
     }
 
     private void initData() {
-        parkLotInfo = (ParkLotInfo) getArguments().getSerializable("parkspace_info");
-        mData = (ArrayList<Park_Info>) getArguments().getSerializable("park_info");
+        parkLotInfo = getArguments().getParcelable(ConstansUtil.PARK_LOT_INFO);
+        mData =  getArguments().getParcelableArrayList(ConstansUtil.PARK_SPACE_INFO);
 
         if (parkLotInfo == null) {
-            parkspace_id = getArguments().getString("parkspace_id");
-            city_code = getArguments().getString("city_code");
+            parkspace_id = getArguments().getString(ConstansUtil.PARK_LOT_ID);
+            city_code = getArguments().getString(ConstansUtil.CITY_CODE);
             initLoading("加载中...");
             requestGetParkspaceData();
         } else {
@@ -114,8 +114,8 @@ public class ParkLotDetailFragment extends BaseFragment {
         }
 
         if (mData == null) {
-            parkspace_id = getArguments().getString("parkspace_id");
-            city_code = getArguments().getString("city_code");
+            parkspace_id = getArguments().getString(ConstansUtil.PARK_LOT_ID);
+            city_code = getArguments().getString(ConstansUtil.CITY_CODE);
             if (mLoadingDialog == null) {
                 initLoading("加载中...");
             } else if (!mLoadingDialog.isShowing()) {

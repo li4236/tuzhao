@@ -411,7 +411,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
-            android:text="收藏"
+            android:text="未收藏"
             android:textColor="@color/b1"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

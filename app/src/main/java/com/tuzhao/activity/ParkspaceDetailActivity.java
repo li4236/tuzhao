@@ -19,6 +19,7 @@ import com.tuzhao.fragment.parklotdetail.ParkLotCommentFragment;
 import com.tuzhao.fragment.parklotdetail.ParkLotDetailFragment;
 import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.Park_Info;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;
@@ -60,13 +61,13 @@ public class ParkspaceDetailActivity extends BaseActivity {
 
     private void initData() {
         if (getIntent().hasExtra("parkspace_info")) {
-            mParkLotInfo = (ParkLotInfo) getIntent().getSerializableExtra("parkspace_info");
+            mParkLotInfo = getIntent().getParcelableExtra("parkspace_info");
         } else {
             parkspace_id = getIntent().getStringExtra("parkspace_id");
             city_code = getIntent().getStringExtra("city_code");
         }
         if (getIntent().hasExtra("park_list")) {
-            mParkInfos = (ArrayList<Park_Info>) getIntent().getSerializableExtra("park_list");
+            mParkInfos = getIntent().getParcelableArrayListExtra("park_list");
         }
 
     }
@@ -129,20 +130,20 @@ public class ParkspaceDetailActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             if (position == 0) {
                 if (mParkLotInfo == null) {
-                    bundle.putString("parkspace_id", parkspace_id);
-                    bundle.putString("city_code", city_code);
-                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
+                    bundle.putString(ConstansUtil.PARK_LOT_ID, parkspace_id);
+                    bundle.putString(ConstansUtil.CITY_CODE, city_code);
+                    bundle.putParcelable(ConstansUtil.PARK_LOT_INFO, mParkLotInfo);
                 } else {
-                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
+                    bundle.putParcelable(ConstansUtil.PARK_LOT_INFO, mParkLotInfo);
                 }
-                bundle.putParcelableArrayList("mParkInfos", mParkInfos);
+                bundle.putParcelableArrayList(ConstansUtil.PARK_SPACE_INFO, mParkInfos);
             } else {
                 if (mParkLotInfo == null) {
-                    bundle.putString("parkspace_id", parkspace_id);
-                    bundle.putString("city_code", city_code);
-                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
+                    bundle.putString(ConstansUtil.PARK_LOT_ID, parkspace_id);
+                    bundle.putString(ConstansUtil.CITY_CODE, city_code);
+                    bundle.putParcelable(ConstansUtil.PARK_LOT_INFO, mParkLotInfo);
                 } else {
-                    bundle.putParcelable("mParkLotInfo", mParkLotInfo);
+                    bundle.putParcelable(ConstansUtil.PARK_LOT_INFO, mParkLotInfo);
                 }
             }
             fragment.setArguments(bundle);

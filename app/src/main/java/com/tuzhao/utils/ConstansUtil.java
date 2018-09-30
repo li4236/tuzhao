@@ -282,6 +282,11 @@ public class ConstansUtil {
     public static final String PARK_LOT_NAME = "ParkLotName";
 
     /**
+     * 车场信息
+     */
+    public static final String PARK_LOT_INFO = "ParkLotInfo";
+
+    /**
      * 对话框弹出,订单评论
      */
     public static final String DIALOG_SHOW = "DialogShow";
