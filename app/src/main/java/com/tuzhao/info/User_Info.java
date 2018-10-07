@@ -35,6 +35,7 @@ public class User_Info implements Parcelable {
     private String unionId;//微信的unionId
     private String wechatNickname;//微信昵称
     private String paymentPassword;//支付密码（设置了就返回-1，没设置就返回""）
+    private int leaveEarlyTime;
 
     public String getId() {
         return id;
@@ -245,6 +246,14 @@ public class User_Info implements Parcelable {
         return !realName.equals("-1") && !birthday.equals("0000-00-00");
     }
 
+    public int getLeaveEarlyTime() {
+        return leaveEarlyTime;
+    }
+
+    public void setLeaveEarlyTime(int leaveEarlyTime) {
+        this.leaveEarlyTime = leaveEarlyTime;
+    }
+
     @Override
     public String toString() {
         return "User_Info{" +
@@ -271,6 +280,7 @@ public class User_Info implements Parcelable {
                 ", wechatNickname='" + wechatNickname + '\'' +
                 ", autologin='" + autologin + '\'' +
                 ", paymentPassword='" + paymentPassword + '\'' +
+                ", leaveEarlyTime='" + leaveEarlyTime + '\'' +
                 '}';
     }
 
@@ -304,6 +314,7 @@ public class User_Info implements Parcelable {
         dest.writeString(this.wechatNickname);
         dest.writeString(this.paymentPassword);
         dest.writeString(this.autologin);
+        dest.writeInt(this.leaveEarlyTime);
     }
 
     public User_Info() {
@@ -333,6 +344,7 @@ public class User_Info implements Parcelable {
         this.wechatNickname = in.readString();
         this.paymentPassword = in.readString();
         this.autologin = in.readString();
+        this.leaveEarlyTime = in.readInt();
     }
 
     public static final Creator<User_Info> CREATOR = new Creator<User_Info>() {

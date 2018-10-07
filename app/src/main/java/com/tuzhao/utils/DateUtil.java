@@ -645,7 +645,7 @@ public class DateUtil {
         Calendar startCalendar = getYearToSecondCalendar(startDate);
         Calendar endCalenar = getYearToSecondCalendar(endDate);
 
-        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        int minutesDistance = (int) getCalendarDistance(startCalendar, endCalenar);
         if (minutesDistance == 0) {
             if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
                 minutesDistance = 1;
@@ -683,7 +683,7 @@ public class DateUtil {
         Calendar endCalenar = getYearToSecondCalendar(endDate);
         startCalendar.add(Calendar.SECOND, addSecond.equals("-1") ? 0 : Integer.valueOf(addSecond));
 
-        int minutesDistance = (int) ((endCalenar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+        int minutesDistance = (int) getCalendarDistance(startCalendar, endCalenar);
         if (minutesDistance == 0) {
             if (endCalenar.getTimeInMillis() / 1000 > startCalendar.getTimeInMillis() / 1000) {
                 minutesDistance = 1;
@@ -1495,8 +1495,6 @@ public class DateUtil {
     }
 
     /**
-     * A
-     *
      * @return MM-dd HH:mm
      */
     public static String getCalendarMonthToMinute(Calendar calendar) {
@@ -1505,6 +1503,17 @@ public class DateUtil {
         }
         return thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + " "
                 + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
+    }
+
+    /**
+     * @return MM月dd日 HH时mm分
+     */
+    public static String getCalendarMonthToMinuteWithText(Calendar calendar) {
+        if (calendar == null) {
+            return "";
+        }
+        return thanTen((calendar.get(Calendar.MONTH) + 1)) + "月" + thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日 "
+                + thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + "时" + thanTen(calendar.get(Calendar.MINUTE)) + "分";
     }
 
     /**
@@ -1546,11 +1555,11 @@ public class DateUtil {
     }
 
     /**
-     * @param startDate //开始停车时间，格式为yyyy-MM-dd HH:mm
-     * @param endDate   //结束停车时间，格式为yyyy-MM-dd HH:mm
-     * @param highDate  //高峰停车时间，格式为HH:mm - HH:mm
-     * @param highFee   //高峰时段单价(xx.xx元/分钟)
-     * @param lowFee    //低峰时段单价(xx.xx元/分钟)
+     * @param startDate 开始停车时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   结束停车时间，格式为yyyy-MM-dd HH:mm
+     * @param highDate  高峰停车时间，格式为HH:mm - HH:mm
+     * @param highFee   高峰时段单价(xx.xx元/分钟)
+     * @param lowFee    低峰时段单价(xx.xx元/分钟)
      * @return 预估停车应交费用
      */
     public static double caculateParkFee(String startDate, String endDate, String highDate, double highFee, double lowFee) {

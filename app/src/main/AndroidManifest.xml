@@ -235,6 +235,7 @@
         <activity android:name=".activity.mine.AuditCarActivity" />
         <activity android:name=".activity.mine.ParkOrderFinishActivity" />
         <activity android:name=".activity.mine.ParkOrderAppointmentActivity" />
+        <activity android:name=".activity.mine.ParkOrderParkingActivity" />
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"

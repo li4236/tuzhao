@@ -858,7 +858,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 });
     }
 
-    private void requestOrderData(String orderNumber) {
+    private void requestOrderData(final String orderNumber) {
         OkGo.post(HttpConstants.getDetailOfParkOrder)
                 .tag(TAG)
                 .headers("token", UserManager.getInstance().getToken())
@@ -870,6 +870,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                         dissmissLoading();
                         MyToast.showToast(OrderParkActivity.this, "预约成功", 5);
                         Intent intent = new Intent(OrderParkActivity.this, ParkOrderAppointmentActivity.class);
+                        parkOrderInfoBase_class_info.data.setOrder_number(orderNumber);
                         intent.putExtra(ConstansUtil.PARK_ORDER_INFO, parkOrderInfoBase_class_info.data);
                         startActivity(intent);
                         finish();
