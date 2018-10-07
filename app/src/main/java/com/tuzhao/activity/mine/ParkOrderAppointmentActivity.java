@@ -247,7 +247,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 mIsOpening = false;
                 mOpenLockDialog.cancelOpenLockAnimator();
                 if (mOpenLockDialog != null && !mOpenLockDialog.isShowing()) {
-                    finishAppointment(mParkOrderInfo);
+                    finishAppointment();
                     showFiveToast("开锁成功");
                 }
             }
@@ -289,7 +289,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 @Override
                 public void onSuccess(Boolean aBoolean) {
                     if (aBoolean) {
-                        finishAppointment(mParkOrderInfo);
+                        finishAppointment();
                     } else {
                         requestOrderPark();
                     }
@@ -299,13 +299,19 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         mOpenLockDialog.startOpenLock();
     }
 
-    private void finishAppointment(ParkOrderInfo parkOrderInfo) {
+    private void finishAppointment() {
         Intent intent = new Intent();
         intent.setAction(ConstansUtil.FINISH_APPOINTMENT);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+        mParkOrderInfo.setOrderStatus("2");
+        mParkOrderInfo.setParkStartTime(DateUtil.getCurrentYearToSecond());
+        bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);
+
+        MyReceiver.removeLockListener(mParkOrderInfo.getLockId());
+        startActivity(ParkOrderParkingActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+        finish();
     }
 
     private void requestOrderPark() {

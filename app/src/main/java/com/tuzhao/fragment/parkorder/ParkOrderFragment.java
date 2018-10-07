@@ -269,7 +269,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         if (parkOrderInfo != null) {
-                            parkOrderInfo.setOrderStatus("2");
                             if (mOrderStatus == 0) {
                                 //全部订单则把预约的改为停车中
                                 mCommonAdapter.notifyDataChange(parkOrderInfo);

@@ -253,6 +253,9 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         mPollingUtil.start();
     }
 
+    /**
+     * 每分钟更新一次订单金额，已停时长，超时时长
+     */
     private void updateOrderInfo() {
         int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
         double parkFee = 0;
@@ -357,6 +360,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         IntentObserable.dispatch(intent);
 
         showFiveToast("已结束停车");
+        startActivity(ParkOrderFinishActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
         finish();
     }
 
