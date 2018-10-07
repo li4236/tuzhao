@@ -297,10 +297,24 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.CHANGE_PARK_ORDER_INRO:
-                    Bundle changeBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                    ParkOrderInfo changeParkOrderInfo = changeBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                    if (changeParkOrderInfo != null) {
-                        mCommonAdapter.notifyDataChange(changeParkOrderInfo);
+                    if (mOrderStatus == 0 || mOrderStatus == 1 || mOrderStatus == 2) {
+                        Bundle changeBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                        ParkOrderInfo changeParkOrderInfo = changeBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        if (changeParkOrderInfo != null) {
+                            if (changeBundle.getString(ConstansUtil.PARK_SPACE_ID) == null && mOrderStatus != 1) {
+                                //延长停车中订单的停车时间
+                                mCommonAdapter.notifyDataChange(changeParkOrderInfo);
+                            } else {
+                                //重新分配车位给预约中的订单
+                                for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                                    if (mCommonAdapter.get(i).equals(changeParkOrderInfo)) {
+                                        mCommonAdapter.get(i).setParkSpaceId(changeBundle.getString(ConstansUtil.PARK_SPACE_ID));
+                                        mCommonAdapter.notifyDataChange(i);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
                 case ConstansUtil.FINISH_PARK:
@@ -338,7 +352,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.INVOICE_SUCCESS:
-                    if (mOrderStatus==0||mOrderStatus == 4 || mOrderStatus == 5) {
+                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5) {
                         String ordersId = intent.getStringExtra(ConstansUtil.INTENT_MESSAGE);
                         for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
                             if (mCommonAdapter.get(i).getOrdersId().equals(ordersId)) {

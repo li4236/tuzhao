@@ -140,7 +140,7 @@ public class ConstansUtil {
     public static final String REQUEST_FOR_RESULT = "RequestForResult";
 
     /**
-     * activity返回给上个activity的结果的key
+     * key
      */
     public static final String FOR_REQEUST_RESULT = "ForRequestResult";
 

@@ -414,14 +414,27 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         if (readyParkId.length() > 0) {
             readyParkId.deleteCharAt(readyParkId.length() - 1);
         }
-// TODO: 2018/9/26 参数和文档不一致
+
+        StringBuilder readyParkUpdateTime = new StringBuilder();
+        for (int i = 1, size = mCanParkList.size() > 3 ? 3 : mCanParkList.size(); i < size; i++) {
+            readyParkUpdateTime.append(mCanParkList.get(i).getUpdate_time());
+            readyParkUpdateTime.append(",");
+        }
+        if (readyParkUpdateTime.length() > 0) {
+            readyParkUpdateTime.deleteCharAt(readyParkId.length() - 1);
+        }
+
         showLoadingDialog("重新分配...");
         getOkGo(HttpConstants.redistributionOrderParkSpace)
                 .addInterceptor(new TokenInterceptor())
                 .headers("token", UserManager.getInstance().getUserInfo().getToken())
                 .params("orderId", mParkOrderInfo.getId())
                 .params("parkSpaceId", mCanParkList.get(0).getId())
+                .params("parkInterval", DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()) + "*" +
+                        DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()))
+                .params("parkSpaceUpdateTime", mParkOrderInfo.getUpdateTime())
                 .params("alternateParkSpaceId", readyParkId.toString().equals("") ? "-1" : readyParkId.toString())
+                .params("alternateParkSpaceUpdateTime", readyParkUpdateTime.toString().equals("") ? "-1" : readyParkUpdateTime.toString())
                 .params("cityCode", mParkOrderInfo.getCityCode())
                 .execute(new JsonCodeCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
@@ -429,7 +442,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                         switch (responseData.code) {
                             case "0":
                                 dismmisLoadingDialog();
-                                redistributionParkSpace(responseData.data);
+                                redistributionParkSpace(mCanParkList.get(0), null);
                                 break;
                             case "101":
                                 dismmisLoadingDialog();
@@ -444,6 +457,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                                 }
 
                                 if (mCanParkList.size() > 0) {
+                                    //还有可停的车位，则继续请求
                                     if (mCanParkList.size() != 1) {
                                         DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrderEndTime());
                                     }
@@ -452,22 +466,17 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                                     showFiveToast("未匹配到合适您时间的车位，请尝试更换时间");
                                 }
                                 break;
-                            case "106":
-                                dismmisLoadingDialog();
-                                mCanParkList.remove(0);
-                                showRequestAppointOrderDialog(mCanParkList.get(0), Integer.valueOf(responseData.data.getExtensionTime()) / 60);
-                                break;
                             case "102":
                                 dismmisLoadingDialog();
                                 for (int i = 0; i < mCanParkList.size(); i++) {
                                     if (mCanParkList.get(i).getId().equals(responseData.data.getParkSpaceId())) {
-                                        showRequestAppointOrderDialog(mCanParkList.get(i), Integer.valueOf(responseData.data.getExtensionTime()));
+                                        showRequestAppointOrderDialog(mCanParkList.get(i), responseData.data.getExtensionTime());
                                         break;
                                     }
                                 }
                                 break;
                             case "103":
-                                showFiveToast("内部错误，请重新选择");
+                                showFiveToast("服务器异常，请重新选择");
                                 finish();
                                 break;
                             case "104":
@@ -477,6 +486,11 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                             case "105":
                                 dismmisLoadingDialog();
                                 showFiveToast("您当前车位在该时段内已有过预约，请尝试更换时间");
+                                break;
+                            case "106":
+                                dismmisLoadingDialog();
+                                mCanParkList.remove(0);
+                                showRequestAppointOrderDialog(mCanParkList.get(0), String.valueOf(Integer.valueOf(responseData.data.getExtensionTime()) / 60));
                                 break;
                             case "107":
                                 dismmisLoadingDialog();
@@ -501,14 +515,14 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
      * @param park_info     预约的车位
      * @param extensionTime 可停车的顺延时长（分钟）
      */
-    private void showRequestAppointOrderDialog(final Park_Info park_info, int extensionTime) {
+    private void showRequestAppointOrderDialog(final Park_Info park_info, final String extensionTime) {
         TipeDialog.Builder builder = new TipeDialog.Builder(this);
         builder.setMessage("可分配车位宽限时长为" + extensionTime + "分钟，是否预定？");
         builder.setTitle("确认预定");
         builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 showLoadingDialog("提交中...");
-                reserveLockedParkSpaceForOrder(park_info);
+                reserveLockedParkSpaceForOrder(park_info, extensionTime);
             }
         });
 
@@ -524,7 +538,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
     /**
      * 预约被锁定的车位
      */
-    private void reserveLockedParkSpaceForOrder(Park_Info park_info) {
+    private void reserveLockedParkSpaceForOrder(final Park_Info park_info, final String extensionTime) {
         getOkGo(HttpConstants.reserveLockedParkSpaceForOrder)
                 .params("orderId", mParkOrderInfo.getId())
                 .params("parkSpaceId", park_info.getId())
@@ -532,7 +546,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
-                        redistributionParkSpace(responseData.data);
+                        redistributionParkSpace(park_info, extensionTime);
                     }
 
                     @Override
@@ -555,21 +569,26 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
     /**
      * 重新分配车位给该订单
      */
-    private void redistributionParkSpace(ParkOrderInfo parkOrderInfo) {
-        mParkOrderInfo.setParkSpaceId(parkOrderInfo.getParkSpaceId());
-        mParkOrderInfo.setExtensionTime(parkOrderInfo.getExtensionTime());
+    private void redistributionParkSpace(Park_Info parkInfo, String extensionTime) {
         for (int i = 0; i < mCanParkList.size(); i++) {
-            if (mCanParkList.get(i).getId().equals(parkOrderInfo.getParkSpaceId())) {
+            if (mCanParkList.get(i).getId().equals(parkInfo.getId())) {
                 mCanParkList.remove(i);
                 break;
             }
         }
 
+        if (extensionTime != null) {
+            mParkOrderInfo.setExtensionTime(extensionTime);
+        }
+
         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
         Bundle bundle = new Bundle();
         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+        bundle.putString(ConstansUtil.PARK_SPACE_ID, parkInfo.getId());
         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);
+
+        mParkOrderInfo.setParkSpaceId(parkInfo.getId());
     }
 
     private void cancelAppointment() {

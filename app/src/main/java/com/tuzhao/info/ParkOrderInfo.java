@@ -93,6 +93,7 @@ public class ParkOrderInfo implements Parcelable {
     private String parkSpaceStatus;//车位状态
     private String isInvoiced;//0(未开发票)，1(已开发票)
     private String ordersId;//订单对应总表的id
+    private String updateTime;//订单的更新时间
 
     public String getId() {
         return id;
@@ -461,6 +462,14 @@ public class ParkOrderInfo implements Parcelable {
         this.userNoteName = userNoteName;
     }
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -525,6 +534,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.userNoteName);
         dest.writeString(this.isInvoiced);
         dest.writeString(this.ordersId);
+        dest.writeString(this.updateTime);
     }
 
     public ParkOrderInfo() {
@@ -572,6 +582,7 @@ public class ParkOrderInfo implements Parcelable {
         this.userNoteName = in.readString();
         this.isInvoiced = in.readString();
         this.ordersId = in.readString();
+        this.updateTime = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

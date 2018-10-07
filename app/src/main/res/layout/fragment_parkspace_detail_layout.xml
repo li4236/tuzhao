@@ -435,7 +435,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:drawableStart="@mipmap/ic_yuyue"
-            android:text="预定"
+            android:text="预约"
             android:textColor="@color/b1"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
