@@ -151,7 +151,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
                         loadDataFail(e, new LoadFailCallback() {
                             @Override
                             public void onLoadFail(Exception e) {
-                                if (e.getMessage().equals("101")) {
+                                if (mCommonAdapter.getDataSize() != 0 && e.getMessage().equals("101")) {
                                     showFiveToast("没有更多数据了哦");
                                 }
                             }
