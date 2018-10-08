@@ -4,15 +4,13 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.tuzhao.info.base_info.BaseInfo;
-
 import java.util.Objects;
 
 /**
  * Created by TZL12 on 2017/6/17.
  */
 
-public class Discount_Info extends BaseInfo implements Parcelable {
+public class Discount_Info implements Parcelable {
 
     private String id;
     private String user_id;//所属用户

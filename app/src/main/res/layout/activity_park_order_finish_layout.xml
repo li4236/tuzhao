@@ -38,9 +38,11 @@
                 <TextView
                     android:id="@+id/order_amount"
                     style="@style/TwentyTextB1Style"
+                    android:layout_marginTop="12dp"
                     android:textSize="33sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     style="@style/TwentyTextB1Style"

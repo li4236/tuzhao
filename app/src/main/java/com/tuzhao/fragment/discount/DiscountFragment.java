@@ -241,9 +241,7 @@ public class DiscountFragment extends BaseRefreshFragment<Discount_Info> {
                         showFiveToast("该优惠券的最低消费金额为" + DateUtil.deleteZero(discount_info.getMin_fee()) + "元哦");
                     } else if (getActivity() != null) {
                         Intent intent = new Intent();
-                        Bundle data = new Bundle();
-                        data.putParcelable(ConstansUtil.CHOOSE_DISCOUNT, discount_info);
-                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, data);
+                        intent.putExtra(ConstansUtil.CHOOSE_DISCOUNT, discount_info);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         finish();
                     }
