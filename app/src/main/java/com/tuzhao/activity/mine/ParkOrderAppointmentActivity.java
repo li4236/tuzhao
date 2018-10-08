@@ -1,8 +1,6 @@
 package com.tuzhao.activity.mine;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -186,7 +184,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 ViewUtil.contactService(ParkOrderAppointmentActivity.this);
                 break;
             case R.id.copy_order_number:
-                copyOrderNumber();
+                ViewUtil.clipContent(ParkOrderAppointmentActivity.this, getText(mOrderNumber));
                 break;
         }
     }
@@ -650,17 +648,6 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
             } else {
                 showFiveToast("定位失败，请开启GPS后重试");
             }
-        }
-    }
-
-    private void copyOrderNumber() {
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        if (clipboardManager != null) {
-            ClipData clipData = ClipData.newPlainText("订单编号", getText(mOrderNumber));
-            clipboardManager.setPrimaryClip(clipData);
-            showFiveToast("已复制");
-        } else {
-            showFiveToast("复制失败");
         }
     }
 

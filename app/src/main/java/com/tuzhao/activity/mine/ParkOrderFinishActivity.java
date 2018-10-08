@@ -1,8 +1,6 @@
 package com.tuzhao.activity.mine;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -153,7 +151,7 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
                 }
                 break;
             case R.id.copy_order_number:
-                copyOrderNumber();
+                ViewUtil.clipContent(ParkOrderFinishActivity.this, getText(mOrderNumber));
                 break;
             case R.id.appointment_again:
                 appointmentAgain();
@@ -200,17 +198,6 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         intent.putParcelableArrayListExtra(ConstansUtil.INVOICE_LIST, invoiceInfos);
         intent.putExtra(ConstansUtil.INTENT_MESSAGE, mParkOrderInfo.getActualFee());
         startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
-    }
-
-    private void copyOrderNumber() {
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        if (clipboardManager != null) {
-            ClipData clipData = ClipData.newPlainText("订单编号", getText(mOrderNumber));
-            clipboardManager.setPrimaryClip(clipData);
-            showFiveToast("已复制");
-        } else {
-            showFiveToast("复制失败");
-        }
     }
 
     private void appointmentAgain() {

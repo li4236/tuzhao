@@ -1,5 +1,7 @@
 package com.tuzhao.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.tuzhao.activity.mine.CertifyZhimaActivity;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
+import com.tuzhao.publicwidget.mytoast.MyToast;
 
 /**
  * Created by juncoder on 2018/7/12.
@@ -106,6 +109,17 @@ public class ViewUtil {
     public static void contactService(Context context) {
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
         context.startActivity(intent);
+    }
+
+    public static void clipContent(Context context, String content) {
+        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboardManager != null) {
+            ClipData clipData = ClipData.newPlainText("订单编号", content);
+            clipboardManager.setPrimaryClip(clipData);
+            MyToast.showToast(context, "已复制", 5);
+        } else {
+            MyToast.showToast(context, "复制失败", 5);
+        }
     }
 
 }
