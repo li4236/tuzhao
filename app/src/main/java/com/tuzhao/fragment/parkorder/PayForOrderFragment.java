@@ -183,7 +183,6 @@ public class PayForOrderFragment extends BaseStatusFragment implements View.OnCl
         /*String totalCredit = "（总分" + com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getCredit() + "）";
         mUserTotalCredit.setText(totalCredit);*/
 
-        setCollection(CollectionManager.getInstance().isContainParkLot(mParkOrderInfo.getParkLotId()));
         calculateShouldPayFee();
         IntentObserable.registerObserver(this);
     }

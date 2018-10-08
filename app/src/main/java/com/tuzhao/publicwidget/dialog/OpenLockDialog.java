@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.publicwidget.customView.CircularArcView;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.ImageUtil;
+import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.PollingUtil;
 
 import java.util.LinkedList;
@@ -27,6 +29,8 @@ import java.util.Queue;
  * Created by juncoder on 2018/9/21.
  */
 public class OpenLockDialog extends Dialog {
+
+    private ImageView mCrossView;
 
     private CircularArcView mCircularArcView;
 
@@ -66,21 +70,31 @@ public class OpenLockDialog extends Dialog {
         ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.dialog_open_lock_layout, null);
         setContentView(constraintLayout);
         setCanceledOnTouchOutside(false);
+        setCancelable(false);
         initView(constraintLayout);
         mSuccessCallback = callback;
     }
 
     private void initView(View view) {
+        mCrossView = view.findViewById(R.id.close_dialog);
         mCircularArcView = view.findViewById(R.id.circle_arc);
         mLockIv = view.findViewById(R.id.lock_iv);
         mOpenLockTv = view.findViewById(R.id.open_lock_tv);
         mRetryTv = view.findViewById(R.id.retry_tv);
         ImageUtil.showPic(mLockIv, R.drawable.lock);
 
+        mCrossView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancel();
+            }
+        });
+
         mRetryTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSuccessCallback.onSuccess(false);
+                mCrossView.setVisibility(View.INVISIBLE);
                 mRetryTv.setVisibility(View.INVISIBLE);
                 mOpenLockTv.setVisibility(View.VISIBLE);
                 mOpenLockTv.setText("正在" + mLockMessage + "中.");
@@ -95,6 +109,7 @@ public class OpenLockDialog extends Dialog {
      */
     public void startOpenLock() {
         if (mRetryTv.getVisibility() == View.VISIBLE) {
+            mCrossView.setVisibility(View.INVISIBLE);
             mRetryTv.setVisibility(View.INVISIBLE);
             mOpenLockTv.setVisibility(View.VISIBLE);
         }
@@ -106,6 +121,7 @@ public class OpenLockDialog extends Dialog {
     public void dismiss() {
         super.dismiss();
         cancelOpenLockAndPolling();
+        IntentObserable.dispatch(ConstansUtil.DIALOG_DISMISS);
     }
 
     @Override
@@ -168,10 +184,7 @@ public class OpenLockDialog extends Dialog {
                 @Override
                 public void onAnimationCancel(Animator animation) {
                     super.onAnimationCancel(animation);
-                    if (mOpenLockStatus == 0 || mOpenLockStatus == 2) {
-                        if (mOpenLockStatus == 0) {
-                            setCancelable(false);
-                        }
+                    if (mOpenLockStatus != -1) {
                         resumeLockAnimator();
                     }
                 }
@@ -263,11 +276,12 @@ public class OpenLockDialog extends Dialog {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if (mOpenLockStatus == 0) {
+                if (mOpenLockStatus == 0 || mOpenLockStatus == 1) {
                     mOpenLockTv.setText(mLockMessage + "成功");
                     startLockCloseAnimator();
                 } else if (mOpenLockStatus == 2) {
                     mOpenLockTv.setVisibility(View.INVISIBLE);
+                    mCrossView.setVisibility(View.VISIBLE);
                     mRetryTv.setVisibility(View.VISIBLE);
                 }
             }
@@ -358,6 +372,9 @@ public class OpenLockDialog extends Dialog {
 
     public void setOpenLockStatus(int openLockStatus) {
         mOpenLockStatus = openLockStatus;
+        if (mOpenLockStatus == 2) {
+            mAnimatorSet.cancel();
+        }
     }
 
 }

@@ -7,6 +7,18 @@
     android:minHeight="240dp"
     android:minWidth="240dp">
 
+    <ImageView
+        android:id="@+id/close_dialog"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="4dp"
+        android:contentDescription="@string/picture_description"
+        android:padding="6dp"
+        android:src="@drawable/ic_delimg"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.tuzhao.publicwidget.customView.CircularArcView
         android:id="@+id/circle_arc"
         android:layout_width="126dp"

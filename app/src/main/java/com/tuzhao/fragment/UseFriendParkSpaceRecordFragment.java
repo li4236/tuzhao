@@ -54,7 +54,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
 
     private String mStatus;
 
-    private boolean mIsOpening;
+    //private boolean mIsOpening;
 
     private OpenLockDialog mOpenLockDialog;
 
@@ -93,6 +93,12 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
     }
 
     @Override
+    protected void initData() {
+        super.initData();
+        IntentObserable.registerObserver(this);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
@@ -102,6 +108,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        IntentObserable.unregisterObserver(this);
     }
 
     @Override
@@ -195,7 +202,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             @Override
             public void openSuccess() {
                 mOpenLockDialog.setOpenLockStatus(0);
-                mIsOpening = false;
+                //mIsOpening = false;
                 mOpenLockDialog.cancelOpenLockAnimator();
                 if (!mOpenLockDialog.isShowing()) {
                     parkOrderInfo.setOrderStatus("1");
@@ -208,7 +215,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             @Override
             public void openFailed() {
                 mOpenLockDialog.setOpenLockStatus(2);
-                mIsOpening = false;
+                //mIsOpening = false;
                 if (mOpenLockDialog.isShowing()) {
                     mOpenLockDialog.cancelOpenLockAnimator();
                 } else {
@@ -219,7 +226,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             @Override
             public void openSuccessHaveCar() {
                 mOpenLockDialog.setOpenLockStatus(1);
-                mIsOpening = false;
+                //mIsOpening = false;
                 mOpenLockDialog.cancelOpenLockAnimator();
                 mOpenLockDialog.dismiss();
                 showFiveToast("车位上方有车辆滞留");
@@ -315,7 +322,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
     }
 
     private void performOpenLock(final ParkOrderInfo parkOrderInfo) {
-        if (mIsOpening) {
+        /*if (mIsOpening) {
             if (parkOrderInfo.getLockId().equals(mOpenLockOrder.getLockId())) {
                 //如果当前正在开锁，但是关闭了开锁对话框的，再次点击开锁则只显示对话框
                 showOpenLockDialog();
@@ -337,7 +344,19 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                     }).start();
                 }
             });
-        }
+        }*/
+        showDialog("提示", "确定开锁吗？", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mOpenLockOrder = parkOrderInfo;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getCurrentTimeInMillis();
+                    }
+                }).start();
+            }
+        });
     }
 
     /**
@@ -345,7 +364,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
      */
     private void openLockByRecord(ParkOrderInfo parkOrderInfo) {
         showOpenLockDialog();
-        mIsOpening = true;
+        //mIsOpening = true;
         getOkGo(HttpConstants.openLockByRecord)
                 .params("id", parkOrderInfo.getId())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -357,10 +376,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        mIsOpening = false;
                         mOpenLockDialog.setOpenLockStatus(2);
-                        mOpenLockDialog.dismiss();
-                        mOpenLockOrder = null;
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
@@ -567,6 +583,9 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             if (mStatus.equals("2")) {
                 mCommonAdapter.notifyAddData(0, (ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
             }
+        } else if (ConstansUtil.DIALOG_DISMISS.equals(intent.getAction())) {
+            //mIsOpening = false;
+            mOpenLockOrder = null;
         }
     }
 

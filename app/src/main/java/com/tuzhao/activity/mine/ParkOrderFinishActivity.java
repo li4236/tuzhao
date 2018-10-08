@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
@@ -95,6 +96,7 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         findViewById(R.id.delete_order).setOnClickListener(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
         mOrderAmount.setText(mParkOrderInfo.getActual_pay_fee());
