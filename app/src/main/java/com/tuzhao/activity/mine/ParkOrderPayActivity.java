@@ -147,9 +147,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         getDiscount();
         getMonthlyCard();
 
-        mOrderAmount.setText(mParkOrderInfo.getOrderFee());
         mParkFee.setText(mParkOrderInfo.getOrderFee());
-        mTotalPrice.setText(mParkOrderInfo.getOrderFee());
         mOvertimeFee.setText(mParkOrderInfo.getFineFee() + "元");
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
         mParkLotName.setText(mParkOrderInfo.getParkLotName());

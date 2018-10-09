@@ -361,7 +361,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         IntentObserable.dispatch(intent);
 
         showFiveToast("已结束停车");
-        startActivity(ParkOrderFinishActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+        startActivity(ParkOrderPayActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
         finish();
     }
 

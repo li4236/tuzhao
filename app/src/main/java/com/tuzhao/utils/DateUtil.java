@@ -2608,16 +2608,10 @@ public class DateUtil {
      * @param phone_numble 手机号
      */
     public static boolean isPhoneNumble(String phone_numble) {
-//		Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
-//		Matcher m = p.matcher(phone_numble);
-//		return m.matches();
-       /* String regExp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
-        Pattern p = Pattern.compile(regExp);
-        Matcher m = p.matcher(phone_numble);*/
         if (phone_numble.length() != 11) {
             return false;
         } else {
-            String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+            String regex = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$";
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(phone_numble);
             return m.matches();
