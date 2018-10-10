@@ -176,6 +176,15 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!mPayImmediately.isClickable()) {
+            //某些手机会有微信双开，点击微信支付会弹出选择哪个微信支付的对话框，如果此时用户没有选择而是把对话框关闭了，则会导致支付按钮不可点击
+            mPayImmediately.setClickable(true);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mPayThread != null) {
@@ -302,7 +311,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         iwxapi.sendReq(payReq);
 
         if (!payReq.checkArgs()) {
-            System.out.println("微信支付暂不可用，请使用支付宝支付");
+            showFiveToast("微信支付暂不可用，请使用支付宝支付");
         }
     }
 
@@ -391,7 +400,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                     break;
                 case ConstansUtil.PAY_CANCEL:
                     showFiveToast("支付取消");
-                    mPayImmediately.setClickable(true);
                     break;
                 case ConstansUtil.PAY_ERROR:
                     if (intent.getStringExtra(ConstansUtil.INTENT_MESSAGE) != null) {
@@ -399,7 +407,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                     } else {
                         showFiveToast("支付失败");
                     }
-                    mPayImmediately.setClickable(true);
                     break;
             }
         }
