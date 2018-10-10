@@ -131,18 +131,8 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
     @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
-        mStartParkDate.setText("入场时间：" + DateUtil.getYearToMinuteWithText(mParkOrderInfo.getOrderStartTime()));
-        mCarNumber.setText(mParkOrderInfo.getCarNumber());
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mParkLotName.setText(mParkOrderInfo.getParkLotName());
-        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
-        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
-        mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
-        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
-        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
-        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
-
-        registerLockListener();
+        showCantCancelLoadingDialog();
+        getParkOrderDetail();
     }
 
     @NonNull
@@ -234,6 +224,45 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         animation.setDuration(500);
         marker.setAnimation(animation);
         marker.startAnimation();
+    }
+
+    private void getParkOrderDetail() {
+        getOkGo(HttpConstants.getParkOrderDetail)
+                .params("id", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        o.data.copyFrom(mParkOrderInfo);
+                        mParkOrderInfo = o.data;
+                        init();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showFiveToast("获取订单信息失败，请稍后重试");
+                        finish();
+                    }
+                });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void init() {
+        mStartParkDate.setText("入场时间：" + DateUtil.getYearToMinuteWithText(mParkOrderInfo.getOrderStartTime()));
+        mCarNumber.setText(mParkOrderInfo.getCarNumber());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
+        mParkLotName.setText(mParkOrderInfo.getParkLotName());
+        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
+        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
+        mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
+        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
+        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
+        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
+
+        registerLockListener();
     }
 
     private void registerLockListener() {

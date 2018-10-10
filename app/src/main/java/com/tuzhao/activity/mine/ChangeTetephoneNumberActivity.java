@@ -136,8 +136,9 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
             }
         });
 
+        mTelephoneNumber.requestFocus();
         ViewUtil.openInputMethod(mTelephoneNumber);
-
+        
         mClearTetephoneNumber.setOnClickListener(this);
         mGetVerificationCode.setOnClickListener(this);
         mClearVerificationCode.setOnClickListener(this);
@@ -186,12 +187,16 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                 break;
             case R.id.get_verify_code:
                 if (TextUtils.isEmpty(getText(mTelephoneNumber))) {
+                    mTelephoneNumber.requestFocus();
                     showTelephoneError("请输入新的手机号");
                 } else if (getTextLength(mTelephoneNumber) < 11) {
+                    mTelephoneNumber.requestFocus();
                     showTelephoneError("手机号格式不正确");
                 } else if (!DateUtil.isPhoneNumble(getText(mTelephoneNumber))) {
+                    mTelephoneNumber.requestFocus();
                     showTelephoneError("手机号不正确");
                 } else if (getText(mTelephoneNumber).equals(UserManager.getInstance().getUserInfo().getUsername())) {
+                    mTelephoneNumber.requestFocus();
                     showTelephoneError("不能与旧手机号一样");
                 } else {
                     hideView(mTelephoneNumberError);
@@ -206,16 +211,21 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                 break;
             case R.id.confirm_change:
                 if (getTextLength(mTelephoneNumber) == 0) {
+                    mTelephoneNumber.requestFocus();
                     showFiveToast("请输入新的手机号");
                 } else if (getTextLength(mTelephoneNumber) < 11) {
+                    mTelephoneNumber.requestFocus();
                     showFiveToast("手机号格式不正确");
                 } else if (mTelephoneToken == null) {
                     showTelephoneError("请先获取验证码");
                 } else if (!getText(mTelephoneNumber).equals(mGetVerificationCodeTelephone)) {
+                    mTelephoneNumber.requestFocus();
                     showTelephoneError("手机号与获取验证码的不一致");
                 } else if (TextUtils.isEmpty(getText(mVerificationCode))) {
+                    mVerificationCode.requestFocus();
                     showVerificationCodeError("请输入验证码");
                 } else if (getTextLength(mVerificationCode) < 4) {
+                    mVerificationCode.requestFocus();
                     showVerificationCodeError("验证码格式不正确");
                 } else {
                     changeTelephoneNumber();

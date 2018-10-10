@@ -12,11 +12,9 @@ import com.tuzhao.activity.PayActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Discount_Info;
-import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
@@ -28,7 +26,6 @@ import com.tuzhao.utils.PollingUtil;
 import com.tuzhao.utils.ViewUtil;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -49,6 +46,8 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
     private TextView mDiscountDeduction;
 
     private TextView mMonthlyCardOffer;
+
+    private TextView mMonthlyCardDiscount;
 
     private TextView mCarNumber;
 
@@ -80,10 +79,6 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
 
     private double mMonthlyCardOfferPrice;
 
-    private ArrayList<Discount_Info> mDiscountInfos;
-
-    private ArrayList<MonthlyCardBean> mMonthlyCards;
-
     private Discount_Info mChooseDiscount;
 
     private DecimalFormat mDecimalFormat;
@@ -112,6 +107,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         mOvertimeFee = findViewById(R.id.overtime_fee);
         mDiscountDeduction = findViewById(R.id.discount_deduction);
         mMonthlyCardOffer = findViewById(R.id.monthly_card_offer);
+        mMonthlyCardDiscount = findViewById(R.id.monthly_card_discount);
         mCarNumber = findViewById(R.id.car_number);
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkSpaceNumber = findViewById(R.id.park_space_number);
@@ -140,33 +136,8 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
     @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
-        mDiscountInfos = new ArrayList<>();
-        mMonthlyCards = new ArrayList<>();
-        mDecimalFormat = new DecimalFormat("0.00");
-
-        getDiscount();
-        getMonthlyCard();
-
-        mParkFee.setText(mParkOrderInfo.getOrderFee());
-        mOvertimeFee.setText(mParkOrderInfo.getFineFee() + "元");
-        mCarNumber.setText(mParkOrderInfo.getCarNumber());
-        mParkLotName.setText(mParkOrderInfo.getParkLotName());
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
-        mAppointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
-        mAppointmentEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
-        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
-        mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));
-        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
-
-        String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
-        mOvertimeDuration.setText(overtimeDuration);
-
-        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
-        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
-
-        calculateShouldPayFee();
-        IntentObserable.registerObserver(this);
+        showCantCancelLoadingDialog();
+        getParkOrderDetail();
     }
 
     @NonNull
@@ -185,11 +156,11 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
                 break;
             case R.id.discount_deduction:
             case R.id.discount_deduction_av:
-                if (mDiscountInfos.size() <= 0) {
+                if (mParkOrderInfo.getDiscount().size() == 1 && mParkOrderInfo.getDiscount().get(0).getId().equals("-1")) {
                     showFiveToast("暂无可用优惠券哦");
                 } else {
                     Intent dicountIntent = new Intent(ParkOrderPayActivity.this, DiscountActivity.class);
-                    dicountIntent.putParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST, mDiscountInfos);
+                    dicountIntent.putParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST, mParkOrderInfo.getDiscount());
                     dicountIntent.putExtra(ConstansUtil.ORDER_FEE, mParkOrderInfo.getOrderFee());
                     dicountIntent.putExtra(ConstansUtil.TYPE, 1);
                     startActivityForResult(dicountIntent, ConstansUtil.DISOUNT_REQUEST_CODE);
@@ -239,57 +210,58 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         }
     }
 
-    /**
-     * 获取优惠券
-     */
-    private void getDiscount() {
-        getOkGo(HttpConstants.getUserDiscount)
-                .params("discountType", 4)
-                .params("isUsable", 1)
-                .execute(new JsonCallback<Base_Class_List_Info<Discount_Info>>() {
+    private void getParkOrderDetail() {
+        getOkGo(HttpConstants.getParkOrderDetail)
+                .params("id", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
-                    public void onSuccess(Base_Class_List_Info<Discount_Info> o, Call call, Response response) {
-                        mDiscountInfos.addAll(o.data);
-                        calculateShouldPayFee();
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        o.data.copyFrom(mParkOrderInfo);
+                        mParkOrderInfo = o.data;
+                        init();
                         dismmisLoadingDialog();
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "101":
-                                    break;
-                                default:
-                                    showFiveToast("查询优惠券失败，请返回重试");
-                                    break;
-                            }
-                        }
+                        dismmisLoadingDialog();
+                        showFiveToast("获取订单信息失败，请稍后重试");
+                        finish();
                     }
                 });
     }
 
-    /**
-     * 获取有效的月卡
-     */
-    private void getMonthlyCard() {
-        getOkGo(HttpConstants.getUserMonthlyCards)
-                .params("startItem", 0)
-                .params("pageSize", 15)
-                .params("type", "1")
-                .execute(new JsonCallback<Base_Class_List_Info<MonthlyCardBean>>() {
-                    @Override
-                    public void onSuccess(Base_Class_List_Info<MonthlyCardBean> o, Call call, Response response) {
-                        for (MonthlyCardBean monthlyCardBean : o.data) {
-                            if (monthlyCardBean.getCityCode().equals(mParkOrderInfo.getCityCode()) ||
-                                    monthlyCardBean.getCityCode().equals("0000")) {
-                                mMonthlyCards.add(monthlyCardBean);
-                            }
-                        }
-                        calculateShouldPayFee();
-                    }
-                });
+    @SuppressLint("SetTextI18n")
+    private void init() {
+        mDecimalFormat = new DecimalFormat("0.00");
+
+        mParkFee.setText(mParkOrderInfo.getOrderFee());
+        mOvertimeFee.setText(mParkOrderInfo.getFineFee() + "元");
+        mCarNumber.setText(mParkOrderInfo.getCarNumber());
+        mParkLotName.setText(mParkOrderInfo.getParkLotName());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
+        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
+        mAppointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
+        mAppointmentEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
+        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
+        mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));
+        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
+
+        String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
+        mOvertimeDuration.setText(overtimeDuration);
+
+        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
+        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
+
+        if (mParkOrderInfo.getMonthlyCardDiscount() != 1) {
+            mMonthlyCardDiscount.setVisibility(View.VISIBLE);
+            mMonthlyCardDiscount.setText(String.valueOf(mParkOrderInfo.getMonthlyCardDiscount() * 10));
+        }
+
+        calculateShouldPayFee();
+        IntentObserable.registerObserver(this);
     }
 
     /**
@@ -312,7 +284,12 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
             }
         } else {
             calculateParkFeeWithMonthlyCard();
-            String discountCount = "有" + mDiscountInfos.size() + "个红包";
+            String discountCount;
+            if (mParkOrderInfo.getDiscount().size() == 1 && mParkOrderInfo.getDiscount().get(0).getId().equals("-1")) {
+                discountCount = "有0个红包";
+            } else {
+                discountCount = "有" + mParkOrderInfo.getDiscount().size() + "个红包";
+            }
             mDiscountDeduction.setText(discountCount);
         }
 
@@ -331,11 +308,11 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
      */
     @SuppressLint("SetTextI18n")
     private void calculateParkFeeWithMonthlyCard() {
-        if (!mMonthlyCards.isEmpty()) {
-            mMonthlyCardOfferPrice = Double.parseDouble(mDecimalFormat.format(mShouldPay - mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
+        if (mParkOrderInfo.getMonthlyCardDiscount() != 1) {
+            mMonthlyCardOfferPrice = Double.parseDouble(mDecimalFormat.format(mShouldPay - mShouldPay * mParkOrderInfo.getMonthlyCardDiscount()));
             mMonthlyCardOffer.setText("—" + String.valueOf(mMonthlyCardOfferPrice) + "元");
 
-            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * Double.valueOf(mMonthlyCards.get(0).getDiscount())));
+            mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * mParkOrderInfo.getMonthlyCardDiscount()));
         }
         if (mShouldPay <= 0) {
             mShouldPay = 0.01;

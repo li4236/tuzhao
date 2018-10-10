@@ -710,4 +710,9 @@ public class HttpConstants {
      */
     public static final String openLockByRecord = ROOT_URL + "openLockByRecord";
 
+    /**
+     * 获取停车订单的详细信息
+     */
+    public static final String getParkOrderDetail = ROOT_URL + "getParkOrderDetail";
+
 }

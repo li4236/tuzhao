@@ -4,6 +4,7 @@ package com.tuzhao.application;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Debug;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
@@ -78,6 +79,7 @@ public class MyApplication extends MultiDexApplication {
         }*/
         mApplication = this;
         SKIP_WELCOME = false;//跳过启动欢迎见面
+        Debug.startMethodTracing("trace");
         /**
          * 初始化极光推送
          */
@@ -96,10 +98,6 @@ public class MyApplication extends MultiDexApplication {
 
         /*开启网络广播监听*/
         NetStateReceiver.registerNetworkStateReceiver(this);
-        /*
-          检查版本更新
-         */
-        //UpdateConfig.init(this);
 
         OkGo.init(this);
 
@@ -146,12 +144,12 @@ public class MyApplication extends MultiDexApplication {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        NetStateReceiver.unRegisterNetworkStateReceiver(this);
         GlideApp.get(this).clearMemory();
     }
 

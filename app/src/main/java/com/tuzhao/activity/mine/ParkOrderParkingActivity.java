@@ -27,9 +27,12 @@ import com.tuzhao.activity.ParkspaceDetailActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnLockListenerAdapter;
+import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
+import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicmanager.UserManager;
+import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DeviceUtils;
@@ -39,6 +42,9 @@ import com.tuzhao.utils.ViewUtil;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/10/7.
@@ -136,32 +142,9 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
     @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
+        showCantCancelLoadingDialog();
         mDecimalFormat = new DecimalFormat("0.00");
-        initPolling();
-
-        mCarNumber.setText(mParkOrderInfo.getCarNumber());
-        mGraceTime.setText(com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
-
-        Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
-        calendar.add(Calendar.MINUTE, com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getLeave_time());
-        mLatestLeaveTime.setText(DateUtil.getCalendarMonthToMinuteWithText(calendar));
-
-        String timeoutBilling = "超时部分按" + mParkOrderInfo.getFine() + "元/时计费";
-        SpannableString spannableString = new SpannableString(timeoutBilling);
-        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff0101")), 5, timeoutBilling.indexOf("/"), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mTimeoutBilling.setText(spannableString);
-
-        mParkLotName.setText(mParkOrderInfo.getParkLotName());
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
-        mAppointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
-        mAppointmentEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
-        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
-
-        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
-        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
-
-        initLockListener();
+        getParkOrderDetail();
     }
 
     @NonNull
@@ -242,6 +225,58 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         animation.setDuration(500);
         marker.setAnimation(animation);
         marker.startAnimation();
+    }
+
+    private void getParkOrderDetail() {
+        getOkGo(HttpConstants.getParkOrderDetail)
+                .params("id", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        o.data.copyFrom(mParkOrderInfo);
+                        mParkOrderInfo = o.data;
+                        init();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showFiveToast("获取订单信息失败，请稍后重试");
+                        finish();
+                    }
+                });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void init() {
+        initPolling();
+
+        mCarNumber.setText(mParkOrderInfo.getCarNumber());
+        mGraceTime.setText(com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
+
+        Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
+        calendar.add(Calendar.MINUTE, com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getLeave_time());
+        mLatestLeaveTime.setText(DateUtil.getCalendarMonthToMinuteWithText(calendar));
+
+        String timeoutBilling = "超时部分按" + mParkOrderInfo.getFine() + "元/时计费";
+        SpannableString spannableString = new SpannableString(timeoutBilling);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff0101")), 5, timeoutBilling.indexOf("/"), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTimeoutBilling.setText(spannableString);
+
+        mParkLotName.setText(mParkOrderInfo.getParkLotName());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
+        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
+        mAppointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
+        mAppointmentEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
+        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
+
+        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
+        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
+
+        initLockListener();
     }
 
     private void initPolling() {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -97,23 +98,8 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
     @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
-        mOrderAmount.setText(mParkOrderInfo.getActual_pay_fee());
-        mCarNumber.setText(mParkOrderInfo.getCarNumber());
-        mParkLotName.setText(mParkOrderInfo.getParkLotName());
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
-        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
-        mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));
-
-        String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
-        if (!overtimeDuration.equals("未超时")) {
-            mOvertimeDuration.setTextColor(Color.parseColor("#ff2020"));
-        }
-        mOvertimeDuration.setText(overtimeDuration);
-
-        mParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), mParkOrderInfo.getParkEndTime()));
-        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
-        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
+        showCantCancelLoadingDialog();
+        getParkOrderDetail();
     }
 
     @NonNull
@@ -169,6 +155,12 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.e(TAG, "onBackPressed: " );
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
@@ -181,6 +173,50 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
                 IntentObserable.dispatch(ConstansUtil.INVOICE_SUCCESS, ConstansUtil.INTENT_MESSAGE, arrayList.get(0).getOrderId());
             }
         }
+    }
+
+    private void getParkOrderDetail() {
+        getOkGo(HttpConstants.getParkOrderDetail)
+                .params("id", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        o.data.copyFrom(mParkOrderInfo);
+                        mParkOrderInfo = o.data;
+                        init();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showFiveToast("获取订单信息失败，请稍后重试");
+                        finish();
+                    }
+                });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void init() {
+        mOrderAmount.setText(mParkOrderInfo.getActual_pay_fee());
+        mCarNumber.setText(mParkOrderInfo.getCarNumber());
+        mParkLotName.setText(mParkOrderInfo.getParkLotName());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
+        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
+        mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
+        mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));
+
+        String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
+        if (!overtimeDuration.equals("未超时")) {
+            mOvertimeDuration.setTextColor(Color.parseColor("#ff2020"));
+        }
+        mOvertimeDuration.setText(overtimeDuration);
+
+        mParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), mParkOrderInfo.getParkEndTime()));
+        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
+        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
     }
 
     private void startInvoiceReimbursement() {

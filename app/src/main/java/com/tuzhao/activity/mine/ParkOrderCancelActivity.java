@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,15 +81,8 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
 
     @Override
     protected void initData() {
-        mCarNumber.setText(mParkOrderInfo.getCarNumber());
-        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
-        mParkLotName.setText(mParkOrderInfo.getParkLotName());
-        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
-        mApointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
-        mAppointmentParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
-        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
-        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
-        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
+        showCantCancelLoadingDialog();
+        getParkOrderDetail();
     }
 
     @NonNull
@@ -118,6 +112,42 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
                 ViewUtil.clipContent(ParkOrderCancelActivity.this, getText(mOrderNumber));
                 break;
         }
+    }
+
+    private void getParkOrderDetail() {
+        getOkGo(HttpConstants.getParkOrderDetail)
+                .params("id", mParkOrderInfo.getId())
+                .params("cityCode", mParkOrderInfo.getCityCode())
+                .execute(new JsonCallback<Base_Class_Info<ParkOrderInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
+                        o.data.copyFrom(mParkOrderInfo);
+                        mParkOrderInfo = o.data;
+                        init();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dismmisLoadingDialog();
+                        showFiveToast("获取订单信息失败，请稍后重试");
+                        finish();
+                    }
+                });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void init() {
+        mCarNumber.setText(mParkOrderInfo.getCarNumber());
+        mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
+        mParkLotName.setText(mParkOrderInfo.getParkLotName());
+        mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
+        mApointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
+        mAppointmentParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
+        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
+        mOrderNumber.setText(mParkOrderInfo.getOrder_number());
+        mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
     }
 
     private void deletelOrder() {

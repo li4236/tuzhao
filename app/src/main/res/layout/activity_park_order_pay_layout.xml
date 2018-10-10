@@ -40,9 +40,9 @@
                     style="@style/TwentyTextB1Style"
                     android:layout_marginTop="12dp"
                     android:textSize="33sp"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     style="@style/TwentyTextB1Style"
@@ -155,6 +155,23 @@
                     android:text="月卡优惠"
                     app:layout_constraintStart_toStartOf="@+id/park_fee_tv"
                     app:layout_constraintTop_toBottomOf="@+id/discount_deduction_tv" />
+
+                <TextView
+                    android:id="@+id/monthly_card_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/solid_r8_all_1dp"
+                    android:paddingBottom="2dp"
+                    android:paddingEnd="1dp"
+                    android:paddingStart="1dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@color/w0"
+                    android:textSize="8sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/monthly_card_offer_tv"
+                    app:layout_constraintStart_toEndOf="@+id/monthly_card_offer_tv"
+                    app:layout_constraintTop_toTopOf="@+id/monthly_card_offer_tv" />
 
                 <TextView
                     android:id="@+id/monthly_card_offer"
