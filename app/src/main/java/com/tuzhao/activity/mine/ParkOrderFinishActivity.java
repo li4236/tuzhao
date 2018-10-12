@@ -6,22 +6,21 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.OrderParkActivity;
+import com.tuzhao.activity.ParkspaceDetailActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.InvoiceInfo;
-import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.ViewUtil;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/9/28.
  */
-public class ParkOrderFinishActivity extends BaseStatusActivity implements View.OnClickListener {
+public class ParkOrderFinishActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -100,6 +99,7 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
     protected void initData() {
         showCantCancelLoadingDialog();
         getParkOrderDetail();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -141,7 +141,8 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
                 ViewUtil.clipContent(ParkOrderFinishActivity.this, getText(mOrderNumber));
                 break;
             case R.id.appointment_again:
-                appointmentAgain();
+                startActivity(ParkspaceDetailActivity.class, "parkspace_id", mParkOrderInfo.getParkLotId(),
+                        "city_code", mParkOrderInfo.getCityCode());
                 break;
             case R.id.delete_order:
                 showDialog("确定删除订单吗", new DialogInterface.OnClickListener() {
@@ -152,12 +153,6 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
                 });
                 break;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Log.e(TAG, "onBackPressed: " );
     }
 
     @Override
@@ -173,6 +168,12 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
                 IntentObserable.dispatch(ConstansUtil.INVOICE_SUCCESS, ConstansUtil.INTENT_MESSAGE, arrayList.get(0).getOrderId());
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     private void getParkOrderDetail() {
@@ -237,13 +238,6 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
     }
 
-    private void appointmentAgain() {
-        ParkLotInfo parkLotInfo = new ParkLotInfo();
-        parkLotInfo.setId(mParkOrderInfo.getParkLotId());
-        parkLotInfo.setCity_code(mParkOrderInfo.getCityCode());
-        startActivity(OrderParkActivity.class, "parkLotInfo", parkLotInfo);
-    }
-
     private void deleteOrder() {
         showLoadingDialog("正在删除");
         getOkGo(HttpConstants.deletelParkOrder)
@@ -275,6 +269,14 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.DIALOG_ON_BACK_PRESS.equals(intent.getAction())) {
+            dismmisLoadingDialog();
+            finish();
+        }
     }
 
 }

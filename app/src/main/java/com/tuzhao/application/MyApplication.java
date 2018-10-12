@@ -4,7 +4,6 @@ package com.tuzhao.application;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Debug;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
@@ -79,7 +78,7 @@ public class MyApplication extends MultiDexApplication {
         }*/
         mApplication = this;
         SKIP_WELCOME = false;//跳过启动欢迎见面
-        Debug.startMethodTracing("trace");
+        //Debug.startMethodTracing("trace");
         /**
          * 初始化极光推送
          */

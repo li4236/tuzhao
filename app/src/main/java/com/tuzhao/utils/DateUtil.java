@@ -1887,11 +1887,15 @@ public class DateUtil {
         return number;
     }
 
+    public static String deleteZero(double number) {
+        return deleteZero(String.valueOf(number));
+    }
+
     /**
      * 删掉.00
      */
     public static String deleteZero(String number) {
-        if (!number.contains(".")||number.charAt(number.length() - 1) != '0') {
+        if (!number.contains(".") || number.charAt(number.length() - 1) != '0') {
             return number;
         }
 

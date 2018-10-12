@@ -138,6 +138,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
     protected void initData() {
         showCantCancelLoadingDialog();
         getParkOrderDetail();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -257,11 +258,10 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
 
         if (mParkOrderInfo.getMonthlyCardDiscount() != 1) {
             mMonthlyCardDiscount.setVisibility(View.VISIBLE);
-            mMonthlyCardDiscount.setText(String.valueOf(mParkOrderInfo.getMonthlyCardDiscount() * 10));
+            mMonthlyCardDiscount.setText(DateUtil.deleteZero(mParkOrderInfo.getMonthlyCardDiscount() * 10) + "折");
         }
 
         calculateShouldPayFee();
-        IntentObserable.registerObserver(this);
     }
 
     /**
@@ -346,6 +346,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
                             intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                             IntentObserable.dispatch(intent);
                             dismmisLoadingDialog();
+                            finish();
                         } else if (o.data.getOrderStatus().equals("3")) {
                             mPollingUtil = new PollingUtil(1000, new PollingUtil.OnTimeCallback() {
                                 @Override
@@ -408,6 +409,10 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
             switch (intent.getAction()) {
                 case ConstansUtil.PAY_SUCCESS:
                     getParkOrder();
+                    break;
+                case ConstansUtil.DIALOG_ON_BACK_PRESS:
+                    dismmisLoadingDialog();
+                    finish();
                     break;
             }
         }

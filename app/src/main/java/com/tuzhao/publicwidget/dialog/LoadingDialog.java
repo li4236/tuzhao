@@ -2,13 +2,12 @@ package com.tuzhao.publicwidget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.IntentObserable;
 
 /**
  * 自定义透明的dialog
@@ -19,12 +18,13 @@ public class LoadingDialog extends Dialog {
 
     private String content;
 
-    private boolean mCancelable = true;
+    private boolean mCancelable;
 
     public LoadingDialog(Context context, String content, boolean cancelable) {
         super(context, R.style.CustomDialog);
         this.content = content != null ? content : "加载中...";
         initView();
+        setCancelable(cancelable);
         mCancelable = cancelable;
     }
 
@@ -48,24 +48,18 @@ public class LoadingDialog extends Dialog {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                if (LoadingDialog.this.isShowing() && mCancelable) {
-                    LoadingDialog.this.dismiss();
-                    Log.e(TAG, "onKeyDown: ");
-                    return false;
-                }
-                break;
+    public void onBackPressed() {
+        if (mCancelable) {
+            cancel();
+        } else if (isShowing()) {
+            IntentObserable.dispatch(ConstansUtil.DIALOG_ON_BACK_PRESS);
         }
-        return true;
     }
 
     private void initView() {
         setContentView(R.layout.view_dialog);
         ((TextView) findViewById(R.id.tvcontent)).setText(content);
         setCanceledOnTouchOutside(true);
-        setCancelable(false);
     }
 
     public String getContent() {

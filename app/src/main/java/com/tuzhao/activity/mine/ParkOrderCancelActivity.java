@@ -9,10 +9,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.OrderParkActivity;
+import com.tuzhao.activity.ParkspaceDetailActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.ParkLotInfo;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
@@ -20,6 +19,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
@@ -28,7 +28,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/10/8.
  */
-public class ParkOrderCancelActivity extends BaseStatusActivity implements View.OnClickListener {
+public class ParkOrderCancelActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -83,6 +83,7 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
     protected void initData() {
         showCantCancelLoadingDialog();
         getParkOrderDetail();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -103,7 +104,8 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
                 });
                 break;
             case R.id.appointment_again:
-                appointmentAgain();
+                startActivity(ParkspaceDetailActivity.class, "parkspace_id", mParkOrderInfo.getParkLotId(),
+                        "city_code", mParkOrderInfo.getCityCode());
                 break;
             case R.id.contact_service_cl:
                 ViewUtil.contactService(ParkOrderCancelActivity.this);
@@ -112,6 +114,12 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
                 ViewUtil.clipContent(ParkOrderCancelActivity.this, getText(mOrderNumber));
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
     }
 
     private void getParkOrderDetail() {
@@ -182,11 +190,12 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
                 });
     }
 
-    private void appointmentAgain() {
-        ParkLotInfo parkLotInfo = new ParkLotInfo();
-        parkLotInfo.setId(mParkOrderInfo.getParkLotId());
-        parkLotInfo.setCity_code(mParkOrderInfo.getCityCode());
-        startActivity(OrderParkActivity.class, "parkLotInfo", parkLotInfo);
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.DIALOG_ON_BACK_PRESS.equals(intent.getAction())) {
+            dismmisLoadingDialog();
+            finish();
+        }
     }
 
 }

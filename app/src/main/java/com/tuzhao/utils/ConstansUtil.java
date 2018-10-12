@@ -297,6 +297,11 @@ public class ConstansUtil {
     public static final String DIALOG_DISMISS = "DialogDismiss";
 
     /**
+     * 对话框不可取消的，则把返回键的事件传递出去
+     */
+    public static final String DIALOG_ON_BACK_PRESS = "DialogOnBackPress";
+
+    /**
      * 弹出对话框，我的车位fragment,检查更新
      */
     public static final String SHOW_DIALOG = "ShowDialog";

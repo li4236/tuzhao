@@ -41,6 +41,7 @@ import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.ViewUtil;
 
 import java.util.Calendar;
@@ -53,7 +54,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/9/29.
  */
-public class ParkOrderAppointmentActivity extends BaseStatusActivity implements View.OnClickListener {
+public class ParkOrderAppointmentActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -133,6 +134,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
     protected void initData() {
         showCantCancelLoadingDialog();
         getParkOrderDetail();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -200,6 +202,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
             mOpenLockDialog.setOpenLockStatus(-1);
             mOpenLockDialog.cancel();
         }
+        IntentObserable.unregisterObserver(this);
     }
 
     private void initMapView() {
@@ -677,6 +680,14 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
             } else {
                 showFiveToast("定位失败，请开启GPS后重试");
             }
+        }
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.DIALOG_ON_BACK_PRESS.equals(intent.getAction())) {
+            dismmisLoadingDialog();
+            finish();
         }
     }
 

@@ -37,6 +37,7 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.PollingUtil;
 import com.tuzhao.utils.ViewUtil;
 
@@ -49,7 +50,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/10/7.
  */
-public class ParkOrderParkingActivity extends BaseStatusActivity implements View.OnClickListener {
+public class ParkOrderParkingActivity extends BaseStatusActivity implements View.OnClickListener ,IntentObserver{
 
     private ParkOrderInfo mParkOrderInfo;
 
@@ -145,6 +146,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         showCantCancelLoadingDialog();
         mDecimalFormat = new DecimalFormat("0.00");
         getParkOrderDetail();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -201,6 +203,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
             mPollingUtil.cancel();
         }
         MyReceiver.removeLockListener(mParkOrderInfo.getLockId());
+        IntentObserable.unregisterObserver(this);
     }
 
     private void initMapView() {
@@ -426,6 +429,14 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
             showFiveToast("已复制");
         } else {
             showFiveToast("复制失败");
+        }
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.DIALOG_ON_BACK_PRESS.equals(intent.getAction())) {
+            dismmisLoadingDialog();
+            finish();
         }
     }
 
