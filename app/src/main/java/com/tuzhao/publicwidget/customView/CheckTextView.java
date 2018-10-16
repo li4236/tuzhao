@@ -41,27 +41,49 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            return true;
+        } else if (event.getAction() == MotionEvent.ACTION_UP && inViewArea(event.getX(), event.getY())) {
             if (mOnCheckChangeListener != null) {
                 mOnCheckChangeListener.onCheckChange(!mIsCheck);
             } else {
                 setChecked(!mIsCheck);
             }
+            return true;
         }
         return super.onTouchEvent(event);
+    }
+
+    /**
+     * @return 触摸的范围是否在View里面
+     */
+    private boolean inViewArea(float x, float y) {
+        return x >= 0 && x <= getWidth() && y >= 0 && y <= getHeight();
     }
 
     @Override
     public void setChecked(boolean checked) {
         mIsCheck = checked;
         if (mIsCheck) {
-            setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_y2_all_5dp));
+            if (mCheckDrawable == null) {
+                setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_y2_all_5dp));
+            } else {
+                setBackground(mCheckDrawable);
+            }
         } else {
-            setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_5dp_g10));
+            if (mNoCheckDrawble == null) {
+                setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_5dp_g10));
+            } else {
+                setBackground(mNoCheckDrawble);
+            }
         }
     }
 
     public void setOnCheckChangeListener(OnCheckChangeListener onCheckChangeListener) {
         mOnCheckChangeListener = onCheckChangeListener;
+    }
+
+    public OnCheckChangeListener getOnCheckChangeListener() {
+        return mOnCheckChangeListener;
     }
 
     @Override
@@ -79,7 +101,9 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
     }
 
     public void setCheckDrawable(@DrawableRes int drawableId) {
-        mCheckDrawable = ContextCompat.getDrawable(getContext(), drawableId);
+        if (mCheckDrawable == null) {
+            mCheckDrawable = ContextCompat.getDrawable(getContext(), drawableId);
+        }
     }
 
     public void setCheckDrawable(Drawable checkDrawable) {
@@ -91,7 +115,9 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
     }
 
     public void setNoCheckDrawble(@DrawableRes int drawableId) {
-        mNoCheckDrawble = ContextCompat.getDrawable(getContext(), drawableId);
+        if (mNoCheckDrawble == null) {
+            mNoCheckDrawble = ContextCompat.getDrawable(getContext(), drawableId);
+        }
     }
 
     public void setNoCheckDrawble(Drawable noCheckDrawble) {

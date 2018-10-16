@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tuzhao.publicwidget.customView.CheckTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reason"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="8dp"
+    android:gravity="center"
+    android:paddingBottom="10dp"
+    android:paddingEnd="12dp"
+    android:paddingStart="12dp"
+    android:paddingTop="10dp"
+    android:textColor="@color/b1"
+    android:textSize="12sp">
+
+</com.tuzhao.publicwidget.customView.CheckTextView>

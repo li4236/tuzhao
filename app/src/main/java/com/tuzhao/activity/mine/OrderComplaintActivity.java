@@ -9,11 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
@@ -22,17 +19,22 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Pair;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.CustomDialog;
+import com.tuzhao.publicwidget.customView.CheckTextView;
+import com.tuzhao.publicwidget.customView.FlexBoxLayoutManager;
 import com.tuzhao.publicwidget.upload.UploadPicture;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -41,8 +43,6 @@ import okhttp3.Response;
  * Created by juncoder on 2018/7/27.
  */
 public class OrderComplaintActivity extends BaseStatusActivity implements View.OnClickListener {
-
-    private TextView mComplaintReason;
 
     private ImageView mParkSpaceIv;
 
@@ -56,15 +56,13 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
 
     private TextView mConfirmSubmit;
 
-    private String[] mSpinnerString = {"订单计费有误", "结束停车未停止计费", "其他"};
+    private ReasonApdater mApdater;
 
     private ParkOrderInfo mParkOrderInfo;
 
     private UploadPicture<UploadAdapter> mUploadPicture;
 
-    private CustomDialog mCustomDialog;
-
-    private boolean mHaveChooseReason = false;
+    private int mReasonPosition = -1;
 
     @Override
     protected int resourceId() {
@@ -73,17 +71,21 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        mComplaintReason = findViewById(R.id.complaint_reason);
         mParkSpaceIv = findViewById(R.id.park_space_iv);
         mParkSpaceName = findViewById(R.id.park_space_name);
         mParkDuration = findViewById(R.id.grace_time);
         mQuestionDescription = findViewById(R.id.question_descrption_et);
         mQeustionTextNumber = findViewById(R.id.input_text_number);
         mConfirmSubmit = findViewById(R.id.confirm_submit);
-        RecyclerView recyclerView = findViewById(R.id.complaint_reason_rv);
+        RecyclerView reasonRecyclerView = findViewById(R.id.complaint_reason_rv);
+        RecyclerView recyclerView = findViewById(R.id.complaint_pictrue_rv);
 
-        initComplaintReasonDialog();
         initEditText();
+
+        reasonRecyclerView.setLayoutManager(new FlexBoxLayoutManager());
+        mApdater = new ReasonApdater();
+        reasonRecyclerView.setAdapter(mApdater);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mUploadPicture = new UploadPicture<>(this, new UploadAdapter(), 4);
         mUploadPicture.setStartPadding(DensityUtil.dp2px(this, 10));
@@ -92,7 +94,6 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         mUploadPicture.getAdapter().addData(new UploadPhotoInfo());
         mQuestionDescription.clearFocus();
 
-        mComplaintReason.setOnClickListener(this);
         mConfirmSubmit.setOnClickListener(this);
     }
 
@@ -109,26 +110,32 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
             String parkDuration = "时长：" + DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getPark_start_time(),
                     mParkOrderInfo.getPark_end_time()) + "  日期：" + DateUtil.getYearToDayWithPointText(mParkOrderInfo.getPark_start_time());
             mParkDuration.setText(parkDuration);
+
+            initcomplaintReason();
         }
     }
 
-    private void initComplaintReasonDialog() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_list_layout, null);
-        mCustomDialog = new CustomDialog(this, view, true);
-        ListView listView = view.findViewById(R.id.dialog_lv);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.item_center_text_b1_layout, mSpinnerString);
-        listView.setAdapter(arrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!mHaveChooseReason) {
-                    mComplaintReason.setTextColor(ConstansUtil.B1_COLOR);
-                    mHaveChooseReason = true;
-                }
-                mComplaintReason.setText(mSpinnerString[position]);
-                mCustomDialog.dismiss();
-            }
-        });
+    private void initcomplaintReason() {
+        List<Pair<String, Boolean>> list = new ArrayList<>();
+        switch (mParkOrderInfo.getOrderStatus()) {
+            case "1":
+                list.add(new Pair<>("无法开锁", false));
+                list.add(new Pair<>("车位有车", false));
+                list.add(new Pair<>("其他", false));
+                break;
+            case "2":
+                list.add(new Pair<>("无法关锁", false));
+                list.add(new Pair<>("结束停车未停止计费", false));
+                list.add(new Pair<>("其他", false));
+                break;
+            case "3":
+            case "4":
+            case "5":
+                list.add(new Pair<>("订单计费有误", false));
+                list.add(new Pair<>("其他", false));
+                break;
+        }
+        mApdater.setNewData(list);
     }
 
     private void initEditText() {
@@ -176,13 +183,10 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.complaint_reason:
-                mCustomDialog.show();
-                break;
             case R.id.confirm_submit:
-                if (!mHaveChooseReason) {
+                if (mReasonPosition == -1) {
                     showFiveToast("请选择投诉理由");
-                } else if (getText(mComplaintReason).equals("其他") && getTextLength(mQuestionDescription) == 0) {
+                } else if (mApdater.get(mReasonPosition).getFirst().equals("其他") && getTextLength(mQuestionDescription) == 0) {
                     showFiveToast("请对您要投诉的问题进行说明");
                 } else {
                     mConfirmSubmit.setClickable(false);
@@ -197,7 +201,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         getOkGo(HttpConstants.orderComplaint)
                 .params("cityCode", mParkOrderInfo.getCityCode())
                 .params("orderId", mParkOrderInfo.getId())
-                .params("reason", mHaveChooseReason ? getText(mComplaintReason) : "")
+                .params("reason", mApdater.get(mReasonPosition).getFirst())
                 .params("detailDescription", getText(mQuestionDescription))
                 .params("complaintPhoto", mUploadPicture.getUploadPictures())
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
@@ -227,6 +231,68 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
                         }
                     }
                 });
+    }
+
+    class ReasonApdater extends BaseAdapter<com.tuzhao.info.Pair<String, Boolean>> {
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, com.tuzhao.info.Pair<String, Boolean> stringBooleanPair, final int position) {
+            CheckTextView checkedTextView = holder.getView(R.id.reason);
+            checkedTextView.setText(stringBooleanPair.getFirst());
+            checkedTextView.setNoCheckDrawble(R.drawable.g6_stroke_all_3dp);
+            checkedTextView.setCheckDrawable(R.drawable.solide_y18_stroke_y3_all_3dp);
+
+            checkedTextView.setChecked(stringBooleanPair.getSecond());
+            if (stringBooleanPair.getSecond()) {
+                checkedTextView.setTextColor(ConstansUtil.Y3_COLOR);
+            } else {
+                checkedTextView.setTextColor(ConstansUtil.B1_COLOR);
+            }
+
+            if (checkedTextView.getOnCheckChangeListener() == null) {
+                checkedTextView.setOnCheckChangeListener(new CheckTextView.OnCheckChangeListener() {
+                    @Override
+                    public void onCheckChange(boolean isCheck) {
+                        if (isCheck) {
+                            if (mReasonPosition == -1) {
+                                mReasonPosition = position;
+                                get(position).setSecond(true);
+                                notifyDataChange(position, position);
+                                // TODO: 2018/10/13 如果position位置的Viewholder已经被回收了，则会调用onBindViewHolder方法来更新数据,而不会调用带payload方法的onBindViewHolder来更新
+                            } else if (mReasonPosition != position) {
+                                get(mReasonPosition).setSecond(false);
+                                notifyDataChange(mReasonPosition, position);
+
+                                mReasonPosition = position;
+                                get(position).setSecond(true);
+                                notifyDataChange(position, position);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, com.tuzhao.info.Pair<String, Boolean> stringBooleanPair, int position, @NonNull List<Object> payloads) {
+            super.conver(holder, stringBooleanPair, position, payloads);
+            if (payloads.size() == 1) {
+                CheckTextView checkedTextView = holder.getView(R.id.reason);
+                checkedTextView.setChecked(stringBooleanPair.getSecond());
+                if (stringBooleanPair.getSecond()) {
+                    checkedTextView.setTextColor(ConstansUtil.Y3_COLOR);
+                } else {
+                    checkedTextView.setTextColor(ConstansUtil.B1_COLOR);
+                }
+
+            }
+        }
+
+        @Override
+        protected int itemViewId() {
+            return R.layout.item_check_text_view_layout;
+        }
+
     }
 
     class UploadAdapter extends BaseAdapter<UploadPhotoInfo> {

@@ -329,6 +329,13 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     }
 
     /**
+     * 已在外面修改了数据的，这里更新就行
+     */
+    public void notifyDataChange(int changeDataPosition, int payload) {
+        notifyItemChanged(changeDataPosition + getHeadViewCount(), payload);
+    }
+
+    /**
      * 修改changeDataPosition的数据为newData
      */
     public void notifyDataChange(int changeDataPosition, T newData) {

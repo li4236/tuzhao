@@ -117,8 +117,6 @@ dependencies {
     compile 'com.kyleduo.switchbutton:library:2.0.0'
     //横向滑动tab选项卡
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
-    //优惠券红包效果  https://github.com/dongjunkun/CouponView
-    compile 'com.github.dongjunkun:CouponView:1.0.4'
     //我修复重构项目后防止出现一些红色错误
     compile 'com.android.support:multidex:1.0.3'
     //侧滑删除按钮 https://github.com/mcxtzhang/SwipeDelMenuLayout/blob/master/README-cn.md

@@ -26,6 +26,7 @@ import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.DensityUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -102,8 +103,15 @@ public abstract class BaseStatusFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(TAG);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPageEnd(TAG);
         dismmisLoadingDialog();
     }
 

@@ -17,6 +17,7 @@ import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.dialog.SelectDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -89,6 +90,8 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
 
     private int mRequestCount;
 
+    private SelectDialog mSelectDialog;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_park_order_pay_layout;
@@ -158,7 +161,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
             case R.id.discount_deduction:
             case R.id.discount_deduction_av:
                 if (mParkOrderInfo.getDiscount().size() == 1 && mParkOrderInfo.getDiscount().get(0).getId().equals("-1")) {
-                    showFiveToast("暂无可用优惠券哦");
+                    showFiveToast("没有可使用的红包哦");
                 } else {
                     Intent dicountIntent = new Intent(ParkOrderPayActivity.this, DiscountActivity.class);
                     dicountIntent.putParcelableArrayListExtra(ConstansUtil.DISCOUNT_LIST, mParkOrderInfo.getDiscount());

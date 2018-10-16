@@ -278,6 +278,13 @@ public abstract class BaseStatusActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    protected void startActivity(Class<?> tClass, String parcelableKey, Parcelable parcelable, String stringKey, String string) {
+        Intent intent = new Intent(this, tClass);
+        intent.putExtra(parcelableKey, parcelable);
+        intent.putExtra(stringKey, string);
+        startActivity(intent);
+    }
+
     protected void startActivityWithList(Class<?> tClass, String key, ArrayList<? extends Parcelable> data) {
         Intent intent = new Intent(this, tClass);
         intent.putParcelableArrayListExtra(key, data);

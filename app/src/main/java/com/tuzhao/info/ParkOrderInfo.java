@@ -452,10 +452,12 @@ public class ParkOrderInfo implements Parcelable {
     public void copyFrom(ParkOrderInfo parkOrderInfo) {
         this.id = parkOrderInfo.getId();
         this.cityCode = parkOrderInfo.getCityCode();
-        this.parkLotName = parkOrderInfo.getParkLotName();
+        this.carNumber = parkOrderInfo.getCarNumber();
+        this.parkLotName = parkOrderInfo.getParkLotName();  //车场名字
         this.orderFee = parkOrderInfo.getOrderFee();
         this.actualFee = parkOrderInfo.getActualFee();
-        this.orderTime = parkOrderInfo.getOrderTime();
+        this.orderTime = parkOrderInfo.getOrderTime();      //下单时间
+        this.orderStatus = parkOrderInfo.getOrderStatus();
     }
 
     @Override

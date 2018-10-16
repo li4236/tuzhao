@@ -49,18 +49,24 @@ public class MonthlyCard {
          */
         private String cityCode;
 
+        /**
+         * 折扣(0.x),代表打x折
+         */
+        private double discount;
+
         private List<MonthlyCardPrice> cityMonthlyCards;
 
         private boolean sort;
 
         public static class MonthlyCardPrice {
+
             /**
-             * 月卡的有效期
+             * 月卡的有效期(xx天)
              */
             private String allotedPeriod;
 
             /**
-             * 价格
+             * 价格(xx元)
              */
             private String price;
 
@@ -80,6 +86,7 @@ public class MonthlyCard {
                 this.price = price;
             }
 
+
             @Override
             public String toString() {
                 return "MonthlyCardPrice{" +
@@ -87,7 +94,6 @@ public class MonthlyCard {
                         ", price='" + price + '\'' +
                         '}';
             }
-
         }
 
         public String getCity() {
@@ -106,12 +112,20 @@ public class MonthlyCard {
             this.cityCode = cityCode;
         }
 
+        public double getDiscount() {
+            return discount;
+        }
+
+        public void setDiscount(double discount) {
+            this.discount = discount;
+        }
+
         public List<MonthlyCardPrice> getCityMonthlyCards() {
             if (!sort) {
                 Collections.sort(cityMonthlyCards, new Comparator<MonthlyCardPrice>() {
                     @Override
                     public int compare(MonthlyCardPrice o1, MonthlyCardPrice o2) {
-                        return Integer.valueOf(o1.getAllotedPeriod())-Integer.valueOf(o2.getAllotedPeriod());
+                        return Integer.valueOf(o1.getAllotedPeriod()) - Integer.valueOf(o2.getAllotedPeriod());
                     }
                 });
                 sort = true;
@@ -128,7 +142,9 @@ public class MonthlyCard {
             return "City{" +
                     "city='" + city + '\'' +
                     ", cityCode='" + cityCode + '\'' +
+                    ", discount=" + discount +
                     ", cityMonthlyCards=" + cityMonthlyCards +
+                    ", sort=" + sort +
                     '}';
         }
 

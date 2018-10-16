@@ -1469,8 +1469,11 @@ public class DateUtil {
      * @return date对应的年月日，格式2018.05.07
      */
     public static String getYearToDayWithPointText(String date) {
-        return date.substring(0, date.indexOf("-")) + "." + date.substring(6, date.lastIndexOf("-")) + "."
-                + date.substring(date.lastIndexOf("-") + 1, date.indexOf(" "));
+        int index = date.indexOf(" ");
+        if (index > 0) {
+            return date.replaceAll("-", ".").substring(0, index);
+        }
+        return date.replaceAll("-", ".");
     }
 
     /**
