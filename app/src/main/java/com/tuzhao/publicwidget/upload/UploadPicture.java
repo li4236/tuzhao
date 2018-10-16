@@ -16,7 +16,7 @@ import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
-import com.tuzhao.publicwidget.mytoast.MyToast;
+import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.GlideApp;
@@ -37,6 +37,8 @@ import okhttp3.Response;
  * Created by juncoder on 2018/7/28.
  */
 public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements IntentObserver {
+
+    private static final String TAG = "UploadPicture";
 
     private CustomDialog mCustomDialog;
 
@@ -59,6 +61,8 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
     private int mStartPadding;
 
     private int mTopPadding;
+
+    private LoadingDialog mLoadingDialog;
 
     public UploadPicture(Activity activity, AD adapter, int pictureType) {
         mActivity = activity;
@@ -135,6 +139,25 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         mCustomDialog.show();
     }
 
+    private void showLoading() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(mActivity, "压缩中..");
+        }
+        mLoadingDialog.show();
+    }
+
+    private void dismissLoading() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
+    }
+
+    private void cancelLoading() {
+        if (mLoadingDialog != null) {
+            mLoadingDialog.cancel();
+        }
+    }
+
     private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
             switch (mChoosePosition) {
@@ -146,6 +169,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                             ImageUtil.compressPhoto(mActivity, imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
+                                    dismissLoading();
                                     handleCompressPhoto(file, 1);
                                 }
                             });
@@ -160,6 +184,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                             ImageUtil.compressPhoto(mActivity, imageBeans.get(1), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
+                                    dismissLoading();
                                     handleCompressPhoto(file, 2);
                                 }
                             });
@@ -179,6 +204,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                             ImageUtil.compressPhoto(mActivity, imageBeans.get(2), new SuccessCallback<MyFile>() {
                                 @Override
                                 public void onSuccess(MyFile file) {
+                                    dismissLoading();
                                     handleCompressPhoto(file, 2);
                                 }
                             });
@@ -201,7 +227,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     firstProperty.setPath(file.getAbsolutePath());
                     firstProperty.setShowProgress(true);
                     firstProperty.setProgress("0%");
-                    mAdapter.notifyDataChange(0, firstProperty);
+                    mAdapter.notifyDataChange(0);
                 }
                 uploadPhoto(file);
                 break;
@@ -214,7 +240,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     secondProperty.setPath(file.getAbsolutePath());
                     secondProperty.setProgress("0%");
                     secondProperty.setShowProgress(true);
-                    mAdapter.notifyDataChange(1, secondProperty);
+                    mAdapter.notifyDataChange(1);
                 }
                 uploadPhoto(file);
                 break;
@@ -228,7 +254,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     thirdProperty.setUploadSuccess(false);
                     thirdProperty.setShowProgress(true);
                     thirdProperty.setProgress("0%");
-                    mAdapter.notifyDataChange(2, thirdProperty);
+                    mAdapter.notifyDataChange(2);
                 }
                 uploadPhoto(file);
                 break;
@@ -246,7 +272,6 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                     @Override
                     public void onSuccess(Base_Class_Info<String> stringBase_class_info, Call call, Response response) {
                         setServerUrl(file.getAbsolutePath(), mBasePictureUrl + stringBase_class_info.data);
-                        setUploadProgress(file.getAbsolutePath(), 1);
                     }
 
                     @Override
@@ -274,7 +299,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
                 if (progress == 1.0) {
                     firstProperty.setShowProgress(false);
                 }
-                mAdapter.notifyDataChange(i, firstProperty, 1);
+                mAdapter.notifyDataChange(i, 1);
                 break;
             }
         }
@@ -285,9 +310,10 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
             if (mAdapter.get(i).getPath().equals(filePath)) {
                 UploadPhotoInfo firstProperty = mAdapter.get(i);
                 firstProperty.setPath(url);
+                firstProperty.setProgress("0%");
                 firstProperty.setShowProgress(false);
                 firstProperty.setUploadSuccess(true);
-                mAdapter.notifyDataChange(i, firstProperty, 1);
+                mAdapter.notifyDataChange(i, 1);
                 break;
             }
         }
@@ -381,27 +407,33 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
         });
     }
 
+    public void conver(TextView textView, final UploadPhotoInfo uploadPhotoInfo) {
+        ViewUtil.showProgressStatus(textView, uploadPhotoInfo.isShowProgress());
+        textView.setText(uploadPhotoInfo.getProgress());
+    }
+
     public void onDestroy() {
         mCustomDialog.cancel();
         IntentObserable.unregisterObserver(this);
         GlideApp.get(mActivity.getApplicationContext()).clearMemory();
         mActivity = null;
+        cancelLoading();
     }
 
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.PHOTO_IMAGE)) {
             ArrayList<String> list = intent.getStringArrayListExtra(ConstansUtil.INTENT_MESSAGE);
+            showLoading();
             if (list.size() == 1) {
-                MyToast.showToast(mActivity.getApplicationContext(), "压缩中...", 5);
                 ImageUtil.compressPhoto(mActivity, list.get(0), new SuccessCallback<MyFile>() {
                     @Override
                     public void onSuccess(MyFile file) {
+                        dismissLoading();
                         handleCompressPhoto(file, mChoosePosition);
                     }
                 });
             } else {
-                MyToast.showToast(mActivity.getApplicationContext(), "压缩中...", 5);
                 handleImageBean(list);
             }
         }

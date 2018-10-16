@@ -65,4 +65,15 @@ public class UploadPhotoInfo {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "UploadPhotoInfo{" +
+                "name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", showProgress=" + showProgress +
+                ", progress='" + progress + '\'' +
+                ", uploadSuccess=" + uploadSuccess +
+                '}';
+    }
+
 }

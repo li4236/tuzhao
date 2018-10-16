@@ -324,6 +324,17 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
             } else {
                 goneView(holder.getView(R.id.delete_complaint_photo));
             }
+
+        }
+
+        @Override
+        protected void conver(@NonNull BaseViewHolder holder, UploadPhotoInfo uploadPhotoInfo, int position, @NonNull List<Object> payloads) {
+            mUploadPicture.conver((TextView) holder.getView(R.id.complaint_upload_tv), uploadPhotoInfo);
+            if (!uploadPhotoInfo.getPath().equals("-1") && uploadPhotoInfo.isUploadSuccess() && !uploadPhotoInfo.isShowProgress()) {
+                showView(holder.getView(R.id.delete_complaint_photo));
+            } else {
+                goneView(holder.getView(R.id.delete_complaint_photo));
+            }
         }
 
         @Override
