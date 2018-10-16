@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +20,7 @@ import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.SelectDialog;
+import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -47,6 +50,8 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
     private TextView mDiscountDeduction;
 
     private TextView mMonthlyCardOffer;
+
+    private ArrowView mBuyMonthlyCardAv;
 
     private TextView mMonthlyCardDiscount;
 
@@ -90,7 +95,10 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
 
     private int mRequestCount;
 
-    private SelectDialog mSelectDialog;
+    /**
+     * true（跳转到订单支付页面）  false（其他，如购买月卡）
+     */
+    private boolean mIsStartForPayOrder;
 
     @Override
     protected int resourceId() {
@@ -109,8 +117,9 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         mParkFee = findViewById(R.id.park_fee);
         mOvertimeFee = findViewById(R.id.overtime_fee);
         mDiscountDeduction = findViewById(R.id.discount_deduction);
-        mMonthlyCardOffer = findViewById(R.id.monthly_card_offer);
         mMonthlyCardDiscount = findViewById(R.id.monthly_card_discount);
+        mMonthlyCardOffer = findViewById(R.id.monthly_card_offer);
+        mBuyMonthlyCardAv = findViewById(R.id.buy_monthly_card_av);
         mCarNumber = findViewById(R.id.car_number);
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkSpaceNumber = findViewById(R.id.park_space_number);
@@ -181,6 +190,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
                 break;
             case R.id.pay_immediately:
                 if (mShouldPay >= 0.01) {
+                    mIsStartForPayOrder = true;
                     Bundle bundle = new Bundle();
                     bundle.putString(ConstansUtil.PAY_TYPE, "0");
                     bundle.putString(ConstansUtil.PAY_MONEY, mShouldPay + "元");
@@ -199,9 +209,15 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ConstansUtil.DISOUNT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            mChooseDiscount = data.getParcelableExtra(ConstansUtil.CHOOSE_DISCOUNT);
-            calculateShouldPayFee();
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == ConstansUtil.DISOUNT_REQUEST_CODE) {
+                mChooseDiscount = data.getParcelableExtra(ConstansUtil.CHOOSE_DISCOUNT);
+                calculateShouldPayFee();
+            } else if (requestCode == ConstansUtil.REQUSET_CODE) {
+                mParkOrderInfo.setMonthlyCardDiscount(data.getDoubleExtra(ConstansUtil.INTENT_MESSAGE, 1));
+                showMonthlyCard();
+                calculateShouldPayFee();
+            }
         }
     }
 
@@ -260,11 +276,46 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
 
         if (mParkOrderInfo.getMonthlyCardDiscount() != 1) {
-            mMonthlyCardDiscount.setVisibility(View.VISIBLE);
-            mMonthlyCardDiscount.setText(DateUtil.deleteZero(mParkOrderInfo.getMonthlyCardDiscount() * 10) + "折");
+            showMonthlyCard();
+        } else {
+            buyMonthlyCard();
         }
 
         calculateShouldPayFee();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void showMonthlyCard() {
+        ConstraintLayout constraintLayout = findViewById(R.id.top_cl);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.clear(R.id.monthly_card_offer, ConstraintSet.END);
+        constraintSet.connect(R.id.monthly_card_offer, ConstraintSet.END, R.id.park_fee, ConstraintSet.END);
+        constraintSet.applyTo(constraintLayout);
+
+        mMonthlyCardDiscount.setBackgroundResource(R.drawable.solid_r8_all_1dp);
+        mMonthlyCardDiscount.setText(DateUtil.deleteZero(mParkOrderInfo.getMonthlyCardDiscount() * 10) + "折");
+        mMonthlyCardOffer.setTextColor(ContextCompat.getColor(this, R.color.r8));
+        mMonthlyCardOffer.setOnClickListener(null);
+        goneView(mBuyMonthlyCardAv);
+    }
+
+    private void buyMonthlyCard() {
+        mMonthlyCardOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsStartForPayOrder = false;
+                startActivityForResult(BuyMonthlyCardActivity.class, ConstansUtil.REQUSET_CODE, ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
+            }
+        });
+
+        mBuyMonthlyCardAv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsStartForPayOrder = false;
+                startActivityForResult(BuyMonthlyCardActivity.class, ConstansUtil.REQUSET_CODE, ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
+            }
+        });
     }
 
     /**
@@ -329,7 +380,11 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         if (mRequestCount >= 3) {
             dismmisLoadingDialog();
             showFiveToast("查询订单状态失败，请刷新后再查看");
+            if (mPollingUtil != null) {
+                mPollingUtil.cancel();
+            }
             finish();
+            return;
         }
         showLoadingDialog("正在查询订单状态");
         mRequestCount++;
@@ -351,15 +406,15 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
                             dismmisLoadingDialog();
                             finish();
                         } else if (o.data.getOrderStatus().equals("3")) {
-                            mPollingUtil = new PollingUtil(1000, new PollingUtil.OnTimeCallback() {
-                                @Override
-                                public void onTime() {
-                                    getParkOrder();
-                                    mPollingUtil.cancel();
-                                    mPollingUtil = null;
-                                }
-                            });
-                            mPollingUtil.start();
+                            if (mPollingUtil == null || !mPollingUtil.isRunning()) {
+                                mPollingUtil = new PollingUtil(1000, new PollingUtil.OnTimeCallback() {
+                                    @Override
+                                    public void onTime() {
+                                        getParkOrder();
+                                    }
+                                });
+                                mPollingUtil.start();
+                            }
                         }
                     }
 
@@ -411,7 +466,10 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case ConstansUtil.PAY_SUCCESS:
-                    getParkOrder();
+                    if (mIsStartForPayOrder) {
+                        //如果是订单支付的则查询订单状态
+                        getParkOrder();
+                    }
                     break;
                 case ConstansUtil.DIALOG_ON_BACK_PRESS:
                     dismmisLoadingDialog();

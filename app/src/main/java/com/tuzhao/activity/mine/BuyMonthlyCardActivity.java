@@ -23,6 +23,7 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -82,6 +83,8 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
      */
     private int mNationalPosition = -1;
 
+    private String mCityCode;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_buy_monthly_card_layout;
@@ -111,6 +114,9 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
     @Override
     protected void initData() {
         super.initData();
+        //订单跳转过来的，则默认选择对应的城市月卡
+        mCityCode = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
+
         for (int i = 0; i < mLastChooseArea.length; i++) {
             mLastChooseArea[i] = -1;
         }
@@ -121,7 +127,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         ImageUtil.showPicWithNoAnimate(mAreaCardIv, R.drawable.ic_graycitycard_shadow);
         ImageUtil.showPicWithNoAnimate(mNationalCardPark, R.drawable.ic_graylogo);
         ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_grayallcity_shadow);
-        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受7折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
+        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受对应折扣优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
         mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("各地区停车费用均有差异，地区卡只能在选定的一个城市使用，全国卡则全国通用。"));
 
         /*if (LocationManager.getInstance().hasLocation()) {
@@ -271,6 +277,16 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                                         mChooseCityCode = "0000";
                                         setCurrenNationalMonthlyCard();
                                     }
+                                } else if (mCityCode != null) {
+                                    //订单跳转过来的，则默认选择订单所在城市的月卡
+                                    for (int i = 0; i < mMonthlyCards.size(); i++) {
+                                        for (int j = 0; j < mMonthlyCards.get(i).getCitys().size(); j++) {
+                                            if (mCityCode.equals(mMonthlyCards.get(i).getCitys().get(j).getCityCode())) {
+                                                setCurrentChooseCardPosition(i, j);
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
                                 //setCurrenNationalMonthlyCard();
                             }
@@ -328,15 +344,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                     if (mLastChooseArea[0] != options1 || mLastChooseArea[1] != option2 ||
                             !mChooseCityCode.equals(mMonthlyCards.get(options1).getCitys().get(option2).getCityCode())) {
                         //只有选择不一样的城市才刷新数据
-                        mChooseCityCode = mMonthlyCards.get(options1).getCitys().get(option2).getCityCode();
-                        mAdapter.setNewData(mMonthlyCards.get(options1).getCitys().get(option2).getCityMonthlyCards());
-                        mLastChooseArea[0] = options1;
-                        mLastChooseArea[1] = option2;
-                        setCurrentChooseCard(true);
-
-                        String city = mMonthlyCards.get(options1).getCitys().get(option2).getCity().replace("市", "");
-                        mChooseCardTv.setText("当前选择：地区月卡（" + city + "）");
-                        mMonthlyCardArea.setText(city + "卡");
+                        setCurrentChooseCardPosition(options1, option2);
                     }
                 }
             });
@@ -346,6 +354,24 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             mPickerView.show();
         }
 
+    }
+
+    /**
+     * 记录当前选择的月卡位置并显示
+     */
+    private void setCurrentChooseCardPosition(int province, int city) {
+        mChooseCityCode = mMonthlyCards.get(province).getCitys().get(city).getCityCode();
+        mAdapter.setNewData(mMonthlyCards.get(province).getCitys().get(city).getCityMonthlyCards());
+        mLastChooseArea[0] = province;
+        mLastChooseArea[1] = city;
+        setCurrentChooseCard(true);
+
+        String cityName = mMonthlyCards.get(province).getCitys().get(city).getCity().replace("市", "");
+        mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
+        mMonthlyCardArea.setText(cityName + "卡");
+        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
+                + DateUtil.deleteZero(mMonthlyCards.get(province).getCitys().get(city).getDiscount() * 10) +
+                "折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
     }
 
 /*    private void initLocation() {
@@ -383,6 +409,10 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             mAdapter.setNewData(city.getCityMonthlyCards());
             setCurrentChooseCard(false);
             mChooseCardTv.setText("当前选择：全国月卡");
+
+            mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
+                    + DateUtil.deleteZero(city.getDiscount() * 10) +
+                    "折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
         }
     }
 
@@ -397,6 +427,9 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         setCurrentChooseCard(true);
         mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
         mMonthlyCardArea.setText(cityName + "卡");
+        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
+                + DateUtil.deleteZero(city.getDiscount() * 10) +
+                "折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
     }
 
     /**
@@ -418,6 +451,14 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             if (intent.getAction().equals(ConstansUtil.PAY_SUCCESS)) {
+                if (mCityCode != null) {
+                    if (mCityCode.equals(mChooseCityCode) || "0000".equals(mChooseCityCode)) {
+                        //如果是订单跳转过来则购买了对应的城市月卡或者全国月卡才传递折扣回去
+                        Intent monthlyCardIntent = new Intent();
+                        monthlyCardIntent.putExtra(ConstansUtil.INTENT_MESSAGE, mMonthlyCards.get(mLastChooseArea[0]).getCitys().get(mLastChooseArea[1]).getDiscount());
+                        setResult(RESULT_OK, monthlyCardIntent);
+                    }
+                }
                 finish();
             }
         }

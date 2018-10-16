@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.MonthlyCardBean;
@@ -92,28 +93,32 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
                 .execute(new JsonCallback<Base_Class_List_Info<MonthlyCardBean>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<MonthlyCardBean> o, Call call, Response response) {
+                        if (mStartItme == 0 && mCommonAdapter.getData().isEmpty()) {
+                            //如果一开始是没有月卡显示了购买界面的，则购买之后刷新把购买界面隐藏掉
+                            notifyShowEmptyView(false);
+                        }
                         loadDataSuccess(o);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        if (mCommonAdapter.getData().size() == 0) {
-                            notifyShowEmptyView(true);
-                        }
-                        stopLoadStatus();
-                        if (!handleException(e)) {
-                            switch (e.getMessage()) {
-                                case "101":
-                                    if (!mCommonAdapter.getData().isEmpty()) {
+                        loadDataFail(e, new LoadFailCallback() {
+                            @Override
+                            public void onLoadFail(Exception e) {
+                                if (e.getMessage().equals("101")) {
+                                    if (mStartItme == 0) {
+                                        mCommonAdapter.clearAll();
+                                        //刷新之后显示没有数据的，则显示购买界面
+                                        notifyShowEmptyView(true);
+                                    } else if (mCommonAdapter.getDataSize() != 0) {
                                         showFiveToast("没有更多数据了哦");
                                     }
-                                    break;
-                                default:
+                                } else {
                                     showFiveToast(e.getMessage());
-                                    break;
+                                }
                             }
-                        }
+                        });
                     }
                 });
     }

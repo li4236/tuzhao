@@ -21,6 +21,8 @@ public class PollingUtil {
 
     private long mPeriod;
 
+    private boolean mIsRunning;
+
     private static final int WHAT = 0x111;
 
     public PollingUtil(long period, final OnTimeCallback onTimeCallback) {
@@ -42,6 +44,7 @@ public class PollingUtil {
             mTimer.cancel();
         }
         mTimer = new Timer();
+        mIsRunning = true;
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -53,11 +56,16 @@ public class PollingUtil {
     }
 
     public void cancel() {
+        mIsRunning = false;
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
         }
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public boolean isRunning() {
+        return mIsRunning;
     }
 
     public interface OnTimeCallback {

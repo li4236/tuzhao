@@ -27,6 +27,7 @@
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/top_cl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="7dp"
@@ -45,6 +46,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/order_amount_tv"
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="2dp"
                     android:text="元"
@@ -127,11 +129,11 @@
                 <com.tuzhao.publicwidget.customView.ArrowView
                     android:id="@+id/discount_deduction_av"
                     android:layout_width="30dp"
-                    android:layout_height="16dp"
-                    android:paddingBottom="3dp"
+                    android:layout_height="28dp"
+                    android:paddingBottom="9dp"
                     android:paddingEnd="14dp"
                     android:paddingStart="9dp"
-                    android:paddingTop="3dp"
+                    android:paddingTop="9dp"
                     app:arrow_width="2px"
                     app:layout_constraintBottom_toBottomOf="@+id/discount_deduction_tv"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -140,8 +142,10 @@
                 <TextView
                     android:id="@+id/discount_deduction"
                     style="@style/TwentyTextG6Style"
-                    android:layout_width="wrap_content"
                     android:gravity="end"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="8dp"
+                    android:paddingTop="6dp"
                     android:text="有0个红包"
                     android:textColor="@color/r8"
                     app:layout_constraintBottom_toBottomOf="@+id/discount_deduction_tv"
@@ -159,27 +163,43 @@
                 <TextView
                     android:id="@+id/monthly_card_discount"
                     android:layout_width="wrap_content"
-                    android:layout_height="12dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/solid_r8_all_1dp"
+                    android:background="@drawable/solid_g6_all_1dp"
                     android:gravity="center"
+                    android:layout_marginTop="1dp"
                     android:paddingEnd="1dp"
                     android:paddingStart="1dp"
+                    android:text="暂无"
                     android:textColor="@color/w0"
                     android:textSize="8sp"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/monthly_card_offer_tv"
                     app:layout_constraintStart_toEndOf="@+id/monthly_card_offer_tv"
+                    app:layout_constraintTop_toTopOf="@+id/monthly_card_offer_tv" />
+
+                <com.tuzhao.publicwidget.customView.ArrowView
+                    android:id="@+id/buy_monthly_card_av"
+                    android:layout_width="30dp"
+                    android:layout_height="28dp"
+                    android:paddingBottom="9dp"
+                    android:paddingEnd="14dp"
+                    android:paddingStart="9dp"
+                    android:paddingTop="9dp"
+                    app:arrow_width="2px"
+                    app:layout_constraintBottom_toBottomOf="@+id/monthly_card_offer_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/monthly_card_offer_tv" />
 
                 <TextView
                     android:id="@+id/monthly_card_offer"
                     style="@style/TwentyTextG6Style"
-                    android:layout_width="wrap_content"
                     android:gravity="end"
-                    android:text="无月卡"
-                    android:textColor="@color/r8"
-                    app:layout_constraintEnd_toEndOf="@+id/park_fee"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="6dp"
+                    android:paddingTop="6dp"
+                    android:text="前去购买"
+                    app:layout_constraintBottom_toBottomOf="@+id/monthly_card_offer_tv"
+                    app:layout_constraintEnd_toStartOf="@+id/buy_monthly_card_av"
                     app:layout_constraintTop_toTopOf="@+id/monthly_card_offer_tv" />
 
             </android.support.constraint.ConstraintLayout>
