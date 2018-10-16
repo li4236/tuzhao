@@ -65,7 +65,8 @@ public class MyReceiver extends BroadcastReceiver {
                         notifyListeners(jsonObject);
                     } else if (jsonObject.optString("type").equals("logout")) {
                         String time = jsonObject.optString("time");
-                        if (UserManager.getInstance().hasLogined() && DateUtil.getYearToSecondCalendar(time).compareTo(
+                        if (UserManager.getInstance().hasLogined() && UserManager.getInstance().getUserInfo().getUsername().equals(jsonObject.optString("phone"))
+                                && DateUtil.getYearToSecondCalendar(time).compareTo(
                                 DateUtil.getYearToSecondCalendar(UserManager.getInstance().getLoginTime())) >= 0) {
                             //如果登录之后别人在别的设备登录了则退出登录
                             User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
