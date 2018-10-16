@@ -165,9 +165,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="1dp"
                     android:background="@drawable/solid_g6_all_1dp"
                     android:gravity="center"
-                    android:layout_marginTop="1dp"
                     android:paddingEnd="1dp"
                     android:paddingStart="1dp"
                     android:text="暂无"
@@ -437,7 +437,7 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/order_complaint_cl"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:paddingEnd="22dp"

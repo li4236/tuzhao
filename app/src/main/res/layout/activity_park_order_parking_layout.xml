@@ -440,15 +440,21 @@
                     app:layout_constraintStart_toEndOf="@id/park_space_description_tv"
                     app:layout_constraintTop_toTopOf="@+id/actual_start_park_time_tv" />
 
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/bottom_gl"
+                    style="@style/VerticalGuideLine"
+                    app:layout_constraintGuide_percent="0.5" />
+
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/order_complaint_cl"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
-                    android:paddingEnd="20dp"
-                    android:paddingStart="20dp"
+                    android:paddingEnd="22dp"
+                    android:paddingStart="22dp"
                     android:paddingTop="16dp"
-                    app:layout_constraintEnd_toStartOf="@id/contact_service_cl"
+                    app:layout_constraintEnd_toStartOf="@+id/bottom_gl"
                     app:layout_constraintTop_toBottomOf="@+id/actual_start_park_time_tv">
 
                     <ImageView
@@ -478,7 +484,7 @@
                     android:paddingEnd="22dp"
                     android:paddingStart="22dp"
                     android:paddingTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/bottom_gl"
                     app:layout_constraintTop_toBottomOf="@+id/actual_start_park_time_tv">
 
                     <ImageView
