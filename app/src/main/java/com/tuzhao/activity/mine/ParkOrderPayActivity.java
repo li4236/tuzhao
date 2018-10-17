@@ -407,6 +407,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
                             Bundle bundle = new Bundle();
                             mParkOrderInfo.setOrderStatus(o.data.getOrderStatus());
                             mParkOrderInfo.setActual_pay_fee(o.data.getActual_pay_fee());
+                            mParkOrderInfo.setTime(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), mParkOrderInfo.getParkEndTime()));
                             bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                             intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
                             IntentObserable.dispatch(intent);

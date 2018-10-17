@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -41,6 +42,9 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
 
     private ConstraintLayout mConstraintLayout;
 
+    /**
+     * 0:全部     1:已预约      2:租用中    4/5：待评论，已完成     6:已取消
+     */
     private int mOrderStatus;
 
     private boolean mRequestSuccess;
@@ -100,6 +104,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     public void onDetach() {
         super.onDetach();
         //如果放在onDestroyView取消注册，则当滑到别的界面而销毁布局的时候会收不到通知，导致数据没更新
+        Log.e(TAG, "onDetach: ");
         IntentObserable.unregisterObserver(this);
     }
 
@@ -173,18 +178,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 //停车中
                 circleView.setColor(Color.parseColor("#ffa830"));
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getPark_start_time()));
-                /*String parkTimeDistance;
-                if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime()).compareTo(
-                        DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
-                    //停车时长超过预约时长
-                    parkTimeDistance = "已超时" + DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrderEndTime(), DateUtil.getCurrentYearToSecond(), parkOrderInfo.getExtensionTime());
-                } else if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime()).compareTo(
-                        DateUtil.getYearToSecondCalendar(DateUtil.getCurrentYearToSecond())) < 0) {
-                    //在顺延时长内
-                    parkTimeDistance = "宽限剩余" + DateUtil.getDistanceForDayHourMinuteAddEnd(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime());
-                } else {
-                    parkTimeDistance = "剩余" + DateUtil.getDistanceForDayHourMinute(DateUtil.getCurrentYearToSecond(), parkOrderInfo.getOrderEndTime());
-                }*/
                 orderTimeDescription.setText(parkOrderInfo.getTime());
                 orderStatus.setTextColor(Color.parseColor("#ffa830"));
                 orderStatus.setText("租用中");
@@ -206,17 +199,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
             case "5":
                 //已完成（待评论、已完成）
                 circleView.setColor(Color.parseColor("#1dd0a1"));
-                /*if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime()).compareTo(
-                        DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
-                    //停车时长超过预约时长加顺延时长
-                    orderTime.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getPark_end_time()));
-                } else if (DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderEndTime()).compareTo(
-                        DateUtil.getYearToSecondCalendar(parkOrderInfo.getPark_end_time())) < 0) {
-                    //停车时间在顺延时长内
-                    orderTime.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getPark_end_time()));
-                } else {
-                    orderTime.setText(DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime()));
-                }*/
                 orderTime.setText(parkOrderInfo.getTime());
                 String actualPay = "￥" + parkOrderInfo.getActual_pay_fee();
                 orderTimeDescription.setText(actualPay);
@@ -232,7 +214,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                 //已取消（超时取消、正常手动取消）
                 circleView.setColor(Color.parseColor("#808080"));
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getOrderStartTime()));
-                //String appointDistance = "预停" + DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime());
                 orderTimeDescription.setText(parkOrderInfo.getTime());
                 orderStatus.setTextColor(Color.parseColor("#808080"));
                 orderStatus.setText("已取消");
@@ -279,34 +260,38 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     if (mOrderStatus == 0 || mOrderStatus == 1 || mOrderStatus == 2) {
                         Bundle bundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo parkOrderInfo = bundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                        if (parkOrderInfo != null) {
-                            if (mOrderStatus == 0) {
-                                //全部订单则把预约的改为停车中
-                                mCommonAdapter.notifyDataChange(parkOrderInfo);
-                            } else if (mOrderStatus == 1) {
-                                //预约订单则把它删掉
-                                notifyRemoveData(parkOrderInfo);
-                            } else if (mOrderStatus == 2) {
-                                //添加到正在停车中的订单
-                                mCommonAdapter.addFirstData(parkOrderInfo);
-                            }
+                        if (mOrderStatus == 0) {
+                            //全部订单则把预约的改为停车中
+                            mCommonAdapter.notifyDataChange(parkOrderInfo);
+                        } else if (mOrderStatus == 1) {
+                            //预约订单则把它删掉
+                            notifyRemoveData(parkOrderInfo);
+                        } else if (mOrderStatus == 2) {
+                            //添加到正在停车中的订单
+                            mCommonAdapter.addFirstData(parkOrderInfo);
                         }
                     }
                     break;
                 case ConstansUtil.CHANGE_APPOINTMENT_INFO:
-                    Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                    ParkOrderInfo changeOrderInfo = changBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
-                    if (changeOrderInfo != null) {
+                    if (mOrderStatus == 0 || mOrderStatus == 1) {
+                        Bundle changBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                        ParkOrderInfo changeOrderInfo = changBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         mCommonAdapter.notifyDataChange(changeOrderInfo);
                     }
                     break;
                 case ConstansUtil.CANCEL_ORDER:
-                    if (mOrderStatus == 0 || mOrderStatus == 1) {
+                    if (mOrderStatus == 0 || mOrderStatus == 1 || mOrderStatus == 6) {
                         Bundle cancelBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo cancelParkOrderInfo = cancelBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         if (cancelParkOrderInfo != null) {
                             cancelParkOrderInfo.setOrderStatus("6");
-                            notifyRemoveData(cancelParkOrderInfo);
+                            if (mOrderStatus == 0 || mOrderStatus == 1) {
+                                //取消了订单则全部和已预约的订单删除该订单
+                                notifyRemoveData(cancelParkOrderInfo);
+                            } else {
+                                //在已取消的列表添加该取消的订单
+                                notifyAddData(0, cancelParkOrderInfo);
+                            }
                         }
                     }
                     break;
@@ -346,20 +331,28 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.FINISH_PAY_ORDER:
-                    if (mOrderStatus == 0 || mOrderStatus == 3 || mOrderStatus == 4 || mOrderStatus == 5) {
+                    if (mOrderStatus == 0 || mOrderStatus == 5) {
                         Bundle finishBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                        mCommonAdapter.notifyDataChange((ParkOrderInfo) finishBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO));
+                        ParkOrderInfo parkOrderInfo = finishBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
+                        if (mOrderStatus == 0) {
+                            //支付完成全部订单列表中的待支付则改为待评论
+                            mCommonAdapter.notifyDataChange(parkOrderInfo);
+                        } else {
+                            //把支付完成的订单添加到已完成列表
+                            mCommonAdapter.notifyAddData(0, parkOrderInfo);
+                        }
                     }
                     break;
                 case ConstansUtil.COMMENT_SUCCESS:
-                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5) {
+                    if (mOrderStatus == 0 || mOrderStatus == 5) {
+                        //评论成功则改为已完成
                         Bundle commentBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo commentOrder = commentBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         mCommonAdapter.notifyDataChange(commentOrder);
                     }
                     break;
                 case ConstansUtil.DELETE_PARK_ORDER:
-                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5 || mOrderStatus == 6) {
+                    if (mOrderStatus == 0 || mOrderStatus == 5 || mOrderStatus == 6) {
                         Bundle orderBundle = intent.getBundleExtra(ConstansUtil.FOR_REQEUST_RESULT);
                         ParkOrderInfo orderInfo = orderBundle.getParcelable(ConstansUtil.PARK_ORDER_INFO);
                         notifyRemoveData(orderInfo);
@@ -367,17 +360,12 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     break;
                 case ConstansUtil.INVOICE_SUCCESS:
                     if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5) {
-                        String ordersId = intent.getStringExtra(ConstansUtil.INTENT_MESSAGE);
-                        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
-                            if (mCommonAdapter.get(i).getOrdersId().equals(ordersId)) {
-                                mCommonAdapter.get(i).setIsInvoiced("1");
-                                mCommonAdapter.notifyDataChange(i);
-                                break;
-                            }
-                        }
+                        //更新订单为已开发票
+                        mCommonAdapter.notifyDataChange((ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
                     }
                     break;
             }
         }
     }
+
 }

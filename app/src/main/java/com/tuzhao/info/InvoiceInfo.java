@@ -13,13 +13,14 @@ import java.util.Objects;
 
 public class InvoiceInfo extends BaseInfo implements Parcelable {
 
+    /**
+     * 订单对应总表的id
+     */
     private String orderId;
 
     private String parkspaceName;
 
     private String parkStarttime;
-
-    private String pictures;
 
     private boolean check = false;
 
@@ -51,14 +52,6 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
 
     public void setParkStarttime(String parkStarttime) {
         this.parkStarttime = parkStarttime;
-    }
-
-    public String getPictures() {
-        return pictures;
-    }
-
-    public void setPictures(String pictures) {
-        this.pictures = pictures;
     }
 
     public boolean getCheck() {
@@ -99,7 +92,6 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
                 "orderId='" + orderId + '\'' +
                 ", parkspaceName='" + parkspaceName + '\'' +
                 ", parkStarttime='" + parkStarttime + '\'' +
-                ", pictures='" + pictures + '\'' +
                 ", check=" + check +
                 ", locationDescribe='" + locationDescribe + '\'' +
                 ", parkDuration='" + parkDuration + '\'' +
@@ -117,7 +109,6 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         dest.writeString(this.orderId);
         dest.writeString(this.parkspaceName);
         dest.writeString(this.parkStarttime);
-        dest.writeString(this.pictures);
         dest.writeByte(this.check ? (byte) 1 : (byte) 0);
         dest.writeString(this.locationDescribe);
         dest.writeString(this.parkDuration);
@@ -131,7 +122,6 @@ public class InvoiceInfo extends BaseInfo implements Parcelable {
         this.orderId = in.readString();
         this.parkspaceName = in.readString();
         this.parkStarttime = in.readString();
-        this.pictures = in.readString();
         this.check = in.readByte() != 0;
         this.locationDescribe = in.readString();
         this.parkDuration = in.readString();

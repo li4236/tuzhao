@@ -168,10 +168,15 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
             ArrayList<InvoiceInfo> arrayList;
             if ((arrayList = data.getParcelableArrayListExtra(ConstansUtil.FOR_REQEUST_RESULT)) != null && !arrayList.isEmpty()) {
                 //开了发票之后改为已开票状态
-                mParkOrderInfo.setIsInvoiced("1");
-
-                //通知订单fragment把订单改为已开票状态，不能使用setResult的办法，因为那样只有startActivityForResult的那个fragment才能收到结果
-                IntentObserable.dispatch(ConstansUtil.INVOICE_SUCCESS, ConstansUtil.INTENT_MESSAGE, arrayList.get(0).getOrderId());
+                for (InvoiceInfo invoiceInfo : arrayList) {
+                    if (invoiceInfo.getOrderId().equals(mParkOrderInfo.getOrdersId())) {
+                        mParkOrderInfo.setIsInvoiced("1");
+                        //通知订单fragment把订单改为已开票状态，不能使用setResult的办法，因为那样只有startActivityForResult的那个fragment才能收到结果
+                        IntentObserable.dispatch(ConstansUtil.INVOICE_SUCCESS, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                        //因为发票的id是总表的id而不是订单的id，所以没办法找到开发票的全部订单，只可能找到这个订单是否开了发票
+                        break;
+                    }
+                }
             }
         }
     }
@@ -241,7 +246,6 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         invoiceInfo.setLocationDescribe(mParkOrderInfo.getParkSpaceLocation());
         invoiceInfo.setOrderId(mParkOrderInfo.getOrdersId());
         invoiceInfo.setParkspaceName(mParkOrderInfo.getParkLotName());
-        invoiceInfo.setPictures(mParkOrderInfo.getPictures());
         invoiceInfo.setParkStarttime(mParkOrderInfo.getParkStartTime());
         invoiceInfo.setParkDuration(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), mParkOrderInfo.getParkEndTime()));
 
