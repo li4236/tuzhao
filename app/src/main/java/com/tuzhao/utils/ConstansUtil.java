@@ -548,4 +548,9 @@ public class ConstansUtil {
      */
     public static final String INVOICE_SUCCESS = "InvoiceSuccess";
 
+    /**
+     * 删除好友分享的车位
+     */
+    public static final String DELETE_SHARE_PARK_SPACE = "DeleteShareParkSpace";
+
 }

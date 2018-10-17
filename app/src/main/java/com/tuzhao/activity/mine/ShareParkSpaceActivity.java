@@ -422,6 +422,8 @@ public class ShareParkSpaceActivity extends BaseRefreshActivity<Park_Info> imple
                 }
             }
 
+        } else if (ConstansUtil.DELETE_SHARE_PARK_SPACE.equals(intent.getAction())) {
+            mCommonAdapter.notifyRemoveData((Park_Info) intent.getParcelableExtra(ConstansUtil.INTENT_MESSAGE));
         }
     }
 

@@ -2,7 +2,6 @@ package com.tianzhili.www.myselfsdk.pickerview.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,18 +65,16 @@ public class BasePickerView {
         outAnim = getOutAnimation();
     }
 
-    protected void initEvents() {
+    private void initEvents() {
         //消失动画
         outAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                Log.e("TAG", "onAnimationStart: ");
                 isDismissing = true;
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Log.e("TAG", "onAnimationEnd: ");
                 //从activity根视图移除
                 decorView.removeView(rootView);
                 mIsShowing = false;
