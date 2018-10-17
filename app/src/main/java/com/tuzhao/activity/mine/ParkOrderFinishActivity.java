@@ -45,13 +45,17 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
 
     private TextView mParkSpaceDescription;
 
+    private TextView mAppointmentStartParkTime;
+
+    private TextView mAppointmentEndParkTime;
+
     private TextView mActualStartParkTime;
 
     private TextView mAcutalEndParkTime;
 
-    private TextView mOvertimeDuration;
+    private TextView mGraceTime;
 
-    private TextView mParkDuration;
+    private TextView mOvertimeDuration;
 
     private TextView mOrderNumber;
 
@@ -75,10 +79,12 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkSpaceNumber = findViewById(R.id.park_space_number);
         mParkSpaceDescription = findViewById(R.id.park_space_description);
+        mAppointmentStartParkTime = findViewById(R.id.appointment_start_park_time);
+        mAppointmentEndParkTime = findViewById(R.id.appointment_end_park_time);
         mActualStartParkTime = findViewById(R.id.actual_start_park_time);
         mAcutalEndParkTime = findViewById(R.id.actual_end_park_time);
         mOvertimeDuration = findViewById(R.id.overtime_duration);
-        mParkDuration = findViewById(R.id.grace_time);
+        mGraceTime = findViewById(R.id.grace_time);
         mOrderNumber = findViewById(R.id.order_number);
         mOrderDate = findViewById(R.id.order_date_tv);
 
@@ -206,8 +212,11 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         mParkLotName.setText(mParkOrderInfo.getParkLotName());
         mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
         mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
+        mAppointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
+        mAppointmentEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
         mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
         mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));
+        mGraceTime.setText((Integer.valueOf(mParkOrderInfo.getExtensionTime())) / 60 + "分钟");
 
         String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
         if (!overtimeDuration.equals("未超时")) {
@@ -215,7 +224,6 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         }
         mOvertimeDuration.setText(overtimeDuration);
 
-        mParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), mParkOrderInfo.getParkEndTime()));
         mOrderNumber.setText(mParkOrderInfo.getOrder_number());
         mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
     }
