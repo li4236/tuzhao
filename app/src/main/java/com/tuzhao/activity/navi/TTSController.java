@@ -45,7 +45,7 @@ public class TTSController implements AMapNaviListener {
     private Context mContext;
     private SpeechSynthesizer mTts;
     private boolean isPlaying = false;
-    private LinkedList<String> wordList = new LinkedList();
+    private LinkedList<String> wordList = new LinkedList<>();
     private final int TTS_PLAY = 1;
     private final int CHECK_TTS_PLAY = 2;
     private Handler handler = new Handler() {
@@ -127,7 +127,7 @@ public class TTSController implements AMapNaviListener {
                     public void onInit(int errorcode) {
                         if (ErrorCode.SUCCESS == errorcode) {
                         } else {
-                            Toast.makeText(mContext, "语音合成初始化失败!", Toast.LENGTH_SHORT);
+                            Toast.makeText(mContext, "语音合成初始化失败!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

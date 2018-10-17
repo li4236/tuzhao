@@ -14,7 +14,7 @@ public class MonthlyCardBean implements Parcelable {
     private String area;
     private String expiredDate;
     private String cityCode;
-    private String discount;
+    private double discount;
 
     public int getId() {
         return id;
@@ -48,11 +48,11 @@ public class MonthlyCardBean implements Parcelable {
         this.cityCode = cityCode;
     }
 
-    public String getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(String discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 
@@ -80,7 +80,7 @@ public class MonthlyCardBean implements Parcelable {
         dest.writeString(this.area);
         dest.writeString(this.expiredDate);
         dest.writeString(this.cityCode);
-        dest.writeString(this.discount);
+        dest.writeDouble(this.discount);
     }
 
     private MonthlyCardBean(Parcel in) {
@@ -88,7 +88,7 @@ public class MonthlyCardBean implements Parcelable {
         this.area = in.readString();
         this.expiredDate = in.readString();
         this.cityCode = in.readString();
-        this.discount = in.readString();
+        this.discount = in.readDouble();
     }
 
     public static final Parcelable.Creator<MonthlyCardBean> CREATOR = new Parcelable.Creator<MonthlyCardBean>() {

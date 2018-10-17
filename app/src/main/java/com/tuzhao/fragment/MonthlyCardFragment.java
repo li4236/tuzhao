@@ -1,6 +1,7 @@
 package com.tuzhao.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -13,7 +14,9 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.MonthlyCardBean;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.publicwidget.customView.CornerImageView;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
@@ -138,21 +141,27 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
     protected void bindData(BaseViewHolder holder, MonthlyCardBean cardInfo, int position) {
         holder.setText(R.id.area_monthly_card, cardInfo.getArea().replace("市", "") + "卡")
                 .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期");
+
+        CornerImageView imageView = holder.getView(R.id.monthly_card_iv);
+        imageView.setText(DateUtil.deleteZero(cardInfo.getDiscount() * 10) + "折");
         if (mType == 2) {
             if (cardInfo.getArea().equals("全国")) {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_grayallcity_shadow);
-                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_graylogo);
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_grayallcity_shadow)
+                        .showPic(R.id.area_monthly_card_park, R.drawable.ic_graylogo);
             } else {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_graycitycard_shadow);
-                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_graycitycard_shadow)
+                        .showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
             }
+            imageView.setCornerColor(Color.parseColor("#808082"));
         } else {
             if (cardInfo.getArea().equals("全国")) {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_allcity_shadow);
-                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_pinklogo);
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_allcity_shadow)
+                        .showPic(R.id.area_monthly_card_park, R.drawable.ic_pinklogo);
+                imageView.setCornerColor(Color.parseColor("#fe9b40"));
             } else {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_citycard_shadow);
-                holder.showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_citycard_shadow)
+                        .showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
+                imageView.setCornerColor(Color.parseColor("#ff0101"));
             }
         }
     }

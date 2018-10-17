@@ -198,4 +198,10 @@
         <attr name="child_width" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="CornerImageView">
+        <attr name="corner_color" format="color" />
+        <attr name="discount_text_color" format="color" />
+        <attr name="discount" format="string" />
+    </declare-styleable>
+
 </resources>
