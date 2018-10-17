@@ -39,13 +39,11 @@ public class WaveImageView extends AppCompatImageView {
     private int mHeigth;
 
     public WaveImageView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public WaveImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public WaveImageView(Context context, AttributeSet attrs, int defStyleAttr) {

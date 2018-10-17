@@ -22,13 +22,11 @@ public class ArcView extends View {
     private Path mPath;
 
     public ArcView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public ArcView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public ArcView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {

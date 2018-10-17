@@ -64,23 +64,27 @@ public class CircularArcView extends View {
     private int mProgress = -1;
 
     public CircularArcView(Context context) {
-        super(context);
-        mArcColor = Color.WHITE;
-        mCicleColor = Color.parseColor("#4df2f2f2");
-        mSweepAngle = 68;
-        mArcWidth = 8;
+        this(context, null);
     }
 
     public CircularArcView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        initAttribute(context, attrs, 0);
-        init();
+        this(context, attrs, 0);
     }
 
     public CircularArcView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttribute(context, attrs, defStyleAttr);
         init();
+    }
+
+    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CircularArcView, defStyleAttr, 0);
+        mArcWidth = typedArray.getDimension(R.styleable.CircularArcView_stroke_width, 8);
+        mArcColor = typedArray.getColor(R.styleable.CircularArcView_CircularArcView_arc_color, Color.WHITE);
+        mCicleColor = typedArray.getColor(R.styleable.CircularArcView_CircularArcView_circle_color, Color.parseColor("#4df2f2f2"));
+        mRadius = typedArray.getDimension(R.styleable.CircularArcView_CircularArcView_circle_radius, 0);
+        mSweepAngle = typedArray.getInt(R.styleable.CircularArcView_sweep_angle, 68);
+        typedArray.recycle();
     }
 
     private void init() {
@@ -103,16 +107,6 @@ public class CircularArcView extends View {
         mCloseStartAngle = new float[4];
 
         mHookPath = new Path();
-    }
-
-    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CircularArcView, defStyleAttr, 0);
-        mArcWidth = typedArray.getDimension(R.styleable.CircularArcView_stroke_width, 8);
-        mArcColor = typedArray.getColor(R.styleable.CircularArcView_CircularArcView_arc_color, Color.WHITE);
-        mCicleColor = typedArray.getColor(R.styleable.CircularArcView_CircularArcView_circle_color, Color.parseColor("#4df2f2f2"));
-        mRadius = typedArray.getDimension(R.styleable.CircularArcView_CircularArcView_circle_radius, 0);
-        mSweepAngle = typedArray.getInt(R.styleable.CircularArcView_sweep_angle, 68);
-        typedArray.recycle();
     }
 
     @Override

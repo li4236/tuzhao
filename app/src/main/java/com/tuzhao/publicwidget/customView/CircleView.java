@@ -29,35 +29,23 @@ public class CircleView extends View {
     private int mColor;
 
     public CircleView(Context context) {
-        super(context);
-        mColor = parseColor("#f2ac4c");
-        init();
+        this(context, null);
     }
 
     public CircleView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        initAttribute(context, attrs, 0);
-        init();
+        this(context, attrs, 0);
     }
 
     public CircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttribute(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CircleView, defStyleAttr, 0);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleView, defStyleAttr, 0);
         mColor = typedArray.getColor(R.styleable.CircleView_color, parseColor("#f2ac4c"));
         typedArray.recycle();
-    }
 
-    private void init() {
-        mPaint = new Paint();
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mColor);
         mPaint.setAntiAlias(true);
-        //mPaint.setShadowLayer(30,5,2, Color.RED);
     }
 
     @Override
@@ -71,10 +59,7 @@ public class CircleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.save();
-        canvas.translate(mWidth / 2, mHeight / 2);
-        canvas.drawCircle(0, 0, mRadius, mPaint);
-        canvas.restore();
+        canvas.drawCircle(mWidth / 2, mHeight / 2, mRadius, mPaint);
     }
 
     public void setColor(int color) {

@@ -18,8 +18,6 @@ import com.tuzhao.R;
 
 public class NavigationView extends View {
 
-    private static final String TAG = "NavigationView";
-
     private Paint mBackgroundPaint;
 
     private Paint mInnerPaint;
@@ -39,33 +37,21 @@ public class NavigationView extends View {
     private boolean mIsDrawCenterCircle;
 
     public NavigationView(Context context) {
-        super(context);
-        mBackgroundColor = Color.WHITE;
-        mInnerColor = Color.parseColor("#f4bb67");
-        init();
+        this(context, null);
     }
 
     public NavigationView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        initAttribute(context, attrs, 0);
-        init();
+        this(context, attrs, 0);
     }
 
     public NavigationView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttribute(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.NavigationView, defStyleAttr, 0);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NavigationView, defStyleAttr, 0);
         mBackgroundColor = typedArray.getColor(R.styleable.NavigationView_background_color, Color.WHITE);
         mInnerColor = typedArray.getColor(R.styleable.NavigationView_inner_color, Color.parseColor("#f4bb67"));
         mInnerRadius = typedArray.getDimension(R.styleable.NavigationView_inner_radius, 0);
         typedArray.recycle();
-    }
 
-    private void init() {
         mBackgroundPaint = new Paint();
         mBackgroundPaint.setColor(mBackgroundColor);
         mBackgroundPaint.setStyle(Paint.Style.FILL);
@@ -77,7 +63,6 @@ public class NavigationView extends View {
         mInnerPaint.setAntiAlias(true);
 
         mTriangelRect = new RectF();
-
     }
 
     @Override

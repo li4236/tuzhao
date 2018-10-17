@@ -47,26 +47,29 @@ public class Voltage extends View {
     private int mHeighVoltageColor;
 
     public Voltage(Context context) {
-        super(context);
-        mBorderRadius = 2;
-        mBorderWidth = 4;
-        mBorderColor = Color.BLACK;
-        mLowVoltageColor = Color.parseColor("#980000");
-        mMiddleVoltageColor = Color.parseColor("#fbbb11");
-        mHeighVoltageColor = Color.parseColor("#4cda64");
-        init();
+        this(context, null);
     }
 
     public Voltage(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        initAttribute(context, attrs, 0);
-        init();
+        this(context, attrs, 0);
     }
 
     public Voltage(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttribute(context, attrs, defStyleAttr);
         init();
+    }
+
+    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.Voltage, defStyleAttr, 0);
+        mBorderRadius = typedArray.getDimension(R.styleable.Voltage_border_radius, 2);
+        mBorderWidth = typedArray.getDimension(R.styleable.Voltage_border_width, 4);
+        mVoltage = typedArray.getInt(R.styleable.Voltage_voltage, 0);
+        mBorderColor = typedArray.getColor(R.styleable.Voltage_border_color, Color.BLACK);
+        mLowVoltageColor = typedArray.getColor(R.styleable.Voltage_low_voltage_color, Color.parseColor("#980000"));
+        mMiddleVoltageColor = typedArray.getColor(R.styleable.Voltage_middle_voltage_color, Color.parseColor("#fbbb11"));
+        mHeighVoltageColor = typedArray.getColor(R.styleable.Voltage_heigh_voltage_color, Color.parseColor("#4cda64"));
+        typedArray.recycle();
     }
 
     private void init() {
@@ -83,25 +86,13 @@ public class Voltage extends View {
         mVoltageRect = new RectF();
     }
 
-    private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.Voltage, defStyleAttr, 0);
-        mBorderRadius = typedArray.getDimension(R.styleable.Voltage_border_radius, 2);
-        mBorderWidth = typedArray.getDimension(R.styleable.Voltage_border_width, 4);
-        mVoltage = typedArray.getInt(R.styleable.Voltage_voltage, 0);
-        mBorderColor = typedArray.getColor(R.styleable.Voltage_border_color, Color.BLACK);
-        mLowVoltageColor = typedArray.getColor(R.styleable.Voltage_low_voltage_color, Color.parseColor("#980000"));
-        mMiddleVoltageColor = typedArray.getColor(R.styleable.Voltage_middle_voltage_color, Color.parseColor("#fbbb11"));
-        mHeighVoltageColor = typedArray.getColor(R.styleable.Voltage_heigh_voltage_color, Color.parseColor("#4cda64"));
-        typedArray.recycle();
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         mHeadRect.set(width - height / 4, height * 3 / 8, width, height * 5 / 8);
-        mBorderRect.set(mBorderPaint.getStrokeWidth()/2, mBorderPaint.getStrokeWidth()/2, mHeadRect.left, height - mBorderPaint.getStrokeWidth()/2);
+        mBorderRect.set(mBorderPaint.getStrokeWidth() / 2, mBorderPaint.getStrokeWidth() / 2, mHeadRect.left, height - mBorderPaint.getStrokeWidth() / 2);
 
         mVoltageWidth = mBorderRect.right - mBorderRect.left - mBorderWidth * 2;
         mVoltageRect.left = mBorderRect.left + mBorderWidth;

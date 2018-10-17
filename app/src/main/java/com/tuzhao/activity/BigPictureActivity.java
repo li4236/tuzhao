@@ -4,8 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -26,7 +25,6 @@ public class BigPictureActivity extends BaseActivity {
      */
     private FixViewPager viewpager;
     private TextView textview_selectcount;
-    private LinearLayout linearlayout_selectcount;
 
     /**
      * 数据相关
@@ -49,11 +47,10 @@ public class BigPictureActivity extends BaseActivity {
 
         viewpager = findViewById(R.id.id_activity_bigpicture_layout_viewpager);
         textview_selectcount = findViewById(R.id.id_activity_bigpicture_layout_textview_selectcount);
-        linearlayout_selectcount = findViewById(R.id.id_activity_bigpicture_layout_linearlayout_selectcount);
         int barheigh = setStyle(false);
-        RelativeLayout.LayoutParams rp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams rp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rp.setMargins(0, barheigh, 0, 0);
-        linearlayout_selectcount.setLayoutParams(rp);
+        textview_selectcount.setLayoutParams(rp);
     }
 
     private void initData() {

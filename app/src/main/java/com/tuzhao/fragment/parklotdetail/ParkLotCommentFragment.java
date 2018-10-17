@@ -32,6 +32,7 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
+import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.ImageUtil;
 
@@ -115,18 +116,17 @@ public class ParkLotCommentFragment extends BaseFragment {
 
     private void initData() {
         if (getArguments() != null) {
-            parkspace_info = (ParkLotInfo) getArguments().getSerializable("parkspace_info");
+            parkspace_info = getArguments().getParcelable(ConstansUtil.PARK_LOT_INFO);
+
+            if (parkspace_info == null) {
+                parkspace_id = getArguments().getString(ConstansUtil.PARK_LOT_ID);
+                city_code = getArguments().getString(ConstansUtil.CITY_CODE);
+                requestGetParkspceComment(parkspace_id, city_code, null, null);
+            } else {
+                requestGetParkspceComment(parkspace_info.getId(), parkspace_info.getCity_code(), null, null);
+            }
         }
 
-        if (parkspace_info == null) {
-            if (getArguments() != null) {
-                parkspace_id = getArguments().getString("parkspace_id");
-                city_code = getArguments().getString("city_code");
-                requestGetParkspceComment(parkspace_id, city_code, null, null);
-            }
-        } else {
-            requestGetParkspceComment(parkspace_info.getId(), parkspace_info.getCity_code(), null, null);
-        }
     }
 
     private void initEvent() {
