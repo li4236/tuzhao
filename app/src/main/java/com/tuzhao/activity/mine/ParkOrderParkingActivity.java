@@ -271,7 +271,13 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         initPolling();
 
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
-        mGraceTime.setText(Integer.valueOf(mParkOrderInfo.getExtensionTime()) / 60 + "分钟");
+        int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
+        if (extensionTime == -1) {
+            extensionTime = 0;
+        } else {
+            extensionTime /= 60;
+        }
+        mGraceTime.setText(extensionTime + "分钟");
 
         Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
         calendar.add(Calendar.SECOND, Integer.parseInt(mParkOrderInfo.getExtensionTime()));

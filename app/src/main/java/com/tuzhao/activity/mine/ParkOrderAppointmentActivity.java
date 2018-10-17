@@ -261,10 +261,16 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
         mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
         mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
-        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
         mOrderNumber.setText(mParkOrderInfo.getOrder_number());
         mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
 
+        int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
+        if (extensionTime == -1) {
+            extensionTime = 0;
+        } else {
+            extensionTime /= 60;
+        }
+        mGraceTime.setText(extensionTime + "分钟");
         registerLockListener();
     }
 

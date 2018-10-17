@@ -14,7 +14,6 @@ import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
@@ -153,9 +152,16 @@ public class ParkOrderCancelActivity extends BaseStatusActivity implements View.
         mParkSpaceDescription.setText(mParkOrderInfo.getParkSpaceLocation());
         mApointmentStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()));
         mAppointmentParkDuration.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getOrderStartTime(), mParkOrderInfo.getOrderEndTime()));
-        mGraceTime.setText(UserManager.getInstance().getUserInfo().getLeave_time() + "分钟");
         mOrderNumber.setText(mParkOrderInfo.getOrder_number());
         mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
+
+        int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
+        if (extensionTime == -1) {
+            extensionTime = 0;
+        } else {
+            extensionTime /= 60;
+        }
+        mGraceTime.setText(extensionTime + "分钟");
     }
 
     private void deletelOrder() {

@@ -216,13 +216,20 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         mAppointmentEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
         mActualStartParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_start_time()));
         mAcutalEndParkTime.setText(DateUtil.deleteSecond(mParkOrderInfo.getPark_end_time()));
-        mGraceTime.setText((Integer.valueOf(mParkOrderInfo.getExtensionTime())) / 60 + "分钟");
 
         String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
         if (!overtimeDuration.equals("未超时")) {
             mOvertimeDuration.setTextColor(Color.parseColor("#ff2020"));
         }
         mOvertimeDuration.setText(overtimeDuration);
+
+        int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
+        if (extensionTime == -1) {
+            extensionTime = 0;
+        } else {
+            extensionTime /= 60;
+        }
+        mGraceTime.setText(extensionTime + "分钟");
 
         mOrderNumber.setText(mParkOrderInfo.getOrder_number());
         mOrderDate.setText("下单时间：" + DateUtil.deleteSecond(mParkOrderInfo.getOrderTime()));
