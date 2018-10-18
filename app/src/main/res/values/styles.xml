@@ -15,8 +15,9 @@
     </style>
 
     <style name="TransparentTheme" parent="AppTheme">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/ic_load</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <!-- Base application theme. -->

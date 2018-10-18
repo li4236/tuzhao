@@ -4,7 +4,6 @@ package com.tuzhao.application;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,7 +19,6 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.DensityUtil;
-import com.tuzhao.utils.GlideApp;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.logging.Level;
@@ -39,17 +37,8 @@ import static com.tianzhili.www.myselfsdk.okgo.OkGo.getContext;
 public class MyApplication extends MultiDexApplication {
 
     private static MyApplication mApplication = null;
-    private Handler mHandler;
     private DatabaseImp databaseImp;
     public static boolean SKIP_WELCOME;
-
-    public Handler getHandler() {
-        return mHandler;
-    }
-
-    public void setHandler(Handler handler) {
-        mHandler = handler;
-    }
 
     @Override
     public void onCreate() {
@@ -128,12 +117,6 @@ public class MyApplication extends MultiDexApplication {
             e.printStackTrace();
         }
 
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        GlideApp.get(this).clearMemory();
     }
 
     public static MyApplication getInstance() {
