@@ -5,9 +5,9 @@ package com.tuzhao.publicwidget.swipetoloadlayout;
  */
 
 
-    public interface ChangeScrollStateCallback {
+public interface ChangeScrollStateCallback {
 
-        public void change(int c);
+    void change(int c);
 
-    }
+}
 

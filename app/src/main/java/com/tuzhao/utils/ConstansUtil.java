@@ -53,6 +53,11 @@ public class ConstansUtil {
     public static final int MINIMUN_INVOICE_AMOUNT = 100;
 
     /**
+     * 科大讯飞AppId
+     */
+    public static final String SPEECH_UTILITY_APP_ID= "592e14d9";
+
+    /**
      * 微信的AppId
      */
     public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";

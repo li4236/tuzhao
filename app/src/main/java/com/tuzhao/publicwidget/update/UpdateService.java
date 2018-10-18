@@ -60,6 +60,9 @@ public class UpdateService extends Service implements IntentObserver {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            return START_NOT_STICKY;
+        }
         if (intent.hasExtra(ConstansUtil.INTENT_MESSAGE)) {
             mUserUpdate = true;
         }

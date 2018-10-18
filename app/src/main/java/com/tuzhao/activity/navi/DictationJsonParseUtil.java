@@ -43,84 +43,20 @@ class DictationResult {
             private String w;
             private String sc;
 
-            public String getW() {
-                return w;
-            }
-
-            public void setW(String w) {
-                this.w = w;
-            }
-
-            public String getSc() {
-                return sc;
-            }
-
-            public void setSc(String sc) {
-                this.sc = sc;
-            }
-
             @Override
             public String toString() {
                 return w;
             }
         }
 
-        public String getBg() {
-            return bg;
-        }
-
-        public void setBg(String bg) {
-            this.bg = bg;
-        }
-
-        public List<Cw> getCw() {
-            return cw;
-        }
-
-        public void setCw(List<Cw> cw) {
-            this.cw = cw;
-        }
-
         @Override
         public String toString() {
-            String result = "";
+            StringBuilder result = new StringBuilder();
             for (Cw cwTmp : cw) {
-                result += cwTmp.toString();
+                result.append(cwTmp.toString());
             }
-            return result;
+            return result.toString();
         }
-    }
-
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
-    }
-
-    public String getLs() {
-        return ls;
-    }
-
-    public void setLs(String ls) {
-        this.ls = ls;
-    }
-
-    public String getBg() {
-        return bg;
-    }
-
-    public void setBg(String bg) {
-        this.bg = bg;
-    }
-
-    public String getEd() {
-        return ed;
-    }
-
-    public void setEd(String ed) {
-        this.ed = ed;
     }
 
     public List<Words> getWs() {
@@ -133,10 +69,10 @@ class DictationResult {
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (Words wsTmp : ws) {
-            result += wsTmp.toString();
+            result.append(wsTmp.toString());
         }
-        return result;
+        return result.toString();
     }
 }

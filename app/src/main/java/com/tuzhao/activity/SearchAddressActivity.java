@@ -37,13 +37,13 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
-import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.SpeechUtility;
 import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.navi.Constant;
 import com.tuzhao.activity.navi.DictationJsonParseUtil;
-import com.tuzhao.activity.navi.VoiceDialog;
+import com.tuzhao.publicwidget.dialog.VoiceDialog;
 import com.tuzhao.adapter.SearchAddressAdapter;
 import com.tuzhao.adapter.SearchAddressHistoryAdapter;
 import com.tuzhao.info.Search_Address_Info;
@@ -54,8 +54,6 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -81,7 +79,6 @@ public class SearchAddressActivity extends BaseActivity {
      * 定位相关
      */
     private AMapLocationClient locationClient;
-    private String keyword;
 
     /**
      * 语音识别
@@ -89,19 +86,13 @@ public class SearchAddressActivity extends BaseActivity {
     private String dictationResultStr = "[", finalResult;
     private VoiceDialog mVoiceDialog;
     private Dialog mDialog;
-    private SpeechRecognizer mAsr;// 语音识别对象
-    private RecognizerDialog iatDialog;
-    // 用HashMap存储听写结果
-    private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
-    private String mCloudGrammar = null;// 云端语法文件
-    private String mEngineType = SpeechConstant.TYPE_CLOUD;
     private boolean mUserReject;//用户拒绝开启录音权限
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_address_layout_refactor);
-        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
         initLocation();//初始化定位
         initData();//初始化数据
         initView();//初始化控件
@@ -111,14 +102,14 @@ public class SearchAddressActivity extends BaseActivity {
     }
 
     private void initData() {
-
         if (getIntent().hasExtra("whatPage")) {
-
             whatPage = getIntent().getStringExtra("whatPage");
             city = getIntent().getStringExtra("cityCode");
             if (city == null) {
                 locationClient.startLocation();//启动定位
             }
+            //科大讯飞语音初始化
+            SpeechUtility.createUtility(this.getApplicationContext(), SpeechConstant.APPID + "=" + ConstansUtil.SPEECH_UTILITY_APP_ID);
         } else {
             finish();
         }
@@ -223,7 +214,7 @@ public class SearchAddressActivity extends BaseActivity {
         imageview_clean = findViewById(R.id.id_activity_searchaddress_layout_imageview_clean);
 
         if (whatPage.equals("1") || whatPage.equals("2")) {
-            keyword = getIntent().getStringExtra("keyword");
+            String keyword = getIntent().getStringExtra("keyword");
             if (!keyword.equals("")) {
                 etextview_input.setText(keyword);
                 etextview_input.setSelection(keyword.length());//光标移动到最后
@@ -383,7 +374,6 @@ public class SearchAddressActivity extends BaseActivity {
      * @since 2.8.0
      */
     private AMapLocationClientOption getDefaultOption() {
-
         AMapLocationClientOption mOption = new AMapLocationClientOption();
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
         mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
@@ -449,8 +439,6 @@ public class SearchAddressActivity extends BaseActivity {
     private void initVoice() {
         //1.创建SpeechRecognizer对象，第二个参数：本地识别时传InitListener
         final SpeechRecognizer mIat = SpeechRecognizer.createRecognizer(SearchAddressActivity.this, null);
-        //dialogManager = DialogManager.getInstance();
-        //recordDialogShow = dialogManager.recordDialogShow(this);
         mVoiceDialog = new VoiceDialog(this);
         mDialog = mVoiceDialog.createDialog();
         //2.设置听写参数，详见SDK中《MSC Reference Manual》文件夹下的SpeechConstant类
@@ -552,7 +540,9 @@ public class SearchAddressActivity extends BaseActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    requestPermission(Manifest.permission.RECORD_AUDIO);
+                    if (requestPermission(Manifest.permission.RECORD_AUDIO)) {
+                        return true;
+                    }
                     mDialog.show();
                     mVoiceDialog.updateUI(R.mipmap.listener01, "正在录音");
                     dictationResultStr = "[";
@@ -570,10 +560,12 @@ public class SearchAddressActivity extends BaseActivity {
 
     }
 
-    private void requestPermission(String permission) {
+    private boolean requestPermission(String permission) {
         if (!mUserReject && ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{permission}, 0x111);
+            return true;
         }
+        return false;
     }
 
     @Override

@@ -131,7 +131,6 @@
         <activity
             android:name=".activity.SearchAddressActivity"
             android:windowSoftInputMode="stateHidden|adjustNothing" />
-        <activity android:name=".activity.navi.RouteNaviActivity" />
         <activity android:name=".activity.ChargestationDetailActivity" />
         <activity android:name=".activity.mine.DiscountActivity" />
         <activity android:name=".activity.mine.MyWalletActivity" />
@@ -178,9 +177,6 @@
             android:launchMode="singleTask" />
         <activity android:name=".activity.mine.CommentOrderActivity" />
         <activity android:name=".activity.mine.MyParkspaceActivity" />
-        <activity
-            android:name=".activity.mine.OrderActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.mine.AddParkSpaceActivity"
             android:windowSoftInputMode="adjustPan" />

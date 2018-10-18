@@ -1,4 +1,4 @@
-package com.tuzhao.fragment.parkorder;
+package com.tuzhao.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
-import com.tuzhao.activity.mine.OrderActivity;
 import com.tuzhao.activity.mine.ParkOrderAppointmentActivity;
 import com.tuzhao.activity.mine.ParkOrderCancelActivity;
 import com.tuzhao.activity.mine.ParkOrderFinishActivity;
@@ -242,9 +241,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                         break;
                     case "6":
                         startActivity(ParkOrderCancelActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
-                        break;
-                    default:
-                        startActivity(OrderActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
                         break;
                 }
             }

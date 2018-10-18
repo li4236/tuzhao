@@ -41,7 +41,6 @@ import com.tencent.tauth.UiError;
 import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.application.MyApplication;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicmanager.WeChatManager;
 import com.tuzhao.publicwidget.mytoast.MyToast;
@@ -63,21 +62,23 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
     private boolean isAnimStart = false;
     private int currentProgress;
 
+    private Tencent mTencent;
+
     private IUiListener qqShareListener = new IUiListener() {
         //QQ分享回调
         @Override
         public void onCancel() {
-            MyToast.showToast(ShareActivity.this,"分享已取消",5);
+            MyToast.showToast(ShareActivity.this, "分享已取消", 5);
         }
 
         @Override
         public void onComplete(Object response) {
-            MyToast.showToast(ShareActivity.this,"分享成功",5);
+            MyToast.showToast(ShareActivity.this, "分享成功", 5);
         }
 
         @Override
         public void onError(UiError e) {
-            MyToast.showToast(ShareActivity.this,"分享失败",5);
+            MyToast.showToast(ShareActivity.this, "分享失败", 5);
         }
     };
 
@@ -88,14 +89,13 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_layout);
         initView();//初始化控件
-        initData();//初始化数据
         initEvent();//初始化事件
-        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
     }
 
     private void initView() {
-        mWebView = (WebView) findViewById(R.id.id_activity_share_layout_webview);
-        mProgressBar = (ProgressBar) findViewById(R.id.id_activity_share_layout_progressBar);
+        mWebView = findViewById(R.id.id_activity_share_layout_webview);
+        mProgressBar = findViewById(R.id.id_activity_share_layout_progressBar);
 
         WebSettings webSettings = mWebView.getSettings();
 
@@ -141,12 +141,14 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
         });
 
         //新浪微博初始化
-        WbSdk.install(this,new AuthInfo(this, WebConstants.APP_KEY, WebConstants.REDIRECT_URL, WebConstants.SCOPE));//创建微博API接口类对象
+        WbSdk.install(this, new AuthInfo(this, WebConstants.APP_KEY, WebConstants.REDIRECT_URL, WebConstants.SCOPE));//创建微博API接口类对象
         shareHandler = new WbShareHandler(this);
         shareHandler.registerApp();
-    }
 
-    private void initData() {
+        WeChatManager.getInstance().registerWeChat(this);
+
+        mTencent = Tencent.createInstance("1106725796", this);
+
     }
 
     private void initEvent() {
@@ -163,16 +165,14 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
                                               if (uri.getAuthority().equals("webview")) {
                                                   Log.e("网页点击", uri.getQueryParameter("pos"));
                                                   String pos = uri.getQueryParameter("pos");
-                                                  if (pos.equals("1")){
+                                                  if (pos.equals("1")) {
                                                       sharetoWeChat(true);
-                                                  }
-                                                  else if (pos.equals("2")) {
+                                                  } else if (pos.equals("2")) {
                                                       sharetoWeChat(false);
-                                                  }
-                                                  else if (pos.equals("3")) {
+                                                  } else if (pos.equals("3")) {
                                                       doShareToQQ();
-                                                  }else {
-                                                      sendMessageToWb(true,false);
+                                                  } else {
+                                                      sendMessageToWb(true, false);
                                                   }
                                               }
                                               return true;
@@ -203,9 +203,7 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
 
             @Override
             public void run() {
-                if (null != MyApplication.getInstance().getmTencent()) {
-                    MyApplication.getInstance().getmTencent().shareToQQ(ShareActivity.this, params, qqShareListener);
-                }
+                mTencent.shareToQQ(ShareActivity.this, params, qqShareListener);
             }
         });
     }
@@ -285,28 +283,29 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
 
     /**
      * 新浪微博或者微信的回调
+     *
      * @param intent
      */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        shareHandler.doResultIntent(intent,this);
+        shareHandler.doResultIntent(intent, this);
     }
 
     //新浪微博的回调
     @Override
     public void onWbShareSuccess() {
-        MyToast.showToast(ShareActivity.this,"分享成功",5);
+        MyToast.showToast(ShareActivity.this, "分享成功", 5);
     }
 
     @Override
     public void onWbShareCancel() {
-        MyToast.showToast(ShareActivity.this,"分享已取消",5);
+        MyToast.showToast(ShareActivity.this, "分享已取消", 5);
     }
 
     @Override
     public void onWbShareFail() {
-        MyToast.showToast(ShareActivity.this,"分享失败",5);
+        MyToast.showToast(ShareActivity.this, "分享失败", 5);
     }
 
     /**
@@ -333,11 +332,12 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
 
     /**
      * 创建文本消息对象。
+     *
      * @return 文本消息对象。
      */
     private TextObject getTextObj() {
         TextObject textObject = new TextObject();
-        textObject.text = "#途找停车#\n送你10元停车券，快来一起停车吧"+"\nhttps://admin.toozhao.cn/h5app/share/getshare.html" + "?key=" + UserManager.getInstance().getUserInfo().getUsername() + "&pos=4";
+        textObject.text = "#途找停车#\n送你10元停车券，快来一起停车吧" + "\nhttps://admin.toozhao.cn/h5app/share/getshare.html" + "?key=" + UserManager.getInstance().getUserInfo().getUsername() + "&pos=4";
         textObject.title = "邀请好友，你和好友各拿10元停车立减券哦";
         textObject.actionUrl = "https://admin.toozhao.cn/h5app/share/getshare.html" + "?key=" + UserManager.getInstance().getUserInfo().getUsername();
         return textObject;
@@ -345,18 +345,19 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
 
     /**
      * 创建图片消息对象。
+     *
      * @return 图片消息对象。
      */
     private ImageObject getImageObj(Context context) {
         ImageObject imageObject = new ImageObject();
-        Bitmap  bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.logo);
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.logo);
         imageObject.setImageObject(bitmap);
         return imageObject;
     }
 
     public void sharetoWeChat(boolean isFrinds) {
         WXWebpageObject webpage = new WXWebpageObject();
-        webpage.webpageUrl = "https://admin.toozhao.cn/h5app/share/getshare.html" + "?key=" + UserManager.getInstance().getUserInfo().getUsername() + "&pos="+(isFrinds?"1":"2");
+        webpage.webpageUrl = "https://admin.toozhao.cn/h5app/share/getshare.html" + "?key=" + UserManager.getInstance().getUserInfo().getUsername() + "&pos=" + (isFrinds ? "1" : "2");
         WXMediaMessage msg = new WXMediaMessage(webpage);
         msg.title = "送你10元停车券，快来一起停车吧";
         msg.description = "邀请好友，你和好友各拿10元停车立减券哦";
@@ -366,7 +367,7 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("webpage");
         req.message = msg;
-        req.scene = isFrinds?WXSceneSession:WXSceneTimeline;
+        req.scene = isFrinds ? WXSceneSession : WXSceneTimeline;
         WeChatManager.getInstance().api.sendReq(req);
     }
 

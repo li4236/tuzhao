@@ -24,7 +24,6 @@ public class SuperRefreshRecyclerView extends FrameLayout {
 
     private RelativeLayout emptyView, errorView;
     private SwipeToLoadLayout swipeToLoadLayout;
-    private SwipeLoadMoreFooterLayout swipeLoadMoreFooterLayout;
     private RecyclerView recyclerView;
     private boolean move;
     private int mIndex;
@@ -57,10 +56,8 @@ public class SuperRefreshRecyclerView extends FrameLayout {
         emptyView = findViewById(R.id.layout_empty);
         errorView = findViewById(R.id.layout_error);
         swipeToLoadLayout = findViewById(R.id.swipe_to_load);
-        swipeLoadMoreFooterLayout = findViewById(R.id.swipe_load_more_footer);
         recyclerView = findViewById(R.id.swipe_target);
     }
-
 
     public void init(RecyclerView.LayoutManager layoutManager, OnRefreshListener onRefreshListener, OnLoadMoreListener onLoadMoreListener) {
         recyclerView.setLayoutManager(layoutManager);

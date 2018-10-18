@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.SplashActivity;
-import com.tuzhao.activity.base.BaseGuideFragment;
+import com.tuzhao.fragment.base.BaseGuideFragment;
 import com.tuzhao.utils.ImageUtil;
 
 /**

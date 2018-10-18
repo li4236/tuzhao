@@ -15,7 +15,7 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.fragment.parkorder.ParkOrderFragment;
+import com.tuzhao.fragment.ParkOrderFragment;
 import com.tuzhao.utils.DensityUtil;
 
 import java.util.ArrayList;

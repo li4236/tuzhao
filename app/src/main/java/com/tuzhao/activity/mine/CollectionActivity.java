@@ -18,7 +18,7 @@ import com.tianzhili.www.myselfsdk.chenjing.XStatusBarHelper;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.activity.base.SuccessCallback;
-import com.tuzhao.fragment.collection.CollectionFragment;
+import com.tuzhao.fragment.CollectionFragment;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;

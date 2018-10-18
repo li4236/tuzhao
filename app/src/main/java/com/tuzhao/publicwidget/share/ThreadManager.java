@@ -1,12 +1,9 @@
 package com.tuzhao.publicwidget.share;
 
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 
-import java.lang.reflect.Field;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
@@ -21,7 +18,7 @@ public final class ThreadManager {
 
     // UI线程
     private static Handler mManinHandler;
-    private static Object mMainHandlerLock = new Object();
+    private static final Object mMainHandlerLock = new Object();
 
     // 本地改就行..不要传svn
     public static final boolean DEBUG_THREAD = false;
@@ -54,31 +51,14 @@ public final class ThreadManager {
     }
 
     private static Executor initNetworkExecutor() {
-        Executor result = null;
+        Executor result;
         // 3.0以上
-        if (Build.VERSION.SDK_INT >= 11) {
-            //result = AsyncTask.THREAD_POOL_EXECUTOR;
-            result = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS,
-                    new LinkedBlockingQueue<Runnable>());
-        }
-        // 3.0以下, 反射获取
-        else {
-            Executor tmp = null;
-            try {
-                Field field = AsyncTask.class.getDeclaredField("sExecutor");
-                field.setAccessible(true);
-                tmp = (Executor) field.get(null);
-            } catch (Exception e) {
-                tmp = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS,
-                        new LinkedBlockingQueue<Runnable>());
-            }
-            result = tmp;
-        }
+        //result = AsyncTask.THREAD_POOL_EXECUTOR;
+        result = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>());
 
-        if (result instanceof ThreadPoolExecutor) {
-            // core size减少为3个
-            ((ThreadPoolExecutor) result).setCorePoolSize(3);
-        }
+        // core size减少为3个
+        ((ThreadPoolExecutor) result).setCorePoolSize(3);
 
         return result;
     }
@@ -90,7 +70,6 @@ public final class ThreadManager {
     /**
      * 取得UI线程Handler
      *
-     * @return
      */
     public static Handler getMainHandler() {
         if (mManinHandler == null) {

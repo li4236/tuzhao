@@ -14,8 +14,6 @@ import com.tuzhao.R;
  */
 public class SwipeLoadMoreFooterLayout extends FrameLayout implements SwipeLoadMoreTrigger, SwipeTrigger {
 
-    private Context mContext;
-
     public SwipeLoadMoreFooterLayout(Context context) {
         this(context, null);
         init(context);
@@ -32,8 +30,7 @@ public class SwipeLoadMoreFooterLayout extends FrameLayout implements SwipeLoadM
     }
 
     private void init(Context context){
-        mContext=context;
-        LayoutInflater.from(mContext).inflate(R.layout.layout_footer_loading, this);
+        LayoutInflater.from(context).inflate(R.layout.layout_footer_loading, this);
     }
 
     @Override

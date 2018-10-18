@@ -15,9 +15,8 @@ import com.tuzhao.R;
 /**
  * Created by ex-liyongqiang001 on 16/7/28.
  */
-public class RefreshHeaderView extends FrameLayout implements SwipeRefreshTrigger,SwipeTrigger   {
+public class RefreshHeaderView extends FrameLayout implements SwipeRefreshTrigger, SwipeTrigger {
 
-    private Context mcontext;
     private TextView tvTip;
     private ImageView iconRefresh;
     private AnimationDrawable animationDrawable;
@@ -37,10 +36,10 @@ public class RefreshHeaderView extends FrameLayout implements SwipeRefreshTrigge
         init(context);
     }
 
-    private void init(Context context){
-        LayoutInflater.from(context).inflate(R.layout.layout_refresh_header,this);
-        tvTip=(TextView)findViewById(R.id.tv_tip);
-        iconRefresh=(ImageView)findViewById(R.id.icon_refresh);
+    private void init(Context context) {
+        LayoutInflater.from(context).inflate(R.layout.layout_refresh_header, this);
+        tvTip = findViewById(R.id.tv_tip);
+        iconRefresh = findViewById(R.id.icon_refresh);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class RefreshHeaderView extends FrameLayout implements SwipeRefreshTrigge
     public void onRelease() {
         //达到一定滑动距离，松开刷新时调用
         //setText("释放立即刷新");
-        Log.i("info","onRelease");
+        Log.i("info", "onRelease");
     }
 
     @Override
@@ -92,7 +91,7 @@ public class RefreshHeaderView extends FrameLayout implements SwipeRefreshTrigge
         tvTip.setText("刷新完成");
         animationDrawable.stop();
         //iconRefresh.setImageResource(R.mipmap.icon_refresh);
-        Log.i("info","onComplete");
+        Log.i("info", "onComplete");
     }
 
     @Override
@@ -100,6 +99,6 @@ public class RefreshHeaderView extends FrameLayout implements SwipeRefreshTrigge
         //重置
         tvTip.setText("下拉刷新");
         iconRefresh.setImageResource(R.mipmap.ic_xiala3);
-        Log.i("info","onReset");
+        Log.i("info", "onReset");
     }
 }

@@ -1,4 +1,4 @@
-package com.tuzhao.activity.navi;
+package com.tuzhao.publicwidget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

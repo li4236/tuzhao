@@ -7,5 +7,5 @@ import android.support.v7.widget.RecyclerView;
  */
 
 public interface ChangeScrollCallback {
-    public void scroll(RecyclerView recyclerView, int dx, int dy);
+    void scroll(RecyclerView recyclerView, int dx, int dy);
 }

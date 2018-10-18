@@ -17,26 +17,20 @@ public class WeChatManager {
 
     public IWXAPI api;      //这个对象是专门用来向微信发送数据的一个重要接口,使用强引用持有,所有的信息发送都是基于这个对象的
 
-    public static WeChatManager getInstance(){
-
+    public static WeChatManager getInstance() {
         if (weChatManager == null) {
-
             synchronized (WeChatManager.class) {
-
                 if (weChatManager == null) {
-
                     weChatManager = new WeChatManager();
                 }
-                return weChatManager;
             }
-        } else {
-
-            return weChatManager;
         }
+        return weChatManager;
     }
 
     public void registerWeChat(Context context) {   //向微信注册app
-        api = WXAPIFactory.createWXAPI(context, APP_ID, true);
+        api = WXAPIFactory.createWXAPI(context.getApplicationContext(), APP_ID, true);
         api.registerApp(APP_ID);
     }
+
 }

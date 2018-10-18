@@ -8,13 +8,9 @@ import android.content.SharedPreferences;
  */
 public class SpUtils {
 
-    private Context mContext;
-
     private SharedPreferences mSharedPreferences;
 
     private static SpUtils sSpUtils;
-
-    public static final String UPDATE_VERSION = "UpdateVersion";
 
     /**
      * 本次启动是否已检查更新

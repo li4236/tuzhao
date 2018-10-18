@@ -101,6 +101,13 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
                                 }
                             }
                             o.data = cars;
+                            if (!cars.isEmpty()) {
+                                loadDataSuccess(o);
+                            } else if (mCommonAdapter.getDataSize() == 0) {
+                                //没有审核通过的车辆
+                                dismmisLoadingDialog();
+                                mRecyclerView.showEmpty();
+                            }
                         } else {
                             Collections.sort(o.data, new Comparator<Car>() {
                                 @Override
@@ -108,8 +115,8 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
                                     return o1.getSortStatus() - o2.getSortStatus();
                                 }
                             });
+                            loadDataSuccess(o);
                         }
-                        loadDataSuccess(o);
                     }
 
                     @Override

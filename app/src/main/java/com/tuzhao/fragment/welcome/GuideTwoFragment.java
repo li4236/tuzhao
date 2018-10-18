@@ -12,7 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseGuideFragment;
+import com.tuzhao.fragment.base.BaseGuideFragment;
 import com.tuzhao.utils.ImageUtil;
 
 /**

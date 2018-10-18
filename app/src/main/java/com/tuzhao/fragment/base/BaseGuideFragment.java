@@ -1,4 +1,4 @@
-package com.tuzhao.activity.base;
+package com.tuzhao.fragment.base;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;

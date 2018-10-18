@@ -1,4 +1,4 @@
-package com.tuzhao.fragment.discount;
+package com.tuzhao.fragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;

@@ -13,18 +13,11 @@ import java.util.List;
  *
  */
 public class GsonUtil {
-    // 将单条Json数据解析成相应的映射对象
-    public static <T> T parseJsonWithGson(String jsonData, Class<T> type) {
-        Gson gson = new Gson();
-        T result = gson.fromJson(jsonData, type);
-        return result;
-    }
 
     // 将Json数组解析成相应的映射对象列表
     public static <T> List<T> parseJsonArrayWithGson(String jsonData,
                                                      Class<T> type) {
-        Gson gson = new Gson();
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
 
         // 下面这句因为泛型在编译期类型会被擦除，从而导致如下错误：
         // java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap
