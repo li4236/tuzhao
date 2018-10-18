@@ -6,8 +6,15 @@ package com.tuzhao.info;
 
 public class RentalRecordItemInfo {
 
-    //订单id
-    private String orderId;
+    /**
+     * 订单状态（2：停车中，4/5：已完成）
+     */
+    private String orderStatus;
+
+    /**
+     * 亲友备注（如果是亲友停车的则返回亲友备注，没有备注返回亲友真实姓名，如果为null则代表是出租的订单）
+     */
+    private String noteName;
 
     //出租时长
     private String rentalTime;
@@ -20,6 +27,22 @@ public class RentalRecordItemInfo {
 
     //获得收益
     private String rentalFee;
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getNoteName() {
+        return noteName;
+    }
+
+    public void setNoteName(String noteName) {
+        this.noteName = noteName;
+    }
 
     public String getRentalTime() {
         return rentalTime;
@@ -52,4 +75,5 @@ public class RentalRecordItemInfo {
     public void setRentalFee(String rentalFee) {
         this.rentalFee = rentalFee;
     }
+
 }

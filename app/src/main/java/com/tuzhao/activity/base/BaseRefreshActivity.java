@@ -2,6 +2,7 @@ package com.tuzhao.activity.base;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
@@ -60,7 +61,9 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      *
      * @return recycleview使用的布局管理器
      */
-    protected abstract RecyclerView.LayoutManager createLayouManager();
+    protected  RecyclerView.LayoutManager createLayouManager() {
+        return new LinearLayoutManager(this);
+    }
 
     /**
      * 当下拉刷新时将会回调该方法
