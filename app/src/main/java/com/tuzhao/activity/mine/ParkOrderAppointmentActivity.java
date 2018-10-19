@@ -84,6 +84,8 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
 
     private boolean mIsOpening;
 
+    private int mOpenLockCount;
+
     private OpenLockDialog mOpenLockDialog;
 
     private List<Park_Info> mParkSpaceList;
@@ -293,8 +295,14 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 super.openFailed();
                 mOpenLockDialog.setOpenLockStatus(2);
                 mIsOpening = false;
-                if (mOpenLockDialog.isShowing()) {
-                    mOpenLockDialog.cancelOpenLockAnimator();
+                if (mOpenLockCount % 2 == 0) {
+                    mOpenLockDialog.dismiss();
+                    showDialog("开锁失败，是否为您重新分配车位？", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getParkSpaceList();
+                        }
+                    });
                 } else {
                     showFiveToast("开锁失败，请稍后重试");
                 }
@@ -333,6 +341,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
             });
         }
         mOpenLockDialog.startOpenLock();
+        mOpenLockCount++;
     }
 
     private void finishAppointment() {
@@ -372,7 +381,12 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
-                                    showFiveToast("设备暂时离线，请稍后重试");
+                                    showDialog("设备暂时离线，是否为您重新分配车位？", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            getParkSpaceList();
+                                        }
+                                    });
                                     break;
                                 case "103":
                                     Calendar calendar = Calendar.getInstance();
@@ -397,6 +411,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
     }
 
     private void getParkSpaceList() {
+        showLoadingDialog("查找车位...");
         getOkGo(HttpConstants.getParkList)
                 .params("citycode", mParkOrderInfo.getCityCode())
                 .params("parkspace_id", mParkOrderInfo.getParkLotId())
@@ -481,14 +496,13 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                 .execute(new JsonCodeCallback<Base_Class_Info<ParkOrderInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> responseData, Call call, Response response) {
+                        dismmisLoadingDialog();
                         switch (responseData.code) {
                             case "0":
-                                dismmisLoadingDialog();
                                 redistributionParkSpace(mCanParkList.get(0), null);
+                                showFiveToast("已成功为你分配车位");
                                 break;
                             case "101":
-                                dismmisLoadingDialog();
-
                                 //备选车位都不能用，则删掉
                                 mCanParkList.remove(0);
                                 String[] readyPark = readyParkId.toString().split(",");
@@ -509,7 +523,6 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                                 }
                                 break;
                             case "102":
-                                dismmisLoadingDialog();
                                 for (int i = 0; i < mCanParkList.size(); i++) {
                                     if (mCanParkList.get(i).getId().equals(responseData.data.getParkSpaceId())) {
                                         showRequestAppointOrderDialog(mCanParkList.get(i), responseData.data.getExtensionTime());
@@ -522,23 +535,18 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                                 finish();
                                 break;
                             case "104":
-                                dismmisLoadingDialog();
                                 showFiveToast("您有效订单已达上限，暂不可预约车位哦");
                                 break;
                             case "105":
-                                dismmisLoadingDialog();
                                 showFiveToast("您当前车位在该时段内已有过预约，请尝试更换时间");
                                 break;
                             case "106":
-                                dismmisLoadingDialog();
                                 mCanParkList.remove(0);
                                 showRequestAppointOrderDialog(mCanParkList.get(0), String.valueOf(Integer.valueOf(responseData.data.getExtensionTime()) / 60));
                                 break;
                             case "107":
-                                dismmisLoadingDialog();
                                 showFiveToast("您有订单需要前去付款，要先处理哦");
                             default:
-                                dismmisLoadingDialog();
                                 showFiveToast("服务器正在维护中");
                                 break;
                         }
@@ -622,6 +630,8 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         if (extensionTime != null) {
             mParkOrderInfo.setExtensionTime(extensionTime);
         }
+        mParkOrderInfo.setParkNumber(parkInfo.getPark_number());
+        mParkOrderInfo.setParkSpaceLocation(parkInfo.getLocation_describe());
 
         Intent intent = new Intent(ConstansUtil.CHANGE_PARK_ORDER_INRO);
         Bundle bundle = new Bundle();
@@ -631,6 +641,7 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         IntentObserable.dispatch(intent);
 
         mParkOrderInfo.setParkSpaceId(parkInfo.getId());
+        init();
     }
 
     private void cancelAppointment() {

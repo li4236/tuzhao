@@ -146,6 +146,10 @@ public class ParkOrderInfo implements Parcelable {
         return parkSpaceLocation;
     }
 
+    public void setParkSpaceLocation(String parkSpaceLocation) {
+        this.parkSpaceLocation = parkSpaceLocation;
+    }
+
     public String getOrderStartTime() {
         return orderStartTime;
     }
