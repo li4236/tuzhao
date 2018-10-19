@@ -44,7 +44,6 @@ public class BigPictureActivity extends BaseActivity {
     }
 
     private void initView() {
-
         viewpager = findViewById(R.id.id_activity_bigpicture_layout_viewpager);
         textview_selectcount = findViewById(R.id.id_activity_bigpicture_layout_textview_selectcount);
         int barheigh = setStyle(false);

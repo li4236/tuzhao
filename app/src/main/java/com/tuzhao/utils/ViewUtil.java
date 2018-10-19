@@ -1,5 +1,6 @@
 package com.tuzhao.utils;
 
+import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -11,10 +12,12 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.tuzhao.activity.mine.CertifyZhimaActivity;
+import com.tuzhao.info.Pair;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 
@@ -22,6 +25,8 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
  * Created by juncoder on 2018/7/12.
  */
 public class ViewUtil {
+
+    private static final String TAG = "ViewUtil";
 
     public static void showProgressStatus(TextView textView, boolean showProgress) {
         if (showProgress) {
@@ -119,6 +124,45 @@ public class ViewUtil {
             MyToast.showToast(context, "已复制", 5);
         } else {
             MyToast.showToast(context, "复制失败", 5);
+        }
+    }
+
+    /**
+     * @param distance 移动view的距离
+     */
+    private static void translateView(View view, int distance) {
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "translationY", distance);
+        objectAnimator.setDuration(200);
+        objectAnimator.setAutoCancel(true);
+        objectAnimator.start();
+    }
+
+    /**
+     * @param view          被键盘挡住的view
+     * @param tranltateView 要移动的view
+     * @param pair          first为键盘高度，second为window高度
+     */
+    public static void translateView(final View view, final View tranltateView, final Pair<Integer, Integer> pair) {
+        if (view.getY() == 0) {
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (pair.getFirst() == 0) {
+                        translateView(tranltateView, 0);
+                    } else if (pair.getFirst() > pair.getSecond() - (view.getY() + view.getHeight())) {
+                        //键盘遮挡住了view
+                        translateView(tranltateView, (int) (pair.getSecond() - view.getY() - view.getHeight() * 2 - pair.getFirst()));
+                    }
+                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+        } else {
+            if (pair.getFirst() == 0) {
+                translateView(tranltateView, 0);
+            } else if (pair.getFirst() > pair.getSecond() - (view.getY() + view.getHeight())) {
+                //键盘遮挡住了view
+                translateView(tranltateView, (int) (pair.getSecond() - view.getY() - view.getHeight() * 2 - pair.getFirst()));
+            }
         }
     }
 

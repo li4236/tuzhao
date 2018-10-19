@@ -48,7 +48,7 @@ public abstract class BaseStatusFragment extends Fragment {
     /**
      * fragment所在的根view
      */
-    private View mView;
+    protected View mView;
 
     /**
      * 加载对话框

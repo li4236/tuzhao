@@ -1,5 +1,6 @@
 package com.tuzhao.fragment.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.DigitsKeyListener;
 import android.view.View;
@@ -7,8 +8,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tuzhao.R;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Pair;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -16,6 +19,8 @@ import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -23,7 +28,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/8/31.
  */
-public class PasswordLoginFragment extends BaseStatusFragment implements View.OnClickListener {
+public class PasswordLoginFragment extends BaseStatusFragment implements View.OnClickListener, IntentObserver {
 
     private EditText mPasswordEt;
 
@@ -52,16 +57,17 @@ public class PasswordLoginFragment extends BaseStatusFragment implements View.On
 
         mPasswordEt = findViewById(R.id.password_et);
         mUserLogin = findViewById(R.id.login_tv);
-
         mPasswordEt.setKeyListener(DigitsKeyListener.getInstance("0123456789abcdefghijklmnopqistuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./?';:[]{}!@#$%^*()~&<>！￥？【】、《》，。-=+_"));
 
         mUserLogin.setOnClickListener(this);
         findViewById(R.id.forget_password).setOnClickListener(this);
         findViewById(R.id.sms_login).setOnClickListener(this);
+        mPasswordEt.requestFocus();
     }
 
     @Override
     protected void initData() {
+        IntentObserable.registerObserver(this);
     }
 
     @Override
@@ -87,6 +93,20 @@ public class PasswordLoginFragment extends BaseStatusFragment implements View.On
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof LoginActivity) {
+            ViewUtil.translateView(mUserLogin, mView, ((LoginActivity) getActivity()).mPair);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        IntentObserable.unregisterObserver(this);
     }
 
     private void requestPasswordLogin() {
@@ -122,6 +142,14 @@ public class PasswordLoginFragment extends BaseStatusFragment implements View.On
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.KEYBOARD_HEIGHT_CHANGE.equals(intent.getAction())) {
+            ViewUtil.translateView(mUserLogin, mView, new Pair<>(intent.getIntExtra(ConstansUtil.INTENT_MESSAGE, 0),
+                    intent.getIntExtra(ConstansUtil.HEIGHT, 1920)));
+        }
     }
 
 }

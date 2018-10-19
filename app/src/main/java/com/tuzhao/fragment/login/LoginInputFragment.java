@@ -1,5 +1,6 @@
 package com.tuzhao.fragment.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Pair;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -21,6 +23,8 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -28,7 +32,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/9/3.
  */
-public class LoginInputFragment extends BaseStatusFragment {
+public class LoginInputFragment extends BaseStatusFragment implements IntentObserver{
 
     private User_Info mUserInfo;
 
@@ -120,6 +124,21 @@ public class LoginInputFragment extends BaseStatusFragment {
 
     @Override
     protected void initData() {
+        IntentObserable.registerObserver(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof LoginActivity) {
+            ViewUtil.translateView(mNextStep, mView, ((LoginActivity) getActivity()).mPair);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        IntentObserable.unregisterObserver(this);
     }
 
     private void onTelephoneClick() {
@@ -274,6 +293,14 @@ public class LoginInputFragment extends BaseStatusFragment {
                     }
                 });
 
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.KEYBOARD_HEIGHT_CHANGE.equals(intent.getAction())) {
+            ViewUtil.translateView(mNextStep, mView, new Pair<>(intent.getIntExtra(ConstansUtil.INTENT_MESSAGE, 0),
+                    intent.getIntExtra(ConstansUtil.HEIGHT, 1920)));
+        }
     }
 
 }

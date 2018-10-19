@@ -55,7 +55,7 @@ public class ConstansUtil {
     /**
      * 科大讯飞AppId
      */
-    public static final String SPEECH_UTILITY_APP_ID= "592e14d9";
+    public static final String SPEECH_UTILITY_APP_ID = "592e14d9";
 
     /**
      * 微信的AppId
@@ -557,5 +557,12 @@ public class ConstansUtil {
      * 删除好友分享的车位
      */
     public static final String DELETE_SHARE_PARK_SPACE = "DeleteShareParkSpace";
+
+    /**
+     * 键盘高度改变
+     */
+    public static final String KEYBOARD_HEIGHT_CHANGE = "KeyboardHeightChange";
+
+    public static final String HEIGHT = "Height";
 
 }

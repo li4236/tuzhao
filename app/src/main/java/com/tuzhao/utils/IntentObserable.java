@@ -92,6 +92,15 @@ public class IntentObserable {
         }
     }
 
+    public static void dispatch(String action, String key, int value, String otherKey, int otherValue) {
+        Intent intent = new Intent(action);
+        intent.putExtra(key, value);
+        intent.putExtra(otherKey, otherValue);
+        for (IntentObserver observer : mIntentObservers) {
+            observer.onReceive(intent);
+        }
+    }
+
     public static void dispatch(Intent intent) {
         for (IntentObserver observer : mIntentObservers) {
             observer.onReceive(intent);

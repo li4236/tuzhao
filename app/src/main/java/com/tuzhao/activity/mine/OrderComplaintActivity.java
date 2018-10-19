@@ -111,11 +111,11 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
                     mParkOrderInfo.getPark_end_time()) + "  日期：" + DateUtil.getYearToDayWithPointText(mParkOrderInfo.getPark_start_time());
             mParkDuration.setText(parkDuration);
 
-            initcomplaintReason();
+            initComplaintReason();
         }
     }
 
-    private void initcomplaintReason() {
+    private void initComplaintReason() {
         List<Pair<String, Boolean>> list = new ArrayList<>();
         switch (mParkOrderInfo.getOrderStatus()) {
             case "1":

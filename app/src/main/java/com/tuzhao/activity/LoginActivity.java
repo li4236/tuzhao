@@ -9,16 +9,19 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.fragment.login.LoginFragment;
 import com.tuzhao.fragment.login.LoginInputFragment;
 import com.tuzhao.fragment.login.PasswordLoginFragment;
 import com.tuzhao.fragment.login.SmsLoginFragment;
+import com.tuzhao.info.Pair;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.KeyboardHeightUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Objects;
@@ -28,7 +31,11 @@ import cn.jpush.android.api.JPushInterface;
 /**
  * Created by juncoder on 2018/8/31.
  */
-public class LoginActivity extends BaseStatusActivity implements IntentObserver {
+public class LoginActivity extends BaseStatusActivity implements IntentObserver, SuccessCallback<Pair<Integer, Integer>> {
+
+    public Pair<Integer, Integer> mPair;
+
+    private KeyboardHeightUtil mKeyboardHeightUtil;
 
     @Override
     protected int resourceId() {
@@ -37,6 +44,9 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mPair = new Pair<>(0,0);
+        mKeyboardHeightUtil = new KeyboardHeightUtil(this);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.login_container, new LoginFragment());
         transaction.commit();
@@ -68,9 +78,30 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            mKeyboardHeightUtil.start();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mKeyboardHeightUtil.setKeyboardHeightObserver(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mKeyboardHeightUtil.setKeyboardHeightObserver(null);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
+        mKeyboardHeightUtil.close();
     }
 
     @Override
@@ -159,6 +190,12 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver 
         } else {
             startActivity(MainActivity.class);
         }
+    }
+
+    @Override
+    public void onSuccess(Pair<Integer, Integer> pair) {
+        mPair = pair;
+        IntentObserable.dispatch(ConstansUtil.KEYBOARD_HEIGHT_CHANGE, ConstansUtil.INTENT_MESSAGE, pair.getFirst(), ConstansUtil.HEIGHT, pair.getSecond());
     }
 
 }

@@ -68,8 +68,6 @@ public class MyFriendsActivity extends BaseStatusActivity {
 
     private Park_Info mPark_info;
 
-    private int mNotNameNum;
-
     @Override
     protected void initView(Bundle savedInstanceState) {
         if ((mPark_info = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) == null) {
@@ -92,7 +90,7 @@ public class MyFriendsActivity extends BaseStatusActivity {
             @Override
             public void onClick(View v) {
                 if (mAdapter.getData().size() >= 5) {
-                    showFiveToast("最多只能添加5个亲友设备哦");
+                    showFiveToast("最多只能添加5个亲友哦");
                 } else {
                     showAddFriendDialog();
                 }
@@ -321,7 +319,8 @@ public class MyFriendsActivity extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<String> o, Call call, Response response) {
                         dismmisLoadingDialog();
-                        showDeleteFriendDialog(position, friendName + "在" + o.data.replace("*", "至") + "预定了该车位，确定删除吗?");
+                        showDeleteFriendDialog(position, friendName + "在" + o.data.replace("*", "至")
+                                + "预定了该车位，确定删除吗?");
                     }
 
                     @Override
@@ -491,11 +490,13 @@ public class MyFriendsActivity extends BaseStatusActivity {
                                 case "109":
                                     showFiveToast("你的亲友的共享车位已达到上限啦");
                                     break;
+                                case "110":
+                                    showFiveToast("该亲友还没实名认证，无法添加");
+                                    break;
                             }
                         }
                     }
                 });
-
     }
 
     private class BluetoothBindingAdapter extends BaseAdapter<FriendInfo> {
@@ -503,16 +504,8 @@ public class MyFriendsActivity extends BaseStatusActivity {
         @Override
         protected void conver(@NonNull final BaseViewHolder holder, final FriendInfo friendInfo, final int position) {
             final String noteName;
-            if (friendInfo.getNoteName() == null || friendInfo.getNoteName().equals("-1")) {
-                if (friendInfo.getRealName() == null || friendInfo.getRealName().equals("-1")) {
-                    if (friendInfo.getTelephone() == null || friendInfo.getTelephone().equals("-1")) {
-                        noteName = "亲友" + (++mNotNameNum);
-                    } else {
-                        noteName = friendInfo.getTelephone();
-                    }
-                } else {
-                    noteName = friendInfo.getRealName();
-                }
+            if (friendInfo.getNoteName() == null) {
+                noteName = friendInfo.getRealName();
             } else {
                 noteName = friendInfo.getNoteName();
             }

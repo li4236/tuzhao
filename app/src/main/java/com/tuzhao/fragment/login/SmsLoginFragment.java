@@ -1,6 +1,7 @@
 package com.tuzhao.fragment.login;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,9 +13,11 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Pair;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -24,7 +27,9 @@ import com.tuzhao.utils.ClipboardObserver;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.CountdownUtil;
 import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.SmsObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -32,7 +37,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/8/31.
  */
-public class SmsLoginFragment extends BaseStatusFragment implements View.OnClickListener {
+public class SmsLoginFragment extends BaseStatusFragment implements View.OnClickListener, IntentObserver {
 
     private EditText mVerifyCodeEt;
 
@@ -111,6 +116,8 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
         } else {
             findViewById(R.id.password_login).setOnClickListener(this);
         }
+
+        mVerifyCodeEt.requestFocus();
         mSendSms.setOnClickListener(this);
         mUserLogin.setOnClickListener(this);
     }
@@ -124,6 +131,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
             }
         });
         mClipboardObserver.registerClipEvents();
+        IntentObserable.registerObserver(this);
     }
 
     @Override
@@ -148,6 +156,14 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof LoginActivity) {
+            ViewUtil.translateView(mUserLogin, mView, ((LoginActivity) getActivity()).mPair);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mClipboardObserver.unregisterClipEvents();
@@ -157,6 +173,7 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
         if (mSmsObserver != null) {
             requireContext().getContentResolver().unregisterContentObserver(mSmsObserver);
         }
+        IntentObserable.unregisterObserver(this);
     }
 
     private void sendSms() {
@@ -378,6 +395,14 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.KEYBOARD_HEIGHT_CHANGE.equals(intent.getAction())) {
+            ViewUtil.translateView(mUserLogin, mView, new Pair<>(intent.getIntExtra(ConstansUtil.INTENT_MESSAGE, 0),
+                    intent.getIntExtra(ConstansUtil.HEIGHT, 1920)));
+        }
     }
 
 }

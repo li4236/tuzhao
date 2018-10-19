@@ -18,8 +18,10 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tuzhao.R;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
+import com.tuzhao.info.Pair;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -28,6 +30,7 @@ import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.Objects;
 
@@ -89,11 +92,11 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
         switch (v.getId()) {
             case R.id.next_step_tv:
                 if (TextUtils.isEmpty(getText(mTelephoneNumber))) {
-                    showFiveToast("请输入新的手机号");
+                    showFiveToast("请输入手机号码");
                 } else if (getTextLength(mTelephoneNumber) < 11) {
-                    showFiveToast("手机号格式不正确");
+                    showFiveToast("手机号码格式不正确");
                 } else if (!DateUtil.isPhoneNumble(getText(mTelephoneNumber))) {
-                    showFiveToast("手机号不正确");
+                    showFiveToast("手机号码不正确");
                 } else {
                     phoneIsNewUser();
                 }
@@ -102,6 +105,14 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
             case R.id.wechat_login_tv:
                 performWechatLogin();
                 break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof LoginActivity) {
+            ViewUtil.translateView(mNextStep, mView, ((LoginActivity) getActivity()).mPair);
         }
     }
 
@@ -172,12 +183,13 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> o, Call call, Response response) {
+                        dismmisLoadingDialog();
                         if (o.data.getId().equals("-1")) {
                             IntentObserable.dispatch(ConstansUtil.WECHAT_TELEPHONE_LOGIN, ConstansUtil.USER_INFO, o.data);
                         } else {
                             IntentObserable.dispatch(ConstansUtil.LOGIN_SUCCESS, ConstansUtil.INTENT_MESSAGE, o.data);
                         }
-                        dismmisLoadingDialog();
+
                     }
                 });
     }
@@ -186,6 +198,9 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.WECHAT_CODE)) {
             wechatLogin(intent.getStringExtra(ConstansUtil.FOR_REQEUST_RESULT));
+        } else if (ConstansUtil.KEYBOARD_HEIGHT_CHANGE.equals(intent.getAction())) {
+            ViewUtil.translateView(mNextStep, mView, new Pair<>(intent.getIntExtra(ConstansUtil.INTENT_MESSAGE, 0),
+                    intent.getIntExtra(ConstansUtil.HEIGHT, 1920)));
         }
     }
 
