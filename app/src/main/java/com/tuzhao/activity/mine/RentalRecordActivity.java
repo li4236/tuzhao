@@ -100,7 +100,7 @@ public class RentalRecordActivity extends BaseRefreshActivity<RentalRecordItemIn
     @Override
     protected void bindData(BaseViewHolder holder, RentalRecordItemInfo rentalRecordItemInfo, int position) {
         String[] rentalTimes = rentalRecordItemInfo.getRentalTime().split(":");
-        StringBuilder time = new StringBuilder("出租时长:");
+        StringBuilder time = new StringBuilder("2".equals(rentalRecordItemInfo.getOrderStatus()) ? "预停时长：" : "出租时长：");
 
         if (!rentalTimes[0].equals("0")) {
             time.append(rentalTimes[0]);
