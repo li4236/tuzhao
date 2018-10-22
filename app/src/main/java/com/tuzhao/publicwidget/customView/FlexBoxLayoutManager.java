@@ -28,6 +28,7 @@ public class FlexBoxLayoutManager extends RecyclerView.LayoutManager {
 
         int startOffset = getPaddingStart();    //子view对应的left坐标
         int topOffset = getPaddingTop();        //子view对应的top坐标
+        int mLastViewMaxHeightUse = 0;          //上一行view使用的最大高度
 
         for (int i = 0; i < state.getItemCount(); i++) {
             View view = recycler.getViewForPosition(i);
@@ -44,11 +45,15 @@ public class FlexBoxLayoutManager extends RecyclerView.LayoutManager {
 
             if (right > getWidth()) {
                 //显示不下，换行
-                topOffset +=viewHightUse;
+                topOffset += mLastViewMaxHeightUse;
                 startOffset = getPaddingStart();
 
                 left = startOffset;
                 right = left + viewWidthUse;
+
+                mLastViewMaxHeightUse = viewHightUse;
+            } else {
+                mLastViewMaxHeightUse = Math.max(mLastViewMaxHeightUse, viewHightUse);
             }
 
             top = topOffset;
