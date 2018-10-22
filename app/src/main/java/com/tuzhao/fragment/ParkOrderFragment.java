@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -103,7 +102,6 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     public void onDetach() {
         super.onDetach();
         //如果放在onDestroyView取消注册，则当滑到别的界面而销毁布局的时候会收不到通知，导致数据没更新
-        Log.e(TAG, "onDetach: ");
         IntentObserable.unregisterObserver(this);
     }
 

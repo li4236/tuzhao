@@ -1528,7 +1528,7 @@ public class DateUtil {
     }
 
     /**
-     * @return yyyy-MM-dd HH:ss
+     * @return yyyy-MM-dd HH:mm:ss
      */
     public static String getCalenarYearToSecond(Calendar calendar) {
         return calendar.get(Calendar.YEAR) + "-" + thanTen((calendar.get(Calendar.MONTH) + 1)) + "-" + thanTen(calendar.get(Calendar.DAY_OF_MONTH))

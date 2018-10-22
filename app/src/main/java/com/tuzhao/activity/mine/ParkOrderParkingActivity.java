@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -38,7 +40,6 @@ import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
-import com.tuzhao.utils.PollingUtil;
 import com.tuzhao.utils.ViewUtil;
 
 import java.text.DecimalFormat;
@@ -88,7 +89,12 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
 
     private TextView mOrderDate;
 
-    private PollingUtil mPollingUtil;
+    /**
+     * 当前时间
+     */
+    private Calendar nowCalendar;
+
+    private Handler mHandler;
 
     private DecimalFormat mDecimalFormat;
 
@@ -212,8 +218,8 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
-        if (mPollingUtil != null) {
-            mPollingUtil.cancel();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
         }
         MyReceiver.removeLockListener(mParkOrderInfo.getLockId());
         IntentObserable.unregisterObserver(this);
@@ -252,6 +258,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
                     public void onSuccess(Base_Class_Info<ParkOrderInfo> o, Call call, Response response) {
                         o.data.copyFrom(mParkOrderInfo);
                         mParkOrderInfo = o.data;
+                        nowCalendar = DateUtil.getYearToSecondCalendar(o.time);
                         init();
                         dismmisLoadingDialog();
                     }
@@ -268,7 +275,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
 
     @SuppressLint("SetTextI18n")
     private void init() {
-        initPolling();
+        initHandler();
 
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
         int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
@@ -301,14 +308,15 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         initLockListener();
     }
 
-    private void initPolling() {
-        mPollingUtil = new PollingUtil(1000 * 60, new PollingUtil.OnTimeCallback() {
+    private void initHandler() {
+        mHandler = new Handler(Looper.getMainLooper());
+        mHandler.post(new Runnable() {
             @Override
-            public void onTime() {
+            public void run() {
                 updateOrderInfo();
+                mHandler.postDelayed(this, 1000 * 60);
             }
         });
-        mPollingUtil.start();
     }
 
     /**
@@ -317,13 +325,12 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
     private void updateOrderInfo() {
         int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
         double parkFee = 0;
-        Calendar nowCalendar = Calendar.getInstance();
         if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime()).compareTo(
                 DateUtil.getYearToSecondCalendar(mParkOrderInfo.getParkStartTime())) > 0) {
             //提前停车
             if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) < 0) {
                 //还没到预约开始停车时间,计算开始停车时间到当前时间的费用
-                parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getParkStartTime()), DateUtil.getCurrentYearToMinutes(),
+                parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getParkStartTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
                         mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
             } else {
                 //到了预约开始停车时间，则计算开始停车时间到预约开始停车时间之间的费用
@@ -347,7 +354,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
 
             //计算超时部分的费用
             Calendar startOverTimeCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime());
-            mFineFee = DateUtil.getCalendarDistance(startOverTimeCalendar, Calendar.getInstance()) * Double.valueOf(mParkOrderInfo.getFine()) / 60;
+            mFineFee = DateUtil.getCalendarDistance(startOverTimeCalendar, nowCalendar) * Double.valueOf(mParkOrderInfo.getFine()) / 60;
             parkFee += mFineFee;
             mOvertimeDuration.setText(DateUtil.getDistanceForDayHourMinuteAddStart(mParkOrderInfo.getOrderEndTime(),
                     DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
@@ -355,9 +362,9 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
             //没有超时
             if (UserManager.getInstance().getUserInfo().getLeaveEarlyTime() > 0) {
                 //可以提前结单
-                if (Calendar.getInstance().compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) > 0) {
+                if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) > 0) {
                     //在预约停车的时间范围内,则停了多久就算多久的钱
-                    parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.getCurrentYearToMinutes(),
+                    parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
                             mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
                 }
             } else {
@@ -372,17 +379,19 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
                 }
                 parkFee += mTotalAppointmentFee;
 
-                if (Calendar.getInstance().compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime())) > 0) {
+                if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime())) > 0) {
                     //计算在宽限的时间停车的费用内
-                    parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()), DateUtil.getCurrentYearToMinutes(),
+                    parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
                             mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
                 }
             }
         }
 
-        mAlreadyParkTime.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), DateUtil.getCurrentYearToSecond()));
+        mAlreadyParkTime.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), DateUtil.getCalenarYearToSecond(nowCalendar)));
         mOrderFee = mDecimalFormat.format(parkFee);
         mOrderAmount.setText(mOrderFee);
+
+        nowCalendar.add(Calendar.MINUTE, 1);
     }
 
     private void initLockListener() {
