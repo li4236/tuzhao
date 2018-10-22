@@ -139,27 +139,27 @@ public class MonthlyCardFragment extends BaseRefreshFragment<MonthlyCardBean> im
 
     @Override
     protected void bindData(BaseViewHolder holder, MonthlyCardBean cardInfo, int position) {
-        holder.setText(R.id.area_monthly_card, cardInfo.getArea().replace("市", "") + "卡")
-                .setText(R.id.monthly_card_expried_date, cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期");
-
         CornerImageView imageView = holder.getView(R.id.monthly_card_iv);
-        imageView.setText(DateUtil.deleteZero(cardInfo.getDiscount() * 10) + "折");
+        imageView.setCornerText(DateUtil.deleteZero(cardInfo.getDiscount() * 10) + "折");
+        imageView.setStartText(cardInfo.getArea().replace("市", "") + "卡");
+        imageView.setEndText(cardInfo.getExpiredDate().substring(0, cardInfo.getExpiredDate().indexOf(" ")) + "过期");
+
         if (mType == 2) {
             if (cardInfo.getArea().equals("全国")) {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_grayallcity_shadow)
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_grayallcity)
                         .showPic(R.id.area_monthly_card_park, R.drawable.ic_graylogo);
             } else {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_graycitycard_shadow)
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_graycitycard)
                         .showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
             }
             imageView.setCornerColor(Color.parseColor("#808082"));
         } else {
             if (cardInfo.getArea().equals("全国")) {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_allcity_shadow)
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_allcity)
                         .showPic(R.id.area_monthly_card_park, R.drawable.ic_pinklogo);
                 imageView.setCornerColor(Color.parseColor("#fe9b40"));
             } else {
-                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_citycard_shadow)
+                holder.showPic(R.id.monthly_card_iv, R.drawable.ic_citycard)
                         .showPic(R.id.area_monthly_card_park, R.drawable.ic_blacklogo);
                 imageView.setCornerColor(Color.parseColor("#ff0101"));
             }

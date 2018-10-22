@@ -440,7 +440,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                 orderTime.setText(DateUtil.getMonthToMinute(parkOrderInfo.getOrderStartTime()));
                 String appointParkDistance = "预停" + DateUtil.getDistanceForDayHourMinute(parkOrderInfo.getOrderStartTime(), parkOrderInfo.getOrderEndTime());
                 orderTimeDescription.setText(appointParkDistance);
-                orderStatus.setTextColor(Color.parseColor("#6a6bd9"));
+                orderStatus.setCornerTextColor(Color.parseColor("#6a6bd9"));
                 orderStatus.setText("已预约");
                 break;*/
             case "1":

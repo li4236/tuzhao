@@ -2,13 +2,16 @@ package com.tuzhao.publicwidget.customView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.text.TextPaint;
+import android.graphics.Xfermode;
 import android.util.AttributeSet;
 
 import com.tuzhao.R;
@@ -18,17 +21,31 @@ import java.util.Objects;
 
 /**
  * Created by juncoder on 2018/10/17.
+ * <p>
+ * Xfermode使用教程 https://cloud.tencent.com/developer/article/1015278
+ * </p>
  */
 public class CornerImageView extends android.support.v7.widget.AppCompatImageView {
+
+    private RectF mCornerRectF;
+
+    private float mCornerRadius;
+
+    private Bitmap mSrcBitmap;
+
+    private Canvas mSrcCanvas;
+
+    private Bitmap mDetBitmap;
+
+    private Canvas mDetCanvas;
+
+    private Paint mCornerPaint;
+
+    private Xfermode mXfermode;
 
     private Paint mPaint;
 
     private int mCornerColor;
-
-    /**
-     * 圆角矩形
-     */
-    private RectF mRectF;
 
     private Path mPath;
 
@@ -42,11 +59,28 @@ public class CornerImageView extends android.support.v7.widget.AppCompatImageVie
      */
     private PointF mCornerBottomPoint;
 
+    private Paint mCornerTextPaint;
+
+    private int mCornerTextColor;
+
+    private String mCornerText;
+
+    /**
+     * 画下面左右两边文字的paint
+     */
     private Paint mTextPaint;
+
+    private float mTextSize;
 
     private int mTextColor;
 
-    private String mText;
+    private float mHorizontalMargin;
+
+    private float mBottomMargin;
+
+    private String mStartText;
+
+    private String mEndText;
 
     public CornerImageView(Context context) {
         this(context, null);
@@ -59,60 +93,111 @@ public class CornerImageView extends android.support.v7.widget.AppCompatImageVie
     public CornerImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CornerImageView, defStyleAttr, 0);
+        mCornerRadius = typedArray.getDimension(R.styleable.CornerImageView_corner_radius, 28);
         mCornerColor = typedArray.getColor(R.styleable.CornerImageView_corner_color, Color.parseColor("#ff0101"));
-        mTextColor = typedArray.getColor(R.styleable.CornerImageView_discount_text_color, Color.WHITE);
-        mText = typedArray.getString(R.styleable.CornerImageView_discount);
+        mCornerTextColor = typedArray.getColor(R.styleable.CornerImageView_discount_text_color, Color.WHITE);
+        mCornerText = typedArray.getString(R.styleable.CornerImageView_discount);
+        mTextSize = typedArray.getDimension(R.styleable.CornerImageView_corner_text_size, spToPx(12));
+        mTextColor = typedArray.getColor(R.styleable.CornerImageView_corner_text_color, Color.parseColor("#323232"));
+        mHorizontalMargin = typedArray.getDimension(R.styleable.CornerImageView_corner_text_horizontal_margin, dpToPx(16));
+        mBottomMargin = typedArray.getDimension(R.styleable.CornerImageView_corner_text_bottom_margin, dpToPx(12));
         typedArray.recycle();
+
+        mCornerRectF = new RectF();
+        mCornerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mXfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mCornerColor);
 
-        mRectF = new RectF();
         mPath = new Path();
         mCornerStartPoint = new PointF();
         mCornerBottomPoint = new PointF();
 
-        mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        mCornerTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCornerTextPaint.setColor(mCornerTextColor);
+        mCornerTextPaint.setTextSize(DensityUtil.sp2px(context, 14));
+
+        mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(mTextColor);
-        mTextPaint.setTextSize(DensityUtil.sp2px(context, 14));
+        mTextPaint.setTextSize(mTextSize);
+
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (mRectF.left == 0) {
-            mRectF.right = getMeasuredWidth() - 8;
-            mRectF.left = mRectF.right - 56;
-            mRectF.bottom = 56;
-            mRectF.top = 2;
+        if (mCornerRectF.bottom == 0) {
+            mCornerRectF.right = getMeasuredWidth();
+            mCornerRectF.bottom = getMeasuredHeight();
+        }
 
-            mCornerStartPoint.x = mRectF.right * 5 / 6;
-            mCornerStartPoint.y = mRectF.top;
-            mCornerBottomPoint.x = mRectF.right;
-            mCornerBottomPoint.y = mRectF.right - mCornerStartPoint.x;
+        if (mSrcBitmap == null) {
+            mDetBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+            mDetCanvas = new Canvas(mDetBitmap);
 
-            mPath.addArc(mRectF, 270, 90);      //添加弧形时之前的线画不会连接到弧形的起点，因此先画弧形
+            mSrcBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+            mSrcCanvas = new Canvas(mSrcBitmap);
+        }
+
+        //把图片画在mDetCanvas
+        super.onDraw(mDetCanvas);
+        //画右上角的角标
+        if (mCornerStartPoint.x == 0) {
+            mCornerStartPoint.x = getMeasuredWidth() * 5 / 6;
+            mCornerBottomPoint.x = getMeasuredWidth();
+            mCornerBottomPoint.y = mCornerBottomPoint.x - mCornerStartPoint.x;
+
+            //形成一个三角形的path，因为最后mDetCanvas只会显示圆角矩形部分，所以最终显示的是圆角三角形
+            mPath.moveTo(mCornerStartPoint.x, 0);
+            mPath.lineTo(mCornerBottomPoint.x, 0);
             mPath.lineTo(mCornerBottomPoint.x, mCornerBottomPoint.y);
-            mPath.lineTo(mCornerStartPoint.x, mRectF.top);
             mPath.close();
         }
-        canvas.drawPath(mPath, mPaint);
+        mDetCanvas.drawPath(mPath, mPaint);
+        canvas.drawBitmap(mDetBitmap, 0, 0, mCornerPaint);
 
-        if (mText != null) {
-            drawText(canvas);
+        //再画圆角矩形，并且使用Xfermode取mDetCanvas绘制的内容中和mSrcCanvas绘制的内存重叠的部分(即是圆角矩形的图片)
+        mSrcCanvas.drawRoundRect(mCornerRectF, mCornerRadius, mCornerRadius, mCornerPaint);
+        mCornerPaint.setXfermode(mXfermode);
+        canvas.drawBitmap(mSrcBitmap, 0, 0, mCornerPaint);
+        mCornerPaint.setXfermode(null);
+
+        drawText(canvas);
+        drawBottomText(canvas);
+    }
+
+    /**
+     * 角标的文字
+     */
+    private void drawText(Canvas canvas) {
+        if (mCornerText != null) {
+            //把canvas移动到角标的开始坐标点，并旋转45度，这样方便计算文字的基线坐标
+            canvas.save();
+            canvas.translate(mCornerStartPoint.x, mCornerStartPoint.y);
+            canvas.rotate(45);
+            float textWidth = mCornerTextPaint.measureText(mCornerText);
+            double cornerWidth = Math.sqrt(Math.pow(mCornerBottomPoint.x - mCornerStartPoint.x, 2) + Math.pow(mCornerBottomPoint.y, 2));
+            float baseX = (float) (cornerWidth / 2 - textWidth / 2);
+            canvas.drawText(mCornerText, baseX, textWidth > 66 ? -16 : -20, mCornerTextPaint);
+            canvas.restore();
         }
     }
 
-    private void drawText(Canvas canvas) {
-        canvas.save();
-        canvas.translate(mCornerStartPoint.x, mCornerStartPoint.y);
-        canvas.rotate(45);
-        float textWidth = mTextPaint.measureText(mText);
-        double cornerWidth = Math.sqrt(Math.pow(mRectF.right - mCornerStartPoint.x, 2) + Math.pow(mCornerBottomPoint.y, 2));
-        float baseX = (float) (cornerWidth / 2 - textWidth / 2);
-        canvas.drawText(mText, baseX, textWidth > 66 ? -16 : -20, mTextPaint);
-        canvas.restore();
+    /**
+     * 画图片下面的文字
+     */
+    private void drawBottomText(Canvas canvas) {
+        float baseY = getMeasuredHeight() - mBottomMargin;
+        if (mStartText != null) {
+            canvas.drawText(mStartText, mHorizontalMargin, baseY, mTextPaint);
+        }
+
+        if (mEndText != null) {
+            float endTextBaseX = getMeasuredWidth() - mHorizontalMargin - mTextPaint.measureText(mEndText);
+            canvas.drawText(mEndText, endTextBaseX, baseY, mTextPaint);
+        }
     }
 
     public void setCornerColor(int cornerColor) {
@@ -123,19 +208,49 @@ public class CornerImageView extends android.support.v7.widget.AppCompatImageVie
         }
     }
 
-    public void setTextColor(int textColor) {
-        if (mTextColor != textColor) {
-            mTextColor = textColor;
-            mTextPaint.setColor(mTextColor);
+    public void setCornerTextColor(int textColor) {
+        if (mCornerTextColor != textColor) {
+            mCornerTextColor = textColor;
+            mCornerTextPaint.setColor(mCornerTextColor);
             //invalidate();
         }
     }
 
-    public void setText(String text) {
-        if (!Objects.equals(mText, text)) {
-            mText = text;
+    public void setCornerText(String text) {
+        if (!Objects.equals(mCornerText, text)) {
+            mCornerText = text;
             //invalidate();
         }
+    }
+
+    public void setStartText(String startText) {
+        if (!Objects.equals(mStartText, startText)) {
+            mStartText = startText;
+        }
+    }
+
+    public void setEndText(String endText) {
+        if (!Objects.equals(mEndText, endText)) {
+            mEndText = endText;
+        }
+    }
+
+    public void setTextSize(float textSize) {
+        mTextSize = textSize;
+    }
+
+    public void setTextColor(int textColor) {
+        mTextColor = textColor;
+    }
+
+    private float spToPx(int sp) {
+        final float scale = getResources().getDisplayMetrics().scaledDensity;
+        return sp * scale;
+    }
+
+    private float dpToPx(int dp) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return dp * scale + 0.5f;
     }
 
 }

@@ -199,9 +199,14 @@
     </declare-styleable>
 
     <declare-styleable name="CornerImageView">
+        <attr name="corner_radius" format="dimension" />
         <attr name="corner_color" format="color" />
         <attr name="discount_text_color" format="color" />
         <attr name="discount" format="string" />
+        <attr name="corner_text_color" format="color" />
+        <attr name="corner_text_size" format="dimension" />
+        <attr name="corner_text_horizontal_margin" format="dimension" />
+        <attr name="corner_text_bottom_margin" format="dimension" />
     </declare-styleable>
 
 </resources>
