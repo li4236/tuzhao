@@ -93,6 +93,7 @@ public class ParkOrderInfo implements Parcelable {
     private String isInvoiced;//0(未开发票)，1(已开发票)
     private String ordersId;//订单对应总表的id
     private String updateTime;//订单的更新时间
+    private String isFreePark;
 
     public String getId() {
         return id;
@@ -453,6 +454,18 @@ public class ParkOrderInfo implements Parcelable {
         this.updateTime = updateTime;
     }
 
+    public boolean isFreePark() {
+        return !"-1".equals(isFreePark);
+    }
+
+    public String getIsFreePark() {
+        return isFreePark;
+    }
+
+    public void setIsFreePark(String isFreePark) {
+        this.isFreePark = isFreePark;
+    }
+
     public void copyFrom(ParkOrderInfo parkOrderInfo) {
         this.id = parkOrderInfo.getId();
         this.cityCode = parkOrderInfo.getCityCode();
@@ -462,6 +475,7 @@ public class ParkOrderInfo implements Parcelable {
         this.actualFee = parkOrderInfo.getActualFee();
         this.orderTime = parkOrderInfo.getOrderTime();      //下单时间
         this.orderStatus = parkOrderInfo.getOrderStatus();
+        this.isFreePark = parkOrderInfo.getIsFreePark();
     }
 
     @Override
@@ -515,6 +529,7 @@ public class ParkOrderInfo implements Parcelable {
                 ", longitude=" + longitude +
                 ", parkingUserId='" + parkingUserId + '\'' +
                 ", lockId='" + lockId + '\'' +
+                ", isFreePark='" + isFreePark + '\'' +
                 '}';
     }
 
@@ -566,6 +581,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.isInvoiced);
         dest.writeString(this.ordersId);
         dest.writeString(this.updateTime);
+        dest.writeString(this.isFreePark);
     }
 
     public ParkOrderInfo() {
@@ -613,6 +629,7 @@ public class ParkOrderInfo implements Parcelable {
         this.isInvoiced = in.readString();
         this.ordersId = in.readString();
         this.updateTime = in.readString();
+        this.isFreePark = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

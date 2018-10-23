@@ -103,7 +103,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
     /**
      * 超时费用
      */
-    private double mFineFee;
+    private double mFineFee = 0.00;
 
     /**
      * 预约时间内的全部费用
@@ -286,11 +286,16 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         }
         mGraceTime.setText(extensionTime + "分钟");
 
+        if (mParkOrderInfo.isFreePark()) {
+            mOrderFee = "0.00";
+            mOrderAmount.setText(mOrderFee);
+        }
+
         Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
         calendar.add(Calendar.SECOND, Integer.parseInt(mParkOrderInfo.getExtensionTime()));
         mLatestLeaveTime.setText(DateUtil.getCalendarMonthToMinuteWithText(calendar));
 
-        String timeoutBilling = "超时部分按" + mParkOrderInfo.getFine() + "元/时计费";
+        String timeoutBilling = "超时部分按" + (mParkOrderInfo.isFreePark() ? "0.00" : mParkOrderInfo.getFine()) + "元/时计费";
         SpannableString spannableString = new SpannableString(timeoutBilling);
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ff0101")), 5, timeoutBilling.indexOf("/"), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         mTimeoutBilling.setText(spannableString);
@@ -323,73 +328,84 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
      * 每分钟更新一次订单金额，已停时长，超时时长
      */
     private void updateOrderInfo() {
-        int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
-        double parkFee = 0;
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime()).compareTo(
-                DateUtil.getYearToSecondCalendar(mParkOrderInfo.getParkStartTime())) > 0) {
-            //提前停车
-            if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) < 0) {
-                //还没到预约开始停车时间,计算开始停车时间到当前时间的费用
-                parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getParkStartTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
-                        mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+        if (!mParkOrderInfo.isFreePark()) {
+            //不是免费停车
+            int extensionTime = Integer.valueOf(mParkOrderInfo.getExtensionTime());
+            double parkFee = 0;
+            if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime()).compareTo(
+                    DateUtil.getYearToSecondCalendar(mParkOrderInfo.getParkStartTime())) > 0) {
+                //提前停车
+                if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) < 0) {
+                    //还没到预约开始停车时间,计算开始停车时间到当前时间的费用
+                    parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getParkStartTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
+                            mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                } else {
+                    //到了预约开始停车时间，则计算开始停车时间到预约开始停车时间之间的费用
+                    parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getParkStartTime()),
+                            DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()),
+                            mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                }
+            }
+
+            if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                    nowCalendar) < 0) {
+                //超时
+
+                //计算在预约时间内的费用
+                if (mAppointmentWithExtendsionFee == 0) {
+                    mAppointmentWithExtendsionFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()),
+                            DateUtil.getYearToMinute(mParkOrderInfo.getOrderEndTime(), extensionTime),
+                            mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                }
+                parkFee += mAppointmentWithExtendsionFee;
+
+                //计算超时部分的费用
+                Calendar startOverTimeCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime());
+                mFineFee = DateUtil.getCalendarDistance(startOverTimeCalendar, nowCalendar) * Double.valueOf(mParkOrderInfo.getFine()) / 60;
+                parkFee += mFineFee;
+                mOvertimeDuration.setText(DateUtil.getDistanceForDayHourMinuteAddStart(mParkOrderInfo.getOrderEndTime(),
+                        DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
             } else {
-                //到了预约开始停车时间，则计算开始停车时间到预约开始停车时间之间的费用
-                parkFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getParkStartTime()),
-                        DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()),
-                        mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                //没有超时
+                if (UserManager.getInstance().getUserInfo().getLeaveEarlyTime() > 0) {
+                    //可以提前结单
+                    if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) > 0) {
+                        //在预约停车的时间范围内,则停了多久就算多久的钱
+                        parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
+                                mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                    }
+                } else {
+                    //不可以提前结单,则停车费用按预约时间的全额费用算
+
+                    //计算预约时间的全额费用
+                    if (mTotalAppointmentFee == 0) {
+                        //因为会每分钟更新一次，如果已经算出了全额费用就不再算了
+                        mTotalAppointmentFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()),
+                                DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()),
+                                mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                    }
+                    parkFee += mTotalAppointmentFee;
+
+                    if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime())) > 0) {
+                        //计算在宽限的时间停车的费用内
+                        parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
+                                mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
+                    }
+                }
             }
-        }
 
-        if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
-                nowCalendar) < 0) {
-            //超时
-
-            //计算在预约时间内的费用
-            if (mAppointmentWithExtendsionFee == 0) {
-                mAppointmentWithExtendsionFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()),
-                        DateUtil.getYearToMinute(mParkOrderInfo.getOrderEndTime(), extensionTime),
-                        mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
-            }
-            parkFee += mAppointmentWithExtendsionFee;
-
-            //计算超时部分的费用
-            Calendar startOverTimeCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime());
-            mFineFee = DateUtil.getCalendarDistance(startOverTimeCalendar, nowCalendar) * Double.valueOf(mParkOrderInfo.getFine()) / 60;
-            parkFee += mFineFee;
-            mOvertimeDuration.setText(DateUtil.getDistanceForDayHourMinuteAddStart(mParkOrderInfo.getOrderEndTime(),
-                    DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
+            mOrderFee = mDecimalFormat.format(parkFee);
+            mOrderAmount.setText(mOrderFee);
         } else {
-            //没有超时
-            if (UserManager.getInstance().getUserInfo().getLeaveEarlyTime() > 0) {
-                //可以提前结单
-                if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderStartTime())) > 0) {
-                    //在预约停车的时间范围内,则停了多久就算多久的钱
-                    parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
-                            mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
-                }
-            } else {
-                //不可以提前结单,则停车费用按预约时间的全额费用算
-
-                //计算预约时间的全额费用
-                if (mTotalAppointmentFee == 0) {
-                    //因为会每分钟更新一次，如果已经算出了全额费用就不再算了
-                    mTotalAppointmentFee = DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderStartTime()),
-                            DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()),
-                            mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
-                }
-                parkFee += mTotalAppointmentFee;
-
-                if (nowCalendar.compareTo(DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime())) > 0) {
-                    //计算在宽限的时间停车的费用内
-                    parkFee += DateUtil.caculateParkFee(DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()), DateUtil.getCalenarYearToMinutes(nowCalendar),
-                            mParkOrderInfo.getHigh_time(), Double.valueOf(mParkOrderInfo.getHigh_fee()), Double.valueOf(mParkOrderInfo.getLow_fee()));
-                }
+            //免费停车
+            if (DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime()).compareTo(
+                    nowCalendar) < 0) {
+                //显示超时时长
+                mOvertimeDuration.setText(DateUtil.getDistanceForDayHourMinuteAddStart(mParkOrderInfo.getOrderEndTime(),
+                        DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
             }
         }
-
         mAlreadyParkTime.setText(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), DateUtil.getCalenarYearToSecond(nowCalendar)));
-        mOrderFee = mDecimalFormat.format(parkFee);
-        mOrderAmount.setText(mOrderFee);
 
         nowCalendar.add(Calendar.MINUTE, 1);
     }
@@ -422,18 +438,25 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
 
     private void notifyFinishPark() {
         Intent intent = new Intent();
-        intent.setAction(ConstansUtil.FINISH_PARK);
         Bundle bundle = new Bundle();
-        mParkOrderInfo.setOrderStatus("3");
         mParkOrderInfo.setOrderFee(mOrderFee);
         mParkOrderInfo.setFineFee(String.valueOf(mFineFee));
-        mParkOrderInfo.setPark_end_time(DateUtil.getCurrentYearToSecond());
+        mParkOrderInfo.setParkEndTime(DateUtil.getCalenarYearToSecond(nowCalendar));
+        if (!mParkOrderInfo.isFreePark()) {
+            intent.setAction(ConstansUtil.FINISH_PARK);
+            mParkOrderInfo.setOrderStatus("3");
+        } else {
+            intent.setAction(ConstansUtil.FINISH_PAY_ORDER);
+            mParkOrderInfo.setOrderStatus("4");
+            mParkOrderInfo.setActual_pay_fee("0.00");
+            mParkOrderInfo.setTime(DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getParkStartTime(), mParkOrderInfo.getParkEndTime()));
+        }
         bundle.putParcelable(ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, bundle);
         IntentObserable.dispatch(intent);
 
         showFiveToast("已结束停车");
-        startActivity(ParkOrderPayActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+        startActivity(mParkOrderInfo.isFreePark() ? ParkOrderFinishActivity.class : ParkOrderPayActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
         finish();
     }
 
