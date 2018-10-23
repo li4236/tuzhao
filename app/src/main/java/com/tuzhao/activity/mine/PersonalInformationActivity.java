@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -22,12 +21,10 @@ import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.User_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.alipay.AuthResult;
 import com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.CircleImageView;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DensityUtil;
@@ -52,6 +49,8 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
 
     private static final String UNBOUND = "未绑定";
 
+    private User_Info mUserInfo;
+
     private CircleImageView mCircleImageView;
 
     private TextView mNickname;
@@ -74,7 +73,7 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
 
     private TextView mSesame;
 
-    //private TextView mRealName;
+    private TextView mFreePark;
 
     private Handler mHandler;
 
@@ -98,7 +97,7 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
         mWechat = findViewById(R.id.wechat_bingding_tv);
         mAlipay = findViewById(R.id.alipay_bingding_tv);
         mSesame = findViewById(R.id.sesame_certification_tv);
-        //mRealName = findViewById(R.id.real_name_certification_tv);
+        mFreePark = findViewById(R.id.free_park_tv);
 
         mCircleImageView.setOnClickListener(this);
         findViewById(R.id.edit_personal_message).setOnClickListener(this);
@@ -107,21 +106,22 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
         findViewById(R.id.wechat_bingding_cl).setOnClickListener(this);
         findViewById(R.id.alipay_bingding_cl).setOnClickListener(this);
         findViewById(R.id.sesame_certification_cl).setOnClickListener(this);
+        findViewById(R.id.free_park_cl).setOnClickListener(this);
     }
 
     @Override
     protected void initData() {
-        User_Info userInfo = com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo();
-        ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + userInfo.getImg_url(), R.mipmap.ic_usericon);
+        mUserInfo = com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo();
+        ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + mUserInfo.getImg_url(), R.mipmap.ic_usericon);
         String nickname;
-        if (userInfo.getNickname().equals("-1")) {
+        if (mUserInfo.getNickname().equals("-1")) {
             nickname = "昵称（未设置）";
         } else {
-            nickname = com.tuzhao.publicmanager.UserManager.getInstance().getUserInfo().getNickname();
+            nickname = mUserInfo.getNickname();
         }
         mNickname.setText(nickname);
 
-        if (Objects.equals(userInfo.getGender(), "1")) {
+        if (Objects.equals(mUserInfo.getGender(), "1")) {
             mUserGender.setText("男");
             ImageUtil.showPic(mUserGenderIv, R.drawable.ic_man);
         } else {
@@ -129,13 +129,13 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
             ImageUtil.showPic(mUserGenderIv, R.drawable.ic_woman);
         }
 
-        if (userInfo.getBirthday().equals("0000-00-00")) {
+        if (mUserInfo.getBirthday().equals("0000-00-00")) {
             mBirthday.setText("出生日期（未设置）");
         } else {
-            mBirthday.setText(userInfo.getBirthday());
+            mBirthday.setText(mUserInfo.getBirthday());
         }
-        if (userInfo.getNumberOfPark() != null && !userInfo.getNumberOfPark().equals("-1")) {
-            int numberOfPark = Integer.parseInt(userInfo.getNumberOfPark());
+        if (mUserInfo.getNumberOfPark() != null && !mUserInfo.getNumberOfPark().equals("-1")) {
+            int numberOfPark = Integer.parseInt(mUserInfo.getNumberOfPark());
             if (numberOfPark <= 20) {
                 mUserLevel.setText("停车小白");
             } else if (numberOfPark <= 50) {
@@ -146,28 +146,32 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                 mUserLevel.setText("神级泊客");
             }
             mNumberOfPark.setText("总停车次数");
-            mNumberOfPark.append(userInfo.getNumberOfPark());
+            mNumberOfPark.append(mUserInfo.getNumberOfPark());
             mNumberOfPark.append("次");
         }
 
-        if (!userInfo.getUsername().equals("-1")) {
-            StringBuilder telephone = new StringBuilder(userInfo.getUsername());
+        if (!mUserInfo.getUsername().equals("-1")) {
+            StringBuilder telephone = new StringBuilder(mUserInfo.getUsername());
             if (telephone.length() > 6) {
                 telephone.replace(3, 8, "*****");
             }
             mTelephoneNumber.setText(telephone.toString());
         }
 
-        if (userInfo.getOpenId() != null && !userInfo.getOpenId().equals("-1") && !userInfo.getOpenId().equals("")) {
+        if (mUserInfo.getOpenId() != null && !mUserInfo.getOpenId().equals("-1") && !mUserInfo.getOpenId().equals("")) {
             mWechat.setText(UNBIND);
         }
 
-        if (!Objects.equals(userInfo.getAlinumber(), "-1")) {
+        if (!Objects.equals(mUserInfo.getAlinumber(), "-1")) {
             mAlipay.setText(UNBIND);
         }
 
-        if (userInfo.isCertification()) {
+        if (mUserInfo.isCertification()) {
             mSesame.setText("已认证");
+        }
+
+        if (!"-1".equals(mUserInfo.getParkLotName())) {
+            mFreePark.setText(UNBIND);
         }
 
         IntentObserable.registerObserver(this);
@@ -183,7 +187,7 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_protrait:
-                startActivity(PhotoActivity.class, ConstansUtil.PHOTO_IMAGE, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+                startActivity(PhotoActivity.class, ConstansUtil.PHOTO_IMAGE, HttpConstants.ROOT_IMG_URL_USER + mUserInfo.getImg_url());
                 break;
             case R.id.edit_personal_message:
                 startActivity(ChangePersonalInformationActivity.class);
@@ -198,21 +202,13 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                 if (getText(mWechat).equals(UNBOUND)) {
                     wechatLogin();
                 } else {
-                    TipeDialog.Builder builder = new TipeDialog.Builder(PersonalInformationActivity.this);
-                    builder.setTitle("解除绑定");
-                    builder.setMessage("解除绑定后可重新绑定新的微信账号，是否解除绑定？");
-                    builder.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
+                    showDialog("解除绑定", "解除绑定后可重新绑定新的微信账号，是否解除绑定？",
+                            "解除绑定", new DialogInterface.OnClickListener() {
+                                @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
+                                    requestUnbind(1);
                                 }
                             });
-                    builder.setPositiveButton("解除绑定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            requestUnbind(1);
-                        }
-                    });
-                    builder.create().show();
                 }
                 break;
             case R.id.alipay_bingding_cl:
@@ -220,29 +216,24 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                     initHandler();
                     reqeustAlipayLogin();
                 } else {
-                    TipeDialog.Builder builder = new TipeDialog.Builder(PersonalInformationActivity.this);
-                    builder.setMessage("解除绑定后可重新绑定新的支付宝账号，是否解除绑定？");
-                    builder.setTitle("解除绑定");
-                    builder.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
+                    showDialog("解除绑定", "解除绑定后可重新绑定新的支付宝账号，是否解除绑定？",
+                            "解除绑定", new DialogInterface.OnClickListener() {
+                                @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
+                                    requestUnbind(2);
                                 }
                             });
-                    builder.setPositiveButton("解除绑定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            requestUnbind(2);
-                        }
-                    });
-                    builder.create().show();
                 }
                 break;
             case R.id.sesame_certification_cl:
-                if (UserManager.getInstance().getUserInfo().isCertification()) {
+                if (mUserInfo.isCertification()) {
                     showFiveToast("你已实名认证过了哦");
                 } else {
                     startActivityForResult(CertifyZhimaActivity.class, ConstansUtil.REQUSET_CODE);
                 }
+                break;
+            case R.id.free_park_cl:
+                startActivity(FreeParkActivity.class);
                 break;
         }
     }
@@ -252,8 +243,8 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK) {
             mSesame.setText("已认证");
-            mBirthday.setText(UserManager.getInstance().getUserInfo().getBirthday());
-            if (UserManager.getInstance().getUserInfo().getGender().equals("2")) {
+            mBirthday.setText(mUserInfo.getBirthday());
+            if (mUserInfo.getGender().equals("2")) {
                 mUserGender.setText("女");
                 ImageUtil.showPic(mUserGenderIv, R.drawable.ic_woman);
             }
@@ -276,16 +267,16 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
 
     private void initHandler() {
         if (mHandler == null) {
-            mHandler = new Handler(Looper.myLooper()) {
+            mHandler = new Handler(new Handler.Callback() {
                 @Override
-                public void handleMessage(Message msg) {
+                public boolean handleMessage(Message msg) {
                     if (msg.what == SDK_AUTH_FLAG) {
                         AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
                         if (TextUtils.equals(authResult.getResultStatus(), "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
                             showLoadingDialog("绑定中...");
 
-                            if (UserManager.getInstance().getUserInfo().getAlinumber() != null) {
-                                if (UserManager.getInstance().getUserInfo().getAlinumber().equals(authResult.getUser_id() + ",1")) {
+                            if (mUserInfo.getAlinumber() != null) {
+                                if (mUserInfo.getAlinumber().equals(authResult.getUser_id() + ",1")) {
                                     MyToast.showToast(PersonalInformationActivity.this, "账号和之前一样，未作修改", 5);
                                     if (mLoadingDialog != null) {
                                         mLoadingDialog.dismiss();
@@ -303,8 +294,9 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                             MyToast.showToast(PersonalInformationActivity.this, "授权异常，绑定失败", 5);
                         }
                     }
+                    return true;
                 }
-            };
+            });
         }
     }
 
@@ -333,16 +325,16 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
 
     private void requestUploadUserAliNumber(final String aliuser_id, String authCode) {
         getOkGo(HttpConstants.uploadUserAliNumber)
-                .params("pass_code", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*"
-                        + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
+                .params("pass_code", DensityUtil.MD5code(mUserInfo.getSerect_code() + "*&*"
+                        + mUserInfo.getCreate_time() + "*&*" + mUserInfo.getId()))
                 .params("authCode", authCode)
                 .execute(new JsonCallback<Base_Class_Info<String>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<String> class_info, Call call, Response response) {
                         dismmisLoadingDialog();
                         MyToast.showToast(PersonalInformationActivity.this, "绑定成功", 5);
-                        UserManager.getInstance().getUserInfo().setAlinumber(aliuser_id + ",1");
-                        UserManager.getInstance().getUserInfo().setAliNickname(class_info.data);
+                        mUserInfo.setAlinumber(aliuser_id + ",1");
+                        mUserInfo.setAliNickname(class_info.data);
                         mAlipay.setText(UNBIND);
                     }
 
@@ -368,19 +360,19 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
     private void requestUnbind(final int type) {
         showLoadingDialog("解除绑定");
         getOkGo(HttpConstants.requestUnbindThirdPartyAccount)
-                .params("passCode", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" +
-                        UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
+                .params("passCode", DensityUtil.MD5code(mUserInfo.getSerect_code() + "*&*" +
+                        mUserInfo.getCreate_time() + "*&*" + mUserInfo.getId()))
                 .params("type", type)
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         if (type == 1) {
                             mWechat.setText(UNBOUND);
-                            UserManager.getInstance().getUserInfo().setOpenId("-1");
-                            UserManager.getInstance().getUserInfo().setWechatNickname("");
+                            mUserInfo.setOpenId("-1");
+                            mUserInfo.setWechatNickname("");
                         } else {
-                            UserManager.getInstance().getUserInfo().setAlinumber("-1");
-                            UserManager.getInstance().getUserInfo().setAliNickname("");
+                            mUserInfo.setAlinumber("-1");
+                            mUserInfo.setAliNickname("");
                             mAlipay.setText(UNBOUND);
                         }
                         showFiveToast("解除绑定成功");
@@ -411,12 +403,12 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
         showLoadingDialog("正在绑定");
         getOkGo(HttpConstants.requestBindWechat)
                 .params("code", code)
-                .params("passCode", DensityUtil.MD5code(UserManager.getInstance().getUserInfo().getSerect_code() + "*&*" + UserManager.getInstance().getUserInfo().getCreate_time() + "*&*" + UserManager.getInstance().getUserInfo().getId()))
+                .params("passCode", DensityUtil.MD5code(mUserInfo.getSerect_code() + "*&*" + mUserInfo.getCreate_time() + "*&*" + mUserInfo.getId()))
                 .execute(new JsonCallback<Base_Class_Info<User_Info>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<User_Info> o, Call call, Response response) {
-                        UserManager.getInstance().getUserInfo().setOpenId(o.data.getOpenId());
-                        UserManager.getInstance().getUserInfo().setWechatNickname(o.data.getWechatNickname());
+                        mUserInfo.setOpenId(o.data.getOpenId());
+                        mUserInfo.setWechatNickname(o.data.getWechatNickname());
                         mWechat.setText(UNBIND);
                         showFiveToast("绑定成功");
                         dismmisLoadingDialog();
@@ -455,10 +447,17 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
                     requestWechatBinding(intent.getStringExtra(ConstansUtil.FOR_REQEUST_RESULT));
                     break;
                 case ConstansUtil.CHANGE_PORTRAIT:
-                    ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
+                    ImageUtil.showPic(mCircleImageView, HttpConstants.ROOT_IMG_URL_USER + mUserInfo.getImg_url());
                     break;
                 case ConstansUtil.CHANGE_NICKNAME:
-                    mNickname.setText(UserManager.getInstance().getUserInfo().getNickname());
+                    mNickname.setText(mUserInfo.getNickname());
+                    break;
+                case ConstansUtil.CHANGE_BIND_FREE_PARK:
+                    if ("-1".equals(mUserInfo.getParkLotName())) {
+                        mFreePark.setText(UNBOUND);
+                    } else {
+                        mFreePark.setText(UNBIND);
+                    }
                     break;
             }
         }

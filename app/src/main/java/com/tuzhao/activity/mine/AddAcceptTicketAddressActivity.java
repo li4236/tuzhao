@@ -8,7 +8,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
@@ -356,13 +355,6 @@ public class AddAcceptTicketAddressActivity extends BaseStatusActivity implement
      */
     private void showToast(TextView textView) {
         showFiveToast(textView.getHint().toString());
-    }
-
-    /**
-     * @return true(textView有内容)
-     */
-    private boolean isEmpty(TextView textView) {
-        return TextUtils.isEmpty(textView.getText().toString().trim());
     }
 
     /**

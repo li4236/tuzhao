@@ -565,4 +565,9 @@ public class ConstansUtil {
 
     public static final String HEIGHT = "Height";
 
+    /**
+     * 绑定/解绑免费车场
+     */
+    public static final String CHANGE_BIND_FREE_PARK = "ChangeBindFreePark";
+
 }

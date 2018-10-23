@@ -121,20 +121,18 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
             case "1":
                 list.add(new Pair<>("无法开锁", false));
                 list.add(new Pair<>("车位有车", false));
-                list.add(new Pair<>("其他", false));
                 break;
             case "2":
                 list.add(new Pair<>("无法关锁", false));
                 list.add(new Pair<>("结束停车未停止计费", false));
-                list.add(new Pair<>("其他", false));
                 break;
             case "3":
             case "4":
             case "5":
                 list.add(new Pair<>("订单计费有误", false));
-                list.add(new Pair<>("其他", false));
                 break;
         }
+        list.add(new Pair<>("其他", false));
         mApdater.setNewData(list);
     }
 

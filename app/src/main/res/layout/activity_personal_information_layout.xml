@@ -376,21 +376,29 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <!--<android.support.constraint.ConstraintLayout
-                android:id="@+id/real_name_certification_cl"
+            <TextView
+                android:id="@+id/invite_experience_tv"
+                style="@style/TwentyTextB1Style"
+                android:layout_marginTop="12dp"
+                android:text="受邀体验"
+                app:layout_constraintStart_toStartOf="@id/account_bingding"
+                app:layout_constraintTop_toBottomOf="@+id/sesame_certification_cl" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/free_park_cl"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="12dp"
                 android:background="@color/w0"
-                app:layout_constraintTop_toBottomOf="@+id/sesame_certification_cl">
+                app:layout_constraintTop_toBottomOf="@+id/invite_experience_tv">
 
                 <ImageView
-                    android:id="@+id/real_name_certification_iv"
+                    android:id="@+id/free_park_iv"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_marginStart="13dp"
                     android:contentDescription="@string/picture_description"
-                    android:src="@drawable/ic_realname"
+                    android:src="@drawable/ic_freepark"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -398,21 +406,21 @@
                 <TextView
                     style="@style/TwentyTextB1Style"
                     android:layout_marginStart="16dp"
-                    android:text="实名认证"
+                    android:text="免费停车"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/real_name_certification_iv"
+                    app:layout_constraintStart_toEndOf="@id/free_park_iv"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/real_name_certification_tv"
+                    android:id="@+id/free_park_tv"
                     style="@style/CenterVerticalTwentyTextB1"
                     android:layout_marginEnd="4dp"
-                    android:text="未认证"
+                    android:text="未绑定"
                     android:textColor="@color/g6"
-                    app:layout_constraintEnd_toStartOf="@+id/real_name_certification_right" />
+                    app:layout_constraintEnd_toStartOf="@+id/free_park_right" />
 
                 <ImageView
-                    android:id="@+id/real_name_certification_right"
+                    android:id="@+id/free_park_right"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginEnd="16dp"
@@ -422,7 +430,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-            </android.support.constraint.ConstraintLayout>-->
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
 

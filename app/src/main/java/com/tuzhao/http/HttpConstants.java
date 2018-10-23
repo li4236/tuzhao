@@ -715,4 +715,14 @@ public class HttpConstants {
      */
     public static final String getParkOrderDetail = ROOT_URL + "getParkOrderDetail";
 
+    /**
+     * 绑定免费车场
+     */
+    public static final String bindFreeParkLot = ROOT_URL + "bindFreeParkLot";
+
+    /**
+     * 解绑免费车场
+     */
+    public static final String unbindFreeParkLot = ROOT_URL + "unbindFreeParkLot";
+
 }

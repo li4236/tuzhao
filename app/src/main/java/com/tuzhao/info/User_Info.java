@@ -36,6 +36,7 @@ public class User_Info implements Parcelable {
     private String wechatNickname;//微信昵称
     private String paymentPassword;//支付密码（设置了就返回-1，没设置就返回""）
     private int leaveEarlyTime;
+    private String parkLotName="-1";     //绑定的免费车场名字
 
     public String getId() {
         return id;
@@ -254,6 +255,14 @@ public class User_Info implements Parcelable {
         this.leaveEarlyTime = leaveEarlyTime;
     }
 
+    public String getParkLotName() {
+        return parkLotName;
+    }
+
+    public void setParkLotName(String parkLotName) {
+        this.parkLotName = parkLotName;
+    }
+
     @Override
     public String toString() {
         return "User_Info{" +
@@ -278,9 +287,10 @@ public class User_Info implements Parcelable {
                 ", openId='" + openId + '\'' +
                 ", unionId='" + unionId + '\'' +
                 ", wechatNickname='" + wechatNickname + '\'' +
-                ", autologin='" + autologin + '\'' +
                 ", paymentPassword='" + paymentPassword + '\'' +
-                ", leaveEarlyTime='" + leaveEarlyTime + '\'' +
+                ", leaveEarlyTime=" + leaveEarlyTime +
+                ", parkLotName='" + parkLotName + '\'' +
+                ", autologin='" + autologin + '\'' +
                 '}';
     }
 
@@ -315,6 +325,7 @@ public class User_Info implements Parcelable {
         dest.writeString(this.paymentPassword);
         dest.writeString(this.autologin);
         dest.writeInt(this.leaveEarlyTime);
+        dest.writeString(this.parkLotName);
     }
 
     public User_Info() {
@@ -345,6 +356,7 @@ public class User_Info implements Parcelable {
         this.paymentPassword = in.readString();
         this.autologin = in.readString();
         this.leaveEarlyTime = in.readInt();
+        this.parkLotName = in.readString();
     }
 
     public static final Creator<User_Info> CREATOR = new Creator<User_Info>() {

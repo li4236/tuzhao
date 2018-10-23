@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -367,6 +368,22 @@ public abstract class BaseStatusActivity extends BaseActivity {
     }
 
     /**
+     * 显示对话框
+     *
+     * @param title           对话框的标题
+     * @param message         对话框里面的文字
+     * @param onClickListener 点击确定按钮后的回调
+     */
+    protected void showDialog(String title, String message, String positiveButtonText,Dialog.OnClickListener onClickListener) {
+        new TipeDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(positiveButtonText, onClickListener)
+                .create()
+                .show();
+    }
+
+    /**
      * @return textView里面的字符串
      */
     protected String getText(TextView textView) {
@@ -378,6 +395,10 @@ public abstract class BaseStatusActivity extends BaseActivity {
      */
     protected int getTextLength(TextView textView) {
         return getText(textView).trim().length();
+    }
+
+    protected boolean isEmpty(TextView textView) {
+        return TextUtils.isEmpty(textView.getText());
     }
 
     /**
