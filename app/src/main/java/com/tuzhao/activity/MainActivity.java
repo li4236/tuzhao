@@ -741,74 +741,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             }
                             showMarkers(mShowMarkerData);
                         }
-                        /*if (isLc) {
-                            //mAllMarkerData = new ArrayList<>();
-                            //mYData = homePC_info.data;
-                            if (mAllMarkerData.size() + homePC_info.data.size() > 80) {
-                                for (int i = 0, moreDataSize = mAllMarkerData.size() + homePC_info.data.size() - 80; i <= moreDataSize; i++) {
-                                    mAllMarkerData.remove(0);
-                                }
-                                //最多显示80个marker
-                            }
-
-                            for (NearPointPCInfo info : homePC_info.data) {
-                                RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
-                                        info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
-                                        info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
-                                if (!mAllMarkerData.contains(item)) {
-                                    mAllMarkerData.add(item);
-                                }
-                            }
-
-                            if (isShowPark && isShowCharge) {
-                                showMarkers(mAllMarkerData);
-                            } else if (isShowPark) {
-                                mShowMarkerData.clear();
-                                for (ClusterItem item : mAllMarkerData) {
-                                    if (item.isparkspace()) {
-                                        mShowMarkerData.add(item);
-                                    }
-                                }
-                                showMarkers(mShowMarkerData);
-                            } else {
-                                mShowMarkerData.clear();
-                                for (ClusterItem item : mAllMarkerData) {
-                                    if (!item.isparkspace()) {
-                                        mShowMarkerData.add(item);
-                                    }
-                                }
-                                showMarkers(mShowMarkerData);
-                            }
-                        } else {
-                            mAllMarkerData.clear();
-                            //mQYData = homePC_info.data;
-                            for (NearPointPCInfo info : homePC_info.data) {
-                                RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
-                                        info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
-                                        info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
-                                mAllMarkerData.add(item);
-                            }
-                            if (isShowPark && isShowCharge) {
-                                showMarkers(mAllMarkerData);
-                            } else {
-                                mShowMarkerData.clear();
-                                if (isShowPark) {
-                                    for (ClusterItem item : mAllMarkerData) {
-                                        if (item.isparkspace()) {
-                                            mShowMarkerData.add(item);
-                                        }
-                                    }
-                                    showMarkers(mShowMarkerData);
-                                } else {
-                                    for (ClusterItem item : mAllMarkerData) {
-                                        if (!item.isparkspace()) {
-                                            mShowMarkerData.add(item);
-                                        }
-                                    }
-                                    showMarkers(mShowMarkerData);
-                                }
-                            }
-                        }*/
                         dismissLoading();
                     }
 
@@ -822,15 +754,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         }
                         if (!DensityUtil.isException(MainActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getHomePCLocData" + e.getMessage());
-                            int code = Integer.parseInt(e.getMessage());
-                            switch (code) {
-                                case 102:
+                            switch (e.getMessage()) {
+                                case "102":
                                     if (show1) {
                                         controlAnim(false);
                                     }
                                     //未查找到数据
                                     break;
-                                case 103:
+                                case "103":
                                     //城市未开放
                                     String noOpen = cityname + "暂未开放";
                                     mCityNotOpen.setText(noOpen);
@@ -839,7 +770,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                         controlAnim(true);
                                     }
                                     break;
-                                case 901:
+                                default:
                                     if (show1) {
                                         controlAnim(false);
                                     }

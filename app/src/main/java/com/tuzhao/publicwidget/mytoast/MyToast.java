@@ -1,5 +1,6 @@
 package com.tuzhao.publicwidget.mytoast;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.support.annotation.DrawableRes;
@@ -19,6 +20,10 @@ import com.tuzhao.R;
  */
 
 public class MyToast {
+
+    private static Toast sToast;
+
+    private static int sWindowHeight;
 
     public static void showToast(Context context, @DrawableRes int resId, String str, int sum) {
         //加载Toast布局
@@ -45,18 +50,22 @@ public class MyToast {
         }
     }
 
+    @SuppressLint("ShowToast")
     public static void showToast(Context context, String str, int sum) {
-        //获取屏幕高度
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (wm != null) {
-            Point point = new Point();
-            wm.getDefaultDisplay().getSize(point);
-            int height = point.y;
-            Toast toast = Toast.makeText(context,
-                    str, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.BOTTOM, 0, height / sum);
-            toast.show();
+        if (sToast == null) {
+            //获取屏幕高度
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            if (wm != null) {
+                Point point = new Point();
+                wm.getDefaultDisplay().getSize(point);
+                sWindowHeight = point.y;
+                sToast = Toast.makeText(context,
+                        str, Toast.LENGTH_LONG);
+            }
         }
+        sToast.setText(str);
+        sToast.setGravity(Gravity.BOTTOM, 0, sWindowHeight / sum);
+        sToast.show();
     }
 
 }
