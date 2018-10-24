@@ -570,4 +570,16 @@ public class ConstansUtil {
      */
     public static final String CHANGE_BIND_FREE_PARK = "ChangeBindFreePark";
 
+    /**
+     * 收到极光推送的订单结束停车消息
+     */
+    public static final String JI_GUANG_PARK_END = "JiGuangParkEnd";
+
+    public static final String TIME = "Time";
+
+    /**
+     * 在已完成的订单里添加一条记录
+     */
+    public static final String ADD_FINISH_PARK_ORDER = "AddFinishParkOrder";
+
 }

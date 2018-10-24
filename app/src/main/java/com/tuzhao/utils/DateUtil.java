@@ -585,6 +585,43 @@ public class DateUtil {
     }
 
     /**
+     * @param seconds 秒数
+     * @return 返回给定的秒数为x天x小时x分钟
+     */
+    public static String getDistanceForDayMinute(String seconds) {
+        if (seconds == null) {
+            return "0分钟";
+        }
+
+        long time = Long.valueOf(seconds);
+        int minutesDistance = (int) (time / 60);
+        if (minutesDistance == 0) {
+            if (time > 0) {
+                minutesDistance = 1;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (minutesDistance / 60 / 24 > 0) {
+            stringBuilder.append(minutesDistance / 60 / 24);
+            stringBuilder.append("天");
+            minutesDistance -= minutesDistance / 60 / 24 * 60 * 24; //减去n天的分钟数
+        }
+
+        if (minutesDistance / 60 > 0) {
+            stringBuilder.append(minutesDistance / 60);
+            stringBuilder.append("小时");
+            minutesDistance -= minutesDistance / 60 * 60;
+        }
+
+        if (minutesDistance > 0 || stringBuilder.length() == 0) {
+            stringBuilder.append(minutesDistance);
+            stringBuilder.append("分钟");
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
      * @param startDate 比较的开始时间，格式为yyyy-MM-dd HH:mm:ss
      * @param endDate   比较的结束时间，格式为yyyy-MM-dd HH:mm:ss
      * @return 返回两个时间段相差的分钟数(x小时x分钟)

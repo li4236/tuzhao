@@ -176,6 +176,11 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
         showEmpty();
     }
 
+    protected void notifyRemoveData(int position) {
+        mCommonAdapter.notifyRemoveData(position);
+        showEmpty();
+    }
+
     protected void notifyAddData(T t) {
         mCommonAdapter.notifyAddData(t);
         mRecyclerView.showData();

@@ -353,9 +353,44 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
                     }
                     break;
                 case ConstansUtil.INVOICE_SUCCESS:
-                    if (mOrderStatus == 0 || mOrderStatus == 4 || mOrderStatus == 5) {
+                    if (mOrderStatus == 0 || mOrderStatus == 5) {
                         //更新订单为已开发票
                         mCommonAdapter.notifyDataChange((ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
+                    }
+                    break;
+                case ConstansUtil.JI_GUANG_PARK_END:
+                    if (mOrderStatus == 0 || mOrderStatus == 2) {
+                        String parkOrderId = intent.getStringExtra(ConstansUtil.PARK_ORDER_ID);
+                        String cityCode = intent.getStringExtra(ConstansUtil.CITY_CODE);
+                        String orderFee = intent.getStringExtra(ConstansUtil.ORDER_FEE);
+                        String time = DateUtil.getDistanceForDayMinute(intent.getStringExtra(ConstansUtil.TIME));
+                        for (int i = 0; i < mCommonAdapter.getDataSize(); i++) {
+                            ParkOrderInfo parkOrderInfo = mCommonAdapter.get(i);
+                            if (parkOrderInfo.getCityCode().equals(cityCode) && parkOrderInfo.getId().equals(parkOrderId)) {
+                                if (mOrderStatus == 2) {
+                                    //停车中的直接把该记录删除
+                                    notifyRemoveData(i);
+                                    break;
+                                }
+                                parkOrderInfo.setOrderFee(orderFee);
+                                parkOrderInfo.setTime(time);
+                                if (parkOrderInfo.isFreePark()) {
+                                    //如果是免费停车的把订单状态改为待评论
+                                    parkOrderInfo.setOrderStatus("4");
+                                    IntentObserable.dispatch(ConstansUtil.ADD_FINISH_PARK_ORDER, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
+                                } else {
+                                    //如果不是改为待支付
+                                    parkOrderInfo.setOrderStatus("3");
+                                }
+                                //全部订单中通知更新该条数据
+                                mCommonAdapter.notifyDataChange(i);
+                            }
+                        }
+                    }
+                    break;
+                case ConstansUtil.ADD_FINISH_PARK_ORDER:
+                    if (mOrderStatus == 5) {
+                        notifyAddData(0, (ParkOrderInfo) intent.getParcelableExtra(ConstansUtil.PARK_ORDER_INFO));
                     }
                     break;
             }

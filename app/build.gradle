@@ -47,7 +47,8 @@ android {
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled false         //混淆代码和压缩优化，不会将没有使用到的代码打包
+            shrinkResources false       //去除无用的resource文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
 

@@ -189,7 +189,14 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
                         } else {
                             IntentObserable.dispatch(ConstansUtil.LOGIN_SUCCESS, ConstansUtil.INTENT_MESSAGE, o.data);
                         }
+                    }
 
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            showFiveToast("登录失败，请稍后重试");
+                        }
                     }
                 });
     }

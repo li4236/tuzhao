@@ -68,7 +68,9 @@ public class FreeParkActivity extends BaseStatusActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.binding_free_park:
-                if (isEmpty(mExperienceCode)) {
+                if (!"-1".equals(mUserInfo.getParkLotName())) {
+                    showFiveToast("最多只能绑定一个免费车场哦");
+                } else if (isEmpty(mExperienceCode)) {
                     showFiveToast("请输入车场体验码");
                 } else {
                     bindFreeParkLot();

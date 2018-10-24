@@ -275,13 +275,13 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
 
     private void startAlipay(final String orderInfo) {
         Runnable payRunnable = new Runnable() {
-
             @Override
             public void run() {
                 PayTask alipay = new PayTask(PayActivity.this);
-                Map<String, String> result = alipay.payV2(orderInfo, true);
+                Map<String, String> result = alipay.payV2(orderInfo, true);     //调用支付接口，获取支付结果
 
-                Message msg = new Message();
+                //把支付结果发送到主线程的Handler进行处理
+                Message msg = Message.obtain();
                 msg.what = OrderInfoUtil2_0.SDK_PAY_FLAG;
                 msg.obj = result;
                 mHandler.sendMessage(msg);

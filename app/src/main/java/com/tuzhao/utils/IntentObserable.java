@@ -43,6 +43,16 @@ public class IntentObserable {
         }
     }
 
+    public static void dispatch(String action, String... keyWithValue) {
+        Intent intent = new Intent(action);
+        for (int i = 0; i < keyWithValue.length; i += 2) {
+            intent.putExtra(keyWithValue[i], keyWithValue[i + 1]);
+        }
+        for (IntentObserver observer : mIntentObservers) {
+            observer.onReceive(intent);
+        }
+    }
+
     public static void dispatch(String action, String key, boolean value) {
         Intent intent = new Intent(action);
         intent.putExtra(key, value);

@@ -61,28 +61,18 @@ public class MyReceiver extends BroadcastReceiver {
                 Log.e("收到的自定义消息", bundle.getString(JPushInterface.EXTRA_EXTRA));
                 try {
                     JSONObject jsonObject = new JSONObject(bundle.getString(JPushInterface.EXTRA_EXTRA, ""));
-                    if (jsonObject.optString("type").equals("ctrl")) {
-                        notifyListeners(jsonObject);
-                    } else if (jsonObject.optString("type").equals("logout")) {
-                        String time = jsonObject.optString("time");
-                        if (UserManager.getInstance().hasLogined() && UserManager.getInstance().getUserInfo().getUsername().equals(jsonObject.optString("phone"))
-                                && DateUtil.getYearToSecondCalendar(time).compareTo(
-                                DateUtil.getYearToSecondCalendar(UserManager.getInstance().getLoginTime())) >= 0) {
-                            //如果登录之后别人在别的设备登录了则退出登录
-                            User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
-                            user_info.setAutologin("0");
-                            MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(user_info);
-                            //清空缓存的登录信息
-                            UserManager.getInstance().setUserInfo(null);
-                            UserManager.getInstance().setHasLogin(false);
-
-                            Intent intent1 = new Intent(context, MainActivity.class);
-                            context.startActivity(intent1);
-
-                            Intent intent2 = new Intent(ConstansUtil.FORCE_LOGOUT);
-                            intent2.putExtra(ConstansUtil.REQUEST_FOR_RESULT, time);
-                            IntentObserable.dispatch(intent2);
-                        }
+                    switch (jsonObject.optString("type")) {
+                        case "ctrl":
+                            notifyListeners(jsonObject);
+                            break;
+                        case "logout":
+                            logout(jsonObject, context);
+                            break;
+                        case "order":
+                            IntentObserable.dispatch(ConstansUtil.JI_GUANG_PARK_END, ConstansUtil.CITY_CODE, jsonObject.optString("cityCode"),
+                                    ConstansUtil.PARK_ORDER_ID, jsonObject.optString("parkOrderId"),
+                                    ConstansUtil.ORDER_FEE, jsonObject.optString("orderFee"), ConstansUtil.TIME, jsonObject.optString("time"));
+                            break;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -101,6 +91,31 @@ public class MyReceiver extends BroadcastReceiver {
             } else {
                 Log.d(TAG, "Unhandled intent - " + intent.getAction());
             }
+        }
+    }
+
+    /**
+     * 处理退出登录消息
+     */
+    private void logout(JSONObject jsonObject, Context context) {
+        String time = jsonObject.optString("time");
+        if (UserManager.getInstance().hasLogined() && UserManager.getInstance().getUserInfo().getUsername().equals(jsonObject.optString("phone"))
+                && DateUtil.getYearToSecondCalendar(time).compareTo(
+                DateUtil.getYearToSecondCalendar(UserManager.getInstance().getLoginTime())) >= 0) {
+            //如果登录之后别人在别的设备登录了则退出登录
+            User_Info user_info = MyApplication.getInstance().getDatabaseImp().getUserFormDatabase();
+            user_info.setAutologin("0");
+            MyApplication.getInstance().getDatabaseImp().insertUserToDatabase(user_info);
+            //清空缓存的登录信息
+            UserManager.getInstance().setUserInfo(null);
+            UserManager.getInstance().setHasLogin(false);
+
+            Intent intent1 = new Intent(context, MainActivity.class);
+            context.startActivity(intent1);
+
+            Intent intent2 = new Intent(ConstansUtil.FORCE_LOGOUT);
+            intent2.putExtra(ConstansUtil.REQUEST_FOR_RESULT, time);
+            IntentObserable.dispatch(intent2);
         }
     }
 

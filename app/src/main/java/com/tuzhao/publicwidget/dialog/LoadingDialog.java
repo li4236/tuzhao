@@ -18,7 +18,7 @@ public class LoadingDialog extends Dialog {
 
     private String content;
 
-    private boolean mCancelable;
+    private boolean mCancelable=true;
 
     public LoadingDialog(Context context, String content, boolean cancelable) {
         super(context, R.style.CustomDialog);

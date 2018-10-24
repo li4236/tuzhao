@@ -89,7 +89,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkorcharge_layout);
-        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
 
         initView();
         initData();
@@ -336,16 +336,16 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                         StringBuilder address = new StringBuilder(result.getRegeocodeAddress().getFormatAddress());
                         int position;
                         if (address.length() >= mMaxTextNum) {
-                            if ((position = address.indexOf("自治州")) != -1&& position != address.length() - 1) {
+                            if ((position = address.indexOf("自治州")) != -1 && position != address.length() - 1) {
                                 address.delete(0, position + 3);
-                            } else if ((position = address.indexOf("市")) != -1&& position != address.length() - 1) {
+                            } else if ((position = address.indexOf("市")) != -1 && position != address.length() - 1) {
                                 address.delete(0, position + 1);
                             } else if ((position = address.indexOf("地区")) != -1) {
                                 address.delete(0, position + 2);
                             } else if ((position = address.indexOf("行政区")) != -1) {
                                 //河南省
                                 address.delete(0, position + 3);
-                            } else if ((position = address.indexOf("盟")) != -1&& position != address.length() - 1) {
+                            } else if ((position = address.indexOf("盟")) != -1 && position != address.length() - 1) {
                                 //内蒙古
                                 address.delete(0, position + 1);
                             } else if ((position = address.indexOf("省")) != -1) {
@@ -359,9 +359,9 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
                                 address.delete(0, position + 2);
                             } else if ((position = address.indexOf("区")) != -1 && position != address.length() - 1) {
                                 address.delete(0, position + 1);
-                            } else if ((position = address.indexOf("县")) != -1&& position != address.length() - 1) {
+                            } else if ((position = address.indexOf("县")) != -1 && position != address.length() - 1) {
                                 address.delete(0, position + 1);
-                            } else if ((position = address.indexOf("镇")) != -1&& position != address.length() - 1) {
+                            } else if ((position = address.indexOf("镇")) != -1 && position != address.length() - 1) {
                                 address.delete(0, position + 1);
                             }
                         }
@@ -543,7 +543,7 @@ public class ParkOrChargeListActivity extends BaseActivity implements OnFilterDo
 
                 if (data.hasExtra("lat")) {
                     citycode = data.getStringExtra("citycode");
-                    latLng = new LatLng(Double.parseDouble(data.getStringExtra("lat")), Double.parseDouble(data.getStringExtra("lon")));
+                    latLng = new LatLng(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
                     search_address = data.getStringExtra("keyword");
                     textview_address.setText(search_address);
                     mRecycleview.setRefreshing(true);
