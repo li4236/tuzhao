@@ -65,6 +65,7 @@ public class ParkOrderFragment extends BaseRefreshFragment<ParkOrderInfo> implem
     protected void initView(View view, Bundle savedInstanceState) {
         super.initView(view, savedInstanceState);
         mConstraintLayout = view.findViewById(R.id.loading_dialog);
+        mRecyclerView.setEmptyView(R.drawable.ic_noorder, "你没有该类型的订单哦");
     }
 
     @Override

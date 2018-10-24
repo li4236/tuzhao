@@ -155,7 +155,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
 
     @Override
     protected void initData() {
-        setAutoCancelRequest();
+        setDontAutoCancelRequest();
         scanOrderTime();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));

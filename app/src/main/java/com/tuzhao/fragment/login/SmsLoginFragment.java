@@ -301,8 +301,10 @@ public class SmsLoginFragment extends BaseStatusFragment implements View.OnClick
                                 case "105":
                                     showFiveToast("验证码错误");
                                     break;
+                                default:
+                                    showFiveToast("登录失败，请稍后重试");
+                                    break;
                             }
-                            showFiveToast("登录失败，请稍后重试");
                         }
                     }
                 });

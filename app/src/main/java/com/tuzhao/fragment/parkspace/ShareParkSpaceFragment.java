@@ -134,7 +134,7 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
 
     @Override
     protected void initData() {
-        setAutoCancelRequest();
+        setDontAutoCancelRequest();
         setParkspaceStatus();
         mVoltageView.setVoltage((int) ((Double.valueOf(mParkInfo.getVoltage()) - 4.8) * 100 / 1.2));
 

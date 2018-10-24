@@ -132,8 +132,9 @@ public abstract class BaseStatusFragment extends Fragment {
     }
 
     /**
+     * 调用该方法后在onDestroyView不会自动结束网络请求，需要子类自己结束
      */
-    protected void setAutoCancelRequest() {
+    protected void setDontAutoCancelRequest() {
         mAutoCancelRequest = false;
     }
 
