@@ -19,6 +19,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tuzhao.R;
 import com.tuzhao.activity.LoginActivity;
+import com.tuzhao.activity.WebActivity;
 import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Pair;
@@ -62,7 +63,7 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                showFiveToast("hh");
+                startActivity(WebActivity.class);
             }
 
             @Override

@@ -236,6 +236,7 @@
         <activity android:name=".activity.mine.ParkOrderCancelActivity" />
         <activity android:name=".activity.mine.ParkOrderPayActivity" />
         <activity android:name=".activity.mine.FreeParkActivity" />
+        <activity android:name=".activity.WebActivity" />
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"

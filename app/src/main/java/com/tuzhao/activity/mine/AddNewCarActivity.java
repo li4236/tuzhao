@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.photopicker.controller.PhotoPickConfig;
 import com.tuzhao.R;
+import com.tuzhao.activity.WebActivity;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;
@@ -145,7 +146,7 @@ public class AddNewCarActivity extends BaseStatusActivity implements View.OnClic
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                showFiveToast("哈哈");
+                startActivity(WebActivity.class);
             }
 
             @Override
