@@ -88,6 +88,18 @@ public class SuperRefreshRecyclerView extends FrameLayout {
         }
     }
 
+    public void setErrorView(@DrawableRes int drawableRes, String text) {
+        errorView.removeAllViews();
+
+        ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(mContext).inflate(R.layout.layout_empty, recyclerView, false);
+        ImageView imageView = constraintLayout.findViewById(R.id.empty_iv);
+        imageView.setImageResource(drawableRes);
+        TextView textView = constraintLayout.findViewById(R.id.empty_tv);
+        textView.setText(text);
+
+        errorView.addView(constraintLayout);
+    }
+
     public void showError(OnClickListener onErrorClick) {
         swipeToLoadLayout.setVisibility(GONE);
         emptyView.setVisibility(GONE);
@@ -98,7 +110,7 @@ public class SuperRefreshRecyclerView extends FrameLayout {
     }
 
     public void showData() {
-        if (emptyView.getVisibility() == VISIBLE) {
+        if (emptyView.getVisibility() == VISIBLE||errorView.getVisibility()==VISIBLE) {
             swipeToLoadLayout.setVisibility(VISIBLE);
             emptyView.setVisibility(GONE);
             errorView.setVisibility(GONE);

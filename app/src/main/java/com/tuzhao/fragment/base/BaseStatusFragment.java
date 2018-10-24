@@ -248,6 +248,12 @@ public abstract class BaseStatusFragment extends Fragment {
         startActivity(intent);
     }
 
+    protected void startActivity(Class<?> tClass, String key, boolean data) {
+        Intent intent = new Intent(getActivity(), tClass);
+        intent.putExtra(key, data);
+        startActivity(intent);
+    }
+
     protected void startActivity(Class<?> tClass, String key, Parcelable data) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(key, data);

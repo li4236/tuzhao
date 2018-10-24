@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
+import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
@@ -15,8 +16,16 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView;
+import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DensityUtil;
 
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
+
+import javax.net.ssl.SSLException;
 
 /**
  * Created by juncoder on 2018/5/21.
@@ -47,6 +56,7 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
         mRecyclerView.setRefreshEnabled(true);
         mRecyclerView.setLoadingMoreEnable(true);
         mRecyclerView.setEmptyView(R.layout.layout_empty);
+        mRecyclerView.setErrorView(R.drawable.ic_nosignal2, "网络开小差了哦");
         mCommonAdapter = new CommonAdapter(mRecyclerView.getRecyclerView());
         mRecyclerView.setAdapter(mCommonAdapter);
     }
@@ -148,6 +158,76 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
         }
     }
 
+    @Override
+    protected boolean handleException(Exception e) {
+        dismmisLoadingDialog();
+        if (!DensityUtil.isException(getContext(), e)) {
+            if (e instanceof ConnectException) {
+                showError();
+                return true;
+            } else if (e instanceof SocketTimeoutException) {
+                showError();
+                return true;
+            } else if (e instanceof NoRouteToHostException) {
+                showError();
+                return true;
+            } else if (e instanceof UnknownHostException) {
+                showError();
+                return true;
+            } else if (e instanceof SSLException) {
+                showError();
+                return true;
+            } else if (e instanceof IllegalStateException) {
+                switch (e.getMessage()) {
+                    case "801":
+                        showFiveToast("数据存储异常，请稍后重试");
+                        return true;
+                    case "802":
+                        showFiveToast("客户端异常，请稍后重试");
+                        return true;
+                    case "803":
+                        showFiveToast("参数异常，请检查是否全都填写了哦");
+                        return true;
+                    case "804":
+                        showFiveToast("获取数据异常，请稍后重试");
+                        return true;
+                    case "805":
+                        userError();
+                        return true;
+                    default:
+                        return false;
+                }
+            } else {
+                showFiveToast(e.getMessage());
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 网络连接异常显示异常布局
+     */
+    private void showError() {
+        if (mCommonAdapter.getDataSize() == 0) {
+            mRecyclerView.showError(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mStartItme = 0;
+                    showLoadingDialog();
+                    loadData();
+                }
+            });
+        }
+    }
+
+    protected void userError() {
+        showFiveToast("账号异常，请重新登录");
+        dismmisLoadingDialog();
+        startActivity(LoginActivity.class, ConstansUtil.INTENT_MESSAGE, true);
+    }
+
     protected void increateStartItem() {
         mStartItme += 15;
     }
@@ -159,14 +239,6 @@ public abstract class BaseRefreshFragment<T> extends BaseStatusFragment {
 
     protected void showEmpty() {
         if (mCommonAdapter.getData().isEmpty()) {
-           /* mRecyclerView.showEmpty(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mStartItme = 0;
-                    showLoadingDialog();
-                    loadData();
-                }
-            });*/
             mRecyclerView.showEmpty();
         }
     }

@@ -58,23 +58,23 @@ public class DensityUtil {
         if (e instanceof ConnectException) {
             Log.d("TAG", "请求失败，" + " 信息为：连接异常" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
-            return true;
+            return false;
         } else if (e instanceof SocketTimeoutException) {
             Log.d("TAG", "请求失败，" + " 信息为：超时异常" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
-            return true;
+            return false;
         } else if (e instanceof NoRouteToHostException) {
             Log.d("TAG", "请求失败，" + " 信息为：没有路由到主机" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
-            return true;
+            return false;
         } else if (e instanceof UnknownHostException) {
             Log.d("TAG", "请求失败，" + " 信息为：设备未能上网" + e.toString());
             MyToast.showToast(context, "网络异常", 5);
-            return true;
+            return false;
         } else if (e instanceof SSLException) {
             Log.d("TAG", "请求失败，" + " 信息为：域名被劫持" + e.toString());
             MyToast.showToast(context, "域名被篡改，请检查你的网络环境", 5);
-            return true;
+            return false;
         } else if (e instanceof TokenInvalideException) {
             Log.d("TAG", "请求失败，" + " 信息为：token异常" + e.toString());
             //退出登录，设置不能再自动登录
