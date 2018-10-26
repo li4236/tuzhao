@@ -148,7 +148,6 @@ public class ShareActivity extends BaseActivity implements WbShareCallback {
         WeChatManager.getInstance().registerWeChat(this);
 
         mTencent = Tencent.createInstance("1106725796", this);
-
     }
 
     private void initEvent() {

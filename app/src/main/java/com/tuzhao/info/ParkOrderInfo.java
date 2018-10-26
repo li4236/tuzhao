@@ -94,6 +94,7 @@ public class ParkOrderInfo implements Parcelable {
     private String ordersId;//订单对应总表的id
     private String updateTime;//订单的更新时间
     private String isFreePark;
+    private String canEarlyLeaveTime;     //是否是可以提前离场
 
     public String getId() {
         return id;
@@ -466,6 +467,14 @@ public class ParkOrderInfo implements Parcelable {
         this.isFreePark = isFreePark;
     }
 
+    public boolean isCanEarlyLeaveTime() {
+        return "1".equals(canEarlyLeaveTime);
+    }
+
+    public void setCanEarlyLeaveTime(String canEarlyLeaveTime) {
+        this.canEarlyLeaveTime = canEarlyLeaveTime;
+    }
+
     public void copyFrom(ParkOrderInfo parkOrderInfo) {
         this.id = parkOrderInfo.getId();
         this.cityCode = parkOrderInfo.getCityCode();
@@ -530,6 +539,7 @@ public class ParkOrderInfo implements Parcelable {
                 ", parkingUserId='" + parkingUserId + '\'' +
                 ", lockId='" + lockId + '\'' +
                 ", isFreePark='" + isFreePark + '\'' +
+                ", isFreePark='" + canEarlyLeaveTime + '\'' +
                 '}';
     }
 
@@ -582,6 +592,7 @@ public class ParkOrderInfo implements Parcelable {
         dest.writeString(this.ordersId);
         dest.writeString(this.updateTime);
         dest.writeString(this.isFreePark);
+        dest.writeString(this.canEarlyLeaveTime);
     }
 
     public ParkOrderInfo() {
@@ -630,6 +641,7 @@ public class ParkOrderInfo implements Parcelable {
         this.ordersId = in.readString();
         this.updateTime = in.readString();
         this.isFreePark = in.readString();
+        this.canEarlyLeaveTime = in.readString();
     }
 
     public static final Creator<ParkOrderInfo> CREATOR = new Creator<ParkOrderInfo>() {

@@ -7,8 +7,8 @@ import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -31,6 +31,12 @@ public class WebActivity extends BaseStatusActivity {
 
     private ProgressBar mProgressBar;
 
+    private int mLastProgress;
+
+    private ObjectAnimator mStartObjectAnimator;
+
+    private ObjectAnimator mDissmissObjectAnimator;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_web_layout;
@@ -45,7 +51,7 @@ public class WebActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
-        mWebView.setWebViewClient(new WebViewClient(){
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 mProgressBar.setVisibility(View.VISIBLE);
@@ -58,14 +64,14 @@ public class WebActivity extends BaseStatusActivity {
             }
         });
 
-        mWebView.setWebChromeClient(new WebChromeClient(){
+        mWebView.setWebChromeClient(new WebChromeClient() {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                Log.e(TAG, "onProgressChanged: "+newProgress );
                 if (newProgress >= 100) {
-                    startDismissAnimation(100);
+                    startDismissAnimation();
                 } else {
+                    mLastProgress = mProgressBar.getProgress();
                     startProgressAnimation(newProgress);
                 }
             }
@@ -80,31 +86,31 @@ public class WebActivity extends BaseStatusActivity {
      * progressBar递增动画
      */
     private void startProgressAnimation(int newProgress) {
-        ObjectAnimator animator = ObjectAnimator.ofInt(mProgressBar, "progress",newProgress);
-        animator.setDuration(300);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.start();
+        mStartObjectAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", newProgress);
+        mStartObjectAnimator.setDuration((newProgress - mLastProgress) * 10);
+        mStartObjectAnimator.setInterpolator(new AccelerateInterpolator());
+        mStartObjectAnimator.setAutoCancel(true);
+        mStartObjectAnimator.start();
     }
 
     /**
      * progressBar消失动画
      */
-    private void startDismissAnimation(final int progress) {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(mProgressBar, "alpha", 1.0f, 0.0f);
-        anim.setDuration(500);  // 动画时长
-        anim.setInterpolator(new DecelerateInterpolator());     // 减速
+    private void startDismissAnimation() {
+        mDissmissObjectAnimator = ObjectAnimator.ofFloat(mProgressBar, "alpha", 1.0f, 0.0f);
+        mDissmissObjectAnimator.setDuration(500);  // 动画时长
+        mDissmissObjectAnimator.setInterpolator(new DecelerateInterpolator());     // 减速
         // 关键, 添加动画进度监听器
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        mDissmissObjectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float fraction = valueAnimator.getAnimatedFraction();      // 0.0f ~ 1.0f
-                int offset = 100 - progress;
-                mProgressBar.setProgress((int) (progress + offset * fraction));
+                mProgressBar.setProgress((int) (100 * fraction));
             }
         });
 
-        anim.addListener(new AnimatorListenerAdapter() {
+        mDissmissObjectAnimator.addListener(new AnimatorListenerAdapter() {
 
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -113,7 +119,7 @@ public class WebActivity extends BaseStatusActivity {
                 mProgressBar.setVisibility(View.GONE);
             }
         });
-        anim.start();
+        mDissmissObjectAnimator.start();
     }
 
     @NonNull
@@ -131,6 +137,17 @@ public class WebActivity extends BaseStatusActivity {
             mWebView.goBack();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mStartObjectAnimator != null) {
+            mStartObjectAnimator.cancel();
+        }
+        if (mDissmissObjectAnimator != null) {
+            mDissmissObjectAnimator.cancel();
         }
     }
 

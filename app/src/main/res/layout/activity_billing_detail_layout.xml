@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/top_divider"
+        style="@style/dividerStyle"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        app:layout_constraintTop_toBottomOf="@+id/top_divider">
+
+        <TextView
+            android:id="@+id/order_fee"
+            style="@style/CenterHorizonTwentyTextB1"
+            android:layout_marginTop="24dp"
+            android:textSize="32sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/SixtyTextB1Style"
+            android:text="元"
+            app:layout_constraintBaseline_toBaselineOf="@id/order_fee"
+            app:layout_constraintStart_toEndOf="@id/order_fee" />
+
+        <TextView
+            android:id="@+id/normal_fee_tv"
+            style="@style/FortyTextB1Style"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:text="正常费用"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/order_fee" />
+
+        <TextView
+            android:id="@+id/normal_time_slot_tv"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="10dp"
+            android:text="正常时段"
+            app:layout_constraintStart_toStartOf="@+id/normal_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/normal_fee_tv" />
+
+        <!--<TextView
+            android:id="@+id/normal_time_slot"
+            style="@style/TwentyTextG6Style"
+            app:layout_constraintStart_toStartOf="@id/normal_time_slot_tv"
+            android:layout_marginTop="6dp"
+            app:layout_constraintTop_toBottomOf="@+id/normal_time_slot_tv" />-->
+
+        <TextView
+            android:id="@+id/normal_time_slot_unit_price"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="@id/normal_time_slot_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/normal_time_slot_tv" />
+
+        <TextView
+            android:id="@+id/normal_time_slot_fee"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/normal_time_slot_unit_price"
+            app:layout_constraintTop_toBottomOf="@+id/normal_time_slot_unit_price" />
+
+        <TextView
+            android:id="@+id/high_time_slot_tv"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="10dp"
+            android:text="高峰时段"
+            app:layout_constraintStart_toStartOf="@id/normal_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/normal_time_slot_fee" />
+
+        <!--<TextView
+            android:id="@+id/high_time_slot"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toStartOf="@id/normal_time_slot_tv"
+            app:layout_constraintTop_toBottomOf="@+id/high_time_slot_tv" />-->
+
+        <TextView
+            android:id="@+id/high_time_slot_unit_price"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="@id/high_time_slot_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/high_time_slot_tv" />
+
+        <TextView
+            android:id="@+id/high_time_slot_fee"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/high_time_slot_unit_price"
+            app:layout_constraintTop_toBottomOf="@+id/high_time_slot_unit_price" />
+
+        <View
+            android:id="@+id/normal_fee_divider"
+            style="@style/dividerStyle"
+            android:layout_height="2dp"
+            android:layout_marginEnd="26dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/line_stroke_g10_width_2px_dashwidth_2dp_dashgap_1dp"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/high_time_slot_fee" />
+
+        <TextView
+            android:id="@+id/overtime_fee_tv"
+            style="@style/FortyTextB1Style"
+            android:layout_marginTop="8dp"
+            android:text="超时费用"
+            app:layout_constraintStart_toStartOf="@id/normal_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/normal_fee_divider" />
+
+        <TextView
+            android:id="@+id/overtime_time_slot_tv"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="10dp"
+            android:text="超时时段"
+            app:layout_constraintStart_toStartOf="@id/overtime_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/overtime_fee_tv" />
+
+        <!--        <TextView
+                    android:id="@+id/overtime_time_slot"
+                    style="@style/TwentyTextG6Style"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintStart_toStartOf="@id/overtime_time_slot_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/overtime_time_slot_tv" />-->
+
+        <TextView
+            android:id="@+id/overtime_slot_unit_price"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="@id/overtime_time_slot_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/overtime_time_slot_tv" />
+
+        <TextView
+            android:id="@+id/overtime_time_slot_fee"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/overtime_slot_unit_price"
+            app:layout_constraintTop_toBottomOf="@+id/overtime_slot_unit_price" />
+
+        <View
+            android:id="@+id/overtime_fee_divider"
+            style="@style/dividerStyle"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/line_stroke_g10_width_2px_dashwidth_2dp_dashgap_1dp"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="@+id/normal_fee_divider"
+            app:layout_constraintStart_toStartOf="@+id/normal_fee_divider"
+            app:layout_constraintTop_toBottomOf="@+id/overtime_time_slot_fee" />
+
+        <TextView
+            android:id="@+id/discount_fee_tv"
+            style="@style/FortyTextB1Style"
+            android:layout_marginTop="8dp"
+            android:text="优惠费用"
+            app:layout_constraintStart_toStartOf="@id/normal_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/overtime_fee_divider" />
+
+        <TextView
+            android:id="@+id/discount_decrease_tv"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="10dp"
+            android:text="优惠券减免"
+            app:layout_constraintStart_toStartOf="@id/discount_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/discount_fee_tv" />
+
+        <TextView
+            android:id="@+id/monthly_card_discount_tv"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/overtime_time_slot_tv"
+            app:layout_constraintTop_toBottomOf="@+id/discount_decrease_tv" />
+
+        <TextView
+            android:id="@+id/discount_decrease"
+            style="@style/TwentyTextB1Style"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="@id/discount_decrease_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/discount_decrease_tv" />
+
+        <TextView
+            android:id="@+id/monthly_card_discount_decrease"
+            style="@style/TwentyTextB1Style"
+            app:layout_constraintBottom_toBottomOf="@+id/monthly_card_discount_tv"
+            app:layout_constraintEnd_toEndOf="@id/overtime_slot_unit_price"
+            app:layout_constraintTop_toTopOf="@+id/monthly_card_discount_tv" />
+
+        <View
+            android:id="@+id/discount_fee_divider"
+            style="@style/dividerStyle"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/line_stroke_g10_width_2px_dashwidth_2dp_dashgap_1dp"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="@+id/normal_fee_divider"
+            app:layout_constraintStart_toStartOf="@+id/normal_fee_divider"
+            app:layout_constraintTop_toBottomOf="@+id/monthly_card_discount_decrease" />
+
+        <TextView
+            android:id="@+id/total_price_tv"
+            style="@style/TwentyTextG6Style"
+            android:layout_marginTop="16dp"
+            android:text="合计"
+            app:layout_constraintStart_toStartOf="@id/discount_fee_tv"
+            app:layout_constraintTop_toBottomOf="@+id/discount_fee_divider" />
+
+        <TextView
+            android:id="@+id/total_price"
+            style="@style/TwentyTextB1Style"
+            app:layout_constraintEnd_toEndOf="@+id/normal_time_slot_unit_price"
+            app:layout_constraintTop_toTopOf="@+id/total_price_tv" />
+
+        <View
+            android:id="@+id/center_divider"
+            style="@style/dividerStyle"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/total_price" />
+
+        <LinearLayout
+            android:id="@+id/violation_statement_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/center_divider">
+
+            <TextView
+                style="@style/FortyTextB1Style"
+                android:paddingBottom="12dp"
+                android:paddingStart="12dp"
+                android:paddingTop="12dp"
+                android:text="违规行为说明" />
+
+            <com.tuzhao.publicwidget.customView.ArrowView
+                android:layout_width="36dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="16dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="12dp"
+                android:paddingTop="16dp"
+                app:arrow_width="2px" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

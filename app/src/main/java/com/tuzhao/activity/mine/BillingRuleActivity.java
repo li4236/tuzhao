@@ -2,22 +2,15 @@ package com.tuzhao.activity.mine;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.http.HttpConstants;
-import com.tuzhao.info.ParkLotInfo;
-import com.tuzhao.info.base_info.Base_Class_Info;
-import com.tuzhao.publicwidget.callback.JsonCallback;
+import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 
 import java.util.Calendar;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/6/12.
@@ -39,9 +32,7 @@ public class BillingRuleActivity extends BaseStatusActivity {
 
     private TextView mOvertimeFee;
 
-    private String mParkLotId;
-
-    private String mCityCode;
+    private ParkOrderInfo mParkOrderInfo;
 
     @Override
     protected int resourceId() {
@@ -50,6 +41,11 @@ public class BillingRuleActivity extends BaseStatusActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mParkOrderInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_ORDER_INFO);
+        if (mParkOrderInfo == null) {
+            finish();
+        }
+
         mParkLotName = findViewById(R.id.park_lot_name);
         mHighTime = findViewById(R.id.high_time);
         mHighFee = findViewById(R.id.high_fee);
@@ -60,71 +56,44 @@ public class BillingRuleActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
-        super.initData();
-        mParkLotId = getIntent().getStringExtra(ConstansUtil.PARK_LOT_ID);
-        mCityCode = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
-        getParkLotData();
+        mParkLotName.setText(mParkOrderInfo.getParkLotName());
+
+        //高峰时段的时间
+        String highTime = mParkOrderInfo.getHigh_time();
+        int position = highTime.indexOf(" - ");
+        Calendar startCalendar = DateUtil.getSpecialCalendar(highTime.substring(0, position));
+        Calendar endCalendar = DateUtil.getSpecialCalendar(highTime.substring(position + 3, highTime.length()));
+        if (startCalendar.compareTo(endCalendar) >= 0) {
+            //如果开始时间比结束时间晚，则结束时间为第二天的xx时段
+            highTime = highTime.replace(highTime.substring(position + 3, highTime.length()),
+                    "次日" + highTime.substring(position + 3, highTime.length()));
+        }
+        mHighTime.setText(highTime);
+
+        String highFee = DateUtil.deleteZero(mParkOrderInfo.getHigh_fee()) + "元/小时";
+        mHighFee.setText(highFee);
+
+        String lowTime = mParkOrderInfo.getLow_time();
+        position = lowTime.indexOf(" - ");
+        startCalendar = DateUtil.getSpecialCalendar(lowTime.substring(0, position));
+        endCalendar = DateUtil.getSpecialCalendar(lowTime.substring(position + 3, lowTime.length()));
+        if (startCalendar.compareTo(endCalendar) >= 0) {
+            lowTime = lowTime.replace(lowTime.substring(position + 3, lowTime.length()),
+                    "次日" + lowTime.substring(position + 3, lowTime.length()));
+        }
+        mLowTime.setText(lowTime);
+
+        String lowFee = DateUtil.deleteZero(mParkOrderInfo.getLow_fee()) + "元/小时";
+        mLowFee.setText(lowFee);
+
+        String overTimeFee = DateUtil.deleteZero(mParkOrderInfo.getFine()) + "元/小时";
+        mOvertimeFee.setText(overTimeFee);
     }
 
     @NonNull
     @Override
     protected String title() {
         return "计费规则";
-    }
-
-    private void getParkLotData() {
-        getOkGo(HttpConstants.getOneParkSpaceData)
-                .params("parkspace_id", mParkLotId)
-                .params("citycode", mCityCode)
-                .params("ad_position", "2")
-                .execute(new JsonCallback<Base_Class_Info<ParkLotInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<ParkLotInfo> o, Call call, Response response) {
-                        mParkLotName.setText(o.data.getParkLotName());
-
-                        //高峰时段的时间
-                        String highTime = o.data.getHigh_time();
-                        int position = highTime.indexOf(" - ");
-                        Calendar startCalendar = DateUtil.getSpecialCalendar(highTime.substring(0, position));
-                        Calendar endCalendar = DateUtil.getSpecialCalendar(highTime.substring(position + 3, highTime.length()));
-                        if (startCalendar.compareTo(endCalendar) >= 0) {
-                            //如果开始时间比结束时间晚，则结束时间为第二天的xx时段
-                            highTime = highTime.replace(highTime.substring(position + 3, highTime.length()),
-                                    "次日" + highTime.substring(position + 3, highTime.length()));
-                        }
-                        mHighTime.setText(highTime);
-
-                        String highFee = DateUtil.deleteZero(o.data.getHigh_fee()) + "元/小时";
-                        mHighFee.setText(highFee);
-
-                        String lowTime = o.data.getLow_time();
-                        position = lowTime.indexOf(" - ");
-                        startCalendar = DateUtil.getSpecialCalendar(lowTime.substring(0, position));
-                        endCalendar = DateUtil.getSpecialCalendar(lowTime.substring(position + 3, lowTime.length()));
-                        if (startCalendar.compareTo(endCalendar) >= 0) {
-                            Log.e(TAG, "onSuccess: startCalendar:" + DateUtil.getCalenarYearToMinutes(startCalendar));
-                            Log.e(TAG, "onSuccess: endCalendar:" + DateUtil.getCalenarYearToMinutes(endCalendar));
-                            lowTime = lowTime.replace(lowTime.substring(position + 3, lowTime.length()),
-                                    "次日" + lowTime.substring(position + 3, lowTime.length()));
-                        }
-                        mLowTime.setText(lowTime);
-
-                        String lowFee = DateUtil.deleteZero(o.data.getLow_fee()) + "元/小时";
-                        mLowFee.setText(lowFee);
-
-                        String overTimeFee = DateUtil.deleteZero(o.data.getFine()) + "元/小时";
-                        mOvertimeFee.setText(overTimeFee);
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-
-                        }
-                    }
-                });
     }
 
 }

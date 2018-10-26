@@ -117,7 +117,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         mParkFee = findViewById(R.id.park_fee);
         mOvertimeFee = findViewById(R.id.overtime_fee);
         mDiscountDeduction = findViewById(R.id.discount_deduction);
-        mMonthlyCardDiscount = findViewById(R.id.monthly_card_discount);
+        mMonthlyCardDiscount = findViewById(R.id.monthly_card_discount_decrease);
         mMonthlyCardOffer = findViewById(R.id.monthly_card_offer);
         mBuyMonthlyCardAv = findViewById(R.id.buy_monthly_card_av);
         mCarNumber = findViewById(R.id.car_number);
@@ -164,8 +164,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         switch (v.getId()) {
             case R.id.billing_rules_cl:
             case R.id.billing_rules_av:
-                startActivity(BillingRuleActivity.class, ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId(),
-                        ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
+                startActivity(BillingDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.discount_deduction:
             case R.id.discount_deduction_av:

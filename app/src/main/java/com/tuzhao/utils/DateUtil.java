@@ -1201,7 +1201,7 @@ public class DateUtil {
 
     public static String getParkOvertime(ParkOrderInfo parkOrderInfo) {
         if (getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime()).compareTo(
-                getYearToSecondCalendar(parkOrderInfo.getParkEndTime())) < 0) {
+                getYearToSecondCalendar(parkOrderInfo.getParkEndTime())) <= 0) {
             //停车时长超过预约时长
             return DateUtil.getDistanceForDayHourMinuteAddStart(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getPark_end_time(), parkOrderInfo.getExtensionTime());
         } else {
@@ -1587,6 +1587,26 @@ public class DateUtil {
     }
 
     /**
+     * @param date yyyy-MM-dd HH:mm:ss
+     * @return xx日 HH:mm
+     */
+    public static String getDayToMinute(String date) {
+        return thanTen(date.substring(date.lastIndexOf("-") + 1, date.indexOf(" "))) + "日" +
+                thanTen(date.substring(date.indexOf(" ") + 1, date.lastIndexOf(":")));
+    }
+
+    /**
+     * @param date       yyyy-MM-dd HH:mm:ss
+     * @param addSeconds 在date的基础上加上的秒数
+     * @return xx日 HH:mm
+     */
+    public static String getDayToMinute(String date, String addSeconds) {
+        Calendar calendar = getYearToSecondCalendar(date, addSeconds);
+        return thanTen(calendar.get(Calendar.DAY_OF_MONTH)) + "日" +
+                thanTen(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + thanTen(calendar.get(Calendar.MINUTE));
+    }
+
+    /**
      * @param yearToSecond yyyy-MM-dd HH:mm:ss
      * @return yyyy-MM-dd HH:mm
      */
@@ -1595,11 +1615,235 @@ public class DateUtil {
     }
 
     /**
+     * @return 停车时长，格式为(正常时长，高峰时长，超时时长)
+     */
+    public static String getParkOrderTime(ParkOrderInfo parkOrderInfo) {
+        StringBuilder parkTime = new StringBuilder();
+        Calendar startParkCalendar = getYearToSecondCalendar(parkOrderInfo.getParkStartTime());
+        Calendar endParkCalendar = getYearToSecondCalendar(parkOrderInfo.getParkEndTime());
+        Calendar appointStartParkCalendar = getYearToSecondCalendar(parkOrderInfo.getOrderStartTime());
+        Calendar appointEndParkCalendar = getYearToSecondCalendar(parkOrderInfo.getOrderEndTime());
+        Calendar appointMaxEndParkCalendar = getYearToSecondCalendar(parkOrderInfo.getOrderEndTime(), parkOrderInfo.getExtensionTime());
+        boolean shouldAddOvertime = true;
+        if (startParkCalendar.compareTo(appointStartParkCalendar) < 0) {
+            //提前停车
+            if (endParkCalendar.compareTo(appointMaxEndParkCalendar) > 0) {
+                //超时
+                caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), startParkCalendar, appointMaxEndParkCalendar);
+                parkTime.append(",");
+                parkTime.append(getDateSeconds(appointMaxEndParkCalendar, endParkCalendar));
+                shouldAddOvertime = false;
+            } else {
+                //没有超时
+                if (parkOrderInfo.isCanEarlyLeaveTime()) {
+                    //可以提前离场
+                    caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), startParkCalendar, endParkCalendar);
+                } else {
+                    //不可以提前离场
+                    if (endParkCalendar.compareTo(appointEndParkCalendar) > 0) {
+                        //在顺延时长内结束停车
+                        caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), startParkCalendar, endParkCalendar);
+                    } else {
+                        caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), startParkCalendar, appointEndParkCalendar);
+                    }
+                }
+            }
+        } else {
+            //没有提前停车
+            if (endParkCalendar.compareTo(appointMaxEndParkCalendar) > 0) {
+                //超时
+                caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), appointStartParkCalendar, appointMaxEndParkCalendar);
+                parkTime.append(",");
+                parkTime.append(getDateSeconds(appointMaxEndParkCalendar, endParkCalendar));
+                shouldAddOvertime = false;
+            } else {
+                //没有超时
+                if (parkOrderInfo.isCanEarlyLeaveTime()) {
+                    //可以提前离场
+                    caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), appointStartParkCalendar, endParkCalendar);
+                } else {
+                    //不可以提前离场
+                    if (endParkCalendar.compareTo(appointEndParkCalendar) > 0) {
+                        //在顺延时长内结束停车
+                        caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), appointStartParkCalendar, endParkCalendar);
+                    } else {
+                        //提前结束停车
+                        caculateParkTime(parkTime, parkOrderInfo.getHigh_time(), appointStartParkCalendar, appointEndParkCalendar);
+                    }
+                }
+            }
+        }
+        if (shouldAddOvertime) {
+            parkTime.append(",");
+            parkTime.append("0");
+        }
+        return parkTime.toString();
+    }
+
+    /**
+     * 计算停车时长
+     *
+     * @param parkTime          最后结果放在这里，格式为(正常时长，高峰时长，超时时长)
+     * @param highDate          高峰时段(HH:mm - HH:mm)
+     * @param startParkCalendar 停车的开始时间
+     * @param endParkCalendar   停车的结束时间
+     */
+    private static void caculateParkTime(StringBuilder parkTime, String highDate, Calendar startParkCalendar, Calendar endParkCalendar) {
+        String[] highDates = highDate.split(" - ");
+        boolean highDateInSameDay = isHighDateInSameDay(highDate);  //高峰期在同一天
+        boolean reset;
+        long totalTimeSlotSeconds = getDateSeconds(startParkCalendar, endParkCalendar);
+        long highTimeSlotSeconds = 0;
+        Calendar hightStartCalendar;
+        Calendar hightEndCalendar;
+        if (highDateInSameDay) {
+            //高峰期在同一天
+            hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
+            hightEndCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[1]);
+            if (isIntersection(startParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                //开始停车时间在高峰期内
+                hightStartCalendar = startParkCalendar;
+                reset = true;
+                while (true) {
+                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
+                    if (reset) {
+                        hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
+                        reset = false;
+                    }
+                    hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                        //结束时间在高峰期内
+                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                        break;
+                    } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                        //结束时间比高峰期早
+                        break;
+                    }
+                }
+            } else if (hightEndCalendar.compareTo(startParkCalendar) < 0) {
+                //开始停车时间比高峰期晚，即开始停车那天是没有高峰期的，所以算第二天的
+                hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                if (hightStartCalendar.compareTo(endParkCalendar) < 0) {
+                    //第二天有高峰期
+                    if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                        //第二天停车就结束，并且高峰期在停车结束时间内
+                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                    } else {
+                        while (true) {
+                            highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
+                            hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                            hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                            if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                                //结束时间在高峰期内
+                                highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                                break;
+                            } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                                //结束时间比高峰期早
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                //开始停车时间比高峰期早
+                while (true) {
+                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
+                    hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                        //结束时间在高峰期内
+                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                        break;
+                    } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                        //结束时间比高峰期早
+                        break;
+                    }
+                }
+            }
+        } else {
+            //高峰期不在同一天
+            hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
+            hightEndCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[1], 1);
+            if (isIntersection(startParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                //开始停车时间在高峰期内
+                if (endParkCalendar.compareTo(hightEndCalendar) <= 0) {
+                    //停车时间都在高峰期内
+                    highTimeSlotSeconds += getDateSeconds(startParkCalendar, endParkCalendar);
+                } else {
+                    //结束停车时间不在高峰期内
+                    hightStartCalendar = startParkCalendar;
+                    reset = true;
+                    while (true) {
+                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
+                        if (reset) {
+                            hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
+                            reset = false;
+                        }
+                        hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                            //结束时间在高峰期内
+                            highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                            break;
+                        } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                            //结束时间比高峰期早
+                            break;
+                        }
+                    }
+                }
+            } else {
+                //开始停车时间比高峰期早
+                while (true) {
+                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
+                    hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                        //结束时间在高峰期内
+                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                        break;
+                    } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                        //结束时间比高峰期早
+                        break;
+                    }
+                }
+            }
+        }
+
+        parkTime.append(totalTimeSlotSeconds - highTimeSlotSeconds);
+        parkTime.append(",");
+        parkTime.append(highTimeSlotSeconds);
+    }
+
+    /**
+     * @return 订单的金额
+     */
+    public static double calulateParkFee(ParkOrderInfo parkOrderInfo) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        String[] parkTime = getParkOrderTime(parkOrderInfo).split(",");
+        long lowTime = Long.valueOf(parkTime[0]);
+        long highTime = Long.valueOf(parkTime[1]);
+        long overtime = Long.valueOf(parkTime[2]);
+        double result;
+
+        //不要先转化为xx元/秒,因为如果为30元/小时,停了1小时，计算为60*60*30，最后再除以3600结果为30
+        //如果转了则为0.00833333元/秒,这样算会导致结果不准确
+        double lowFee = Double.valueOf(parkOrderInfo.getLow_fee());
+        double highFee = Double.valueOf(parkOrderInfo.getHigh_fee());
+        double overtimeFee = Double.valueOf(parkOrderInfo.getFine());
+        result = Double.valueOf(decimalFormat.format(lowTime / 3600.0)) * lowFee +
+                Double.valueOf(decimalFormat.format(highTime / 3600.0)) * highFee +
+                Double.valueOf(decimalFormat.format(overtime / 3600.0)) * overtimeFee;
+        return result;
+    }
+
+    /**
      * @param startDate 开始停车时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束停车时间，格式为yyyy-MM-dd HH:mm
      * @param highDate  高峰停车时间，格式为HH:mm - HH:mm
-     * @param highFee   高峰时段单价(xx.xx元/分钟)
-     * @param lowFee    低峰时段单价(xx.xx元/分钟)
+     * @param highFee   高峰时段单价(xx.xx元/小时)
+     * @param lowFee    低峰时段单价(xx.xx元/小时)
      * @return 预估停车应交费用
      */
     public static double caculateParkFee(String startDate, String endDate, String highDate, double highFee, double lowFee) {
@@ -1731,7 +1975,7 @@ public class DateUtil {
      */
     private static boolean isHighDateInSameDay(String highDate) {
         return getHourMinuteCalendar(highDate.substring(0, highDate.indexOf(" - "))).compareTo
-                (getHourMinuteCalendar(highDate.substring(highDate.indexOf(" - ") + 3, highDate.length()))) <= 0;
+                (getHourMinuteCalendar(highDate.substring(highDate.indexOf(" - ") + 3, highDate.length()))) < 0;
     }
 
     /**
@@ -1825,6 +2069,15 @@ public class DateUtil {
      */
     private static int getDateMinutes(Calendar startCalendar, Calendar endCalendar) {
         return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000 / 60);
+    }
+
+    /**
+     * @param startCalendar 开始时间的日历,格式为yyyy-MM-dd HH:mm
+     * @param endCalendar   结束时间的日历,格式为yyyy-MM-dd HH:mm
+     * @return 两个时间相差的秒数
+     */
+    private static int getDateSeconds(Calendar startCalendar, Calendar endCalendar) {
+        return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 1000);
     }
 
     /**

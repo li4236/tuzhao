@@ -119,8 +119,7 @@ public class ParkOrderFinishActivity extends BaseStatusActivity implements View.
         switch (v.getId()) {
             case R.id.billing_rules_cl:
             case R.id.billing_rules_av:
-                startActivity(BillingRuleActivity.class, ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId(),
-                        ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
+                startActivity(BillingDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
                 break;
             case R.id.buy_monthly_card:
                 startActivity(BuyMonthlyCardActivity.class);
