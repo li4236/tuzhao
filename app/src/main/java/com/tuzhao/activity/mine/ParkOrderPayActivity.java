@@ -2,6 +2,7 @@ package com.tuzhao.activity.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -276,6 +277,9 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         mGraceTime.setText(extensionTime + "分钟");
 
         String overtimeDuration = DateUtil.getParkOvertime(mParkOrderInfo);
+        if (!overtimeDuration.equals("未超时")) {
+            mOvertimeDuration.setTextColor(Color.parseColor("#ff2020"));
+        }
         mOvertimeDuration.setText(overtimeDuration);
 
         mOrderNumber.setText(mParkOrderInfo.getOrder_number());

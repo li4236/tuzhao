@@ -1249,8 +1249,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
                 mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
                 ImageUtil.showPic(mDrawerProtraitIv, R.mipmap.ic_usericon);
-               /* ImageUtil.showCirclePic(mDrawerProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url(),
-                        R.mipmap.ic_usericon);*/
             }
         }
     }
@@ -1526,32 +1524,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void showMarkers(List<ClusterItem> markerdata) {
-        /*if (mClusterOverlay != null) {
-            mClusterOverlay.onDestroy();
-        }
-        int clusterRadius = 30;//标点之间的距离半径dp
-        mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), clusterRadius), getApplicationContext());
-        mClusterOverlay.setClusterRenderer(MainActivity.this);
-        mClusterOverlay.setOnClusterClickListener(MainActivity.this);
-        mClusterOverlay.setOnCameraMoveRequestData(new ClusterOverlay.OnCameraMoveRequestData() {
-            @Override
-            public void OnCameraMoveRequestData() {
-                if (!isFirstMove) {
-                    if (lastLatlng != null) {
-                        if (AMapUtils.calculateLineDistance(lastLatlng, aMap.getCameraPosition().target) > moveDistance) {
-                            lastLatlng = aMap.getCameraPosition().target;
-                            getAddressOrCitycode(aMap.getCameraPosition().target, true);
-                        }
-                    } else {
-                        lastLatlng = aMap.getCameraPosition().target;
-                        getAddressOrCitycode(aMap.getCameraPosition().target, true);
-                    }
-
-                } else {
-                    isFirstMove = false;
-                }
-            }
-        });*/
         if (mClusterOverlay == null) {
             mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), 30), getApplicationContext());
             mClusterOverlay.setClusterRenderer(MainActivity.this);
@@ -1570,7 +1542,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             }
         } else {
             OkGo.get(HttpConstants.ROOT_MAPSTYLE_URL)
-                    .execute(new FileCallback() {
+                    .execute(new FileCallback("mystyle_sdk.data") {
                         @Override
                         public void onSuccess(File file, Call call, Response response) {
                             if (aMap != null) {

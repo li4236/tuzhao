@@ -100,11 +100,6 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
     private String mOrderFee;
 
     /**
-     * 超时费用
-     */
-    private double mFineFee = 0.00;
-
-    /**
      * 预约时间内的全部费用
      */
     private double mTotalAppointmentFee;
@@ -146,7 +141,6 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         mMapView = findViewById(R.id.order_mv);
         mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
-        initMapView();
 
         mParkLotName.setOnClickListener(this);
         findViewById(R.id.park_lot_name_av).setOnClickListener(this);
@@ -178,8 +172,8 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         switch (v.getId()) {
             case R.id.billing_rules_cl:
             case R.id.billing_rules_av:
-                startActivity(BillingRuleActivity.class, ConstansUtil.PARK_LOT_ID, mParkOrderInfo.getParkLotId(),
-                        ConstansUtil.CITY_CODE, mParkOrderInfo.getCityCode());
+                ParkOrderInfo parkOrderInfo = mParkOrderInfo.cloneInfo(mOrderFee, DateUtil.getCalenarYearToSecond(nowCalendar));
+                startActivity(BillingDetailActivity.class, ConstansUtil.PARK_ORDER_INFO, parkOrderInfo);
                 break;
             case R.id.order_complaint_cl:
                 startActivity(OrderComplaintActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
@@ -274,6 +268,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
 
     @SuppressLint("SetTextI18n")
     private void init() {
+        initMapView();
         initHandler();
 
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
@@ -286,8 +281,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
         mGraceTime.setText(extensionTime + "分钟");
 
         if (mParkOrderInfo.isFreePark()) {
-            mOrderFee = "0.00";
-            mOrderAmount.setText(mOrderFee);
+            mOrderAmount.setText("0.0");
         }
 
         Calendar calendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime());
@@ -376,8 +370,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
 
             //计算超时部分的费用
             Calendar startOverTimeCalendar = DateUtil.getYearToSecondCalendar(mParkOrderInfo.getOrderEndTime(), mParkOrderInfo.getExtensionTime());
-            mFineFee = DateUtil.getCalendarDistance(startOverTimeCalendar, nowCalendar) * Double.valueOf(mParkOrderInfo.getFine()) / 60;
-            parkFee += mFineFee;
+            parkFee += DateUtil.getCalendarDistance(startOverTimeCalendar, nowCalendar) * Double.valueOf(mParkOrderInfo.getFine()) / 60;
             mOvertimeDuration.setText(DateUtil.getDistanceForDayHourMinuteAddStart(mParkOrderInfo.getOrderEndTime(),
                     DateUtil.getCurrentYearToSecond(), mParkOrderInfo.getExtensionTime()));
         } else {
@@ -409,7 +402,7 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
             }
         }
 
-        mOrderFee = mDecimalFormat.format(parkFee);
+        mOrderFee = mDecimalFormat.format(parkFee * mParkOrderInfo.getMonthlyCardDiscount());
         mOrderAmount.setText(mOrderFee);
     }
 
@@ -442,7 +435,11 @@ public class ParkOrderParkingActivity extends BaseStatusActivity implements View
     private void notifyFinishPark() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        mParkOrderInfo.setOrderFee(mOrderFee);
+        if (mParkOrderInfo.isFreePark()) {
+            mParkOrderInfo.setOrderFee("0.00");
+        } else {
+            mParkOrderInfo.setOrderFee(mOrderFee);
+        }
         if (!mParkOrderInfo.isFreePark()) {
             intent.setAction(ConstansUtil.FINISH_PARK);
             mParkOrderInfo.setOrderStatus("3");

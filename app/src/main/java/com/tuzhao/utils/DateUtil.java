@@ -1689,123 +1689,130 @@ public class DateUtil {
      * @param endParkCalendar   停车的结束时间
      */
     private static void caculateParkTime(StringBuilder parkTime, String highDate, Calendar startParkCalendar, Calendar endParkCalendar) {
+        Log.e(TAG, "caculateParkTime    startParkCalendar: " + getCalenarYearToSecond(startParkCalendar));
+        Log.e(TAG, "caculateParkTime    endParkCalendar: " + getCalenarYearToSecond(endParkCalendar));
         String[] highDates = highDate.split(" - ");
-        boolean highDateInSameDay = isHighDateInSameDay(highDate);  //高峰期在同一天
-        boolean reset;
+        boolean highDateInSameDay = isHighDateInSameDay(highDate);  //高峰期是否在同一天
         long totalTimeSlotSeconds = getDateSeconds(startParkCalendar, endParkCalendar);
         long highTimeSlotSeconds = 0;
         Calendar hightStartCalendar;
         Calendar hightEndCalendar;
         if (highDateInSameDay) {
-            //高峰期在同一天
+            //高峰期在同一天,08:00 - 15:00
+            Log.e(TAG, "caculateParkTime: 高峰期在同一天");
             hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
             hightEndCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[1]);
             if (isIntersection(startParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                //开始停车时间在高峰期内
-                hightStartCalendar = startParkCalendar;
-                reset = true;
-                while (true) {
-                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
-                    if (reset) {
-                        hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
-                        reset = false;
-                    }
-                    hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                    hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                    if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                        //结束时间在高峰期内
-                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
-                        break;
-                    } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
-                        //结束时间比高峰期早
-                        break;
-                    }
+                //开始停车时间在高峰期内,2018-10-27 08:00:00
+                Log.e(TAG, "caculateParkTime: 开始停车时间在高峰期内");
+                if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                    //结束停车时间也在高峰期内,2018-10-27 10:00:00
+                    highTimeSlotSeconds += getDateSeconds(startParkCalendar, endParkCalendar);
+                } else {
+                    //停车时间比当天的高峰期还晚,2018-10-27 16:00:00
+                    hightStartCalendar = startParkCalendar;     //需要计算高峰期的时间为开始停车时间到高峰期的结束时间
+                    highTimeSlotSeconds += calulateHighParkTime(highDates[0], hightStartCalendar, hightEndCalendar,
+                            startParkCalendar, endParkCalendar);
                 }
             } else if (hightEndCalendar.compareTo(startParkCalendar) < 0) {
-                //开始停车时间比高峰期晚，即开始停车那天是没有高峰期的，所以算第二天的
-                hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                //开始停车时间比高峰期晚，即开始停车那天是没有高峰期的，所以算第二天的.2018-10-27 16:00
+                hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);   //2018-10-28 08:00:00
+                hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);     //2018-10-28 15:00:00
                 if (hightStartCalendar.compareTo(endParkCalendar) < 0) {
-                    //第二天有高峰期
+                    //停车时间内有高峰期
+                    Log.e(TAG, "caculateParkTime: 第二天有高峰期");
                     if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                        //第二天停车就结束，并且高峰期在停车结束时间内
+                        //第二天停车就结束，并且停车结束时间在高峰期内，2018-10-28 10:00:00
+                        Log.e(TAG, "caculateParkTime: 第二天停车就结束，并且停车结束时间在高峰期内");
                         highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
                     } else {
-                        while (true) {
-                            highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
-                            hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                            hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                            if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                                //结束时间在高峰期内
-                                highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
-                                break;
-                            } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
-                                //结束时间比高峰期早
-                                break;
-                            }
-                        }
+                        highTimeSlotSeconds += calulateHighParkTime(null, hightStartCalendar, hightEndCalendar,
+                                startParkCalendar, endParkCalendar);
                     }
                 }
             } else {
-                //开始停车时间比高峰期早
-                while (true) {
-                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
-                    hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                    hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                //开始停车时间比高峰期早，2018-10-27 07:00:00
+                Log.e(TAG, "caculateParkTime: 开始停车时间比高峰期早");
+                if (endParkCalendar.compareTo(hightStartCalendar) >= 0) {
+                    //停车时间有在高峰期内的
                     if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                        //结束时间在高峰期内
+                        //结束停车在高峰期内，2018-10-27 10:00:00
                         highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
-                        break;
-                    } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
-                        //结束时间比高峰期早
-                        break;
+                    } else {
+                        //结束停车时间比当天的高峰期结束时间还晚的
+                        highTimeSlotSeconds += calulateHighParkTime(null, hightStartCalendar, hightEndCalendar,
+                                startParkCalendar, endParkCalendar);
                     }
                 }
             }
         } else {
-            //高峰期不在同一天
+            //高峰期不在同一天，08:00 - 03:00
+            Log.e(TAG, "caculateParkTime: 高峰期不在同一天");
             hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
             hightEndCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[1], 1);
             if (isIntersection(startParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                //开始停车时间在高峰期内
+                //开始停车时间在高峰期内，2018-10-26 09:00:00
+                Log.e(TAG, "caculateParkTime: 开始停车时间在高峰期内");
                 if (endParkCalendar.compareTo(hightEndCalendar) <= 0) {
-                    //停车时间都在高峰期内
+                    //停车时间也在高峰期内,2018-10-27 02:00:00
                     highTimeSlotSeconds += getDateSeconds(startParkCalendar, endParkCalendar);
+                    Log.e(TAG, "caculateParkTime: 停车时间都在高峰期内" + highTimeSlotSeconds);
                 } else {
-                    //结束停车时间不在高峰期内
-                    hightStartCalendar = startParkCalendar;
-                    reset = true;
-                    while (true) {
-                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
-                        if (reset) {
-                            hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDates[0]);
-                            reset = false;
-                        }
-                        hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                        hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                        if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                            //结束时间在高峰期内
-                            highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
-                            break;
-                        } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
-                            //结束时间比高峰期早
-                            break;
-                        }
-                    }
+                    //结束停车时间不在高峰期内,2018-10-27 05:00:00
+                    hightStartCalendar = startParkCalendar;     //设置开始算的高峰期为2018-10-26 09:00:00
+                    Log.e(TAG, "caculateParkTime: 结束停车时间不在高峰期内");
+                    highTimeSlotSeconds += calulateHighParkTime(highDates[0], hightStartCalendar, hightEndCalendar,
+                            startParkCalendar, endParkCalendar);
                 }
             } else {
-                //开始停车时间比高峰期早
-                while (true) {
-                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
-                    hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                //2018-10-26 03:00:00
+                hightEndCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                Calendar hightEndDayStartCalendar = getTodayStartCalendar(hightEndCalendar);
+                if (isIntersection(startParkCalendar, hightEndDayStartCalendar, hightEndCalendar)) {
+                    //开始停车时间在第二天的高峰期，2018-10-26 01:00:00
+                    Log.e(TAG, "caculateParkTime: 开始停车时间在第二天的高峰期");
+                    if (endParkCalendar.compareTo(hightEndCalendar) <= 0) {
+                        //停车时间都在第二天高峰期内,2018-10-26 02:00:00
+                        highTimeSlotSeconds += getDateSeconds(startParkCalendar, endParkCalendar);
+                        Log.e(TAG, "caculateParkTime: 停车时间都在第二天高峰期内");
+                    } else {
+                        //结束停车时间不在高峰期内,2018-10-27 05:00:00
+                        Log.e(TAG, "caculateParkTime: 结束停车时间不在第二天高峰期内");
+                        highTimeSlotSeconds = getDateSeconds(startParkCalendar, hightEndCalendar);
+                        hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        if (endParkCalendar.compareTo(hightStartCalendar) > 0) {
+                            //结束停车不在当天的高峰期，2018-10-27 05:00:00
+                            Log.e(TAG, "caculateParkTime: 结束停车不在当天的高峰期");
+                            while (true) {
+                                if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                                    //结束时间在高峰期内
+                                    highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                                    Log.e(TAG, "caculateParkTime: 结束时间在高峰期内" + highTimeSlotSeconds);
+                                    break;
+                                } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                                    //结束时间比高峰期早
+                                    Log.e(TAG, "caculateParkTime: 结束时间比高峰期早");
+                                    break;
+                                }
+                                highTimeSlotSeconds += getDateSeconds(hightStartCalendar, hightEndCalendar);
+                                hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                                hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                            }
+                        }
+                    }
+                } else {
                     hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                    if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
-                        //结束时间在高峰期内
-                        highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
-                        break;
-                    } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
-                        //结束时间比高峰期早
-                        break;
+                    //开始停车时间比高峰期早
+                    if (endParkCalendar.compareTo(hightStartCalendar) >= 0) {
+                        //停车时间有在高峰期内的
+                        if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                            //结束停车在高峰期内，2018-10-27 10:00:00
+                            highTimeSlotSeconds += getDateSeconds(hightStartCalendar, endParkCalendar);
+                        } else {
+                            //结束停车时间比高峰期结束时间还晚的
+                            highTimeSlotSeconds += calulateHighParkTime(null, hightStartCalendar, hightEndCalendar,
+                                    startParkCalendar, endParkCalendar);
+                        }
                     }
                 }
             }
@@ -1814,6 +1821,32 @@ public class DateUtil {
         parkTime.append(totalTimeSlotSeconds - highTimeSlotSeconds);
         parkTime.append(",");
         parkTime.append(highTimeSlotSeconds);
+    }
+
+    private static double calulateHighParkTime(String highDate, Calendar hightStartCalendar, Calendar hightEndCalendar,
+                                               Calendar startParkCalendar, Calendar endParkCalendar) {
+        long highTime = 0;
+        while (true) {
+            highTime += getDateSeconds(hightStartCalendar, hightEndCalendar);
+            if (highDate != null) {
+                //设置为正确的高峰期开始时间
+                hightStartCalendar = getSameYearToDayCalendar(startParkCalendar, highDate);
+                highDate = null;
+            }
+            hightStartCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            hightEndCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            if (isIntersection(endParkCalendar, hightStartCalendar, hightEndCalendar)) {
+                //结束时间在高峰期内
+                highTime += getDateSeconds(hightStartCalendar, endParkCalendar);
+                Log.e(TAG, "caculateParkTime: 结束时间在高峰期内" + highTime);
+                break;
+            } else if (hightStartCalendar.compareTo(endParkCalendar) > 0) {
+                //结束时间比高峰期早
+                Log.e(TAG, "caculateParkTime: 结束时间比高峰期早");
+                break;
+            }
+        }
+        return highTime;
     }
 
     /**

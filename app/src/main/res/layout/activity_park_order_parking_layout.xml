@@ -73,7 +73,7 @@
                         style="@style/TwentyTextB1Style"
                         android:gravity="start"
                         android:paddingEnd="6dp"
-                        android:text="计费规则" />
+                        android:text="计费详情" />
 
                     <com.tuzhao.publicwidget.customView.ArrowView
                         android:id="@+id/billing_rules_av"

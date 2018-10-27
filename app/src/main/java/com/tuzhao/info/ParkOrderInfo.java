@@ -655,4 +655,28 @@ public class ParkOrderInfo implements Parcelable {
             return new ParkOrderInfo[size];
         }
     };
+
+    public ParkOrderInfo cloneInfo(String orderFee, String parkEndTime) {
+        ParkOrderInfo parkOrderInfo = new ParkOrderInfo();
+        parkOrderInfo.parkLotName = this.parkLotName;
+        parkOrderInfo.orderStatus = this.orderStatus;
+        parkOrderInfo.orderFee = orderFee;
+        parkOrderInfo.actualFee = orderFee;
+        parkOrderInfo.orderStartTime = this.orderStartTime;
+        parkOrderInfo.orderEndTime = this.orderEndTime;
+        parkOrderInfo.parkStartTime = this.parkStartTime;
+        parkOrderInfo.parkEndTime = parkEndTime;
+        parkOrderInfo.isFreePark = this.isFreePark;
+        parkOrderInfo.discount = this.discount;
+        parkOrderInfo.monthlyCardDiscount = this.monthlyCardDiscount;
+        parkOrderInfo.extensionTime = this.extensionTime;
+        parkOrderInfo.high_time = this.high_time;
+        parkOrderInfo.low_time = this.low_time;
+        parkOrderInfo.high_fee = this.high_fee;
+        parkOrderInfo.low_fee = this.low_fee;
+        parkOrderInfo.fine = this.fine;
+        parkOrderInfo.canEarlyLeaveTime = this.canEarlyLeaveTime;
+        return parkOrderInfo;
+    }
+
 }

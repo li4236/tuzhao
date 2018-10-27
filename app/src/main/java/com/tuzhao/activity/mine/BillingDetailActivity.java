@@ -89,7 +89,7 @@ public class BillingDetailActivity extends BaseStatusActivity {
     @Override
     protected void initData() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-        mOrderFee.setText(mParkOrderInfo.getOrderFee());
+        mOrderFee.setText(mParkOrderInfo.getActual_pay_fee());
         String[] timeSlot = DateUtil.getParkOrderTime(mParkOrderInfo).split(",");
         double normalTime = Double.valueOf(decimalFormat.format(Long.valueOf(timeSlot[0]) / 3600.0));
         double highTime = Double.valueOf(decimalFormat.format(Long.valueOf(timeSlot[1]) / 3600.0));
@@ -97,9 +97,9 @@ public class BillingDetailActivity extends BaseStatusActivity {
         double normalUnitPrice = Double.valueOf(mParkOrderInfo.getLow_fee());
         double highUnitPrice = Double.valueOf(mParkOrderInfo.getHigh_fee());
         double overtimeUnitPrice = Double.valueOf(mParkOrderInfo.getFine());
-        double normalFee = normalTime * normalUnitPrice;
-        double highFee = highTime * highUnitPrice;
-        double overtimeFee = overtimeTime * overtimeUnitPrice;
+        double normalFee = Double.valueOf(decimalFormat.format(normalTime * normalUnitPrice));
+        double highFee = Double.valueOf(decimalFormat.format(highTime * highUnitPrice));
+        double overtimeFee = Double.valueOf(decimalFormat.format(overtimeTime * overtimeUnitPrice));
         double discountDecrease = 0;
         double monthlyCardDecrease = 0;
 
@@ -117,7 +117,7 @@ public class BillingDetailActivity extends BaseStatusActivity {
         mOvertimeSlotUnitPrice.setText(overtimeUnitPrice + "元/小时");
         mOvertimeSlotFee.setText(overtimeTime + "小时*" + overtimeUnitPrice + "元/时=" + overtimeFee + "元");
 
-        if (!"-1".equals(mParkOrderInfo.getDiscount().get(0).getId())) {
+        if (!"-1".equals(mParkOrderInfo.getDiscount().get(0).getId()) && Integer.valueOf(mParkOrderInfo.getOrderStatus()) >= 3) {
             discountDecrease = Double.valueOf(mParkOrderInfo.getDiscount().get(0).getDiscount());
             mDiscountDecrease.setText("-" + discountDecrease + "元");
         } else {

@@ -119,7 +119,6 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
         mMapView = findViewById(R.id.order_mv);
         mMapView.onCreate(savedInstanceState);
         mAMap = mMapView.getMap();
-        initMapView();
 
         mParkLotName.setOnClickListener(this);
         findViewById(R.id.park_lot_name_av).setOnClickListener(this);
@@ -256,6 +255,8 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
 
     @SuppressLint("SetTextI18n")
     private void init() {
+        initMapView();
+
         mStartParkDate.setText("入场时间：" + DateUtil.getYearToMinuteWithText(mParkOrderInfo.getOrderStartTime()));
         mCarNumber.setText(mParkOrderInfo.getCarNumber());
         mParkSpaceNumber.setText(mParkOrderInfo.getParkNumber());
