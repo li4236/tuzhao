@@ -183,7 +183,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             //取消上次的默认收票地址
             AcceptTicketAddressInfo acceptTicketAddressInfo = mCommonAdapter.get(mDefalutAddressPosition);
             acceptTicketAddressInfo.setIsDefault("0");
-            mCommonAdapter.notifyDataChange(acceptTicketAddressInfo);
+            mCommonAdapter.notifyDataChange(mDefalutAddressPosition,1);
         }
 
         //设置新的默认收票地址，不管请求成功与否
@@ -191,7 +191,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
         if (addressInfo.getIsDefault().equals("0")) {
             //如果是新添加了收票地址的话不用重新更新数据，否则会出错
             addressInfo.setIsDefault("1");
-            mCommonAdapter.notifyDataChange(addressInfo);
+            mCommonAdapter.notifyDataChange(position,1);
         }
 
         getOkgos(HttpConstants.setDefaultAcceptTicketAddress)
@@ -386,6 +386,12 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             }
         });
 
+    }
+
+    @Override
+    protected void bindData(BaseViewHolder holder, AcceptTicketAddressInfo addressInfo, int position, List<Object> payloads) {
+        super.bindData(holder, addressInfo, position, payloads);
+        ((CheckBox)holder.getView(R.id.accept_ticket_address_set_default)).setChecked(addressInfo.getIsDefault().equals("1"));
     }
 
     @Override

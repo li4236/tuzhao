@@ -342,12 +342,8 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
                 mDiscountDeduction.setText(parkDiscount);
 
                 mShouldPay = Double.parseDouble(mDecimalFormat.format(Double.valueOf(mParkOrderInfo.getOrderFee()) - discountFee));
-                calculateParkFeeWithMonthlyCard();
-            } else {
-                calculateParkFeeWithMonthlyCard();
             }
         } else {
-            calculateParkFeeWithMonthlyCard();
             String discountCount;
             if (mParkOrderInfo.getDiscount().size() == 1 && mParkOrderInfo.getDiscount().get(0).getId().equals("-1")) {
                 discountCount = "有0个红包";
@@ -356,6 +352,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
             }
             mDiscountDeduction.setText(discountCount);
         }
+        calculateParkFeeWithMonthlyCard();
 
         if (mChooseDiscount != null) {
             mAlreadyDiscount.setText("已优惠 ¥ " + mDecimalFormat.format(mMonthlyCardOfferPrice + Double.valueOf(mChooseDiscount.getDiscount())));
@@ -378,7 +375,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
 
             mShouldPay = Double.parseDouble(mDecimalFormat.format(mShouldPay * mParkOrderInfo.getMonthlyCardDiscount()));
         }
-        if (mShouldPay <= 0) {
+        if (mShouldPay < 0.01) {
             mShouldPay = 0.01;
         }
     }
