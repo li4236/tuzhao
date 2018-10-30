@@ -80,7 +80,7 @@ public class BillingDetailActivity extends BaseStatusActivity {
         findViewById(R.id.violation_statement_ll).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(BillingRuleActivity.class, ConstansUtil.PARK_ORDER_INFO, mParkOrderInfo);
+                startActivity(ViolationInstructionActivity.class);
             }
         });
     }
