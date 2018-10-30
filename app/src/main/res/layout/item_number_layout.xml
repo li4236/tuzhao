@@ -3,7 +3,7 @@
     android:id="@+id/number_tv"
     android:layout_width="120dp"
     android:layout_height="53dp"
-    android:background="@drawable/normal_w0_press_g16"
+    android:background="@drawable/normal_transparent_press_g16"
     android:gravity="center"
     android:textColor="@color/b1"
     android:textSize="24sp">

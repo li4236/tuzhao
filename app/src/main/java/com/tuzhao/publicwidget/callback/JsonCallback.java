@@ -1,7 +1,5 @@
 package com.tuzhao.publicwidget.callback;
 
-import android.util.Log;
-
 import com.google.gson.stream.JsonReader;
 import com.tianzhili.www.myselfsdk.okgo.callback.AbsCallback;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
@@ -66,7 +64,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
      * </pre>
      */
     @Override
-    public T convertSuccess(Response response) throws Exception {
+    public T convertSuccess(Response response) {
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用

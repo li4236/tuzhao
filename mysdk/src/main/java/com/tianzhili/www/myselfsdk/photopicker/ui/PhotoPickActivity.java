@@ -64,7 +64,6 @@ public class PhotoPickActivity extends BaseActivity {
     private PhotoGalleryAdapter galleryAdapter;
     private PhotoPickAdapter adapter;
     private PhotoPickBean pickBean;
-    private Uri cameraUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,6 +249,7 @@ public class PhotoPickActivity extends BaseActivity {
         File imageFile = FileUtils.createImageFile(this, "/images");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Android7.0以上URI
+        Uri cameraUri;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             //通过FileProvider创建一个content类型的Uri
             cameraUri = FileProvider.getUriForFile(this, "com.tuzhao.photopicker.provider", imageFile);

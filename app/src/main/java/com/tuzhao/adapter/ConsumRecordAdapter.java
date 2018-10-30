@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -80,7 +79,7 @@ public class ConsumRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textview_type, textview_time, textview_amount;
-        private ImageView imageview_down;
+        private View imageview_down;
 
         MyViewHolder(View itemView) {
             super(itemView);

@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
      */
     private boolean mRequestAccessCoarseLocation;
 
-    public static int ONLYPARK = 1, ONLYCHARGE = 2, PARKANDCHARGE = 3;
+    public static final int ONLYPARK = 1, ONLYCHARGE = 2, PARKANDCHARGE = 3;
 
     /**
      * UI
@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private boolean mHadShowGps;
     private boolean isFirstloc = true;
     private LatLng mLastlocationLatlng = null;
-    private float morenZoom = 14f;//地图的默认缩放等级
+    private final float morenZoom = 14f;//地图的默认缩放等级
     private CameraPosition mLastPosition;//点击marker时地图的位置，用于点击地图后返回地图点击前的位置
     private LatLng mLastLatLng;//上次移动地图时的坐标
     private String mLastCity;//上次移动地图时未开放的城市名字
@@ -183,7 +183,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private View mFragment_content;
     private float mTranslationY;
     private float mCityNoDataTranslationY;
-    private boolean show = false, showClusters, show1 = false, isShowPark = true, isShowCharge = true, isFirstMove = true, isLcData = true;
+    private boolean show = false;
+    private boolean showClusters;
+    private boolean show1 = false;
+    private boolean isShowPark = true;
+    private boolean isShowCharge = true;
+    private boolean isLcData = true;
     private int mapwidth;//地图控件的宽高，用来地图中心点
     private GeocodeSearch geocoderSearch;//将经纬度转化为地址
     private String search_address = "";//搜索的地址
@@ -447,7 +452,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.id_content_main_layout_imageview_turnown:
                 //左下角的定位图标
-                isFirstMove = true;
                 isLcData = true;
                 if (show) {
                     controlAnimfragment(mFragment_content);
@@ -1567,8 +1571,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
     }
 
-    private void showFiveToast(String msg) {
-        MyToast.showToast(this, msg, 5);
+    private void showFiveToast() {
+        MyToast.showToast(this, "没有权限，定位失败", 5);
     }
 
     private boolean noHavePermission(String permission) {
@@ -1588,7 +1592,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
             } else {
-                showFiveToast("没有权限，定位失败");
+                showFiveToast();
             }
             if (!mRequestWriteExternal && noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);

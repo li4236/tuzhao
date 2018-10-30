@@ -213,7 +213,7 @@ public class ChargeDetailFragment extends BaseFragment {
         textview_chargefee.setText(chargestation_info.getCharge_fee() + "元/度");
         textview_serverfee.setText(chargestation_info.getService_fee() + "元/度");
         textview_parkfee.setText(chargestation_info.getPark_fee() + "元/小时");
-        cbratingbar.setStarProgress(chargestation_info.getGrade() == null ? 80 : (new Float(chargestation_info.getGrade()) * 100 / 5));
+        cbratingbar.setStarProgress(chargestation_info.getGrade() == null ? 80 : (Float.valueOf(chargestation_info.getGrade()) * 100 / 5));
         textview_grade.setText(chargestation_info.getGrade() + "分");
         textview_opentime.setText("营业时间（" + chargestation_info.getOpentime() + "）");
     }

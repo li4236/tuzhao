@@ -1,6 +1,7 @@
 package com.tuzhao.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -11,8 +12,6 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.fragment.chargestationdetail.ChargeDetailFragment;
 import com.tuzhao.info.ChargeStationInfo;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by TZL12 on 2017/11/16.

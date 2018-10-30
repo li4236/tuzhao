@@ -25,7 +25,7 @@ public class BitmapConvert implements Converter<Bitmap> {
     }
 
     @Override
-    public Bitmap convertSuccess(Response value) throws Exception {
+    public Bitmap convertSuccess(Response value) {
         return BitmapFactory.decodeStream(value.body().byteStream());
     }
 }

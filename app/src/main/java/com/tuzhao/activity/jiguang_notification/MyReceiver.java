@@ -22,9 +22,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.data.JPushLocalNotification;
-
-import static cn.jpush.android.api.JPushInterface.EXTRA_EXTRA;
 
 /**
  * Created by TZL12 on 2017/10/25.
@@ -117,64 +114,6 @@ public class MyReceiver extends BroadcastReceiver {
             intent2.putExtra(ConstansUtil.REQUEST_FOR_RESULT, time);
             IntentObserable.dispatch(intent2);
         }
-    }
-
-    private void receivingNotification(Context context, Bundle bundle) {
-        String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
-        Log.d(TAG, " title : " + title);
-        String message = bundle.getString(JPushInterface.EXTRA_ALERT);
-        Log.d(TAG, "message : " + message);
-        String extras = bundle.getString(EXTRA_EXTRA);
-        Log.d(TAG, "extras : " + extras);
-    }
-
-    private void openNotification(Context context, Bundle bundle) {
-        String extras = bundle.getString(EXTRA_EXTRA);
-        String myValue = "";
-        try {
-            JSONObject extrasJson = new JSONObject(extras);
-            myValue = extrasJson.optString("myKey");
-        } catch (Exception e) {
-            Log.w(TAG, "Unexpected: extras is not a valid json", e);
-            return;
-        }
-//        if (TYPE_THIS.equals(myValue)) {
-//            Intent mIntent = new Intent(context, ThisActivity.class);
-//            mIntent.putExtras(bundle);
-//            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            context.startActivity(mIntent);
-//        } else if (TYPE_ANOTHER.equals(myValue)){
-//            Intent mIntent = new Intent(context, AnotherActivity.class);
-//            mIntent.putExtras(bundle);
-//            mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            context.startActivity(mIntent);
-//        }
-    }
-
-    //send msg to MainActivity
-    private void processCustomMessage(Context context, Bundle bundle) {
-
-        String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-        String extras = bundle.getString(EXTRA_EXTRA);
-        Intent msgIntent = new Intent("com.yitingchong.www.yitingchong.MESSAGE_RECEIVED_ACTION");
-        msgIntent.putExtra("message", message);
-        if (extras != null) {
-            try {
-                JSONObject extraJson = new JSONObject(extras);
-                if (extraJson.length() > 0) {
-                    msgIntent.putExtra("extras", extras);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        JPushLocalNotification ln = new JPushLocalNotification();
-        ln.setBuilderId(0);
-        ln.setContent(message);
-        ln.setTitle(message);
-        ln.setNotificationId(11111111);
-        ln.setBroadcastTime(System.currentTimeMillis() + 1000);
-        JPushInterface.addLocalNotification(context, ln);
     }
 
     public static void addLockListener(String lockId, OnLockListener onLockListener) {

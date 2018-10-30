@@ -21,7 +21,7 @@ import okhttp3.Response;
 public abstract class JsonCodeCallback<T> extends AbsCallback<T> {
 
     @Override
-    public T convertSuccess(Response response) throws Exception {
+    public T convertSuccess(Response response) {
         Type genType = getClass().getGenericSuperclass();
         //从上述的类中取出真实的泛型参数，有些类可能有多个泛型，所以是数组
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();

@@ -36,15 +36,10 @@ public final class PhotoPick {
         return mContext;
     }
 
-
-    public static void setToolbarBackGround(int toolbarBackGroundId) {
-        toolbarBackGround = toolbarBackGroundId;
-    }
-
-
     public static void checkInit() {
         if (mContext == null) {
             throw new NullPointerException("photoLibrary was not initialized,please init in your Application");
         }
     }
+
 }

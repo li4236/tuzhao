@@ -27,7 +27,7 @@
         <!--<attr name="indicator_animator_reverse" format="reference" />-->
     </declare-styleable>
 
-    <declare-styleable name="wheelview">
+    <declare-styleable name="WheelView">
         <attr name="gravity">
             <enum name="center" value="17"/>
             <enum name="left" value="3"/>

@@ -31,10 +31,6 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         return this;
     }
 
-    public OnItemClickListener getmOnItemClickListener() {
-        return mOnItemClickListener;
-    }
-
     public CommonAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
@@ -65,11 +61,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
 
     /**
      * 在onCreateHolder里调用的，但是在增加了HeaderFooter后，postion位置，会不正确。
-     * 所以如果使用了{@link HeaderAndFooterWrapperAdapter},建议使用 {@link #setListener(int, ViewHolder)} 这个方法，返回的位置是正确的。
-     *
-     * @param parent
-     * @param viewHolder
-     * @param viewType
+     * 建议使用 {@link #setListener(int, ViewHolder)} 这个方法，返回的位置是正确的。
      */
     @Deprecated
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
@@ -141,14 +133,11 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
 
     /**
      * 刷新数据，初始化数据
-     *
-     * @param list
      */
     public void setDatas(List<T> list) {
         if (this.mDatas != null) {
             if (null != list) {
-                List<T> temp = new ArrayList<>();
-                temp.addAll(list);
+                List<T> temp = new ArrayList<>(list);
                 this.mDatas.clear();
                 this.mDatas.addAll(temp);
             } else {
@@ -162,8 +151,6 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
 
     /**
      * 删除数据
-     *
-     * @param i
      */
     public void remove(int i) {
         if (null != mDatas && mDatas.size() > i && i > -1) {
@@ -172,35 +159,11 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder> 
         }
     }
 
-    /**
-     * 加载更多数据
-     *
-     * @param list
-     */
-    public void addDatas(List<T> list) {
-        if (null != list) {
-            List<T> temp = new ArrayList<>();
-            temp.addAll(list);
-            if (this.mDatas != null) {
-                this.mDatas.addAll(temp);
-            } else {
-                this.mDatas = temp;
-            }
-            notifyDataSetChanged();
-        }
-
-    }
-
-
-    public List<T> getDatas() {
-        return mDatas;
-    }
-
-
     public T getItem(int position) {
         if (position > -1 && null != mDatas && mDatas.size() > position) {
             return mDatas.get(position);
         }
         return null;
     }
+
 }

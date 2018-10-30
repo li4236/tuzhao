@@ -20,7 +20,6 @@ public class WheelOptions<T> {
     private ArrayList<ArrayList<ArrayList<T>>> mOptions3Items;
 
     private boolean linkage = false;
-    private OnItemSelectedListener wheelListener_option1;
     private OnItemSelectedListener wheelListener_option2;
 
     public View getView() {
@@ -100,7 +99,7 @@ public class WheelOptions<T> {
             wv_option3.setVisibility(View.GONE);
 
         // 联动监听器
-        wheelListener_option1 = new OnItemSelectedListener() {
+        OnItemSelectedListener wheelListener_option1 = new OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(int index) {

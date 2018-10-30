@@ -26,6 +26,14 @@ public class PhotoCursorLoader {
         //default ，默认配置
         setShowGif(true);//展示gif
         setUri(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        String[] IMAGE_PROJECTION = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media.SIZE
+        };
         setProjection(IMAGE_PROJECTION);
         setSelection(MIME_TYPE + "=? or " + MIME_TYPE + "=? " + (showGif ? ("or " + MIME_TYPE + "=?") : ""));
         setShowGif(isShowGif());
@@ -47,15 +55,6 @@ public class PhotoCursorLoader {
     private final static String IMAGE_JPEG = "image/jpeg";
     private final static String IMAGE_PNG = "image/png";
     private final static String IMAGE_GIF = "image/gif";
-
-    private final String[] IMAGE_PROJECTION = {
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-            MediaStore.Images.Media.DATE_ADDED,
-            MediaStore.Images.Media.SIZE
-    };
 
     @NonNull
     public Uri getUri() {

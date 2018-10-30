@@ -77,7 +77,7 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
 
     @Override
     protected void initView(final Bundle savedInstanceState) {
-        XStatusBarHelper.immersiveStatusBar(this,0);
+        XStatusBarHelper.immersiveStatusBar(this, 0);
         mParkLotName = findViewById(R.id.park_lot_name);
         mParkLotAddress = findViewById(R.id.park_lot_address);
         mMapView = findViewById(R.id.navigation_mv);
@@ -283,7 +283,7 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
         textView.setText("取消");
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(Color.parseColor("#0979fe"));
-        textView.setBackgroundResource(R.drawable.white_all_10dp);
+        textView.setBackgroundResource(R.drawable.w0_all_10dp);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.bottomMargin = dpToPx(15);

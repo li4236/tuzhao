@@ -187,7 +187,6 @@ public class HttpConstants {
      * 反馈意见
      */
     public static final String uploadSuggest = ROOT_URL + "uploadSuggest";
-    ;
 
     /**
      * 获取用户账单列表

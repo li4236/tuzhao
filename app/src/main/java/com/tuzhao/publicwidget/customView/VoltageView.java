@@ -62,7 +62,7 @@ public class VoltageView extends View {
 
     private void initAttribute(Context context, AttributeSet attributeSet, int defStyleAttr) {
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.VoltageView, defStyleAttr, 0);
-        mBorderRadius = typedArray.getDimension(R.styleable.VoltageView_vv_border_radius, 2);
+        mBorderRadius = typedArray.getDimension(R.styleable.VoltageView_vv_border_radius, 4);
         mBorderWidth = typedArray.getDimension(R.styleable.VoltageView_vv_border_width, 4);
         mVoltage = typedArray.getInt(R.styleable.VoltageView_vv_voltage, 0);
         mBorderColor = typedArray.getColor(R.styleable.VoltageView_vv_border_color, Color.WHITE);
@@ -107,7 +107,7 @@ public class VoltageView extends View {
         canvas.drawRect(mHeadRect, mBorderPaint);
 
         mBorderPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawRoundRect(mBorderRect, 4, 4, mBorderPaint);
+        canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
 
         mVoltageRect.top = mVoltageRect.bottom - mVoltageHeight * mVoltage / 100;
         if (mVoltage <= 20) {

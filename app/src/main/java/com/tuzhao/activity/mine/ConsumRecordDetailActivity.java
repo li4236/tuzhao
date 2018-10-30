@@ -17,8 +17,6 @@ import com.tuzhao.info.ConsumRecordInfo;
 
 public class ConsumRecordDetailActivity extends BaseActivity {
 
-    private ConsumRecordInfo consumrecord_info;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +33,7 @@ public class ConsumRecordDetailActivity extends BaseActivity {
     private void initData() {
 
         if (getIntent().hasExtra("consumrecord_info")) {
-            consumrecord_info = (ConsumRecordInfo) getIntent().getSerializableExtra("consumrecord_info");
+            ConsumRecordInfo consumrecord_info = (ConsumRecordInfo) getIntent().getSerializableExtra("consumrecord_info");
 
             switch (Integer.parseInt(consumrecord_info.getType())) {
                 case 1:

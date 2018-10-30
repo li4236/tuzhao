@@ -1,5 +1,7 @@
 package com.tuzhao.publicmanager;
 
+import com.tuzhao.utils.DateUtil;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,11 +14,10 @@ import java.util.Locale;
 public class TimeManager {
 
     private static TimeManager timeManager = null;
-    private String nowTime = null;
     private long differenceTime;  //时间差值
     private boolean isServerTime = false; //是否是服务器时间
 
-    public static TimeManager getInstance(){
+    public static TimeManager getInstance() {
 
         if (timeManager == null) {
 
@@ -34,38 +35,40 @@ public class TimeManager {
         }
     }
 
-    public String getNowTime(boolean isDetail , boolean isMoreDetail) {
+    public String getNowTime(boolean isDetail, boolean isMoreDetail) {
         long nowSystemtime = System.currentTimeMillis();
         SimpleDateFormat format;
-        if (isMoreDetail){
-            format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        }else {
-            if (isDetail){
-                format=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            }else {
-                format=new SimpleDateFormat("yyyy-MM-dd");
+        if (isMoreDetail) {
+            format = DateUtil.getYearToSecondFormat();
+        } else {
+            if (isDetail) {
+                format = DateUtil.getYearToMinutesFormat();
+            } else {
+                format = DateUtil.getYearToDayFormat();
             }
         }
-        if (isServerTime){
+
+        String nowTime;
+        if (isServerTime) {
             nowSystemtime = nowSystemtime + differenceTime;
             Date d1 = new Date(nowSystemtime);
-            nowTime=format.format(d1);
-        }else {
+            nowTime = format.format(d1);
+        } else {
             Date d1 = new Date(System.currentTimeMillis());
-            nowTime=format.format(d1);
+            nowTime = format.format(d1);
         }
         return nowTime;
     }
 
-    public void initTime(String serverTime){
+    public void initTime(String serverTime) {
         isServerTime = true;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        long newdifferencetime = 0;
+        long newdifferencetime;
         try {
             Date serverDate = df.parse(serverTime);
             newdifferencetime = serverDate.getTime() - System.currentTimeMillis();
 
-            if (Math.abs(newdifferencetime)<Math.abs(differenceTime)){
+            if (Math.abs(newdifferencetime) < Math.abs(differenceTime)) {
                 differenceTime = newdifferencetime;
             }
         } catch (ParseException e) {

@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.R;
-import com.tianzhili.www.myselfsdk.banner.listener.OnBannerClickListener;
 import com.tianzhili.www.myselfsdk.banner.listener.OnBannerListener;
 import com.tianzhili.www.myselfsdk.banner.loader.ImageLoaderInterface;
 import com.tianzhili.www.myselfsdk.banner.view.BannerViewPager;
@@ -66,10 +65,7 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
     private ImageLoaderInterface imageLoader;
     private BannerPagerAdapter adapter;
     private OnPageChangeListener mOnPageChangeListener;
-    private BannerScroller mScroller;
-    private OnBannerClickListener bannerListener;
     private OnBannerListener listener;
-    private DisplayMetrics dm;
 
     private WeakHandler handler = new WeakHandler();
 
@@ -88,7 +84,7 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
         imageUrls = new ArrayList<>();
         imageViews = new ArrayList<>();
         indicatorImages = new ArrayList<>();
-        dm = context.getResources().getDisplayMetrics();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
         indicatorSize = dm.widthPixels / 80;
         initView(context, attrs);
     }
@@ -132,9 +128,9 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
         try {
             Field mField = ViewPager.class.getDeclaredField("mScroller");
             mField.setAccessible(true);
-            mScroller = new BannerScroller(viewPager.getContext());
-            mScroller.setDuration(scrollTime);
-            mField.set(viewPager, mScroller);
+            BannerScroller scroller = new BannerScroller(viewPager.getContext());
+            scroller.setDuration(scrollTime);
+            mField.set(viewPager, scroller);
         } catch (Exception e) {
             Log.e(tag, e.getMessage());
         }
@@ -508,16 +504,6 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
         public Object instantiateItem(ViewGroup container, final int position) {
             container.addView(imageViews.get(position));
             View view = imageViews.get(position);
-            if (bannerListener != null) {
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e(tag, "你正在使用旧版点击事件接口，下标是从1开始，" +
-                                "为了体验请更换为setOnBannerListener，下标从0开始计算");
-                        bannerListener.OnBannerClick(position);
-                    }
-                });
-            }
             if (listener != null) {
                 view.setOnClickListener(new OnClickListener() {
                     @Override
@@ -602,12 +588,6 @@ public class Banner extends FrameLayout implements OnPageChangeListener {
                 break;
         }
 
-    }
-
-    @Deprecated
-    public Banner setOnBannerClickListener(OnBannerClickListener listener) {
-        this.bannerListener = listener;
-        return this;
     }
 
     /**

@@ -13,19 +13,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
-        <!--jjdxm_update更新 start-->
-        <activity
-            android:name=".update.view.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-        <activity
-            android:name=".update.view.DownloadDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-
-        <service android:name=".update.server.DownloadingService"/>
-        <!--jjdxm_update更新 end-->
-
     </application>
 
 </manifest>

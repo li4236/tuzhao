@@ -2,7 +2,6 @@ package com.tianzhili.www.myselfsdk.filter.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,7 +23,6 @@ public class MultiGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TYPE_ITEM = 1;//设置item的地方
 
     private Context mContext;
-    private LayoutInflater inflater;
 
     //数据
     private List<FilterBean.InstitutionObject> obj_list;//收住对象
@@ -49,28 +47,6 @@ public class MultiGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public MultiGridAdapter(Context context) {
         this.mContext = context;
-        inflater = LayoutInflater.from(context);
-    }
-
-    //set值
-    public void setObj_list(List<FilterBean.InstitutionObject> obj_list) {
-        this.obj_list = obj_list;
-    }
-
-    public void setProperty_list(List<FilterBean.PlaceProperty> property_list) {
-        this.property_list = property_list;
-    }
-
-    public void setBed_list(List<FilterBean.Bed> bed_list) {
-        this.bed_list = bed_list;
-    }
-
-    public void setType_list(List<FilterBean.InstitutionPlace> type_list) {
-        this.type_list = type_list;
-    }
-
-    public void setSpecial_list(List<FilterBean.InstitutionFeature> special_list) {
-        this.special_list = special_list;
     }
 
     /**
@@ -131,9 +107,6 @@ public class MultiGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * 获取类型标记
      * <p>
      * 这里用了两种布局，标题位置一种布局，数据显示一种布局
-     *
-     * @param position
-     * @return
      */
     @Override
     public int getItemViewType(int position) {
@@ -150,10 +123,6 @@ public class MultiGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     /**
      * 根据标记 创建不同的布局
-     *
-     * @param parent
-     * @param viewType
-     * @return
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -175,9 +144,6 @@ public class MultiGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * 该处是recyclerView的item复用的地方，注意保存状态
      * <p>
      * 该处有默认选中的item,也有手动选中item，如果冲突，优先选手动的结果
-     *
-     * @param holder
-     * @param position
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {

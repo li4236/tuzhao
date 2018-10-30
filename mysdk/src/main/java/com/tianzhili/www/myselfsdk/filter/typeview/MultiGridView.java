@@ -27,10 +27,7 @@ public class MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean
 
     RecyclerView recyclerView;
 
-    private Context mcontext;
     private MultiGridAdapter multiGridAdapter;
-    //总数据
-    private FilterBean filterBean;
     //分数据
     private List<FilterBean.InstitutionObject> obj_list;//收住对象
     private List<FilterBean.PlaceProperty> property_list;//机构性质
@@ -48,18 +45,15 @@ public class MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean
     //构造
     public MultiGridView(Context context) {
         this(context, null);
-        mcontext = context;
     }
 
     public MultiGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mcontext = context;
         init(context);
     }
 
     public MultiGridView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mcontext = context;
         init(context);
     }
 
@@ -67,7 +61,6 @@ public class MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean
     public MultiGridView(Context context, AttributeSet attrs, int defStyleAttr,
                          int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        mcontext = context;
         init(context);
     }
 
@@ -82,11 +75,7 @@ public class MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean
 //        ButterKnife.bind(this, this);
     }
 
-    //01设置 筛选视图收起 回调
-    private OnFilterDoneListener mOnFilterDoneListener;
-
     public MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean> setOnFilterDoneListener(OnFilterDoneListener listener) {
-        mOnFilterDoneListener = listener;
         return this;
     }
 
@@ -176,7 +165,6 @@ public class MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean
 
     //获取总数据
     public MultiGridView<FirstBean, SeconBean, ThirdBean, ForthBean, FifthBean> setFilterBean(FilterBean filterBean) {
-        this.filterBean = filterBean;
 
         //获取分数据
         obj_list = filterBean.getObject();

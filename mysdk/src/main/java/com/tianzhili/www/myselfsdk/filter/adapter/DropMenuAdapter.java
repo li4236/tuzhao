@@ -476,13 +476,11 @@ public class DropMenuAdapter implements MenuAdapter {
             areas.add("3top" + i);
         }
 
-        DoubleGridView view = new DoubleGridView(mContext)
+        return new DoubleGridView(mContext)
                 .setmTopGridData(phases)
                 .setmBottomGridList(areas)
                 .setOnFilterDoneListener(onFilterDoneListener)
                 .build();
-
-        return view;
     }
 
     /**

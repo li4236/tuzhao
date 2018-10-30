@@ -19,7 +19,6 @@ import java.util.List;
  */
 
 public class ParkSelectAdapter extends RecyclerView.Adapter<ParkSelectAdapter.ViewHolder> {
-    private Context mContext;
     private List<ParkBean> mDatas;
     private LayoutInflater mInflater;
 
@@ -31,7 +30,6 @@ public class ParkSelectAdapter extends RecyclerView.Adapter<ParkSelectAdapter.Vi
 
 
     public ParkSelectAdapter(Context mContext, List<ParkBean> mDatas) {
-        this.mContext = mContext;
         this.mDatas = mDatas;
         mInflater = LayoutInflater.from(mContext);
     }

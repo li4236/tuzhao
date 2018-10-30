@@ -28,7 +28,7 @@
                 android:id="@+id/id_item_consumrecod_layout_textview_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10dp"
+                android:textSize="10sp"
                 android:textColor="@color/b1"
                 android:layout_marginTop="6dp"/>
         </LinearLayout>
@@ -41,10 +41,11 @@
             android:textSize="15sp"/>
     </LinearLayout>
 
-    <ImageView
+    <View
         android:id="@+id/id_item_consumrecord_layout_imageview_down"
         android:layout_width="match_parent"
         android:paddingTop="10dp"
         android:layout_height="2px"
         android:background="#7fd2d2d2"/>
+
 </LinearLayout>

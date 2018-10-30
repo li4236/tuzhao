@@ -125,20 +125,6 @@ public class DeviceUtils {
     }
 
     /**
-     * @return 手机型号
-     */
-    public static String getSystemModel() {
-        return Build.MODEL;
-    }
-
-    /**
-     * @return 手机厂商
-     */
-    public static String getDeviceBrand() {
-        return Build.BRAND;
-    }
-
-    /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
      */
     public static boolean isGpsOpen(Context context) {

@@ -168,7 +168,9 @@ public class XStatusBarHelper {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
         } else {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -178,7 +180,7 @@ public class XStatusBarHelper {
         View rootView = contentView.getChildAt(0);
         if (rootView != null) {
             //设置为true后，布局会自动加上状态栏高度的距离
-            ViewCompat.setFitsSystemWindows(rootView, true);
+            rootView.setFitsSystemWindows(true);
         }
         //设置一个状态栏
         setStatusBar(decorView, statusBarColor, true);
@@ -401,10 +403,10 @@ public class XStatusBarHelper {
      * 设置MIUI6+的状态栏是否为darkMode
      * 来源：http://dev.xiaomi.com/doc/p=4769/
      */
-    public static void setStatusBarDarkModeForMIUI6(Window window, boolean darkmode) {
+    private static void setStatusBarDarkModeForMIUI6(Window window, boolean darkmode) {
         Class<? extends Window> clazz = window.getClass();
         try {
-            int darkModeFlag = 0;
+            int darkModeFlag ;
             Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
             Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
             darkModeFlag = field.getInt(layoutParams);
@@ -427,7 +429,7 @@ public class XStatusBarHelper {
     /**
      * 判断系统是否为MIUI6以上
      */
-    public static boolean isMIUI6Later() {
+    private static boolean isMIUI6Later() {
         try {
             Class<?> clz = Class.forName("android.os.SystemProperties");
             Method mtd = clz.getMethod("get", String.class);
@@ -470,7 +472,7 @@ public class XStatusBarHelper {
                     forceFitsSystemWindows((ViewGroup) view);
                 } else {
                     if (ViewCompat.getFitsSystemWindows(view)) {
-                        ViewCompat.setFitsSystemWindows(view, false);
+                        view.setFitsSystemWindows(false);
                     }
                 }
             }

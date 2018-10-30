@@ -31,7 +31,6 @@ public class BigPictureActivity extends BaseActivity {
      */
     private ArrayList<String> imgList = new ArrayList<>();
     private int position;
-    private PicturePagerAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,8 +57,8 @@ public class BigPictureActivity extends BaseActivity {
             position = getIntent().getIntExtra("position", 0);
         }
         textview_selectcount.setText((position + 1) + "/" + imgList.size());
-        mAdapter = new PicturePagerAdapter(this, imgList, this);
-        viewpager.setAdapter(mAdapter);
+        PicturePagerAdapter adapter = new PicturePagerAdapter(this, imgList, this);
+        viewpager.setAdapter(adapter);
         if (position != 0) {
             viewpager.setCurrentItem(position);
         }

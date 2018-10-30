@@ -16,7 +16,6 @@ public class SensorEventHelper implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private long lastTime = 0;
-    private final int TIME_SENSOR = 100;
     private float mAngle;
     private Context mContext;
     private Marker mMarker;
@@ -26,7 +25,6 @@ public class SensorEventHelper implements SensorEventListener {
         mSensorManager = (SensorManager) context
                 .getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-
     }
 
     public void registerSensorListener() {
@@ -50,7 +48,7 @@ public class SensorEventHelper implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (System.currentTimeMillis() - lastTime < TIME_SENSOR) {
+        if (System.currentTimeMillis() - lastTime < 100) {
             return;
         }
         switch (event.sensor.getType()) {

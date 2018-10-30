@@ -160,7 +160,7 @@ public class PhotoPreviewActivity extends BaseActivity {
         if (selectPhotos.isEmpty()) {
             menuItem.setTitle(R.string.send);
         } else {
-            menuItem.setTitle(getString(R.string.sends, String.valueOf(selectPhotos.size()), String.valueOf(maxPickSize)));
+            menuItem.setTitle("发送(" + selectPhotos.size() + "/" + maxPickSize+")");
         }
     }
 

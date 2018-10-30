@@ -14,7 +14,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.tianzhili.www.myselfsdk.SuspensionIndexBar.DividerItemDecoration;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.HeaderRecyclerAndFooterWrapperAdapter;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.IndexBar;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.ViewHolder;
@@ -122,7 +121,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
         mRv.addItemDecoration(mDecoration = new SuspensionDecoration(this, mDatas).setHeaderViewCount(mHeaderAdapter.getHeaderViewCount()));
 
         //如果add两个，那么按照先后顺序，依次渲染。
-        mRv.addItemDecoration(new DividerItemDecoration(SelectParkSpaceActivity.this, DividerItemDecoration.VERTICAL_LIST));
+        mRv.addItemDecoration(new android.support.v7.widget.DividerItemDecoration(SelectParkSpaceActivity.this, android.support.v7.widget.DividerItemDecoration.VERTICAL));
 
         mIndexBar.setmPressedShowTextView(mTvSideBarHint)//设置HintTextView
                 .setNeedRealIndex(false)//设置需要真实的索引

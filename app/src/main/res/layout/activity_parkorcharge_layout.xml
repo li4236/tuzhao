@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/w3"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -86,7 +85,7 @@
         android:id="@+id/id_activity_parkorcharge_layout_linearlayout_address"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@drawable/white_click_gray"
+        android:background="@drawable/normal_w0_press_g9"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="16dp"

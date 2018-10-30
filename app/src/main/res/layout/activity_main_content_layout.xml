@@ -56,7 +56,7 @@
         android:id="@+id/id_content_main_layout_textview_citynodata"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:background="@drawable/white_all_20dp"
+        android:background="@drawable/w0_all_20dp"
         android:gravity="center"
         android:textColor="@color/b1"
         android:textSize="13sp"

@@ -3,14 +3,12 @@ package com.tuzhao.publicwidget.swipetoloadlayout;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Scroller;
 
 import com.tuzhao.R;
@@ -440,7 +438,7 @@ public class SwipeToLoadLayout extends ViewGroup {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        final int action = MotionEventCompat.getActionMasked(ev);
+        final int action =ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
@@ -458,11 +456,11 @@ public class SwipeToLoadLayout extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        final int action = MotionEventCompat.getActionMasked(event);
+        final int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
 
-                mActivePointerId = MotionEventCompat.getPointerId(event, 0);
+                mActivePointerId = event.getPointerId(0);
                 mInitDownY = mLastY = getMotionEventY(event, mActivePointerId);
                 mInitDownX = mLastX = getMotionEventX(event, mActivePointerId);
 
@@ -533,11 +531,11 @@ public class SwipeToLoadLayout extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        final int action = MotionEventCompat.getActionMasked(event);
+        final int action = event.getAction();
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mActivePointerId = MotionEventCompat.getPointerId(event, 0);
+                mActivePointerId = event.getPointerId(0);
                 return true;
 
             case MotionEvent.ACTION_MOVE:
@@ -966,51 +964,26 @@ public class SwipeToLoadLayout extends ViewGroup {
      * scroll up. Override this if the child view is a custom view.
      */
     protected boolean canChildScrollUp() {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            if (mTargetView instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) mTargetView;
-                return absListView.getChildCount() > 0
-                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
-                        .getTop() < absListView.getPaddingTop());
-            } else {
-                return ViewCompat.canScrollVertically(mTargetView, -1) || mTargetView.getScrollY() > 0;
-            }
-        } else {
-            return ViewCompat.canScrollVertically(mTargetView, -1);
-        }
+        return mTargetView.canScrollVertically(-1);
     }
 
     /**
      * Whether it is possible for the child view of this layout to
      * scroll down. Override this if the child view is a custom view.
      *
-     * @return
      */
     protected boolean canChildScrollDown() {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            if (mTargetView instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) mTargetView;
-                return absListView.getChildCount() > 0
-                        && (absListView.getLastVisiblePosition() < absListView.getChildCount() - 1
-                        || absListView.getChildAt(absListView.getChildCount() - 1).getBottom() > absListView.getPaddingBottom());
-            } else {
-                return ViewCompat.canScrollVertically(mTargetView, 1) || mTargetView.getScrollY() < 0;
-            }
-        } else {
-            return ViewCompat.canScrollVertically(mTargetView, 1);
-        }
+        return mTargetView.canScrollVertically(1);
     }
 
     /**
      * @see #onLayout(boolean, int, int, int, int)
      */
     private void layoutChildren() {
-        final int width = getMeasuredWidth();
         final int height = getMeasuredHeight();
 
         final int paddingLeft = getPaddingLeft();
         final int paddingTop = getPaddingTop();
-        final int paddingRight = getPaddingRight();
         final int paddingBottom = getPaddingBottom();
 
         if (mTargetView == null) {
@@ -1265,16 +1238,15 @@ public class SwipeToLoadLayout extends ViewGroup {
     /**
      * on not active finger up
      *
-     * @param ev
      */
     private void onSecondaryPointerUp(MotionEvent ev) {
-        final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-        final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+        final int pointerIndex = ev.getActionIndex();
+        final int pointerId = ev.getPointerId(pointerIndex);
         if (pointerId == mActivePointerId) {
             // This was our active pointer going up. Choose a new
             // active pointer and adjust accordingly.
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
+            mActivePointerId = ev.getPointerId(newPointerIndex);
         }
     }
 
@@ -1388,19 +1360,19 @@ public class SwipeToLoadLayout extends ViewGroup {
     }
 
     private float getMotionEventY(MotionEvent event, int activePointerId) {
-        final int index = MotionEventCompat.findPointerIndex(event, activePointerId);
+        final int index = event.findPointerIndex(activePointerId);
         if (index < 0) {
             return INVALID_COORDINATE;
         }
-        return MotionEventCompat.getY(event, index);
+        return event.getY(index);
     }
 
     private float getMotionEventX(MotionEvent event, int activePointId) {
-        final int index = MotionEventCompat.findPointerIndex(event, activePointId);
+        final int index = event.findPointerIndex(activePointId);
         if (index < 0) {
             return INVALID_COORDINATE;
         }
-        return MotionEventCompat.getX(event, index);
+        return event.getX(index);
     }
 
     RefreshCallback mRefreshCallback = new RefreshCallback() {

@@ -18,7 +18,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.tianzhili.www.myselfsdk.SuspensionIndexBar.DividerItemDecoration;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.HeaderRecyclerAndFooterWrapperAdapter;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.IndexBar;
 import com.tianzhili.www.myselfsdk.SuspensionIndexBar.OnItemClickListener;
@@ -234,7 +233,7 @@ public class SelectCityActivity extends BaseActivity {
                 .setTitleFontSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 13, getResources().getDisplayMetrics()))
                 .setColorTitleFont(mContext.getResources().getColor(android.R.color.black))
                 .setHeaderViewCount(mHeaderAdapter.getHeaderViewCount() - mHeaderDatas.size()));
-        mRv.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
+        mRv.addItemDecoration(new android.support.v7.widget.DividerItemDecoration(mContext, android.support.v7.widget.DividerItemDecoration.VERTICAL));
 
 
         mIndexBar.setmPressedShowTextView(mTvSideBarHint)//设置HintTextView

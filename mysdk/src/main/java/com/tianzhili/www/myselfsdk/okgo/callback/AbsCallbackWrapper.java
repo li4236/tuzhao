@@ -14,7 +14,7 @@ import okhttp3.Response;
  */
 public class AbsCallbackWrapper<T> extends AbsCallback<T> {
     @Override
-    public T convertSuccess(Response value) throws Exception {
+    public T convertSuccess(Response value) {
         value.close();
         return (T) value;
     }

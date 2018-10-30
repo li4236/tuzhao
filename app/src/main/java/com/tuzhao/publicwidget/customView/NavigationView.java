@@ -22,10 +22,6 @@ public class NavigationView extends View {
 
     private Paint mInnerPaint;
 
-    private int mBackgroundColor;
-
-    private int mInnerColor;
-
     private float mBackgroundRadius;
 
     private float mInnerRadius;
@@ -47,18 +43,18 @@ public class NavigationView extends View {
     public NavigationView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NavigationView, defStyleAttr, 0);
-        mBackgroundColor = typedArray.getColor(R.styleable.NavigationView_background_color, Color.WHITE);
-        mInnerColor = typedArray.getColor(R.styleable.NavigationView_inner_color, Color.parseColor("#f4bb67"));
+        int backgroundColor = typedArray.getColor(R.styleable.NavigationView_background_color, Color.WHITE);
+        int innerColor = typedArray.getColor(R.styleable.NavigationView_inner_color, Color.parseColor("#f4bb67"));
         mInnerRadius = typedArray.getDimension(R.styleable.NavigationView_inner_radius, 0);
         typedArray.recycle();
 
         mBackgroundPaint = new Paint();
-        mBackgroundPaint.setColor(mBackgroundColor);
+        mBackgroundPaint.setColor(backgroundColor);
         mBackgroundPaint.setStyle(Paint.Style.FILL);
         mBackgroundPaint.setAntiAlias(true);
 
         mInnerPaint = new Paint();
-        mInnerPaint.setColor(mInnerColor);
+        mInnerPaint.setColor(innerColor);
         mInnerPaint.setStyle(Paint.Style.FILL);
         mInnerPaint.setAntiAlias(true);
 

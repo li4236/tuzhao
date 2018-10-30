@@ -50,6 +50,8 @@ public class IndexBar extends View {
     //每个index区域的高度
     private int mGapHeight;
 
+    private Rect indexBounds;
+
     private Paint mPaint;
 
     //手指按下时的背景色
@@ -143,6 +145,7 @@ public class IndexBar extends View {
 
         initIndexDatas();
 
+        indexBounds = new Rect();//存放每个绘制的index的Rect区域
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -188,7 +191,6 @@ public class IndexBar extends View {
         int measureWidth = 0, measureHeight = 0;//最终测量出来的宽高
 
         //得到合适宽度：
-        Rect indexBounds = new Rect();//存放每个绘制的index的Rect区域
         String index;//每个要绘制的index内容
         for (int i = 0; i < mIndexDatas.size(); i++) {
             index = mIndexDatas.get(i);

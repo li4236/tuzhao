@@ -35,18 +35,14 @@ public class FilterTabsIndicator extends LinearLayout {
      * 左右分割线
      */
     private Paint mDividerPaint;
-    private int mDividerColor = 0xFFffffff;// 分割线颜色
     private int mDividerPadding = 8;// 分割线距离上下padding
 
     /*
      * 上下两条线
      */
     private Paint mLinePaint;
-    private float mLineHeight = 1;
-    private int mLineColor = 0xFFdfdfdf;// 分割线颜色
 
 
-    private int mTabTextSize = 12;// 指针文字的大小,sp
     private int mTabDefaultColor;// 未选中默认颜色
     private int mTabSelectedColor;// 指针选中颜色(已修改成主题色 橙色)
     private int drawableRight = 8;//下拉三角形距离文字的距离
@@ -104,10 +100,12 @@ public class FilterTabsIndicator extends LinearLayout {
 
         mDividerPaint = new Paint();
         mDividerPaint.setAntiAlias(true);
-        mDividerPaint.setColor(mDividerColor);
+        int dividerColor = 0xFFffffff;
+        mDividerPaint.setColor(dividerColor);
 
         mLinePaint = new Paint();
-        mLinePaint.setColor(mLineColor);
+        int lineColor = 0xFFdfdfdf;
+        mLinePaint.setColor(lineColor);
 
         mDividerPadding = DpUtils.dpToPx(context, mDividerPadding);
         drawableRight = DpUtils.dpToPx(context, drawableRight);
@@ -139,7 +137,8 @@ public class FilterTabsIndicator extends LinearLayout {
 //        canvas.drawRect(0, 0, measuredWidth, mLineHeight, mLinePaint);
 
         //下边黑线
-        canvas.drawRect(0, measureHeight - mLineHeight, measuredWidth, measureHeight, mLinePaint);
+        float lineHeight = 1;
+        canvas.drawRect(0, measureHeight - lineHeight, measuredWidth, measureHeight, mLinePaint);
     }
 
     /**
@@ -236,7 +235,8 @@ public class FilterTabsIndicator extends LinearLayout {
         TextView tv = new TextView(context);
         tv.setGravity(Gravity.CENTER);
         tv.setText(title);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTabTextSize);
+        int tabTextSize = 12;
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, tabTextSize);
         tv.setTextColor(mTabDefaultColor);
         tv.setSingleLine();
         tv.setEllipsize(TextUtils.TruncateAt.END);

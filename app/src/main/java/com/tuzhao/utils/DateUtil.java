@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.tuzhao.info.ParkOrderInfo;
-import com.tuzhao.publicmanager.TimeManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -23,11 +22,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.tianzhili.www.myselfsdk.pickerview.view.WheelTime.dateFormat;
 
 /**
  * Created by TZL12 on 2017/9/15.
@@ -53,7 +50,7 @@ public class DateUtil {
 
     private static Calendar sSpecialTodayEndCalendar;
 
-    private static SimpleDateFormat getYearToSecondFormat() {
+    public static SimpleDateFormat getYearToSecondFormat() {
         if (sYearToSecondFormat == null) {
             sYearToSecondFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         }
@@ -74,7 +71,7 @@ public class DateUtil {
         return sHourToSecond;
     }
 
-    private static SimpleDateFormat getYearToMinutesFormat() {
+    public static SimpleDateFormat getYearToMinutesFormat() {
         if (sExceptSecondsFormat == null) {
             sExceptSecondsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         }
@@ -2358,77 +2355,6 @@ public class DateUtil {
     }
 
     /**
-     * 与当前时间比较早晚
-     *
-     * @param time 需要比较的时间
-     * @return 输入的时间比现在时间晚则返回true
-     */
-    public boolean compareNowTime(String time, boolean isDetail) {
-        boolean isDayu = false;
-        SimpleDateFormat dateFormat;
-        if (isDetail) {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        }
-
-        try {
-            Date parse = dateFormat.parse(time);
-            Date parse1 = dateFormat.parse(TimeManager.getInstance().getNowTime(true, false));
-
-            if (time.equals(getNowTime(false))) {
-                isDayu = true;
-            } else {
-                long diff = parse1.getTime() - parse.getTime();
-                if (diff < 0) {
-                    isDayu = true;
-                } else {
-                    isDayu = false;
-                }
-            }
-
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return isDayu;
-    }
-
-    /**
-     * 比较两个时间
-     *
-     * @param starTime  开始时间
-     * @param endString 结束时间
-     * @return 结束时间大于开始时间返回true，否则反之֮
-     */
-    public boolean compareTwoTime(String starTime, String endString, boolean isDetail) {
-        boolean isDayu = false;
-        SimpleDateFormat dateFormat;
-        if (isDetail) {
-            dateFormat = getYearToMinutesFormat();
-        } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        }
-
-        try {
-            Date parse = dateFormat.parse(starTime);
-            Date parse1 = dateFormat.parse(endString);
-
-            long diff = parse1.getTime() - parse.getTime();
-            if (diff >= 0) {
-                isDayu = true;
-            } else {
-                isDayu = false;
-            }
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return isDayu;
-    }
-
-    /**
      * 判断time是否在from，to之内
      *
      * @param thetime   指定日期
@@ -2448,65 +2374,6 @@ public class DateUtil {
         return false;
     }
 
-    /**
-     * 判断区间是否在开始到结束时间之内
-     *
-     * @param thetime1  指定开始日期
-     * @param starttime 开始日期
-     * @param endtime   结束日期
-     * @return
-     */
-    public boolean isTheIntervalBeginorEnd(String thetime1, String thetime2, String starttime, String endtime) {
-
-        SimpleDateFormat dateFormat = getYearToMinutesFormat();
-        try {
-            Date time1 = dateFormat.parse(thetime1);
-            Date time2 = dateFormat.parse(thetime2);
-            Date start = dateFormat.parse(starttime);
-            Date end = dateFormat.parse(endtime);
-
-            if ((time1.getTime() - start.getTime()) >= 0 && (end.getTime() - time2.getTime()) >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * 判断time是否在from，to之内
-     *
-     * @param thetime   指定日期
-     * @param starttime 开始日期
-     * @param endtime   结束日期
-     * @return
-     */
-    public boolean betweenStartAndEndSimple(String thetime, String starttime, String endtime) {
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        try {
-            Date time = dateFormat.parse(thetime);
-            Date start = dateFormat.parse(starttime);
-            Date end = dateFormat.parse(endtime);
-
-            if ((time.getTime() - start.getTime()) >= 0 && (end.getTime() - time.getTime()) > 0) {
-                return true;
-            } else {
-                return false;
-            }
-
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public String addTime(String thetime, int addtime) {
         SimpleDateFormat dateFormat = getYearToMinutesFormat();
         if (!thetime.equals("") && addtime > 0) {
@@ -2518,379 +2385,6 @@ public class DateUtil {
             }
         }
         return "";
-    }
-
-    /**
-     * 计算停车费用
-     *
-     * @param startParkTime 开始停车的时间 格式为yyyy-MM-dd HH:mm
-     * @param endParkTime   现在结束停车的时间 格式为yyyy-MM-dd HH:mm
-     * @param lastLeaveTime 所允许的最迟离开时间 格式为yyyy-MM-dd HH:mm
-     * @param highStartTime 高峰的开始时间 HH:mm
-     * @param highDndTime   低峰的开始时间 HH:mm
-     * @param highFee       0.0
-     * @param lowFee        0.0
-     */
-    public ParkFee countCost(String startParkTime, String endParkTime, String lastLeaveTime, String highStartTime, String highDndTime, String highFee, String lowFee, String fine) {
-
-        try {
-            int highStartHour, highEndHour, highStartMin, highEndMin;
-            Date date = dateFormat.parse(startParkTime);
-            Long dayTime;
-            highStartHour = Integer.parseInt(highStartTime.substring(0, highStartTime.indexOf(":")));
-            highEndHour = Integer.parseInt(highDndTime.substring(0, highDndTime.indexOf(":")));
-            highStartMin = Integer.parseInt(highStartTime.substring(highStartTime.indexOf(":") + 1, highStartTime.length()));
-            highEndMin = Integer.parseInt(highDndTime.substring(highDndTime.indexOf(":") + 1, highDndTime.length()));
-
-            String hjTongTime, hjFeiTongQTime, hjFeiTongTime;
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            hjTongTime = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);//当天
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) - 1);
-            hjFeiTongQTime = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);//前一天
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 2);
-            hjFeiTongTime = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);//后一天
-
-            int sw = 0;
-            boolean isOuttime = false;
-
-            if (compareTwoTime(endParkTime, lastLeaveTime, true)) {
-                //未超时
-                Log.e("未超时", "哈哈哈");
-                if (highStartHour < highEndHour) {
-                    //同天
-                    sw = 1;
-                } else if (highStartHour > highEndHour) {
-                    //正常跨天
-                    sw = 2;
-                } else if (highStartHour == highEndHour) {
-                    if (highStartMin < highEndMin) {
-                        //奇葩同天
-                        sw = 1;
-                    } else {
-                        //奇葩跨天
-                        sw = 2;
-                    }
-                }
-            } else {
-                isOuttime = true;
-                if (highStartHour < highEndHour) {
-                    //同天
-                    sw = 1;
-                } else if (highStartHour > highEndHour) {
-                    //正常跨天
-                    sw = 2;
-                } else if (highStartHour == highEndHour) {
-                    if (highStartMin < highEndMin) {
-                        //奇葩同天
-                        sw = 1;
-                    } else {
-                        //奇葩跨天
-                        sw = 2;
-                    }
-                }
-            }
-
-            switch (sw) {
-                case 1:
-                    Log.e("同天", "哈哈哈");
-                    if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highStartTime, hjTongTime + " " + highDndTime)) {
-                        //开始时间在高峰时段内
-                        Log.e("开始时间在当天的高峰时段内", "哈哈哈");
-                        Date dt = dateFormat.parse(hjTongTime + " 00:00");
-                        dayTime = dt.getTime();
-                        int hightMinCount = 0, lowMinCount = 0;
-                        String time1 = startParkTime, time2 = hjTongTime + " " + highDndTime;
-                        Log.e("开始时间在高峰时段内", "time1" + time1 + "   time2" + time2);
-                        boolean isHigh = true;
-                        while (true) {
-                            if (!compareTwoTime(endParkTime, time2, true)) {
-                                Log.e("开始时间在高峰时段内", "执行了while1");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    dayTime += 86400000;
-                                    String d = dateFormat.format(dayTime);
-                                    Log.e("开始时间在高峰时段内", "执行了while1" + d);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highStartTime;
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    String d = dateFormat.format(dayTime);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highDndTime;
-                                }
-                                Log.e("开始时间在高峰时段内", "time1 " + time1 + "   time2 " + time2);
-                                isHigh = !isHigh;
-                            } else {
-                                Log.e("开始时间在高峰时段内", "执行了while2");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                }
-                                break;
-                            }
-                        }
-                        Log.e("开始时间在高峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
-                        float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime) {
-                            float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
-                        } else {
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
-                        }
-                    } else if (betweenStartAndEnd(startParkTime, hjFeiTongQTime + " " + highDndTime, hjTongTime + " " + highStartTime)) {
-                        //开始时间在前一天到当天的低峰时段内
-                        Log.e("开始时间在前一天到当天的低峰时段内", "哈哈哈");
-                        Date dt = dateFormat.parse(hjTongTime + " 00:00");
-                        dayTime = dt.getTime();
-                        int hightMinCount = 0, lowMinCount = 0;
-                        String time1 = startParkTime, time2 = hjTongTime + " " + highStartTime;
-                        Log.e("开始时间在前一天到当天的低峰时段内", "time1" + time1 + "   time2" + time2);
-                        boolean isHigh = false;
-                        while (true) {
-                            if (!compareTwoTime(endParkTime, time2, true)) {
-                                Log.e("开始时间在前一天到当天的低峰时段内", "执行了while1");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    dayTime += 86400000;
-                                    String d = dateFormat.format(dayTime);
-                                    Log.e("开始时间在前一天到当天的低峰时段内", "执行了while1" + d);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highStartTime;
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    String d = dateFormat.format(dayTime);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highDndTime;
-                                }
-                                Log.e("开始时间在前一天到当天的低峰时段内", "time1 " + time1 + "   time2 " + time2);
-                                isHigh = !isHigh;
-                            } else {
-                                Log.e("开始时间在前一天到当天的低峰时段内", "执行了while2");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                }
-                                break;
-                            }
-                        }
-                        Log.e("开始时间在前一天到当天的低峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
-                        float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime) {
-                            float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
-                        } else {
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
-                        }
-                    } else if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highDndTime, hjFeiTongTime + " " + highStartTime)) {
-                        //开始时间在当天到后一天的高峰时段内
-                        Log.e("开始时间在当天到后一天的低峰时段内", "哈哈哈");
-                        Date dt = dateFormat.parse(hjFeiTongTime + " 00:00");
-                        dayTime = dt.getTime();
-                        int hightMinCount = 0, lowMinCount = 0;
-                        String time1 = startParkTime, time2 = hjFeiTongTime + " " + highStartTime;
-                        Log.e("开始时间在当天到后一天的低峰时段内", "time1" + time1 + "   time2" + time2);
-                        boolean isHigh = false;
-                        while (true) {
-                            if (!compareTwoTime(endParkTime, time2, true)) {
-                                Log.e("开始时间在当天到后一天的低峰时段内", "执行了while1");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    dayTime += 86400000;
-                                    String d = dateFormat.format(dayTime);
-                                    Log.e("开始时间在当天到后一天的低峰时段内", "执行了while1" + d);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highStartTime;
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    String d = dateFormat.format(dayTime);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highDndTime;
-                                }
-                                Log.e("开始时间在当天到后一天的低峰时段内", "time1 " + time1 + "   time2 " + time2);
-                                isHigh = !isHigh;
-                            } else {
-                                Log.e("开始时间在当天到后一天的低峰时段内", "执行了while2");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                }
-                                break;
-                            }
-                        }
-                        Log.e("开始时间在当天到后一天的低峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
-                        float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime) {
-                            float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
-                        } else {
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
-                        }
-                    }
-                case 2:
-                    Log.e("跨天", "哈哈哈");
-                    if (betweenStartAndEnd(startParkTime, hjFeiTongQTime + " " + highStartTime, hjTongTime + " " + highDndTime)) {
-                        //开始时间在前一天到当天的高峰时段内
-                        Log.e("开始时间在前一天到当天的高峰时段内", "哈哈哈");
-                        Date dt = dateFormat.parse(hjTongTime + " 00:00");
-                        dayTime = dt.getTime();
-                        int hightMinCount = 0, lowMinCount = 0;
-                        String time1 = startParkTime, time2 = hjTongTime + " " + highDndTime;
-                        Log.e("开始时间在前一天到当天的高峰时段内", "time1" + time1 + "   time2" + time2);
-                        boolean isHigh = true;
-                        while (true) {
-                            if (!compareTwoTime(endParkTime, time2, true)) {
-                                Log.e("开始时间在前一天到当天的高峰时段内", "执行了while1");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    String d = dateFormat.format(dayTime);
-                                    Log.e("开始时间在前一天到当天的高峰时段内", "执行了while1" + d);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highStartTime;
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    dayTime += 86400000;
-                                    String d = dateFormat.format(dayTime);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highDndTime;
-                                }
-                                Log.e("开始时间在前一天到当天的高峰时段内", "time1 " + time1 + "   time2 " + time2);
-                                isHigh = !isHigh;
-                            } else {
-                                Log.e("开始时间在前一天到当天的高峰时段内", "执行了while2");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                }
-                                break;
-                            }
-                        }
-                        Log.e("开始时间在前一天到当天的高峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
-                        float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime) {
-                            float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
-                        } else {
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
-                        }
-                    } else if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highStartTime, hjFeiTongTime + " " + highDndTime)) {
-                        //开始时间在当天到后一天的高峰时段内
-                        Log.e("开始时间在当天到后一天的高峰时段内", "哈哈哈");
-                        Date dt = dateFormat.parse(hjFeiTongTime + " 00:00");
-                        dayTime = dt.getTime();
-                        int hightMinCount = 0, lowMinCount = 0;
-                        String time1 = startParkTime, time2 = hjFeiTongTime + " " + highDndTime;
-                        Log.e("开始时间在当天到后一天的高峰时段内", "time1" + time1 + "   time2" + time2);
-                        boolean isHigh = true;
-                        while (true) {
-                            if (!compareTwoTime(endParkTime, time2, true)) {
-                                Log.e("开始时间在当天到后一天的高峰时段内", "执行了while1");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    String d = dateFormat.format(dayTime);
-                                    Log.e("开始时间在当天到后一天的高峰时段内", "执行了while1" + d);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highStartTime;
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    dayTime += 86400000;
-                                    String d = dateFormat.format(dayTime);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highDndTime;
-                                }
-                                Log.e("开始时间在当天到后一天的高峰时段内", "time1 " + time1 + "   time2 " + time2);
-                                isHigh = !isHigh;
-                            } else {
-                                Log.e("开始时间在当天到后一天的高峰时段内", "执行了while2");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                }
-                                break;
-                            }
-                        }
-                        Log.e("开始时间在当天到后一天的高峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
-                        float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime) {
-                            float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
-                        } else {
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
-                        }
-                    } else if (betweenStartAndEnd(startParkTime, hjTongTime + " " + highDndTime, hjTongTime + " " + highStartTime)) {
-                        //开始时间在当天的低峰时段内
-                        Log.e("开始时间在当天的低峰时段内", "哈哈哈");
-                        Date dt = dateFormat.parse(hjTongTime + " 00:00");
-                        dayTime = dt.getTime();
-                        int hightMinCount = 0, lowMinCount = 0;
-                        String time1 = startParkTime, time2 = hjTongTime + " " + highStartTime;
-                        Log.e("开始时间在当天的低峰时段内", "time1" + time1 + "   time2" + time2);
-                        boolean isHigh = false;
-                        while (true) {
-                            if (!compareTwoTime(endParkTime, time2, true)) {
-                                Log.e("开始时间在当天的低峰时段内", "执行了while1");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    String d = dateFormat.format(dayTime);
-                                    Log.e("开始时间在当天的低峰时段内", "执行了while1" + d);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highStartTime;
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, time2, false);
-                                    time1 = time2;
-                                    dayTime += 86400000;
-                                    String d = dateFormat.format(dayTime);
-                                    time2 = d.substring(0, d.indexOf(" ")) + " " + highDndTime;
-                                }
-                                Log.e("开始时间在当天的低峰时段内", "time1 " + time1 + "   time2 " + time2);
-                                isHigh = !isHigh;
-                            } else {
-                                Log.e("开始时间在当天的低峰时段内", "执行了while2");
-                                if (isHigh) {
-                                    hightMinCount = hightMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                } else {
-                                    lowMinCount = lowMinCount + getTimeDifferenceMinute(time1, endParkTime, false);
-                                }
-                                break;
-                            }
-                        }
-                        Log.e("开始时间在当天的低峰时段内", "哈哈哈" + hightMinCount + "   " + lowMinCount);
-                        float parkfee = hightMinCount * (new Float(highFee) / 60) + lowMinCount * (new Float(lowFee) / 60);
-                        if (isOuttime) {
-                            float outfee = getTimeDifferenceMinute(lastLeaveTime, endParkTime, false) * (new Float(fine) / 60);
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, (float) (Math.round(outfee * 100)) / 100);
-                        } else {
-                            return new ParkFee((float) (Math.round(parkfee * 100)) / 100, 0);
-                        }
-                    }
-                    break;
-            }
-        } catch (Exception e) {
-            Log.e("停车费用计算错误", e.toString());
-        }
-        return new ParkFee(0, 0);
-    }
-
-    /**
-     * costfee 总费用
-     * fine_fee超时费用
-     * discount_fee 优惠费用
-     * discount_id优惠券id
-     */
-    public class ParkFee {
-
-        public float parkfee, outtimefee;
-
-        public ParkFee(float parkfee, float outtimefee) {
-            this.parkfee = parkfee;
-            this.outtimefee = outtimefee;
-        }
     }
 
     //米和千米的换算
@@ -3001,25 +2495,7 @@ public class DateUtil {
     }
 
     /**
-     * 订单流水号生成
-     */
-    public synchronized String getOrderNumber(boolean isCharge) {
-        if (isCharge) {
-            String str = new SimpleDateFormat("mmssSSS").format(new Date());
-            str = "CG" + str + new DecimalFormat("0000").format(new Random().nextInt(100000));
-            return str;
-        } else {
-            String str = new SimpleDateFormat("mmssSSS").format(new Date());
-            str = "PK" + str + new DecimalFormat("0000").format(new Random().nextInt(100000));
-            return str;
-        }
-    }
-
-    /**
      * 初始化车牌选项卡数据。
-     *
-     * @param options1Items
-     * @param options2Items
      */
     public void initData(ArrayList<String> options1Items, ArrayList<ArrayList<String>> options2Items) {
 

@@ -83,10 +83,10 @@ public class HttpLoggingInterceptor implements Interceptor {
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
         //响应日志拦截
-        return logForResponse(response, tookMs,request);
+        return logForResponse(response, tookMs);
     }
 
-    private void logForRequest(Request request, Connection connection) throws IOException {
+    private void logForRequest(Request request, Connection connection) {
         boolean logBody = (printLevel == Level.BODY);
         boolean logHeaders = (printLevel == Level.BODY || printLevel == Level.HEADERS);
         RequestBody requestBody = request.body();
@@ -119,7 +119,7 @@ public class HttpLoggingInterceptor implements Interceptor {
         }
     }
 
-    private Response logForResponse(Response response, long tookMs,Request request) throws IOException  {
+    private Response logForResponse(Response response, long tookMs) {
         Response.Builder builder = response.newBuilder();
         Response clone = builder.build();
         ResponseBody responseBody = clone.body();
@@ -165,11 +165,10 @@ public class HttpLoggingInterceptor implements Interceptor {
         String subtype = mediaType.subtype();
         if (subtype != null) {
             subtype = subtype.toLowerCase();
-            if (subtype.contains("x-www-form-urlencoded") ||
-                subtype.contains("json") ||
-                subtype.contains("xml") ||
-                subtype.contains("html")) //
-                return true;
+            return subtype.contains("x-www-form-urlencoded") ||
+                    subtype.contains("json") ||
+                    subtype.contains("xml") ||
+                    subtype.contains("html");
         }
         return false;
     }

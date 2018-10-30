@@ -1,10 +1,8 @@
 package com.tuzhao.utils;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,8 +16,6 @@ import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
@@ -120,14 +116,6 @@ public class DensityUtil {
         }
     }
 
-    public static String subZeroAndDot(String s) {
-        if (s.indexOf(".") > 0) {
-            s = s.replaceAll("0+?$", "");//去掉多余的0
-            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
-        }
-        return s;
-    }
-
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, output);
@@ -142,36 +130,6 @@ public class DensityUtil {
             e.printStackTrace();
         }
         return result;
-    }
-
-    public static String getLocalBluetoothMAC(Context context) {
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (btAdapter == null) {
-            return android.provider.Settings.Secure.getString(context.getContentResolver(), "bluetooth_address");
-        }
-
-        String bluetoothMAC = "";
-        if (Build.VERSION.SDK_INT < 23) {
-            bluetoothMAC = btAdapter.getAddress();
-        } else {
-            Class<? extends BluetoothAdapter> btAdapterClass = btAdapter.getClass();
-            try {
-                Class<?> btClass = Class.forName("android.bluetooth.IBluetooth");
-                Field bluetooth = btAdapterClass.getDeclaredField("mService");
-                bluetooth.setAccessible(true);
-                Method btAddress = btClass.getMethod("getAddress");
-                btAddress.setAccessible(true);
-                bluetoothMAC = (String) btAddress.invoke(bluetooth.get(btAdapter));
-            } catch (Exception e) {
-                bluetoothMAC = btAdapter.getAddress();
-            }
-        }
-
-        if (bluetoothMAC.equals("02:00:00:00:00:00")) {
-            return android.provider.Settings.Secure.getString(context.getContentResolver(), "bluetooth_address");
-        } else {
-            return bluetoothMAC;
-        }
     }
 
 }

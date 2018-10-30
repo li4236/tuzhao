@@ -27,7 +27,7 @@ public class UCropUtils {
         options.setCompressionQuality(100);                         //设置裁剪的图片质量
         options.setCompressionFormat(Bitmap.CompressFormat.PNG);    //设置裁剪出来图片的格式
         options.setFreeStyleCropEnabled(true);                     //可以调整裁剪框
-        if (showClipCircle == true) {
+        if (showClipCircle) {
             options.setCircleDimmedLayer(true);                     //设置裁剪框圆形
             options.setShowCropFrame(false);                        //设置是否展示矩形裁剪框
             options.setShowCropGrid(false);                         //是否显示裁剪框网格

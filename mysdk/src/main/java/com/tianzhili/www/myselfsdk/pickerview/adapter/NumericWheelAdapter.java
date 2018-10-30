@@ -37,17 +37,14 @@ public class NumericWheelAdapter implements WheelAdapter {
 	public Object getItem(int index) {
 		if(minValue<=maxValue){
 			if (index >= 0 && index < getItemsCount()) {
-				int value = minValue + index;
-				return value;
+				return minValue + index;
 			}
 		}else {
 			if (index >= 0 && index < getItemsCount()) {
 				if ((minValue + index) <24 ){
-					int value = minValue + index;
-					return value;
+					return minValue + index;
 				}else {
-					int value = minValue + index-24;
-					return value;
+					return minValue + index-24;
 				}
 			}
 		}

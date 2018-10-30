@@ -13,8 +13,6 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
 	
 	// items
 	private ArrayList<T> items;
-	// length
-	private int length;
 
 	/**
 	 * Constructor
@@ -23,7 +21,6 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
 	 */
 	public ArrayWheelAdapter(ArrayList<T> items, int length) {
 		this.items = items;
-		this.length = length;
 	}
 	
 	/**

@@ -31,14 +31,7 @@ import java.util.List;
 
 public class ParkspaceDetailActivity extends BaseActivity {
 
-    /**
-     * UI
-     */
-    private ViewPager viewpager;
-    private SmartTabLayout viewPagerTab;
     private ImageView imageView_back;
-    private ParkLotDetailFragment mParkLotDetailFragment;
-    private ParkLotCommentFragment mParkLotCommentFragment;
 
     /**
      * 页面相关
@@ -74,14 +67,17 @@ public class ParkspaceDetailActivity extends BaseActivity {
 
     private void initView() {
         imageView_back = findViewById(R.id.id_activity_parkspacedetail_imageView_back);
-        viewpager = findViewById(R.id.id_activity_parkspacedetail_layout_viewpager);
-        viewPagerTab = findViewById(R.id.id_activity_parkspacedetail_layout_pagetab);
+        /*
+      UI
+     */
+        ViewPager viewpager = findViewById(R.id.id_activity_parkspacedetail_layout_viewpager);
+        SmartTabLayout viewPagerTab = findViewById(R.id.id_activity_parkspacedetail_layout_pagetab);
 
-        mParkLotDetailFragment = new ParkLotDetailFragment();
-        mParkLotCommentFragment = new ParkLotCommentFragment();
+        ParkLotDetailFragment parkLotDetailFragment = new ParkLotDetailFragment();
+        ParkLotCommentFragment parkLotCommentFragment = new ParkLotCommentFragment();
         fragmentList = new ArrayList<>();
-        fragmentList.add(mParkLotDetailFragment);
-        fragmentList.add(mParkLotCommentFragment);
+        fragmentList.add(parkLotDetailFragment);
+        fragmentList.add(parkLotCommentFragment);
 
         viewpager.setAdapter(new MyFrageStatePagerAdapter(getSupportFragmentManager()));
         viewPagerTab.setViewPager(viewpager);

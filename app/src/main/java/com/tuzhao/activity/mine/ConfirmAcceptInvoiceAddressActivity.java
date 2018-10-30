@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -21,8 +20,8 @@ import com.tuzhao.info.InvoiceInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.customView.CheckBox;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 
 import java.util.ArrayList;
@@ -102,11 +101,6 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
     }
 
     @Override
-    protected RecyclerView.LayoutManager createLayouManager() {
-        return new LinearLayoutManager(this);
-    }
-
-    @Override
     protected void initData() {
         super.initData();
         String price = "开票总额:" + mTotalPrice + "元";
@@ -183,7 +177,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
             //取消上次的默认收票地址
             AcceptTicketAddressInfo acceptTicketAddressInfo = mCommonAdapter.get(mDefalutAddressPosition);
             acceptTicketAddressInfo.setIsDefault("0");
-            mCommonAdapter.notifyDataChange(mDefalutAddressPosition,1);
+            mCommonAdapter.notifyDataChange(mDefalutAddressPosition, 1);
         }
 
         //设置新的默认收票地址，不管请求成功与否
@@ -191,7 +185,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
         if (addressInfo.getIsDefault().equals("0")) {
             //如果是新添加了收票地址的话不用重新更新数据，否则会出错
             addressInfo.setIsDefault("1");
-            mCommonAdapter.notifyDataChange(position,1);
+            mCommonAdapter.notifyDataChange(position, 1);
         }
 
         getOkgos(HttpConstants.setDefaultAcceptTicketAddress)
@@ -391,7 +385,7 @@ public class ConfirmAcceptInvoiceAddressActivity extends BaseRefreshActivity<Acc
     @Override
     protected void bindData(BaseViewHolder holder, AcceptTicketAddressInfo addressInfo, int position, List<Object> payloads) {
         super.bindData(holder, addressInfo, position, payloads);
-        ((CheckBox)holder.getView(R.id.accept_ticket_address_set_default)).setChecked(addressInfo.getIsDefault().equals("1"));
+        ((CheckBox) holder.getView(R.id.accept_ticket_address_set_default)).setChecked(addressInfo.getIsDefault().equals("1"));
     }
 
     @Override

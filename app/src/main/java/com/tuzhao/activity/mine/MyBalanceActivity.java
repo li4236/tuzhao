@@ -272,8 +272,7 @@ public class MyBalanceActivity extends BaseActivity implements IntentObserver {
                         dismmisLoadingDialog();
                         UserManager.getInstance().getUserInfo().setOpenId(o.data.getOpenId());
                         UserManager.getInstance().getUserInfo().setWechatNickname(o.data.getWechatNickname());
-                        Intent intent = new Intent(MyBalanceActivity.this, GetMoneyActivty.class);
-                        startActivity(intent);
+                        startWithdraw(1);
                     }
 
                     @Override

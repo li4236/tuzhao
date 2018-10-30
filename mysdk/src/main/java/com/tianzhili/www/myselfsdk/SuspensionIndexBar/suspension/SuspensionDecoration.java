@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import java.util.List;
@@ -27,12 +26,9 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
     private Paint mPaint;
     private Rect mBounds;//用于存放测量文字Rect
 
-    private LayoutInflater mInflater;
-
     private int mTitleHeight;//title的高
     private static int COLOR_TITLE_BG = Color.parseColor("#FFefeff4");
     private static int COLOR_TITLE_FONT = Color.parseColor("#FF8e8e93");
-    private static int mTitleFontSize;//title字体大小
 
     private int mHeaderViewCount = 0;
 
@@ -43,10 +39,9 @@ public class SuspensionDecoration extends RecyclerView.ItemDecoration {
         mPaint = new Paint();
         mBounds = new Rect();
         mTitleHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 19, context.getResources().getDisplayMetrics());
-        mTitleFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 13, context.getResources().getDisplayMetrics());
-        mPaint.setTextSize(mTitleFontSize);
+        int titleFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 13, context.getResources().getDisplayMetrics());
+        mPaint.setTextSize(titleFontSize);
         mPaint.setAntiAlias(true);
-        mInflater = LayoutInflater.from(context);
     }
 
 

@@ -29,7 +29,6 @@ import com.tuzhao.utils.GlideApp;
 import com.tuzhao.utils.ImageUtil;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,8 +68,6 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
     private ParkOrderInfo mParkOrderInfo;
 
     private List<File> mCommentPicFiles;
-
-    private DecimalFormat mDecimalFormat;
 
     @Override
     protected int resourceId() {
@@ -125,7 +122,6 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
             }
         });
 
-        mDecimalFormat = new DecimalFormat("0.0");
     }
 
     @NonNull

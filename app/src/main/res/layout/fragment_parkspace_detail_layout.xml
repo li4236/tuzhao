@@ -145,7 +145,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="@dimen/layout_margin_sisty"
                     android:drawablePadding="8dp"
-                    android:drawableTop="@mipmap/ic_park5xiangqing"
+                    android:drawableTop="@mipmap/ic_park5"
                     android:text="0车位"
                     android:textColor="@color/b1"
                     android:textSize="10sp"
