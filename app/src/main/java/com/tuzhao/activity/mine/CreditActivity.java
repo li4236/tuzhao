@@ -36,8 +36,6 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
 
     private TextView mCreditSituation;
 
-    private ImageView mNoDepositIv;
-
     private ImageView mLeaveGraceIv;
 
     private ImageView mAdvanceEndOrderIv;
@@ -68,7 +66,6 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         mParkGracePeriod = findViewById(R.id.park_grace_period);
         mCreditSituation = findViewById(R.id.credit_situation);
         mCreditView = findViewById(R.id.credit_view);
-        mNoDepositIv = findViewById(R.id.no_deposit_iv);
         mLeaveGraceIv = findViewById(R.id.leave_grace_iv);
         mAdvanceEndOrderIv = findViewById(R.id.advance_end_order_iv);
         mFirstRule = findViewById(R.id.first_rule_tv);
@@ -77,7 +74,6 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         mFourthRule = findViewById(R.id.fourth_rule_tv);
 
         findViewById(R.id.credit_record_cl).setOnClickListener(this);
-        findViewById(R.id.no_deposit_cl).setOnClickListener(this);
         findViewById(R.id.leave_grace_cl).setOnClickListener(this);
         findViewById(R.id.advance_end_order_cl).setOnClickListener(this);
     }
@@ -89,11 +85,11 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         if (mCredit <= ConstansUtil.POOR_CREDIT_SCORE) {
             mCreditStage.setText("较差");
             mCreditStage.setBackgroundResource(R.drawable.r7_all_3dp);
-            ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
+            ImageUtil.showImgPic(mAdvanceEndOrderIv, R.drawable.ic_noflash);
         } else if (mCredit <= ConstansUtil.FINE_CREDIT_SCORE) {
             mCreditStage.setText("一般");
             mCreditStage.setBackgroundResource(R.drawable.y2_all_3dp);
-            ImageUtil.showPic(mNoDepositIv, R.drawable.ic_nodeposit);
+            ImageUtil.showImgPic(mAdvanceEndOrderIv, R.drawable.ic_noflash);
         } else if (mCredit <= ConstansUtil.GOOD_CREDIT_SCORE) {
             mCreditStage.setText("良好");
             mCreditStage.setBackgroundResource(R.drawable.y3_all_3dp);
@@ -112,7 +108,7 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         parkGracePeriod = parkGracePeriod + "分钟";
         mParkGracePeriod.setText(parkGracePeriod);
 
-        SpannableString firstRule = new SpannableString("规则途找信用分是根据用户的每一次停车，每一次履约情况来进行评定的，" +
+        SpannableString firstRule = new SpannableString("规则途找信用分是根据用户的每一次停车，每一次履约情况来进行综合评定的，" +
                 "每个月均有波动。分值视历史履约情况而改变。");
         hideTwoWord(firstRule);
         mFirstRule.setText(firstRule);
@@ -122,13 +118,13 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         hideTwoWord(secondRule);
         mSecondRule.setText(secondRule);
 
-        SpannableString thirdRule = new SpannableString("规则”宽限时长”：当实际停车时间超出预订结束停车时间，系统会根据该车位的实际情况和用户的信用等级自动分配一个结束停车的顺延时长，" +
-                "在宽限时长内离开仍按原价计费不收取超时费，信用等级为极好、优秀、良好、一般、较差的顺延时长最大值分别为60、45、30、15、10分钟。");
+        SpannableString thirdRule = new SpannableString("规则”宽限时长”：当实际停车时间超出预订结束停车时间，系统会根据该车位的实际情况和用户的信用等级自动分配一个结束停车的宽限时长，" +
+                "在宽限时长内离开仍按原价计费不收取超时费，信用等级为极好、优秀、良好、一般、较差的宽限时长最大值分别为60、45、30、15、10分钟。");
         hideTwoWord(thirdRule);
         mThirdRule.setText(thirdRule);
 
         SpannableString fourthRule = new SpannableString("规则“提前结单”：当用户停车出现过早离开的违规行为，提前结单的特权可以免除用户该次停车的违规行为。" +
-                "信用分等级分别为良好、优秀、极好的用户每个自然月对应可以有一、三、五次的提前结单的特权。");
+                "信用分等级分别为极好、优秀、良好的用户每个自然月对应可以有五、三、一次的提前结单的特权。（注：每个自然月次数会根据信用等级重置，不累加）");
         hideTwoWord(fourthRule);
         mFourthRule.setText(fourthRule);
     }
@@ -180,9 +176,6 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.credit_record_cl:
                 startActivity(CreditRecordActivity.class);
-                break;
-            case R.id.no_deposit_cl:
-// TODO: 2018/9/12  
                 break;
             case R.id.leave_grace_cl:
 

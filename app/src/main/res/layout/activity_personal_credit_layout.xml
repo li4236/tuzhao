@@ -142,7 +142,6 @@
                 style="@style/TwentyTextG6Style"
                 android:layout_marginBottom="6dp"
                 android:gravity="bottom"
-                android:text="10分钟"
                 app:layout_constraintBottom_toBottomOf="@+id/current_credit"
                 app:layout_constraintEnd_toEndOf="@id/park_grace_period_tv" />
 
@@ -195,45 +194,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/no_deposit_cl"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/leave_grace_cl"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/credit_privilege_tv">
-
-                <ImageView
-                    android:id="@+id/no_deposit_iv"
-                    android:layout_width="26dp"
-                    android:layout_height="30dp"
-                    android:contentDescription="@string/picture_description"
-                    android:src="@drawable/ic_deposit1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/no_deposit_tv"
-                    style="@style/TenTextG6Stytle"
-                    android:text="免保证金"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/no_deposit_iv"
-                    app:layout_constraintStart_toStartOf="@id/no_deposit_iv"
-                    app:layout_constraintTop_toBottomOf="@id/no_deposit_iv" />
-
-            </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.Guideline
+                app:layout_constraintGuide_percent="0.5"
+                android:id="@+id/center_gl"
+                style="@style/VerticalGuideLine"/>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/leave_grace_cl"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:paddingEnd="36dp"
+                android:paddingStart="36dp"
+                android:paddingTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/advance_end_order_cl"
-                app:layout_constraintStart_toEndOf="@+id/no_deposit_cl"
-                app:layout_constraintTop_toTopOf="@+id/no_deposit_cl">
+                app:layout_constraintEnd_toStartOf="@+id/center_gl"
+                app:layout_constraintTop_toBottomOf="@+id/credit_privilege_tv">
 
                 <ImageView
                     android:id="@+id/leave_grace_iv"
@@ -257,12 +232,14 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/advance_end_order_cl"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:paddingStart="36dp"
+                android:paddingEnd="36dp"
+                android:paddingTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/leave_grace_cl"
-                app:layout_constraintTop_toTopOf="@+id/no_deposit_cl">
+                app:layout_constraintStart_toEndOf="@+id/center_gl"
+                app:layout_constraintTop_toTopOf="@+id/leave_grace_cl">
 
                 <ImageView
                     android:id="@+id/advance_end_order_iv"
