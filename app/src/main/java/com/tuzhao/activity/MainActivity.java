@@ -527,8 +527,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 if (isShowCharge) {
                     isShowCharge = false;
                     isShowPark = true;
-                    ImageUtil.showPic(mParkLotIv, R.mipmap.ic_park5);
-                    ImageUtil.showPic(mChargePileIv, R.mipmap.ic_chong8);
+                    ImageUtil.showPicWithNoAnimate(mParkLotIv, R.mipmap.ic_park5);
+                    ImageUtil.showPicWithNoAnimate(mChargePileIv, R.mipmap.ic_chong8);
                     if (isLcData) {
                         mShowMarkerData.clear();
                         for (ClusterItem item : mAllMarkerData) {
@@ -547,7 +547,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         showMarkers(mShowMarkerData);
                     }
                 } else {
-                    mChargePileIv.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_chong7));
+                    ImageUtil.showPicWithNoAnimate(mChargePileIv, R.mipmap.ic_chong7);
                     isShowCharge = true;
                     if (isLcData) {
                         mShowMarkerData.clear();
@@ -605,8 +605,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (isShowPark) {
             isShowPark = false;
             isShowCharge = true;
-            ImageUtil.showPic(mParkLotIv, R.mipmap.ic_park6);
-            ImageUtil.showPic(mChargePileIv, R.mipmap.ic_chong7);
+            ImageUtil.showPicWithNoAnimate(mParkLotIv, R.mipmap.ic_park6);
+            ImageUtil.showPicWithNoAnimate(mChargePileIv, R.mipmap.ic_chong7);
 
             if (isLcData) {
                 mShowMarkerData.clear();
@@ -626,7 +626,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 showMarkers(mShowMarkerData);
             }
         } else {
-            mParkLotIv.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.mipmap.ic_park5));
+            ImageUtil.showPicWithNoAnimate(mParkLotIv, R.mipmap.ic_park5);
             isShowPark = true;
             if (isLcData) {
                 mShowMarkerData.clear();

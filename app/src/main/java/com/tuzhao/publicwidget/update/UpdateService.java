@@ -128,6 +128,9 @@ public class UpdateService extends Service implements IntentObserver {
                             }
                         } else if (mUserUpdate) {
                             MyToast.showToast(getApplicationContext(), "当前已是最新版本了哦", 5);
+                            stopSelf();
+                        } else {
+                            stopSelf();
                         }
                         SpUtils.getInstance(getApplicationContext()).putBoolean(SpUtils.ALREADY_CHECK_UPDATE, true);
                     }
