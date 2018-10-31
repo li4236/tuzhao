@@ -66,7 +66,7 @@ public class OpenLockDialog extends Dialog {
     private SuccessCallback<Boolean> mSuccessCallback;
 
     public OpenLockDialog(@NonNull Context context, SuccessCallback<Boolean> callback) {
-        super(context, R.style.ParkDialog);
+        super(context, R.style.CustomDialogStyle);
         ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.dialog_open_lock_layout, null);
         setContentView(constraintLayout);
         setCanceledOnTouchOutside(false);

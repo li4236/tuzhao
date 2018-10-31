@@ -29,13 +29,13 @@ public class CustomDialog extends Dialog {
     private PaymentPasswordHelper mPasswordHelper;
 
     public CustomDialog(@NonNull Context context, View view) {
-        super(context, R.style.ParkDialog);
+        super(context, R.style.CustomDialogStyle);
         setContentView(view);
         setCanceledOnTouchOutside(false);
     }
 
     public CustomDialog(@NonNull Context context, View view, boolean isShowAnimation) {
-        super(context, R.style.ParkDialog);
+        super(context, R.style.CustomDialogStyle);
         ViewGroup viewGroup = (ViewGroup) view.getParent();
         if (viewGroup != null) {
             //防止复用出错，在添加车辆，上传图片时会复用
@@ -47,12 +47,12 @@ public class CustomDialog extends Dialog {
         if (window != null) {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
-            window.setWindowAnimations(R.style.ParkAnimationStyle);
+            window.setWindowAnimations(R.style.SlideAnimationStyle);
         }
     }
 
     public CustomDialog(PaymentPasswordHelper helper) {
-        super(helper.getContext(), R.style.ParkDialog);
+        super(helper.getContext(), R.style.CustomDialogStyle);
         //设置安全flag，禁止截屏，防止密码泄露
         Objects.requireNonNull(getWindow()).setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(helper.getView());
@@ -63,7 +63,7 @@ public class CustomDialog extends Dialog {
         if (window != null) {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
-            window.setWindowAnimations(R.style.ParkAnimationStyle);
+            window.setWindowAnimations(R.style.SlideAnimationStyle);
         }
 
         helper.setCloseListener(new View.OnClickListener() {

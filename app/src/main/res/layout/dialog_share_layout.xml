@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/dialog_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/w0_all_10dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="26dp"
+        android:paddingTop="16dp">
+
+        <ImageView
+            android:id="@+id/share_to_wechat_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/picture_description"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_wechat" />
+
+        <TextView
+            android:id="@+id/share_to_wechat_tv"
+            style="@style/TenTextB1Style"
+            android:paddingTop="8dp"
+            android:text="微信分享"
+            app:layout_constraintEnd_toEndOf="@id/share_to_wechat_iv"
+            app:layout_constraintStart_toStartOf="@id/share_to_wechat_iv"
+            app:layout_constraintTop_toBottomOf="@+id/share_to_wechat_iv" />
+
+        <ImageView
+            android:id="@+id/share_to_frends_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="34dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_wechat_friends"
+            app:layout_constraintBottom_toBottomOf="@+id/share_to_wechat_iv"
+            app:layout_constraintStart_toEndOf="@id/share_to_wechat_iv"
+            app:layout_constraintTop_toTopOf="@+id/share_to_wechat_iv" />
+
+        <TextView
+            android:id="@+id/share_to_frends_tv"
+            style="@style/TenTextB1Style"
+            android:paddingTop="8dp"
+            android:text="朋友圈分享"
+            app:layout_constraintEnd_toEndOf="@id/share_to_frends_iv"
+            app:layout_constraintStart_toStartOf="@id/share_to_frends_iv"
+            app:layout_constraintTop_toBottomOf="@+id/share_to_frends_iv" />
+
+        <ImageView
+            android:id="@+id/share_to_wechat_mini_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="34dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_program"
+            app:layout_constraintBottom_toBottomOf="@+id/share_to_wechat_iv"
+            app:layout_constraintStart_toEndOf="@id/share_to_frends_iv"
+            app:layout_constraintTop_toTopOf="@+id/share_to_wechat_iv" />
+
+        <TextView
+            android:id="@+id/share_to_wechat_mini_tv"
+            style="@style/TenTextB1Style"
+            android:paddingTop="8dp"
+            android:text="小程序分享"
+            app:layout_constraintEnd_toEndOf="@id/share_to_wechat_mini_iv"
+            app:layout_constraintStart_toStartOf="@id/share_to_wechat_mini_iv"
+            app:layout_constraintTop_toBottomOf="@+id/share_to_wechat_mini_iv" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/cancel_tv"
+        style="@style/TwentyTextB1Style"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/w0_all_10dp"
+        android:text="取消"
+        android:textSize="18sp" />
+
+</LinearLayout>

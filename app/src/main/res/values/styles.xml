@@ -37,7 +37,7 @@
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
-    <style name="ParkDialog" parent="Dialog">
+    <style name="CustomDialogStyle" parent="Dialog">
         <item name="android:windowFrame">@null</item><!--边框-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
         <item name="android:windowIsTranslucent">false</item><!--半透明-->
@@ -46,7 +46,7 @@
         <item name="android:backgroundDimAmount">0.2</item>
     </style>
 
-    <style name="ParkAnimationStyle">
+    <style name="SlideAnimationStyle">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>

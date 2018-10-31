@@ -43,30 +43,11 @@ public class MyApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        /*if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectCustomSlowCalls() //API等级11，使用StrictMode.noteSlowCode
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork()   // or .detectAll() for all detectable problems
-                    .penaltyLog() //在Logcat 中打印违规异常信息
-                    .penaltyFlashScreen() //API等级11
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectActivityLeaks()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects() //API等级11
-                    .penaltyLog()
-                    .build());
-        }*/
         mApplication = this;
         SKIP_WELCOME = false;//跳过启动欢迎见面
-        //Debug.startMethodTracing("trace");
-        /**
-         * 初始化极光推送
-         */
-        JPushInterface.setDebugMode(true);//true代表为调试模式，可以打印日志
+
         JPushInterface.init(this);//整个应用初始化极光推送，一次就好
+        JPushInterface.setDebugMode(true);//true代表为调试模式，可以打印日志
 
         /*开启网络广播监听*/
         NetStateReceiver.registerNetworkStateReceiver(this);

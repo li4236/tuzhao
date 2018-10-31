@@ -6,11 +6,10 @@ import android.os.Bundle;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
+import com.tuzhao.publicmanager.WeChatManager;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.IntentObserable;
@@ -27,21 +26,18 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler 
 
     private static final int SHARE = 2;
 
-    private IWXAPI mIWXAPI;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wxentry_layout);
-        mIWXAPI = WXAPIFactory.createWXAPI(this, ConstansUtil.WECHAT_APP_ID);
-        mIWXAPI.handleIntent(getIntent(), this);
+        WeChatManager.getInstance().api.handleIntent(getIntent(), this);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        mIWXAPI.handleIntent(intent, this);
+        WeChatManager.getInstance().api.handleIntent(intent, this);
     }
 
     @Override

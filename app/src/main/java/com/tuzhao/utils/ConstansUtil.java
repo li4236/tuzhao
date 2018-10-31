@@ -63,6 +63,11 @@ public class ConstansUtil {
     public static final String WECHAT_APP_ID = "wxb68fabefc83d5c48";
 
     /**
+     * 微信小程序原始id
+     */
+    public static final String WECHAT_MINI_ID = "gh_93edeeccccd4";
+
+    /**
      * 微信登录返回的code
      */
     public static final String WECHAT_CODE = "WechatCode";

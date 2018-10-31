@@ -19,7 +19,7 @@ import com.tuzhao.R;
 public class SelectDialog extends Dialog {
 
     public SelectDialog(@NonNull Context context, String[] content, AdapterView.OnItemClickListener onItemClickListener) {
-        super(context, R.style.ParkDialog);
+        super(context, R.style.CustomDialogStyle);
         View view = getLayoutInflater().inflate(R.layout.dialog_list_cancel_layout, null);
         ListView listView = view.findViewById(R.id.dialog_lv);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.item_center_text_blue2_layout, content);
@@ -40,7 +40,7 @@ public class SelectDialog extends Dialog {
         if (window != null) {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
-            window.setWindowAnimations(R.style.ParkAnimationStyle);
+            window.setWindowAnimations(R.style.SlideAnimationStyle);
         }
     }
 
