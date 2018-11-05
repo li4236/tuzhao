@@ -211,7 +211,6 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                             case "0":
                                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
                                 mUserInfo.setBalance(decimalFormat.format(Double.valueOf(mUserInfo.getBalance()) - Double.valueOf(getText(mWithdrawMoney))));
-                                mPasswordHelper.setCanControl(true);
                                 mCustomDialog.dismiss();
                                 IntentObserable.dispatch(ConstansUtil.WITHDRAWL_SUCCESS);
                                 showFiveToast("提现成功");
@@ -251,6 +250,8 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                                 break;
                             case "109":
                                 showFiveToast("提现的金额异常，请重新输入");
+                                mPasswordHelper.setCanControl(true);
+                                mPasswordHelper.clearPassword();
                                 mCustomDialog.dismiss();
                                 mWithdrawMoney.setText("");
                                 break;
@@ -262,11 +263,15 @@ public class WithdrawActivity extends BaseStatusActivity implements View.OnClick
                                 break;
                             case "112":
                                 showFiveToast("支付宝提现不可低于0.1元");
+                                mPasswordHelper.setCanControl(true);
+                                mPasswordHelper.clearPassword();
                                 mCustomDialog.dismiss();
                                 mWithdrawMoney.setText("");
                                 break;
                             case "113":
                                 showFiveToast("提现失败，请稍后重试");
+                                mPasswordHelper.setCanControl(true);
+                                mPasswordHelper.clearPassword();
                                 mCustomDialog.dismiss();
                                 break;
                             default:
