@@ -331,7 +331,7 @@
                 style="@style/TwentyTextB1Style"
                 android:layout_width="0dp"
                 android:drawablePadding="8dp"
-                android:drawableStart="@drawable/ic_wechat_friends"
+                android:drawableStart="@drawable/ic_friendshare"
                 android:gravity="start|center_vertical"
                 android:paddingBottom="16dp"
                 android:paddingStart="16dp"
