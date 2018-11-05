@@ -134,11 +134,11 @@ public class CornerImageView extends android.support.v7.widget.AppCompatImageVie
         }
 
         if (mSrcBitmap == null) {
-            mDetBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-            mDetCanvas = new Canvas(mDetBitmap);
-
             mSrcBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
             mSrcCanvas = new Canvas(mSrcBitmap);
+
+            mDetBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+            mDetCanvas = new Canvas(mDetBitmap);
         }
 
         //把图片画在mDetCanvas
@@ -180,7 +180,7 @@ public class CornerImageView extends android.support.v7.widget.AppCompatImageVie
             float textWidth = mCornerTextPaint.measureText(mCornerText);
             double cornerWidth = Math.sqrt(Math.pow(mCornerBottomPoint.x - mCornerStartPoint.x, 2) + Math.pow(mCornerBottomPoint.y, 2));
             float baseX = (float) (cornerWidth / 2 - textWidth / 2);
-            canvas.drawText(mCornerText, baseX, textWidth > 66 ? -16 : -20, mCornerTextPaint);
+            canvas.drawText(mCornerText, baseX, -dpToPx(6), mCornerTextPaint);
             canvas.restore();
         }
     }
