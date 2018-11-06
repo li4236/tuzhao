@@ -1,6 +1,6 @@
 package com.tuzhao.publicwidget.map;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
@@ -27,6 +27,7 @@ import com.amap.api.maps.model.animation.AlphaAnimation;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
+import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.info.RegionItem;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     private static final String TAG = "ClusterOverlay";
 
     private AMap mAMap;
-    private Context mContext;
+    private Activity mActivity;
 
     /**
      * 全部聚合点的item
@@ -87,13 +88,17 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
     private AtomicInteger mAtomicInteger;
 
+    private long mAllFreeNumber;
+    private SuccessCallback<Long> mFreeNumberCallback;
+    private NotifyFreeNumberRunnable mFreeNumberRunnable;
+
     /**
      * 构造函数,批量添加聚合元素时,调用此构造函数
      *
      * @param allClusterItems 聚合元素
      * @param clusterSize     聚合元素之间的距离为多少时开始聚合为一个聚合点
      */
-    public ClusterOverlay(AMap amap, List<ClusterItem> allClusterItems, int clusterSize, Context context) {
+    public ClusterOverlay(AMap amap, List<ClusterItem> allClusterItems, int clusterSize, Activity activity) {
         //默认最多会缓存40张不同的图片作为聚合显示元素图片,根据自己显示需求和app使用内存情况,可以修改数量
         mLruCache = new LruCache<Integer, BitmapDescriptor>(40) {
             protected void entryRemoved(boolean evicted, Integer key, BitmapDescriptor oldValue, BitmapDescriptor newValue) {
@@ -109,7 +114,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         if (allClusterItems != null) {
             mAllClusterItems.addAll(allClusterItems);
         }
-        mContext = context;
+        mActivity = activity;
         mClusters = new ArrayList<>();
         mCurrentClusters = new ArrayList<>();
         mNewClusters = new ArrayList<>();
@@ -120,6 +125,8 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mCurrentHash = new HashSet<>();
 
         mAtomicInteger = new AtomicInteger();
+
+        mFreeNumberRunnable = new NotifyFreeNumberRunnable();
 
         this.mAMap = amap;
         mClusterSize = clusterSize;
@@ -139,6 +146,10 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     public void setOnClusterClickListener(
             ClusterClickListener clusterClickListener) {
         mClusterClickListener = clusterClickListener;
+    }
+
+    public void setFreeNumberCallback(SuccessCallback<Long> freeNumberCallback) {
+        mFreeNumberCallback = freeNumberCallback;
     }
 
     /**
@@ -304,6 +315,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mDisappearClusters.clear();
         mNewClusters.clear();
         mCopyClusters.clear();
+        mAllFreeNumber = 0;
 
         //地图获取转换器, 获取可视区域, 获取可视区域的四个点形成的经纬度范围, 得到一个经纬度范围
         LatLngBounds visibleBounds = mAMap.getProjection().getVisibleRegion().latLngBounds;
@@ -315,6 +327,10 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
             //如果点在地图可视范围内
             if (visibleBounds.contains(latlng)) {
+                if (clusterItem.isparkspace()) {
+                    mAllFreeNumber += clusterItem.getFreeNumber();
+                }
+
                 Cluster cluster = getCluster(latlng, mClusters);    //根据这个位置和聚合物的集合, 获得一个聚合器
                 if (cluster != null) {
                     //把能聚合的点聚合成一个点
@@ -498,7 +514,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
             bitmapDescriptor = mLruCache.get(cluster.getClusterCount());
 
             if (bitmapDescriptor == null) {
-                TextView textView = new TextView(mContext);
+                TextView textView = new TextView(mActivity);
                 int number = cluster.getClusterCount();
                 textView.setText(String.valueOf(number));
                 textView.setGravity(Gravity.CENTER);
@@ -533,7 +549,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
             }
             bitmapDescriptor = mLruCacheName.get(type);
             if (bitmapDescriptor == null) {
-                TextView textView = new TextView(mContext);
+                TextView textView = new TextView(mActivity);
                 if (mClusterRender != null && mClusterRender.getDrawable(cluster.getClusterCount(), type) != null) {
                     textView.setBackground(mClusterRender.getDrawable(cluster.getClusterCount(), type));
                 }
@@ -608,6 +624,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
                 case ADD_AND_REMOVE_CLUSTER_LIST:
                     List<Cluster> clusterList = (List<Cluster>) message.obj;
                     AddAndRemoveClusterToMap(clusterList);
+                    mActivity.runOnUiThread(mFreeNumberRunnable);
                     break;
                 case ADD_SINGLE_CLUSTER:
                     Cluster cluster = (Cluster) message.obj;
@@ -651,7 +668,7 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         if (screenMarker != null) {
             final LatLng latLng = screenMarker.getPosition();
             Point point = aMap.getProjection().toScreenLocation(latLng);
-            point.y -= dp2px(mContext, 20);
+            point.y -= dp2px(mActivity, 20);
             LatLng target = aMap.getProjection().fromScreenLocation(point);
             //使用TranslateAnimation,填写一个需要移动的目标点
             animation = new TranslateAnimation(target);
@@ -706,6 +723,15 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         public void setType(int type) {
             this.type = type;
         }
+    }
+
+    private class NotifyFreeNumberRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            mFreeNumberCallback.onSuccess(mAllFreeNumber);
+        }
+
     }
 
 }

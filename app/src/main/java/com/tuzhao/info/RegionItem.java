@@ -20,8 +20,10 @@ public class RegionItem implements ClusterItem {
     private String name;//车场或电站名
     private double price;//车场或电站价格
     private double grade;//车场或电站评分
+    private int freeNumber;//空闲车位数量
 
-    public RegionItem( String id,LatLng latLng, String cancharge, boolean isparkspace,String city_code,String picture,String address,String name,double price,double grade) {
+    public RegionItem( String id,LatLng latLng, String cancharge, boolean isparkspace,String city_code,String picture,String address,
+                       String name,double price,double grade,int freeNumber) {
         mLatLng=latLng;
         this.id=id;
         this.cancharge=cancharge;
@@ -32,6 +34,7 @@ public class RegionItem implements ClusterItem {
         this.name = name;
         this.price = price;
         this.grade = grade;
+        this.freeNumber = freeNumber;
     }
 
     @Override
@@ -73,6 +76,14 @@ public class RegionItem implements ClusterItem {
 
     public double getGrade() {
         return grade;
+    }
+
+    public int getFreeNumber() {
+        return freeNumber;
+    }
+
+    public void setFreeNumber(int freeNumber) {
+        this.freeNumber = freeNumber;
     }
 
     @Override

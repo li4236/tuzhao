@@ -21,6 +21,8 @@ public class NearPointPCInfo extends BaseInfo {
     private String name;//车场或电站名
     private double price;//车场或电站价格
     private double grade;//车场或电站评分
+    private int freeNumber;//空闲车位数量
+    private int freeTime;//免费停车时长
 
     public String getId() {
         return id;
@@ -108,6 +110,30 @@ public class NearPointPCInfo extends BaseInfo {
 
     public void setGrade(double grade) {
         this.grade = grade;
+    }
+
+    public String getCitycode() {
+        return citycode;
+    }
+
+    public void setCitycode(String citycode) {
+        this.citycode = citycode;
+    }
+
+    public int getFreeNumber() {
+        return freeNumber;
+    }
+
+    public void setFreeNumber(int freeNumber) {
+        this.freeNumber = freeNumber;
+    }
+
+    public int getFreeTime() {
+        return freeTime;
+    }
+
+    public void setFreeTime(int freeTime) {
+        this.freeTime = freeTime;
     }
 
     @Override

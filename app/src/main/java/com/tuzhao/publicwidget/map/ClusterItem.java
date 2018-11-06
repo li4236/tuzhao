@@ -29,4 +29,7 @@ public interface ClusterItem {
     double getPrice();
 
     double getGrade();
+
+    int getFreeNumber();
+
 }

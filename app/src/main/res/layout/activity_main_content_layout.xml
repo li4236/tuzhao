@@ -40,6 +40,53 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/free_park_space_cl"
+        android:layout_width="250dp"
+        android:layout_height="42dp"
+        android:background="@drawable/ic_idle"
+        app:layout_constraintBottom_toTopOf="@+id/id_content_main_layout_relativelayout_openuser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/refresh_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="2dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_f5"
+            android:scaleType="centerCrop"
+            android:padding="11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/refresh_divider"
+            style="@style/VerticalDividerStyle"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/g6"
+            app:layout_constraintEnd_toStartOf="@id/refresh_iv" />
+
+        <TextView
+            android:id="@+id/free_park_space_number"
+            style="@style/FortyTextB1Style"
+            android:layout_width="0dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:text="附近剩余0个停车位"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/refresh_divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
     <android.support.constraint.Guideline
         android:id="@+id/third_gl"
         android:layout_width="1dp"

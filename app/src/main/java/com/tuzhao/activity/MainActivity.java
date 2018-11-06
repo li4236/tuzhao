@@ -2,12 +2,14 @@ package com.tuzhao.activity;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -120,7 +123,8 @@ import okhttp3.Response;
 import static com.tianzhili.www.myselfsdk.okgo.convert.FileConvert.DM_TARGET_FOLDER;
 import static com.tuzhao.utils.DensityUtil.dp2px;
 
-public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender, ClusterClickListener, IntentObserver {
+public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender,
+        ClusterClickListener, IntentObserver, SuccessCallback<Long> {
 
     private static final String TAG = "MainActivity";
 
@@ -151,9 +155,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private SensorEventHelper mSensorHelper;
     private SensorEventHelper mCircleSensorHelper;
     private ImageView mLocationIv, mParkLotIv, mChargePileIv,
-            mSearchIv;
+            mSearchIv, mRefreshIv;
     private CircleImageView mHomeProtraitIv, mDrawerProtraitIv;
-    private TextView mUserName, mCityNotOpen, mCredit;
+    private TextView mUserName, mCredit, mFreeParkSpaceNumber;
     private TextView mMyWallet, mOrder, mShare,
             mCar, mParkSpace, mSetting, mCollection, mFind;
     private TextView mParkNow;
@@ -175,17 +179,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private final float morenZoom = 14f;//地图的默认缩放等级
     private CameraPosition mLastPosition;//点击marker时地图的位置，用于点击地图后返回地图点击前的位置
     private LatLng mLastLatLng;//上次移动地图时的坐标
-    private String mLastCity;//上次移动地图时未开放的城市名字
     private List<ClusterItem> mAllMarkerData = new LinkedList<>();//当前全部的地图标点的数据
     private List<ClusterItem> mShowMarkerData = new ArrayList<>();//当前显示的城市地图标点的数据
     private ClusterOverlay mClusterOverlay;//标点的聚拢
     private FragmentManager mFragmentManager;
     private View mFragment_content;
     private float mTranslationY;
-    private float mCityNoDataTranslationY;
     private boolean show = false;
     private boolean showClusters;
-    private boolean show1 = false;
     private boolean isShowPark = true;
     private boolean isShowCharge = true;
     private boolean isLcData = true;
@@ -206,6 +207,24 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     private boolean mStartUpdate;
 
     private boolean mUpdateActivityFinish;
+
+    private RotateAnimation mRotateAnimation;
+
+    private Point mCenterPoint;
+
+    private boolean mIsRotate;
+
+    private long mLastFreeNumber = -1;
+
+    /**
+     * 触发请求数据的地图最小移动距离
+     */
+    private int mMinimumMove = 5;
+
+    /**
+     * 请求数据半径
+     */
+    private int mRequestRadius = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,6 +301,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
         geocoderSearch = new GeocodeSearch(this);
         mFragmentManager = getSupportFragmentManager();
+        mRefreshIv = findViewById(R.id.refresh_iv);
+        mFreeParkSpaceNumber = findViewById(R.id.free_park_space_number);
         mHomeProtraitIv = findViewById(R.id.id_activity_main_layout_imageview_user);
         mLocationIv = findViewById(R.id.id_content_main_layout_imageview_turnown);
         mSearchIv = findViewById(R.id.id_content_main_layout_imageview_search);
@@ -299,7 +320,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mParkLotIv = findViewById(R.id.id_content_main_layout_imageview_spark);
         mDrawerProtraitIv = findViewById(R.id.id_content_main_layout_imageview_huser);
         mChargePileIv = findViewById(R.id.id_content_main_layout_imageview_scharge);
-        mCityNotOpen = findViewById(R.id.id_content_main_layout_textview_citynodata);
         mHomeDrawerCl = findViewById(R.id.id_content_main_layout_relativelayout_openuser);
         mCredit = findViewById(R.id.id_activity_main_layout_textview_credit);
         mParkNow = findViewById(R.id.id_content_main_layout_textview_parknow);
@@ -363,6 +383,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         mSetting.setOnClickListener(this);
         mDrawerTopCl.setOnClickListener(this);
         mSearchIv.setOnClickListener(this);
+        mRefreshIv.setOnClickListener(this);
         mMyWallet.setOnClickListener(this);
         mOrder.setOnClickListener(this);
         mCar.setOnClickListener(this);
@@ -407,12 +428,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             public void onTouch(MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if (mLastLatLng == null) {
-                        //记录当前点击marker的坐标
-                        mLastLatLng = aMap.getCameraPosition().target;
+                        //记录当前触摸屏幕的坐标
+                        mLastLatLng = aMap.getProjection().fromScreenLocation(getCenterPoint());
                     } else {
-                        //判断屏幕移动的位置是否超过10公里，如果超过则请求新的数据
-                        if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getCameraPosition().target) / 1000 >= 10) {
-                            mLastLatLng = aMap.getCameraPosition().target;
+                        //判断屏幕移动的位置是否超过5公里，如果超过则请求新的数据
+                        if (AMapUtils.calculateLineDistance(mLastLatLng, aMap.getProjection().fromScreenLocation(getCenterPoint())) / 1000 >= mMinimumMove) {
+                            mLastLatLng = aMap.getProjection().fromScreenLocation(getCenterPoint());
                             getAddressOrCitycode(mLastLatLng, true);
                         }
                     }
@@ -450,6 +471,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     login();
                 }
                 break;
+            case R.id.refresh_iv:
+                startRefreshData();
+                break;
             case R.id.id_content_main_layout_imageview_turnown:
                 //左下角的定位图标
                 isLcData = true;
@@ -457,19 +481,16 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     controlAnimfragment(mFragment_content);
                 }
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
-                if (mAllMarkerData.size() == 0 && LocationManager.getInstance().hasLocation()) {
+                if (LocationManager.getInstance().hasLocation()) {
                     initLoading("正在加载...");
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
                             LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
-                            LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, "当前城市");
-                } else {
+                            LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "当前城市");
+                } else if (mAllMarkerData.size() != 0) {
                     if (isShowPark && isShowCharge) {
                         showMarkers(mAllMarkerData);
                     } else {
                         showMarkers(mShowMarkerData);
-                    }
-                    if (show1) {
-                        controlAnim(false);
                     }
                 }
                 break;
@@ -697,33 +718,23 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 });
     }
 
-    private void requestHomePCLocData(final String citycode, String lat, String lon, String radius, final boolean isLc, final String cityname) {
+    private void requestHomePCLocData(final String citycode, String lat, String lon, final String cityname) {
         OkGo.post(HttpConstants.getNearPointLocData)
                 .tag(HttpConstants.getNearPointLocData)
                 .params("citycode", citycode)
                 .params("lat", lat)
                 .params("lon", lon)
-                .params("radius", radius)
+                .params("radius", mRequestRadius)
                 .params("type", "1")
                 .execute(new JsonCallback<Base_Class_List_Info<NearPointPCInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<NearPointPCInfo> homePC_info, Call call, Response response) {
-                        if (show1) {
-                            controlAnim(false);
-                        }
-
+                        mAllMarkerData.clear();
                         for (NearPointPCInfo info : homePC_info.data) {
                             RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
                                     info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
-                                    info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade());
-                            if (!mAllMarkerData.contains(item)) {
-                                mAllMarkerData.add(item);
-                            }
-                        }
-
-                        //最多显示80个marker
-                        while (mAllMarkerData.size() > 80) {
-                            mAllMarkerData.remove(0);
+                                    info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade(), info.getFreeNumber());
+                            mAllMarkerData.add(item);
                         }
 
                         if (isShowPark && isShowCharge) {
@@ -760,32 +771,96 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             Log.d("TAG", "请求失败， 信息为：" + "getHomePCLocData" + e.getMessage());
                             switch (e.getMessage()) {
                                 case "102":
-                                    if (show1) {
-                                        controlAnim(false);
-                                    }
                                     //未查找到数据
+                                    showFreeParkSpaceNumber();
                                     break;
                                 case "103":
                                     //城市未开放
-                                    String noOpen = cityname + "暂未开放";
-                                    mCityNotOpen.setText(noOpen);
-                                    if (!show1 || !Objects.equals(mLastCity, cityname)) {
-                                        mLastCity = cityname;
-                                        controlAnim(true);
-                                    }
+                                    showCityNoOpen(cityname);
                                     break;
                                 default:
-                                    if (show1) {
-                                        controlAnim(false);
-                                    }
+                                    showFreeParkSpaceNumber();
                                     MyToast.showToast(MainActivity.this, "服务器正在维护中", 5);
                                     break;
                             }
                         } else {
-                            if (show1) {
-                                controlAnim(false);
+                            if (isShowPark && isShowCharge) {
+                                showMarkers(mAllMarkerData);
+                            } else {
+                                showMarkers(mShowMarkerData);
                             }
+                        }
+                    }
+                });
+    }
 
+    private void refreshHomePCLocData(final String citycode, double lat, double lon, float radius, final String cityname) {
+        OkGo.post(HttpConstants.getNearPointLocData)
+                .tag(HttpConstants.getNearPointLocData)
+                .params("citycode", citycode)
+                .params("lat", lat)
+                .params("lon", lon)
+                .params("radius", radius)
+                .params("type", "1")
+                .execute(new JsonCallback<Base_Class_List_Info<NearPointPCInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_List_Info<NearPointPCInfo> homePC_info, Call call, Response response) {
+                        for (NearPointPCInfo info : homePC_info.data) {
+                            RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
+                                    info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,
+                                    info.getPicture(), info.getAddress(), info.getName(), info.getPrice(), info.getGrade(), info.getFreeNumber());
+                            mAllMarkerData.add(item);
+                        }
+
+                        if (isShowPark && isShowCharge) {
+                            showMarkers(mAllMarkerData);
+                        } else if (isShowPark) {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mAllMarkerData) {
+                                if (item.isparkspace()) {
+                                    mShowMarkerData.add(item);
+                                }
+                            }
+                            showMarkers(mShowMarkerData);
+                        } else {
+                            mShowMarkerData.clear();
+                            for (ClusterItem item : mAllMarkerData) {
+                                if (!item.isparkspace()) {
+                                    mShowMarkerData.add(item);
+                                }
+                            }
+                            showMarkers(mShowMarkerData);
+                        }
+                        stopRefresh();
+                        dismissLoading();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (mLoadingDialog != null) {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
+                            }
+                        }
+                        stopRefresh();
+                        if (!DensityUtil.isException(MainActivity.this, e)) {
+                            Log.d("TAG", "请求失败， 信息为：" + "getHomePCLocData" + e.getMessage());
+                            switch (e.getMessage()) {
+                                case "102":
+                                    //未查找到数据
+                                    showFreeParkSpaceNumber();
+                                    break;
+                                case "103":
+                                    //城市未开放
+                                    showCityNoOpen(cityname);
+                                    break;
+                                default:
+                                    showFreeParkSpaceNumber();
+                                    MyToast.showToast(MainActivity.this, "服务器正在维护中", 5);
+                                    break;
+                            }
+                        } else {
                             if (isShowPark && isShowCharge) {
                                 Log.e(TAG, "onError four: " + mAllMarkerData.size());
                                 showMarkers(mAllMarkerData);
@@ -834,13 +909,14 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     isLcData = true;
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
                             LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
-                            LocationManager.getInstance().getmAmapLocation().getLongitude() + "",
-                            "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
+                            LocationManager.getInstance().getmAmapLocation().getLongitude() + "", amapLocation.getCity());//进行请求充电桩和停车位数据
                 } else {
                     if (mAllMarkerData == null) {
                         aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLastlocationLatlng, morenZoom));
                         isLcData = true;
-                        requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(), LocationManager.getInstance().getmAmapLocation().getLatitude() + "", LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "10", isLcData, amapLocation.getCity());//进行请求充电桩和停车位数据
+                        requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
+                                LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
+                                LocationManager.getInstance().getmAmapLocation().getLongitude() + "", amapLocation.getCity());//进行请求充电桩和停车位数据
                     }
                     mLocationMarker.setPosition(mLastlocationLatlng);
                 }
@@ -1011,6 +1087,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         if (show) {
             controlAnimfragment(mFragment_content);
         }
+        stopRefresh();
         mapView.onDestroy();
         if (mlocationClient != null) {
             mlocationClient.onDestroy();
@@ -1174,23 +1251,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         objectAnimator.start();
     }
 
-    private void controlAnim(boolean show) {
-        show1 = show;
-        if (mCityNoDataTranslationY == 0) {
-            mCityNoDataTranslationY = mCityNotOpen.getY() + mCityNotOpen.getHeight();
-        }
-        ObjectAnimator objectAnimator;
-        if (show) {
-            mCityNotOpen.setVisibility(View.VISIBLE);
-            objectAnimator = ObjectAnimator.ofFloat(mCityNotOpen, "translationY", -mCityNoDataTranslationY, 0);
-        } else {
-            mCityNotOpen.setVisibility(View.GONE);
-            objectAnimator = ObjectAnimator.ofFloat(mCityNotOpen, "translationY", 0, -mCityNoDataTranslationY);
-        }
-        objectAnimator.setDuration(500);
-        objectAnimator.start();
-    }
-
     @Override
     public void onReceive(Intent intent) {
         if (Objects.equals(intent.getAction(), ConstansUtil.FORCE_LOGOUT)) {
@@ -1217,6 +1277,91 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             ImageUtil.showPic(mHomeProtraitIv, HttpConstants.ROOT_IMG_URL_USER + UserManager.getInstance().getUserInfo().getImg_url());
         } else if (Objects.equals(intent.getAction(), ConstansUtil.UPDATE_ACTIVITY_FINISH)) {
             mUpdateActivityFinish = true;
+        }
+    }
+
+    private void startRefreshData() {
+        if (mRotateAnimation == null) {
+            mRotateAnimation = new RotateAnimation(0, 360f, android.view.animation.Animation.RELATIVE_TO_SELF,
+                    0.5f, android.view.animation.Animation.RELATIVE_TO_SELF, 0.5f);
+            mRotateAnimation.setRepeatCount(android.view.animation.Animation.INFINITE);
+            mRotateAnimation.setRepeatMode(android.view.animation.Animation.RESTART);
+            mRotateAnimation.setFillBefore(true);
+            mRotateAnimation.setDuration(800);
+        }
+        if (!mIsRotate) {
+            mRefreshIv.startAnimation(mRotateAnimation);
+            final LatLng centerLatLng = aMap.getProjection().fromScreenLocation(getCenterPoint());
+            geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+                @Override
+                public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                    if (i == 1000) {
+                        refreshHomePCLocData(regeocodeResult.getRegeocodeAddress().getCityCode(),
+                                centerLatLng.latitude, centerLatLng.longitude, mRequestRadius, regeocodeResult.getRegeocodeAddress().getCity());
+                    } else {
+                        stopRefresh();
+                        showToast("刷新失败，请稍后重试");
+                    }
+                }
+
+                @Override
+                public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+                }
+            });
+
+            //转化参数
+            RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(centerLatLng.latitude, centerLatLng.longitude), 200, GeocodeSearch.AMAP);
+            geocoderSearch.getFromLocationAsyn(query);
+            mIsRotate = true;
+        }
+    }
+
+    private void stopRefresh() {
+        if (mRotateAnimation != null) {
+            mRotateAnimation.cancel();
+        }
+        mIsRotate = false;
+    }
+
+    /**
+     * @return 屏幕中心点坐标
+     */
+    private Point getCenterPoint() {
+        if (mCenterPoint == null) {
+            mCenterPoint = new Point();
+        }
+
+        if (mCenterPoint.x == 0 && mCenterPoint.y == 0) {
+            getWindowManager().getDefaultDisplay().getRealSize(mCenterPoint);
+            mCenterPoint.x /= 2;
+            mCenterPoint.y /= 2;
+        }
+
+        return mCenterPoint;
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void showCityNoOpen(String cityName) {
+        mFreeParkSpaceNumber.setText(cityName + "暂未开放");
+    }
+
+    /**
+     * 显示当前剩余的空闲车位
+     */
+    @SuppressLint("SetTextI18n")
+    private void showFreeParkSpaceNumber() {
+        if (mLastFreeNumber == -1) {
+            mLastFreeNumber = 0;
+        }
+        mFreeParkSpaceNumber.setText("附近剩余" + mLastFreeNumber + "个空闲车位");
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onSuccess(Long aLong) {
+        if (mLastFreeNumber != aLong) {
+            mLastFreeNumber = aLong;
+            mFreeParkSpaceNumber.setText("附近剩余" + aLong + "个空闲车位");
         }
     }
 
@@ -1322,7 +1467,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
-                    //options.anchor(0.5f, 0.5f);
                     options.position(latLng);
                     if (mSearchMarker != null) {
                         mSearchMarker.remove();
@@ -1390,7 +1534,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     ImageView img_chargestation = view_ChargeStation.findViewById(R.id.view_icon_chargestation_location_img);
                     img_chargestation.setImageResource(R.mipmap.ic_biaojiweizhi);
                     options.icon(BitmapDescriptorFactory.fromView(view_ChargeStation));
-                    //options.anchor(0.5f, 0.5f);
                     options.position(latLng);
                     if (mSearchMarker != null) {
                         mSearchMarker.remove();
@@ -1401,8 +1544,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
                     String citycode = data.getStringExtra("citycode");
                     isLcData = false;
-                    requestHomePCLocData(citycode, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude),
-                            "10", isLcData, "当前城市");
+                    requestHomePCLocData(citycode, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), "当前城市");
                 } else {
                     if (isLcData) {
                         if (isShowPark && isShowCharge) {
@@ -1493,19 +1635,13 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                             builder.create().show();
                         }
                     } else {
-                        Log.e(TAG, "onRegeocodeSearched: " + result.getRegeocodeAddress().getCityCode());
                         if (result.getRegeocodeAddress().getCityCode().equals("1900")) {
-                            mCityNotOpen.setText("当前位置暂未开放");
-                            if (!show1) {
-                                controlAnim(true);
-                            }
+                            showCityNoOpen("当前位置");
                             dismissLoading();
                         } else {
                             isLcData = false;
                             moveCityCode = result.getRegeocodeAddress().getCityCode();
-                            Log.e(TAG, "onRegeocodeSearched: 5");
-                            requestHomePCLocData(moveCityCode, latLng.latitude + "", latLng.longitude + "",
-                                    "10", isLcData, result.getRegeocodeAddress().getCity());
+                            requestHomePCLocData(moveCityCode, latLng.latitude + "", latLng.longitude + "", result.getRegeocodeAddress().getCity());
                         }
                     }
 
@@ -1529,9 +1665,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     private void showMarkers(List<ClusterItem> markerdata) {
         if (mClusterOverlay == null) {
-            mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), 30), getApplicationContext());
+            mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), 30), this);
             mClusterOverlay.setClusterRenderer(MainActivity.this);
             mClusterOverlay.setOnClusterClickListener(MainActivity.this);
+            mClusterOverlay.setFreeNumberCallback(this);
         } else {
             mClusterOverlay.assignClusters(markerdata);
         }
@@ -1571,8 +1708,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         }
     }
 
-    private void showFiveToast() {
-        MyToast.showToast(this, "没有权限，定位失败", 5);
+    private void showToast(String msg) {
+        MyToast.showToast(this, msg, 5);
     }
 
     private boolean noHavePermission(String permission) {
@@ -1592,7 +1729,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 mlocationClient.stopLocation();
                 mlocationClient.startLocation();
             } else {
-                showFiveToast();
+                showToast("没有权限，定位失败");
             }
             if (!mRequestWriteExternal && noHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, WRITE_REQUEST_CODE);
