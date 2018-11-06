@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.tianzhili.www.myselfsdk.okgo.exception.OkGoException;
-import com.tianzhili.www.myselfsdk.okgo.interceptor.TokenInvalideException;
+import com.tianzhili.www.myselfsdk.okgo.exception.TokenExpiredException;
+import com.tianzhili.www.myselfsdk.okgo.exception.TokenInvalideException;
 import com.tuzhao.activity.LoginActivity;
 import com.tuzhao.application.MyApplication;
 import com.tuzhao.info.User_Info;
@@ -26,8 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.SSLException;
 
 public class DensityUtil {
-
-    private static Toast mToast;
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -71,6 +69,17 @@ public class DensityUtil {
             Log.d("TAG", "请求失败，" + " 信息为：域名被劫持" + e.toString());
             MyToast.showToast(context, "域名被篡改，请检查你的网络环境", 5);
             return false;
+        } else if (e instanceof TokenExpiredException) {
+            Log.e("TAG", "isException: token 过期");
+            //清空缓存的登录信息
+            UserManager.getInstance().setUserInfo(new User_Info());
+            //发送退出登录的广播
+            LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(ConstansUtil.LOGOUT_ACTION));
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            MyToast.showToast(context, "账户异常，请重新登录", 5);
         } else if (e instanceof TokenInvalideException) {
             Log.d("TAG", "请求失败，" + " 信息为：token异常" + e.toString());
             //退出登录，设置不能再自动登录
@@ -82,6 +91,7 @@ public class DensityUtil {
             //发送退出登录的广播
             LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(new Intent(ConstansUtil.LOGOUT_ACTION));
             Intent intent = new Intent(context, LoginActivity.class);
+            intent.putExtra(ConstansUtil.INTENT_MESSAGE, true);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             MyToast.showToast(context, "账户异常，请重新登录", 5);

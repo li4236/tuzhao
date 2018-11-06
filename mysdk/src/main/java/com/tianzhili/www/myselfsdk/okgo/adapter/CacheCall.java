@@ -9,7 +9,8 @@ import com.tianzhili.www.myselfsdk.okgo.cache.CacheMode;
 import com.tianzhili.www.myselfsdk.okgo.callback.AbsCallback;
 import com.tianzhili.www.myselfsdk.okgo.callback.AbsCallbackWrapper;
 import com.tianzhili.www.myselfsdk.okgo.exception.OkGoException;
-import com.tianzhili.www.myselfsdk.okgo.interceptor.TokenInvalideException;
+import com.tianzhili.www.myselfsdk.okgo.exception.TokenExpiredException;
+import com.tianzhili.www.myselfsdk.okgo.exception.TokenInvalideException;
 import com.tianzhili.www.myselfsdk.okgo.model.HttpHeaders;
 import com.tianzhili.www.myselfsdk.okgo.model.Response;
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
@@ -164,15 +165,20 @@ public class CacheCall<T> implements Call<T> {
                     //网络请求成功回调
                     sendSuccessResultCallback(false, data, call, response);
                 } catch (Exception e) {
-                    //一般为服务器响应成功，但是数据解析错误，返回码为901
                     try {
-                        int a = Integer.parseInt(e.getMessage());
-                        if (a == 806) {
-                            sendFailResultCallback(false, call, response, new TokenInvalideException(e.getMessage()));
-                        } else {
-                            sendFailResultCallback(false, call, response, e);
+                        switch (e.getMessage()) {
+                            case "805":
+                                sendFailResultCallback(false, call, response, new TokenExpiredException(e.getMessage()));
+                                break;
+                            case "806":
+                                sendFailResultCallback(false, call, response, new TokenInvalideException(e.getMessage()));
+                                break;
+                            default:
+                                sendFailResultCallback(false, call, response, e);
+                                break;
                         }
                     } catch (NumberFormatException e11) {
+                        //一般为服务器响应成功，但是数据解析错误，返回码为901
                         sendFailResultCallback(false, call, response, OkGoException.INSTANCE("901"));
                     }
 
