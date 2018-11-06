@@ -86,6 +86,11 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
     @Override
     protected void initData() {
         IntentObserable.registerObserver(this);
+        User_Info userInfo = new DatabaseImp(getContext()).getUserFormDatabase();
+        if ("1".equals(userInfo.getAutologin())) {
+            mTelephoneNumber.setText(userInfo.getUsername());
+            mTelephoneNumber.setSelection(getTextLength(mTelephoneNumber));
+        }
     }
 
     @Override

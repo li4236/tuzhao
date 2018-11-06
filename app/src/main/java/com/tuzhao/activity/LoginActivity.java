@@ -37,6 +37,8 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver,
 
     private KeyboardHeightUtil mKeyboardHeightUtil;
 
+    private boolean mLoginSuccess;
+
     @Override
     protected int resourceId() {
         return R.layout.activity_login_layout;
@@ -102,6 +104,9 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver,
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
         mKeyboardHeightUtil.close();
+        if (!mLoginSuccess) {
+            startActivity(MainActivity.class, ConstansUtil.LOGIN_SUCCESS, false);
+        }
     }
 
     @Override
@@ -183,13 +188,8 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver,
         JPushInterface.setAlias(this, 1, userInfo.getUsername());//登录成功后给该用户设置极光推送的别名
         MobclickAgent.onProfileSignIn(userInfo.getUsername());//友盟在用户登录操作统计
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("LOGIN_ACTION"));
-
-        if (getIntent().hasExtra(ConstansUtil.INTENT_MESSAGE)) {
-            //如果是在其他界面需要登录的，则登录后返回其他界面
-            finish();
-        } else {
-            startActivity(MainActivity.class);
-        }
+        startActivity(MainActivity.class);
+        mLoginSuccess = true;
     }
 
     @Override

@@ -166,6 +166,7 @@ public class CacheCall<T> implements Call<T> {
                     sendSuccessResultCallback(false, data, call, response);
                 } catch (Exception e) {
                     try {
+
                         switch (e.getMessage()) {
                             case "805":
                                 sendFailResultCallback(false, call, response, new TokenExpiredException(e.getMessage()));

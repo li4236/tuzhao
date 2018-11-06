@@ -15,6 +15,7 @@ import java.util.List;
 import cn.jpush.android.api.JPushInterface;
 
 public class DatabaseImp {
+
     private Database database;
 
     public DatabaseImp(Context context) {
@@ -67,9 +68,8 @@ public class DatabaseImp {
         SQLiteDatabase db = database.getReadableDatabase();
         String sql = "select * from tb_user";
         Cursor cursor = db.rawQuery(sql, null);
-        User_Info user_info = null;
+        User_Info user_info = new User_Info();
         while (cursor.moveToNext()) {
-            user_info = new User_Info();
             user_info.setId(cursor.getString(cursor.getColumnIndex("_id")));
             user_info.setUsername(cursor.getString(cursor.getColumnIndex("username")));
             user_info.setPassword(cursor.getString(cursor.getColumnIndex("password")));

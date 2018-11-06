@@ -1093,6 +1093,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+        if (!intent.getBooleanExtra(ConstansUtil.LOGIN_SUCCESS, true)) {
+            //没有登录成功
+            mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
+            mDrawerlayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//禁止侧边滑动
+            ImageUtil.showPic(mDrawerProtraitIv, R.mipmap.ic_usericon);
+        }
     }
 
     @Override

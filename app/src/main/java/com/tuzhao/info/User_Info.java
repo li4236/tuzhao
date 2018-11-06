@@ -36,7 +36,7 @@ public class User_Info implements Parcelable {
     private String wechatNickname;//微信昵称
     private String paymentPassword;//支付密码（设置了就返回-1，没设置就返回""）
     private int leaveEarlyTime;
-    private String parkLotName="-1";     //绑定的免费车场名字
+    private String parkLotName = "-1";     //绑定的免费车场名字
 
     public String getId() {
         return id;
@@ -46,7 +46,7 @@ public class User_Info implements Parcelable {
         this.id = id;
     }
 
-    private String autologin;//是否自动登录，用于本地数据库操作，默认值为1,1为可以自动登录，0为不
+    private String autologin = "0";//是否自动登录，用于本地数据库操作，默认值为1,1为可以自动登录，0为不
 
     public String getUsername() {
         return username;
