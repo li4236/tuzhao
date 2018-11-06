@@ -918,7 +918,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                                 LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
                                 LocationManager.getInstance().getmAmapLocation().getLongitude() + "", amapLocation.getCity());//进行请求充电桩和停车位数据
                     }
+                    //网络状态切换的时候定位精准度会变化
                     mLocationMarker.setPosition(mLastlocationLatlng);
+                    mLocationCircleMarker.setPosition(mLastlocationLatlng);
                 }
             } else {
                 if (!mHadShowGps && (!noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION) || mRequestAccessCoarseLocation)) {
@@ -1060,6 +1062,46 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+        if (mUpdateActivityFinish) {
+            //刚启动的时候如果检查到更新打开了UpdateActivity则会导致地图还没显示当前位置就中途停住，当UpdateActivity关闭时继续显示当前位置
+            mLocationIv.performClick();
+            mUpdateActivityFinish = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+        if (show) {
+            controlAnimfragment(mFragment_content);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (Objects.equals(getIntent().getStringExtra(ConstansUtil.REQUEST_FOR_RESULT), ConstansUtil.CHANGE_PASSWORD)) {
+            mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         mlocationClient.stopLocation();
@@ -1103,46 +1145,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mLoadingDialog.cancel();
         }
         stopService(new Intent(this, UpdateService.class));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-        if (mUpdateActivityFinish) {
-            //刚启动的时候如果检查到更新打开了UpdateActivity则会导致地图还没显示当前位置就中途停住，当UpdateActivity关闭时继续显示当前位置
-            mLocationIv.performClick();
-            mUpdateActivityFinish = false;
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-        if (show) {
-            controlAnimfragment(mFragment_content);
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (Objects.equals(getIntent().getStringExtra(ConstansUtil.REQUEST_FOR_RESULT), ConstansUtil.CHANGE_PASSWORD)) {
-            mDrawerlayout.closeDrawer(GravityCompat.START);//关闭侧边
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
     }
 
     /**
