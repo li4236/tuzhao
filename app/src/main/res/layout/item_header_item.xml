@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="33dp"
     android:layout_marginBottom="7dp"
-    android:background="@drawable/little_yuan_gray_5dp"
+    android:background="@drawable/solid_w2_stroke_g1_width_1dp_corner_5dp"
     android:gravity="center"
     android:minWidth="89dp"
     android:textColor="#323232"

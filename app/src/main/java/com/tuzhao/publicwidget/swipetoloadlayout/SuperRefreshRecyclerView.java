@@ -67,6 +67,14 @@ public class SuperRefreshRecyclerView extends FrameLayout {
         recyclerView.addOnScrollListener(new RecyclerViewListener());
     }
 
+    public void setOnMoveListener(OnMoveListener onMoveListener) {
+        swipeToLoadLayout.setOnMoveListener(onMoveListener);
+    }
+
+    public View getHeaderView() {
+        return swipeToLoadLayout.getHeaderView();
+    }
+
     public void showEmpty() {
         if (emptyView.getChildCount() != 0) {
             swipeToLoadLayout.setVisibility(GONE);

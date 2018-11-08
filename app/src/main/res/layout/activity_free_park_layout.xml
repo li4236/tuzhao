@@ -46,7 +46,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_corner_5dp"
         android:gravity="center"
         android:text="绑定"
         android:textColor="@color/b1"

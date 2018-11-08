@@ -13,14 +13,15 @@ public class NearPointPCInfo extends BaseInfo {
     private String id;//停车场或充电桩的id
     private double longitude;//经度
     private double latitude;//纬度
+    private String distance;//距离车主的位置
     private String cancharge;//是否可充电（是->存放充电站id）
-    private String isparkspace;//是否是停车场
+    private String isparkspace;//是否是停车场(1是,0不是)
     private String citycode;//城市码
     private String picture;//车场或电站图片
     private String address;//车场或电站地址
     private String name;//车场或电站名
     private double price;//车场或电站价格
-    private double grade;//车场或电站评分
+    private float grade;//车场或电站评分
     private int freeNumber;//空闲车位数量
     private int freeTime;//免费停车时长
 
@@ -46,6 +47,10 @@ public class NearPointPCInfo extends BaseInfo {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public boolean canCharge() {
+        return !"-1".equals(cancharge);
     }
 
     public String getCancharge() {
@@ -104,11 +109,11 @@ public class NearPointPCInfo extends BaseInfo {
         this.price = price;
     }
 
-    public double getGrade() {
+    public float getGrade() {
         return grade;
     }
 
-    public void setGrade(double grade) {
+    public void setGrade(float grade) {
         this.grade = grade;
     }
 
@@ -134,6 +139,18 @@ public class NearPointPCInfo extends BaseInfo {
 
     public void setFreeTime(int freeTime) {
         this.freeTime = freeTime;
+    }
+
+    public boolean isParkSpace() {
+        return "1".equals(isparkspace);
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
     @Override

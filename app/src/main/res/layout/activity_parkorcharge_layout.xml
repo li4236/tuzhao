@@ -41,12 +41,12 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
-            android:background="@drawable/w5_all_15dp"
+            android:background="@drawable/solid_w5_corner_15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
-                android:id="@+id/parkorcharge_search_iv"
+                android:id="@+id/search_iv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="6dp"
@@ -74,7 +74,7 @@
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/parkorcharge_search_iv"
+                app:layout_constraintStart_toEndOf="@id/search_iv"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>

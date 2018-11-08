@@ -56,6 +56,8 @@ public class SwipeToLoadLayout extends ViewGroup {
 
     private OnLoadMoreListener mLoadMoreListener;
 
+    private OnMoveListener mOnMoveListener;
+
     private View mHeaderView;
 
     private View mTargetView;
@@ -389,6 +391,10 @@ public class SwipeToLoadLayout extends ViewGroup {
         mHasFooterView = (mFooterView != null);
     }
 
+    public View getHeaderView() {
+        return mHeaderView;
+    }
+
     /**
      * TODO add gravity
      * LayoutParams of RefreshLoadMoreLayout
@@ -438,7 +444,7 @@ public class SwipeToLoadLayout extends ViewGroup {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        final int action =ev.getAction();
+        final int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
@@ -892,6 +898,10 @@ public class SwipeToLoadLayout extends ViewGroup {
         this.mRefreshListener = listener;
     }
 
+    public void setOnMoveListener(OnMoveListener onMoveListener) {
+        mOnMoveListener = onMoveListener;
+    }
+
     /**
      * set an {@link OnLoadMoreListener} to listening load more event
      *
@@ -970,7 +980,6 @@ public class SwipeToLoadLayout extends ViewGroup {
     /**
      * Whether it is possible for the child view of this layout to
      * scroll down. Override this if the child view is a custom view.
-     *
      */
     protected boolean canChildScrollDown() {
         return mTargetView.canScrollVertically(1);
@@ -1237,7 +1246,6 @@ public class SwipeToLoadLayout extends ViewGroup {
 
     /**
      * on not active finger up
-     *
      */
     private void onSecondaryPointerUp(MotionEvent ev) {
         final int pointerIndex = ev.getActionIndex();
@@ -1382,6 +1390,9 @@ public class SwipeToLoadLayout extends ViewGroup {
                 mHeaderView.setVisibility(VISIBLE);
                 ((SwipeTrigger) mHeaderView).onPrepare();
             }
+            if (mOnMoveListener != null) {
+                mOnMoveListener.onMove(0, false);
+            }
         }
 
         @Override
@@ -1436,6 +1447,9 @@ public class SwipeToLoadLayout extends ViewGroup {
             if (mFooterView != null && mFooterView instanceof SwipeTrigger && STATUS.isStatusDefault(mStatus)) {
                 mFooterView.setVisibility(VISIBLE);
                 ((SwipeTrigger) mFooterView).onPrepare();
+                if (mOnMoveListener != null) {
+                    mOnMoveListener.onMove(0, false);
+                }
             }
         }
 

@@ -12,6 +12,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
 import com.tuzhao.fragment.chargestationdetail.ChargeDetailFragment;
 import com.tuzhao.info.ChargeStationInfo;
+import com.tuzhao.utils.ConstansUtil;
 
 /**
  * Created by TZL12 on 2017/11/16.
@@ -44,8 +45,8 @@ public class ChargestationDetailActivity extends BaseActivity {
         if (getIntent().hasExtra("chargestation_info")) {
             chargestation_info = (ChargeStationInfo) getIntent().getSerializableExtra("chargestation_info");
         } else {
-            chargestation_id = getIntent().getStringExtra("chargestation_id");
-            city_code = getIntent().getStringExtra("city_code");
+            chargestation_id = getIntent().getStringExtra(ConstansUtil.CHARGE_ID);
+            city_code = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
         }
 
         if (chargestation_info == null) {

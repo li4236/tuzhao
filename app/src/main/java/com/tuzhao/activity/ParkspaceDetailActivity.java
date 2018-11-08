@@ -56,8 +56,8 @@ public class ParkspaceDetailActivity extends BaseActivity {
         if (getIntent().hasExtra("parkspace_info")) {
             mParkLotInfo = getIntent().getParcelableExtra("parkspace_info");
         } else {
-            parkspace_id = getIntent().getStringExtra("parkspace_id");
-            city_code = getIntent().getStringExtra("city_code");
+            parkspace_id = getIntent().getStringExtra(ConstansUtil.PARK_LOT_ID);
+            city_code = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
         }
         if (getIntent().hasExtra("park_list")) {
             mParkInfos = getIntent().getParcelableArrayListExtra("park_list");

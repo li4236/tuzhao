@@ -28,7 +28,7 @@
         android:id="@+id/invoice_progress_type_item"
         style="@style/TenTextY3Style"
         android:layout_marginStart="10dp"
-        android:background="@drawable/hollow_y3_6dp"
+        android:background="@drawable/stroke_y3_width_1px_corner_6dp"
         android:paddingEnd="6dp"
         android:paddingStart="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/invoice_progress_company_item"

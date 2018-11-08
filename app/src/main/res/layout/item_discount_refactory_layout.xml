@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:background="@drawable/w0_all_5dp">
+            android:background="@drawable/solid_w0_corner_5dp">
 
             <View
                 android:id="@+id/top_divider"
@@ -106,7 +106,7 @@
         android:id="@+id/delete_discount"
         android:layout_width="60dp"
         android:layout_height="match_parent"
-        android:background="@drawable/solid_r1_all_5dp"
+        android:background="@drawable/solid_r1_corner_5dp"
         android:gravity="center"
         android:text="删除"
         android:textColor="@color/w0"

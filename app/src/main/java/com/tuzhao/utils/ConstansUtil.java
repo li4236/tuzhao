@@ -284,7 +284,11 @@ public class ConstansUtil {
      */
     public static final String JUMP_TO_DEPOSIT_PAYMENT = "JumpToDepositPayment";
 
+    /**
+     * 车场id
+     */
     public static final String PARK_LOT_ID = "ParkLotId";
+
 
     /**
      * 车场名称
@@ -295,6 +299,11 @@ public class ConstansUtil {
      * 车场信息
      */
     public static final String PARK_LOT_INFO = "ParkLotInfo";
+
+    /**
+     * 电站id
+     */
+    public static final String CHARGE_ID = "ChargeId";
 
     /**
      * 对话框弹出,订单评论
@@ -427,6 +436,11 @@ public class ConstansUtil {
      * 纬度
      */
     public static final String LONGITUDE = "Longitude";
+
+    /**
+     * 经纬度
+     */
+    public static final String LATLNG = "LatLng";
 
     /**
      * 密码登录

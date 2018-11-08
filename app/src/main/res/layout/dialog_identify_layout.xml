@@ -58,7 +58,7 @@
         android:id="@+id/upload_tv"
         android:layout_width="330dp"
         android:layout_height="44dp"
-        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_corner_5dp"
         android:gravity="center"
         android:text="上传"
         android:textColor="@color/b1"

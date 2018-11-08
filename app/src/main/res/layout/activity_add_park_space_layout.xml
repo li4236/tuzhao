@@ -305,7 +305,7 @@
                     android:layout_width="200dp"
                     android:layout_height="60dp"
                     android:layout_marginStart="16dp"
-                    android:background="@drawable/y3_all_1dp"
+                    android:background="@drawable/stroke_y3_corner_1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/property_photo_tv"
                     app:layout_constraintTop_toTopOf="parent">

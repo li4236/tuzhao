@@ -279,6 +279,17 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
      */
     protected abstract void loadData();
 
+    protected int converItemViewId(int viewType) {
+        if (viewType != -1) {
+            return viewType;
+        }
+        return 0;
+    }
+
+    protected int converGetItmeViewType(T t, int position) {
+        return 0;
+    }
+
     /**
      * @return adapter中的itemViewId
      */
@@ -315,6 +326,16 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
         @Override
         protected int itemViewId() {
             return itemViewResourceId();
+        }
+
+        @Override
+        protected int itemViewId(int viewType) {
+            return converItemViewId(viewType);
+        }
+
+        @Override
+        protected int converGetItemViewType(T t, int position) {
+            return converGetItmeViewType(t, position);
         }
 
     }

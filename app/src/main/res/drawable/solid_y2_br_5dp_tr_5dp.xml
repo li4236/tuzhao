@@ -4,10 +4,7 @@
     <!--背景颜色-->
     <solid android:color="@color/y2" />
     <!--四个圆角的大小设置-->
-    <corners android:topLeftRadius="0dp"
-        android:topRightRadius="5dp"
+    <corners
         android:bottomRightRadius="5dp"
-        android:bottomLeftRadius="0dp"/>
-    <!--边框的宽度和颜色-->
-    <stroke android:width="0dp" android:color="@color/y2" />
+        android:topRightRadius="5dp" />
 </shape>

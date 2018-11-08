@@ -215,7 +215,7 @@
         android:layout_width="140dp"
         android:layout_height="40dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/y3_all_8dp"
+        android:background="@drawable/stroke_y3_corner_8dp"
         android:gravity="center"
         android:text="取消申请"
         android:textColor="@color/y3"

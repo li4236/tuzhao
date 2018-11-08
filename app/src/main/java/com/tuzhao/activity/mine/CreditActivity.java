@@ -84,21 +84,21 @@ public class CreditActivity extends BaseStatusActivity implements View.OnClickLi
         mCredit = Integer.valueOf(UserManager.getInstance().getUserInfo().getCredit());
         if (mCredit <= ConstansUtil.POOR_CREDIT_SCORE) {
             mCreditStage.setText("较差");
-            mCreditStage.setBackgroundResource(R.drawable.r7_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.solid_r7_corner_3dp);
             ImageUtil.showImgPic(mAdvanceEndOrderIv, R.drawable.ic_noflash);
         } else if (mCredit <= ConstansUtil.FINE_CREDIT_SCORE) {
             mCreditStage.setText("一般");
-            mCreditStage.setBackgroundResource(R.drawable.y2_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.solid_y2_corner_3dp);
             ImageUtil.showImgPic(mAdvanceEndOrderIv, R.drawable.ic_noflash);
         } else if (mCredit <= ConstansUtil.GOOD_CREDIT_SCORE) {
             mCreditStage.setText("良好");
-            mCreditStage.setBackgroundResource(R.drawable.y3_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.solid_y3_corner_3dp);
         } else if (mCredit <= ConstansUtil.VERY_GOOD_CREDIT_SCORE) {
             mCreditStage.setText("优秀");
-            mCreditStage.setBackgroundResource(R.drawable.blue5_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.solid_blue5_corner_3dp);
         } else {
             mCreditStage.setText("极好");
-            mCreditStage.setBackgroundResource(R.drawable.green11_all_3dp);
+            mCreditStage.setBackgroundResource(R.drawable.solid_green11_corner_3dp);
         }
 
         String parkGracePeriod = String.valueOf(UserManager.getInstance().getUserInfo().getLeave_time());

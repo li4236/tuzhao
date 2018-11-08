@@ -288,7 +288,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/yuan_little_green_5dp"
+                    android:background="@drawable/solid_y2_tl_5dp_tr_5dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -405,7 +405,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/yuan_little_white_bl_br_5dp"
+                    android:background="@drawable/solid_w0_bl_5dp_br_5dp"
                     android:orientation="horizontal">
 
                     <TextView

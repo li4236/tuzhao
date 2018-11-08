@@ -303,7 +303,7 @@ public class ParkOrderPayActivity extends BaseStatusActivity implements View.OnC
         constraintSet.connect(R.id.monthly_card_offer, ConstraintSet.END, R.id.park_fee, ConstraintSet.END);
         constraintSet.applyTo(constraintLayout);
 
-        mMonthlyCardDiscount.setBackgroundResource(R.drawable.solid_r8_all_1dp);
+        mMonthlyCardDiscount.setBackgroundResource(R.drawable.solid_r8_corner_1dp);
         mMonthlyCardDiscount.setText(DateUtil.deleteZero(mParkOrderInfo.getMonthlyCardDiscount() * 10) + "折");
         mMonthlyCardOffer.setTextColor(ContextCompat.getColor(this, R.color.r8));
         mMonthlyCardOffer.setOnClickListener(null);

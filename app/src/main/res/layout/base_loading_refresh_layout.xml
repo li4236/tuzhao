@@ -15,7 +15,7 @@
         android:id="@+id/loading_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/little_yuan_gray_10dp"
+        android:background="@drawable/solid_g6_corner_10dp"
         android:paddingBottom="8dp"
         android:visibility="invisible"
         android:layout_marginBottom="90dp"

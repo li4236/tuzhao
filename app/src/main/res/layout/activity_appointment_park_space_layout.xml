@@ -190,7 +190,7 @@
         android:layout_marginBottom="14dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/yuan_little_graynall_8dp"
+        android:background="@drawable/solid_g5_corner_8dp"
         android:gravity="center"
         android:paddingBottom="12dp"
         android:paddingTop="12dp"

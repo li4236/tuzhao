@@ -23,7 +23,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/corner_5dp_stroke_1dp_g6"
+        android:background="@drawable/stroke_g6_1dp_corner_5dp"
         android:contentDescription="@string/picture_description"
         android:drawableStart="@drawable/ic_add"
         android:gravity="center"

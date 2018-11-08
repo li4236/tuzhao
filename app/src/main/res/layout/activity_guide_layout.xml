@@ -27,7 +27,7 @@
             android:id="@+id/guide_one_indicator"
             android:layout_width="40dp"
             android:layout_height="3dp"
-            android:background="@drawable/yuan_little_y2_all_5dp"
+            android:background="@drawable/solid_y2_corner_5dp"
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
@@ -35,7 +35,7 @@
             android:layout_width="40dp"
             android:layout_height="3dp"
             android:layout_marginStart="15dp"
-            android:background="@drawable/yuan_little_gray_5dp"
+            android:background="@drawable/solid_g13_corner_5dp"
             app:layout_constraintStart_toEndOf="@+id/guide_one_indicator" />
 
         <View
@@ -43,7 +43,7 @@
             android:layout_width="40dp"
             android:layout_height="3dp"
             android:layout_marginStart="15dp"
-            android:background="@drawable/yuan_little_gray_5dp"
+            android:background="@drawable/solid_g13_corner_5dp"
             app:layout_constraintStart_toEndOf="@+id/guide_two_indicator" />
 
     </android.support.constraint.ConstraintLayout>

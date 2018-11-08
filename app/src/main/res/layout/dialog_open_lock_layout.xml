@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/w0_all_15dp"
+    android:background="@drawable/solid_w0_corner_15dp"
     android:minHeight="240dp"
     android:minWidth="240dp">
 
@@ -56,7 +56,7 @@
         style="@style/SixtyTextB1Style"
         android:layout_width="110dp"
         android:layout_height="36dp"
-        android:background="@drawable/normal_y6_to_y4_press_y12_to_y5_all_18dp"
+        android:background="@drawable/normal_y6_to_y4_press_y12_to_y5_corner_18dp"
         android:text="重试"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

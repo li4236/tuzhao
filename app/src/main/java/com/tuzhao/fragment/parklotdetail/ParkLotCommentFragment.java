@@ -133,7 +133,7 @@ public class ParkLotCommentFragment extends BaseFragment {
         textview_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textview_all.setBackground(ContextCompat.getDrawable(mContext, R.drawable.yuan_little_green_lt_lb_5dp));
+                textview_all.setBackground(ContextCompat.getDrawable(mContext, R.drawable.solid_y2_bl_5dp_tl_5dp));
                 textview_all.setTextColor(ContextCompat.getColor(mContext, R.color.w0));
                 textview_good.setBackgroundColor(ContextCompat.getColor(mContext, R.color.nocolor));
                 textview_good.setTextColor(ContextCompat.getColor(mContext, R.color.b1));
@@ -163,7 +163,7 @@ public class ParkLotCommentFragment extends BaseFragment {
                 textview_all.setTextColor(ContextCompat.getColor(mContext, R.color.b1));
                 textview_good.setBackgroundColor(ContextCompat.getColor(mContext, R.color.nocolor));
                 textview_good.setTextColor(ContextCompat.getColor(mContext, R.color.b1));
-                textview_bad.setBackground(ContextCompat.getDrawable(mContext, R.drawable.yuan_little_green_rt_rb_5dp));
+                textview_bad.setBackground(ContextCompat.getDrawable(mContext, R.drawable.solid_y2_br_5dp_tr_5dp));
                 textview_bad.setTextColor(ContextCompat.getColor(mContext, R.color.w0));
                 type = 3;
                 initAdapterData();

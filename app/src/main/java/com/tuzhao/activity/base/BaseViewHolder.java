@@ -4,6 +4,10 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.cb.ratingbar.CBRatingBar;
 import com.tuzhao.R;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.publicwidget.customView.CircleImageView;
@@ -51,6 +56,15 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setText(@IdRes int id, String text, int start, int end, @ColorInt int foregroundColor, int textSize) {
+        TextView textView = getView(id);
+        SpannableString spannableString = new SpannableString(text);
+        spannableString.setSpan(new ForegroundColorSpan(foregroundColor), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(textSize), start, end, foregroundColor);
+        textView.setText(spannableString);
+        return this;
+    }
+
     public BaseViewHolder appendText(@IdRes int id, String text) {
         ((TextView) getView(id)).append(text);
         return this;
@@ -86,6 +100,11 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setStartProgress(@IdRes int id, float progress) {
+        ((CBRatingBar) getView(id)).setStarProgress(progress);
+        return this;
+    }
+
     public BaseViewHolder showPic(@IdRes int id, @DrawableRes int drawableRes) {
         ImageUtil.showPic((ImageView) getView(id), drawableRes);
         return this;
@@ -107,7 +126,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public BaseViewHolder showImpPic(@IdRes int id, String url) {
-        ImageUtil.showImgPic((ImageView)getView(id), url);
+        ImageUtil.showImgPic((ImageView) getView(id), url);
         return this;
     }
 
@@ -171,8 +190,27 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder showViewOrGone(@IdRes int id, boolean show) {
+        View view = getView(id);
+        if (show) {
+            if (view.getVisibility() != View.VISIBLE) {
+                view.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (view.getVisibility() != View.GONE) {
+                view.setVisibility(View.GONE);
+            }
+        }
+        return this;
+    }
+
     public BaseViewHolder setOnClickListener(@IdRes int id, View.OnClickListener onClickListener) {
         getView(id).setOnClickListener(onClickListener);
+        return this;
+    }
+
+    public BaseViewHolder setOnClickListener(View.OnClickListener onClickListener) {
+        itemView.setOnClickListener(onClickListener);
         return this;
     }
 

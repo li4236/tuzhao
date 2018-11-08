@@ -477,7 +477,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
                     .setText(R.id.monthly_card_price, monthlyCardPrice.getPrice() + "元")
                     .setTextColor(R.id.validity_period, canChoose ? ConstansUtil.Y3_COLOR : ConstansUtil.G10_COLOR)
                     .setTextColor(R.id.monthly_card_price, canChoose ? ConstansUtil.Y3_COLOR : ConstansUtil.G10_COLOR)
-                    .setBackground(R.id.monthly_card_price_cl, canChoose ? R.drawable.stroke_y3_all_5dp : R.drawable.stroke_g10_all_5dp)
+                    .setBackground(R.id.monthly_card_price_cl, canChoose ? R.drawable.stroke_y3_corner_5dp : R.drawable.stroke_g10_corner_5dp)
                     .itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

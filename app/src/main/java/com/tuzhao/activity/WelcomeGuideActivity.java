@@ -75,8 +75,8 @@ public class WelcomeGuideActivity extends BaseActivity {
     }
 
     private void setCurrentIndex(int currentIndex) {
-        mIndicators[this.currentIndex].setBackground(ContextCompat.getDrawable(this, R.drawable.yuan_little_gray_5dp));
-        mIndicators[currentIndex].setBackground(ContextCompat.getDrawable(this, R.drawable.yuan_little_y2_all_5dp));
+        mIndicators[this.currentIndex].setBackground(ContextCompat.getDrawable(this, R.drawable.solid_g13_corner_5dp));
+        mIndicators[currentIndex].setBackground(ContextCompat.getDrawable(this, R.drawable.solid_y2_corner_5dp));
         mFragments.get(this.currentIndex).isVisibilityToUser(false);
         mFragments.get(currentIndex).isVisibilityToUser(true);
         this.currentIndex = currentIndex;

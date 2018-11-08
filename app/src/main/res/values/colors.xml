@@ -13,7 +13,9 @@
     <color name="w3">#f3f3f3</color>
     <color name="w4">#f9f8f7</color>
     <color name="w5">#f2f2f2</color>
+
     <color name="b1">#323232</color>
+
     <color name="g1">#b0b0b2</color>
     <color name="g2">#c3c3c3</color>
     <color name="g3">#8f8f8f</color>
@@ -30,6 +32,7 @@
     <color name="g14">#1a000000</color>
     <color name="g15">#b8b8b8</color>
     <color name="g16">#e5e5e5</color>
+
     <color name="green1">#3edc94</color>
     <color name="green2">#3eef9f</color>
     <color name="green3">#28CF83</color>
@@ -41,12 +44,15 @@
     <color name="green9">#61ff30</color>
     <color name="green10">#14d499</color>
     <color name="green11">#82D093</color>
+    <color name="green12">#54d6a2</color>
+
     <color name="blue1">#005bea</color>
     <color name="blue2">#0979fe</color>
     <color name="blue3">#80a8fd</color>
     <color name="blue4">#48c6ef</color>
     <color name="blue5">#3dd6fa</color>
     <color name="blue6">#66a4ff</color>
+
     <color name="r1">#ef413e</color>
     <color name="r2">#ff0000</color>
     <color name="r3">#cd2a20</color>
@@ -55,6 +61,7 @@
     <color name="r6">#ff6c6c</color>
     <color name="r7">#ff3052</color>
     <color name="r8">#ff0101</color>
+
     <color name="y1">#ff863b</color>
     <color name="y2">#ffcc30</color>
     <color name="y3">#ffa830</color>
@@ -73,4 +80,6 @@
     <color name="y16">#e5b52c</color>
     <color name="y17">#ffe428</color>
     <color name="y18">#1affa830</color>
+
+    <color name="p1">#8886d9</color>
 </resources>

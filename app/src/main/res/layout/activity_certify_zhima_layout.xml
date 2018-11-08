@@ -77,7 +77,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+        android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_corner_5dp"
         android:text="开始认证"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

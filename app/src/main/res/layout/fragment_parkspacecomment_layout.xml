@@ -11,7 +11,7 @@
         android:layout_marginRight="38dp"
         android:layout_marginTop="12dp"
         android:padding="2px"
-        android:background="@drawable/little_yuan_black_5dp">
+        android:background="@drawable/solid_w5_stroke_g5_width_2px_corner_5dp">
 
         <TextView
             android:id="@+id/id_fragment_parkspacecomment_layout_textview_all"
@@ -23,7 +23,7 @@
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
             android:textColor="@color/w0"
-            android:background="@drawable/yuan_little_green_lt_lb_5dp"
+            android:background="@drawable/solid_y2_bl_5dp_tl_5dp"
             android:text="全部评论"/>
         <ImageView
             android:layout_width="2px"

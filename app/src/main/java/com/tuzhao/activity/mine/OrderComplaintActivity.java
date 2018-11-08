@@ -237,8 +237,8 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         protected void conver(@NonNull BaseViewHolder holder, com.tuzhao.info.Pair<String, Boolean> stringBooleanPair, final int position) {
             CheckTextView checkedTextView = holder.getView(R.id.reason);
             checkedTextView.setText(stringBooleanPair.getFirst());
-            checkedTextView.setNoCheckDrawble(R.drawable.g6_stroke_all_3dp);
-            checkedTextView.setCheckDrawable(R.drawable.solide_y18_stroke_y3_all_3dp);
+            checkedTextView.setNoCheckDrawble(R.drawable.stroke_g6_width_1dp_corner_3dp);
+            checkedTextView.setCheckDrawable(R.drawable.solid_y18_stroke_y3_corner_3dp);
 
             checkedTextView.setChecked(stringBooleanPair.getSecond());
             if (stringBooleanPair.getSecond()) {

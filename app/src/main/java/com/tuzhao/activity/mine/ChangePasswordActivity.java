@@ -373,7 +373,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
                    /* mHandler.removeMessages(HIDE_ORIGINAL_PASSWORD_ERROR);
                     mHandler.sendEmptyMessageDelayed(HIDE_ORIGINAL_PASSWORD_ERROR, 1500);
 
-                    mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);*/
                     //mOriginalPassword.requestFocus();
                     //动画结束后原密码输入框获取焦点
                     mOriginalPassword.setSelection(getTextLength(mOriginalPassword));
@@ -384,7 +384,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
         /*if (!isVisible(mOriginalPasswordError)) {
             mOriginalPasswordError.setVisibility(View.VISIBLE);
         }
-        mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        mOriginalPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);*/
         //mOriginalPassword.clearFocus();
         mOriginPasswordErrorAnimator.start();
     }
@@ -405,7 +405,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     /*mHandler.sendEmptyMessageDelayed(HIDE_NEW_PASSWORD_ERROR, 1500);
-                    mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);*/
                     //mNewPassword.requestFocus();
                     mNewPassword.setSelection(getTextLength(mNewPassword));
                     setFocus();
@@ -413,7 +413,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
             });
         }
         /*mNewPasswordError.setVisibility(View.VISIBLE);
-        mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        mNewPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);*/
         //mNewPassword.clearFocus();
         mNewPasswrodErrorAnimator.start();
     }
@@ -435,7 +435,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
                     super.onAnimationEnd(animation);
                     /*mHandler.removeMessages(HIDE_CONFIRM_PASSWORD_ERROR);
                     mHandler.sendEmptyMessageDelayed(HIDE_CONFIRM_PASSWORD_ERROR, 1500);
-                    mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);*/
+                    mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);*/
                     //mConfirmPassword.requestFocus();
                     mConfirmPassword.setSelection(getTextLength(mConfirmPassword));
                     setFocus();
@@ -445,7 +445,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
         /*if (!isVisible(mConfirmPasswordError)) {
             mConfirmPasswordError.setVisibility(View.VISIBLE);
         }
-        mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);*/
+        mConfirmPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);*/
         //mConfirmPassword.clearFocus();
         mConfirmPasswordErrorAnimator.start();
     }
@@ -529,7 +529,7 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
     private boolean originPasswrodIsCorrect() {
         if (getTextLength(mOriginalPassword) == 0) {
             //没有输入密码，输入框变红色，并在左下方显示请输入原密码
-            mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            mOriginalPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
             if (!getText(mOriginalPasswordError).equals(INPUT_ORIGIN_PASSWORD)) {
                 mOriginalPasswordError.setText(INPUT_ORIGIN_PASSWORD);
             }
@@ -537,14 +537,14 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
             return false;
         } else if (!DensityUtil.MD5code(getText(mOriginalPassword)).equals(mLocalOriginalPassword)) {
             //密码错误
-            mOriginalPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            mOriginalPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
             if (!getText(mOriginalPasswordError).equals(ORIGIN_PASSWROD_INCORRECT)) {
                 mOriginalPasswordError.setText(ORIGIN_PASSWROD_INCORRECT);
             }
             showView(mOriginalPasswordError);
             return false;
         } else {
-            mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+            mOriginalPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
             hideView(mOriginalPasswordError);
             return true;
         }
@@ -555,28 +555,28 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
      */
     private boolean newPasswordIsCorrect() {
         if (getTextLength(mNewPassword) == 0) {
-            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            mNewPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
             if (!getText(mNewPasswordError).equals(INPUT_NEW_PASSWORD)) {
                 mNewPasswordError.setText(INPUT_NEW_PASSWORD);
             }
             showView(mNewPasswordError);
             return false;
         } else if (getTextLength(mNewPassword) < 8) {
-            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            mNewPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
             if (!getText(mNewPasswordError).equals(PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT)) {
                 mNewPasswordError.setText(PASSWROD_LENGTH_CANNOT_LESS_THAN_EIGHT);
             }
             showView(mNewPasswordError);
             return false;
         } else if (DensityUtil.MD5code(getText(mNewPassword)).equals(mLocalOriginalPassword)) {
-            mNewPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+            mNewPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
             if (!getText(mNewPasswordError).equals(SAME_OF_ORIGIN_PASSWORD)) {
                 mNewPasswordError.setText(SAME_OF_ORIGIN_PASSWORD);
             }
             showView(mNewPasswordError);
             return false;
         } else {
-            mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+            mNewPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
             hideView(mNewPasswordError);
             return true;
         }
@@ -589,21 +589,21 @@ public class ChangePasswordActivity extends BaseStatusActivity implements View.O
     private boolean confirmPasswordIsCorrect() {
         if (mAlreadyClick) {
             if (getTextLength(mConfirmPassword) == 0) {
-                mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+                mConfirmPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
                 if (!getText(mConfirmPasswordError).equals(INPUT_NEW_PASSWORD_AGAIN)) {
                     mConfirmPasswordError.setText(INPUT_NEW_PASSWORD_AGAIN);
                 }
                 showView(mConfirmPasswordError);
                 return false;
             } else if (!getText(mNewPassword).equals(getText(mConfirmPassword))) {
-                mConfirmPassword.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+                mConfirmPassword.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
                 if (!getText(mConfirmPasswordError).equals(PASSWORD_IS_DIFFERENT)) {
                     mConfirmPasswordError.setText(PASSWORD_IS_DIFFERENT);
                 }
                 showView(mConfirmPasswordError);
                 return false;
             } else {
-                mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                mConfirmPassword.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
                 hideView(mConfirmPasswordError);
                 return true;
             }

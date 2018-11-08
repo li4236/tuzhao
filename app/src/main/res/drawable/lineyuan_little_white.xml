@@ -2,12 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--背景颜色-->
-    <solid android:color="#ffffff" />
+    <solid android:color="@color/w0" />
     <!--四个圆角的大小设置-->
-    <corners android:topLeftRadius="22dp"
-        android:topRightRadius="22dp"
-        android:bottomRightRadius="22dp"
-        android:bottomLeftRadius="22dp"/>
+    <corners android:radius="22dp"/>
     <!--边框的宽度和颜色-->
     <stroke android:width="1px" android:color="#afaeae" />
 </shape>

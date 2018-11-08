@@ -378,10 +378,11 @@ public abstract class BaseStatusFragment extends Fragment {
     }
 
     protected int dpToPx(float dp) {
-        if (getContext() != null) {
-            return DensityUtil.dp2px(getContext(), dp);
-        }
-        return 0;
+        return (int) (getResources().getDisplayMetrics().density * dp + 0.5);
+    }
+
+    protected int spToPx(float sp) {
+        return (int) (getResources().getDisplayMetrics().scaledDensity * sp);
     }
 
     protected void finish() {

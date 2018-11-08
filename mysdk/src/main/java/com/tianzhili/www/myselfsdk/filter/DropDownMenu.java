@@ -145,10 +145,8 @@ public class DropDownMenu extends RelativeLayout implements View.OnClickListener
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(-1, -2);
         params.bottomMargin = bottomMargin;//添加距离底部高度
         // TODO: 2017/10/30 提升到fragment时，有bug
-        if (view != null) {
-            frameLayoutContainer.removeView(view);
-            frameLayoutContainer.addView(view, position, params);
-        }
+        frameLayoutContainer.removeView(view);
+        frameLayoutContainer.addView(view, position, params);
         view.setVisibility(GONE);
     }
 

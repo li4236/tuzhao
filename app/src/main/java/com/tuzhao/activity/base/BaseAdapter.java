@@ -75,7 +75,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-        //super.onBindViewHolder(holder, position, payloads);
         if (getItemViewType(position) != HEADER_VIEW && getItemViewType(position) != FOOTER_VIEW) {
             if (payloads.isEmpty()) {
                 conver(holder, mData.get(position - getHeadViewCount()), position - getHeadViewCount());
@@ -218,15 +217,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
     protected abstract int itemViewId();
 
     /**
-     * 如果子类需要不同的itemViewType则重写该方法
-     *
-     * @param position 对应data的实际position
-     */
-    protected int converGetItemViewType(T t, int position) {
-        return 0;
-    }
-
-    /**
      * 如果子类需要不同的布局则重写该方法
      * 建议converGetItemViewType返回的是布局的id，否则重写该方法时不要调super
      */
@@ -235,6 +225,15 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         if (viewType != 0) {
             return viewType;
         }
+        return 0;
+    }
+
+    /**
+     * 如果子类需要不同的itemViewType则重写该方法
+     *
+     * @param position 对应data的实际position
+     */
+    protected int converGetItemViewType(T t, int position) {
         return 0;
     }
 

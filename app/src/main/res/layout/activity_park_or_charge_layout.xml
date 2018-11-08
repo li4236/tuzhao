@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_cl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/base_tb"
+        layout="@layout/base_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/top_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/w0"
+        app:layout_constraintTop_toBottomOf="@+id/base_tb">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/park_or_charge_cl"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/solid_w5_corner_15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/search_iv"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="6dp"
+                android:contentDescription="@string/picture_description"
+                android:src="@drawable/ic_scarch2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/search_address"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:ellipsize="end"
+                android:fadeScrollbars="false"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:scrollbars="none"
+                android:textColor="@color/b1"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/search_iv"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <com.tuzhao.publicwidget.customView.CompatCheckTextView
+            android:id="@+id/request_by_sort"
+            style="@style/TwentyTextG6Style"
+            android:layout_width="0dp"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="排序"
+            app:layout_constraintEnd_toStartOf="@+id/request_by_type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/park_or_charge_cl" />
+
+        <com.tuzhao.publicwidget.customView.CompatCheckTextView
+            android:id="@+id/request_by_type"
+            style="@style/TwentyTextG6Style"
+            android:layout_width="0dp"
+            android:paddingBottom="12dp"
+            android:text="类别"
+            app:layout_constraintEnd_toStartOf="@+id/request_by_distance"
+            app:layout_constraintStart_toEndOf="@+id/request_by_sort"
+            app:layout_constraintTop_toTopOf="@+id/request_by_sort" />
+
+        <com.tuzhao.publicwidget.customView.CompatCheckTextView
+            android:id="@+id/request_by_distance"
+            style="@style/TwentyTextG6Style"
+            android:layout_width="0dp"
+            android:paddingBottom="12dp"
+            android:text="距离"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/request_by_type"
+            app:layout_constraintTop_toTopOf="@+id/request_by_sort" />
+
+        <View
+            style="@style/dividerStyle"
+            app:layout_constraintTop_toBottomOf="@+id/request_by_sort" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <com.tuzhao.publicwidget.swipetoloadlayout.SuperRefreshRecyclerView
+        android:id="@+id/base_srrv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_cl" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/filter_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/top_cl" />
+
+    <View
+        android:id="@+id/filter_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#33000000"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_rv" />
+
+</android.support.constraint.ConstraintLayout>

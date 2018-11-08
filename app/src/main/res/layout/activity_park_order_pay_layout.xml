@@ -166,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="1dp"
-                    android:background="@drawable/solid_g6_all_1dp"
+                    android:background="@drawable/solid_g6_corner_1dp"
                     android:gravity="center"
                     android:paddingEnd="1dp"
                     android:paddingStart="1dp"

@@ -610,10 +610,10 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_content_main_layout_textview_parknow:
-                intent = new Intent(MainActivity.this, ParkOrChargeListActivity.class);
-                intent.putExtra("citycode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
-                intent.putExtra("lat", aMap.getCameraPosition().target.latitude);
-                intent.putExtra("lon", aMap.getCameraPosition().target.longitude);
+                intent = new Intent(MainActivity.this, ParkOrChargeActivity.class);
+                intent.putExtra(ConstansUtil.CITY_CODE, isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
+                intent.putExtra(ConstansUtil.LATITUDE, aMap.getCameraPosition().target.latitude);
+                intent.putExtra(ConstansUtil.LONGITUDE, aMap.getCameraPosition().target.longitude);
                 startActivity(intent);
                 break;
         }
@@ -805,6 +805,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 .execute(new JsonCallback<Base_Class_List_Info<NearPointPCInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_List_Info<NearPointPCInfo> homePC_info, Call call, Response response) {
+                        mAllMarkerData.clear();
                         for (NearPointPCInfo info : homePC_info.data) {
                             RegionItem item = new RegionItem(info.getId(), new LatLng(info.getLatitude(), info.getLongitude()),
                                     info.getCancharge() == null ? "-1" : info.getCancharge(), info.getIsparkspace().equals("1"), citycode,

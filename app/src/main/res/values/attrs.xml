@@ -144,4 +144,8 @@
         <attr name="corner_text_bottom_margin" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="RoundedRectangleImageView">
+        <attr name="rounded_radius" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:state_pressed="true" android:drawable="@drawable/solid_y7_to_y16_all_12dp" />
-
-    <item android:drawable="@drawable/solid_y17_to_y15_all_12dp" />
-
-</selector>

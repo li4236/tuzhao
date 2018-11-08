@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/w0"
+    android:paddingTop="16dp">
+
+    <com.tuzhao.publicwidget.customView.RoundedRectangleImageView
+        android:id="@+id/park_or_charge_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:src="@mipmap/ic_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/station_type"
+        style="@style/TwentyTextB1Style"
+        android:layout_marginStart="16dp"
+        android:text="充电站"
+        app:layout_constraintStart_toEndOf="@id/park_or_charge_iv"
+        app:layout_constraintTop_toTopOf="@+id/park_or_charge_iv" />
+
+    <TextView
+        android:id="@+id/charge_price"
+        style="@style/TenTextG6Stytle"
+        android:text="均价3.0元/度"
+        app:layout_constraintBottom_toTopOf="@+id/location_description"
+        app:layout_constraintStart_toStartOf="@id/station_type"
+        app:layout_constraintTop_toBottomOf="@id/station_type" />
+
+    <TextView
+        android:id="@+id/location_description"
+        style="@style/TenTextG6Stytle"
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        android:text="详细地址"
+        app:layout_constraintBottom_toBottomOf="@+id/park_or_charge_iv"
+        app:layout_constraintEnd_toStartOf="@+id/park_or_charge_distance"
+        app:layout_constraintStart_toStartOf="@id/charge_price" />
+
+    <TextView
+        android:id="@+id/free_park_space_tv"
+        style="@style/TenTextG6Stytle"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/solid_y3_corner_2dp"
+        android:text="空"
+        android:textColor="@color/w0"
+        app:layout_constraintStart_toStartOf="@id/location_description"
+        app:layout_constraintTop_toBottomOf="@+id/location_description" />
+
+    <TextView
+        android:id="@+id/free_park_space"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginStart="6dp"
+        android:text="空闲车位20个"
+        app:layout_constraintBottom_toBottomOf="@+id/free_park_space_tv"
+        app:layout_constraintStart_toEndOf="@id/free_park_space_tv"
+        app:layout_constraintTop_toTopOf="@+id/free_park_space_tv" />
+
+    <TextView
+        android:id="@+id/free_park_time_tv"
+        style="@style/TenTextG6Stytle"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/solid_green12_corner_2dp"
+        android:text="免"
+        android:textColor="@color/w0"
+        app:layout_constraintStart_toStartOf="@id/location_description"
+        app:layout_constraintTop_toBottomOf="@+id/free_park_space_tv" />
+
+    <TextView
+        android:id="@+id/free_park_time"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginStart="6dp"
+        android:text="前30分钟免费"
+        app:layout_constraintBottom_toBottomOf="@+id/free_park_time_tv"
+        app:layout_constraintStart_toEndOf="@id/free_park_time_tv"
+        app:layout_constraintTop_toTopOf="@+id/free_park_time_tv" />
+
+    <TextView
+        android:id="@+id/can_charge_tv"
+        style="@style/TenTextG6Stytle"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/solid_p1_corner_2dp"
+        android:text="充"
+        android:textColor="@color/w0"
+        app:layout_constraintStart_toStartOf="@id/location_description"
+        app:layout_constraintTop_toBottomOf="@+id/free_park_time_tv" />
+
+    <TextView
+        android:id="@+id/can_charge"
+        style="@style/TenTextG6Stytle"
+        android:layout_marginStart="6dp"
+        android:text="充电桩提供充电"
+        app:layout_constraintBottom_toBottomOf="@+id/can_charge_tv"
+        app:layout_constraintStart_toEndOf="@id/can_charge_tv"
+        app:layout_constraintTop_toTopOf="@+id/can_charge_tv" />
+
+    <com.cb.ratingbar.CBRatingBar
+        android:id="@+id/park_or_charge_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/charge_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/charge_price"
+        app:starCanTouch="true"
+        app:starCount="5"
+        app:starCoverColor="@color/y2"
+        app:starEndColor="#00ff00"
+        app:starFillColor="#ffffff"
+        app:starMaxProgress="5"
+        app:starPathData="@string/round_star"
+        app:starPathDataId="@string/round_star"
+        app:starPointCount="5"
+        app:starProgress="4"
+        app:starShowStroke="true"
+        app:starSize="10dp"
+        app:starSpace="4dp"
+        app:starStartColor="#0000ff"
+        app:starStrokeColor="@color/y3"
+        app:starStrokeWidth="2px"
+        app:starUseGradient="false" />
+
+    <TextView
+        android:id="@+id/park_or_charge_distance"
+        style="@style/TenTextG6Stytle"
+        android:text="0.8km"
+        app:layout_constraintBottom_toBottomOf="@id/location_description"
+        app:layout_constraintEnd_toEndOf="@+id/park_or_charge_cb"
+        app:layout_constraintTop_toTopOf="@+id/location_description" />
+
+    <View
+        style="@style/dividerStyle"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/can_charge_tv" />
+
+</android.support.constraint.ConstraintLayout>

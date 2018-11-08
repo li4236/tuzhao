@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:background="@drawable/w0_all_10dp"
+        android:background="@drawable/solid_w0_corner_10dp"
         android:paddingBottom="16dp"
         android:paddingStart="26dp"
         android:paddingTop="16dp">
@@ -85,7 +85,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="6dp"
-        android:background="@drawable/w0_all_10dp"
+        android:background="@drawable/solid_w0_corner_10dp"
         android:text="取消"
         android:textSize="18sp" />
 

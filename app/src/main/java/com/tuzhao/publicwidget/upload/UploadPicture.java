@@ -356,7 +356,7 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
 
     protected void setTakePhotoPic(ImageView imageView) {
         imageView.setPadding(mStartPadding, mTopPadding, mStartPadding, mTopPadding);
-        imageView.setBackgroundResource(R.drawable.y3_all_1dp);
+        imageView.setBackgroundResource(R.drawable.stroke_y3_corner_1dp);
         ImageUtil.showPicWithNoAnimate(imageView, R.drawable.ic_photo);
     }
 

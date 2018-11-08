@@ -374,7 +374,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
      * @param message         对话框里面的文字
      * @param onClickListener 点击确定按钮后的回调
      */
-    protected void showDialog(String title, String message, String positiveButtonText,Dialog.OnClickListener onClickListener) {
+    protected void showDialog(String title, String message, String positiveButtonText, Dialog.OnClickListener onClickListener) {
         new TipeDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
@@ -445,6 +445,10 @@ public abstract class BaseStatusActivity extends BaseActivity {
     protected int dpToPx(float dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    protected int spToPx(float sp) {
+        return (int) (getResources().getDisplayMetrics().scaledDensity * sp);
     }
 
 }

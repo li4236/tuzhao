@@ -19,11 +19,11 @@ public class RegionItem implements ClusterItem {
     private String address;//车场或电站地址
     private String name;//车场或电站名
     private double price;//车场或电站价格
-    private double grade;//车场或电站评分
+    private float grade;//车场或电站评分
     private int freeNumber;//空闲车位数量
 
     public RegionItem( String id,LatLng latLng, String cancharge, boolean isparkspace,String city_code,String picture,String address,
-                       String name,double price,double grade,int freeNumber) {
+                       String name,double price,float grade,int freeNumber) {
         mLatLng=latLng;
         this.id=id;
         this.cancharge=cancharge;
@@ -74,7 +74,7 @@ public class RegionItem implements ClusterItem {
         return price;
     }
 
-    public double getGrade() {
+    public float getGrade() {
         return grade;
     }
 

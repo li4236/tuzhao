@@ -56,7 +56,7 @@
                     android:layout_height="26dp"
                     android:layout_marginEnd="3dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/normal_transparent_stroke_g6_press_g16_all_5dp"
+                    android:background="@drawable/normal_transparent_stroke_g6_press_g16_corner_5dp"
                     android:text="删除订单"
                     app:layout_constraintEnd_toStartOf="@+id/center_gl"
                     app:layout_constraintTop_toBottomOf="@+id/already_cancel" />
@@ -66,7 +66,7 @@
                     android:layout_width="76dp"
                     android:layout_height="26dp"
                     android:layout_marginStart="3dp"
-                    android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_all_5dp"
+                    android:background="@drawable/normal_y6_to_y15_press_y7_to_y16_corner_5dp"
                     android:gravity="center"
                     android:text="重新预约"
                     android:textColor="@color/b1"

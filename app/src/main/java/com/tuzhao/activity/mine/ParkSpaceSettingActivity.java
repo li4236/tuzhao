@@ -254,9 +254,9 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         String[] shareDays = mPark_info.getShareDay().split(",");
         for (int i = 0; i < shareDays.length; i++) {
             if (shareDays[i].equals("1")) {
-                mTextViews[i].setBackgroundResource(R.drawable.yuan_little_y2_all_5dp);
+                mTextViews[i].setBackgroundResource(R.drawable.solid_y2_corner_5dp);
             } else {
-                mTextViews[i].setBackgroundResource(R.drawable.little_yuan_5dp_g10);
+                mTextViews[i].setBackgroundResource(R.drawable.solid_g10_corner_5dp);
             }
         }
 

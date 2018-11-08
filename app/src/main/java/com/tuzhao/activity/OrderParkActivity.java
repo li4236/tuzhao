@@ -192,7 +192,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 }
             }
             if (carNumber == null) {
-                textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
+                textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.solid_g5_corner_8dp));
                 textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
             } else {
                 if (textview_starttime.getText().length() > 0 && textview_parktime.getText().length() > 0 && mCanParkInfo.size() > 0) {
@@ -274,7 +274,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void showStartTimeOptions() {
-        textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
+        textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.solid_g5_corner_8dp));
         textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
         if (mStartTimeOption == null) {
             mDays = new ArrayList<>(7);
@@ -402,7 +402,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void showParktimeOptions() {
-        textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.yuan_little_graynall_8dp));
+        textview_ordernow.setBackground(ContextCompat.getDrawable(OrderParkActivity.this, R.drawable.solid_g5_corner_8dp));
         textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
         //选项选择器
         if (pvOptions == null) {
@@ -652,7 +652,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         } else {
             price = "约￥0.00";
             textview_fee.setText(price);
-            textview_ordernow.setBackground(getResources().getDrawable(R.drawable.yuan_little_graynall_8dp));
+            textview_ordernow.setBackground(getResources().getDrawable(R.drawable.solid_g5_corner_8dp));
             textview_ordernow.setTextColor(ContextCompat.getColor(OrderParkActivity.this, R.color.w0));
         }
     }

@@ -65,13 +65,13 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
         mIsCheck = checked;
         if (mIsCheck) {
             if (mCheckDrawable == null) {
-                setBackground(ContextCompat.getDrawable(getContext(), R.drawable.yuan_little_y2_all_5dp));
+                setBackground(ContextCompat.getDrawable(getContext(), R.drawable.solid_y2_corner_5dp));
             } else {
                 setBackground(mCheckDrawable);
             }
         } else {
             if (mNoCheckDrawble == null) {
-                setBackground(ContextCompat.getDrawable(getContext(), R.drawable.little_yuan_5dp_g10));
+                setBackground(ContextCompat.getDrawable(getContext(), R.drawable.solid_g10_corner_5dp));
             } else {
                 setBackground(mNoCheckDrawble);
             }
@@ -93,7 +93,7 @@ public class CheckTextView extends AppCompatTextView implements Checkable {
 
     @Override
     public void toggle() {
-
+        setChecked(!mIsCheck);
     }
 
     public Drawable getCheckDrawable() {

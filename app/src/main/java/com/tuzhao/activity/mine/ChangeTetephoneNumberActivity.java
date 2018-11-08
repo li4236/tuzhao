@@ -97,7 +97,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                     if (telephoneNumberLength == 11 && DateUtil.isPhoneNumble(getText(mTelephoneNumber)) && mTelephoneToken != null) {
                         //如果之前输入框显示了红色背景的，则手机号正确的时候显示为黄色背景
                         hideView(mTelephoneNumberError);
-                        mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                        mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
                     }
                 } else {
                     hideView(mClearTetephoneNumber);
@@ -123,7 +123,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                     showView(mClearVerificationCode);
                     if (verificationCodeLength == 4 && isVisible(mVerificationCodeError)) {
                         hideView(mVerificationCodeError);
-                        mVerificationCode.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                        mVerificationCode.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
                     }
                 } else {
                     hideView(mClearVerificationCode);
@@ -155,7 +155,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                 @Override
                 public void onResult(String smsContent) {
                     hideView(mVerificationCodeError);
-                    mVerificationCode.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                    mVerificationCode.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
                     mVerificationCode.setText(smsContent);
                 }
             });
@@ -166,7 +166,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
             @Override
             public void onSuccess(String s) {
                 hideView(mVerificationCodeError);
-                mVerificationCode.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                mVerificationCode.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
                 mVerificationCode.setText(s);
             }
         });
@@ -200,7 +200,7 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
                     showTelephoneError("不能与旧手机号一样");
                 } else {
                     hideView(mTelephoneNumberError);
-                    mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_all_3dp);
+                    mTelephoneNumber.setBackgroundResource(R.drawable.normal_g6_focus_y3_stroke_corner_3dp);
                     mGetVerificationCode.setClickable(false);
                     mGetVerificationCode.setTextColor(ConstansUtil.G6_COLOR);
                     sendVerificationCode();
@@ -343,13 +343,13 @@ public class ChangeTetephoneNumberActivity extends BaseStatusActivity implements
     private void showTelephoneError(String msg) {
         setNewText(mTelephoneNumberError, msg);
         showView(mTelephoneNumberError);
-        mTelephoneNumber.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+        mTelephoneNumber.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
     }
 
     private void showVerificationCodeError(String msg) {
         setNewText(mVerificationCodeError, msg);
         showView(mVerificationCodeError);
-        mVerificationCode.setBackgroundResource(R.drawable.r8_stroke_all_3dp);
+        mVerificationCode.setBackgroundResource(R.drawable.stroke_r8_corner_3dp);
     }
 
 }

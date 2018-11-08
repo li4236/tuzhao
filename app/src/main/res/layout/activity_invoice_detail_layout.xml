@@ -29,7 +29,7 @@
                 android:id="@+id/invoice_detail_status_bg"
                 android:layout_width="0dp"
                 android:layout_height="87dp"
-                android:background="@drawable/start_b3_end_b4_bg"
+                android:background="@drawable/solid_blue3_to_blue4_bg"
                 android:contentDescription="@string/picture_description"
                 android:theme="@style/TransparentTheme"
                 app:layout_constraintEnd_toEndOf="parent"

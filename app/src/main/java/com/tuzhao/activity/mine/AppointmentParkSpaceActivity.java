@@ -541,7 +541,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                         showFiveToast("该车正在停车中哦");
                         mCarNumber.setText("");
                     }
-                    mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+                    mNextStep.setBackgroundResource(R.drawable.solid_g5_corner_8dp);
                     mNextStep.setTextColor(Color.WHITE);
                     return;
                 }
@@ -648,7 +648,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             mNextStep.setBackgroundResource(R.drawable.little_yuan_yellow_8dp);
             mNextStep.setTextColor(ConstansUtil.B1_COLOR);
         } else {
-            mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+            mNextStep.setBackgroundResource(R.drawable.solid_g5_corner_8dp);
             mNextStep.setTextColor(Color.WHITE);
         }
 
@@ -748,7 +748,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
             mCanParkList.remove(parkInfo);
             if (mCanParkList.isEmpty()) {
-                mNextStep.setBackgroundResource(R.drawable.yuan_little_graynall_8dp);
+                mNextStep.setBackgroundResource(R.drawable.solid_g5_corner_8dp);
                 mNextStep.setTextColor(Color.WHITE);
             }
         }

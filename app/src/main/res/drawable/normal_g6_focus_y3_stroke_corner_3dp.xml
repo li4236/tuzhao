@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_focused="true" android:drawable="@drawable/stroke_y3_corner_3dp" />
+
+    <item android:drawable="@drawable/stroke_g6_width_1dp_corner_3dp" />
+
+</selector>
