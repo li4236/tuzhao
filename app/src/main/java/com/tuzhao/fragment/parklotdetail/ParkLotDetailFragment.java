@@ -73,7 +73,7 @@ public class ParkLotDetailFragment extends BaseFragment {
             textview_parkspacename, textview_parkcount, textview_grade, textview_opentime, mCollectTv;
     private TextView textview_parkspaceaddress;
     private LinearLayout mNavigationToParkLot;
-    private ConstraintLayout linearlayout_goorder, mCollectParkLot;
+    private ConstraintLayout mCollectParkLot;
     private CBRatingBar cbratingbar;
 
     /**
@@ -101,7 +101,7 @@ public class ParkLotDetailFragment extends BaseFragment {
 
     private void initData() {
         parkLotInfo = getArguments().getParcelable(ConstansUtil.PARK_LOT_INFO);
-        mData =  getArguments().getParcelableArrayList(ConstansUtil.PARK_SPACE_INFO);
+        mData = getArguments().getParcelableArrayList(ConstansUtil.PARK_SPACE_INFO);
 
         if (parkLotInfo == null) {
             parkspace_id = getArguments().getString(ConstansUtil.PARK_LOT_ID);
@@ -147,7 +147,6 @@ public class ParkLotDetailFragment extends BaseFragment {
         textview_parkcount = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_parkcount);
         textview_grade = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_textview_grade);
         mNavigationToParkLot = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_daohang);
-        linearlayout_goorder = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_linearlayout_goorder);
         cbratingbar = mContentView.findViewById(R.id.id_fragment_parkspacedetail_layout_cbratingbar);
         mCollectParkLot = mContentView.findViewById(R.id.collect_park_lot_cl);
         mCollectIv = mContentView.findViewById(R.id.collect_park_lot_iv);
@@ -162,8 +161,7 @@ public class ParkLotDetailFragment extends BaseFragment {
     }
 
     private void initEvent() {
-
-        linearlayout_goorder.setOnClickListener(new View.OnClickListener() {
+        mContentView.findViewById(R.id.short_rent).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (UserManager.getInstance().hasLogined()) {
@@ -191,6 +189,46 @@ public class ParkLotDetailFragment extends BaseFragment {
                             } else {
                                 Intent intent = new Intent(getActivity(), OrderParkActivity.class);
                                 intent.putExtra("parkLotInfo", parkLotInfo);
+                                intent.putParcelableArrayListExtra("park_list", mData);
+                                intent.putParcelableArrayListExtra("order_list", mOrderList);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    login();
+                }
+            }
+        });
+
+        mContentView.findViewById(R.id.long_rent).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UserManager.getInstance().hasLogined()) {
+                    if (mData == null || mData.size() <= 0) {
+                        MyToast.showToast(mContext, "暂无停车位，稍后再来试试哦", 5);
+                    } else {
+                        if (mOrderList == null) {
+                            initLoading("加载中...");
+                            requestGetUserParkOrderForAppoint();
+                        } else {
+                            int aingcount = 0;
+                            for (ParkOrderInfo parkOrderInfo : mOrderList) {
+                                Log.e(this.getClass().getName(), "onClick: " + parkOrderInfo);
+                                if (parkOrderInfo.getOrderStatus().equals("3")) {
+                                    MyToast.showToast(mContext, "您当前还有未付款的订单", 5);
+                                    return;
+                                } else {
+                                    if (parkOrderInfo.getOrderStatus().equals("1") || parkOrderInfo.getOrderStatus().equals("2")) {
+                                        aingcount++;
+                                    }
+                                }
+                            }
+                            if (aingcount > 1) {
+                                MyToast.showToast(mContext, "预定订单数量已达上限哦", 5);
+                            } else {
+                                Intent intent = new Intent(getActivity(), OrderParkActivity.class);
+                                intent.putExtra(ConstansUtil.PARK_LOT_INFO, parkLotInfo);
                                 intent.putParcelableArrayListExtra("park_list", mData);
                                 intent.putParcelableArrayListExtra("order_list", mOrderList);
                                 startActivity(intent);
@@ -326,7 +364,7 @@ public class ParkLotDetailFragment extends BaseFragment {
 
             Intent intent = new Intent();
             intent.putExtra(ConstansUtil.INTENT_MESSAGE, collectionInfo);
-            Log.e(TAG, "deleteCollectionSuccess: "+collectionInfo );
+            Log.e(TAG, "deleteCollectionSuccess: " + collectionInfo);
             getActivity().setResult(Activity.RESULT_OK, intent);
         }
     }
@@ -506,7 +544,7 @@ public class ParkLotDetailFragment extends BaseFragment {
         }
         textview_highfee.setText(parkspace_info.getHigh_fee());
         textview_lowfee.setText(parkspace_info.getLow_fee());
-        textview_finewarm.setText("※ 停车超过顺延时间会按" + parkspace_info.getFine() + "元/小时收取额外超时费哦 ※");
+        textview_finewarm.setText("※ 停车超过宽限时间会按" + parkspace_info.getFine() + "元/小时收取额外超时费哦 ※");
         cbratingbar.setStarProgress(parkspace_info.getGrade() == null ? 80 : (Float.valueOf(parkspace_info.getGrade()) * 100 / 5));
         textview_grade.setText(parkspace_info.getGrade() + "分");
         textview_opentime.setText("(" + parkspace_info.getOpentime() + ")");

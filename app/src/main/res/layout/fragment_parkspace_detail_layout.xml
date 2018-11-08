@@ -7,6 +7,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
         android:overScrollMode="never"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/collect_park_lot_cl"
@@ -388,61 +389,63 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/collect_park_lot_cl"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@color/w0"
+        android:layout_width="74dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/solid_w0_corner_10dp"
+        android:paddingTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/id_fragment_parkspacedetail_layout_linearlayout_goorder"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/collect_park_lot_iv"
-            android:layout_width="21dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="20dp"
+            android:layout_height="19dp"
             android:contentDescription="@string/picture_description"
             android:src="@drawable/ic_nocollect"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/collect_park_lot_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/collect_park_lot_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
+            android:layout_marginTop="6dp"
             android:text="未收藏"
             android:textColor="@color/b1"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/collect_park_lot_iv" />
 
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/id_fragment_parkspacedetail_layout_linearlayout_goorder"
+    <TextView
+        android:id="@+id/long_rent"
+        style="@style/SixtyTextB1Style"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@drawable/solid_y6_to_y15"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/solid_y19_tl_bl_26dp"
+        android:text="长期租用"
+        app:layout_constraintBottom_toBottomOf="@+id/collect_park_lot_cl"
+        app:layout_constraintEnd_toStartOf="@id/short_rent"
+        app:layout_constraintStart_toEndOf="@+id/collect_park_lot_cl"
+        app:layout_constraintTop_toTopOf="@+id/collect_park_lot_cl" />
+
+    <TextView
+        android:id="@+id/short_rent"
+        style="@style/SixtyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/solid_y20_tr_br_26dp"
+        android:text="临时租用"
         app:layout_constraintBottom_toBottomOf="@+id/collect_park_lot_cl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/collect_park_lot_cl">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="10dp"
-            android:drawableStart="@mipmap/ic_yuyue"
-            android:text="预约"
-            android:textColor="@color/b1"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintStart_toEndOf="@+id/long_rent"
+        app:layout_constraintTop_toTopOf="@+id/collect_park_lot_cl" />
 
 </android.support.constraint.ConstraintLayout>
