@@ -140,11 +140,11 @@ public class SearchAddressActivity extends BaseActivity {
                             break;
                         case 2:
                             intent = new Intent(SearchAddressActivity.this, MainActivity.class);
-                            intent.putExtra("keyword", historyDatas.get(position).getKeyword());
-                            intent.putExtra("lat", historyDatas.get(position).getLatitude());
-                            intent.putExtra("lon", historyDatas.get(position).getLongitude());
-                            intent.putExtra("citycode", historyDatas.get(position).getCitycode());
-                            setResult(2, intent);
+                            intent.putExtra(ConstansUtil.INTENT_MESSAGE, historyDatas.get(position).getKeyword());
+                            intent.putExtra(ConstansUtil.LATITUDE, historyDatas.get(position).getLatitude());
+                            intent.putExtra(ConstansUtil.LONGITUDE, historyDatas.get(position).getLongitude());
+                            intent.putExtra(ConstansUtil.CITY_CODE, historyDatas.get(position).getCitycode());
+                            setResult(RESULT_OK, intent);
                             finish();
                             break;
                         case 3:
@@ -184,11 +184,11 @@ public class SearchAddressActivity extends BaseActivity {
                         break;
                     case 2:
                         intent = new Intent(SearchAddressActivity.this, MainActivity.class);
-                        intent.putExtra("keyword", adapter.get(position).getKeyword());
-                        intent.putExtra("lat", adapter.get(position).getLatitude());
-                        intent.putExtra("lon", adapter.get(position).getLongitude());
-                        intent.putExtra("citycode", adapter.get(position).getCitycode());
-                        setResult(2, intent);
+                        intent.putExtra(ConstansUtil.INTENT_MESSAGE, adapter.get(position).getKeyword());
+                        intent.putExtra(ConstansUtil.LATITUDE, adapter.get(position).getLatitude());
+                        intent.putExtra(ConstansUtil.LONGITUDE, adapter.get(position).getLongitude());
+                        intent.putExtra(ConstansUtil.CITY_CODE, adapter.get(position).getCitycode());
+                        setResult(RESULT_OK, intent);
                         break;
                     case 3:
                         intent = new Intent();

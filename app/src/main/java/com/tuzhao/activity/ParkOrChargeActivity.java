@@ -1,5 +1,6 @@
 package com.tuzhao.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -142,6 +143,8 @@ public class ParkOrChargeActivity extends BaseRefreshActivity<NearPointPCInfo> i
                                 switch (e.getMessage()) {
                                     case "103":
                                         mSearchAddress.setText("城市未开放哦");
+                                        mCommonAdapter.clearAll();
+                                        mRecyclerView.showEmpty();
                                         break;
                                     default:
                                         showFiveToast(ConstansUtil.SERVER_ERROR);
@@ -388,12 +391,25 @@ public class ParkOrChargeActivity extends BaseRefreshActivity<NearPointPCInfo> i
         switch (v.getId()) {
             case R.id.search_iv:
             case R.id.search_address:
-
+                startActivityForResult(SearchAddressActivity.class, ConstansUtil.REQUSET_CODE, "whatPage", "2",
+                        "keyword", getText(mSearchAddress), ConstansUtil.CITY_CODE, mCityCode);
                 break;
             case R.id.filter_bg:
                 mCheckTextViews[mRequestPostion].setChecked(false);
                 hideFilter();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ConstansUtil.REQUSET_CODE && resultCode == RESULT_OK && data != null) {
+            mCityCode = data.getStringExtra(ConstansUtil.CITY_CODE);
+            mLatLng = new LatLng(data.getDoubleExtra(ConstansUtil.LATITUDE, mLatLng.latitude),
+                    data.getDoubleExtra(ConstansUtil.LONGITUDE, mLatLng.longitude));
+            mSearchAddress.setText(data.getStringExtra(ConstansUtil.INTENT_MESSAGE));
+            onRefresh();
         }
     }
 
