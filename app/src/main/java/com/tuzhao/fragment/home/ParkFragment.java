@@ -13,6 +13,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.ParkspaceDetailActivity;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.info.NearPointPCInfo;
+import com.tuzhao.utils.ConstansUtil;
 
 
 /**
@@ -212,8 +213,8 @@ public class ParkFragment extends BaseFragment {
                 //啥也不用干，消耗点击事件
                 //点击跳转详情页面
                 Intent intent = new Intent(mContext, ParkspaceDetailActivity.class);
-                intent.putExtra("parkspace_id", nearPointPCInfo.getId());
-                intent.putExtra("city_code", nearPointPCInfo.getCity_code());
+                intent.putExtra(ConstansUtil.PARK_LOT_ID, nearPointPCInfo.getId());
+                intent.putExtra(ConstansUtil.CITY_CODE, nearPointPCInfo.getCity_code());
                 startActivity(intent);
             }
         });

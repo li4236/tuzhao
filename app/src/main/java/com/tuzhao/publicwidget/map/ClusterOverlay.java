@@ -27,7 +27,6 @@ import com.amap.api.maps.model.animation.AlphaAnimation;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
-import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.info.RegionItem;
 
 import java.util.ArrayList;
@@ -88,10 +87,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
     private AtomicInteger mAtomicInteger;
 
-    private long mAllFreeNumber;
-    private SuccessCallback<Long> mFreeNumberCallback;
-    private NotifyFreeNumberRunnable mFreeNumberRunnable;
-
     /**
      * 构造函数,批量添加聚合元素时,调用此构造函数
      *
@@ -126,8 +121,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
         mAtomicInteger = new AtomicInteger();
 
-        mFreeNumberRunnable = new NotifyFreeNumberRunnable();
-
         this.mAMap = amap;
         mClusterSize = clusterSize;
         mPXInMeters = mAMap.getScalePerPixel();
@@ -146,10 +139,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
     public void setOnClusterClickListener(
             ClusterClickListener clusterClickListener) {
         mClusterClickListener = clusterClickListener;
-    }
-
-    public void setFreeNumberCallback(SuccessCallback<Long> freeNumberCallback) {
-        mFreeNumberCallback = freeNumberCallback;
     }
 
     /**
@@ -315,7 +304,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         mDisappearClusters.clear();
         mNewClusters.clear();
         mCopyClusters.clear();
-        mAllFreeNumber = 0;
 
         //地图获取转换器, 获取可视区域, 获取可视区域的四个点形成的经纬度范围, 得到一个经纬度范围
         LatLngBounds visibleBounds = mAMap.getProjection().getVisibleRegion().latLngBounds;
@@ -327,9 +315,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
 
             //如果点在地图可视范围内
             if (visibleBounds.contains(latlng)) {
-                if (clusterItem.isparkspace()) {
-                    mAllFreeNumber += clusterItem.getFreeNumber();
-                }
 
                 Cluster cluster = getCluster(latlng, mClusters);    //根据这个位置和聚合物的集合, 获得一个聚合器
                 if (cluster != null) {
@@ -624,7 +609,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
                 case ADD_AND_REMOVE_CLUSTER_LIST:
                     List<Cluster> clusterList = (List<Cluster>) message.obj;
                     AddAndRemoveClusterToMap(clusterList);
-                    mActivity.runOnUiThread(mFreeNumberRunnable);
                     break;
                 case ADD_SINGLE_CLUSTER:
                     Cluster cluster = (Cluster) message.obj;
@@ -723,15 +707,6 @@ public class ClusterOverlay implements AMap.OnCameraChangeListener, AMap.OnMarke
         public void setType(int type) {
             this.type = type;
         }
-    }
-
-    private class NotifyFreeNumberRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            mFreeNumberCallback.onSuccess(mAllFreeNumber);
-        }
-
     }
 
 }

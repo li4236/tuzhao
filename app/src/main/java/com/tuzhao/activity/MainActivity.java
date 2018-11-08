@@ -124,7 +124,7 @@ import static com.tianzhili.www.myselfsdk.okgo.convert.FileConvert.DM_TARGET_FOL
 import static com.tuzhao.utils.DensityUtil.dp2px;
 
 public class MainActivity extends BaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener, ClusterRender,
-        ClusterClickListener, IntentObserver, SuccessCallback<Long> {
+        ClusterClickListener, IntentObserver {
 
     private static final String TAG = "MainActivity";
 
@@ -503,7 +503,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 //跳转搜索页面
                 intent = new Intent(MainActivity.this, SearchAddressActivity.class);
                 intent.putExtra("whatPage", "2");
-                intent.putExtra("cityCode", isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
+                intent.putExtra(ConstansUtil.CITY_CODE, isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
                 intent.putExtra("keyword", search_address);
                 startActivityForResult(intent, 2);
                 break;
@@ -769,6 +769,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         }
                         if (!DensityUtil.isException(MainActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getHomePCLocData" + e.getMessage());
+                            mAllMarkerData.clear();
+                            mLastFreeNumber = 0;
+                            showMarkers(mAllMarkerData);
                             switch (e.getMessage()) {
                                 case "102":
                                     //未查找到数据
@@ -847,6 +850,9 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         stopRefresh();
                         if (!DensityUtil.isException(MainActivity.this, e)) {
                             Log.d("TAG", "请求失败， 信息为：" + "getHomePCLocData" + e.getMessage());
+                            mAllMarkerData.clear();
+                            mLastFreeNumber = 0;
+                            showMarkers(mAllMarkerData);
                             switch (e.getMessage()) {
                                 case "102":
                                     //未查找到数据
@@ -989,14 +995,12 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
         options.icon(BitmapDescriptorFactory.fromView(arcView));
         options.anchor(0.5f, 0.5f);
         options.position(latlng);
-        Log.e(TAG, "addLoactionMarker  longitude:" + latlng.longitude + "  latitude:" + latlng.latitude);
         mLocationMarker = aMap.addMarker(options);
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(BitmapDescriptorFactory.fromView(circleView));
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.position(latlng);
-        Log.e(TAG, "addLoactionMarker  longitude:" + latlng.longitude + "  latitude:" + latlng.latitude);
         mLocationCircleMarker = aMap.addMarker(markerOptions);
         startMarkerAnimation();
     }
@@ -1241,7 +1245,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
      */
     private void controlAnimfragment(final View ll_view) {
         if (mTranslationY == 0) {
-            //
             mTranslationY = ll_view.getY() + ll_view.getHeight();
         }
         show = !show;
@@ -1363,15 +1366,6 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
             mLastFreeNumber = 0;
         }
         mFreeParkSpaceNumber.setText("附近剩余" + mLastFreeNumber + "个空闲车位");
-    }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onSuccess(Long aLong) {
-        if (mLastFreeNumber != aLong) {
-            mLastFreeNumber = aLong;
-            mFreeParkSpaceNumber.setText("附近剩余" + aLong + "个空闲车位");
-        }
     }
 
     /**
@@ -1673,11 +1667,20 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     private void showMarkers(List<ClusterItem> markerdata) {
+        if (markerdata != null && !markerdata.isEmpty() && markerdata.get(0).isparkspace()) {
+            //显示地图上的全部车场空闲车位的数量
+            int freeNumber = 0;
+            for (ClusterItem clusterItem : markerdata) {
+                freeNumber += clusterItem.getFreeNumber();
+            }
+            mLastFreeNumber = freeNumber;
+            mFreeParkSpaceNumber.setText("附近剩余" + mLastFreeNumber + "个空闲车位");
+        }
+
         if (mClusterOverlay == null) {
             mClusterOverlay = new ClusterOverlay(aMap, markerdata, dp2px(getApplicationContext(), 30), this);
             mClusterOverlay.setClusterRenderer(MainActivity.this);
             mClusterOverlay.setOnClusterClickListener(MainActivity.this);
-            mClusterOverlay.setFreeNumberCallback(this);
         } else {
             mClusterOverlay.assignClusters(markerdata);
         }

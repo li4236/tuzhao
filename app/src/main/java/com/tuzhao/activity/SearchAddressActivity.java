@@ -104,7 +104,7 @@ public class SearchAddressActivity extends BaseActivity {
     private void initData() {
         if (getIntent().hasExtra("whatPage")) {
             whatPage = getIntent().getStringExtra("whatPage");
-            city = getIntent().getStringExtra("cityCode");
+            city = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
             if (city == null) {
                 locationClient.startLocation();//启动定位
             }

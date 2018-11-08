@@ -12,6 +12,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.ChargestationDetailActivity;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.info.NearPointPCInfo;
+import com.tuzhao.utils.ConstansUtil;
 
 /**
  * Created by TZL12 on 2017/7/7.
@@ -78,8 +79,8 @@ public class ChargeFragment extends BaseFragment {
 //            imageview_collection.setImageDrawable(ContextCompat.getDrawable(mContext,R.mipmap.ic_scchenggong));
 //        }
         nearPointPCInfo = (NearPointPCInfo) getArguments().getSerializable("cssinfo");
-        ((TextView)mContentView.findViewById(R.id.id_fragment_charge_layout_textview_psname)).setText(nearPointPCInfo.getName());
-        ((TextView)mContentView.findViewById(R.id.id_fragment_charge_layout_textview_psprice)).setText("均价"+nearPointPCInfo.getPrice()+"元/度");
+        ((TextView) mContentView.findViewById(R.id.id_fragment_charge_layout_textview_psname)).setText(nearPointPCInfo.getName());
+        ((TextView) mContentView.findViewById(R.id.id_fragment_charge_layout_textview_psprice)).setText("均价" + nearPointPCInfo.getPrice() + "元/度");
     }
 
     private void initView() {
@@ -226,8 +227,8 @@ public class ChargeFragment extends BaseFragment {
                 //啥也不用干，消耗点击事件
                 //点击跳转详情页面
                 Intent intent = new Intent(mContext, ChargestationDetailActivity.class);
-                intent.putExtra("chargestation_id",nearPointPCInfo.getId());
-                intent.putExtra("city_code",nearPointPCInfo.getCity_code());
+                intent.putExtra(ConstansUtil.CHARGE_ID, nearPointPCInfo.getId());
+                intent.putExtra(ConstansUtil.CITY_CODE, nearPointPCInfo.getCity_code());
                 startActivity(intent);
             }
         });
