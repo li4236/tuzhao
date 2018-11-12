@@ -1,5 +1,6 @@
 package com.tuzhao.activity.base;
 
+import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
@@ -11,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -75,8 +77,18 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setTextCenterLine(@IdRes int id) {
+        ((TextView) getView(id)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        return this;
+    }
+
     public BaseViewHolder setBackground(@IdRes int id, @DrawableRes int drawableRes) {
         getView(id).setBackgroundResource(drawableRes);
+        return this;
+    }
+
+    public BaseViewHolder setBackground(@DrawableRes int drawableRes) {
+        itemView.setBackgroundResource(drawableRes);
         return this;
     }
 
@@ -102,6 +114,26 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public BaseViewHolder setStartProgress(@IdRes int id, float progress) {
         ((CBRatingBar) getView(id)).setStarProgress(progress);
+        return this;
+    }
+
+    public BaseViewHolder setMarginTop(@IdRes int id, int margin) {
+        View view = getView(id);
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        layoutParams.topMargin = margin;
+        view.setLayoutParams(layoutParams);
+        return this;
+    }
+
+    public BaseViewHolder setPaddingTop(@IdRes int id, int padding) {
+        View view = getView(id);
+        view.setPadding(view.getPaddingLeft(), padding, view.getPaddingRight(), view.getPaddingBottom());
+        return this;
+    }
+
+    public BaseViewHolder setPaddingBottom(@IdRes int id, int padding) {
+        View view = getView(id);
+        view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), padding);
         return this;
     }
 

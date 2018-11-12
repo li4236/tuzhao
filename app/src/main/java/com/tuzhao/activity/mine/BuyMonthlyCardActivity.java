@@ -22,11 +22,11 @@ import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
-import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
+import com.tuzhao.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,8 +127,8 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         ImageUtil.showPicWithNoAnimate(mAreaCardIv, R.drawable.ic_graycitycard_shadow);
         ImageUtil.showPicWithNoAnimate(mNationalCardPark, R.drawable.ic_graylogo);
         ImageUtil.showPicWithNoAnimate(mNationalCardIv, R.drawable.ic_grayallcity_shadow);
-        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受对应折扣优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
-        mSecondIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("各地区停车费用均有差异，地区卡只能在选定的一个城市使用，全国卡则全国通用。"));
+        mFirstIndicate.setText(ViewUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受对应折扣优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
+        mSecondIndicate.setText(ViewUtil.getFirstTwoTransparentSpannable("各地区停车费用均有差异，地区卡只能在选定的一个城市使用，全国卡则全国通用。"));
 
         /*if (LocationManager.getInstance().hasLocation()) {
             //如果已经定位成功的则显示当前的城市
@@ -369,7 +369,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         String cityName = mMonthlyCards.get(province).getCitys().get(city).getCity().replace("市", "");
         mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
         mMonthlyCardArea.setText(cityName + "卡");
-        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
+        mFirstIndicate.setText(ViewUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
                 + DateUtil.deleteZero(mMonthlyCards.get(province).getCitys().get(city).getDiscount() * 10) +
                 "折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
     }
@@ -410,7 +410,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
             setCurrentChooseCard(false);
             mChooseCardTv.setText("当前选择：全国月卡");
 
-            mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
+            mFirstIndicate.setText(ViewUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
                     + DateUtil.deleteZero(city.getDiscount() * 10) +
                     "折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
         }
@@ -427,7 +427,7 @@ public class BuyMonthlyCardActivity extends BaseStatusActivity implements View.O
         setCurrentChooseCard(true);
         mChooseCardTv.setText("当前选择：地区月卡（" + cityName + "）");
         mMonthlyCardArea.setText(cityName + "卡");
-        mFirstIndicate.setText(DataUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
+        mFirstIndicate.setText(ViewUtil.getFirstTwoTransparentSpannable("拥有月卡的用户，每次费用结算均享受"
                 + DateUtil.deleteZero(city.getDiscount() * 10) +
                 "折优惠，如有优惠券，优先减去券额再按月卡优惠折算。"));
     }

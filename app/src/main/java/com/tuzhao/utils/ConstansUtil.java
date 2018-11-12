@@ -53,6 +53,11 @@ public class ConstansUtil {
     public static final int MINIMUN_INVOICE_AMOUNT = 100;
 
     /**
+     * 长租订单最大保留的分钟数，过期自动取消
+     */
+    public static final int MAX_KEEP_LONG_RENT_ORDER_MINUTE = 15;
+
+    /**
      * 科大讯飞AppId
      */
     public static final String SPEECH_UTILITY_APP_ID = "592e14d9";
@@ -107,6 +112,11 @@ public class ConstansUtil {
      * 类型
      */
     public static final String TYPE = "Type";
+
+    /**
+     * 人民币符号
+     */
+    public static final String YUAN = "¥";
 
     /**
      * 城市码
@@ -600,5 +610,10 @@ public class ConstansUtil {
      * 在已完成的订单里添加一条记录
      */
     public static final String ADD_FINISH_PARK_ORDER = "AddFinishParkOrder";
+
+    /**
+     * 订单编号
+     */
+    public static final String ORDER_NUMBER = "OrderNumber";
 
 }

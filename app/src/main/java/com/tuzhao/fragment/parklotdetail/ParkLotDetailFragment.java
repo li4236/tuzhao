@@ -28,6 +28,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
 import com.tuzhao.activity.BigPictureActivity;
 import com.tuzhao.activity.LoginActivity;
+import com.tuzhao.activity.LongRentActivity;
 import com.tuzhao.activity.OrderParkActivity;
 import com.tuzhao.activity.mine.NavigationActivity;
 import com.tuzhao.fragment.base.BaseFragment;
@@ -188,7 +189,7 @@ public class ParkLotDetailFragment extends BaseFragment {
                                 MyToast.showToast(mContext, "预定订单数量已达上限哦", 5);
                             } else {
                                 Intent intent = new Intent(getActivity(), OrderParkActivity.class);
-                                intent.putExtra("parkLotInfo", parkLotInfo);
+                                intent.putExtra(ConstansUtil.PARK_LOT_INFO, parkLotInfo);
                                 intent.putParcelableArrayListExtra("park_list", mData);
                                 intent.putParcelableArrayListExtra("order_list", mOrderList);
                                 startActivity(intent);
@@ -227,11 +228,16 @@ public class ParkLotDetailFragment extends BaseFragment {
                             if (aingcount > 1) {
                                 MyToast.showToast(mContext, "预定订单数量已达上限哦", 5);
                             } else {
-                                Intent intent = new Intent(getActivity(), OrderParkActivity.class);
-                                intent.putExtra(ConstansUtil.PARK_LOT_INFO, parkLotInfo);
-                                intent.putParcelableArrayListExtra("park_list", mData);
-                                intent.putParcelableArrayListExtra("order_list", mOrderList);
-                                startActivity(intent);
+                                if (!"-1".equals(parkLotInfo.getLongRentPrice())) {
+                                    parkLotInfo.convertLongRentInfo();
+                                    Intent intent = new Intent(getActivity(), LongRentActivity.class);
+                                    intent.putExtra(ConstansUtil.PARK_LOT_INFO, parkLotInfo);
+                                    intent.putParcelableArrayListExtra("park_list", mData);
+                                    intent.putParcelableArrayListExtra("order_list", mOrderList);
+                                    startActivity(intent);
+                                } else {
+                                    MyToast.showToast(mContext, "该车场不支持长租哎", 5);
+                                }
                             }
                         }
                     }

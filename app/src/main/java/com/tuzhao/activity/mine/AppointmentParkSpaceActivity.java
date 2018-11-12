@@ -413,13 +413,12 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
                     //记录选中的开始入场时间
                     Calendar appointmentStartCalendar = Calendar.getInstance();
-                    appointmentStartCalendar.add(Calendar.DAY_OF_MONTH, mDays.get(options1).equals("今天") ? options1 : options1 + 1);
+                    appointmentStartCalendar.add(Calendar.DAY_OF_MONTH, mDays.get(0).equals("今天") ? options1 : options1 + 1);
                     appointmentStartCalendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
                     appointmentStartCalendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
                     appointmentStartCalendar.set(Calendar.SECOND, 0);
                     appointmentStartCalendar.set(Calendar.MILLISECOND, 0);
                     mAppointmentStartTime = DateUtil.getCurrentYearToMinutes(appointmentStartCalendar.getTimeInMillis());
-
                     Calendar nowCalendar = Calendar.getInstance();
                     nowCalendar.set(Calendar.SECOND, 0);
                     nowCalendar.set(Calendar.MILLISECOND, 0);

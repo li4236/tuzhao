@@ -555,7 +555,7 @@ public class HttpConstants {
     public static final String getAlipayBuyMonthlyCardInfo = ROOT_URL + "getAlipayBuyMonthlyCardInfo";
 
     /**
-     * 获取微信缴纳车锁押金订单信息
+     * 获取微信购买月卡订单信息
      */
     public static final String getWechatBuyMonthlyCardInfo = ROOT_URL + "getWechatBuyMonthlyCardInfo";
 
@@ -723,5 +723,20 @@ public class HttpConstants {
      * 解绑免费车场
      */
     public static final String unbindFreeParkLot = ROOT_URL + "unbindFreeParkLot";
+
+    /**
+     * 新增长租订单
+     */
+    public static final String addLongRentOrder = ROOT_URL + "addLongRentOrder";
+
+    /**
+     * 获取支付宝支付长租订单信息
+     */
+    public static final String getAlipayLongRentOrderInfo = ROOT_URL + "getAlipayLongRentOrderInfo";
+
+    /**
+     * 获取微信支付长租订单信息
+     */
+    public static final String getWechatLongRentOrderInfo = ROOT_URL + "getWechatLongRentOrderInfo";
 
 }

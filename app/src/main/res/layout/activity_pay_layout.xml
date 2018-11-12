@@ -33,6 +33,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pay_money" />
 
+    <ViewStub
+        android:id="@+id/countdown_vs"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout="@layout/viewstub_countdown_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/pay_money"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pay_money" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/alipay_cl"
         android:layout_width="match_parent"

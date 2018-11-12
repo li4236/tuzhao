@@ -16,6 +16,7 @@ public class TimeManager {
     private static TimeManager timeManager = null;
     private long differenceTime;  //时间差值
     private boolean isServerTime = false; //是否是服务器时间
+    private String serverTime;
 
     public static TimeManager getInstance() {
 
@@ -61,6 +62,7 @@ public class TimeManager {
     }
 
     public void initTime(String serverTime) {
+        this.serverTime = serverTime;
         isServerTime = true;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         long newdifferencetime;
@@ -75,4 +77,12 @@ public class TimeManager {
             e.printStackTrace();
         }
     }
+
+    public String getServerTime() {
+        if (serverTime == null) {
+            serverTime = DateUtil.getCurrentYearToSecond();
+        }
+        return serverTime;
+    }
+
 }

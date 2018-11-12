@@ -3,6 +3,8 @@ package com.tuzhao.info;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by TZL12 on 2017/4/29.
  * 停车场数据实体
@@ -30,6 +32,9 @@ public class ParkLotInfo implements Parcelable {
     private String city_code;//城市码
     private String profit_ratio;//收益比
     private String isCollection;//是否收藏了该车场（0：未收藏，1：收藏了）
+    private String longRentInfo;//长租的信息，由天数和折扣组成(1,1;30,1;60,0.9)代表1天和30天都是不打折，60天的打9折。
+    private ArrayList<LongRentInfo> longRentInfos;
+    private String longRentPrice = "-1";//长租的价格,-1代表不支持长租
 
     public String getId() {
         return id;
@@ -191,6 +196,37 @@ public class ParkLotInfo implements Parcelable {
         this.isCollection = isCollection;
     }
 
+    /**
+     * 将长租的字符串信息转化为List
+     */
+    public void convertLongRentInfo() {
+        if (!"-1".equals(longRentPrice) && longRentInfos == null) {
+            String[] infos = longRentInfo.split(";");
+            longRentInfos = new ArrayList<>(infos.length);
+            String[] prices = longRentPrice.split(";");
+            for (int i = 0; i < infos.length; i++) {
+                String[] longRent = infos[i].split(",");
+                LongRentInfo longRentInfo = new LongRentInfo();
+                longRentInfo.setRentDay(Integer.valueOf(longRent[0]));
+                longRentInfo.setDiscount(Double.valueOf(longRent[1]));
+                longRentInfo.setNormalPrice(Double.valueOf(prices[i]));
+                longRentInfos.add(longRentInfo);
+            }
+        }
+    }
+
+    public String getLongRentPrice() {
+        return longRentPrice;
+    }
+
+    public ArrayList<LongRentInfo> getLongRentInfos() {
+        return longRentInfos;
+    }
+
+    public void setLongRentInfos(ArrayList<LongRentInfo> longRentInfos) {
+        this.longRentInfos = longRentInfos;
+    }
+
     @Override
     public String toString() {
         return "ParkLotInfo{" +
@@ -244,6 +280,7 @@ public class ParkLotInfo implements Parcelable {
         dest.writeString(this.city_code);
         dest.writeString(this.profit_ratio);
         dest.writeString(this.isCollection);
+        dest.writeTypedList(this.longRentInfos);
     }
 
     public ParkLotInfo() {
@@ -270,6 +307,7 @@ public class ParkLotInfo implements Parcelable {
         this.city_code = in.readString();
         this.profit_ratio = in.readString();
         this.isCollection = in.readString();
+        this.longRentInfos = in.createTypedArrayList(LongRentInfo.CREATOR);
     }
 
     public static final Creator<ParkLotInfo> CREATOR = new Creator<ParkLotInfo>() {

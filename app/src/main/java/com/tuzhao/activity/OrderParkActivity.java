@@ -99,8 +99,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initData() {
-        if (getIntent().hasExtra("parkLotInfo")) {
-            mParkLotInfo = getIntent().getParcelableExtra("parkLotInfo");
+        if (getIntent().hasExtra(ConstansUtil.PARK_LOT_INFO)) {
+            mParkLotInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_LOT_INFO);
             if (getIntent().hasExtra("park_list")) {
                 park_list = getIntent().getParcelableArrayListExtra("park_list");
                 order_list = getIntent().getParcelableArrayListExtra("order_list");
@@ -346,7 +346,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     //返回的分别是三个级别的选中位置
                     String tx = mDays.get(options1) + " " + DateUtil.thanTen(mHours.get(options1).get(option2)) + " 点 " + DateUtil.thanTen(mMinutes.get(options1).get(option2).get(options3)) + " 分";
                     Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.DAY_OF_MONTH, options1);
+                    calendar.add(Calendar.DAY_OF_MONTH, mDays.get(0).equals("今天") ? options1 : options1 + 1);
                     calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
                     calendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
                     calendar.set(Calendar.SECOND, 0);

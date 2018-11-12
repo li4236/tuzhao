@@ -63,6 +63,15 @@ public class ViewUtil {
         }
     }
 
+    /**
+     * @return 在text前面加上两个字的空位
+     */
+    public static SpannableString getFirstTwoTransparentSpannable(String text) {
+        SpannableString spannableString = new SpannableString("月卡" + text);
+        spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
     public static void addEndText(TextView textView, int placeholderCount) {
         StringBuilder stringBuilder = new StringBuilder(textView.getText());
         for (int i = 0; i < placeholderCount; i++) {

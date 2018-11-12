@@ -4,11 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 
@@ -64,13 +68,21 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     private Thread mPayThread;
 
     /**
-     * 0(停车订单)  1(车锁押金) 2(购买月卡)
+     * 0(停车订单)  1(车锁押金) 2(购买月卡) 3(长租停车订单)
      */
     private String mPayType;
 
     private String mParkSpaceId;
 
     private String mAllotedPeriod;
+
+    private String mOrderNumber;
+
+    private long mExpireTime;
+
+    private Handler mCountdownHandler;
+
+    private TextView mCountdownTv;
 
     @Override
     protected int resourceId() {
@@ -124,6 +136,12 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 mPayDescription.setText("购买月卡");
                 mAllotedPeriod = intent.getStringExtra(ConstansUtil.ALLOTED_PERIOD);
                 break;
+            case "3":
+                mPayDescription.setText("长租费用");
+                mOrderNumber = intent.getStringExtra(ConstansUtil.ORDER_NUMBER);
+                mExpireTime = Long.valueOf(intent.getStringExtra(ConstansUtil.TIME));
+                startCountdown();
+                break;
         }
 
         IntentObserable.registerObserver(this);
@@ -156,6 +174,9 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         case "2":
                             alipayPay(HttpConstants.getAlipayBuyMonthlyCardInfo, "allotedPeriod", mAllotedPeriod, "cityCode", mCityCode);
                             break;
+                        case "3":
+                            alipayPay(HttpConstants.getAlipayLongRentOrderInfo, "orderNumber", mOrderNumber);
+                            break;
                     }
                 } else {
                     switch (mPayType) {
@@ -168,6 +189,8 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         case "2":
                             wechatPay(HttpConstants.getWechatBuyMonthlyCardInfo, "allotedPeriod", mAllotedPeriod, "cityCode", mCityCode);
                             break;
+                        case "3":
+                            wechatPay(HttpConstants.getWechatLongRentOrderInfo, "orderNumber", mOrderNumber);
                     }
                 }
                 mPayImmediately.setClickable(false);
@@ -179,8 +202,12 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         if (!mPayImmediately.isClickable()) {
-            //某些手机会有微信双开，点击微信支付会弹出选择哪个微信支付的对话框，如果此时用户没有选择而是把对话框关闭了，则会导致支付按钮不可点击
-            mPayImmediately.setClickable(true);
+            if (mExpireTime != 0 && mExpireTime <= SystemClock.elapsedRealtime()) {
+                handleOrderExpire();
+            } else {
+                //某些手机会有微信双开，点击微信支付会弹出选择哪个微信支付的对话框，如果此时用户没有选择而是把对话框关闭了，则会导致支付按钮不可点击
+                mPayImmediately.setClickable(true);
+            }
         }
     }
 
@@ -189,6 +216,9 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         super.onDestroy();
         if (mPayThread != null) {
             mPayThread.interrupt();
+        }
+        if (mCountdownHandler != null) {
+            mCountdownHandler.removeCallbacksAndMessages(null);
         }
         IntentObserable.unregisterObserver(this);
     }
@@ -325,9 +355,8 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                             @SuppressWarnings("unchecked")
                             //如果消息是支付成功 则SDK正常运行，将随该消息附带的msg.obj强转回map中，建立新的payresult支付结果
                                     PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                            /**
-                             对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                             */
+
+                            //对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                             // 同步返回需要验证的信息，从支付结果中取到resultinfo
                             String resultStatus = payResult.getResultStatus();
                             // 判断resultStatus 为9000则代表支付成功
@@ -344,7 +373,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                             } else {
                                 showFiveToast("支付失败");
                             }
-                            mPayImmediately.setClickable(true);
                             break;
                         }
                         default:
@@ -386,15 +414,65 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 .create().show();
     }
 
+    private void startCountdown() {
+        if (mExpireTime > SystemClock.elapsedRealtime()) {
+            ViewStub viewStub = findViewById(R.id.countdown_vs);
+            mCountdownTv = viewStub.inflate().findViewById(R.id.countdown_tv);
+            viewStub.setVisibility(View.VISIBLE);
+
+            mCountdownHandler = new Handler(Looper.getMainLooper());
+            mCountdownHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    int remainTime = (int) ((mExpireTime - SystemClock.elapsedRealtime()) / 1000);
+                    if (remainTime > 0) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        int time = remainTime / 60;
+                        stringBuilder.append(DateUtil.thanTen(time));
+                        stringBuilder.append(":");
+
+                        time = remainTime - time * 60;
+                        stringBuilder.append(DateUtil.thanTen(time));
+                        mCountdownTv.setText(stringBuilder.toString());
+
+                        mCountdownHandler.postDelayed(this, 1000);
+                    } else {
+                        if (mPayImmediately.isClickable()) {
+                            //没有正在支付则关闭页面
+                            handleOrderExpire();
+                        }
+                    }
+
+                }
+            });
+        } else {
+            handleOrderExpire();
+        }
+    }
+
+    /**
+     * 订单过时未支付,则关闭页面
+     */
+    private void handleOrderExpire() {
+        showFiveToast("该订单已过期，请重新预定");
+        mPayImmediately.setClickable(false);
+        finish();
+    }
+
     @Override
     public void onReceive(Intent intent) {
         if (intent.getAction() != null) {
             Log.e(TAG, "onReceive: " + intent.getAction());
             switch (intent.getAction()) {
                 case ConstansUtil.PAY_SUCCESS:
-                    if (Objects.equals(mPayType, "1")) {
+                    if ("1".equals(mPayType)) {
                         showPaySuccessDialog();
                     } else {
+                        if ("3".equals(mPayType)) {
+                            if (mExpireTime <= SystemClock.elapsedRealtime()) {
+                                mExpireTime = SystemClock.elapsedRealtime() + 10000;
+                            }
+                        }
                         finish();
                     }
                     break;

@@ -1,9 +1,5 @@
 package com.tuzhao.utils;
 
-import android.graphics.Color;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.amap.api.maps.model.LatLng;
@@ -32,6 +28,12 @@ public class DataUtil {
 
     private static final String TAG = "DataUtil";
 
+    /**
+     * @param canParkList 最后可停的车位
+     * @param parkSpaces  全部车位
+     * @param startTime   yyyy-MM-dd HH:mm
+     * @param endTime     yyyy-MM-dd HH:mm
+     */
     public static void findCanParkList(List<Park_Info> canParkList, List<Park_Info> parkSpaces, String startTime, String endTime) {
         Log.e("TAG", "startDate: " + startTime + "  endDate:" + endTime);
         canParkList.clear();
@@ -42,6 +44,7 @@ public class DataUtil {
         for (Park_Info parkInfo : parkSpaces) {
             Log.e("TAG", "scanPark parkInfo:" + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
+                canParkList.remove(parkInfo);
                 continue;
             }
 
@@ -97,10 +100,13 @@ public class DataUtil {
             }
         }
 
-        sortCanParkListByShareTime(canParkList, endTime);
+        if (!canParkList.isEmpty()) {
+            sortCanParkListByShareTime(canParkList, endTime);
+        }
+
     }
 
-    public static void sortCanParkListByShareTime(List<Park_Info> canParkList, String parkEndTime) {
+    private static void sortCanParkListByShareTime(List<Park_Info> canParkList, String parkEndTime) {
         //停车时间加上宽限时长
         final Calendar mCanParkEndCalendar = DateUtil.getYearToMinuteCalendar(parkEndTime);
         mCanParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
@@ -178,12 +184,67 @@ public class DataUtil {
     }
 
     /**
-     * @return 在text前面加上两个字的空位
+     * @param canParkList 最后可停的车位
+     * @param parkSpaces  全部车位
+     * @param startTime   yyyy-MM-dd HH:mm
+     * @param endTime     yyyy-MM-dd HH:mm
      */
-    public static SpannableString getFirstTwoTransparentSpannable(String text) {
-        SpannableString spannableString = new SpannableString("月卡" + text);
-        spannableString.setSpan(new ForegroundColorSpan(Color.TRANSPARENT), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannableString;
+    public static void findCanLongParkList(List<Park_Info> canParkList, List<Park_Info> parkSpaces, String startTime, String endTime) {
+        Log.e("TAG", "startDate: " + startTime + "  endDate:" + endTime);
+        canParkList.clear();
+        canParkList.addAll(parkSpaces);
+
+        for (Park_Info parkInfo : parkSpaces) {
+            Log.e("TAG", "scanPark parkInfo:" + parkInfo);
+            if (!parkInfo.getPark_status().equals("2")) {
+                canParkList.remove(parkInfo);
+                continue;
+            }
+
+            //排除不在共享日期之内的(根据共享日期)
+            if (DateUtil.isInShareDate(startTime, endTime, parkInfo.getOpen_date()) == 0) {
+                canParkList.remove(parkInfo);
+                Log.e(TAG, "scanPark: notInShareDate");
+                continue;
+            }
+
+            Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
+            //排除不在共享时间段内的(根据共享的时间段)
+            if (!"-1".equals(parkInfo.getOpen_time())) {
+                canParkList.remove(parkInfo);
+                continue;
+            }
+
+            //排除不是每天共享的(根据共享星期)
+            if (!"1,1,1,1,1,1,1".equals(parkInfo.getShareDay())) {
+                canParkList.remove(parkInfo);
+                Log.e("TAG", "scanPark: notInShareDay");
+                continue;
+            }
+
+            //排除暂停时间在预定时间内的(根据暂停日期)
+            if (DateUtil.isInPauseDate(startTime, endTime, parkInfo.getPauseShareDate()) == 0) {
+                canParkList.remove(parkInfo);
+                Log.e(TAG, "scanPark: inPauseDate");
+                continue;
+            }
+
+            //排除该时间段被别人预约过的(根据车位的被预约时间)
+            if (DateUtil.isInOrderDate(startTime, endTime, parkInfo.getOrder_times())) {
+                canParkList.remove(parkInfo);
+                Log.e(TAG, "scanPark: isInOrderDate");
+            }
+
+        }
+
+        /*Collections.sort(canParkList, new Comparator<Park_Info>() {
+            @Override
+            public int compare(Park_Info o1, Park_Info o2) {
+                //根据指标排序，车位停车次数少的优先
+                return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
+            }
+        });*/
+
     }
 
     /**
