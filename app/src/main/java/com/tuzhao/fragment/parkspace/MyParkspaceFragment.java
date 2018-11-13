@@ -21,12 +21,13 @@ import com.tuzhao.fragment.base.BaseStatusFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
-import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.customView.CircleView;
 import com.tuzhao.publicwidget.customView.CircularArcView;
 import com.tuzhao.publicwidget.customView.VoltageView;
+import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.ImageUtil;
@@ -92,7 +93,7 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         bundle.putInt(ConstansUtil.POSITION, position);
         bundle.putInt(ConstansUtil.SIZE, totalSize);
         fragment.setArguments(bundle);
-        fragment.setTAG(fragment.getTag() + " parkInfoId:" + parkInfo.getId() + " cityCode:" + parkInfo.getCityCode());
+        fragment.setTAG(fragment.getTAG() + " parkInfoId:" + parkInfo.getId() + " cityCode:" + parkInfo.getCityCode());
         return fragment;
     }
 
@@ -124,7 +125,6 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
         TextView numberOfParkSpace = view.findViewById(R.id.number_of_park_space);
         TextView parkspaceDescription = view.findViewById(R.id.parkspace_description);
         TextView parkLot = view.findViewById(R.id.parking_lot);
-
 
         mCircularArcView = view.findViewById(R.id.circle_arc);
         mLock = view.findViewById(R.id.lock);
@@ -364,22 +364,21 @@ public class MyParkspaceFragment extends BaseStatusFragment implements View.OnCl
             }
         }
 
-        String nowDate = DateUtil.getCurrentYearToMinutes();
-        String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60);
-
-        if (DateUtil.isInShareDate(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_date()) == 0) {
+        String nowDate = DateUtil.deleteSecond(TimeManager.getInstance().getServerTime());
+        String afterTwoMinutesDate = DateUtil.getCalenarYearToMinutes(DateUtil.getYearToSecondCalendar(TimeManager.getInstance().getServerTime(), "120"));
+        if (DateUtil.notInShareDate(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_date())) {
             return "停租中";
         }
 
-        if (0 == DateUtil.isInPauseDate(nowDate, afterTwoMinutesDate, mParkInfo.getPauseShareDate())) {
+        if (DateUtil.isInParkSpacePauseDate(nowDate, afterTwoMinutesDate, mParkInfo.getPauseShareDate())) {
             return "停租中";
         }
 
-        if (0 == DateUtil.isInShareDay(nowDate, afterTwoMinutesDate, mParkInfo.getShareDay())) {
+        if (DateUtil.isNotInShareDay(nowDate, afterTwoMinutesDate, mParkInfo.getShareDay())) {
             return "停租中";
         }
 
-        if (null == DateUtil.isInShareTime(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_time(), false)) {
+        if (DateUtil.isNotInShareTime(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_time())) {
             return "停租中";
         }
 

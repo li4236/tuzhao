@@ -428,9 +428,6 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
                         if (mCanParkList.isEmpty()) {
                             showNoParkSpaceDialog();
                         } else {
-                            if (mCanParkList.size() > 1) {
-                                DataUtil.sortCanParkByIndicator(mCanParkList, DateUtil.deleteSecond(mParkOrderInfo.getOrderEndTime()));
-                            }
                             redistributionOrderParkSpace();
                         }
                     }
@@ -515,9 +512,6 @@ public class ParkOrderAppointmentActivity extends BaseStatusActivity implements 
 
                                 if (mCanParkList.size() > 0) {
                                     //还有可停的车位，则继续请求
-                                    if (mCanParkList.size() != 1) {
-                                        DataUtil.sortCanParkByIndicator(mCanParkList, mParkOrderInfo.getOrderEndTime());
-                                    }
                                     redistributionOrderParkSpace();
                                 } else {
                                     showFiveToast("未匹配到合适您时间的车位，请尝试更换时间");

@@ -35,6 +35,8 @@ import com.tuzhao.utils.DateUtil;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -156,6 +158,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
         }
 
         mDecimalFormat = new DecimalFormat("0.00");
+        initAppointmentIncomeTimeOptions();
     }
 
     @NonNull
@@ -177,7 +180,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                 startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                 break;
             case R.id.appointment_income_time_tv:
-                showAppointmentIncomeTimeOptions();
+                mStartTimeOption.show();
                 break;
             case R.id.daily_rent_cl:
                 showDailyRentOption();
@@ -219,7 +222,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
     /**
      * 弹出选择入场时间的选择器
      */
-    private void showAppointmentIncomeTimeOptions() {
+    private void initAppointmentIncomeTimeOptions() {
         if (mStartTimeOption == null) {
             mDays = new ArrayList<>(7);
             mHours = new ArrayList<>(24);
@@ -455,6 +458,16 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
         showLoadingDialog();
         for (int i = 0; i < mCanParkList.size(); i++) {
             if (mCanParkList.get(i).rentDay == mChooseRentDay) {
+                if (!mCanParkList.get(i).haveSort) {
+                    Collections.sort(mCanParkList.get(i).parkInfos, new Comparator<Park_Info>() {
+                        @Override
+                        public int compare(Park_Info o1, Park_Info o2) {
+                            return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
+                        }
+                    });
+                    mCanParkList.get(i).haveSort = true;
+                }
+
                 final String orderPrice = getOrderPrice();
                 getOkGo(HttpConstants.addLongRentOrder)
                         .params("parkSpaceId", mCanParkList.get(i).parkInfos.get(0).getId())
@@ -574,6 +587,8 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
 
         List<Park_Info> parkInfos;
 
+        private boolean haveSort;
+
         CanParkList(int rentDay) {
             this.rentDay = rentDay;
             this.parkInfos = new LinkedList<>();
@@ -590,6 +605,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
             haveScan = false;
             appointmentEndTime = null;
             parkInfos.clear();
+            haveSort = false;
         }
 
     }

@@ -275,19 +275,19 @@ public class ShareParkSpaceFragment extends BaseStatusFragment implements View.O
         String nowDate = DateUtil.getCurrentYearToMinutes();
         String afterTwoMinutesDate = DateUtil.getCurrentYearToMinutes(System.currentTimeMillis() + 1000 * 60);
 
-        if (DateUtil.isInShareDate(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_date()) == 0) {
+        if (DateUtil.notInShareDate(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_date())) {
             return "停租中";
         }
 
-        if (0 == DateUtil.isInPauseDate(nowDate, afterTwoMinutesDate, mParkInfo.getPauseShareDate())) {
+        if (DateUtil.isInParkSpacePauseDate(nowDate, afterTwoMinutesDate, mParkInfo.getPauseShareDate())) {
             return "停租中";
         }
 
-        if (0 == DateUtil.isInShareDay(nowDate, afterTwoMinutesDate, mParkInfo.getShareDay())) {
+        if (DateUtil.isNotInShareDay(nowDate, afterTwoMinutesDate, mParkInfo.getShareDay())) {
             return "停租中";
         }
 
-        if (null == DateUtil.isInShareTime(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_time(), false)) {
+        if (DateUtil.isNotInShareTime(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_time())) {
             return "停租中";
         }
 

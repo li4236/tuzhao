@@ -9,7 +9,6 @@ import com.tuzhao.publicmanager.UserManager;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -39,8 +38,7 @@ public class DataUtil {
         canParkList.clear();
         canParkList.addAll(parkSpaces);
 
-        Calendar[] shareTimeCalendar;
-        int status;
+        int maxExtentionMinute;
         for (Park_Info parkInfo : parkSpaces) {
             Log.e("TAG", "scanPark parkInfo:" + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
@@ -48,139 +46,91 @@ public class DataUtil {
                 continue;
             }
 
-            int currentStatus;
+            int currentExtentionMinute;
             //排除不在共享日期之内的(根据共享日期)
-            if ((currentStatus = DateUtil.isInShareDate(startTime, endTime, parkInfo.getOpen_date())) == 0) {
+            if ((currentExtentionMinute = DateUtil.isInShareDate(startTime, endTime, parkInfo.getOpen_date())) == -1) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: notInShareDate");
                 continue;
             } else {
-                status = currentStatus;
+                maxExtentionMinute = currentExtentionMinute;
             }
 
             //排除暂停时间在预定时间内的(根据暂停日期)
-            if ((currentStatus = DateUtil.isInPauseDate(startTime, endTime, parkInfo.getPauseShareDate())) == 0) {
+            if ((currentExtentionMinute = DateUtil.isInPauseDate(startTime, endTime, parkInfo.getPauseShareDate())) == -1) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: inPauseDate");
                 continue;
             } else {
-                if (status != 1) {
-                    status = currentStatus;
-                }
+                maxExtentionMinute = Math.min(maxExtentionMinute, currentExtentionMinute);
             }
 
             //排除预定时间当天不共享的(根据共享星期)
-            if ((currentStatus = DateUtil.isInShareDay(startTime, endTime, parkInfo.getShareDay())) == 0) {
+            if ((currentExtentionMinute = DateUtil.isInShareDay(startTime, endTime, parkInfo.getShareDay())) == -1) {
                 canParkList.remove(parkInfo);
                 Log.e("TAG", "scanPark: notInShareDay");
                 continue;
             } else {
-                if (status != 1) {
-                    status = currentStatus;
-                }
+                maxExtentionMinute = Math.min(maxExtentionMinute, currentExtentionMinute);
             }
 
             //排除该时间段被别人预约过的(根据车位的被预约时间)
-            if (DateUtil.isInOrderDate(startTime, endTime, parkInfo.getOrder_times())) {
+            if ((currentExtentionMinute = DateUtil.isInOrderDate(startTime, endTime, parkInfo.getOrder_times())) == -1) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: isInOrderDate");
                 continue;
+            } else {
+                maxExtentionMinute = Math.min(maxExtentionMinute, currentExtentionMinute);
             }
 
-            Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
             //排除不在共享时间段内的(根据共享的时间段)
-            if ((shareTimeCalendar = DateUtil.isInShareTime(startTime, endTime, parkInfo.getOpen_time(), status == 1)) != null) {
+            if ((currentExtentionMinute = DateUtil.isInShareTime(startTime, endTime, parkInfo.getOpen_time())) == -1) {
                 //获取车位可共享的时间差
-                Log.e("TAG", "shareTimeDistance: " + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[0]) + "  end:" + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[1]));
                 int position = canParkList.indexOf(parkInfo);
-                parkInfo.setShareTimeCalendar(shareTimeCalendar);
                 canParkList.set(position, parkInfo);
+                parkInfo.setMaxExtensionMinute(Math.min(maxExtentionMinute, currentExtentionMinute));
             } else {
                 canParkList.remove(parkInfo);
+                Log.e("TAG", "isNotInShareTime: " + parkInfo.getOpen_time());
             }
         }
 
         if (!canParkList.isEmpty()) {
-            sortCanParkListByShareTime(canParkList, endTime);
+            sortParkListByExtensionTimeWithIndicator(canParkList);
         }
 
+        Log.e(TAG, "findCanParkList: " + canParkList);
     }
 
-    private static void sortCanParkListByShareTime(List<Park_Info> canParkList, String parkEndTime) {
-        //停车时间加上宽限时长
-        final Calendar mCanParkEndCalendar = DateUtil.getYearToMinuteCalendar(parkEndTime);
-        mCanParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
-
+    /**
+     * 根据车位最大可顺延时长和指标进行排序
+     */
+    private static void sortParkListByExtensionTimeWithIndicator(List<Park_Info> canParkList) {
+        final int extensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
         Collections.sort(canParkList, new Comparator<Park_Info>() {
             @Override
             public int compare(Park_Info o1, Park_Info o2) {
-                long result;
-
-                if ((o1.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) >= 0
-                        && (o2.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) >= 0) {
-                    //如果两个车位的共享结束时段都比预约停车时间加上宽限时间长，则按照车位的可共享时段的大小从小到大排序
-                    result = DateUtil.getCalendarDistance(o1.getShareTimeCalendar()[0], o1.getShareTimeCalendar()[1]) -
-                            DateUtil.getCalendarDistance(o2.getShareTimeCalendar()[0], o2.getShareTimeCalendar()[1]);
-                } else if ((o1.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) > 0) {
-                    //如果第一个车位的共享结束时段都比预约停车时间加上宽限时间长，第二个不是，则第一个排前面
+                int result;
+                if (o1.getMaxExtensionMinute() >= extensionTime && o2.getMaxExtensionMinute() >= extensionTime) {
+                    //如果都满足用户的顺延时长则按照车位指标从小到大排序
+                    result = Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
+                } else if (o1.getMaxExtensionMinute() >= extensionTime && o2.getMaxExtensionMinute() < extensionTime) {
+                    //如果第一个车位满足用户的顺延时长，第二个车位不满足，则第一个车位排在前面
                     result = -1;
-                } else if ((o2.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) > 0) {
-                    //如果第二个车位的共享结束时段都比预约停车时间加上宽限时间长，第二个不是，则第二个排前面
-                    result = -1;
+                } else if (o1.getMaxExtensionMinute() < extensionTime && o2.getMaxExtensionMinute() >= extensionTime) {
+                    //如果第二个车位用户的满足顺延时长，第一个车位不满足，则第二个车位排在前面
+                    result = 1;
                 } else {
-                    //如果两个车位的共享结束时段都不比预约停车时间加上宽限时间长，则停车的宽限时长大的排前面
-                    result = (o2.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis())
-                            - (o1.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis());
+                    //两个车位都不满足,则车位最大可顺延时长大的排在前面
+                    result = -(o1.getMaxExtensionMinute() - o2.getMaxExtensionMinute());
+                    if (result == 0) {
+                        //如果车位的最大可顺延时长一样，则根据车位指标排序，指标小的排在前面
+                        result = Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
+                    }
                 }
-                return (int) result;
+                return result;
             }
         });
-    }
-
-    public static void sortCanParkByIndicator(List<Park_Info> canParkInfo, String endTime) {
-        if (canParkInfo.size() <= 1) {
-            return;
-        }
-
-        //停车时间加上宽限时长
-        final Calendar mCanParkEndCalendar = DateUtil.getYearToMinuteCalendar(endTime);
-        mCanParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
-
-        if (canParkInfo.get(1).getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis() <= 0) {
-            //如果第二个的共享时间没有比停车时间加上宽限时间更长则不用比较了
-            return;
-        }
-
-        if (canParkInfo.size() == 2 ||
-                (canParkInfo.size() >= 3 && canParkInfo.get(2).getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis() <= 0)) {
-            //如果只有两个预选车位或者预选车位大于三个，但是第三个的共享时间没有比停车时间加上宽限时间更长
-            Park_Info parkInfoOne = canParkInfo.get(0);
-            Park_Info parkInfoTwo = canParkInfo.get(1);
-            if (Integer.valueOf(parkInfoOne.getIndicator()) > Integer.valueOf(parkInfoTwo.getIndicator())) {
-                canParkInfo.set(0, parkInfoTwo);
-                canParkInfo.set(1, parkInfoOne);
-            }
-        } else if (canParkInfo.size() >= 3) {
-
-            //预选车位大于等于三个则只需要比较前三个
-            List<Park_Info> list = new ArrayList<>(3);
-            for (int i = 0; i < 3; i++) {
-                list.add(canParkInfo.get(i));
-            }
-
-            //把前三个预选车位按照指标从小到大排序
-            Collections.sort(list, new Comparator<Park_Info>() {
-                @Override
-                public int compare(Park_Info o1, Park_Info o2) {
-                    return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
-                }
-            });
-
-            for (int i = 0; i < 3; i++) {
-                canParkInfo.set(i, list.get(i));
-            }
-        }
-
     }
 
     /**
@@ -202,48 +152,40 @@ public class DataUtil {
             }
 
             //排除不在共享日期之内的(根据共享日期)
-            if (DateUtil.isInShareDate(startTime, endTime, parkInfo.getOpen_date()) == 0) {
+            if (DateUtil.notInShareDate(startTime, endTime, parkInfo.getOpen_date())) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: notInShareDate");
                 continue;
             }
 
-            Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
-            //排除不在共享时间段内的(根据共享的时间段)
+            //排除不在共享时间段内的(根据共享的时间段),因为长租是一天起的，所以车位必须全天开放才行
             if (!"-1".equals(parkInfo.getOpen_time())) {
                 canParkList.remove(parkInfo);
+                Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
                 continue;
             }
 
             //排除不是每天共享的(根据共享星期)
-            if (!"1,1,1,1,1,1,1".equals(parkInfo.getShareDay())) {
+            if (DateUtil.isNotInShareDay(startTime, endTime, parkInfo.getShareDay())) {
                 canParkList.remove(parkInfo);
                 Log.e("TAG", "scanPark: notInShareDay");
                 continue;
             }
 
             //排除暂停时间在预定时间内的(根据暂停日期)
-            if (DateUtil.isInPauseDate(startTime, endTime, parkInfo.getPauseShareDate()) == 0) {
+            if (DateUtil.isInParkSpacePauseDate(startTime, endTime, parkInfo.getPauseShareDate())) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: inPauseDate");
                 continue;
             }
 
             //排除该时间段被别人预约过的(根据车位的被预约时间)
-            if (DateUtil.isInOrderDate(startTime, endTime, parkInfo.getOrder_times())) {
+            if (!DateUtil.isNotInOrderDate(startTime, endTime, parkInfo.getOrder_times())) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: isInOrderDate");
             }
 
         }
-
-        /*Collections.sort(canParkList, new Comparator<Park_Info>() {
-            @Override
-            public int compare(Park_Info o1, Park_Info o2) {
-                //根据指标排序，车位停车次数少的优先
-                return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
-            }
-        });*/
 
     }
 

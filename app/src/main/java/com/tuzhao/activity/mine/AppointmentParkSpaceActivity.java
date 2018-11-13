@@ -555,8 +555,6 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
     private void scanParkSpace() {
         mCanParkList.clear();
         mCanParkList.addAll(mParkInfos);
-        Calendar[] shareTimeCalendar;
-        int status;
         boolean haveDestination = mLatitude != 0 && mLongitude != 0;    //是否选择目的地
         final LatLng latLng = new LatLng(mLatitude, mLongitude);
         LatLng currentLatLng = new LatLng(LocationManager.getInstance().getmAmapLocation().getLatitude(), LocationManager.getInstance().getmAmapLocation().getLongitude());
@@ -571,40 +569,29 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 continue;
             }
 
-            int currentStatus;
             //排除不在共享日期之内的(根据共享日期)
-            if ((currentStatus = DateUtil.isInShareDate(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOpen_date())) == 0) {
+            if (DateUtil.notInShareDate(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOpen_date())) {
                 mCanParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: notInShareDate");
                 continue;
-            } else {
-                status = currentStatus;
             }
 
             //排除暂停时间在预约时间内的(根据暂停日期)
-            if ((currentStatus = DateUtil.isInPauseDate(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getPauseShareDate())) == 0) {
+            if (DateUtil.isInParkSpacePauseDate(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getPauseShareDate())) {
                 mCanParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: inPauseDate");
                 continue;
-            } else {
-                if (status != 1) {
-                    status = currentStatus;
-                }
             }
 
             //排除预约时间当天不共享的(根据共享星期)
-            if ((currentStatus = DateUtil.isInShareDay(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getShareDay())) == 0) {
+            if (DateUtil.isNotInShareDay(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getShareDay())) {
                 mCanParkList.remove(parkInfo);
                 Log.e("TAG", "scanPark: notInShareDay");
                 continue;
-            } else {
-                if (status != 1) {
-                    status = currentStatus;
-                }
             }
 
             //排除该时间段被别人预约过的(根据车位的被预约时间)
-            if (DateUtil.isInOrderDate(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOrder_times())) {
+            if (!DateUtil.isNotInOrderDate(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOrder_times())) {
                 mCanParkList.remove(parkInfo);
                 Log.e(TAG, "scanPark: isInOrderDate");
                 continue;
@@ -612,11 +599,9 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
             Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
             //排除不在共享时间段内的(根据共享的时间段)
-            if ((shareTimeCalendar = DateUtil.isInShareTime(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOpen_time(), status == 1)) != null) {
+            if ( DateUtil.isInShareTime(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOpen_time()) !=-1) {
                 //获取车位可共享的时间差
-                Log.e("TAG", "shareTimeDistance: " + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[0]) + "  end:" + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[1]));
                 int position = mCanParkList.indexOf(parkInfo);
-                parkInfo.setShareTimeCalendar(shareTimeCalendar);
                 mCanParkList.set(position, parkInfo);
             } else {
                 mCanParkList.remove(parkInfo);

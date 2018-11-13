@@ -33,14 +33,13 @@ import com.tuzhao.publicwidget.dialog.LoadingDialog;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DensityUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -490,153 +489,17 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
         Log.e("TAG", "startDate: " + start_time + "  endDate:" + end_time);
         if (mCanParkInfo == null) {
             mCanParkInfo = new LinkedList<>();
-        } else {
-            mCanParkInfo.clear();
         }
-        mCanParkInfo.addAll(park_list);
-
-        Calendar[] shareTimeCalendar;
-        int status;
-        for (Park_Info parkInfo : park_list) {
-            Log.e("TAG", "scanPark parkInfo:" + parkInfo);
-            if (!parkInfo.getPark_status().equals("2")) {
-                mCanParkInfo.remove(parkInfo);
-                continue;
-            }
-
-            int currentStatus;
-            //排除不在共享日期之内的(根据共享日期)
-            if ((currentStatus = DateUtil.isInShareDate(start_time, end_time, parkInfo.getOpen_date())) == 0) {
-                mCanParkInfo.remove(parkInfo);
-                Log.e(TAG, "scanPark: notInShareDate");
-                continue;
-            } else {
-                status = currentStatus;
-            }
-
-            //排除暂停时间在预定时间内的(根据暂停日期)
-            if ((currentStatus = DateUtil.isInPauseDate(start_time, end_time, parkInfo.getPauseShareDate())) == 0) {
-                mCanParkInfo.remove(parkInfo);
-                Log.e(TAG, "scanPark: inPauseDate");
-                continue;
-            } else {
-                if (status != 1) {
-                    status = currentStatus;
-                }
-            }
-
-            //排除预定时间当天不共享的(根据共享星期)
-            if ((currentStatus = DateUtil.isInShareDay(start_time, end_time, parkInfo.getShareDay())) == 0) {
-                mCanParkInfo.remove(parkInfo);
-                Log.e("TAG", "scanPark: notInShareDay");
-                continue;
-            } else {
-                if (status != 1) {
-                    status = currentStatus;
-                }
-            }
-
-            //排除该时间段被别人预约过的(根据车位的被预约时间)
-            if (DateUtil.isInOrderDate(start_time, end_time, parkInfo.getOrder_times())) {
-                mCanParkInfo.remove(parkInfo);
-                Log.e(TAG, "scanPark: isInOrderDate");
-                continue;
-            }
-
-            Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
-            //排除不在共享时间段内的(根据共享的时间段)
-            if ((shareTimeCalendar = DateUtil.isInShareTime(start_time, end_time, parkInfo.getOpen_time(), status == 1)) != null) {
-                //获取车位可共享的时间差
-                Log.e("TAG", "shareTimeDistance: " + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[0]) + "  end:" + DateUtil.getCalendarMonthToMinute(shareTimeCalendar[1]));
-                int position = mCanParkInfo.indexOf(parkInfo);
-                parkInfo.setShareTimeCalendar(shareTimeCalendar);
-                mCanParkInfo.set(position, parkInfo);
-            } else {
-                mCanParkInfo.remove(parkInfo);
-            }
-        }
-
-        //停车时间加上宽限时长
-        mCanParkEndCalendar = DateUtil.getYearToMinuteCalendar(end_time);
-        mCanParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
-
-        Collections.sort(mCanParkInfo, new Comparator<Park_Info>() {
-            @Override
-            public int compare(Park_Info o1, Park_Info o2) {
-                long result;
-
-                if ((o1.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) >= 0
-                        && (o2.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) >= 0) {
-                    //如果两个车位的共享结束时段都比预约停车时间加上宽限时间长，则按照车位的可共享时段的大小从小到大排序
-                    result = DateUtil.getCalendarDistance(o1.getShareTimeCalendar()[0], o1.getShareTimeCalendar()[1]) -
-                            DateUtil.getCalendarDistance(o2.getShareTimeCalendar()[0], o2.getShareTimeCalendar()[1]);
-                } else if ((o1.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) > 0) {
-                    //如果第一个车位的共享结束时段都比预约停车时间加上宽限时间长，第二个不是，则第一个排前面
-                    result = -1;
-                } else if ((o2.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis()) > 0) {
-                    //如果第二个车位的共享结束时段都比预约停车时间加上宽限时间长，第二个不是，则第二个排前面
-                    result = -1;
-                } else {
-                    //如果两个车位的共享结束时段都不比预约停车时间加上宽限时间长，则停车的宽限时长大的排前面
-                    result = (o2.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis())
-                            - (o1.getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis());
-                }
-                return (int) result;
-            }
-        });
+        DataUtil.findCanParkList(mCanParkInfo, park_list, start_time, end_time);
 
         if (mCanParkInfo.size() >= 1) {
             if (TextUtils.isEmpty(textview_carnumble.getText())) {
                 MyToast.showToast(this, "选了车牌号码才可以预定车位哦", 5);
             }
-            if (mCanParkInfo.size() != 1) {
-                sortCanParkByIndicator();
-            }
         }
 
         Log.e("TAG", "mCanParkInfo: " + mCanParkInfo);
         setOrderFee();
-    }
-
-    /**
-     * 把共享时长大于mCanParkEndCalendar的前三个预选车位按照指标排序
-     */
-    private void sortCanParkByIndicator() {
-        if (mCanParkInfo.get(1).getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis() <= 0) {
-            //如果第二个的共享时间没有比停车时间加上宽限时间更长则不用比较了
-            return;
-        }
-
-        if (mCanParkInfo.size() == 2 ||
-                (mCanParkInfo.size() >= 3 && mCanParkInfo.get(2).getShareTimeCalendar()[1].getTimeInMillis() - mCanParkEndCalendar.getTimeInMillis() <= 0)) {
-            //如果只有两个预选车位或者预选车位大于三个，但是第三个的共享时间没有比停车时间加上宽限时间更长
-            Park_Info parkInfoOne = mCanParkInfo.get(0);
-            Park_Info parkInfoTwo = mCanParkInfo.get(1);
-            if (Integer.valueOf(parkInfoOne.getIndicator()) > Integer.valueOf(parkInfoTwo.getIndicator())) {
-                mCanParkInfo.set(0, parkInfoTwo);
-                mCanParkInfo.set(1, parkInfoOne);
-            }
-        } else if (mCanParkInfo.size() >= 3) {
-
-            //预选车位大于等于三个则只需要比较前三个
-            List<Park_Info> list = new ArrayList<>(3);
-            for (int i = 0; i < 3; i++) {
-                list.add(mCanParkInfo.get(i));
-            }
-
-            //把前三个预选车位按照指标从小到大排序
-            Collections.sort(list, new Comparator<Park_Info>() {
-                @Override
-                public int compare(Park_Info o1, Park_Info o2) {
-                    return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
-                }
-            });
-
-            for (int i = 0; i < 3; i++) {
-                mCanParkInfo.set(i, list.get(i));
-            }
-        }
-
     }
 
     private void setOrderFee() {
@@ -662,18 +525,14 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void showAlertDialog() {
-        Calendar canParkEndCalendar = DateUtil.getYearToMinuteCalendar(end_time);
-        canParkEndCalendar.add(Calendar.MINUTE, UserManager.getInstance().getUserInfo().getLeave_time());
-        Log.e("TAG", "showAlertDialog shareTime: " + DateUtil.getTwoYearToMinutesString(
-                mCanParkInfo.get(0).getShareTimeCalendar()[0], mCanParkInfo.get(0).getShareTimeCalendar()[1]));
-        if (DateUtil.getCalendarDistance(canParkEndCalendar, mCanParkInfo.get(0).getShareTimeCalendar()[1]) >= 0) {
+        if (mCanParkInfo.get(0).getMaxExtensionMinute() >= UserManager.getInstance().getUserInfo().getLeave_time()) {
         /*mExtensionTime = UserManager.getInstance().getUserInfo().getLeave_time();
         builder.setMessage("最优车位宽限时长为" + mExtensionTime + "分钟，是否预定？");*/
             //builder.setMessage("已为你匹配到最优车位，是否预订？");
             addNewParkOrder();
         } else {
             final TipeDialog.Builder builder = new TipeDialog.Builder(OrderParkActivity.this);
-            mExtensionTime = (int) DateUtil.getCalendarDistance(mCanParkInfo.get(0).getShareTimeCalendar()[1], canParkEndCalendar);
+            mExtensionTime = mCanParkInfo.get(0).getMaxExtensionMinute();
             builder.setMessage("可分配车位宽限时长为" + mExtensionTime + "分钟，是否预定？");
             builder.setTitle("确认预定");
             builder.setPositiveButton("立即预定", new DialogInterface.OnClickListener() {
@@ -740,9 +599,6 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                                 }
 
                                 if (mCanParkInfo.size() > 0) {
-                                    if (mCanParkInfo.size() != 1) {
-                                        sortCanParkByIndicator();
-                                    }
                                     addNewParkOrder();
                                 } else {
                                     dissmissLoading();

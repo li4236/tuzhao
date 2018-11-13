@@ -61,6 +61,9 @@ public class Park_Info implements Parcelable {
     private String voltage;//车位锁电量值
     private String indicator;//指标，代表该车位被停车的次数，用于预定车位排序
     private Calendar[] shareTimeCalendar;     //能共享的时间段的开始时间和结束时间，仅用于预定车位排序
+    // 最大可顺延的分钟数，代表预约停车的结束时间距离合法的结束时间的分钟数。
+    // 比如结束时间为2018-11-13 11:00，该车位别的订单预约时间为2018-11-13 11:05 - xxx，则最大可顺延为5分钟。
+    private int maxExtensionMinute;
 
     public String getPark_space_name() {
         return parkspace_name;
@@ -334,12 +337,12 @@ public class Park_Info implements Parcelable {
         this.indicator = indicator;
     }
 
-    public Calendar[] getShareTimeCalendar() {
-        return shareTimeCalendar;
+    public int getMaxExtensionMinute() {
+        return maxExtensionMinute;
     }
 
-    public void setShareTimeCalendar(Calendar[] shareTimeCalendar) {
-        this.shareTimeCalendar = shareTimeCalendar;
+    public void setMaxExtensionMinute(int maxExtensionMinute) {
+        this.maxExtensionMinute = maxExtensionMinute;
     }
 
     public String getUserName() {
@@ -431,7 +434,7 @@ public class Park_Info implements Parcelable {
     }
 
     public String getUserNoteName() {
-        return userNoteName==null?userName:userNoteName;
+        return userNoteName == null ? userName : userNoteName;
     }
 
     public void setUserNoteName(String userNoteName) {

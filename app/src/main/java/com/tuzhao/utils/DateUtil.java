@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
 import com.tuzhao.info.ParkOrderInfo;
+import com.tuzhao.publicmanager.TimeManager;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -130,6 +132,17 @@ public class DateUtil {
         return calendar;
     }
 
+    private static void setCalendarYearToMinute(Calendar calendar, String yearToMinute) {
+        String[] yearToMinutes = yearToMinute.split("-");
+        calendar.set(Calendar.YEAR, Integer.valueOf(yearToMinutes[0]));
+        calendar.set(Calendar.MONTH, Integer.valueOf(yearToMinutes[1]) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToMinutes[2].substring(0, yearToMinutes[2].indexOf(" "))));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(yearToMinutes[2].substring(yearToMinutes[2].indexOf(" ") + 1, yearToMinutes[2].indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(yearToMinutes[2].substring(yearToMinutes[2].indexOf(":") + 1, yearToMinutes[2].length())));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+    }
+
     /**
      * @param isDetail true(2018-04-19 11:15:00) false(11:15:00)
      */
@@ -202,105 +215,257 @@ public class DateUtil {
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareDate 共享时间，格式为yyyy-MM-dd - yyyy-MM-dd(包括了开始共享的时间和结束共享的时间)
-     * @return 0:(开始时间和结束时间之间不在在共享时间之内) 1:(开始时间和结束时间之间在共享时间之内,但是结束时间刚好是最后共享日期的第二天凌晨的)
-     * 2:(开始时间和结束时间之间在共享时间之内)
+     * @return -1(车位的共享日期不能完全包括预约的停车日期) other(预约结束时间距离车位的共享结束日期的分钟数)
      */
     public static int isInShareDate(String startDate, String endDate, String shareDate) {
         if (shareDate.equals("-1") || shareDate.equals("")) {
-            return 0;
+            return 24 * 60;
         }
 
         String[] date = shareDate.split(" - ");
-        Calendar startCalendar = getYearToDayCalendar(startDate, true);
-        Calendar endCalendar = getYearToDayCalendar(endDate, true);
+        Calendar startCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endCalendar = getYearToMinuteCalendar(endDate);
         Calendar startShareCalendar = getYearToDayCalendar(date[0], false);
         Calendar endShareCalendar = getYearToDayCalendar(date[1], false);
+        endShareCalendar.set(Calendar.HOUR_OF_DAY, 24);
 
         if (startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0) {
             //在共享的日期内
-            return 2;
-        } else {
-            String[] endHourWithMinutes = endDate.split(" ")[1].split(":");
-            if (endHourWithMinutes[0].equals("00") && endHourWithMinutes[1].equals("00")) {
-                //如果不在共享日期内，但是结束时间为凌晨的，则把共享结束时间加一天再比较
-                endShareCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                if (endCalendar.compareTo(endShareCalendar) == 0) {
-                    return 1;
-                }
-            }
+            return getCalendarMinuteDistance(endShareCalendar, endCalendar);
         }
-        return 0;
+        return -1;
+    }
+
+    /**
+     * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
+     * @param shareDate 共享时间，格式为yyyy-MM-dd - yyyy-MM-dd(包括了开始共享的时间和结束共享的时间)
+     * @return true(预约的停车时间不在共享日期内)
+     */
+    public static boolean notInShareDate(String startDate, String endDate, String shareDate) {
+        if (shareDate.equals("-1") || shareDate.equals("")) {
+            return false;
+        }
+
+        String[] date = shareDate.split(" - ");
+        Calendar startCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endCalendar = getYearToMinuteCalendar(endDate);
+        Calendar startShareCalendar = getYearToDayCalendar(date[0], false);
+        Calendar endShareCalendar = getYearToDayCalendar(date[1], false);
+        endShareCalendar.set(Calendar.HOUR_OF_DAY, 24); //结束时间为那天的晚上
+
+        return startCalendar.compareTo(startShareCalendar) < 0 || endCalendar.compareTo(endShareCalendar) > 0;
     }
 
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param pauseDate 暂停时间，格式为yyyy-MM-dd
-     * @return 0:(暂停时间在开始时间和结束时间之间) 1:(结束时间为暂停时间的00:00)
-     * 2:(暂停时间不在开始时间和结束时间之间)
+     * @return -1(和暂停时间有冲突) other(结束时间到暂停时间的分钟数)
      */
     public static int isInPauseDate(String startDate, String endDate, String pauseDate) {
         if (pauseDate.equals("-1")) {
-            return 2;
+            return 24 * 60;
         }
 
-        Calendar startCalendar = getYearToDayCalendar(startDate, true);
-        Calendar endCalendar = getYearToDayCalendar(endDate, true);
+        Calendar startCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endCalendar = getYearToMinuteCalendar(endDate);
+
         String[] pause = pauseDate.split(",");
-        Calendar pauseCalendar;
-        int inPauseDate = 2;
-        for (String aPause : pause) {
-            pauseCalendar = getYearToDayCalendar(aPause, false);
-            if (startCalendar.compareTo(pauseCalendar) <= 0 && endCalendar.compareTo(pauseCalendar) >= 0) {
-                //暂停时间在停车时间内
-                if (endDate.split(" ")[0].equals(aPause) && isInStartDay(endDate)) {
-                    //判断最后一天是否是暂停时间的00:00，不直接返回是因为如果停车时间为2018-04-26 10:00 - 2018-04-29:00，如果暂停时间为2018-04-29,2018-04-28则不正确
-                    inPauseDate = 1;
-                } else {
-                    return 0;
-                }
+        List<CalendarHolder> calendarHolders = new ArrayList<>(pause.length);
+        for (String pauseString : pause) {
+            calendarHolders.add(new CalendarHolder(getYearToDayCalendar(pauseString, false)));
+        }
+        Collections.sort(calendarHolders, new Comparator<CalendarHolder>() {
+            @Override
+            public int compare(CalendarHolder o1, CalendarHolder o2) {
+                return o1.startCalendar.compareTo(o2.startCalendar);
+            }
+        });
+
+        for (int i = 0; i < calendarHolders.size(); i++) {
+            CalendarHolder calendarHolder = calendarHolders.get(i);
+            calendarHolder.endCalendar = getTodayEndCalendar(calendarHolder.startCalendar);
+            if (endCalendar.compareTo(calendarHolder.startCalendar) <= 0) {
+                //因为暂停共享日期已经按时间来排序了，如果预约的结束停车时间比当前的暂停共享时间早，则代表预约停车时间不在共享时间内
+                return (int) ((calendarHolder.startCalendar.getTimeInMillis() - endCalendar.getTimeInMillis()) / 60000);
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) >= 0 && startCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的开始时间在暂停共享时间内
+                return -1;
+            } else if (endCalendar.compareTo(calendarHolder.startCalendar) > 0 && endCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的结束时间在暂停共享时间内
+                return -1;
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) <= 0 && endCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                //预约停车的时间内包括暂停共享时间
+                return -1;
             }
         }
-        return inPauseDate;
+
+        //如果暂停日期都比预约停车的开始时间早的
+        return 24 * 60;
+    }
+
+    /**
+     * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
+     * @param pauseDate 暂停时间，格式为yyyy-MM-dd
+     * @return true(预约时间和暂停时间有冲突)     false(预约时间和暂停时间没冲突)
+     */
+    public static boolean isInParkSpacePauseDate(String startDate, String endDate, String pauseDate) {
+        if (pauseDate.equals("-1")) {
+            return false;
+        }
+
+        Calendar startCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endCalendar = getYearToMinuteCalendar(endDate);
+
+        String[] pause = pauseDate.split(",");
+        List<CalendarHolder> calendarHolders = new ArrayList<>(pause.length);
+        for (String pauseString : pause) {
+            calendarHolders.add(new CalendarHolder(getYearToDayCalendar(pauseString, false)));
+        }
+        Collections.sort(calendarHolders, new Comparator<CalendarHolder>() {
+            @Override
+            public int compare(CalendarHolder o1, CalendarHolder o2) {
+                return o1.startCalendar.compareTo(o2.startCalendar);
+            }
+        });
+
+        for (int i = 0; i < calendarHolders.size(); i++) {
+            CalendarHolder calendarHolder = calendarHolders.get(i);
+            calendarHolder.endCalendar = getTodayEndCalendar(calendarHolder.startCalendar);
+            if (endCalendar.compareTo(calendarHolder.startCalendar) <= 0) {
+                //因为暂停共享日期已经按时间来排序了，如果预约的结束停车时间比当前的暂停共享时间早，则代表预约停车时间不在暂停共享时间内
+                return false;
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) >= 0 && startCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的开始时间在暂停共享时间内
+                return true;
+            } else if (endCalendar.compareTo(calendarHolder.startCalendar) > 0 && endCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的结束时间在暂停共享时间内
+                return true;
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) <= 0 && endCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                //预约停车的时间内包括暂停共享时间
+                return true;
+            }
+        }
+
+        //如果暂停日期都比预约停车的开始时间早的
+        return false;
     }
 
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareDays 每周共享的星期，
-     * @return 0:(开始时间和结束时间之间不在在共享星期之内) 1:(开始时间和结束时间之间在共享星期之内,但是结束时间刚好是最后共享日期的第二天凌晨的)
-     * 2:(开始时间和结束时间之间在共享星期之内)
+     * @return -1(开始时间和结束时间之间不在在共享星期之内) other(结束时间之间距离最近的共享星期开始时间的分钟数)
      */
     public static int isInShareDay(String startDate, String endDate, String shareDays) {
-        //如果是同一天则只需要判断当天是否共享
-        if (startDate.split(" ")[0].equals(endDate.split(" ")[0])) {
-            int parkDay = getDayOfWeek(startDate, true);
-            if (shareDays.split(",")[parkDay - 1].charAt(0) != '1') {
-                return 0;
+        if ("1,1,1,1,1,1,1".equals(shareDays)) {
+            //每天都共享的则不用判断了
+            return ConstansUtil.ONE_DAY_MINUTES;
+        } else if (startDate.split(" ")[0].equals(endDate.split(" ")[0])) {
+            //如果是停车时间都在同一天则只需要判断当天是否共享
+            int parkDay = getDayOfWeek(startDate, true);//(1-7)
+            String[] days = shareDays.split(",");
+            if (days[parkDay - 1].equals("0")) {
+                //停车那天不可以共享
+                return -1;
+            } else {
+                return getMaxMinuteOfShareDay(endDate, parkDay, days);
             }
         } else {
-            String[] days = shareDays.split(",");
             if (getDateDayDistance(startDate, endDate) > 6) {
-                //如果停车时间超过6天则需要判断是否整个星期都共享
-                for (int i = 0; i < days.length; i++) {
-                    if (days[i].charAt(0) != '1') {
-                        return 0;
-                    }
-                }
+                //如果停车时间超过6天则需要判断是否整个星期都共享,因为第一个if已经判断了，所以这里肯定是不行的
+                return -1;
             } else {
-                //停车时间为一到六天的
+                //停车时间为一到六天的(可能周一到周日)
                 int startDay = getDayOfWeek(startDate, true);
-                int endDay = getDayOfWeek(endDate, true);
-                boolean isInStartDay = isInStartDay(endDate);
+                int endDay = getEndDayOfWeek(endDate);
+                String[] days = shareDays.split(",");
                 if (startDay < endDay) {
                     //如果停车时间是在同一个星期内则只需要判断停车的星期是否都在共享的星期内
                     for (int i = startDay; i <= endDay; i++) {
-                        if (days[i - 1].charAt(0) != '1') {
-                            if (i == endDay && isInStartDay) {
-                                //如果最后一天不共享但是是只停00:00的
-                                return 1;
-                            }
-                            return 0;
+                        if (days[i - 1].equals("0")) {
+                            //在预约停车的某一天是不共享的
+                            return -1;
+                        }
+                    }
+                    return getMaxMinuteOfShareDay(endDate, endDay, days);
+                } else {
+                    //如果是停车时间是在两个星期之间的，则判断停车的星期是否都在共享的星期内
+                    List<Integer> list = new ArrayList<>();
+                    //保存停车所在的星期
+                    for (int i = startDay; i <= 7; i++) {
+                        list.add(i);
+                    }
+                    for (int i = 1; i <= endDay; i++) {
+                        list.add(i);
+                    }
+
+                    for (int i = 0; i < list.size(); i++) {
+                        if (days[list.get(i) - 1].equals("0")) {
+                            //在预约停车的某一天是不共享的
+                            return -1;
+                        }
+                    }
+                    return getMaxMinuteOfShareDay(endDate, endDay, days);
+                }
+            }
+        }
+    }
+
+    private static int getMaxMinuteOfShareDay(String endDate, int endDay, String[] days) {
+        if (endDay == 7) {
+            //是在星期天停车
+            if (days[0].equals("1")) {
+                //如果星期一可以停
+                return ConstansUtil.ONE_DAY_MINUTES;
+            } else {
+                //星期一不可以停，则最大停车时间为到当天晚上凌晨
+                Calendar calendar = getYearToMinuteCalendar(endDate);
+                return getCalendarMinuteDistance(calendar, getTodayEndCalendar(calendar));
+            }
+        } else {
+            if (days[endDay].equals("1")) {
+                //第二天也可以共享
+                return ConstansUtil.ONE_DAY_MINUTES;
+            } else {
+                //第二天不可以共享
+                Calendar calendar = getYearToMinuteCalendar(endDate);
+                return getCalendarMinuteDistance(calendar, getTodayEndCalendar(calendar));
+            }
+        }
+    }
+
+    /**
+     * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
+     * @param shareDays 每周共享的星期，
+     * @return true(预约停车时间不在共享的星期内)
+     */
+    public static boolean isNotInShareDay(String startDate, String endDate, String shareDays) {
+        if ("1,1,1,1,1,1,1".equals(shareDays)) {
+            //每天都共享的则不用判断了
+            return false;
+        } else if (startDate.split(" ")[0].equals(endDate.split(" ")[0])) {
+            //如果是停车时间都在同一天则只需要判断当天是否共享
+            int parkDay = getDayOfWeek(startDate, true);//(1-7)
+            return !shareDays.split(",")[parkDay - 1].equals("1");
+        } else {
+            if (getDateDayDistance(startDate, endDate) > 6) {
+                //如果停车时间超过6天则需要判断是否整个星期都共享,因为第一个if已经判断了，所以这里肯定是不行的
+                return true;
+            } else {
+                //停车时间为一到六天的(可能周一到周日)
+                int startDay = getDayOfWeek(startDate, true);
+                int endDay = getEndDayOfWeek(endDate);
+                String[] days = shareDays.split(",");
+                if (startDay < endDay) {
+                    //如果停车时间是在同一个星期内则只需要判断停车的星期是否都在共享的星期内
+                    for (int i = startDay; i <= endDay; i++) {
+                        if (days[i - 1].equals("0")) {
+                            //在预约停车的某一天是不共享的
+                            return true;
                         }
                     }
                 } else {
@@ -315,65 +480,119 @@ public class DateUtil {
                     }
 
                     for (int i = 0; i < list.size(); i++) {
-                        if (days[list.get(i) - 1].charAt(0) != '1') {
-                            //如果是最后一天的凌晨的则也可以
-                            if (i == list.size() - 1 && isInStartDay) {
-                                return 1;
-                            }
-                            //否则就是不在共享星期内
-                            return 0;
+                        if (days[list.get(i) - 1].equals("0")) {
+                            //在预约停车的某一天是不共享的
+                            return true;
                         }
                     }
                 }
             }
         }
-        return 2;
+        return false;
     }
 
     /**
-     * @param orderDate 逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
-     * @return true(停车时间在预约时间内)
+     * @param orderDate 别人在这个车位预约的订单时间，逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
+     * @return -1(预约停车时间和车位订单预约时间有冲突) other(最大可宽限的时长)
      */
-    public static boolean isInOrderDate(String startDate, String endDate, String orderDate) {
-        if (orderDate.equals("-1") || orderDate.equals("")) {
-            return false;
+    public static int isInOrderDate(String startDate, String endDate, String orderDate) {
+        if (orderDate.equals("-1")) {
+            return ConstansUtil.ONE_DAY_MINUTES;
         }
 
         //保存在现在时刻以后的预约时间（既是排除掉在现在以前那些被预约的时间）
         String[] orderDates = orderDate.split(",");
         List<String> usefulDates = new ArrayList<>(orderDates.length);
-        Calendar nowCalendar = Calendar.getInstance();
-        nowCalendar.set(Calendar.SECOND, 0);
-        nowCalendar.set(Calendar.MILLISECOND, 0);
+        Calendar nowCalendar = getYearToSecondCalendar(TimeManager.getInstance().getServerTime());
 
         for (String date : orderDates) {
-            if (nowCalendar.compareTo(getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()))) == -1) {
+            if (nowCalendar.compareTo(getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()))) < 0) {
                 usefulDates.add(date);
             }
         }
 
         if (usefulDates.isEmpty()) {
-            return false;
+            return ConstansUtil.ONE_DAY_MINUTES;
         }
 
-        //将已被预约的时间用Calendar保存
-        Calendar[] calendars = new Calendar[usefulDates.size() * 2];
+        List<CalendarHolder> calendarHolders = new ArrayList<>(usefulDates.size());
         for (int i = 0; i < usefulDates.size(); i++) {
-            calendars[i * 2] = getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*")));
-            calendars[i * 2 + 1] = getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()));
+            calendarHolders.add(new CalendarHolder(getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*"))),
+                    getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()))));
         }
 
         Calendar startCalendar = getYearToMinuteCalendar(startDate);
         Calendar endCalendar = getYearToMinuteCalendar(endDate);
-        for (int i = 0; i < calendars.length; i += 2) {
-            if (startCalendar.compareTo(calendars[i]) >= 0 && startCalendar.compareTo(calendars[i + 1]) < 0
-                    || endCalendar.compareTo(calendars[i]) > 0 && endCalendar.compareTo(calendars[i + 1]) <= 0
-                    || startCalendar.compareTo(calendars[i]) <= 0 && endCalendar.compareTo(calendars[i + 1]) >= 0
-                    || startCalendar.compareTo(calendars[i]) >= 0 && endCalendar.compareTo(calendars[i + 1]) <= 0) {
-                return true;
+        for (int i = 0; i < calendarHolders.size(); i++) {
+            CalendarHolder calendarHolder = calendarHolders.get(i);
+            if (endCalendar.compareTo(calendarHolder.startCalendar) <= 0) {
+                //预约的结束停车时间比订单中的开始时间早，则最大宽限时间为预约结束时间到订单的开始停车时间
+                return getCalendarMinuteDistance(endCalendar, calendarHolder.startCalendar);
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) >= 0 && startCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的开始时间在订单预约时间内
+                return -1;
+            } else if (endCalendar.compareTo(calendarHolder.startCalendar) > 0 && endCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的结束时间在订单预约时间内
+                return -1;
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) <= 0 && endCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                //预约停车的时间包括订单预约时间
+                return -1;
             }
         }
-        return false;
+
+        return ConstansUtil.ONE_DAY_MINUTES;
+    }
+
+    /**
+     * @param orderDate 别人在这个车位预约的订单时间，逗号隔开(2018-04-19 17:00*2018-04-19 19:00,2018-04-21 08:00*2018-04-22 05:00)
+     * @return true(预约停车时间和车位订单预约时间没有冲突)
+     */
+    public static boolean isNotInOrderDate(String startDate, String endDate, String orderDate) {
+        if (orderDate.equals("-1")) {
+            return true;
+        }
+
+        //保存在现在时刻以后的预约时间（既是排除掉在现在以前那些被预约的时间）
+        String[] orderDates = orderDate.split(",");
+        List<String> usefulDates = new ArrayList<>(orderDates.length);
+        Calendar nowCalendar = getYearToSecondCalendar(TimeManager.getInstance().getServerTime());
+
+        for (String date : orderDates) {
+            if (nowCalendar.compareTo(getYearToMinuteCalendar(date.substring(date.indexOf("*") + 1, date.length()))) < 0) {
+                usefulDates.add(date);
+            }
+        }
+
+        if (usefulDates.isEmpty()) {
+            return true;
+        }
+
+        List<CalendarHolder> calendarHolders = new ArrayList<>(usefulDates.size());
+        for (int i = 0; i < usefulDates.size(); i++) {
+            calendarHolders.add(new CalendarHolder(getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*"))),
+                    getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()))));
+        }
+
+        Calendar startCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endCalendar = getYearToMinuteCalendar(endDate);
+        for (int i = 0; i < calendarHolders.size(); i++) {
+            CalendarHolder calendarHolder = calendarHolders.get(i);
+            if (endCalendar.compareTo(calendarHolder.startCalendar) <= 0) {
+                //预约的结束停车时间比订单中的开始时间早，则肯定没冲突了
+                return true;
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) >= 0 && startCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的开始时间在订单预约时间内
+                return false;
+            } else if (endCalendar.compareTo(calendarHolder.startCalendar) > 0 && endCalendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                //预约停车的结束时间在订单预约时间内
+                return false;
+            } else if (startCalendar.compareTo(calendarHolder.startCalendar) <= 0 && endCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                //预约停车的时间包括订单预约时间
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -471,14 +690,14 @@ public class DateUtil {
         return getDateMinutes(compareCalendar, calendarList.get(0));
     }
 
-    private static class CalendarHolder {
+    private static class CalendarHolder implements Cloneable, Comparable<CalendarHolder> {
 
         private Calendar startCalendar;
 
         private Calendar endCalendar;
 
-        CalendarHolder() {
-
+        public CalendarHolder(Calendar startCalendar) {
+            this.startCalendar = startCalendar;
         }
 
         CalendarHolder(Calendar startCalendar, Calendar endCalendar) {
@@ -501,6 +720,17 @@ public class DateUtil {
         void setEndCalendar(Calendar endCalendar) {
             this.endCalendar = endCalendar;
         }
+
+        @Override
+        protected Object clone() {
+            return new CalendarHolder((Calendar) startCalendar.clone(), (Calendar) endCalendar.clone());
+        }
+
+        @Override
+        public int compareTo(@NonNull CalendarHolder o) {
+            return this.startCalendar.compareTo(o.startCalendar);
+        }
+
     }
 
     /**
@@ -536,7 +766,7 @@ public class DateUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return (int) ((end.getTime() / 1000 - start.getTime() / 1000) / 3600 / 24);
+        return (int) ((end.getTime() - start.getTime()) / 1000 / 3600 / 24);
     }
 
     /**
@@ -939,9 +1169,36 @@ public class DateUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        //周一到周日为2到6,1(周日)
         day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         if (day == 0) {
             day = 7;
+        }
+        return day;
+    }
+
+    /**
+     * @param date yyyy-MM-dd HH:mm
+     * @return 获取当天是星期几(星期一到星期七)
+     */
+    private static int getEndDayOfWeek(String date) {
+        int day;
+        Calendar calendar = getCalendar();
+        setCalendarYearToMinute(calendar, date);
+        //周一到周日为2到6,1(周日)
+        day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (day == 0) {
+            day = 7;
+        }
+        if (calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.MINUTE) == 0) {
+            //因为如果时间为2018-11-13 24:00,实际上Calendar会认为是2018-11-14 00:00。
+            // 所以如果时间为当天凌晨的，则判断为星期几的时候为前一天。
+            // 因为当13号为星期二晚上凌晨的时候，Calendar会认为是星期三了，这样如果星期三是不共享的则会判断错误，所以要回退一天
+            if (day == 1) {
+                day = 7;
+            } else {
+                day--;
+            }
         }
         return day;
     }
@@ -984,97 +1241,129 @@ public class DateUtil {
     /**
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
-     * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00) 注：最多3个，用“,”隔开
+     * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00,20:00 - 03:00) 注：最多3个，用“,”隔开
      * @return null(共享时间段内没有一个包含开始时间和结束时间的)  Calendar[]{能停车的时间段的开始时间,结束时间}
      */
-    public static Calendar[] isInShareTime(String startDate, String endDate, String shareTime, boolean isInStartDay) {
+    public static int isInShareTime(String startDate, String endDate, String shareTime) {
         if (shareTime.equals("-1")) {
             //如果是全天共享的那直接就可以了
-            return new Calendar[]{getTodayStartCalendar(getYearToMinuteCalendar(startDate)), getTodayEndCalendar(getYearToMinuteCalendar(endDate))};
+            return ConstansUtil.ONE_DAY_MINUTES;
         } else if (getDateDayDistance(startDate, endDate) < 1) {
             //停车时长不大于24小时
-            Calendar startTime = getYearToMinuteCalendar(startDate);
-            Calendar endTime = getYearToMinuteCalendar(endDate);
+            Calendar startCanlendar = getYearToMinuteCalendar(startDate);
+            Calendar endCanlendar = getYearToMinuteCalendar(endDate);
 
             //获取停车位共享的各个时间段
             String[] times = shareTime.split(",");
 
+            List<CalendarHolder> calendarHolders = new ArrayList<>();
+            for (String time : times) {
+                CalendarHolder calendarHolder = new CalendarHolder(getSameYearToDayCalendar(startCanlendar, time.substring(0, time.indexOf(" - "))),
+                        getSameYearToDayCalendar(startCanlendar, time.substring(time.indexOf(" - ") + 3, time.length())));
+                calendarHolders.add(calendarHolder);
+                if (calendarHolder.startCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                    //预约的开始时间为2018-11-13
+                    CalendarHolder theDayBefore = (CalendarHolder) calendarHolder.clone();
+                    //20:00 - 03:00 则添加时间为2018-11-12 20:00 - 2018-11-13 03:00
+                    theDayBefore.startCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                    calendarHolders.add(theDayBefore);
+
+                    //20:00 - 03:00 则添加时间为2018-11-13 20:00 - 2018-11-14 03:00
+                    calendarHolder.endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                }
+            }
+
             if (!isInSameDay(startDate, endDate)) {
-                //停车时间跨了一天的
-                Calendar[] calendars = new Calendar[times.length * 2];
-                for (int i = 0; i < times.length; i++) {
-                    calendars[i * 2] = getSameYearToDayCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
-                    calendars[i * 2 + 1] = getSameYearToDayCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
-
-                    //共享日期跨了一天的，则把结束的日期加一天
-                    if (calendars[i * 2].compareTo(calendars[i * 2 + 1]) >= 0) {
-                        calendars[i * 2 + 1].add(Calendar.DAY_OF_MONTH, 1);
+                for (String time : times) {
+                    CalendarHolder calendarHolder = new CalendarHolder(getSameYearToDayCalendar(endCanlendar, time.substring(0, time.indexOf(" - "))),
+                            getSameYearToDayCalendar(endCanlendar, time.substring(time.indexOf(" - ") + 3, time.length())));
+                    calendarHolders.add(calendarHolder);
+                    if (calendarHolder.startCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                        //预约的结束时间为2018-11-14
+                        //20:00 - 03:00 则添加时间为2018-11-14 20:00 - 2018-11-15 03:00
+                        calendarHolder.endCalendar.add(Calendar.DAY_OF_MONTH, 1);
                     }
                 }
+            }
 
-                for (int i = 0; i < calendars.length; i += 2) {
-                    if (startTime.compareTo(calendars[i]) >= 0 && endTime.compareTo(calendars[i + 1]) <= 0) {
-                        if (isInStartDay) {
-                            //结束时间为00:00的，但是那天是不共享的，则返回共享开始的时间段到共享结束时间段那天的凌晨的时间差
-                            return new Calendar[]{calendars[i], getTodayStartCalendar(calendars[i + 1])};
-                        }
-                        return new Calendar[]{calendars[i], calendars[i + 1]};
-                    }
+            Collections.sort(calendarHolders);
+
+            for (int i = 0; i < calendarHolders.size(); i++) {
+                CalendarHolder calendarHolder = calendarHolders.get(i);
+                if (startCanlendar.compareTo(calendarHolder.startCalendar) >= 0 && endCanlendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                    //预约停车时间都在共享时间内
+                    return getCalendarMinuteDistance(endCanlendar, calendarHolder.endCalendar);
+                } else if (startCanlendar.compareTo(calendarHolder.startCalendar) < 0) {
+                    //如果预约停车的开始时间比这个共享时间的开始时间还早，就可以提前退出了
+                    return -1;
                 }
-            } else {
-                //停车时间在同一天的
-                if (times.length == 2) {
-                    //如果有两个时间段，如果第二个时间段是从凌晨开始的则放在数组前面。主要是为了之后判断这个时间段是不会跨天了的
-                    if (isInStartDay(getSameYearToDayCalendar(startTime, times[1].substring(0, times[1].indexOf(" - "))))) {
-                        String temp = times[0];
-                        times[0] = times[1];
-                        times[1] = temp;
-                    }
-                } else if (times.length >= 3) {
-                    if (!isInStartDay(getSameYearToDayCalendar(startTime, times[0].substring(0, times[0].indexOf(" - "))))) {
-                        //如果第一个不是从凌晨开始的，则判断其他时间段是否是从凌晨开始的
-                        for (int i = 1; i < times.length; i++) {
-                            if (isInStartDay(getSameYearToDayCalendar(startTime, times[i].substring(0, times[i].indexOf(" - "))))) {
-                                String temp = times[0];
-                                times[0] = times[i];
-                                times[i] = temp;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                List<Calendar> list = new ArrayList<>(times.length * 2);
-                Calendar startCalendar;
-                Calendar endCalendar;
-                for (int i = 0; i < times.length; i++) {
-                    startCalendar = getSameYearToDayCalendar(startTime, times[i].substring(0, times[i].indexOf(" - ")));
-                    endCalendar = getSameYearToDayCalendar(startTime, times[i].substring(times[i].indexOf(" - ") + 3, times[i].length()));
-                    list.add(startCalendar);
-                    list.add(endCalendar);
-
-                    //如果共享日期跨天了的，则把共享时间拆成当天共享的开始时间到当天的结束时间，当天的开始时间到当天的共享结束时间
-                    if (startCalendar.compareTo(endCalendar) >= 0) {
-                        list.set(list.size() - 1, getTodayEndCalendar(startCalendar));
-                        list.add(0, getTodayStartCalendar(endCalendar));
-                        list.add(1, (Calendar) endCalendar.clone());
-                    }
-                }
-
-                for (int i = 0; i < list.size(); i += 2) {
-                    if (startTime.compareTo(list.get(i)) >= 0 && endTime.compareTo(list.get(i + 1)) <= 0) {
-                        if (i - 2 >= 0 && isInStartDay(list.get(i))) {
-                            //如果是从凌晨开始的，并且i-2大于等于0的，则这个时间段是跨天的
-                            return new Calendar[]{list.get(i + 1), list.get(i - 2)};
-                        } else {
-                            return new Calendar[]{list.get(i), list.get(i + 1)};
-                        }
-                    }
-                }
-
             }
         }
-        return null;
+        return -1;
+    }
+
+    /**
+     * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
+     * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
+     * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00,20:00 - 03:00) 注：最多3个，用“,”隔开
+     * @return true(预约停车时间不在共享时间段内)
+     */
+    public static boolean isNotInShareTime(String startDate, String endDate, String shareTime) {
+        if (shareTime.equals("-1")) {
+            //如果是全天共享的那直接就可以了
+            return false;
+        } else if (getDateDayDistance(startDate, endDate) < 1) {
+            //停车时长不大于24小时
+            Calendar startCanlendar = getYearToMinuteCalendar(startDate);
+            Calendar endCanlendar = getYearToMinuteCalendar(endDate);
+
+            //获取停车位共享的各个时间段
+            String[] times = shareTime.split(",");
+
+            List<CalendarHolder> calendarHolders = new ArrayList<>();
+            for (String time : times) {
+                CalendarHolder calendarHolder = new CalendarHolder(getSameYearToDayCalendar(startCanlendar, time.substring(0, time.indexOf(" - "))),
+                        getSameYearToDayCalendar(startCanlendar, time.substring(time.indexOf(" - ") + 3, time.length())));
+                calendarHolders.add(calendarHolder);
+                if (calendarHolder.startCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                    //预约的开始时间为2018-11-13
+                    CalendarHolder theDayBefore = (CalendarHolder) calendarHolder.clone();
+                    //20:00 - 03:00 则添加时间为2018-11-12 20:00 - 2018-11-13 03:00
+                    theDayBefore.startCalendar.add(Calendar.DAY_OF_MONTH, -1);
+                    calendarHolders.add(theDayBefore);
+
+                    //20:00 - 03:00 则添加时间为2018-11-13 20:00 - 2018-11-14 03:00
+                    calendarHolder.endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                }
+            }
+
+            if (!isInSameDay(startDate, endDate)) {
+                for (String time : times) {
+                    CalendarHolder calendarHolder = new CalendarHolder(getSameYearToDayCalendar(endCanlendar, time.substring(0, time.indexOf(" - "))),
+                            getSameYearToDayCalendar(endCanlendar, time.substring(time.indexOf(" - ") + 3, time.length())));
+                    calendarHolders.add(calendarHolder);
+                    if (calendarHolder.startCalendar.compareTo(calendarHolder.endCalendar) >= 0) {
+                        //预约的结束时间为2018-11-14
+                        //20:00 - 03:00 则添加时间为2018-11-14 20:00 - 2018-11-15 03:00
+                        calendarHolder.endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    }
+                }
+            }
+
+            Collections.sort(calendarHolders);
+
+            for (int i = 0; i < calendarHolders.size(); i++) {
+                CalendarHolder calendarHolder = calendarHolders.get(i);
+                if (startCanlendar.compareTo(calendarHolder.startCalendar) >= 0 && endCanlendar.compareTo(calendarHolder.endCalendar) <= 0) {
+                    //预约停车时间都在共享时间内
+                    return false;
+                } else if (startCanlendar.compareTo(calendarHolder.startCalendar) < 0) {
+                    //如果预约停车的开始时间比这个共享时间的开始时间还早，就可以提前退出了
+                    return true;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -1189,7 +1478,7 @@ public class DateUtil {
      * @return true(两天是在同一天)
      */
     public static boolean isInSameDay(String startDate, String endDate) {
-        return startDate.split(" ")[0].endsWith(endDate.split(" ")[0]);
+        return startDate.split(" ")[0].equals(endDate.split(" ")[0]);
     }
 
     public static boolean isInSameDay(Calendar startCalendar, Calendar endCalendar) {
@@ -2111,7 +2400,7 @@ public class DateUtil {
     }
 
     /**
-     * @return 返回与originCalendar同年月日但时分为23点59分Calendar
+     * @return 返回与originCalendar同年月日但时分为24点00分Calendar
      */
     private static Calendar getTodayEndCalendar(Calendar originCalendar) {
         Calendar calendar = (Calendar) originCalendar.clone();
@@ -2139,6 +2428,13 @@ public class DateUtil {
             return second / 60 + 1;
         }
         return second / 60;
+    }
+
+    /**
+     * @return 两个日历相差的分钟数
+     */
+    public static int getCalendarMinuteDistance(Calendar startCalendar, Calendar endCalendar) {
+        return (int) ((endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / 60000);
     }
 
     /**

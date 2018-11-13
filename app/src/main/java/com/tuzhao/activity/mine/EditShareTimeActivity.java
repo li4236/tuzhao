@@ -415,8 +415,8 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
     private boolean isOrderInPauseDate(String pauseDate) {
         if (!mParkInfo.getOrder_times().equals("-1") && !mParkInfo.getOrder_times().equals("")) {
             for (String orderTime : mParkInfo.getOrder_times().split(",")) {
-                if (DateUtil.isInPauseDate(orderTime.substring(0, orderTime.indexOf("*")),
-                        orderTime.substring(orderTime.indexOf("*") + 1, orderTime.length()), pauseDate) == 0) {
+                if (DateUtil.isInParkSpacePauseDate(orderTime.substring(0, orderTime.indexOf("*")),
+                        orderTime.substring(orderTime.indexOf("*") + 1, orderTime.length()), pauseDate)) {
                     return true;
                 }
             }
@@ -894,11 +894,15 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                     .getView(R.id.delete_everyday_share_time).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String orderTime = DateUtil.isInShareTime(mParkInfo.getOrder_times(), everydayShareTimeInfo.getStatTime() + " - " + everydayShareTimeInfo.getEndTime());
-                    if (orderTime != null) {
-                        showFiveToast(orderTime + "已被人预定了，不可取消哦");
-                    } else {
+                    if (getDataSize() == 1) {
                         notifyRemoveData(poisition);
+                    } else {
+                        String orderTime = DateUtil.isInShareTime(mParkInfo.getOrder_times(), everydayShareTimeInfo.getStatTime() + " - " + everydayShareTimeInfo.getEndTime());
+                        if (orderTime != null) {
+                            showFiveToast(orderTime + "已被人预定了，不可取消哦");
+                        } else {
+                            notifyRemoveData(poisition);
+                        }
                     }
                 }
             });

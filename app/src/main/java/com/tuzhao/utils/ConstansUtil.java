@@ -58,6 +58,11 @@ public class ConstansUtil {
     public static final int MAX_KEEP_LONG_RENT_ORDER_MINUTE = 15;
 
     /**
+     * 一天的分钟数
+     */
+    public static final int ONE_DAY_MINUTES = 24 * 60;
+
+    /**
      * 科大讯飞AppId
      */
     public static final String SPEECH_UTILITY_APP_ID = "592e14d9";

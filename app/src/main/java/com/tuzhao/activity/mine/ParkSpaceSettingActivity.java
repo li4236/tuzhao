@@ -344,7 +344,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     }
 
     private void stopParkspaceRent() {
-        if (DateUtil.isInOrderDate(DateUtil.getCurrentYearToMinutes(), mPark_info.getOpen_date().split(" - ")[1] + " 24:00", mPark_info.getOrder_times())) {
+        if (!DateUtil.isNotInOrderDate(DateUtil.getCurrentYearToMinutes(), mPark_info.getOpen_date().split(" - ")[1] + " 24:00", mPark_info.getOrder_times())) {
             mSwitchButton.setCheckedNoEvent(true);
             showFiveToast("车位已有人预约，暂时不能停止出租哦");
         } else {
