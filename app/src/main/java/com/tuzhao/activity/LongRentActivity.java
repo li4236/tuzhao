@@ -277,8 +277,6 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
             mNowCalendar = DateUtil.getYearToSecondCalendar(TimeManager.getInstance().getServerTime());
             initTimeOption();
         }
-
-        mStartTimeOption.show();
     }
 
     /**
@@ -458,22 +456,23 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
         showLoadingDialog();
         for (int i = 0; i < mCanParkList.size(); i++) {
             if (mCanParkList.get(i).rentDay == mChooseRentDay) {
-                if (!mCanParkList.get(i).haveSort) {
-                    Collections.sort(mCanParkList.get(i).parkInfos, new Comparator<Park_Info>() {
+                final CanParkList canParkList = mCanParkList.get(i);
+                if (!canParkList.haveSort) {
+                    Collections.sort(canParkList.parkInfos, new Comparator<Park_Info>() {
                         @Override
                         public int compare(Park_Info o1, Park_Info o2) {
                             return Integer.valueOf(o1.getIndicator()) - Integer.valueOf(o2.getIndicator());
                         }
                     });
-                    mCanParkList.get(i).haveSort = true;
+                    canParkList.haveSort = true;
                 }
 
                 final String orderPrice = getOrderPrice();
                 getOkGo(HttpConstants.addLongRentOrder)
-                        .params("parkSpaceId", mCanParkList.get(i).parkInfos.get(0).getId())
+                        .params("parkSpaceId", canParkList.parkInfos.get(0).getId())
                         .params("carNumber", getText(mCarNumber))
-                        .params("parkInterval", mAppointmentStartTime + "*" + DateUtil.deleteSecond(mCanParkList.get(i).getAppointmentEndTime()))
-                        .params("alternateParkSpaceId", mCanParkList.get(i).parkInfos.size() > 1 ? mCanParkList.get(i).parkInfos.get(i).getId() : "-1")
+                        .params("parkInterval", mAppointmentStartTime + "*" + canParkList.getAppointmentEndTime())
+                        .params("alternateParkSpaceId", canParkList.parkInfos.size() > 1 ? canParkList.parkInfos.get(i).getId() : "-1")
                         .params("price", getOrderPrice())
                         .params("cityCode", mParkLotInfo.getCity_code())
                         .execute(new JsonCallback<Base_Class_Info<String>>() {
@@ -497,7 +496,34 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                                 super.onError(call, response, e);
                                 if (!handleException(e)) {
                                     switch (e.getMessage()) {
-
+                                        case "106":
+                                            showFiveToast("该车牌号码已经被删除啦");
+                                            for (int j = 0; j < mCars.size(); j++) {
+                                                if (mCars.get(j).getCarNumber().equals(getText(mCarNumber))) {
+                                                    mCars.remove(j);
+                                                    break;
+                                                }
+                                            }
+                                            break;
+                                        case "109":
+                                            showFiveToast("租用所需的价格已改变，正在为你刷新数据");
+                                            break;
+                                        case "110":
+                                            canParkList.parkInfos.remove(0);
+                                            if (!canParkList.parkInfos.isEmpty()) {
+                                                //删除备选车位
+                                                canParkList.parkInfos.remove(0);
+                                            }
+                                            if (canParkList.parkInfos.isEmpty()) {
+                                                setBookNow(false);
+                                                showFiveToast("刚刚的车位已经被别人抢走了哎,换个时间试试吧");
+                                            } else {
+                                                showFiveToast("刚刚的车位已经被别人抢走了哎，这次手快一点哦");
+                                            }
+                                            break;
+                                        default:
+                                            showFiveToast(ConstansUtil.SERVER_ERROR);
+                                            break;
                                     }
                                 }
                             }

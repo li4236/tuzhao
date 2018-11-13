@@ -99,7 +99,6 @@ public class DataUtil {
             sortParkListByExtensionTimeWithIndicator(canParkList);
         }
 
-        Log.e(TAG, "findCanParkList: " + canParkList);
     }
 
     /**

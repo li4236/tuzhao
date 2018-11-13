@@ -81,6 +81,9 @@ public class MyCarActivity extends BaseRefreshActivity<Car> {
     protected void initData() {
         if (mChooseCar && getIntent().hasExtra(ConstansUtil.CAR_NUMBER)) {
             mCommonAdapter.setNewData(getIntent().<Car>getParcelableArrayListExtra(ConstansUtil.CAR_NUMBER));
+            if (mCommonAdapter.getDataSize() == 0) {
+                super.initData();
+            }
         } else {
             super.initData();
         }
