@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Objects;
 
 /**
@@ -60,7 +58,6 @@ public class Park_Info implements Parcelable {
     private String parkLockStatus;//车位锁状态，1(打开状态)  2(关闭状态) 3（离线状态）
     private String voltage;//车位锁电量值
     private String indicator;//指标，代表该车位被停车的次数，用于预定车位排序
-    private Calendar[] shareTimeCalendar;     //能共享的时间段的开始时间和结束时间，仅用于预定车位排序
     // 最大可顺延的分钟数，代表预约停车的结束时间距离合法的结束时间的分钟数。
     // 比如结束时间为2018-11-13 11:00，该车位别的订单预约时间为2018-11-13 11:05 - xxx，则最大可顺延为5分钟。
     private int maxExtensionMinute;
@@ -482,7 +479,6 @@ public class Park_Info implements Parcelable {
                 ", parkLockStatus='" + parkLockStatus + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
-                ", shareTimeCalendar=" + Arrays.toString(shareTimeCalendar) +
                 '}';
     }
 

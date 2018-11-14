@@ -31,6 +31,8 @@ import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.utils.ConstansUtil;
 import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
+import com.tuzhao.utils.IntentObserable;
+import com.tuzhao.utils.IntentObserver;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ import okhttp3.Response;
 /**
  * Created by juncoder on 2018/11/9.
  */
-public class LongRentActivity extends BaseStatusActivity implements View.OnClickListener {
+public class LongRentActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
     private TextView mCarNumber;
 
@@ -143,22 +145,10 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
             finish();
         }
 
-        ArrayList<LongRentInfo> longRentInfos = mParkLotInfo.getLongRentInfos();
-        mDailyRentInfo = longRentInfos.get(0);
-        longRentInfos.remove(0);
-        mAdapter.setNewArrayData(longRentInfos);
-
-        mCanParkList = new ArrayList<>(14 + longRentInfos.size());
-        for (int i = 1, size = 14 + longRentInfos.size() + 1; i < size; i++) {
-            if (i <= 14) {
-                mCanParkList.add(new CanParkList(1));
-            } else {
-                mCanParkList.add(new CanParkList(longRentInfos.get(i - 15).getRentDay()));
-            }
-        }
-
+        initLongRentInfo();
+        initDailyRentOption();
         mDecimalFormat = new DecimalFormat("0.00");
-        initAppointmentIncomeTimeOptions();
+        IntentObserable.registerObserver(this);
     }
 
     @NonNull
@@ -180,10 +170,10 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                 startActivityForResult(intent, ConstansUtil.REQUSET_CODE);
                 break;
             case R.id.appointment_income_time_tv:
-                mStartTimeOption.show();
+                showAppointmentIncomeTimeOptions();
                 break;
             case R.id.daily_rent_cl:
-                showDailyRentOption();
+                mDailyRentOption.show();
                 break;
             case R.id.book_now:
                 if (isEmpty(mCarNumber)) {
@@ -219,10 +209,16 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentObserable.unregisterObserver(this);
+    }
+
     /**
      * 弹出选择入场时间的选择器
      */
-    private void initAppointmentIncomeTimeOptions() {
+    private void showAppointmentIncomeTimeOptions() {
         if (mStartTimeOption == null) {
             mDays = new ArrayList<>(7);
             mHours = new ArrayList<>(24);
@@ -277,6 +273,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
             mNowCalendar = DateUtil.getYearToSecondCalendar(TimeManager.getInstance().getServerTime());
             initTimeOption();
         }
+        mStartTimeOption.show();
     }
 
     /**
@@ -343,7 +340,23 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
         });
     }
 
-    private void showDailyRentOption() {
+    private void initLongRentInfo() {
+        ArrayList<LongRentInfo> longRentInfos = mParkLotInfo.getLongRentInfos();
+        mDailyRentInfo = longRentInfos.get(0);
+        longRentInfos.remove(0);
+        mAdapter.setNewArrayData(longRentInfos);
+
+        mCanParkList = new ArrayList<>(14 + longRentInfos.size());
+        for (int i = 1, size = 14 + longRentInfos.size() + 1; i < size; i++) {
+            if (i <= 14) {
+                mCanParkList.add(new CanParkList(1));
+            } else {
+                mCanParkList.add(new CanParkList(longRentInfos.get(i - 15).getRentDay()));
+            }
+        }
+    }
+
+    private void initDailyRentOption() {
         if (mDailyRentDays == null) {
             mDailyRentDays = new ArrayList<>(14);
             for (int i = 1; i <= 14; i++) {
@@ -390,7 +403,6 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                 }
             });
         }
-        mDailyRentOption.show();
     }
 
     /**
@@ -472,7 +484,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                         .params("parkSpaceId", canParkList.parkInfos.get(0).getId())
                         .params("carNumber", getText(mCarNumber))
                         .params("parkInterval", mAppointmentStartTime + "*" + canParkList.getAppointmentEndTime())
-                        .params("alternateParkSpaceId", canParkList.parkInfos.size() > 1 ? canParkList.parkInfos.get(i).getId() : "-1")
+                        .params("alternateParkSpaceId", canParkList.parkInfos.size() > 1 ? canParkList.parkInfos.get(1).getId() : "-1")
                         .params("price", getOrderPrice())
                         .params("cityCode", mParkLotInfo.getCity_code())
                         .execute(new JsonCallback<Base_Class_Info<String>>() {
@@ -553,6 +565,42 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                 ConstansUtil.ORDER_NUMBER, mOrderInfo.orderNumber, ConstansUtil.TIME, String.valueOf(mOrderInfo.expireTime));
     }
 
+    private void getParkLotData() {
+        showLoadingDialog();
+        getOkGo(HttpConstants.getOneParkSpaceData)
+                .params("citycode", mParkLotInfo.getCity_code())
+                .params("parkspace_id", mParkLotInfo.getId())
+                .params("ad_position", 2)
+                .execute(new JsonCallback<Base_Class_Info<ParkLotInfo>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<ParkLotInfo> o, Call call, Response response) {
+                        mParkLotInfo = o.data;
+                        initLongRentInfo();
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        if (!handleException(e)) {
+                            finish();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (ConstansUtil.PAY_SUCCESS.equals(intent.getAction())) {
+            finish();
+        } else if (ConstansUtil.LONG_RENT_AGAIN.equals(intent.getAction())) {
+            getParkLotData();
+        } else if (ConstansUtil.RESET_LONG_RENT_ORDER.equals(intent.getAction())) {
+            mOrderInfo = null;
+            performScanParkSpace();
+        }
+    }
+
     private class LongRentAdapter extends BaseAdapter<LongRentInfo> {
 
         @Override
@@ -603,6 +651,9 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
         }
     }
 
+    /**
+     * 记录对应天数的车位信息
+     */
     private class CanParkList {
 
         private int rentDay;

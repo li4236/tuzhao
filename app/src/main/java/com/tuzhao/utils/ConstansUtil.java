@@ -621,4 +621,14 @@ public class ConstansUtil {
      */
     public static final String ORDER_NUMBER = "OrderNumber";
 
+    /**
+     * 预约长租车位是出现异常，刷新车位数据然后让用户重新选择
+     */
+    public static final String LONG_RENT_AGAIN = "LongRentAgain";
+
+    /**
+     * 长租订单已过期，重置
+     */
+    public static final String RESET_LONG_RENT_ORDER = "ResetLongRentOrder";
+
 }

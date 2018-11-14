@@ -250,10 +250,35 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         mPayImmediately.setClickable(true);
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
+                                case "101":
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("客户端异常，请稍后重试");
+                                        finish();
+                                        break;
+                                    }
                                 case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("该订单已过期，请重新选择");
+                                        IntentObserable.dispatch(ConstansUtil.RESET_LONG_RENT_ORDER);
+                                    } else {
+                                        showFiveToast("客户端异常，请稍后重试");
+                                    }
                                     finish();
                                     break;
+                                case "103":
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("该车场的长租时间已修改了哎，请重新选择");
+                                        notifyLongRentAgain();
+                                        finish();
+                                        break;
+                                    }
+                                case "104":
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("订单价格已经改变了，请重新选择");
+                                        notifyLongRentAgain();
+                                        finish();
+                                        break;
+                                    }
                                 default:
                                     showFiveToast(e.getMessage());
                                     break;
@@ -279,10 +304,35 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                         mPayImmediately.setClickable(true);
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
+                                case "101":
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("客户端异常，请稍后重试");
+                                        finish();
+                                        break;
+                                    }
                                 case "102":
-                                    showFiveToast("客户端异常，请稍后重试");
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("该订单已过期，请重新选择");
+                                        IntentObserable.dispatch(ConstansUtil.RESET_LONG_RENT_ORDER);
+                                    } else {
+                                        showFiveToast("客户端异常，请稍后重试");
+                                    }
                                     finish();
                                     break;
+                                case "103":
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("该车场的长租时间已修改了哎，请重新选择");
+                                        notifyLongRentAgain();
+                                        finish();
+                                        break;
+                                    }
+                                case "104":
+                                    if ("3".equals(mPayType)) {
+                                        showFiveToast("订单价格已经改变了，请重新选择");
+                                        notifyLongRentAgain();
+                                        finish();
+                                        break;
+                                    }
                                 default:
                                     showFiveToast(e.getMessage());
                                     break;
@@ -382,6 +432,10 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 }
             });
         }
+    }
+
+    private void notifyLongRentAgain() {
+        IntentObserable.dispatch(ConstansUtil.LONG_RENT_AGAIN);
     }
 
     private void showPaySuccessDialog() {
