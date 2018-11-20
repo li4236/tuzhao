@@ -7,6 +7,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
@@ -65,6 +67,11 @@ public class OpenLockDialog extends Dialog {
 
     private SuccessCallback<Boolean> mSuccessCallback;
 
+    private Handler mHandler;
+
+    /**
+     * @param callback true(开锁成功)  false(重试)
+     */
     public OpenLockDialog(@NonNull Context context, SuccessCallback<Boolean> callback) {
         super(context, R.style.CustomDialogStyle);
         ConstraintLayout constraintLayout = (ConstraintLayout) getLayoutInflater().inflate(R.layout.dialog_open_lock_layout, null);
@@ -73,6 +80,7 @@ public class OpenLockDialog extends Dialog {
         setCancelable(false);
         initView(constraintLayout);
         mSuccessCallback = callback;
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     private void initView(View view) {
@@ -99,6 +107,7 @@ public class OpenLockDialog extends Dialog {
                 mOpenLockTv.setVisibility(View.VISIBLE);
                 mOpenLockTv.setText("正在" + mLockMessage + "中.");
                 startOpenLockAnimator();
+                postDelayed();
             }
         });
 
@@ -118,8 +127,15 @@ public class OpenLockDialog extends Dialog {
     }
 
     @Override
+    public void show() {
+        super.show();
+        postDelayed();
+    }
+
+    @Override
     public void dismiss() {
         super.dismiss();
+        mHandler.removeCallbacksAndMessages(null);
         cancelOpenLockAndPolling();
         IntentObserable.dispatch(ConstansUtil.DIALOG_DISMISS);
     }
@@ -128,6 +144,21 @@ public class OpenLockDialog extends Dialog {
     public void cancel() {
         super.cancel();
         cancelAllAnimator();
+    }
+
+    /**
+     * 15s后还没开锁认为超时
+     */
+    private void postDelayed() {
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mOpenLockStatus == -1) {
+                    setOpenLockStatus(2);
+                }
+            }
+        }, 15 * 1000);
     }
 
     /**
@@ -333,7 +364,7 @@ public class OpenLockDialog extends Dialog {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 mSuccessCallback.onSuccess(true);
-                dismiss();
+                cancel();
             }
         });
         mValueAnimator.start();

@@ -26,6 +26,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.FilterInfo;
 import com.tuzhao.info.NearPointPCInfo;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.LocationManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.CheckTextView;
 import com.tuzhao.publicwidget.customView.CompatCheckTextView;
@@ -106,8 +107,8 @@ public class ParkOrChargeActivity extends BaseRefreshActivity<NearPointPCInfo> i
     @Override
     protected void initData() {
         mCityCode = getIntent().getStringExtra(ConstansUtil.CITY_CODE);
-        mLatLng = new LatLng(getIntent().getDoubleExtra(ConstansUtil.LATITUDE, 22.481234),
-                getIntent().getDoubleExtra(ConstansUtil.LONGITUDE, 113.411234));
+        mLatLng = new LatLng(getIntent().getDoubleExtra(ConstansUtil.LATITUDE, LocationManager.getInstance().getmAmapLocation().getLatitude()),
+                getIntent().getDoubleExtra(ConstansUtil.LONGITUDE, LocationManager.getInstance().getmAmapLocation().getLongitude()));
         mDecimalFormat = new DecimalFormat("0.0");
         getAddress();
         super.initData();

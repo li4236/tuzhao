@@ -631,4 +631,19 @@ public class ConstansUtil {
      */
     public static final String RESET_LONG_RENT_ORDER = "ResetLongRentOrder";
 
+    /**
+     * 删除我的车位
+     */
+    public static final String DELETE_PARK_SPACE = "DeleteParkSpace";
+
+    /**
+     * 开锁
+     */
+    public static final String OPEN_LOCK = "OpenLock";
+
+    /**
+     * 开锁成功
+     */
+    public static final String OPEN_LOCK_SUCCESS = "OpenLockSuccess";
+
 }

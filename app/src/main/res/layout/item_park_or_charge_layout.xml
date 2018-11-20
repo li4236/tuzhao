@@ -12,6 +12,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="10dp"
         android:src="@mipmap/ic_img"
+        app:rounded_radius="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -20,6 +20,7 @@ import com.tuzhao.activity.base.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
 import com.tuzhao.activity.base.BaseViewHolder;
 import com.tuzhao.activity.mine.MyCarActivity;
+import com.tuzhao.activity.mine.ParkSpaceActivity;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Car;
 import com.tuzhao.info.LongRentInfo;
@@ -592,6 +593,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
     @Override
     public void onReceive(Intent intent) {
         if (ConstansUtil.PAY_SUCCESS.equals(intent.getAction())) {
+            startActivity(ParkSpaceActivity.class);
             finish();
         } else if (ConstansUtil.LONG_RENT_AGAIN.equals(intent.getAction())) {
             getParkLotData();

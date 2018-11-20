@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.tuzhao.publicwidget.customView.RoundedRectangleImageView
+        android:id="@+id/park_space_iv"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:contentDescription="@string/picture_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:top_left_radius="4dp"
+        app:top_right_radius="4dp" />
+
+    <TextView
+        android:id="@+id/park_lot_name"
+        style="@style/ThirtyTextB1Style"
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@id/voltage_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/park_space_description"
+        style="@style/TwentyTextG6Style"
+        android:layout_width="0dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="3"
+        app:layout_constraintEnd_toStartOf="@+id/park_space_status_bg"
+        app:layout_constraintStart_toStartOf="@id/park_lot_name"
+        app:layout_constraintTop_toBottomOf="@+id/park_lot_name"
+        app:layout_constraintTop_toTopOf="@+id/park_space_status_bg" />
+
+    <com.tuzhao.publicwidget.customView.VoltageView
+        android:id="@+id/voltage_view"
+        android:layout_width="18dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/park_lot_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/park_lot_name"
+        app:vv_border_color="@color/b1"
+        app:vv_border_radius="1dp"
+        app:vv_border_width="1dp"
+        app:vv_voltage="100" />
+
+    <View
+        android:id="@+id/park_space_status_bg"
+        android:layout_width="44dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/solide_w6_tl_bl_8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voltage_view" />
+
+    <TextView
+        android:id="@+id/park_space_status"
+        style="@style/TenTextB1Style"
+        android:layout_marginEnd="6dp"
+        android:text="空闲"
+        android:textSize="9sp"
+        app:layout_constraintBottom_toBottomOf="@+id/park_space_status_bg"
+        app:layout_constraintEnd_toEndOf="@id/park_space_status_bg"
+        app:layout_constraintTop_toTopOf="@+id/park_space_status_bg" />
+
+    <com.tuzhao.publicwidget.customView.CircleView
+        android:id="@+id/park_space_status_cv"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:layout_marginEnd="6dp"
+        app:color="@color/green7"
+        app:layout_constraintBottom_toBottomOf="@+id/park_space_status_bg"
+        app:layout_constraintEnd_toStartOf="@id/park_space_status"
+        app:layout_constraintTop_toTopOf="@+id/park_space_status_bg" />
+
+    <View
+        android:id="@+id/center_divider"
+        style="@style/VerticalDividerStyle"
+        android:layout_width="1px"
+        android:layout_height="0dp"
+        android:background="@color/g6"
+        app:layout_constraintBottom_toBottomOf="@+id/park_space_setting_cl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/park_space_iv" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/park_space_setting_cl"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:background="@drawable/solid_w0_bl_4dp"
+        app:layout_constraintEnd_toStartOf="@id/center_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/park_space_iv">
+
+        <ImageView
+            android:id="@+id/park_space_setting_iv"
+            android:layout_width="13dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_setting3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/TenTextB1Style"
+            android:text="设置"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_setting_iv" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/park_space_lock_cl"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:background="@drawable/solid_w0_br_4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/center_divider"
+        app:layout_constraintTop_toBottomOf="@+id/park_space_iv">
+
+        <ImageView
+            android:id="@+id/park_space_lock_iv"
+            android:layout_width="13dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="7dp"
+            android:contentDescription="@string/picture_description"
+            android:src="@drawable/ic_lock3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/open_lock"
+            style="@style/TenTextB1Style"
+            android:text="开锁"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/park_space_lock_iv" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

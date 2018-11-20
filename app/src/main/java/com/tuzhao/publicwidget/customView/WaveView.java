@@ -7,8 +7,8 @@ import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * 发票详情的水波浪
  */
 
-public class WaveImageView extends AppCompatImageView {
+public class WaveView extends View {
 
     private Paint mPaint;
 
@@ -38,15 +38,15 @@ public class WaveImageView extends AppCompatImageView {
 
     private int mHeigth;
 
-    public WaveImageView(Context context) {
+    public WaveView(Context context) {
         this(context, null);
     }
 
-    public WaveImageView(Context context, AttributeSet attrs) {
+    public WaveView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public WaveImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public WaveView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

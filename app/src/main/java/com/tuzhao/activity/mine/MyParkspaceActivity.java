@@ -17,7 +17,7 @@ import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseActivity;
-import com.tuzhao.activity.base.MyFragmentAdapter;
+import com.tuzhao.activity.base.BaseFragmentAdapter;
 import com.tuzhao.fragment.parkspace.MyParkspaceFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
@@ -56,7 +56,7 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
 
     private TextView mApponitmentTv;
 
-    private MyFragmentAdapter mFragmentAdater;
+    private BaseFragmentAdapter mFragmentAdater;
 
     private ViewStub mViewStub;
 
@@ -71,14 +71,14 @@ public class MyParkspaceActivity extends BaseActivity implements View.OnClickLis
         mFragments = new ArrayList<>();
         mParkInfos = new ArrayList<>();
 
-        mViewPager = findViewById(R.id.my_parkspace_vp);
+        mViewPager = findViewById(R.id.my_park_space_vp);
         mApponitmentTv = findViewById(R.id.appointment_tv);
 
         ImageUtil.showPic((ImageView) findViewById(R.id.appointment_iv), R.drawable.ic_time2);
         ImageUtil.showPic((ImageView) findViewById(R.id.add_park_space_iv), R.drawable.ic_addposition);
         ImageUtil.showPic((ImageView) findViewById(R.id.my_parkspace_setting_iv), R.drawable.ic_setting2);
 
-        mFragmentAdater = new MyFragmentAdapter<>(getSupportFragmentManager(), mFragments);
+        mFragmentAdater = new BaseFragmentAdapter<>(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mFragmentAdater);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

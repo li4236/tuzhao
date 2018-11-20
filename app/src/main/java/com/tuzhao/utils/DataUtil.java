@@ -85,13 +85,13 @@ public class DataUtil {
 
             //排除不在共享时间段内的(根据共享的时间段)
             if ((currentExtentionMinute = DateUtil.isInShareTime(startTime, endTime, parkInfo.getOpen_time())) == -1) {
+                canParkList.remove(parkInfo);
+                Log.e("TAG", "isNotInShareTime: " + parkInfo.getOpen_time());
+            } else {
                 //获取车位可共享的时间差
                 int position = canParkList.indexOf(parkInfo);
                 canParkList.set(position, parkInfo);
                 parkInfo.setMaxExtensionMinute(Math.min(maxExtentionMinute, currentExtentionMinute));
-            } else {
-                canParkList.remove(parkInfo);
-                Log.e("TAG", "isNotInShareTime: " + parkInfo.getOpen_time());
             }
         }
 

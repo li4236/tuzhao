@@ -80,6 +80,10 @@
         <attr name="vv_low_voltage_color" format="color" />
         <attr name="vv_middle_voltage_color" format="color" />
         <attr name="vv_heigh_voltage_color" format="color" />
+        <attr name="vv_orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="CircularArcView">
@@ -122,7 +126,7 @@
         <attr name="draw_circle" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="PlusView" >
+    <declare-styleable name="PlusView">
         <attr name="plus_color" format="color" />
         <attr name="plus_width" format="dimension" />
     </declare-styleable>
@@ -146,6 +150,10 @@
 
     <declare-styleable name="RoundedRectangleImageView">
         <attr name="rounded_radius" format="dimension" />
+        <attr name="top_left_radius" format="dimension" />
+        <attr name="top_right_radius" format="dimension" />
+        <attr name="bottom_left_radius" format="dimension" />
+        <attr name="bottom_right_radius" format="dimension" />
     </declare-styleable>
 
 </resources>

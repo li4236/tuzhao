@@ -599,7 +599,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
             Log.e("TAG", "Open_time: " + parkInfo.getOpen_time());
             //排除不在共享时间段内的(根据共享的时间段)
-            if ( DateUtil.isInShareTime(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOpen_time()) !=-1) {
+            if (DateUtil.isInShareTime(mAppointmentStartTime, mAppointmentEndTime, parkInfo.getOpen_time()) != -1) {
                 //获取车位可共享的时间差
                 int position = mCanParkList.indexOf(parkInfo);
                 mCanParkList.set(position, parkInfo);

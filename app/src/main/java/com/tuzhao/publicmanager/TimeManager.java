@@ -1,9 +1,12 @@
 package com.tuzhao.publicmanager;
 
+import android.os.SystemClock;
+
 import com.tuzhao.utils.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -17,6 +20,7 @@ public class TimeManager {
     private long differenceTime;  //时间差值
     private boolean isServerTime = false; //是否是服务器时间
     private String serverTime;
+    private long elapsedRealTime;
 
     public static TimeManager getInstance() {
 
@@ -63,6 +67,8 @@ public class TimeManager {
 
     public void initTime(String serverTime) {
         this.serverTime = serverTime;
+        elapsedRealTime = SystemClock.elapsedRealtime();
+
         isServerTime = true;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         long newdifferencetime;
@@ -83,6 +89,17 @@ public class TimeManager {
             serverTime = DateUtil.getCurrentYearToSecond();
         }
         return serverTime;
+    }
+
+    /**
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    public String getCurrentTime() {
+        return DateUtil.getCalenarYearToSecond(getServerTimeCalendar());
+    }
+
+    public Calendar getServerTimeCalendar() {
+        return DateUtil.getYearToSecondCalendar(getServerTime(), (int) (SystemClock.elapsedRealtime() - elapsedRealTime) / 1000);
     }
 
 }

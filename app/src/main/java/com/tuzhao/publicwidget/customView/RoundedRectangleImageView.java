@@ -18,9 +18,9 @@ import com.tuzhao.R;
  */
 public class RoundedRectangleImageView extends AppCompatImageView {
 
-    private float mRadius;
     private Path mRoundedRectPath;
     private RectF mRectF;
+    private float[] mRadiusArray = new float[8];
 
     public RoundedRectangleImageView(Context context) {
         this(context, null);
@@ -33,8 +33,25 @@ public class RoundedRectangleImageView extends AppCompatImageView {
     public RoundedRectangleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundedRectangleImageView, defStyleAttr, 0);
-        mRadius = typedArray.getDimension(R.styleable.RoundedRectangleImageView_rounded_radius,
-                (float) (getResources().getDisplayMetrics().density * 2 + 0.5));
+        float radius = typedArray.getDimension(R.styleable.RoundedRectangleImageView_rounded_radius, 0);
+        if (radius == 0) {
+            float topLeft = typedArray.getDimension(R.styleable.RoundedRectangleImageView_top_left_radius, 0);
+            float topRight = typedArray.getDimension(R.styleable.RoundedRectangleImageView_top_right_radius,0);
+            float bottomLeft = typedArray.getDimension(R.styleable.RoundedRectangleImageView_bottom_left_radius,0);
+            float bottomRight = typedArray.getDimension(R.styleable.RoundedRectangleImageView_bottom_right_radius,0);
+            mRadiusArray[0] = topLeft;
+            mRadiusArray[1] = topLeft;
+            mRadiusArray[2] = topRight;
+            mRadiusArray[3] = topRight;
+            mRadiusArray[4] = bottomRight;
+            mRadiusArray[5] = bottomRight;
+            mRadiusArray[6] = bottomLeft;
+            mRadiusArray[7] = bottomLeft;
+        } else {
+            for (int i = 0; i < mRadiusArray.length; i++) {
+                mRadiusArray[i] = radius;
+            }
+        }
         typedArray.recycle();
 
         mRoundedRectPath = new Path();
@@ -45,8 +62,8 @@ public class RoundedRectangleImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         if (mRectF.right == 0) {
             mRectF.right = getMeasuredWidth();
-            mRectF.bottom = getMaxHeight();
-            mRoundedRectPath.addRoundRect(mRectF, mRadius, mRadius, Path.Direction.CW);
+            mRectF.bottom = getMeasuredHeight();
+            mRoundedRectPath.addRoundRect(mRectF, mRadiusArray, Path.Direction.CW);
         }
 
         canvas.save();

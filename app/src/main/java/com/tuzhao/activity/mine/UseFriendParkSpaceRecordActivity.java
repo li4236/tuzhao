@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.activity.base.MyFragmentAdapter;
+import com.tuzhao.activity.base.BaseFragmentAdapter;
 import com.tuzhao.fragment.UseFriendParkSpaceRecordFragment;
 import com.tuzhao.utils.DensityUtil;
 
@@ -33,7 +33,7 @@ public class UseFriendParkSpaceRecordActivity extends BaseStatusActivity {
         List<UseFriendParkSpaceRecordFragment> fragments = new ArrayList<>();
         fragments.add(UseFriendParkSpaceRecordFragment.getInstance("1"));
         fragments.add(UseFriendParkSpaceRecordFragment.getInstance("2"));
-        viewPager.setAdapter(new MyFragmentAdapter<>(getSupportFragmentManager(), fragments));
+        viewPager.setAdapter(new BaseFragmentAdapter<>(getSupportFragmentManager(), fragments));
         smartTabLayout.setViewPager(viewPager);
 
         for (int i = 0; i < fragments.size(); i++) {

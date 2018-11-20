@@ -2,28 +2,33 @@ package com.tuzhao.activity.base;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.tuzhao.fragment.base.BaseStatusFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by juncoder on 2018/8/31.
  */
-public class MyFragmentAdapter<T extends BaseStatusFragment> extends FragmentPagerAdapter {
+public class BaseFragmentAdapter<T extends BaseStatusFragment> extends FragmentPagerAdapter {
 
     private List<T> mFragments;
 
-    public MyFragmentAdapter(FragmentManager fm, List<T> fragments) {
+    public BaseFragmentAdapter(FragmentManager fragmentManager) {
+        super(fragmentManager);
+        mFragments = new ArrayList<>();
+    }
+
+    public BaseFragmentAdapter(FragmentManager fm, List<T> fragments) {
         super(fm);
         mFragments = fragments;
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public T getItem(int position) {
         return mFragments.get(position);
     }
 
@@ -51,8 +56,23 @@ public class MyFragmentAdapter<T extends BaseStatusFragment> extends FragmentPag
 
     @Override
     public long getItemId(int position) {
-        //FragmentManager会根据这个来为Fragment生成TAG(不是BaseStatusFragment里面的Tag），同样的name会进行复用
+        //FragmentManager会根据这个来为Fragment生成Tag(不是BaseStatusFragment里面的TAG），同样的name会进行复用
         return mFragments.get(position).getTAG().hashCode();
+    }
+
+    public List<T> getFragments() {
+        return mFragments;
+    }
+
+    public void setData(List<T> fragments) {
+        mFragments.clear();
+        mFragments.addAll(fragments);
+        notifyDataSetChanged();
+    }
+
+    public void remove(int position) {
+        mFragments.remove(position);
+        notifyDataSetChanged();
     }
 
 }

@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.tuzhao.R;
 
@@ -31,7 +32,7 @@ public class VoltageView extends View {
 
     private int mVoltage;
 
-    //电量的总宽度
+    //电量的总长度
     private float mVoltageHeight;
 
     private float mBorderWidth;
@@ -45,6 +46,8 @@ public class VoltageView extends View {
     private int mMiddleVoltageColor;
 
     private int mHeighVoltageColor;
+
+    private int mOrientation;
 
     public VoltageView(Context context) {
         this(context, null);
@@ -69,6 +72,7 @@ public class VoltageView extends View {
         mLowVoltageColor = typedArray.getColor(R.styleable.VoltageView_vv_low_voltage_color, Color.parseColor("#980000"));
         mMiddleVoltageColor = typedArray.getColor(R.styleable.VoltageView_vv_middle_voltage_color, Color.parseColor("#fbbb11"));
         mHeighVoltageColor = typedArray.getColor(R.styleable.VoltageView_vv_heigh_voltage_color, Color.parseColor("#4cda64"));
+        mOrientation = typedArray.getInt(R.styleable.VoltageView_vv_orientation, LinearLayout.HORIZONTAL);
         typedArray.recycle();
     }
 
@@ -91,13 +95,25 @@ public class VoltageView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        mHeadRect.set(width / 3, 0, width * 2 / 3, width / 7);
-        mBorderRect.set(mBorderWidth / 2, mHeadRect.bottom, width - mBorderWidth / 2, height - mBorderWidth / 2);
 
-        mVoltageHeight = mBorderRect.bottom - mBorderRect.top - mBorderWidth * 2;
-        mVoltageRect.left = mBorderRect.left + mBorderWidth;
-        mVoltageRect.right = mBorderRect.right - mBorderWidth;
-        mVoltageRect.bottom = mBorderRect.bottom - mBorderWidth;
+        if (mOrientation == LinearLayout.HORIZONTAL) {
+            int headHeight = height / 3;
+            mHeadRect.set(width - headHeight/2, headHeight, width, height - headHeight);
+            mBorderRect.set(mBorderWidth / 2, mBorderWidth / 2, width - headHeight/2, height - mBorderWidth / 2);
+
+            mVoltageHeight = mBorderRect.right - mBorderRect.left - mBorderWidth * 2;
+            mVoltageRect.top = mBorderRect.top + mBorderWidth;
+            mVoltageRect.left = mBorderRect.left + mBorderWidth;
+            mVoltageRect.bottom = mBorderRect.bottom - mBorderWidth;
+        } else {
+            mHeadRect.set(width / 3, 0, width * 2 / 3, width / 7);
+            mBorderRect.set(mBorderWidth / 2, mHeadRect.bottom, width - mBorderWidth / 2, height - mBorderWidth / 2);
+
+            mVoltageHeight = mBorderRect.bottom - mBorderRect.top - mBorderWidth * 2;
+            mVoltageRect.left = mBorderRect.left + mBorderWidth;
+            mVoltageRect.right = mBorderRect.right - mBorderWidth;
+            mVoltageRect.bottom = mBorderRect.bottom - mBorderWidth;
+        }
     }
 
     @Override
@@ -109,7 +125,11 @@ public class VoltageView extends View {
         mBorderPaint.setStyle(Paint.Style.STROKE);
         canvas.drawRoundRect(mBorderRect, mBorderRadius, mBorderRadius, mBorderPaint);
 
-        mVoltageRect.top = mVoltageRect.bottom - mVoltageHeight * mVoltage / 100;
+        if (mOrientation == LinearLayout.HORIZONTAL) {
+            mVoltageRect.right = mVoltageRect.left + mVoltageHeight * mVoltage / 100;
+        } else {
+            mVoltageRect.top = mVoltageRect.bottom - mVoltageHeight * mVoltage / 100;
+        }
         if (mVoltage <= 20) {
             mVoltagePaint.setColor(mLowVoltageColor);
         } else if (mVoltage >= 70) {

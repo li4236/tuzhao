@@ -71,9 +71,9 @@ import com.tuzhao.activity.mine.CollectionActivity;
 import com.tuzhao.activity.mine.CreditActivity;
 import com.tuzhao.activity.mine.FriendParkSpaceActivity;
 import com.tuzhao.activity.mine.MyCarActivity;
-import com.tuzhao.activity.mine.MyParkspaceActivity;
 import com.tuzhao.activity.mine.MyWalletActivity;
 import com.tuzhao.activity.mine.ParkOrderActivity;
+import com.tuzhao.activity.mine.ParkSpaceActivity;
 import com.tuzhao.activity.mine.PersonalInformationActivity;
 import com.tuzhao.activity.mine.SetActivity;
 import com.tuzhao.activity.mine.ShareActivity;
@@ -520,7 +520,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_mypark:
-                intent = new Intent(MainActivity.this, MyParkspaceActivity.class);
+                intent = new Intent(MainActivity.this, ParkSpaceActivity.class);
                 startActivity(intent);
                 break;
             case R.id.id_activity_main_layout_linearlayout_friend_park:

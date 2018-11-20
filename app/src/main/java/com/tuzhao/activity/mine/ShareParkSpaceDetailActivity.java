@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.activity.base.MyFragmentAdapter;
+import com.tuzhao.activity.base.BaseFragmentAdapter;
 import com.tuzhao.fragment.parkspace.ShareParkSpaceFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
@@ -45,7 +45,7 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
 
     private List<Park_Info> mParkInfos;
 
-    private MyFragmentAdapter<ShareParkSpaceFragment> mFragmentAdater;
+    private BaseFragmentAdapter<ShareParkSpaceFragment> mFragmentAdater;
 
     private OptionsPickerView<String> mOptionsPickerView;
 
@@ -69,12 +69,12 @@ public class ShareParkSpaceDetailActivity extends BaseStatusActivity implements 
             mFragments.add(ShareParkSpaceFragment.newInstance(mParkInfos.get(i), size));
         }
 
-        mViewPager = findViewById(R.id.my_parkspace_vp);
+        mViewPager = findViewById(R.id.my_park_space_vp);
 
         ImageUtil.showPic((ImageView) findViewById(R.id.modify_friend_nickname_iv), R.drawable.ic_revisenotes);
         ImageUtil.showPic((ImageView) findViewById(R.id.my_parkspace_setting_iv), R.drawable.ic_deleteposition);
 
-        mFragmentAdater = new MyFragmentAdapter<>(getSupportFragmentManager(), mFragments);
+        mFragmentAdater = new BaseFragmentAdapter<>(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mFragmentAdater);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

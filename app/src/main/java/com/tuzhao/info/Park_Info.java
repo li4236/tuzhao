@@ -29,6 +29,7 @@ public class Park_Info implements Parcelable {
     private String park_img;//停车位图片
     private String parkspace_name;//停车场名字
     private String park_status;//1(未开放)   2(开放)     3(暂停)
+    private int isLongRent;//0(不长租)    1(长租)
     private String high_time;//高峰时段
     private String low_time;//低峰时段
     private String high_fee;//高峰时段单价
@@ -294,6 +295,21 @@ public class Park_Info implements Parcelable {
         this.pauseShareDate = pauseShareDate;
     }
 
+    public boolean isLongRent() {
+        return isLongRent == 1;
+    }
+
+    public void setIsLongRent(boolean isLongRent) {
+        this.isLongRent = isLongRent ? 1 : 0;
+    }
+
+    /**
+     * @return true(该车位不是长租得来的车位)
+     */
+    public boolean isLongRentParkSpace() {
+        return !park_number.startsWith("TB");
+    }
+
     public String getParking_user_id() {
         return parking_user_id;
     }
@@ -479,6 +495,7 @@ public class Park_Info implements Parcelable {
                 ", parkLockStatus='" + parkLockStatus + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
+                ", isLongRent='" + isLongRent + '\'' +
                 '}';
     }
 
@@ -548,6 +565,7 @@ public class Park_Info implements Parcelable {
         dest.writeString(this.voltage);
         dest.writeString(this.indicator);
         dest.writeString(this.userNoteName);
+        dest.writeInt(this.isLongRent);
     }
 
     protected Park_Info(Parcel in) {
@@ -591,6 +609,7 @@ public class Park_Info implements Parcelable {
         this.voltage = in.readString();
         this.indicator = in.readString();
         this.userNoteName = in.readString();
+        this.isLongRent = in.readInt();
     }
 
     public static final Creator<Park_Info> CREATOR = new Creator<Park_Info>() {

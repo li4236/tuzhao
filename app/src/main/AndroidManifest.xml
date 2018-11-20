@@ -239,6 +239,8 @@
         <activity android:name=".activity.mine.BillingDetailActivity" />
         <activity android:name=".activity.ParkOrChargeActivity" />
         <activity android:name=".activity.LongRentActivity" />
+        <activity android:name=".activity.mine.ParkSpaceActivity"
+            android:launchMode="singleTask"/>
 
         <activity
             android:name=".publicwidget.update.UpdateActivity"

@@ -276,12 +276,7 @@ public class DateUtil {
         for (String pauseString : pause) {
             calendarHolders.add(new CalendarHolder(getYearToDayCalendar(pauseString, false)));
         }
-        Collections.sort(calendarHolders, new Comparator<CalendarHolder>() {
-            @Override
-            public int compare(CalendarHolder o1, CalendarHolder o2) {
-                return o1.startCalendar.compareTo(o2.startCalendar);
-            }
-        });
+        Collections.sort(calendarHolders);
 
         for (int i = 0; i < calendarHolders.size(); i++) {
             CalendarHolder calendarHolder = calendarHolders.get(i);
@@ -324,12 +319,7 @@ public class DateUtil {
         for (String pauseString : pause) {
             calendarHolders.add(new CalendarHolder(getYearToDayCalendar(pauseString, false)));
         }
-        Collections.sort(calendarHolders, new Comparator<CalendarHolder>() {
-            @Override
-            public int compare(CalendarHolder o1, CalendarHolder o2) {
-                return o1.startCalendar.compareTo(o2.startCalendar);
-            }
-        });
+        Collections.sort(calendarHolders);
 
         for (int i = 0; i < calendarHolders.size(); i++) {
             CalendarHolder calendarHolder = calendarHolders.get(i);
@@ -521,6 +511,8 @@ public class DateUtil {
                     getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()))));
         }
 
+        Collections.sort(calendarHolders);
+
         Calendar startCalendar = getYearToMinuteCalendar(startDate);
         Calendar endCalendar = getYearToMinuteCalendar(endDate);
         for (int i = 0; i < calendarHolders.size(); i++) {
@@ -572,6 +564,8 @@ public class DateUtil {
             calendarHolders.add(new CalendarHolder(getYearToMinuteCalendar(usefulDates.get(i).substring(0, usefulDates.get(i).indexOf("*"))),
                     getYearToMinuteCalendar(usefulDates.get(i).substring(usefulDates.get(i).indexOf("*") + 1, usefulDates.get(i).length()))));
         }
+
+        Collections.sort(calendarHolders);
 
         Calendar startCalendar = getYearToMinuteCalendar(startDate);
         Calendar endCalendar = getYearToMinuteCalendar(endDate);
@@ -1242,7 +1236,7 @@ public class DateUtil {
      * @param startDate 开始时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束时间，格式为yyyy-MM-dd HH:mm
      * @param shareTime 共享时间段(08:00 - 12:00,14:00 - 18:00,20:00 - 03:00) 注：最多3个，用“,”隔开
-     * @return null(共享时间段内没有一个包含开始时间和结束时间的)  Calendar[]{能停车的时间段的开始时间,结束时间}
+     * @return -1(共享时间段内没有一个包含开始时间和结束时间的)  other(能停车的时间段的开始时间,结束时间)
      */
     public static int isInShareTime(String startDate, String endDate, String shareTime) {
         if (shareTime.equals("-1")) {
@@ -1571,6 +1565,26 @@ public class DateUtil {
         calendar.set(Calendar.MILLISECOND, 0);
 
         calendar.add(Calendar.SECOND, addSecond.equals("-1") ? 0 : Integer.valueOf(addSecond));
+        return calendar;
+    }
+
+    /**
+     * @param date      格式为yyyy-MM-dd HH:mm:ss
+     * @param addSecond 添加的秒数
+     * @return 格式为yyyy-MM-dd对应的Calendar
+     */
+    public static Calendar getYearToSecondCalendar(String date, int addSecond) {
+        Calendar calendar = Calendar.getInstance();
+        String[] yearToMinute = date.split("-");
+        calendar.set(Calendar.YEAR, Integer.valueOf(yearToMinute[0]));
+        calendar.set(Calendar.MONTH, Integer.valueOf(yearToMinute[1]) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(yearToMinute[2].substring(0, yearToMinute[2].indexOf(" "))));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(" ") + 1, yearToMinute[2].indexOf(":"))));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].indexOf(":") + 1, yearToMinute[2].lastIndexOf(":"))));
+        calendar.set(Calendar.SECOND, Integer.valueOf(yearToMinute[2].substring(yearToMinute[2].lastIndexOf(":") + 1, yearToMinute[2].length())));
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        calendar.add(Calendar.SECOND, addSecond);
         return calendar;
     }
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/solid_w0_corner_5dp">
+
+    <TextView
+        android:id="@+id/viewstub_tv"
+        style="@style/ThirtyTextB1Style"
+        android:paddingBottom="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:text="挑选车位"
+        android:textColor="@color/y3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tuzhao.publicwidget.customView.ArrowView
+        android:id="@+id/viewstub_av"
+        android:layout_width="32dp"
+        android:layout_height="0dp"
+        android:paddingBottom="20dp"
+        android:paddingEnd="18dp"
+        android:paddingStart="8dp"
+        android:paddingTop="20dp"
+        app:arrow_color="@color/y3"
+        app:arrow_width="0.5dp"
+        app:layout_constraintBottom_toBottomOf="@id/viewstub_tv"
+        app:layout_constraintStart_toEndOf="@id/viewstub_tv"
+        app:layout_constraintTop_toTopOf="@+id/viewstub_tv" />
+
+</android.support.constraint.ConstraintLayout>
