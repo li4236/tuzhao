@@ -62,6 +62,7 @@ public class Park_Info implements Parcelable {
     // 最大可顺延的分钟数，代表预约停车的结束时间距离合法的结束时间的分钟数。
     // 比如结束时间为2018-11-13 11:00，该车位别的订单预约时间为2018-11-13 11:05 - xxx，则最大可顺延为5分钟。
     private int maxExtensionMinute;
+    private String longRentPrice;
 
     public String getPark_space_name() {
         return parkspace_name;
@@ -310,6 +311,21 @@ public class Park_Info implements Parcelable {
         return !park_number.startsWith("TB");
     }
 
+    /**
+     * @return true(该车位可以长租)
+     */
+    public boolean canLongRent() {
+        return "-1".equals(longRentPrice);
+    }
+
+    public String getLongRentPrice() {
+        return longRentPrice;
+    }
+
+    public void setLongRentPrice(String longRentPrice) {
+        this.longRentPrice = longRentPrice;
+    }
+
     public String getParking_user_id() {
         return parking_user_id;
     }
@@ -496,6 +512,7 @@ public class Park_Info implements Parcelable {
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
                 ", isLongRent='" + isLongRent + '\'' +
+                ", longRentPrice='" + longRentPrice + '\'' +
                 '}';
     }
 
@@ -566,6 +583,7 @@ public class Park_Info implements Parcelable {
         dest.writeString(this.indicator);
         dest.writeString(this.userNoteName);
         dest.writeInt(this.isLongRent);
+        dest.writeString(this.longRentPrice);
     }
 
     protected Park_Info(Parcel in) {
@@ -610,6 +628,7 @@ public class Park_Info implements Parcelable {
         this.indicator = in.readString();
         this.userNoteName = in.readString();
         this.isLongRent = in.readInt();
+        this.longRentPrice = in.readString();
     }
 
     public static final Creator<Park_Info> CREATOR = new Creator<Park_Info>() {

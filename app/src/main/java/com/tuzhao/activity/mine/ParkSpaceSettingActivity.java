@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
@@ -17,7 +18,6 @@ import com.tuzhao.adapter.ParkSpaceRentTimeAdapter;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.EverydayShareTimeInfo;
 import com.tuzhao.info.Park_Info;
-import com.tuzhao.info.ShareTimeInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
@@ -51,6 +51,20 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     private SwitchButton mSwitchButton;
 
+    private View mRentModeDivider;
+
+    private TextView mRentMode;
+
+    private TextView mRentModeStatus;
+
+    private SwitchButton mRentModeSb;
+
+    private TextView mFriends;
+
+    private ImageView mFriendsIv;
+
+    private View mFriendsDivider;
+
     private ParkSpaceRentTimeAdapter mAdapter;
 
     private Park_Info mPark_info;
@@ -71,9 +85,17 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
         mParkspaceNumber = findViewById(R.id.parkspace_number);
         mParkspaceStatus = findViewById(R.id.park_space_status);
+        mRentModeDivider = findViewById(R.id.park_space_rent_mode_divider);
+        mRentMode = findViewById(R.id.parkspace_rent_mode_tv);
+        mRentModeStatus = findViewById(R.id.park_space_setting_rent_mode_status);
+        mRentModeSb = findViewById(R.id.park_space_setting_rent_mode_sb);
 
         mRentDate = findViewById(R.id.park_space_space_setting_renten_date);
         mPauseRentDate = findViewById(R.id.park_space_setting_pause_date);
+
+        mFriendsDivider = findViewById(R.id.bluetooth_divider);
+        mFriends = findViewById(R.id.park_space_setting_bluetooth_binding);
+        mFriendsIv = findViewById(R.id.my_friends_iv);
 
         mTextViews = new TextView[7];
         mTextViews[0] = findViewById(R.id.modify_share_time_monday);
@@ -107,13 +129,6 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             @Override
             public void onClick(View v) {
                 startActivityForResult(EditShareTimeActivity.class, REQUEST_CODE, ConstansUtil.PARK_SPACE_INFO, mPark_info);
-            }
-        });
-
-        findViewById(R.id.park_space_setting_bluetooth_binding).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(MyFriendsActivity.class, ConstansUtil.PARK_SPACE_INFO, mPark_info);
             }
         });
 
@@ -162,10 +177,26 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
 
     @Override
     protected void initData() {
-        //getShareTime();
         setParkspaceStatus();
+        initLongRentStatus();
         setParkSpaceInfo();
+        initMyFriends();
         mParkspaceNumber.setText(mPark_info.getPark_number());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT) != null) {
+                mPark_info = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
+                setParkSpaceInfo();
+
+                Intent intent = new Intent();
+                intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
+                setResult(RESULT_OK, intent);
+            }
+        }
     }
 
     @Override
@@ -176,71 +207,50 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
         setResult(RESULT_OK, intent);
     }
 
-    /**
-     * 获取车位的共享时间
-     */
-    private void getShareTime() {
-        getOkGo(HttpConstants.getShareTime)
-                .params("parkId", mPark_info.getId())
-                .params("cityCode", mPark_info.getCityCode())
-                .execute(new JsonCallback<Base_Class_Info<ShareTimeInfo>>() {
-                    @Override
-                    public void onSuccess(Base_Class_Info<ShareTimeInfo> o, Call call, Response response) {
-                        ShareTimeInfo shareTimeInfo = o.data;
-                        mPark_info.setOpen_date(shareTimeInfo.getShareDate());
-                        mPark_info.setOpen_time(shareTimeInfo.getEveryDayShareTime());
-                        mPark_info.setShareDay(shareTimeInfo.getShareDay());
-                        mPark_info.setPauseShareDate(shareTimeInfo.getPauseShareDate());
-                        setParkSpaceInfo();
-                        dismmisLoadingDialog();
-                    }
-
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        if (!handleException(e)) {
-                            showFiveToast("获取共享时间失败，请稍后重试");
-                            finish();
-                        }
-                    }
-                });
-    }
-
-    /**
-     * 排除掉那些已过期的订单
-     */
-    private void scrennOrderTime() {
-        if (!mPark_info.getOrder_times().equals("-1") && !mPark_info.getOrder_times().equals("")) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.MILLISECOND, 0);
-
-            Calendar orderCalendar;
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String string : mPark_info.getOrder_times().split(",")) {
-                orderCalendar = DateUtil.getYearToMinuteCalendar(string.substring(string.indexOf("*") + 1, string.length()));
-                if (orderCalendar.compareTo(calendar) >= 0) {
-                    stringBuilder.append(string);
-                    stringBuilder.append(",");
-                }
-            }
-
-            if (stringBuilder.length() > 0) {
-                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            } else {
-                stringBuilder.append("-1");
-            }
-
-            mPark_info.setOrder_times(stringBuilder.toString());
+    private void setParkspaceStatus() {
+        switch (mPark_info.getPark_status()) {
+            case "1":
+                mParkspaceStatus.setText("未开放");
+                break;
+            case "2":
+                mParkspaceStatus.setText("开放");
+                break;
+            case "3":
+                mParkspaceStatus.setText("暂停");
+                break;
         }
     }
 
-    private void setParkspaceStatus() {
-        if (mPark_info.getPark_status().equals("1")) {
-            mParkspaceStatus.setText("未开放");
-        } else if (mPark_info.getPark_status().equals("2")) {
-            mParkspaceStatus.setText("开放");
-        } else if (mPark_info.getPark_status().equals("3")) {
-            mParkspaceStatus.setText("暂停");
+    private void initLongRentStatus() {
+        if (!mPark_info.canLongRent() || mPark_info.isLongRentParkSpace()) {
+            goneView(mRentModeDivider);
+            goneView(mRentMode);
+            goneView(mRentModeStatus);
+            goneView(mRentModeSb);
+        } else {
+            mRentModeStatus.setText(mPark_info.isLongRent() ? "开放" : "暂停");
+            mRentModeSb.setCheckedNoEvent(mPark_info.isLongRent());
+            mRentModeSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    editLongRentStatus();
+                }
+            });
+        }
+    }
+
+    private void initMyFriends() {
+        if (mPark_info.isLongRentParkSpace()) {
+            goneView(mFriends);
+            goneView(mFriendsIv);
+            goneView(mFriendsDivider);
+        } else {
+            mFriends.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(MyFriendsActivity.class, ConstansUtil.PARK_SPACE_INFO, mPark_info);
+                }
+            });
         }
     }
 
@@ -435,19 +445,47 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT) != null) {
-                mPark_info = data.getParcelableExtra(ConstansUtil.FOR_REQEUST_RESULT);
-                setParkSpaceInfo();
+    private void editLongRentStatus() {
+        showLoadingDialog("正在修改出租状态");
+        getOkGo(HttpConstants.editPark)
+                .params("park_id", mPark_info.getId())
+                .params("citycode", mPark_info.getCityCode())
+                .params("park_status", mPark_info.isLongRent() ? "0" : "1")
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        mPark_info.setIsLongRent(!mPark_info.isLongRent());
+                        mSwitchButton.setCheckedNoEvent(mPark_info.isLongRent());
+                        mRentModeStatus.setText(mPark_info.isLongRent() ? "开放" : "暂停");
 
-                Intent intent = new Intent();
-                intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
-                setResult(RESULT_OK, intent);
-            }
-        }
+                        Intent intent = new Intent();
+                        intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
+                        setResult(RESULT_OK, intent);
+                        dismmisLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mSwitchButton.setCheckedNoEvent(mPark_info.isLongRent());
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                case "102":
+                                case "103":
+                                    showFiveToast("客户端异常，请退出重试");
+                                    finish();
+                                    break;
+                                case "104":
+                                    showFiveToast("该车位已被预约，暂时不能修改状态哦");
+                                    break;
+                                case "105":
+                                    showFiveToast("修改失败，请稍后重试");
+                                    break;
+                            }
+                        }
+                    }
+                });
     }
 
 }

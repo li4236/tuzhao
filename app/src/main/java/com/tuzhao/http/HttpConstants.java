@@ -739,4 +739,9 @@ public class HttpConstants {
      */
     public static final String getWechatLongRentOrderInfo = ROOT_URL + "getWechatLongRentOrderInfo";
 
+    /**
+     * 修改车位的长租状态
+     */
+    public static final String editLongRentStatus = ROOT_URL + "editLongRentStatus";
+
 }
