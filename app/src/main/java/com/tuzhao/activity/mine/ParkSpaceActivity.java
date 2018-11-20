@@ -92,6 +92,13 @@ public class ParkSpaceActivity extends BaseStatusActivity implements IntentObser
         IntentObserable.registerObserver(this);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        showLoadingDialog();
+        getParkSpace();
+    }
+
     @NonNull
     @Override
     protected String title() {
@@ -131,7 +138,7 @@ public class ParkSpaceActivity extends BaseStatusActivity implements IntentObser
                         longRentParkSpace.add(ParkSpaceEmptyFragment.newInstance(1));
                         mLongRentParkSpaceAdapter.setData(longRentParkSpace);
                         adjustPage(mLongRentParkSpaceVp);
-
+                        
                         mMyParkSpaceCount.setText("个人车位（" + myParkSpace.size() + "）");
                         myParkSpace.add(ParkSpaceEmptyFragment.newInstance(0));
                         mMyParkSpaceAdapter.setData(myParkSpace);

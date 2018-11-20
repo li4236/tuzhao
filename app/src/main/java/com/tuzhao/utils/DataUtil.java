@@ -46,6 +46,12 @@ public class DataUtil {
                 continue;
             }
 
+            if (parkInfo.getUser_id().equals(UserManager.getInstance().getUserInfo().getId())) {
+                canParkList.remove(parkInfo);
+                Log.e(TAG, "findCanParkList: same person");
+                continue;
+            }
+
             int currentExtentionMinute;
             //排除不在共享日期之内的(根据共享日期)
             if ((currentExtentionMinute = DateUtil.isInShareDate(startTime, endTime, parkInfo.getOpen_date())) == -1) {
@@ -147,6 +153,12 @@ public class DataUtil {
             Log.e("TAG", "scanPark parkInfo:" + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
                 canParkList.remove(parkInfo);
+                continue;
+            }
+
+            if (parkInfo.getUser_id().equals(UserManager.getInstance().getUserInfo().getId())) {
+                canParkList.remove(parkInfo);
+                Log.e(TAG, "findCanParkList: same person");
                 continue;
             }
 
