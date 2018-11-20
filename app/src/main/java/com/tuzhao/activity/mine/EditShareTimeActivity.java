@@ -1,6 +1,7 @@
 package com.tuzhao.activity.mine;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -333,7 +334,14 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                 }
                 break;
             case R.id.modify_share_time_add_everyday_share_time:
-                if (mEverydayShareTimeAdapter.getData().size() == 3) {
+                if (mParkInfo.isLongRent()) {
+                    showDialog("支持长租需要设置全天时段出租哦，是否去取消长租？", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+                } else if (mEverydayShareTimeAdapter.getData().size() == 3) {
                     showFiveToast("只能选择三个时段哦");
                 } else {
                     Calendar calendar = Calendar.getInstance();
@@ -577,6 +585,13 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
                                     break;
                                 case "107":
                                     showFiveToast("修改的时间段内已被预定");
+                                    break;
+                                case "108":
+                                    showFiveToast("需要取消长租才可以修改哦");
+                                    finish();
+                                    break;
+                                default:
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
                                     break;
                             }
                         }

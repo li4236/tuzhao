@@ -22,12 +22,10 @@
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/positiveButton"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_min="120dp"
         android:background="@color/w1"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         app:layout_constraintWidth_min="250dp">
@@ -35,8 +33,10 @@
         <TextView
             android:id="@+id/message"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:gravity="center"
+            android:minHeight="120dp"
             android:lineSpacingMultiplier="1.5"
             android:paddingBottom="15dp"
             android:paddingLeft="20dp"
@@ -59,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/positiveButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message" />
+        app:layout_constraintTop_toBottomOf="@+id/content" />
 
     <TextView
         android:id="@+id/positiveButton"

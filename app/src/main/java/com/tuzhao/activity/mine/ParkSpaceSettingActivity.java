@@ -233,7 +233,27 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             mRentModeSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    editLongRentStatus();
+                    if (isChecked) {
+                        new TipeDialog.Builder(ParkSpaceSettingActivity.this)
+                                .setTitle("提示")
+                                .setMessage("开启长租会将每日共享时段重置为全天24小时出租，在其他车主长租期间，您将暂时失去对车位的使用权，直到其他车主租期结束！！！")
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mRentModeSb.setCheckedNoEvent(mPark_info.isLongRent());
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        editLongRentStatus();
+                                    }
+                                })
+                                .create()
+                                .show();
+                    } else {
+                        editLongRentStatus();
+                    }
                 }
             });
         }
@@ -448,15 +468,21 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     private void editLongRentStatus() {
         showLoadingDialog("正在修改长租状态");
         getOkGo(HttpConstants.editLongRentStatus)
-                .params("park_id", mPark_info.getId())
-                .params("citycode", mPark_info.getCityCode())
-                .params("park_status", mPark_info.isLongRent() ? "0" : "1")
+                .params("parkSpaceId", mPark_info.getId())
+                .params("cityCode", mPark_info.getCityCode())
+                .params("status", mPark_info.isLongRent() ? "0" : "1")
                 .execute(new JsonCallback<Base_Class_Info<Void>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mPark_info.setIsLongRent(!mPark_info.isLongRent());
+                        if (mPark_info.isLongRent() && !mPark_info.getOpen_time().equals("-1")) {
+                            mPark_info.setOpen_time("-1");
+                            mAdapter.getData().clear();
+                            mAdapter.justAddData("全天");
+                            mAdapter.notifyDataSetChanged();
+                        }
                         mRentModeSb.setCheckedNoEvent(mPark_info.isLongRent());
-                        mRentModeStatus.setText(mPark_info.isLongRent() ? "出租" : "暂停");
+                        mRentModeStatus.setText(mPark_info.isLongRent() ? "支持" : "不支持");
 
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
@@ -473,13 +499,20 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                                 case "101":
                                 case "102":
                                 case "103":
+                                case "104":
+                                case "106":
                                     showFiveToast("客户端异常，请退出重试");
                                     finish();
                                     break;
-                                case "104":
-                                    showFiveToast("该车位已被预约，暂时不能修改状态哦");
-                                    break;
                                 case "105":
+                                    showFiveToast("该车位已经删除了哦");
+                                    Intent intent = new Intent();
+                                    intent.putExtra(ConstansUtil.PARK_SPACE_INFO, mPark_info);
+                                    setResult(ConstansUtil.RESULT_CODE, intent);
+                                    showFiveToast("删除成功");
+                                    finish();
+                                    break;
+                                default:
                                     showFiveToast("修改失败，请稍后重试");
                                     break;
                             }

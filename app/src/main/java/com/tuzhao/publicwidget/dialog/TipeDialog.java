@@ -14,11 +14,7 @@ import com.tuzhao.R;
 /**
  * 提示对话框
  */
-
-
 public class TipeDialog extends Dialog {
-
-    private TextView mTextView;
 
     public TipeDialog(Context context) {
         super(context);
@@ -56,7 +52,7 @@ public class TipeDialog extends Dialog {
          * Set the Dialog message from resource
          */
         public Builder setMessage(int message) {
-            this.message = (String) context.getText(message);
+            this.message = context.getText(message);
             return this;
         }
 
@@ -170,7 +166,7 @@ public class TipeDialog extends Dialog {
             final TipeDialog dialog = new TipeDialog(context, R.style.Dialog);
             dialog.setCancelable(cancelable);
             View layout = inflater.inflate(R.layout.dialog_normal_layout_refator, null);
-            dialog.addContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            //dialog.addContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title
             mTitleView = layout.findViewById(R.id.title);
             mTitleView.setText(title);
