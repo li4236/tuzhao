@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
@@ -50,8 +49,6 @@ public class ParkSpaceFragment extends BaseStatusFragment implements View.OnClic
 
     private CircleView mParkSpaceStatusCv;
 
-    private ImageView mLock;
-
     private TextView mOpenLock;
 
     private int mRecentOrderMinutes;
@@ -90,7 +87,6 @@ public class ParkSpaceFragment extends BaseStatusFragment implements View.OnClic
         mVoltageView = findViewById(R.id.voltage_view);
         mParkSpaceStatus = findViewById(R.id.park_space_status);
         mParkSpaceStatusCv = findViewById(R.id.park_space_status_cv);
-        mLock = findViewById(R.id.park_space_lock_iv);
         mOpenLock = findViewById(R.id.open_lock);
 
         findViewById(R.id.park_space_setting_cl).setOnClickListener(this);
@@ -195,6 +191,7 @@ public class ParkSpaceFragment extends BaseStatusFragment implements View.OnClic
         switch (mParkInfo.getPark_status()) {
             case "1":
                 mParkSpaceStatus.setText("未开放");
+                mParkSpaceStatus.setPadding(dpToPx(3), 0, dpToPx(3), 0);
                 mParkSpaceStatusCv.setColor(Color.parseColor("#808080"));
                 break;
             case "2":
@@ -214,6 +211,7 @@ public class ParkSpaceFragment extends BaseStatusFragment implements View.OnClic
                     default:
                         mParkSpaceStatusCv.setColor(Color.parseColor("#6a6bd9"));
                         mParkSpaceStatus.setText("已预约");
+                        mParkSpaceStatus.setPadding(dpToPx(3), 0, dpToPx(3), 0);
                         mRecentOrderMinutes = Integer.valueOf(status);
                         break;
                 }

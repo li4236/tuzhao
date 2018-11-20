@@ -18,13 +18,13 @@
         android:id="@+id/park_lot_name"
         style="@style/ThirtyTextB1Style"
         android:layout_width="0dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ellipsize="end"
         android:gravity="start"
-        android:maxLines="1"
-        app:layout_constraintEnd_toStartOf="@id/voltage_view"
+        android:maxLines="2"
+        app:layout_constraintEnd_toStartOf="@id/park_space_status_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,13 +32,15 @@
         android:id="@+id/park_space_description"
         style="@style/TwentyTextG6Style"
         android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="4dp"
         android:ellipsize="end"
         android:gravity="start"
-        android:maxLines="3"
+        android:maxLines="2"
+        app:layout_constraintBottom_toBottomOf="@+id/park_space_iv"
         app:layout_constraintEnd_toStartOf="@+id/park_space_status_bg"
-        app:layout_constraintStart_toStartOf="@id/park_lot_name"
-        app:layout_constraintTop_toBottomOf="@+id/park_lot_name"
-        app:layout_constraintTop_toTopOf="@+id/park_space_status_bg" />
+        app:layout_constraintStart_toStartOf="@+id/park_lot_name"
+        app:layout_constraintTop_toBottomOf="@+id/park_lot_name" />
 
     <com.tuzhao.publicwidget.customView.VoltageView
         android:id="@+id/voltage_view"
@@ -65,7 +67,8 @@
     <TextView
         android:id="@+id/park_space_status"
         style="@style/TenTextB1Style"
-        android:layout_marginEnd="6dp"
+        android:paddingEnd="6dp"
+        android:paddingStart="6dp"
         android:text="空闲"
         android:textSize="9sp"
         app:layout_constraintBottom_toBottomOf="@+id/park_space_status_bg"
@@ -76,10 +79,9 @@
         android:id="@+id/park_space_status_cv"
         android:layout_width="6dp"
         android:layout_height="6dp"
-        android:layout_marginEnd="6dp"
         app:color="@color/green7"
         app:layout_constraintBottom_toBottomOf="@+id/park_space_status_bg"
-        app:layout_constraintEnd_toStartOf="@id/park_space_status"
+        app:layout_constraintEnd_toStartOf="@+id/park_space_status"
         app:layout_constraintTop_toTopOf="@+id/park_space_status_bg" />
 
     <View
