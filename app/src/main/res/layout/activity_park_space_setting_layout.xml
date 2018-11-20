@@ -60,6 +60,21 @@
                     app:layout_constraintStart_toEndOf="@+id/parkspace_number_tv"
                     app:layout_constraintTop_toTopOf="@+id/parkspace_number_tv" />
 
+                <View
+                    android:id="@+id/open_rent_divider"
+                    style="@style/dividerStyle"
+                    app:layout_constraintTop_toBottomOf="@+id/parkspace_number_tv" />
+
+                <TextView
+                    android:id="@+id/open_rent_tv"
+                    style="@style/TwentyTextB1Style"
+                    android:layout_marginStart="16dp"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp"
+                    android:text="车位出租"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/open_rent_divider" />
+
                 <com.kyleduo.switchbutton.SwitchButton
                     android:id="@+id/park_space_setting_renten_sb"
                     android:layout_width="wrap_content"
@@ -71,9 +86,9 @@
                     app:kswThumbMargin="2.8dp"
                     app:kswThumbRangeRatio="2.25"
                     app:kswThumbWidth="18dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/parkspace_number_tv"
+                    app:layout_constraintBottom_toBottomOf="@+id/open_rent_tv"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/parkspace_number_tv" />
+                    app:layout_constraintTop_toTopOf="@+id/open_rent_tv" />
 
                 <TextView
                     android:id="@+id/park_space_status"
@@ -86,7 +101,7 @@
                 <View
                     android:id="@+id/park_space_rent_mode_divider"
                     style="@style/dividerStyle"
-                    app:layout_constraintTop_toBottomOf="@+id/parkspace_number_tv" />
+                    app:layout_constraintTop_toBottomOf="@+id/open_rent_tv" />
 
                 <TextView
                     android:id="@+id/parkspace_rent_mode_tv"
@@ -94,7 +109,7 @@
                     android:layout_marginStart="16dp"
                     android:paddingBottom="20dp"
                     android:paddingTop="20dp"
-                    android:text="长租模式"
+                    android:text="支持长租"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/park_space_rent_mode_divider" />
 
@@ -339,23 +354,6 @@
                 android:layout_height="5dp"
                 app:layout_constraintTop_toBottomOf="@id/park_space_space_setting_cl" />
 
-            <!--<TextView
-                android:id="@+id/park_space_setting_renten_tv"
-                style="@style/TwentyTextB1Style"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="车位出租"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
-
-
-
-            <View
-                android:id="@+id/renten_divider"
-                style="@style/dividerStyle"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/park_space_setting_renten_tv" />-->
-
             <TextView
                 android:id="@+id/park_space_setting_bluetooth_binding"
                 style="@style/TwentyTextB1Style"
@@ -372,9 +370,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/bottom_divider" />
 
             <ImageView
+                android:id="@+id/my_friends_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/my_friends_iv"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/picture_description"
                 android:src="@mipmap/ic_right"

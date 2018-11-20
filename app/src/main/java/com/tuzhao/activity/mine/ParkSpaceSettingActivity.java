@@ -210,10 +210,10 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     private void setParkspaceStatus() {
         switch (mPark_info.getPark_status()) {
             case "1":
-                mParkspaceStatus.setText("未开放");
+                mParkspaceStatus.setText("未出租");
                 break;
             case "2":
-                mParkspaceStatus.setText("开放");
+                mParkspaceStatus.setText("出租");
                 break;
             case "3":
                 mParkspaceStatus.setText("暂停");
@@ -228,7 +228,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
             goneView(mRentModeStatus);
             goneView(mRentModeSb);
         } else {
-            mRentModeStatus.setText(mPark_info.isLongRent() ? "开放" : "暂停");
+            mRentModeStatus.setText(mPark_info.isLongRent() ? "支持" : "不支持");
             mRentModeSb.setCheckedNoEvent(mPark_info.isLongRent());
             mRentModeSb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -446,8 +446,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
     }
 
     private void editLongRentStatus() {
-        showLoadingDialog("正在修改出租状态");
-        getOkGo(HttpConstants.editPark)
+        showLoadingDialog("正在修改长租状态");
+        getOkGo(HttpConstants.editLongRentStatus)
                 .params("park_id", mPark_info.getId())
                 .params("citycode", mPark_info.getCityCode())
                 .params("park_status", mPark_info.isLongRent() ? "0" : "1")
@@ -455,8 +455,8 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     @Override
                     public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
                         mPark_info.setIsLongRent(!mPark_info.isLongRent());
-                        mSwitchButton.setCheckedNoEvent(mPark_info.isLongRent());
-                        mRentModeStatus.setText(mPark_info.isLongRent() ? "开放" : "暂停");
+                        mRentModeSb.setCheckedNoEvent(mPark_info.isLongRent());
+                        mRentModeStatus.setText(mPark_info.isLongRent() ? "出租" : "暂停");
 
                         Intent intent = new Intent();
                         intent.putExtra(ConstansUtil.FOR_REQEUST_RESULT, mPark_info);
@@ -467,7 +467,7 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        mSwitchButton.setCheckedNoEvent(mPark_info.isLongRent());
+                        mRentModeSb.setCheckedNoEvent(mPark_info.isLongRent());
                         if (!handleException(e)) {
                             switch (e.getMessage()) {
                                 case "101":
