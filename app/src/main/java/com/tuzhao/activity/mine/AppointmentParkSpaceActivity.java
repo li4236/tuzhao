@@ -23,6 +23,7 @@ import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
+import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
@@ -82,6 +83,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
     //预约停车时长（分钟）
     private int mParkDuration = 0;
+
+    private Calendar mCalendar;
 
     private ArrayList<String> mDays;
 
@@ -344,8 +347,8 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             mHours = new ArrayList<>(24);
             mMinutes = new ArrayList<>(60);
 
-            Calendar nowCalendar = Calendar.getInstance();
-            Calendar todayEndCalendar = Calendar.getInstance();
+            mCalendar = TimeManager.getInstance().getCurrentCalendar();
+            Calendar todayEndCalendar = (Calendar) mCalendar.clone();
             todayEndCalendar.set(Calendar.HOUR_OF_DAY, 24);
             todayEndCalendar.set(Calendar.MINUTE, 0);
             todayEndCalendar.set(Calendar.SECOND, 0);
@@ -354,7 +357,7 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
             ArrayList<String> hours;
             ArrayList<ArrayList<String>> hourWithMinute;
             ArrayList<String> minute;
-            if (DateUtil.getCalendarDistance(nowCalendar, todayEndCalendar) > 1) {
+            if (DateUtil.getCalendarDistance(mCalendar, todayEndCalendar) > 1) {
                 //如果距离凌晨大于一分钟才显示今天可选
                 mDays.add("今天");
 
@@ -362,17 +365,17 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                 hourWithMinute = new ArrayList<>();
 
                 //添加现在的时分,如果现在是15:59分则不添加
-                if (nowCalendar.get(Calendar.MINUTE) != 59 && nowCalendar.get(Calendar.MINUTE) != 60) {
+                if (mCalendar.get(Calendar.MINUTE) != 59 && mCalendar.get(Calendar.MINUTE) != 60) {
                     minute = new ArrayList<>();
-                    hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
-                    for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
+                    hours.add(String.valueOf(mCalendar.get(Calendar.HOUR_OF_DAY)));
+                    for (int j = mCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
                         minute.add(String.valueOf(j));
                     }
                     hourWithMinute.add(minute);
                 }
 
                 //添加往后一小时到23点的时分（即16点到23点）
-                for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
+                for (int i = mCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
                     hours.add(String.valueOf(i));
                     minute = new ArrayList<>();
                     for (int j = 0; j < 60; j++) {
@@ -387,17 +390,20 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
 
             mDays.add("明天");
             mDays.add("后天");
-            nowCalendar.add(Calendar.DAY_OF_MONTH, 3);  //今天，明天，后天
+            mCalendar.add(Calendar.DAY_OF_MONTH, 3);  //今天，明天，后天
             for (int i = 0; i < 2; i++) {
                 addhourWithMinutes();
             }
 
             //添加往后几天的数据
             for (int i = 0, size = 7 - mDays.size(); i < size; i++) {
-                mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
+                mDays.add((mCalendar.get(Calendar.MONTH) + 1) + "月" + mCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
-                nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                mCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
+
+            //上面加了几天，要重置
+            mCalendar = TimeManager.getInstance().getCurrentCalendar();
 
             mStartTimeOption = new OptionsPickerView<>(this);
             mStartTimeOption.setPicker(mDays, mHours, mMinutes, true);
@@ -412,18 +418,18 @@ public class AppointmentParkSpaceActivity extends BaseStatusActivity implements 
                     String tx = mDays.get(options1) + " " + DateUtil.thanTen(mHours.get(options1).get(option2)) + " 点 " + DateUtil.thanTen(mMinutes.get(options1).get(option2).get(options3)) + " 分";
 
                     //记录选中的开始入场时间
-                    Calendar appointmentStartCalendar = Calendar.getInstance();
+                    Calendar appointmentStartCalendar = (Calendar) mCalendar.clone();
                     appointmentStartCalendar.add(Calendar.DAY_OF_MONTH, mDays.get(0).equals("今天") ? options1 : options1 + 1);
                     appointmentStartCalendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
                     appointmentStartCalendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
                     appointmentStartCalendar.set(Calendar.SECOND, 0);
                     appointmentStartCalendar.set(Calendar.MILLISECOND, 0);
                     mAppointmentStartTime = DateUtil.getCurrentYearToMinutes(appointmentStartCalendar.getTimeInMillis());
-                    Calendar nowCalendar = Calendar.getInstance();
-                    nowCalendar.set(Calendar.SECOND, 0);
-                    nowCalendar.set(Calendar.MILLISECOND, 0);
+                    Calendar calendar = TimeManager.getInstance().getCurrentCalendar();
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
 
-                    if (appointmentStartCalendar.compareTo(nowCalendar) >= 0) {
+                    if (appointmentStartCalendar.compareTo(calendar) >= 0) {
                         //入场时间比现在的时间晚则显示选择的入场时间
                         mAppointmentIncomeTime.setText(tx);
                         appointmentStartCalendar.add(Calendar.MINUTE, mParkDuration);

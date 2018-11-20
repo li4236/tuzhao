@@ -4,8 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.view.View;
@@ -25,6 +23,7 @@ import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicmanager.LocationManager;
+import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.customView.ArrowView;
 import com.tuzhao.publicwidget.customView.CircleView;
@@ -35,10 +34,6 @@ import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.DeviceUtils;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -62,8 +57,6 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
      * 正在开锁的订单
      */
     private ParkOrderInfo mOpenLockOrder;
-
-    private Handler mHandler;
 
     public static UseFriendParkSpaceRecordFragment getInstance(String status) {
         UseFriendParkSpaceRecordFragment fragment = new UseFriendParkSpaceRecordFragment();
@@ -105,9 +98,6 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             //因为有可能是从预约状态改为停车中状态的，所以需要全部遍历移除监听
             MyReceiver.removeLockListener(mCommonAdapter.get(i).getLockId());
         }
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
         IntentObserable.unregisterObserver(this);
     }
 
@@ -123,9 +113,6 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                                 //预定中的添加开锁监听
                                 addLockListener(parkOrderInfo);
                             }
-                        }
-                        if (mStatus.equals("1")) {
-                            initHandler();
                         }
                     }
 
@@ -146,52 +133,6 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                         });
                     }
                 });
-    }
-
-    private void initHandler() {
-        mHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == TIME_IN_MILLISS) {
-                    //获取到网络时间
-                    if ((Long) msg.obj >= DateUtil.getYearToSecondCalendar(mOpenLockOrder.getOrderStartTime(), "-1800").getTimeInMillis()) {
-                        openLockByRecord(mOpenLockOrder);
-                    } else {
-                        showFiveToast("入场时间前30分钟才可以开锁哦");
-                        mOpenLockOrder = null;
-                    }
-                } else if (msg.what == GET_TIME_FAILE) {
-                    //获取网络时间失败，使用本地时间
-                    if (((Long) msg.obj - System.currentTimeMillis()) / 1000 <= 30 * 60) {
-                        openLockByRecord(mOpenLockOrder);
-                    } else {
-                        showFiveToast("入场时间前30分钟才可以开锁哦");
-                        mOpenLockOrder = null;
-                    }
-                }
-                return true;
-            }
-        });
-    }
-
-    /**
-     * 获取网络当前时间的时间戳
-     */
-    private void getCurrentTimeInMillis() {
-        try {
-            URL url = new URL("http://www.baidu.com");// 取得资源对象
-            URLConnection uc = url.openConnection();// 生成连接对象
-            uc.connect();// 发出连接
-            Message message = mHandler.obtainMessage();
-            message.what = TIME_IN_MILLISS;
-            message.obj = uc.getDate();// 读取网站日期时间,时间戳
-            mHandler.sendMessage(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Message message = mHandler.obtainMessage();
-            message.what = GET_TIME_FAILE;
-            mHandler.sendMessage(message);
-        }
     }
 
     /**
@@ -345,18 +286,21 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
                 }
             });
         }*/
-        showDialog("提示", "确定开锁吗？", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mOpenLockOrder = parkOrderInfo;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getCurrentTimeInMillis();
+        if (TimeManager.getInstance().getCurrentCalendar().compareTo(
+                DateUtil.getYearToSecondCalendar(mOpenLockOrder.getOrderStartTime(), "-1800")) < 0) {
+            showFiveToast("入场时间前30分钟才可以开锁哦");
+        } else {
+            showDialog("提示", "确定开锁吗？", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (mOpenLockOrder != null) {
+                        MyReceiver.removeLockListener(mOpenLockOrder.getLockId());
                     }
-                }).start();
-            }
-        });
+                    mOpenLockOrder = parkOrderInfo;
+                    openLockByRecord(mOpenLockOrder);
+                }
+            });
+        }
     }
 
     /**

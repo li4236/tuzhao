@@ -156,6 +156,12 @@ public class DataUtil {
                 continue;
             }
 
+            if (!parkInfo.canLongRent()) {
+                canParkList.remove(parkInfo);
+                Log.e(TAG, "findCanLongParkList: cant long rent");
+                continue;
+            }
+
             if (parkInfo.getUser_id().equals(UserManager.getInstance().getUserInfo().getId())) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "findCanParkList: same person");

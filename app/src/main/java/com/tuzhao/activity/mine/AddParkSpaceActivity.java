@@ -10,7 +10,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +29,7 @@ import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.ParkSpaceInfo;
 import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
+import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.CustomDialog;
 import com.tuzhao.publicwidget.upload.MyFile;
@@ -94,6 +94,8 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
 
     private OptionsPickerView<String> mAppointmentOption;
 
+    private Calendar mCalendar;
+    
     private TextView mChooseAppointmentTime;
 
     private TextView mPayDeposit;
@@ -382,7 +384,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
 
     private void handleImageBean(final List<String> imageBeans) {
         if (imageBeans.size() == 2) {
-            Log.e(TAG, "handleImageBean: " + mChoosePosition);
             switch (mChoosePosition) {
                 case 2:
                     compressFirstPhoto(imageBeans.get(0), new SuccessCallback<MyFile>() {
@@ -703,15 +704,16 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
     private void initAppointmentOption() {
         mAppointmentDays = new ArrayList<>(7);
         mAppointmentTimeFramne = new ArrayList<>(7);
-        Calendar calendar = Calendar.getInstance();
+        mCalendar = TimeManager.getInstance().getCurrentCalendar();
         mAppointmentDays.add("明天");
         mAppointmentDays.add("后天");
-        calendar.add(Calendar.DAY_OF_MONTH, 2);
+        mCalendar.add(Calendar.DAY_OF_MONTH, 2);
         for (int i = 1; i <= 5; i++) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-            mAppointmentDays.add(DateUtil.getCalendarMonthToDayWithText(calendar));
+            mCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            mAppointmentDays.add(DateUtil.getCalendarMonthToDayWithText(mCalendar));
         }
-
+        mCalendar.add(Calendar.DAY_OF_MONTH, -7);   //还原为原来的时间
+        
         ArrayList<String> timeFrame;
         for (int i = 0; i < 7; i++) {
             timeFrame = new ArrayList<>(2);
@@ -806,18 +808,17 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
         propertyPhoto.deleteCharAt(propertyPhoto.length() - 1);
 
         //根据用户选的日期算出具体日期(yyyy-MM-dd)
-        final Calendar calendar = Calendar.getInstance();
         String appointmentDate = getText(mChooseAppointmentTime);
         if (appointmentDate.startsWith("明天")) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            mCalendar.add(Calendar.DAY_OF_MONTH, 1);
         } else if (appointmentDate.startsWith("后天")) {
-            calendar.add(Calendar.DAY_OF_MONTH, 2);
+            mCalendar.add(Calendar.DAY_OF_MONTH, 2);
         } else {
-            calendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))) - 1);
-            calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(appointmentDate.substring(appointmentDate.indexOf("月") + 1,
+            mCalendar.set(Calendar.MONTH, Integer.valueOf(appointmentDate.substring(0, appointmentDate.indexOf("月"))) - 1);
+            mCalendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(appointmentDate.substring(appointmentDate.indexOf("月") + 1,
                     appointmentDate.indexOf("日"))));
         }
-        appointmentDate = DateUtil.getCalendarYearToDay(calendar) + " " +
+        appointmentDate = DateUtil.getCalendarYearToDay(mCalendar) + " " +
                 appointmentDate.substring(appointmentDate.length() - 2, appointmentDate.length());
 
         getOkGo(HttpConstants.addUserPark)

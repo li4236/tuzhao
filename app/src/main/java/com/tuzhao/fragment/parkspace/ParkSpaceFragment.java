@@ -248,7 +248,7 @@ public class ParkSpaceFragment extends BaseStatusFragment implements View.OnClic
         }
 
         String nowDate = DateUtil.deleteSecond(TimeManager.getInstance().getCurrentTime());
-        Calendar calendar = TimeManager.getInstance().getServerTimeCalendar();
+        Calendar calendar = TimeManager.getInstance().getCurrentCalendar();
         calendar.add(Calendar.MINUTE, 2);
         String afterTwoMinutesDate = DateUtil.getCalenarYearToMinutes(calendar);
         if (DateUtil.notInShareDate(nowDate, afterTwoMinutesDate, mParkInfo.getOpen_date())) {
@@ -289,7 +289,7 @@ public class ParkSpaceFragment extends BaseStatusFragment implements View.OnClic
                     return o1.compareTo(o2);
                 }
             });
-            Calendar calendar = TimeManager.getInstance().getServerTimeCalendar();
+            Calendar calendar = TimeManager.getInstance().getCurrentCalendar();
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             return String.valueOf(DateUtil.getCalendarDistance(calendar, list.get(0)));

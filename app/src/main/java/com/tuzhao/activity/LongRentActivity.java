@@ -81,8 +81,6 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
 
     private Calendar mNowCalendar;
 
-    private long mNowStartTime;
-
     private ArrayList<String> mDays;
 
     private ArrayList<ArrayList<String>> mHours;
@@ -225,8 +223,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
             mHours = new ArrayList<>(24);
             mMinutes = new ArrayList<>(60);
 
-            mNowCalendar = DateUtil.getYearToSecondCalendar(TimeManager.getInstance().getServerTime());
-            mNowStartTime = SystemClock.elapsedRealtime();  //会有上次请求时间到现在时间距离的误差
+            mNowCalendar = TimeManager.getInstance().getCurrentCalendar();
 
             ArrayList<String> hours;
             ArrayList<ArrayList<String>> hourWithMinute;
@@ -271,7 +268,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                 mNowCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
 
-            mNowCalendar = DateUtil.getYearToSecondCalendar(TimeManager.getInstance().getServerTime());
+            mNowCalendar = TimeManager.getInstance().getCurrentCalendar();
             initTimeOption();
         }
         mStartTimeOption.show();
@@ -316,8 +313,7 @@ public class LongRentActivity extends BaseStatusActivity implements View.OnClick
                 appointmentStartCalendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
                 mAppointmentStartTime = DateUtil.getCurrentYearToMinutes(appointmentStartCalendar.getTimeInMillis());
 
-                Calendar nowCalendar = (Calendar) mNowCalendar.clone();
-                nowCalendar.add(Calendar.MILLISECOND, (int) (SystemClock.elapsedRealtime() - mNowStartTime));
+                Calendar nowCalendar = TimeManager.getInstance().getCurrentCalendar();
 
                 if (appointmentStartCalendar.compareTo(nowCalendar) >= 0) {
                     //入场时间比现在的时间晚则显示选择的入场时间

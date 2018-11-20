@@ -25,6 +25,7 @@ import com.tuzhao.info.ParkOrderInfo;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
+import com.tuzhao.publicmanager.TimeManager;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.callback.JsonCodeCallback;
@@ -82,7 +83,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
     private DecimalFormat mDecimalFormat;
 
-    private Calendar mCanParkEndCalendar;
+    private Calendar mCalendar;
 
     private int mExtensionTime;
 
@@ -280,8 +281,8 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             mHours = new ArrayList<>(24);
             mMinutes = new ArrayList<>(60);
 
-            Calendar nowCalendar = Calendar.getInstance();
-            Calendar todayEndCalendar = Calendar.getInstance();
+            mCalendar = TimeManager.getInstance().getCurrentCalendar();
+            Calendar todayEndCalendar = (Calendar) mCalendar.clone();
             todayEndCalendar.set(Calendar.HOUR_OF_DAY, 24);
             todayEndCalendar.set(Calendar.MINUTE, 0);
             todayEndCalendar.set(Calendar.SECOND, 0);
@@ -290,24 +291,24 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
             ArrayList<String> hours;
             ArrayList<ArrayList<String>> hourWithMinute;
             ArrayList<String> minute;
-            if (DateUtil.getCalendarDistance(nowCalendar, todayEndCalendar) > 1) {
+            if (DateUtil.getCalendarDistance(mCalendar, todayEndCalendar) > 1) {
                 //如果距离凌晨大于一分钟才显示今天可选
                 mDays.add("今天");
 
                 hours = new ArrayList<>();
                 hourWithMinute = new ArrayList<>();
                 //添加现在的时分
-                if (nowCalendar.get(Calendar.MINUTE) != 59 && nowCalendar.get(Calendar.MINUTE) != 60) {
+                if (mCalendar.get(Calendar.MINUTE) != 59 && mCalendar.get(Calendar.MINUTE) != 60) {
                     minute = new ArrayList<>();
-                    hours.add(String.valueOf(nowCalendar.get(Calendar.HOUR_OF_DAY)));
-                    for (int j = nowCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
+                    hours.add(String.valueOf(mCalendar.get(Calendar.HOUR_OF_DAY)));
+                    for (int j = mCalendar.get(Calendar.MINUTE) + 1; j < 60; j++) {
                         minute.add(String.valueOf(j));
                     }
                     hourWithMinute.add(minute);
                 }
 
                 //添加往后一小时到23点的时分
-                for (int i = nowCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
+                for (int i = mCalendar.get(Calendar.HOUR_OF_DAY) + 1; i < 24; i++) {
                     hours.add(String.valueOf(i));
                     minute = new ArrayList<>();
                     for (int j = 0; j < 60; j++) {
@@ -322,16 +323,18 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
 
             mDays.add("明天");
             mDays.add("后天");
-            nowCalendar.add(Calendar.DAY_OF_MONTH, 3);
+            mCalendar.add(Calendar.DAY_OF_MONTH, 3);
             for (int i = 0; i < 2; i++) {
                 addhourWithMinutes();
             }
 
             for (int i = 0, size = 7 - mDays.size(); i < size; i++) {
-                mDays.add((nowCalendar.get(Calendar.MONTH) + 1) + "月" + nowCalendar.get(Calendar.DAY_OF_MONTH) + "日");
+                mDays.add((mCalendar.get(Calendar.MONTH) + 1) + "月" + mCalendar.get(Calendar.DAY_OF_MONTH) + "日");
                 addhourWithMinutes();
-                nowCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                mCalendar.add(Calendar.DAY_OF_MONTH, 1);
             }
+
+            mCalendar = TimeManager.getInstance().getCurrentCalendar();
 
             mStartTimeOption = new OptionsPickerView<>(this);
             mStartTimeOption.setPicker(mDays, mHours, mMinutes, true);
@@ -344,7 +347,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                 public void onOptionsSelect(int options1, int option2, int options3) {
                     //返回的分别是三个级别的选中位置
                     String tx = mDays.get(options1) + " " + DateUtil.thanTen(mHours.get(options1).get(option2)) + " 点 " + DateUtil.thanTen(mMinutes.get(options1).get(option2).get(options3)) + " 分";
-                    Calendar calendar = Calendar.getInstance();
+                    Calendar calendar = (Calendar) mCalendar.clone();
                     calendar.add(Calendar.DAY_OF_MONTH, mDays.get(0).equals("今天") ? options1 : options1 + 1);
                     calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(mHours.get(options1).get(option2)));
                     calendar.set(Calendar.MINUTE, Integer.valueOf(mMinutes.get(options1).get(option2).get(options3)));
@@ -352,7 +355,7 @@ public class OrderParkActivity extends BaseActivity implements View.OnClickListe
                     calendar.set(Calendar.MILLISECOND, 0);
                     start_time = DateUtil.getCurrentYearToMinutes(calendar.getTimeInMillis());
 
-                    Calendar nowCalendar = Calendar.getInstance();
+                    Calendar nowCalendar = TimeManager.getInstance().getCurrentCalendar();
                     nowCalendar.set(Calendar.SECOND, 0);
                     nowCalendar.set(Calendar.MILLISECOND, 0);
 

@@ -160,8 +160,7 @@ public class DateUtil {
      * @return 当前的yyyy-MM-dd HH:mm:ss
      */
     public static String getCurrentYearToSecond() {
-        getDate().setTime(System.currentTimeMillis());
-        return getYearToSecondFormat().format(getDate());
+        return TimeManager.getInstance().getCurrentTime();
     }
 
     /**
@@ -176,8 +175,7 @@ public class DateUtil {
      * @return 当前的yyyy-MM-dd HH:mm
      */
     public static String getCurrentYearToMinutes() {
-        getDate().setTime(System.currentTimeMillis());
-        return getYearToMinutesFormat().format(getDate());
+        return TimeManager.getInstance().getCurrentYearToMinute();
     }
 
     /**
@@ -1507,7 +1505,7 @@ public class DateUtil {
      * @return 格式为yyyy-MM-dd对应的Calendar,时分秒和毫秒都会清零,月为对应的月(0-11)
      */
     public static Calendar getYearToDayCalendar() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = TimeManager.getInstance().getCurrentCalendar();
         //calendar.add(Calendar.MONTH, 1);
         initHourToMilli(calendar);
         return calendar;

@@ -176,7 +176,7 @@ public class EditShareTimeActivity extends BaseStatusActivity implements View.On
 
         String[] shareDay = shareTimeInfo.getShareDay().split(",");
         for (int i = 0; i < shareDay.length; i++) {
-            if (shareDay[i].charAt(0) == '1') {
+            if (shareDay[i].equals("1")) {
                 mCheckTextViews[i].setChecked(true);
             }
         }

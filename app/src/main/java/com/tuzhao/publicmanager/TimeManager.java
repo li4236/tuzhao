@@ -95,10 +95,17 @@ public class TimeManager {
      * @return yyyy-MM-dd HH:mm:ss
      */
     public String getCurrentTime() {
-        return DateUtil.getCalenarYearToSecond(getServerTimeCalendar());
+        return DateUtil.getCalenarYearToSecond(getCurrentCalendar());
     }
 
-    public Calendar getServerTimeCalendar() {
+    /**
+     * @return yyyy-MM-dd HH:mm
+     */
+    public String getCurrentYearToMinute() {
+        return DateUtil.getCalenarYearToMinutes(getCurrentCalendar());
+    }
+
+    public Calendar getCurrentCalendar() {
         return DateUtil.getYearToSecondCalendar(getServerTime(), (int) (SystemClock.elapsedRealtime() - elapsedRealTime) / 1000);
     }
 
