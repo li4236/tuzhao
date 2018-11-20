@@ -15,7 +15,8 @@ import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;
 import com.tuzhao.activity.jiguang_notification.OnLockListenerAdapter;
 import com.tuzhao.fragment.base.BaseStatusFragment;
-import com.tuzhao.fragment.parkspace.ParkSpaceEmptyFragment;
+import com.tuzhao.fragment.parkspace.AddParkSpaceFragment;
+import com.tuzhao.fragment.parkspace.SelectParkSpaceFragment;
 import com.tuzhao.fragment.parkspace.ParkSpaceFragment;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
@@ -135,12 +136,12 @@ public class ParkSpaceActivity extends BaseStatusActivity implements IntentObser
                         }
 
                         mLongRentParkSpaceCount.setText("长租车位（" + longRentParkSpace.size() + "）");
-                        longRentParkSpace.add(ParkSpaceEmptyFragment.newInstance(1));
+                        longRentParkSpace.add(new SelectParkSpaceFragment());
                         mLongRentParkSpaceAdapter.setData(longRentParkSpace);
                         adjustPage(mLongRentParkSpaceVp);
 
                         mMyParkSpaceCount.setText("个人车位（" + myParkSpace.size() + "）");
-                        myParkSpace.add(ParkSpaceEmptyFragment.newInstance(0));
+                        myParkSpace.add(new AddParkSpaceFragment());
                         mMyParkSpaceAdapter.setData(myParkSpace);
                         adjustPage(mMyParkSpaceVp);
 

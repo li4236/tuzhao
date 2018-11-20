@@ -50,12 +50,12 @@ public class PlusView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //画横线
-        canvas.drawLine(getPaddingStart() + mPaint.getStrokeWidth()/2, getPaddingTop() + (getHeight() - getPaddingBottom() - getPaddingTop()) / 2 ,
-                getWidth() - getPaddingEnd() - mPaint.getStrokeWidth()/2, getPaddingTop() + (getHeight() - getPaddingBottom() - getPaddingTop()) / 2, mPaint);
+        canvas.drawLine(getPaddingStart() + mPaint.getStrokeWidth()/2, getPaddingTop() + (getMeasuredHeight() - getPaddingBottom() - getPaddingTop()) / 2 ,
+                getMeasuredWidth() - getPaddingEnd() - mPaint.getStrokeWidth()/2, getPaddingTop() + (getMeasuredHeight() - getPaddingBottom() - getPaddingTop()) / 2, mPaint);
         //画竖线
-        canvas.drawLine(getPaddingStart() + (getWidth() - getPaddingStart() - getPaddingEnd()) / 2,
-                getPaddingTop()+mPaint.getStrokeWidth()/2, getPaddingStart() + (getWidth() - getPaddingStart() - getPaddingEnd()) / 2 ,
-                getHeight() - getPaddingBottom() - mPaint.getStrokeWidth()/2, mPaint);
+        canvas.drawLine(getPaddingStart() + (getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2,
+                getPaddingTop()+mPaint.getStrokeWidth()/2, getPaddingStart() + (getMeasuredWidth() - getPaddingStart() - getPaddingEnd()) / 2 ,
+                getMeasuredHeight() - getPaddingBottom() - mPaint.getStrokeWidth()/2, mPaint);
     }
 
     public void setColor(@ColorInt int color) {
