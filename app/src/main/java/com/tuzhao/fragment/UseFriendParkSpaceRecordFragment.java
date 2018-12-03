@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.amap.api.navi.model.NaviLatLng;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.activity.jiguang_notification.MyReceiver;

@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="加载中..."
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:textColor="@color/g6"
         android:textSize="14sp" />
 

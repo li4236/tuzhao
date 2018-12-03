@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.pickerview.OptionsPickerView;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.adapter.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.mine.MyCarActivity;
 import com.tuzhao.activity.mine.ParkSpaceActivity;
 import com.tuzhao.http.HttpConstants;

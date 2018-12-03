@@ -63,6 +63,9 @@ public class Park_Info implements Parcelable {
     // 比如结束时间为2018-11-13 11:00，该车位别的订单预约时间为2018-11-13 11:05 - xxx，则最大可顺延为5分钟。
     private int maxExtensionMinute;
     private String longRentPrice;
+    private String timeAndPrice;    //收费时间和价格（60,5;-1,10代表前60分钟5元/小时，之后10元/小时）
+    private int insufficientMinute; //不足多少分钟按多少分钟算（60代表不足60分钟按60分钟算）
+    private int freeTime;           //免费停车时长(分钟)
 
     public String getPark_space_name() {
         return parkspace_name;
@@ -470,6 +473,30 @@ public class Park_Info implements Parcelable {
         this.userNoteName = userNoteName;
     }
 
+    public String getTimeAndPrice() {
+        return timeAndPrice;
+    }
+
+    public void setTimeAndPrice(String timeAndPrice) {
+        this.timeAndPrice = timeAndPrice;
+    }
+
+    public int getInsufficientMinute() {
+        return insufficientMinute;
+    }
+
+    public void setInsufficientMinute(int insufficientMinute) {
+        this.insufficientMinute = insufficientMinute;
+    }
+
+    public int getFreeTime() {
+        return freeTime;
+    }
+
+    public void setFreeTime(int freeTime) {
+        this.freeTime = freeTime;
+    }
+
     @Override
     public String toString() {
         return "Park_Info{" +
@@ -487,6 +514,7 @@ public class Park_Info implements Parcelable {
                 ", park_img='" + park_img + '\'' +
                 ", parkspace_name='" + parkspace_name + '\'' +
                 ", park_status='" + park_status + '\'' +
+                ", isLongRent=" + isLongRent +
                 ", high_time='" + high_time + '\'' +
                 ", low_time='" + low_time + '\'' +
                 ", high_fee='" + high_fee + '\'' +
@@ -499,9 +527,11 @@ public class Park_Info implements Parcelable {
                 ", installTime='" + installTime + '\'' +
                 ", reason='" + reason + '\'' +
                 ", type='" + type + '\'' +
+                ", userNoteName='" + userNoteName + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", distance=" + distance +
+                ", haveDistination=" + haveDistination +
                 ", carNumber='" + carNumber + '\'' +
                 ", parkInterval='" + parkInterval + '\'' +
                 ", cityCode='" + cityCode + '\'' +
@@ -511,8 +541,11 @@ public class Park_Info implements Parcelable {
                 ", parkLockStatus='" + parkLockStatus + '\'' +
                 ", voltage='" + voltage + '\'' +
                 ", indicator='" + indicator + '\'' +
-                ", isLongRent='" + isLongRent + '\'' +
+                ", maxExtensionMinute=" + maxExtensionMinute +
                 ", longRentPrice='" + longRentPrice + '\'' +
+                ", timeAndPrice='" + timeAndPrice + '\'' +
+                ", insufficientMinute=" + insufficientMinute +
+                ", freeTime=" + freeTime +
                 '}';
     }
 
@@ -584,6 +617,9 @@ public class Park_Info implements Parcelable {
         dest.writeString(this.userNoteName);
         dest.writeInt(this.isLongRent);
         dest.writeString(this.longRentPrice);
+        dest.writeString(this.timeAndPrice);
+        dest.writeInt(this.insufficientMinute);
+        dest.writeInt(this.freeTime);
     }
 
     protected Park_Info(Parcel in) {
@@ -629,6 +665,9 @@ public class Park_Info implements Parcelable {
         this.userNoteName = in.readString();
         this.isLongRent = in.readInt();
         this.longRentPrice = in.readString();
+        this.timeAndPrice = in.readString();
+        this.insufficientMinute = in.readInt();
+        this.freeTime = in.readInt();
     }
 
     public static final Creator<Park_Info> CREATOR = new Creator<Park_Info>() {

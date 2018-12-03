@@ -86,7 +86,7 @@ public class TimeManager {
 
     public String getServerTime() {
         if (serverTime == null) {
-            serverTime = DateUtil.getCurrentYearToSecond();
+            serverTime = DateUtil.getCalenarYearToSecond(DateUtil.getYearToDayCalendar());
         }
         return serverTime;
     }

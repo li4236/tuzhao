@@ -18,7 +18,7 @@ import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;

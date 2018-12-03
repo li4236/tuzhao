@@ -486,12 +486,11 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     requestHomePCLocData(LocationManager.getInstance().getmAmapLocation().getCityCode(),
                             LocationManager.getInstance().getmAmapLocation().getLatitude() + "",
                             LocationManager.getInstance().getmAmapLocation().getLongitude() + "", "当前城市");
-                } else if (mAllMarkerData.size() != 0) {
-                    if (isShowPark && isShowCharge) {
-                        showMarkers(mAllMarkerData);
-                    } else {
-                        showMarkers(mShowMarkerData);
-                    }
+                } else if (noHavePermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, LOCATION_REQUEST_CODE);
+                } else {
+                    isFirstloc = true;
+                    mlocationClient.startLocation();
                 }
                 break;
             case R.id.user_info:

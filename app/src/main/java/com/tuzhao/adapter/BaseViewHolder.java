@@ -1,4 +1,4 @@
-package com.tuzhao.activity.base;
+package com.tuzhao.adapter;
 
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;

@@ -18,9 +18,9 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.adapter.BaseAdapter;
 import com.tuzhao.activity.base.BaseRefreshActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.FilterInfo;
@@ -142,6 +142,9 @@ public class ParkOrChargeActivity extends BaseRefreshActivity<NearPointPCInfo> i
                             @Override
                             public void onLoadFail(Exception e) {
                                 switch (e.getMessage()) {
+                                    case "102":
+                                        showFiveToast("该位置附近没有数据哦");
+                                        break;
                                     case "103":
                                         mSearchAddress.setText("城市未开放哦");
                                         mCommonAdapter.clearAll();
@@ -477,6 +480,7 @@ public class ParkOrChargeActivity extends BaseRefreshActivity<NearPointPCInfo> i
                         , 2, 2 + String.valueOf(nearPointPCInfo.getPrice()).length(), ConstansUtil.Y3_COLOR, spToPx(12))
                 .setText(R.id.location_description, nearPointPCInfo.getAddress())
                 .setText(R.id.park_or_charge_distance, nearPointPCInfo.getDistance())
+                .showPic(R.id.park_or_charge_iv, HttpConstants.ROOT_IMG_URL_PS + nearPointPCInfo.getPicture().split(",")[0], R.mipmap.ic_img)
                 .setStartProgress(R.id.park_or_charge_cb, nearPointPCInfo.getGrade())
                 .showViewOrGone(R.id.free_park_space_tv, nearPointPCInfo.isParkSpace())
                 .showViewOrGone(R.id.free_park_space, nearPointPCInfo.isParkSpace())

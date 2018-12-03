@@ -13,9 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.adapter.BaseAdapter;
 import com.tuzhao.activity.base.BaseStatusActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.FriendInfo;
 import com.tuzhao.info.Park_Info;

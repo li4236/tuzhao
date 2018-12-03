@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
+import com.tuzhao.adapter.BaseAdapter;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.http.HttpConstants;

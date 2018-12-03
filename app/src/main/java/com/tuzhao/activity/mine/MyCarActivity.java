@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Car;

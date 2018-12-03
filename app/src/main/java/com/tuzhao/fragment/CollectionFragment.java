@@ -9,7 +9,7 @@ import android.widget.CompoundButton;
 import com.tuzhao.R;
 import com.tuzhao.activity.ChargestationDetailActivity;
 import com.tuzhao.activity.ParkspaceDetailActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.base.SuccessCallback;
 import com.tuzhao.fragment.base.BaseRefreshFragment;

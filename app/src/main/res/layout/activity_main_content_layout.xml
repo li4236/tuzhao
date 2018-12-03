@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:theme="@style/TransparentTheme"
+    android:theme="@style/SplashTheme"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:activity=".activity.MainActivity">
 

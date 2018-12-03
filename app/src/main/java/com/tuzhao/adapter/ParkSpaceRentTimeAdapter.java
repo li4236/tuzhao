@@ -3,8 +3,6 @@ package com.tuzhao.adapter;
 import android.support.annotation.NonNull;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
-import com.tuzhao.activity.base.BaseViewHolder;
 
 /**
  * Created by juncoder on 2018/3/28.

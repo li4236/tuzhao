@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.activity.mine.ParkOrderAppointmentActivity;
 import com.tuzhao.activity.mine.ParkOrderCancelActivity;

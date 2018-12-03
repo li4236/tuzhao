@@ -9,7 +9,7 @@ import android.support.constraint.ConstraintLayout;
 import android.view.View;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.activity.base.LoadFailCallback;
 import com.tuzhao.fragment.base.BaseRefreshFragment;
 import com.tuzhao.http.HttpConstants;

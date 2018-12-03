@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.tuzhao.R;
 import com.tuzhao.activity.base.BaseRefreshActivity;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.base_info.Base_Class_Info;

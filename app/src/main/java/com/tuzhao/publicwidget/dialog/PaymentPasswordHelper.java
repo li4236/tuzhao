@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tuzhao.R;
-import com.tuzhao.activity.base.BaseAdapter;
-import com.tuzhao.activity.base.BaseViewHolder;
+import com.tuzhao.adapter.BaseAdapter;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.publicwidget.customView.CrossView;
 import com.tuzhao.publicwidget.customView.GridDivider;
 import com.tuzhao.publicwidget.editviewwatch.RoundPasswordTransformationMethod;

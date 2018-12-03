@@ -156,7 +156,7 @@ public class DataUtil {
                 continue;
             }
 
-            if (!parkInfo.canLongRent()) {
+            if (!parkInfo.isLongRent()) {
                 canParkList.remove(parkInfo);
                 Log.e(TAG, "findCanLongParkList: cant long rent");
                 continue;

@@ -2170,6 +2170,63 @@ public class DateUtil {
     }
 
     /**
+     * @param startDate          开始停车时间yyyy-MM-dd HH:mm
+     * @param endDate            结束停车时间yyyy-MM-dd HH:mm
+     * @param freeTime           前xx分钟免费停车
+     * @param insufficientMinute 不足xx分钟按xx分钟算
+     * @param timeAndPrice       停车的时段和价格60,10;-1,5
+     */
+    public static double caculateParkFee(String startDate, String endDate, int freeTime, int insufficientMinute, String timeAndPrice) {
+        Calendar startDateCalendar = getYearToMinuteCalendar(startDate);
+        Calendar endDateCalendar = getYearToMinuteCalendar(endDate);
+        long totalParkMinutes = getCalendarDistance(startDateCalendar, endDateCalendar);
+        if (totalParkMinutes <= freeTime) {
+            //如果是在免费时长内的则价格为0
+            return 0;
+        }
+
+        double result = 0;
+        if (insufficientMinute > 0) {
+            if (totalParkMinutes % insufficientMinute != 0) {
+                //按照不足xx分钟当xx分钟算，计算出实际应该算多少分钟
+                totalParkMinutes = totalParkMinutes % insufficientMinute * insufficientMinute + insufficientMinute;
+            }
+        }
+
+        if (timeAndPrice.startsWith("-1")) {
+            //全部时间都是同一个价格
+            double price = Double.valueOf(timeAndPrice.split(",")[1]);
+            result = totalParkMinutes * price / 60;
+        } else {
+            //60,10;-1,5
+            // 总时长为120分钟
+            String[] timeWithPrice = timeAndPrice.split(";");
+            int lastTime = 0;
+            for (String aTimeWithPrice : timeWithPrice) {
+                int dotIndex = aTimeWithPrice.indexOf(',');
+                int time = Integer.valueOf(aTimeWithPrice.substring(0, dotIndex));
+                double price = Double.valueOf(aTimeWithPrice.substring(dotIndex + 1, aTimeWithPrice.length()));
+                if (time == -1) {
+                    //(120-60)*5/60=5元
+                    result += (totalParkMinutes - lastTime) * price / 60;
+                    break;
+                } else {
+                    if (totalParkMinutes > time) {
+                        //(60-0)*10/60=10元
+                        result += (time - lastTime) * price / 60;
+                    } else {
+                        result += (totalParkMinutes - lastTime) * price / 60;
+                    }
+                }
+                lastTime = time;
+            }
+
+        }
+
+        return result;
+    }
+
+    /**
      * @param startDate 开始停车时间，格式为yyyy-MM-dd HH:mm
      * @param endDate   结束停车时间，格式为yyyy-MM-dd HH:mm
      * @param highDate  高峰停车时间，格式为HH:mm - HH:mm
@@ -3201,6 +3258,19 @@ public class DateUtil {
             }
         }
         return parkDuration;
+    }
+
+    private static class TimeAndPriceHolder {
+
+        private int minute;
+
+        private double price;
+
+        public TimeAndPriceHolder(int minute, double price) {
+            this.minute = minute;
+            this.price = price;
+        }
+
     }
 
 }

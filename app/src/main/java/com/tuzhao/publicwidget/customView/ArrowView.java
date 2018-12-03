@@ -14,7 +14,7 @@ import com.tuzhao.utils.ConstansUtil;
 /**
  * Created by juncoder on 2018/8/9.
  * <p>
- * 箭头
+ * 箭头(<,>)
  * </p>
  */
 public class ArrowView extends View {

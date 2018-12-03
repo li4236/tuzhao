@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.tianzhili.www.myselfsdk.okgo.request.BaseRequest;
 import com.tuzhao.R;
+import com.tuzhao.adapter.BaseAdapter;
+import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.info.base_info.Base_Class_List_Info;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnLoadMoreListener;
 import com.tuzhao.publicwidget.swipetoloadlayout.OnRefreshListener;
