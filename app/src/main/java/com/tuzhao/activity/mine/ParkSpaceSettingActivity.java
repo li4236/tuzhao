@@ -167,6 +167,13 @@ public class ParkSpaceSettingActivity extends BaseStatusActivity {
                 }
             }
         });
+
+        findViewById(R.id.park_lock_fault).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(OrderComplaintActivity.class,ConstansUtil.PARK_SPACE_INFO,mPark_info);
+            }
+        });
     }
 
     @NonNull

@@ -23,6 +23,7 @@ public class HttpConstants {
     public static final String ROOT_IMG_URL_COMPLAINT = ROOT_BASE_IMG_URL + "complaint/";//投诉照
     public static final String ROOT_IMG_URL_VEHICLE = ROOT_BASE_IMG_URL + "vehicle/";//行驶证
     public static final String ROOT_IMG_URL_GROUP_PHOTO = ROOT_BASE_IMG_URL + "groupPhoto/";//合影
+    public static final String ROOT_IMG_URL_LOCK_FAULT = ROOT_BASE_IMG_URL + "lockFault";//车锁故障图
 
     /**
      * 检查更新
@@ -743,5 +744,10 @@ public class HttpConstants {
      * 修改车位的长租状态
      */
     public static final String editLongRentStatus = ROOT_URL + "editLongRentStatus";
+
+    /**
+     * 车锁保障
+     */
+    public static final String reportLockFailure = ROOT_URL + "reportLockFailure";
 
 }

@@ -91,6 +91,9 @@ public class UploadPicture<AD extends BaseAdapter<UploadPhotoInfo>> implements I
             case 4:
                 mBasePictureUrl = HttpConstants.ROOT_IMG_URL_COMPLAINT;
                 break;
+            case 7:
+                mBasePictureUrl = HttpConstants.ROOT_IMG_URL_LOCK_FAULT;
+                break;
             default:
                 mBasePictureUrl = "";
         }

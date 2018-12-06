@@ -124,9 +124,7 @@ public class IntentObserable {
     }
 
     public static void unregisterObserver(IntentObserver observer) {
-        if (mIntentObservers.contains(observer)) {
-            mIntentObservers.remove(observer);
-        }
+        mIntentObservers.remove(observer);
     }
 
 }

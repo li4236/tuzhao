@@ -21,6 +21,7 @@ import com.tuzhao.adapter.BaseViewHolder;
 import com.tuzhao.http.HttpConstants;
 import com.tuzhao.info.Pair;
 import com.tuzhao.info.ParkOrderInfo;
+import com.tuzhao.info.Park_Info;
 import com.tuzhao.info.UploadPhotoInfo;
 import com.tuzhao.info.base_info.Base_Class_Info;
 import com.tuzhao.publicwidget.callback.JsonCallback;
@@ -41,8 +42,13 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/7/27.
+ * <p>
+ * 订单投诉/车锁报障
+ * </p>
  */
 public class OrderComplaintActivity extends BaseStatusActivity implements View.OnClickListener {
+
+    private TextView mComplaintReason;
 
     private ImageView mParkSpaceIv;
 
@@ -54,11 +60,15 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
 
     private TextView mQeustionTextNumber;
 
+    private TextView mComplaintReasonHint;
+
     private TextView mConfirmSubmit;
 
     private ReasonApdater mApdater;
 
     private ParkOrderInfo mParkOrderInfo;
+
+    private Park_Info mParkInfo;
 
     private UploadPicture<UploadAdapter> mUploadPicture;
 
@@ -71,11 +81,16 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        mParkOrderInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_ORDER_INFO);
+        mParkInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO);
+
+        mComplaintReason = findViewById(R.id.complaint_reason_tv);
         mParkSpaceIv = findViewById(R.id.park_space_iv);
         mParkSpaceName = findViewById(R.id.park_space_name);
         mParkDuration = findViewById(R.id.grace_time);
         mQuestionDescription = findViewById(R.id.question_descrption_et);
         mQeustionTextNumber = findViewById(R.id.input_text_number);
+        mComplaintReasonHint = findViewById(R.id.complaint_reason_hint);
         mConfirmSubmit = findViewById(R.id.confirm_submit);
         RecyclerView reasonRecyclerView = findViewById(R.id.complaint_reason_rv);
         RecyclerView recyclerView = findViewById(R.id.complaint_pictrue_rv);
@@ -87,7 +102,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         reasonRecyclerView.setAdapter(mApdater);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mUploadPicture = new UploadPicture<>(this, new UploadAdapter(), 4);
+        mUploadPicture = new UploadPicture<>(this, new UploadAdapter(), mParkOrderInfo == null ? 7 : 4);
         mUploadPicture.setStartPadding(DensityUtil.dp2px(this, 10));
         mUploadPicture.setTopPadding(DensityUtil.dp2px(this, 12));
         recyclerView.setAdapter(mUploadPicture.getAdapter());
@@ -100,37 +115,46 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
-        mParkOrderInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_ORDER_INFO);
-        if (mParkOrderInfo == null) {
-            showFiveToast("获取订单信息失败，请稍后重试");
+        if (mParkOrderInfo == null && mParkInfo == null) {
             finish();
         } else {
-            ImageUtil.showImgPic(mParkSpaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkOrderInfo.getPictures().split(",")[0]);
-            mParkSpaceName.setText(mParkOrderInfo.getParkLotName() + mParkOrderInfo.getParkSpaceLocation());
-            String parkDuration = "时长：" + DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getPark_start_time(),
-                    mParkOrderInfo.getPark_end_time()) + "  日期：" + DateUtil.getYearToDayWithPointText(mParkOrderInfo.getPark_start_time());
-            mParkDuration.setText(parkDuration);
-
-            initComplaintReason();
+            if (mParkOrderInfo != null) {
+                ImageUtil.showImgPic(mParkSpaceIv, HttpConstants.ROOT_IMG_URL_PS + mParkOrderInfo.getPictures().split(",")[0]);
+                mParkSpaceName.setText(mParkOrderInfo.getParkLotName() + mParkOrderInfo.getParkSpaceLocation());
+                String parkDuration = "时长：" + DateUtil.getDistanceForDayHourMinute(mParkOrderInfo.getPark_start_time(),
+                        mParkOrderInfo.getPark_end_time()) + "  日期：" + DateUtil.getYearToDayWithPointText(mParkOrderInfo.getPark_start_time());
+                mParkDuration.setText(parkDuration);
+            } else {
+                mComplaintReason.setText("故障类型：");
+                mComplaintReasonHint.setText("报障提交后可能会有专员与您联系，请保持电话畅通");
+                findViewById(R.id.park_space_cl).setVisibility(View.GONE);
+            }
         }
+        initComplaintReason();
     }
 
     private void initComplaintReason() {
         List<Pair<String, Boolean>> list = new ArrayList<>();
-        switch (mParkOrderInfo.getOrderStatus()) {
-            case "1":
-                list.add(new Pair<>("无法开锁", false));
-                list.add(new Pair<>("车位有车", false));
-                break;
-            case "2":
-                list.add(new Pair<>("无法关锁", false));
-                list.add(new Pair<>("结束停车未停止计费", false));
-                break;
-            case "3":
-            case "4":
-            case "5":
-                list.add(new Pair<>("订单计费有误", false));
-                break;
+        if (mParkOrderInfo != null) {
+            switch (mParkOrderInfo.getOrderStatus()) {
+                case "1":
+                    list.add(new Pair<>("无法开锁", false));
+                    list.add(new Pair<>("车位有车", false));
+                    break;
+                case "2":
+                    list.add(new Pair<>("无法关锁", false));
+                    list.add(new Pair<>("结束停车未停止计费", false));
+                    break;
+                case "3":
+                case "4":
+                case "5":
+                    list.add(new Pair<>("订单计费有误", false));
+                    break;
+            }
+        } else {
+            list.add(new Pair<>("无法开锁", false));
+            list.add(new Pair<>("无法关锁", false));
+            list.add(new Pair<>("车锁损坏", false));
         }
         list.add(new Pair<>("其他", false));
         mApdater.setNewData(list);
@@ -158,7 +182,10 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
     @NonNull
     @Override
     protected String title() {
-        return "订单投诉";
+        if (mParkOrderInfo != null) {
+            return "订单投诉";
+        }
+        return "车锁报障";
     }
 
     @Override
@@ -183,12 +210,24 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         switch (v.getId()) {
             case R.id.confirm_submit:
                 if (mReasonPosition == -1) {
-                    showFiveToast("请选择投诉理由");
+                    if (mParkInfo == null) {
+                        showFiveToast("请选择投诉理由");
+                    } else {
+                        showFiveToast("请选择故障类型");
+                    }
                 } else if (mApdater.get(mReasonPosition).getFirst().equals("其他") && getTextLength(mQuestionDescription) == 0) {
-                    showFiveToast("请对您要投诉的问题进行说明");
+                    if (mParkInfo == null) {
+                        showFiveToast("请对您要投诉的问题进行说明");
+                    } else {
+                        showFiveToast("请对您要报障原因进行说明");
+                    }
                 } else {
                     mConfirmSubmit.setClickable(false);
-                    orderComplaint();
+                    if (mParkInfo == null) {
+                        orderComplaint();
+                    } else {
+                        reportLockFailure();
+                    }
                 }
                 break;
         }
@@ -229,6 +268,45 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
                         }
                     }
                 });
+    }
+
+    private void reportLockFailure() {
+        showFiveToast("正在提交...");
+        getOkGo(HttpConstants.reportLockFailure)
+                .params("cityCode", mParkInfo.getCityCode())
+                .params("parkSpaceId", mParkInfo.getId())
+                .params("parkLotId",mParkInfo.getParkLotId())
+                .params("fault", mApdater.get(mReasonPosition).getFirst())
+                .params("detailDescription", getText(mQuestionDescription))
+                .params("photos", mUploadPicture.getUploadPictures())
+                .execute(new JsonCallback<Base_Class_Info<Void>>() {
+                    @Override
+                    public void onSuccess(Base_Class_Info<Void> o, Call call, Response response) {
+                        showFiveToast("报障成功，我们将尽快为您处理");
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mConfirmSubmit.setClickable(true);
+                        if (!handleException(e)) {
+                            switch (e.getMessage()) {
+                                case "101":
+                                    showFiveToast("请选择故障类型");
+                                    break;
+                                case "102":
+                                case "103":
+                                case "104":
+                                case "105":
+                                case "106":
+                                    showFiveToast(ConstansUtil.SERVER_ERROR);
+                                    break;
+                            }
+                        }
+                    }
+                });
+
     }
 
     class ReasonApdater extends BaseAdapter<com.tuzhao.info.Pair<String, Boolean>> {
