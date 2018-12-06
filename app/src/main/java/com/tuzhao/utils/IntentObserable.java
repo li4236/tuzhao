@@ -38,8 +38,16 @@ public class IntentObserable {
     public static void dispatch(String action, String key, String value) {
         Intent intent = new Intent(action);
         intent.putExtra(key, value);
-        for (IntentObserver observer : mIntentObservers) {
-            observer.onReceive(intent);
+        if (ConstansUtil.DELETE_PARK_SPACE.equals(action)) {
+            //当fragment发出这个通知的时候，Activity收到会把fragment删除，fragment会解除注册IntentObserver，如果还像原来一样通知会导致同步修改异常
+            List<IntentObserver> list = new ArrayList<>(mIntentObservers);
+            for (IntentObserver observer : list) {
+                observer.onReceive(intent);
+            }
+        } else {
+            for (IntentObserver observer : mIntentObservers) {
+                observer.onReceive(intent);
+            }
         }
     }
 
