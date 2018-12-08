@@ -9,6 +9,7 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.squareup.leakcanary.LeakCanary;
 import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tianzhili.www.myselfsdk.okgo.model.HttpParams;
@@ -43,6 +44,9 @@ public class MyApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
         mApplication = this;
         SKIP_WELCOME = false;//跳过启动欢迎见面
 
@@ -94,6 +98,7 @@ public class MyApplication extends MultiDexApplication {
 
 
             autoLogin();//自动登录
+            LeakCanary.install(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

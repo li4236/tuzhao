@@ -13,6 +13,7 @@ import com.tuzhao.R;
 import com.tuzhao.activity.ParkspaceDetailActivity;
 import com.tuzhao.fragment.base.BaseFragment;
 import com.tuzhao.info.NearPointPCInfo;
+import com.tuzhao.publicwidget.mytoast.MyToast;
 import com.tuzhao.utils.ConstansUtil;
 
 
@@ -37,8 +38,6 @@ public class ParkFragment extends BaseFragment {
      * 数据相关
      */
     private NearPointPCInfo nearPointPCInfo = null;
-    private String parkspace_id = null;
-    private String city_code = null;
 //    private boolean parkspace_issuccess = true, park_issuccess = false;
 //    private ArrayList<Park_Info> mData = new ArrayList<>();//已当前时间来比较可以停的车位
 //    private ArrayList<ParkOrderInfo> mOrderList = null;
@@ -68,9 +67,12 @@ public class ParkFragment extends BaseFragment {
     }
 
     private void initData() {
-        parkspace_id = getArguments().getString("belong_id");
-        city_code = getArguments().getString("city_code");
-        nearPointPCInfo = (NearPointPCInfo) getArguments().getSerializable("pssinfo");
+        if (getArguments() != null) {
+            nearPointPCInfo = (NearPointPCInfo) getArguments().getSerializable("pssinfo");
+        } else {
+            MyToast.showToast(getContext(), "获取车场信息失败", 5);
+            return;
+        }
 //        if (parkspace_id != null) {
 //            initLoading("加载中...");
 //            if (city_code == null) {
@@ -91,8 +93,8 @@ public class ParkFragment extends BaseFragment {
 //            requestGetUserParkOrderForAppoint();
 //        }
 
-        ((TextView)mContentView.findViewById(R.id.id_fragment_parkspace_layout_textview_psname)).setText(nearPointPCInfo.getName());
-        ((TextView)mContentView.findViewById(R.id.id_fragment_parkspace_layout_textview_psprice)).setText("均价"+nearPointPCInfo.getPrice()+"元/小时");
+        ((TextView) mContentView.findViewById(R.id.id_fragment_parkspace_layout_textview_psname)).setText(nearPointPCInfo.getName());
+        ((TextView) mContentView.findViewById(R.id.id_fragment_parkspace_layout_textview_psprice)).setText("均价" + nearPointPCInfo.getPrice() + "元/小时");
     }
 
     private void initView() {

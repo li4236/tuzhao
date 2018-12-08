@@ -328,6 +328,7 @@ public class SearchAddressActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationClient.unRegisterLocationListener(locationListener);
     }
 
     private void SearchWord(String keyword) {

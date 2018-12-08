@@ -1,7 +1,6 @@
 package com.tuzhao.activity.mine;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -130,11 +129,6 @@ public class CollectionActivity extends BaseActivity implements SuccessCallback<
         textview_edit.setText("编辑");
         textview_delete.setVisibility(View.GONE);
         mIsEdit = false;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

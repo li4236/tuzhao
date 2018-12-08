@@ -287,7 +287,7 @@ public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOr
             });
         }*/
         if (TimeManager.getInstance().getCurrentCalendar().compareTo(
-                DateUtil.getYearToSecondCalendar(mOpenLockOrder.getOrderStartTime(), "-1800")) < 0) {
+                DateUtil.getYearToSecondCalendar(parkOrderInfo.getOrderStartTime(), "-1800")) < 0) {
             showFiveToast("入场时间前30分钟才可以开锁哦");
         } else {
             showDialog("提示", "确定开锁吗？", new DialogInterface.OnClickListener() {

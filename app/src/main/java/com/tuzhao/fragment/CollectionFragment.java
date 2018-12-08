@@ -201,12 +201,12 @@ public class CollectionFragment extends BaseRefreshFragment<CollectionInfo> impl
     private void startActivity(CollectionInfo collectionInfo) {
         switch (collectionInfo.getType()) {
             case "1":
-                startActivityForResultByFragment(ParkspaceDetailActivity.class, ConstansUtil.REQUSET_CODE, "parkspace_id", collectionInfo.getParkspace_id(),
-                        "city_code", collectionInfo.getCitycode());
+                startActivityForResultByFragment(ParkspaceDetailActivity.class, ConstansUtil.REQUSET_CODE, ConstansUtil.PARK_LOT_ID, collectionInfo.getParkspace_id(),
+                        ConstansUtil.CITY_CODE, collectionInfo.getCitycode());
                 break;
             case "2":
-                startActivityForResultByFragment(ChargestationDetailActivity.class, ConstansUtil.REQUEST_CODE_TWO, "chargestation_id", collectionInfo.getChargestation_id(),
-                        "city_code", collectionInfo.getCitycode());
+                startActivityForResultByFragment(ChargestationDetailActivity.class, ConstansUtil.REQUEST_CODE_TWO, ConstansUtil.CHARGE_ID, collectionInfo.getChargestation_id(),
+                        ConstansUtil.CITY_CODE, collectionInfo.getCitycode());
                 break;
         }
     }

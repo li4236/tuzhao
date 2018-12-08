@@ -1455,6 +1455,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "onActivityResult  requestCode:" + requestCode + "  result:" + resultCode);
         switch (resultCode) {
             case 1:
                 //收藏的标记点返回页面
@@ -1520,16 +1521,22 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                     }
                 }
                 break;
-            case 2:
+        }
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == OPEN_GPS) {
+                isFirstloc = true;
+                mlocationClient.startLocation();
+            } else if (requestCode == 2) {
                 //搜索地址的返回页面
                 if (data == null)
                     return;
 
-                if (data.hasExtra("lat")) {
+                if (data.hasExtra(ConstansUtil.LATITUDE)) {
                     if (show) {
                         controlAnimfragment(mFragment_content);
                     }
-                    LatLng latLng = new LatLng(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
+                    LatLng latLng = new LatLng(data.getDoubleExtra(ConstansUtil.LATITUDE, 0), data.getDoubleExtra(ConstansUtil.LONGITUDE, 0));
                     search_address = data.getStringExtra("keyword");
                     MarkerOptions options = new MarkerOptions();
                     View view_ChargeStation = getLayoutInflater().inflate(R.layout.view_icon_chargestation_location, null);
@@ -1544,7 +1551,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
 
                     aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, morenZoom));
 
-                    String citycode = data.getStringExtra("citycode");
+                    String citycode = data.getStringExtra(ConstansUtil.CITY_CODE);
                     isLcData = false;
                     requestHomePCLocData(citycode, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude), "当前城市");
                 } else {
@@ -1590,12 +1597,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                         }
                     }
                 }
-                break;
-        }
-
-        if (requestCode == OPEN_GPS && resultCode == RESULT_OK) {
-            isFirstloc = true;
-            mlocationClient.startLocation();
+            }
         }
     }
 
@@ -1732,7 +1734,8 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
