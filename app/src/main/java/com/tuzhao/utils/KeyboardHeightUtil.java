@@ -22,19 +22,19 @@ import com.tuzhao.info.Pair;
  */
 public class KeyboardHeightUtil extends PopupWindow {
     /**
-     * The root activity that uses this KeyboardHeightProvider
+     * The root mActivity that uses this KeyboardHeightProvider
      */
-    private Activity activity;
+    private Activity mActivity;
 
     /**
      * The parent view
      */
-    private View parentView;
+    private View mParentView;
 
     /**
      * The view that is used to calculate the keyboard height
      */
-    private View popupView;
+    private View mPopupView;
 
     /**
      * The keyboard height mCallback
@@ -52,19 +52,19 @@ public class KeyboardHeightUtil extends PopupWindow {
     /**
      * Construct a new KeyboardHeightUtil
      *
-     * @param activity The parent activity
+     * @param activity The parent mActivity
      */
     public KeyboardHeightUtil(Activity activity) {
         super(activity);
-        this.activity = activity;
+        this.mActivity = activity;
 
-        this.popupView = activity.getLayoutInflater().inflate(R.layout.layout_placeholder, null, false);
-        setContentView(popupView);
+        this.mPopupView = activity.getLayoutInflater().inflate(R.layout.layout_placeholder, null, false);
+        setContentView(mPopupView);
 
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
 
-        parentView = activity.findViewById(android.R.id.content);
+        mParentView = activity.findViewById(android.R.id.content);
 
         setWidth(0);
         setHeight(WindowManager.LayoutParams.MATCH_PARENT);
@@ -76,12 +76,12 @@ public class KeyboardHeightUtil extends PopupWindow {
         mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (popupView != null) {
+                if (mPopupView != null) {
                     handleOnGlobalLayout();
                 }
             }
         };
-        popupView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+        mPopupView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
     }
 
     /**
@@ -90,9 +90,9 @@ public class KeyboardHeightUtil extends PopupWindow {
      * of the Activity.
      */
     public void start() {
-        if (!isShowing() && parentView.getWindowToken() != null) {
+        if (!isShowing() && mParentView.getWindowToken() != null) {
             setBackgroundDrawable(new ColorDrawable(0));
-            showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0);
+            showAtLocation(mParentView, Gravity.NO_GRAVITY, 0, 0);
         }
     }
 
@@ -100,9 +100,10 @@ public class KeyboardHeightUtil extends PopupWindow {
      * Close the keyboard height provider,
      * this provider will not be used anymore.
      */
-    public void close() {
+    public void onDestroy() {
         this.mCallback = null;
-        popupView.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+        mActivity = null;
+        mPopupView.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
         dismiss();
     }
 
@@ -120,11 +121,11 @@ public class KeyboardHeightUtil extends PopupWindow {
     /**
      * Popup window itself is as big as the window of the Activity.
      * The keyboard can then be calculated by extracting the popup view bottom
-     * from the activity window height.
+     * from the mActivity window height.
      */
     private void handleOnGlobalLayout() {
-        activity.getWindowManager().getDefaultDisplay().getSize(mPoint);
-        popupView.getWindowVisibleDisplayFrame(mRect);
+        mActivity.getWindowManager().getDefaultDisplay().getSize(mPoint);
+        mPopupView.getWindowVisibleDisplayFrame(mRect);
 
         // REMIND, you may like to change this using the fullscreen size of the phone
         // and also using the status bar and navigation bar heights of the phone to calculate

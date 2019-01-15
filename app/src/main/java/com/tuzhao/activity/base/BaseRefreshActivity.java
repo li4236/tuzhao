@@ -27,7 +27,7 @@ import javax.net.ssl.SSLException;
 /**
  * Created by juncoder on 2018/3/27.
  * <p>
- * 适用于只有一种布局的adpter
+ * 使用了SuperRefreshRecyclerView的基类，简化了下拉上拉以及对数据的处理
  * </p>
  */
 
@@ -110,7 +110,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
     }
 
     /**
-     * 获取包括startItem和pageSize的Okgo
+     * 获取包括startItem和pageSize的BaseRequest
      */
     protected BaseRequest getOkgos(String url) {
         return getOkGo(url)
@@ -119,7 +119,7 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
     }
 
     /**
-     * 获取包括startItem和pageSize的Okgo
+     * 获取包括startItem和pageSize的BaseRequest
      *
      * @param params 如果还需要其他参数则按键值对输入
      */
@@ -303,9 +303,10 @@ public abstract class BaseRefreshActivity<T> extends BaseStatusActivity {
     protected abstract void bindData(BaseViewHolder holder, T t, int position);
 
     /**
-     * adapter局部刷新使用，使用的时候需要判断payloads，否则如果是第一次创建视图的时候会两个bindData方法都会调用
+     * adapter局部刷新使用
      */
     protected void bindData(BaseViewHolder holder, T t, int position, List<Object> payloads) {
+
     }
 
     protected class CommonAdapter extends BaseAdapter<T> {

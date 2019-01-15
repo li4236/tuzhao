@@ -215,7 +215,7 @@ public class SearchAddressActivity extends BaseActivity {
 
         if (whatPage.equals("1") || whatPage.equals("2")) {
             String keyword = getIntent().getStringExtra("keyword");
-            if (!keyword.equals("")) {
+            if (keyword!=null&&!keyword.equals("")) {
                 etextview_input.setText(keyword);
                 etextview_input.setSelection(keyword.length());//光标移动到最后
                 if (progressbar.getVisibility() == View.GONE) {

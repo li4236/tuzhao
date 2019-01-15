@@ -275,7 +275,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
         getOkGo(HttpConstants.reportLockFailure)
                 .params("cityCode", mParkInfo.getCityCode())
                 .params("parkSpaceId", mParkInfo.getId())
-                .params("parkLotId",mParkInfo.getParkLotId())
+                .params("parkLotId", mParkInfo.getParkLotId())
                 .params("fault", mApdater.get(mReasonPosition).getFirst())
                 .params("detailDescription", getText(mQuestionDescription))
                 .params("photos", mUploadPicture.getUploadPictures())
@@ -313,6 +313,7 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, com.tuzhao.info.Pair<String, Boolean> stringBooleanPair, final int position) {
+            //如果position位置的Viewholder已经被回收了，则会调用该conver方法来更新数据,而不会调用带payload方法的conver来更新
             CheckTextView checkedTextView = holder.getView(R.id.reason);
             checkedTextView.setText(stringBooleanPair.getFirst());
             checkedTextView.setNoCheckDrawble(R.drawable.stroke_g6_width_1dp_corner_3dp);
@@ -334,7 +335,6 @@ public class OrderComplaintActivity extends BaseStatusActivity implements View.O
                                 mReasonPosition = position;
                                 get(position).setSecond(true);
                                 notifyDataChange(position, position);
-                                // TODO: 2018/10/13 如果position位置的Viewholder已经被回收了，则会调用onBindViewHolder方法来更新数据,而不会调用带payload方法的onBindViewHolder来更新
                             } else if (mReasonPosition != position) {
                                 get(mReasonPosition).setSecond(false);
                                 notifyDataChange(mReasonPosition, position);

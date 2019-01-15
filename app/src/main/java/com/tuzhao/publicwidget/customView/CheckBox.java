@@ -16,8 +16,6 @@ import com.tuzhao.R;
 
 public class CheckBox extends AppCompatTextView implements Checkable {
 
-    private static final String TAG = "CheckBox";
-
     private boolean mIsCheck;
 
     private Drawable mCheckDrawable;
@@ -51,7 +49,6 @@ public class CheckBox extends AppCompatTextView implements Checkable {
         } else if (event.getAction() == MotionEvent.ACTION_UP && inViewArea(event.getX(), event.getY())) {
             if (mOnCheckHandeListener == null || mOnCheckHandeListener.onCheckChange(!mIsCheck)) {
                 setChecked(!mIsCheck);
-                setDrawableStart();
 
                 if (mOnCheckChangeListener != null) {
                     mOnCheckChangeListener.onCheckChange(mIsCheck);
@@ -99,32 +96,16 @@ public class CheckBox extends AppCompatTextView implements Checkable {
         }
     }
 
-    public Drawable getCheckDrawable() {
-        return mCheckDrawable;
-    }
-
     public void setCheckDrawable(Drawable checkDrawable) {
         mCheckDrawable = checkDrawable;
-    }
-
-    public Drawable getNoCheckDrawble() {
-        return mNoCheckDrawble;
     }
 
     public void setNoCheckDrawble(Drawable noCheckDrawble) {
         mNoCheckDrawble = noCheckDrawble;
     }
 
-    public OnCheckChangeListener getOnCheckChangeListener() {
-        return mOnCheckChangeListener;
-    }
-
     public void setOnCheckChangeListener(OnCheckChangeListener onCheckChangeListener) {
         mOnCheckChangeListener = onCheckChangeListener;
-    }
-
-    public OnCheckHandeListener getOnCheckHandeListener() {
-        return mOnCheckHandeListener;
     }
 
     public void setOnCheckHandeListener(OnCheckHandeListener onCheckHandeListener) {
@@ -139,6 +120,10 @@ public class CheckBox extends AppCompatTextView implements Checkable {
 
     public interface OnCheckHandeListener {
 
+        /**
+         * @param isChecked 当前是否选中
+         * @return true（改变checkbox的状态）
+         */
         boolean onCheckChange(boolean isChecked);
 
     }

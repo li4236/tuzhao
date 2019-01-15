@@ -39,6 +39,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/7/20.
+ * <p>
+ * 短信验证
+ * </p>
  */
 public class SMSVerificationActivity extends BaseStatusActivity {
 
@@ -124,7 +127,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
      * 注册复制的监听事件
      */
     private void registerClipEvents() {
-        mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        mClipboardManager = (ClipboardManager) getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
         if (mClipboardManager != null) {
             mClipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override
@@ -203,6 +206,7 @@ public class SMSVerificationActivity extends BaseStatusActivity {
         }
         if (mClipboardManager != null) {
             mClipboardManager.removePrimaryClipChangedListener(mClipChangedListener);
+            mClipboardManager = null;
         }
     }
 

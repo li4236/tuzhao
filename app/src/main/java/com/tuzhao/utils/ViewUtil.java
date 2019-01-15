@@ -26,8 +26,6 @@ import com.tuzhao.publicwidget.mytoast.MyToast;
  */
 public class ViewUtil {
 
-    private static final String TAG = "ViewUtil";
-
     public static void showProgressStatus(TextView textView, boolean showProgress) {
         if (showProgress) {
             if (!isVisible(textView)) {
@@ -120,11 +118,17 @@ public class ViewUtil {
                 .show();
     }
 
+    /**
+     * 联系客服
+     */
     public static void contactService(Context context) {
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:4006505058"));
         context.startActivity(intent);
     }
 
+    /**
+     * 复制内容到剪切板
+     */
     public static void clipContent(Context context, String content) {
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboardManager != null) {

@@ -516,7 +516,10 @@ public class ParkLotCommentFragment extends BaseFragment {
 
         @Override
         protected void conver(@NonNull BaseViewHolder holder, ParkspaceCommentInfo parkspaceCommentInfo, int position) {
-            holder.showCircleUserPic(R.id.id_item_parkspacemoment_layout_imageview_user, parkspaceCommentInfo.getUser_img_url())
+
+
+            holder.showCircleUserPic(R.id.id_item_parkspacemoment_layout_imageview_user,
+                    parkspaceCommentInfo.getUser_img_url())
                     .setText(R.id.id_item_parkspacemoment_layout_textview_user, parkspaceCommentInfo.getNickname().equals("-1") ?
                             parkspaceCommentInfo.getUsername().substring(0, 3) + "*****" +
                                     parkspaceCommentInfo.getUsername().substring(8, parkspaceCommentInfo.getUsername().length()) :

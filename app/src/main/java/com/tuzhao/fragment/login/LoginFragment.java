@@ -47,6 +47,8 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
 
     private TextView mNextStep;
 
+    private IWXAPI mIWXAPI;
+
     @Override
     protected int resourceId() {
         return R.layout.fragment_login_layout;
@@ -125,6 +127,10 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mIWXAPI != null) {
+            mIWXAPI.detach();
+            mIWXAPI = null;
+        }
         IntentObserable.unregisterObserver(this);
     }
 
@@ -162,15 +168,14 @@ public class LoginFragment extends BaseStatusFragment implements View.OnClickLis
                 });
     }
 
-
     private void performWechatLogin() {
-        IWXAPI iwxapi = WXAPIFactory.createWXAPI(getContext(), null);
-        if (iwxapi.isWXAppInstalled()) {
+        mIWXAPI = WXAPIFactory.createWXAPI(getContext(), null);
+        if (mIWXAPI.isWXAppInstalled()) {
             SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
             req.state = "tuzhao_login";
-            iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
-            iwxapi.sendReq(req);
+            mIWXAPI.registerApp(ConstansUtil.WECHAT_APP_ID);
+            mIWXAPI.sendReq(req);
         } else {
             Uri uri = Uri.parse("market://details?id=com.tencent.mm");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

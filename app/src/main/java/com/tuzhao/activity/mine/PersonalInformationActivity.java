@@ -42,6 +42,9 @@ import static com.tuzhao.publicwidget.alipay.OrderInfoUtil2_0.SDK_AUTH_FLAG;
 
 /**
  * Created by juncoder on 2018/7/14.
+ * <p>
+ * 个人信息
+ * </p>
  */
 public class PersonalInformationActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 
@@ -78,6 +81,8 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
     private Handler mHandler;
 
     private Thread mThread;
+
+    private IWXAPI mIWXAPI;
 
     @Override
     protected int resourceId() {
@@ -262,6 +267,10 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        if (mIWXAPI != null) {
+            mIWXAPI.detach();
+            mIWXAPI = null;
+        }
         IntentObserable.unregisterObserver(this);
     }
 
@@ -394,9 +403,9 @@ public class PersonalInformationActivity extends BaseStatusActivity implements V
         req.scope = "snsapi_userinfo";
         req.state = "tuzhao_login";
 
-        IWXAPI iwxapi = WXAPIFactory.createWXAPI(this, null);
-        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
-        iwxapi.sendReq(req);
+        mIWXAPI = WXAPIFactory.createWXAPI(this, null);
+        mIWXAPI.registerApp(ConstansUtil.WECHAT_APP_ID);
+        mIWXAPI.sendReq(req);
     }
 
     private void requestWechatBinding(String code) {

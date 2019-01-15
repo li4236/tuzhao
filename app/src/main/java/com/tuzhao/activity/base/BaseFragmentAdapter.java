@@ -12,6 +12,9 @@ import java.util.List;
 
 /**
  * Created by juncoder on 2018/8/31.
+ * <p>
+ * ViewPager中的Fragment需要删除时使用这个Adapter
+ * </p>
  */
 public class BaseFragmentAdapter<T extends BaseStatusFragment> extends FragmentPagerAdapter {
 

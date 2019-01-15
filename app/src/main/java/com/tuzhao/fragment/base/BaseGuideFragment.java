@@ -2,7 +2,6 @@ package com.tuzhao.fragment.base;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -12,7 +11,7 @@ import com.tuzhao.utils.DensityUtil;
  * Created by juncoder on 2018/4/28.
  */
 
-public abstract class BaseGuideFragment extends Fragment {
+public abstract class BaseGuideFragment extends BaseFragment {
 
     protected final String TAG = this.getClass().getName();
 

@@ -38,6 +38,9 @@ import okhttp3.Response;
 
 /**
  * Created by juncoder on 2018/8/10.
+ * <p>
+ * 提现
+ * </p>
  */
 public class WithdrawActivity extends BaseStatusActivity implements View.OnClickListener, IntentObserver {
 

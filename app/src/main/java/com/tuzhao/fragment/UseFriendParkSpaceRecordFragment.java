@@ -43,10 +43,6 @@ import okhttp3.Response;
  */
 public class UseFriendParkSpaceRecordFragment extends BaseRefreshFragment<ParkOrderInfo> implements IntentObserver {
 
-    private static final int TIME_IN_MILLISS = 0x123;
-
-    private static final int GET_TIME_FAILE = 0x456;
-
     private String mStatus;
 
     //private boolean mIsOpening;

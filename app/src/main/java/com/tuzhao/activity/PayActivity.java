@@ -31,6 +31,7 @@ import com.tuzhao.publicwidget.alipay.PayResult;
 import com.tuzhao.publicwidget.callback.JsonCallback;
 import com.tuzhao.publicwidget.dialog.TipeDialog;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.DateUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
@@ -66,6 +67,8 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     private Handler mHandler;
 
     private Thread mPayThread;
+
+    private IWXAPI mIWXAPI;
 
     /**
      * 0(停车订单)  1(车锁押金) 2(购买月卡) 3(长租停车订单)
@@ -214,13 +217,19 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        IntentObserable.unregisterObserver(this);
         if (mPayThread != null) {
             mPayThread.interrupt();
         }
         if (mCountdownHandler != null) {
             mCountdownHandler.removeCallbacksAndMessages(null);
         }
-        IntentObserable.unregisterObserver(this);
+        if (mIWXAPI != null) {
+            //解决内存泄漏问题
+            mIWXAPI.detach();
+            mIWXAPI = null;
+            DataUtil.cleanWXLeak();
+        }
     }
 
     private void setAlipayCheck(boolean isCheck) {
@@ -342,9 +351,6 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
                 });
     }
 
-    /**
-     * @param params 如果还需要其他参数则按键值对输入
-     */
     protected BaseRequest getOkgos(String url, String... params) {
         BaseRequest baseRequest = getOkGo(url);
         for (int i = 0; i < params.length; i += 2) {
@@ -377,8 +383,8 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
     }
 
     private void startWechatPay(WechatPayParam wechatPayParam) {
-        IWXAPI iwxapi = WXAPIFactory.createWXAPI(PayActivity.this, null);
-        iwxapi.registerApp(ConstansUtil.WECHAT_APP_ID);
+        mIWXAPI = WXAPIFactory.createWXAPI(PayActivity.this, null);
+        mIWXAPI.registerApp(ConstansUtil.WECHAT_APP_ID);
 
         PayReq payReq = new PayReq();
         payReq.appId = ConstansUtil.WECHAT_APP_ID;
@@ -388,7 +394,7 @@ public class PayActivity extends BaseStatusActivity implements View.OnClickListe
         payReq.nonceStr = wechatPayParam.getNonceStr();
         payReq.timeStamp = wechatPayParam.getTimeStamp();
         payReq.sign = wechatPayParam.getSign();
-        iwxapi.sendReq(payReq);
+        mIWXAPI.sendReq(payReq);
 
         if (!payReq.checkArgs()) {
             showFiveToast("微信支付暂不可用，请使用支付宝支付");

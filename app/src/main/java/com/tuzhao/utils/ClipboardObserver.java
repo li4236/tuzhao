@@ -29,7 +29,8 @@ public class ClipboardObserver {
     }
 
     public void registerClipEvents() {
-        mClipboardManager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
+        //如果不用ApplicationContext会导致内存泄露
+        mClipboardManager = (ClipboardManager) mContext.getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
         if (mClipboardManager != null) {
             mClipChangedListener = new ClipboardManager.OnPrimaryClipChangedListener() {
                 @Override

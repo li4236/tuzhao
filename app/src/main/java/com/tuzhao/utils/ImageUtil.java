@@ -45,8 +45,6 @@ import java.io.File;
 
 public class ImageUtil {
 
-    private static final String TAG = "ImageUtil";
-
     private static LruCache<SuccessCallback<MyFile>, Long> sLruCache = new LruCache<>(6);
 
     private static LruCache<SuccessCallback<MyFile>, String> sPathLruCache = new LruCache<>(6);

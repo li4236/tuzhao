@@ -180,10 +180,6 @@ public class PaymentPasswordHelper {
         return mBackPressedCanCancel;
     }
 
-    public void setBackPressedCanCancel(boolean backPressedCanCancel) {
-        mBackPressedCanCancel = backPressedCanCancel;
-    }
-
     public void setPasswordFirst() {
         if (mPaymentPasswordType == 1) {
             mTitle.setText("设置支付密码");
@@ -235,10 +231,6 @@ public class PaymentPasswordHelper {
         if (mPaymentPasswordType != 0) {
             ViewUtil.setGone(mPasswordError);
         }
-    }
-
-    public String getOriginPassword() {
-        return mOriginPassword;
     }
 
     public String getConfirmPassword() {

@@ -34,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by juncoder on 2018/3/27.
  * <p>
- * 封装了加载对话框以及登录对话框，简单跳转页面
+ * 封装了标题栏，加载对话框以及toast，简单跳转页面等等。。。
  */
 
 public abstract class BaseStatusActivity extends BaseActivity {
@@ -232,7 +232,7 @@ public abstract class BaseStatusActivity extends BaseActivity {
     }
 
     /**
-     * 判断当前用户是否登录，如果登录了则会调用回调方法，没登录则弹出登录对话框
+     * 判断当前用户是否登录，如果登录了则会调用回调方法，没登录则跳转到登录界面
      */
     protected void judgeLogin(OnLoginListener listener) {
         if (com.tuzhao.publicmanager.UserManager.getInstance().hasLogined()) {

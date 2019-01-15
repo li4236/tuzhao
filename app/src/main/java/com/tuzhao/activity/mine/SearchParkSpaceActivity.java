@@ -152,7 +152,7 @@ public class SearchParkSpaceActivity extends BaseActivity {
         textview_goapply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //跳转到申请停车场的页面
+                // TODO: 2018/12/11  跳转到申请停车场的页面
                 Intent intent = new Intent(SearchParkSpaceActivity.this, AddParkSpaceActivity.class);
                 intent.putExtra("citycode", citycode);
                 startActivity(intent);

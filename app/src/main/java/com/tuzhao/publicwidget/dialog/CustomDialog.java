@@ -22,8 +22,6 @@ import java.util.Objects;
 
 public class CustomDialog extends Dialog {
 
-    private static final String TAG = "CustomDialog";
-
     private boolean mIsShowAnimation;
 
     private PaymentPasswordHelper mPasswordHelper;

@@ -6,12 +6,14 @@ import com.amap.api.maps.model.LatLng;
 import com.tuzhao.info.Park_Info;
 import com.tuzhao.publicmanager.UserManager;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +45,7 @@ public class DataUtil {
             Log.e("TAG", "scanPark parkInfo:" + parkInfo);
             if (!parkInfo.getPark_status().equals("2")) {
                 canParkList.remove(parkInfo);
+                Log.e(TAG, "findCanParkList: parkspace not open");
                 continue;
             }
 
@@ -224,6 +227,28 @@ public class DataUtil {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(password);
         return m.matches();
+    }
+
+    /**
+     * 清除微信memory leak
+     */
+    public static void cleanWXLeak() {
+        try {
+            Class clazz = com.tencent.a.a.a.a.g.class;
+            Field field = clazz.getDeclaredField("V");
+            field.setAccessible(true);
+            Object obj = field.get(clazz);
+            if (obj != null) {
+                com.tencent.a.a.a.a.g g = (com.tencent.a.a.a.a.g) obj;
+                Field mapField = clazz.getDeclaredField("U");
+                mapField.setAccessible(true);
+                Map map = (Map) mapField.get(g);
+                map.clear();
+            }
+            field.set(clazz, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void initLicensePlateAttribution(ArrayList<String> city, ArrayList<ArrayList<String>> letter) {

@@ -80,7 +80,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parkspace_select);
-        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0),0);
+        XStatusBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.w0), 0);
         initLocation();//初始化定位
         initView();
         initData();
@@ -349,7 +349,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
                 break;
             case 101:
                 Intent intent = new Intent();
-                ParkLotInfo parkSpaceInfo = (ParkLotInfo) data.getSerializableExtra("park");
+                ParkLotInfo parkSpaceInfo = data.getParcelableExtra("park");
                 ParkBean parkBean = new ParkBean();
                 parkBean.setParkStation(parkSpaceInfo.getParkLotName());
                 parkBean.setProfit_ratio(parkSpaceInfo.getProfit_ratio());
@@ -368,5 +368,7 @@ public class SelectParkSpaceActivity extends BaseActivity implements View.OnClic
         if (mLoadingDialog != null) {
             mLoadingDialog.cancel();
         }
+        locationClient.unRegisterLocationListener(locationListener);
+        locationClient.onDestroy();
     }
 }

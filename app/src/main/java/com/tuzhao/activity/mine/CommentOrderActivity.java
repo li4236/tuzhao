@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -171,8 +172,9 @@ public class CommentOrderActivity extends BaseStatusActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_PICTURE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == PhotoPickConfig.PICK_MORE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             final List<String> imageBeans = data.getStringArrayListExtra(PhotoPickConfig.EXTRA_STRING_ARRAYLIST);
+            Log.e(TAG, "onActivityResult: "+imageBeans);
             mCommentPicFiles.clear();
             for (String imageBean : imageBeans) {
                 //进行图片逐个压缩

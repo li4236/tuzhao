@@ -52,22 +52,6 @@
         <attr name="civ_circle_background_color" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="Voltage">
-        <attr name="border_width" format="dimension" />
-        <attr name="voltage" format="integer" />
-        <attr name="border_radius" format="dimension" />
-        <attr name="border_color" format="color" />
-        <attr name="low_voltage_color" format="color" />
-        <attr name="middle_voltage_color" format="color" />
-        <attr name="heigh_voltage_color" format="color" />
-    </declare-styleable>
-
-    <declare-styleable name="NavigationView">
-        <attr name="background_color" format="color" />
-        <attr name="inner_color" format="color" />
-        <attr name="inner_radius" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="CircleView">
         <attr name="color" format="color" />
     </declare-styleable>

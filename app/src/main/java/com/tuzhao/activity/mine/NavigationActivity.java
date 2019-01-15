@@ -328,6 +328,8 @@ public class NavigationActivity extends BaseStatusActivity implements View.OnCli
 
     /**
      * 打开第三方地图进行导航
+     *
+     * @param packageName 第三方地图的包名，如果手机没安装则会跳到下载界面
      */
     private void openMap(String packageName) {
         if (DeviceUtils.isAppInstalled(this, packageName)) {

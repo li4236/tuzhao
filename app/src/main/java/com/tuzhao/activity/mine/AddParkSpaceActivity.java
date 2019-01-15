@@ -929,19 +929,6 @@ public class AddParkSpaceActivity extends BaseStatusActivity implements View.OnC
             });
         }
 
-        // TODO: 2018/9/11 显示上传进度的时候可以调该方法来局部刷新
-       /* @Override
-        public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-            if (payloads.isEmpty()) {
-                onBindViewHolder(holder, position);
-            } else {
-                showProgressStatus((TextView) holder.getView(R.id.property_upload_tv), get(position).isShowProgress());
-                holder.setText(R.id.property_upload_tv, get(position).getCourier());
-                Log.e(TAG, "onBindViewHolder: " + position + "  path:" + get(position).getPath());
-                ImageUtil.showPicWithNoAnimate((ImageView) holder.getView(R.id.property_photo_iv), get(position).getPath());
-            }
-        }*/
-
         @Override
         protected int itemViewId() {
             return R.layout.item_property_photo_layout;

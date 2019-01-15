@@ -14,15 +14,15 @@ public class DictationJsonParseUtil {
 
     // 解析服务器返回的语音听写结果Json格式数据的静态方法，返回值为语音的字符串
     public static String parseJsonData(String jsonDataStr) {
-        String speechStr = "";
+        StringBuilder speechStr = new StringBuilder();
         List<DictationResult> resultList = GsonUtil.parseJsonArrayWithGson(
                 jsonDataStr, DictationResult.class);
 
         for (int i = 0; i < resultList.size() - 1; i++) { // 这里减1是因为最后有一组作为结尾的标点符号数据，要舍去
-            speechStr += resultList.get(i).toString();
+            speechStr.append(resultList.get(i).toString());
         }
 
-        return speechStr;
+        return speechStr.toString();
     }
 }
 

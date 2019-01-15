@@ -19,6 +19,7 @@ import com.tuzhao.info.User_Info;
 import com.tuzhao.publicmanager.UserManager;
 import com.tuzhao.publicwidget.db.DatabaseImp;
 import com.tuzhao.utils.ConstansUtil;
+import com.tuzhao.utils.DataUtil;
 import com.tuzhao.utils.IntentObserable;
 import com.tuzhao.utils.IntentObserver;
 import com.tuzhao.utils.KeyboardHeightUtil;
@@ -103,7 +104,8 @@ public class LoginActivity extends BaseStatusActivity implements IntentObserver,
     protected void onDestroy() {
         super.onDestroy();
         IntentObserable.unregisterObserver(this);
-        mKeyboardHeightUtil.close();
+        mKeyboardHeightUtil.onDestroy();
+        DataUtil.cleanWXLeak();
         if (!mLoginSuccess) {
             startActivity(MainActivity.class, ConstansUtil.LOGIN_SUCCESS, false);
         }

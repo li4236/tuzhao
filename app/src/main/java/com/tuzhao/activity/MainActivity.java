@@ -610,7 +610,7 @@ public class MainActivity extends BaseActivity implements LocationSource, AMapLo
                 break;
             case R.id.id_content_main_layout_textview_parknow:
                 intent = new Intent(MainActivity.this, ParkOrChargeActivity.class);
-                intent.putExtra(ConstansUtil.CITY_CODE, isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "010") : moveCityCode);
+                intent.putExtra(ConstansUtil.CITY_CODE, isLcData ? (LocationManager.getInstance().hasLocation() ? LocationManager.getInstance().getmAmapLocation().getCityCode() : "0760") : moveCityCode);
                 intent.putExtra(ConstansUtil.LATITUDE, aMap.getCameraPosition().target.latitude);
                 intent.putExtra(ConstansUtil.LONGITUDE, aMap.getCameraPosition().target.longitude);
                 startActivity(intent);

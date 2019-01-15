@@ -14,8 +14,6 @@ import com.tuzhao.utils.IntentObserable;
  */
 public class LoadingDialog extends Dialog {
 
-    private static final String TAG = "LoadingDialog";
-
     private String content;
 
     private boolean mCancelable=true;

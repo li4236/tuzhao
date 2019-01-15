@@ -229,7 +229,7 @@ public class DateUtil {
 
         if (startCalendar.compareTo(startShareCalendar) >= 0 && endCalendar.compareTo(endShareCalendar) <= 0) {
             //在共享的日期内
-            return getCalendarMinuteDistance(endShareCalendar, endCalendar);
+            return getCalendarMinuteDistance(endCalendar, endShareCalendar);
         }
         return -1;
     }
@@ -2664,62 +2664,6 @@ public class DateUtil {
     }
 
     /**
-     * 计算相差的分钟
-     *
-     * @param starTime
-     * @param endTime
-     * @return
-     */
-    public int getTimeDifferenceMinute(String starTime, String endTime, boolean issample) {
-        int minute = 0;
-        SimpleDateFormat dateFormat;
-        if (issample) {
-            dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        } else {
-            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        }
-        try {
-            Date parse = dateFormat.parse(starTime);
-            Date parse1 = dateFormat.parse(endTime);
-
-            long diff = parse1.getTime() - parse.getTime();
-            int parseInt = (int) diff;
-
-            minute = (int) (diff / (60 * 1000));
-
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return minute;
-    }
-
-    /**
-     * 计算相差的秒
-     *
-     * @param starTime
-     * @param endTime
-     * @return
-     */
-    public int getTimeDifferenceMinuteMoreDetail(String starTime, String endTime) {
-        int secend = 0;
-        SimpleDateFormat dateFormat = getYearToSecondFormat();
-        try {
-            Date parse = dateFormat.parse(starTime);
-            Date parse1 = dateFormat.parse(endTime);
-
-            long diff = parse1.getTime() - parse.getTime();
-
-            secend = (int) (diff / 1000);
-
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return secend;
-    }
-
-    /**
      * 判断time是否在from，to之内
      *
      * @param thetime   指定日期
@@ -3166,7 +3110,6 @@ public class DateUtil {
         calendar.set(Calendar.MONTH, 0);
         for (int j = 1; j <= 12; j++) {
             month.add(String.valueOf(j));
-            // TODO: 2018/5/31 for循环里面 calendar.set(Calendar.MONTH, j-1);不生效
             day = new ArrayList<>();
             for (int k = 1; k <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); k++) {
                 day.add(String.valueOf(k));

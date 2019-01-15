@@ -14,6 +14,9 @@ import static android.graphics.Color.parseColor;
 
 /**
  * Created by juncoder on 2018/5/10.
+ * <p>
+ * 圆●
+ * </p>
  */
 
 public class CircleView extends View {

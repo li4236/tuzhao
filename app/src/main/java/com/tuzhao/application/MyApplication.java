@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.tianzhili.www.myselfsdk.netStateLib.NetStateReceiver;
@@ -118,7 +117,6 @@ public class MyApplication extends MultiDexApplication {
         }
         User_Info user_info = getDatabaseImp().getUserFormDatabase();
         if (user_info != null) {
-            Log.e("dsa", "自动登录：" + user_info.getUsername() + user_info.getPassword() + user_info.getAutologin());
             //本地数据库有之前登录过的用户信息，则后台自动登录
             if (user_info.getUsername() != null && user_info.getPassword() != null && user_info.getAutologin().equals("1")) {
                 requestLogin(user_info.getUsername(), user_info.getPassword());

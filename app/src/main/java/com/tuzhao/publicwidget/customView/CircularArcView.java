@@ -23,8 +23,6 @@ import com.tuzhao.R;
 
 public class CircularArcView extends View {
 
-    private static final String TAG = "CircularArcView";
-
     //外圆弧和外圆的画笔
     private Paint mArcPaint;
 

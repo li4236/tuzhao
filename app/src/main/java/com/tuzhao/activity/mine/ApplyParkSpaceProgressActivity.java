@@ -1,5 +1,6 @@
 package com.tuzhao.activity.mine;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -100,6 +101,7 @@ public class ApplyParkSpaceProgressActivity extends BaseStatusActivity implement
         mModifyInfo.setOnClickListener(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initData() {
         if ((mParkSpaceInfo = getIntent().getParcelableExtra(ConstansUtil.PARK_SPACE_INFO)) != null) {

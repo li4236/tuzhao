@@ -37,27 +37,10 @@ public class GridDivider extends RecyclerView.ItemDecoration {
         c.drawLine(width, mPaint.getStrokeWidth(), width + mPaint.getStrokeWidth(), parent.getHeight(), mPaint);
         width += view.getWidth();
         c.drawLine(width, mPaint.getStrokeWidth(), width + mPaint.getStrokeWidth(), parent.getHeight(), mPaint);
-
-       /* for(int i=1;i<childCount+1;i++) {
-            view = parent.getChildAt(i-1);
-            c.drawLine(0,0,view.getWidth(),3,mPaint);
-            if (i % 3 != 0) {
-              c.drawLine(view.getWidth()-3,3,view.getWidth(),view.getHeight(),mPaint);
-            }
-        }*/
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        /*int childCount = parent.getChildCount();
-        for (int i = 1; i < childCount + 1; i++) {
-            if (i % 3 == 0) {
-                outRect.top = 3;
-            } else {
-                outRect.top = 3;
-                outRect.right = 3;
-            }
-        }*/
     }
 }

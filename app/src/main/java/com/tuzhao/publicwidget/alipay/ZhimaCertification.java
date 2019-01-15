@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import com.tianzhili.www.myselfsdk.okgo.OkGo;
 import com.tuzhao.activity.base.LoadFailCallback;
@@ -65,7 +64,6 @@ public class ZhimaCertification {
                 .execute(new JsonCallback<Base_Class_Info<ZhimaInfo>>() {
                     @Override
                     public void onSuccess(Base_Class_Info<ZhimaInfo> o, Call call, Response response) {
-                        Log.e(TAG, "onSuccess: " + o.data.getBiz_no());
                         if (DeviceUtils.isInstallAlipay(mContext)) {
                             try {
                                 mBizNo = o.data.getBiz_no();
